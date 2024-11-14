@@ -175,7 +175,7 @@ final class ArtifactReverseLinksUpdaterTest extends TestCase
                     sprintf('art #%d', self::SOURCE_ARTIFACT_ID_2)
                 );
             }
-            return ChangesetTestBuilder::aChangeset('658')->build();
+            return ChangesetTestBuilder::aChangeset(658)->build();
         });
 
         $this->link_value = Option::fromValue(

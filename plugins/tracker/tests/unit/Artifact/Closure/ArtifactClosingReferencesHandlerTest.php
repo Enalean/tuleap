@@ -84,7 +84,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
             ])
         );
         $this->changeset_creator    = CreateNewChangesetStub::withReturnChangeset(
-            ChangesetTestBuilder::aChangeset('9667')->build()
+            ChangesetTestBuilder::aChangeset(9667)->build()
         );
         $this->status_retriever     = RetrieveStatusFieldStub::withNoField();
         $this->done_value_retriever = $this->createStub(DoneValueRetriever::class);
@@ -105,7 +105,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
                 $status_value_retriever,
                 $this->done_value_retriever,
                 $this->logger,
-                CreateCommentOnlyChangesetStub::withChangeset(ChangesetTestBuilder::aChangeset('4706')->build()),
+                CreateCommentOnlyChangesetStub::withChangeset(ChangesetTestBuilder::aChangeset(4706)->build()),
                 $this->changeset_creator
             )
         );

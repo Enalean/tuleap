@@ -45,7 +45,7 @@ final class EventDescriptionRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->changeset = ChangesetTestBuilder::aChangeset('1001')->build();
+        $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
 
         $this->semantic_description = $this->createMock(\Tracker_Semantic_Description::class);

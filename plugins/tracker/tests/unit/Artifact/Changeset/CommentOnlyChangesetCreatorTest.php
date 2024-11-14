@@ -38,7 +38,7 @@ final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     private const COMMENT_BODY         = 'roisteringly reconvalescent';
     private const SUBMISSION_TIMESTAMP = 1411230972; // 2014-09-20T18:36:12
-    private const NEW_CHANGESET_ID     = '6901';
+    private const NEW_CHANGESET_ID     = 6901;
     private const ARTIFACT_ID          = 84;
     private const USER_ID              = 102;
 

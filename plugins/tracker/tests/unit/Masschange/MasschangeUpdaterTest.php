@@ -100,9 +100,9 @@ final class MasschangeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_values = [1 => 'Value01'];
 
         $artifact_201 = $this->createMock(Artifact::class);
-        $artifact_201->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset('352')->build());
+        $artifact_201->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset(352)->build());
         $artifact_202 = $this->createMock(Artifact::class);
-        $artifact_202->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset('311')->build());
+        $artifact_202->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset(311)->build());
         $this->artifact_factory->method('getArtifactById')->willReturnMap([
             [201, $artifact_201],
             [202, $artifact_202],
@@ -125,11 +125,11 @@ final class MasschangeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_201 = $this->createMock(Artifact::class);
         $artifact_201->method('getId')->willReturn(201);
-        $artifact_201->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset('352')->build());
+        $artifact_201->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset(352)->build());
         $artifact_201->method('userCanView')->willReturn(true);
         $artifact_202 = $this->createMock(Artifact::class);
         $artifact_202->method('getId')->willReturn(202);
-        $artifact_202->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset('311')->build());
+        $artifact_202->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset(311)->build());
         $artifact_202->method('userCanView')->willReturn(true);
         $this->artifact_factory->method('getArtifactById')->willReturnMap([
             [201, $artifact_201],
@@ -184,7 +184,7 @@ final class MasschangeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $artifact       = $this->createMock(Artifact::class);
-        $last_changeset = ChangesetTestBuilder::aChangeset('968')->build();
+        $last_changeset = ChangesetTestBuilder::aChangeset(968)->build();
         $artifact->method('getLastChangeset')->willReturn($last_changeset);
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
 

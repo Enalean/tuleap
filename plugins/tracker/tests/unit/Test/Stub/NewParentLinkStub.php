@@ -33,7 +33,7 @@ final class NewParentLinkStub implements NewParentLink
     {
     }
 
-    public static function withId(int $id): self
+    public static function withId(int $id): NewParentLink
     {
         return new self($id);
     }

@@ -28,9 +28,6 @@ use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetri
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\Move\CheckBeforeMove;
 
-/**
- * @psalm-immutable
- */
 final class CheckBeforeMoveStub implements CheckBeforeMove
 {
     private int $call_count = 0;

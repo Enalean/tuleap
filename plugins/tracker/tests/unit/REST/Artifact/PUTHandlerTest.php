@@ -63,7 +63,7 @@ final class PUTHandlerTest extends TestCase
         $this->link_field_retriever                  = RetrieveUsedArtifactLinkFieldsStub::withNoField();
         $this->check_artifact_rest_update_conditions = CheckArtifactRestUpdateConditionsStub::allowArtifactUpdate();
         $this->changeset_creator                     = CreateNewChangesetStub::withReturnChangeset(
-            ChangesetTestBuilder::aChangeset('289')->build()
+            ChangesetTestBuilder::aChangeset(289)->build()
         );
 
         $this->payload = [];

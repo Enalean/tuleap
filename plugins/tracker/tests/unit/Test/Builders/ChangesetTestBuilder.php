@@ -33,13 +33,13 @@ final class ChangesetTestBuilder
     private ?string $submitted_by_email = 'anonymous_user@example.com';
     private ?string $text_comment       = null;
 
-    private function __construct(private string $id)
+    private function __construct(private int $id)
     {
         $artifact_id    = 171;
         $this->artifact = ArtifactTestBuilder::anArtifact($artifact_id)->build();
     }
 
-    public static function aChangeset(string $changeset_id): self
+    public static function aChangeset(int $changeset_id): self
     {
         return new self($changeset_id);
     }
@@ -71,9 +71,6 @@ final class ChangesetTestBuilder
         return $this;
     }
 
-    /**
-     * @psalm-pure
-     */
     public function build(): \Tracker_Artifact_Changeset
     {
         $changeset = new \Tracker_Artifact_Changeset(

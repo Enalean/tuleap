@@ -66,8 +66,8 @@ final class ListFieldBuilder
 
     public function withReadPermission(\PFUser $user, bool $user_can_read): self
     {
-        $this->user_with_read_permissions[]     = $user;
-        $this->read_permissions[$user->getId()] = $user_can_read;
+        $this->user_with_read_permissions[]           = $user;
+        $this->read_permissions[(int) $user->getId()] = $user_can_read;
 
         return $this;
     }
@@ -90,7 +90,7 @@ final class ListFieldBuilder
         $selectbox->setTracker($this->tracker);
 
         foreach ($this->user_with_read_permissions as $user) {
-            $selectbox->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+            $selectbox->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
         }
 
         return $selectbox;

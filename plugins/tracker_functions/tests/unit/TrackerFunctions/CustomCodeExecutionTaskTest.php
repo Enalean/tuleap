@@ -94,7 +94,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
             TrackerAdministratorNotificationSenderStub::build(),
             $this->buildPluginAllowed(),
         );
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()
             ->withUserName('forge__something')
             ->build());
@@ -121,7 +121,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('1')->ofArtifact($artifact)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->ofArtifact($artifact)->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
@@ -146,7 +146,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('1')->ofArtifact($artifact)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->ofArtifact($artifact)->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
@@ -171,7 +171,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('1')
+        $changeset = ChangesetTestBuilder::aChangeset(1)
             ->ofArtifact($artifact)
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
@@ -197,7 +197,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('1')
+        $changeset = ChangesetTestBuilder::aChangeset(1)
             ->ofArtifact($artifact)
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
@@ -224,7 +224,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         );
         $tracker      = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact     = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
-        $changeset    = ChangesetTestBuilder::aChangeset('1')
+        $changeset    = ChangesetTestBuilder::aChangeset(1)
             ->ofArtifact($artifact)
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
@@ -255,7 +255,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         );
         $tracker      = TrackerTestBuilder::aTracker()->withId(23)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $artifact     = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
-        $changeset    = ChangesetTestBuilder::aChangeset('1')
+        $changeset    = ChangesetTestBuilder::aChangeset(1)
             ->ofArtifact($artifact)
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());

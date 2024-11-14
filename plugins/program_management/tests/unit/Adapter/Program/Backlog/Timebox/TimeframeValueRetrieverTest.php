@@ -55,7 +55,7 @@ final class TimeframeValueRetrieverTest extends TestCase
         $this->semantic_timeframe_builder = $this->createStub(SemanticTimeframeBuilder::class);
 
         $tracker        = TrackerTestBuilder::aTracker()->build();
-        $changeset      = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset      = ChangesetTestBuilder::aChangeset(1)->build();
         $this->artifact = ArtifactTestBuilder::anArtifact(100)
             ->inTracker($tracker)
             ->withChangesets($changeset)

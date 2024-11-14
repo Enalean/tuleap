@@ -75,7 +75,7 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItReturnsTheForwardLinksAsACollectionOfLinksInfo(): void
     {
-        $last_changeset = ChangesetTestBuilder::aChangeset('1807')->build();
+        $last_changeset = ChangesetTestBuilder::aChangeset(1807)->build();
 
         $artifact = $this->createStub(Artifact::class);
         $artifact->method('getLastChangeset')->willReturn($last_changeset);
@@ -98,7 +98,7 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesNotReturnLinksForArtifactsUserCannotSee(): void
     {
-        $last_changeset = ChangesetTestBuilder::aChangeset('1807')->build();
+        $last_changeset = ChangesetTestBuilder::aChangeset(1807)->build();
 
         $artifact = $this->createStub(Artifact::class);
         $artifact->method('getLastChangeset')->willReturn($last_changeset);
@@ -116,7 +116,7 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItReturnsDirectlyCachedLinksInfoWhenThereAreAvailable(): void
     {
-        $last_changeset = ChangesetTestBuilder::aChangeset('1807')->build();
+        $last_changeset = ChangesetTestBuilder::aChangeset(1807)->build();
 
         $this->cache->cacheLinksInfoForChangeset(
             $last_changeset,

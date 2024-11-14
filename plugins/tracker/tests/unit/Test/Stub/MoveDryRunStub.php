@@ -29,9 +29,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
 use Tuleap\Tracker\REST\v1\Move\MoveDryRun;
 
-/**
- * @psalm-immutable
- */
 final class MoveDryRunStub implements MoveDryRun
 {
     private int $call_count = 0;

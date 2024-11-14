@@ -39,6 +39,9 @@ final class RetrieveEventSummaryStub implements RetrieveEventSummary
         return new self(null);
     }
 
+    /**
+     * @param non-empty-string $summary
+     */
     public static function withSummary(string $summary): self
     {
         return new self(Result::ok(CalendarEventData::fromSummary($summary)));

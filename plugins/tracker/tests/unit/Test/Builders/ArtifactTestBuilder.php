@@ -144,13 +144,13 @@ final class ArtifactTestBuilder
 
     public function userCanView(PFUser $user): self
     {
-        $this->user_can_view[$user->getId()] = true;
+        $this->user_can_view[(int) $user->getId()] = true;
         return $this;
     }
 
     public function userCannotView(PFUser $user): self
     {
-        $this->user_can_view[$user->getId()] = false;
+        $this->user_can_view[(int) $user->getId()] = false;
         return $this;
     }
 

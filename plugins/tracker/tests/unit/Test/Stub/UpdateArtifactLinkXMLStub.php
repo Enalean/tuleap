@@ -25,27 +25,19 @@ namespace Tuleap\Tracker\Test\Stub;
 use SimpleXMLElement;
 use Tuleap\Tracker\Tracker\XML\Updater\UpdateArtifactLinkXML;
 
-/**
- * @psalm-immutable
- */
 final class UpdateArtifactLinkXMLStub implements UpdateArtifactLinkXML
 {
-    private function __construct(private int $nb_calls)
+    private function __construct()
     {
     }
 
     public static function build(): self
     {
-        return new self(0);
+        return new self();
     }
 
-    public function getNbValuesUpdated(): int
+    public function updateArtifactLinks(SimpleXMLElement $changeset_xml, \Tracker_FormElement_Field_ArtifactLink $destination_field, int $index): void
     {
-        return $this->nb_calls;
-    }
-
-    public function updateArtifactLinks(SimpleXMLElement $changeset_xml, \Tracker_FormElement_Field_ArtifactLink $destination_field, int $index,): void
-    {
-        $this->nb_calls++;
+        // Side-effects
     }
 }

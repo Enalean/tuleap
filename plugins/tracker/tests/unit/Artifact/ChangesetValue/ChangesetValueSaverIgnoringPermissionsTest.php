@@ -49,7 +49,7 @@ final class ChangesetValueSaverIgnoringPermissionsTest extends \Tuleap\Test\PHPU
     private function save(): bool
     {
         $artifact           = ArtifactTestBuilder::anArtifact(85)->build();
-        $previous_changeset = ChangesetTestBuilder::aChangeset('865')->build();
+        $previous_changeset = ChangesetTestBuilder::aChangeset(865)->build();
         $submitter          = UserTestBuilder::buildWithDefaults();
         $workflow           = $this->createStub(\Workflow::class);
 

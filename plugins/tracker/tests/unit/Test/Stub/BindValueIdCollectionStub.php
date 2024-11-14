@@ -55,7 +55,7 @@ final class BindValueIdCollectionStub implements BindValueIdCollection
         return reset($this->value_ids);
     }
 
-    public function removeValue($value): void
+    public function removeValue(int $value): void
     {
         $key = array_search($value, $this->value_ids);
 

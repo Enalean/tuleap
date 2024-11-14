@@ -26,6 +26,10 @@ use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 final class LinkWithDirectionRepresentationBuilder
 {
+    /**
+     * @param positive-int $id
+     * @param 'reverse'|'forward' $direction
+     */
     public function __construct(
         private int $id,
         private string $direction,
@@ -33,16 +37,25 @@ final class LinkWithDirectionRepresentationBuilder
     ) {
     }
 
+    /**
+     * @param positive-int $id
+     */
     public static function aReverseLink(int $id): self
     {
         return new self($id, 'reverse');
     }
 
+    /**
+     * @param positive-int $id
+     */
     public static function aReverseLinkWithNullType(int $id): LinkWithDirectionRepresentation
     {
         return (new self($id, 'reverse', null))->build();
     }
 
+    /**
+     * @param positive-int $id
+     */
     public static function aForwardLink(int $id): self
     {
         return new self($id, 'forward');
@@ -56,9 +69,12 @@ final class LinkWithDirectionRepresentationBuilder
 
     public function build(): LinkWithDirectionRepresentation
     {
-        $representation            = new LinkWithDirectionRepresentation();
-        $representation->id        = $this->id;
-        $representation->type      = $this->type;
+        $representation = new LinkWithDirectionRepresentation();
+        /** @psalm-suppress InaccessibleProperty */
+        $representation->id = $this->id;
+        /** @psalm-suppress InaccessibleProperty */
+        $representation->type = $this->type;
+        /** @psalm-suppress InaccessibleProperty */
         $representation->direction = $this->direction;
         return $representation;
     }

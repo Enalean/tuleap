@@ -32,18 +32,15 @@ use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\REST\v1\Move\MoveRestArtifact;
 
-/**
- * @psalm-immutable
- */
 final class MoveRestArtifactStub implements MoveRestArtifact
 {
     private int $call_count = 0;
 
     private function __construct(
-        public bool $move_artifact_not_done,
-        public bool $move_semantic_exception,
-        public bool $target_project_not_active,
-        public bool $has_no_fields_to_move,
+        private bool $move_artifact_not_done,
+        private bool $move_semantic_exception,
+        private bool $target_project_not_active,
+        private bool $has_no_fields_to_move,
     ) {
     }
 

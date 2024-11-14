@@ -59,10 +59,9 @@ final class ArtifactValuesRepresentationBuilder
     }
 
     /**
-     * @param list<int|string> ...$other_bind_value_ids
      * @no-named-arguments
      */
-    public function withBindValueIds(int|string $first_bind_value_id, array ...$other_bind_value_ids): self
+    public function withBindValueIds(int|string $first_bind_value_id, int|string ...$other_bind_value_ids): self
     {
         $this->bind_value_ids = [$first_bind_value_id, ...$other_bind_value_ids];
         return $this;
@@ -106,20 +105,20 @@ final class ArtifactValuesRepresentationBuilder
         if ($this->value !== null) {
             $representation->value = $this->value;
         }
-        if ($this->bind_value_ids) {
+        if ($this->bind_value_ids !== null) {
             $representation->bind_value_ids = $this->bind_value_ids;
         }
         if ($this->manual_value !== null) {
             $representation->manual_value    = $this->manual_value;
             $representation->is_autocomputed = false;
         }
-        if ($this->links) {
+        if ($this->links !== null) {
             $representation->links = $this->links;
         }
         if ($this->parent_artifact_id !== null) {
             $representation->parent = ['id' => $this->parent_artifact_id];
         }
-        if ($this->all_links) {
+        if ($this->all_links !== null) {
             $representation->all_links = $this->all_links;
         }
         return $representation;

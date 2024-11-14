@@ -34,7 +34,7 @@ final class ActionsRunnerTest extends TestCase
 
         $actions_runner = new ActionsRunner($task_1, $task_2);
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
         $task_1->expects(self::once())->method('execute')->with($changeset, true);
         $task_2->expects(self::once())->method('execute')->with($changeset, true);
@@ -50,7 +50,7 @@ final class ActionsRunnerTest extends TestCase
         $actions_runner = new ActionsRunner($task_1);
         $actions_runner->addAsyncPostCreationTasks($task_2);
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
         $task_1->expects(self::once())->method('execute')->with($changeset, true);
         $task_2->expects(self::never())->method('execute');
@@ -66,7 +66,7 @@ final class ActionsRunnerTest extends TestCase
         $actions_runner = new ActionsRunner($task_1);
         $actions_runner->addAsyncPostCreationTasks($task_2);
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
         $task_1->expects(self::once())->method('execute')->with($changeset, true);
         $task_2->expects(self::once())->method('execute')->with($changeset, true);
@@ -80,7 +80,7 @@ final class ActionsRunnerTest extends TestCase
         $task_2         = $this->createMock(PostCreationTask::class);
         $task_3         = $this->createMock(PostCreationTask::class);
         $actions_runner = new ActionsRunner($task_1, $task_2, $task_3);
-        $changeset      = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset      = ChangesetTestBuilder::aChangeset(1)->build();
         $last_task_name = '';
         $task_1->method('execute')->willReturnCallback(function () use (&$last_task_name) {
             self::assertEmpty($last_task_name);

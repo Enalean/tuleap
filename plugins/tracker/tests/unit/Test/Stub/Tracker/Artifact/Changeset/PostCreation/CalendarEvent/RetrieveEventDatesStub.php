@@ -32,6 +32,9 @@ final class RetrieveEventDatesStub implements RetrieveEventDates
 {
     private bool $time_displayed = false;
 
+    /**
+     * @param non-falsy-string|null $error
+     */
     private function __construct(private readonly ?int $start, private readonly int $end, private readonly ?string $error)
     {
     }
@@ -53,6 +56,9 @@ final class RetrieveEventDatesStub implements RetrieveEventDates
         return $this;
     }
 
+    /**
+     * @param non-falsy-string $message
+     */
     public static function withError(string $message): self
     {
         return new self(0, 0, $message);

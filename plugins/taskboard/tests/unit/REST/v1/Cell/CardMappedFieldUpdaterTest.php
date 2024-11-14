@@ -106,7 +106,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->done_column)
             ->willReturn($milestone_tracker);
 
-        $last_changeset = ChangesetTestBuilder::aChangeset('934')->build();
+        $last_changeset = ChangesetTestBuilder::aChangeset(934)->build();
         ChangesetValueListTestBuilder::aListOfValue(34460, $last_changeset, $this->mapped_list_field)
             ->withValues([new \Tracker_FormElement_Field_List_Bind_StaticValue(256, 'To do', '', 1, false)])
             ->build();
@@ -325,7 +325,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateCardMappedFieldDoesNotUpdateCardArtifactWhenItIsAlreadyInTheGivenColumn(): void
     {
-        $last_changeset = ChangesetTestBuilder::aChangeset('360')->build();
+        $last_changeset = ChangesetTestBuilder::aChangeset(360)->build();
         ChangesetValueListTestBuilder::aListOfValue(59544, $last_changeset, $this->mapped_list_field)
             ->withValues([new \Tracker_FormElement_Field_List_Bind_StaticValue(self::DONE_BIND_VALUE_ID, 'Done', '', 2, false)])
             ->build();

@@ -37,7 +37,7 @@ final class SendMessagesForAdminsTest extends TestCase
     {
         $this->mail_sender              = SendMailStub::build();
         $this->send_messages_for_admins = new SendMessagesForAdmins($this->mail_sender);
-        $this->changeset                = ChangesetTestBuilder::aChangeset('1')->build();
+        $this->changeset                = ChangesetTestBuilder::aChangeset(1)->build();
     }
 
     public function testItSendNothingIfNoMessage(): void

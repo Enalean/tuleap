@@ -44,6 +44,9 @@ final class RetrieveUserPermissionOnTrackersStub implements RetrieveUserPermissi
         return new self();
     }
 
+    /**
+     * @param list<int> $tracker_ids
+     */
     public function withPermissionOn(array $tracker_ids, TrackerPermissionType $permission): self
     {
         $this->has_permission_on[$permission->name] = $tracker_ids;

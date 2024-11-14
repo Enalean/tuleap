@@ -106,7 +106,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
         $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField($mapped_field);
 
-        $last_changeset            = ChangesetTestBuilder::aChangeset('677')->build();
+        $last_changeset            = ChangesetTestBuilder::aChangeset(677)->build();
         $this->user_story_artifact = ArtifactTestBuilder::anArtifact(78)
             ->inTracker($this->user_story_tracker)
             ->withChangesets($last_changeset)
@@ -121,7 +121,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
         $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField($mapped_field);
 
-        $last_changeset            = ChangesetTestBuilder::aChangeset('677')->build();
+        $last_changeset            = ChangesetTestBuilder::aChangeset(677)->build();
         $this->user_story_artifact = ArtifactTestBuilder::anArtifact(78)
             ->inTracker($this->user_story_tracker)
             ->withChangesets($last_changeset)
@@ -141,7 +141,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
             ->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField($mapped_field);
 
-        $last_changeset            = ChangesetTestBuilder::aChangeset('677')->build();
+        $last_changeset            = ChangesetTestBuilder::aChangeset(677)->build();
         $this->user_story_artifact = ArtifactTestBuilder::anArtifact(78)
             ->inTracker($this->user_story_tracker)
             ->withChangesets($last_changeset)

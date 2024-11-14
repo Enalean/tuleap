@@ -27,9 +27,6 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreated;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Changeset\ProcessChangesetPostCreation;
 
-/**
- * @psalm-immutable
- */
 final class ProcessChangesetPostCreationStub implements ProcessChangesetPostCreation
 {
     private int $count = 0;

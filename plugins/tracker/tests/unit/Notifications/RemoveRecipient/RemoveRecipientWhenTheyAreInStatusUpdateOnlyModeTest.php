@@ -65,7 +65,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
             }
         );
 
-        $changeset = ChangesetTestBuilder::aChangeset('1234')
+        $changeset = ChangesetTestBuilder::aChangeset(1234)
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
                     ->inTracker(

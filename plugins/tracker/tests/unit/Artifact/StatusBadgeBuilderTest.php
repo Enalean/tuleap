@@ -114,7 +114,7 @@ class StatusBadgeBuilderTest extends TestCase
         $builder = new StatusBadgeBuilder($status_factory);
 
         $artifact       = \Tuleap\Tracker\Test\Builders\ArtifactTestBuilder::anArtifact(101)->build();
-        $last_changeset = \Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset('1001')
+        $last_changeset = \Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset(1001)
             ->ofArtifact($artifact)
             ->build();
         $last_changeset->setFieldValue($field, new \Tracker_Artifact_ChangesetValue_List(1010, $last_changeset, $field, true, []));
@@ -146,7 +146,7 @@ class StatusBadgeBuilderTest extends TestCase
         $builder = new StatusBadgeBuilder($status_factory);
 
         $artifact       = \Tuleap\Tracker\Test\Builders\ArtifactTestBuilder::anArtifact(101)->build();
-        $last_changeset = \Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset('1001')
+        $last_changeset = \Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset(1001)
             ->ofArtifact($artifact)
             ->build();
         $list_values    = [
@@ -195,7 +195,7 @@ class StatusBadgeBuilderTest extends TestCase
         $builder = new StatusBadgeBuilder($status_factory);
 
         $artifact       = \Tuleap\Tracker\Test\Builders\ArtifactTestBuilder::anArtifact(101)->build();
-        $last_changeset = \Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset('1001')
+        $last_changeset = \Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset(1001)
             ->ofArtifact($artifact)
             ->build();
         $list_values    = [

@@ -77,7 +77,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
 
     public function testBuildRepresentation(): void
     {
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(42)
             ->withTitle('There is a bug')
             ->inTracker($this->tracker)

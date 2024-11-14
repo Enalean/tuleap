@@ -61,7 +61,7 @@ final class LastChangesetRetrieverTest extends TestCase
     public function testItReturnsTheLastChangesetIDOfGivenIteration(): void
     {
         $this->changeset_factory->method('getLastChangeset')->willReturn(
-            ChangesetTestBuilder::aChangeset((string) self::LAST_CHANGESET_ID)
+            ChangesetTestBuilder::aChangeset(self::LAST_CHANGESET_ID)
                 ->ofArtifact($this->artifact)
                 ->build()
         );

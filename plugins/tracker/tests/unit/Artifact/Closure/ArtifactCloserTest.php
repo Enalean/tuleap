@@ -85,10 +85,10 @@ final class ArtifactCloserTest extends TestCase
         $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);
         $this->done_value_retriever   = $this->createMock(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
-            ChangesetTestBuilder::aChangeset('5438')->build()
+            ChangesetTestBuilder::aChangeset(5438)->build()
         );
         $this->changeset_creator      = CreateNewChangesetStub::withReturnChangeset(
-            ChangesetTestBuilder::aChangeset('2452')->build()
+            ChangesetTestBuilder::aChangeset(2452)->build()
         );
 
         $this->workflow_user = new Tracker_Workflow_WorkflowUser(

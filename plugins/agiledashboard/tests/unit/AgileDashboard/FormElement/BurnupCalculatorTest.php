@@ -92,12 +92,12 @@ final class BurnupCalculatorTest extends TestCase
         Tracker_Semantic_Status::setInstance($user_story_status_semantic, $tracker);
 
         $user_story_01 = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
-        $changeset_01  = ChangesetTestBuilder::aChangeset('1')->ofArtifact($user_story_01)->build();
-        $changeset_02  = ChangesetTestBuilder::aChangeset('2')->ofArtifact($user_story_01)->build();
+        $changeset_01  = ChangesetTestBuilder::aChangeset(1)->ofArtifact($user_story_01)->build();
+        $changeset_02  = ChangesetTestBuilder::aChangeset(2)->ofArtifact($user_story_01)->build();
 
         $user_story_02 = ArtifactTestBuilder::anArtifact(103)->inTracker($tracker)->build();
-        $changeset_03  = ChangesetTestBuilder::aChangeset('3')->ofArtifact($user_story_02)->build();
-        $changeset_04  = ChangesetTestBuilder::aChangeset('4')->ofArtifact($user_story_02)->build();
+        $changeset_03  = ChangesetTestBuilder::aChangeset(3)->ofArtifact($user_story_02)->build();
+        $changeset_04  = ChangesetTestBuilder::aChangeset(4)->ofArtifact($user_story_02)->build();
 
         $artifact_factory->method('getArtifactById')
             ->withConsecutive([102], [103])

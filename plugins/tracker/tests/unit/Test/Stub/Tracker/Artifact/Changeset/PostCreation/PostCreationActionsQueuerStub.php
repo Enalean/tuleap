@@ -27,7 +27,9 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 
 final class PostCreationActionsQueuerStub implements PostCreationActionsQueuer
 {
-    private function __construct(private $count = 0)
+    private int $count = 0;
+
+    private function __construct()
     {
     }
 

@@ -142,9 +142,10 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 
         $result = $this->convertAdd();
         self::assertTrue(Result::isOk($result));
-        self::assertCount(2, $result->value);
-        /** @var list<NewChangeset> $new_changesets */
         $new_changesets = $result->value;
+        if (count($new_changesets) !== 2) {
+            throw new \RuntimeException('Expected 2 changesets');
+        }
 
         [$first_added_changeset, $second_added_changeset] = $new_changesets;
         self::assertSame(self::ADDED_ARTIFACT_ID, $first_added_changeset->getArtifact()->getId());
@@ -228,9 +229,10 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 
         $result = $this->convertChange();
         self::assertTrue(Result::isOk($result));
-        self::assertCount(3, $result->value);
-        /** @var list<NewChangeset> $new_changesets */
         $new_changesets = $result->value;
+        if (count($new_changesets) !== 3) {
+            throw new \RuntimeException('Expected 3 changesets');
+        }
 
         [$new_changeset_add_link, $new_changeset_change_link, $new_changeset_remove_link] = $new_changesets;
         self::assertSame(self::ADDED_ARTIFACT_ID, $new_changeset_add_link->getArtifact()->getId());

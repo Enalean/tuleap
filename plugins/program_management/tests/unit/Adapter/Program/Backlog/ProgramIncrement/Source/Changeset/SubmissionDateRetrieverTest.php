@@ -61,7 +61,7 @@ final class SubmissionDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesTheChangesetsSubmissionDate(): void
     {
-        $changeset = ChangesetTestBuilder::aChangeset((string) self::CHANGESET_ID)
+        $changeset = ChangesetTestBuilder::aChangeset(self::CHANGESET_ID)
             ->ofArtifact($this->artifact)
             ->submittedOn(self::SUBMISSION_TIMESTAMP)
             ->build();

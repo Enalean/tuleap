@@ -100,7 +100,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
             ->with($this->user, $planning_tracker)
             ->willReturn(PlanningBuilder::aPlanning(101)->build());
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
         $artifact = ArtifactTestBuilder::anArtifact($this->artifact_id)
             ->withTitle('title')

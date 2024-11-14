@@ -57,7 +57,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
         $this->artifact                = $this->createMock(Artifact::class);
         $this->backlog_item            = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItem::class);
         $this->semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
-        $this->last_changeset          = ChangesetTestBuilder::aChangeset('1')->ofArtifact($this->artifact)->build();
+        $this->last_changeset          = ChangesetTestBuilder::aChangeset(1)->ofArtifact($this->artifact)->build();
 
         $this->backlog_item->expects(self::once())->method('getArtifact')->willReturn($this->artifact);
     }

@@ -56,7 +56,7 @@ final class BuildMessagesForAdminsTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
         );
         $this->artifact                  = ArtifactTestBuilder::anArtifact(1)->build();
-        $this->changeset                 = ChangesetTestBuilder::aChangeset('1')
+        $this->changeset                 = ChangesetTestBuilder::aChangeset(1)
             ->ofArtifact($this->artifact)
             ->build();
     }
