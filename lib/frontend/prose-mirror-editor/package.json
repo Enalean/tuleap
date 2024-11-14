@@ -50,5 +50,10 @@
     "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "prosemirror-dropcursor@1.8.1": "patches/prosemirror-dropcursor@1.8.1.patch"
+    }
   }
 }

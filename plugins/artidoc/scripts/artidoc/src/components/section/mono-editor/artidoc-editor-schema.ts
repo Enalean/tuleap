@@ -53,6 +53,7 @@ export const artidoc_editor_schema: EditorNodes = {
         selectable: false,
         draggable: false,
         isolating: true,
+        disableDropCursor: true,
         toDOM(): DOMOutputSpec {
             return ["artidoc-section", 0];
         },
