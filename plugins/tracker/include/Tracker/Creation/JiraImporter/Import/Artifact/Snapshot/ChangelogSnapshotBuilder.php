@@ -200,6 +200,8 @@ class ChangelogSnapshotBuilder
                     [
                         \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
                         \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                        \Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
+                        \Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
                     ],
                     true,
                 )

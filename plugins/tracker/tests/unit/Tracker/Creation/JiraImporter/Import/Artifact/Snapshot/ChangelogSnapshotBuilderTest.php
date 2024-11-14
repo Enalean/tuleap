@@ -91,7 +91,7 @@ final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(11, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(12, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame('9', $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -121,6 +121,11 @@ final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(
             'lorem ipsum',
             $snapshot->getFieldInSnapshot('customfield_10081')->getValue()
+        );
+
+        $this->assertSame(
+            ['id' => 'Neque porro'],
+            $snapshot->getFieldInSnapshot('customfield_10059')->getValue()
         );
 
         $this->assertNull($snapshot->getFieldInSnapshot('textfield')->getRenderedValue());
@@ -439,6 +444,13 @@ final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'to'         => null,
                         'toString'   => '',
                     ],
+                    [
+                        'fieldId'    => 'customfield_10059',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => 'Neque porro',
+                        'toString'   => '',
+                    ],
                 ],
                 'author' => [
                     'accountId' => 'e8a7dbae5',
@@ -581,6 +593,19 @@ final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fcustomfield_10058',
                 'customfield_10058',
                 \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
+            )
+        );
+
+        $collection->addMapping(
+            new ListFieldMapping(
+                'customfield_10059',
+                'customfield_10059',
+                null,
+                'Fcustomfield_10059',
+                'customfield_10059',
+                \Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],
             )
