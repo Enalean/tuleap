@@ -17,13 +17,19 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { FileUploadOptions, OnGoingUploadFile } from "./types";
-import { InvalidFileUploadError, MaxSizeUploadExceededError, UploadError } from "./types";
+import {
+    NoUploadError,
+    InvalidFileUploadError,
+    MaxSizeUploadExceededError,
+    UploadError,
+} from "./types";
 import { uploadFile } from "./helpers/upload-file-helper";
 import { postJSON, rawUri, uri } from "@tuleap/fetch-result";
 import type { OngoingUpload } from "./plugin-drop-file";
 import { Option } from "@tuleap/option";
 import type { GetText } from "@tuleap/gettext";
 import type { Upload } from "tus-js-client";
+import { Fault } from "@tuleap/fault";
 
 export const VALID_FILE_TYPES = [
     "image/png",
@@ -73,6 +79,11 @@ export async function uploadAndDisplayFileInEditor(
         onProgressCallback,
     } = options;
 
+    if (upload_url === "") {
+        const error = new NoUploadError(gettext_provider);
+        onErrorCallback(error, "");
+        return Promise.reject(Fault.fromMessage(error.message));
+    }
     const upload_files: OnGoingUploadFile[] = onStartUploadCallback(files);
     const ongoing_uploads: Array<OngoingUpload> = [];
     for (const file of files) {

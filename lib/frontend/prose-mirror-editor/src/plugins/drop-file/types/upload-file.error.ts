@@ -28,11 +28,20 @@ export class MaxSizeUploadExceededError extends Error {
         this.message = gettext_provider.gettext("Max upload size exceeded");
     }
 }
+
 export class UploadError extends Error {
     constructor(gettext_provider: GetText) {
         super();
         this.name = "UploadError";
         this.message = gettext_provider.gettext("An error occurred during upload");
+    }
+}
+
+export class NoUploadError extends Error {
+    constructor(gettext_provider: GetText) {
+        super();
+        this.name = "NoUploadError";
+        this.message = gettext_provider.gettext("You are not allowed to upload file here");
     }
 }
 

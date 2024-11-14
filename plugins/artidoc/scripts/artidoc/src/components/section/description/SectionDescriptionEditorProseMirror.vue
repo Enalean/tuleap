@@ -45,6 +45,7 @@ const props = defineProps<{
     title: string;
     is_edit_mode: boolean;
     editable_description: string;
+    upload_url: string;
     input_section_content: EditorSectionContent["inputSectionContent"];
     upload_file: UseUploadFileType;
     project_id: number;
@@ -89,11 +90,14 @@ watch(
 
 onMounted(async () => {
     if (area_editor.value) {
+        const is_upload_allowed = props.upload_url !== "";
+
         useEditorInstance = await useEditor(
             area_editor.value,
             setupUploadPlugin,
             setupInputPlugin,
             () => setupMonoEditorPlugins(toolbar_bus),
+            is_upload_allowed,
             renderArtidocSectionNode(props.title, props.editable_description),
             props.project_id,
             props.references,
