@@ -22,7 +22,6 @@
     <tuleap-prose-mirror-toolbar
         ref="toolbar"
         class="artidoc-toolbar"
-        v-bind:class="{ 'is-stuck': is_stuck }"
         v-bind:controller="controller"
         v-bind:text_elements="{
             bold: true,
@@ -48,26 +47,15 @@ import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { buildToolbarController } from "@tuleap/prose-mirror-editor-toolbar";
 import { onMounted, ref } from "vue";
-import { observeStickyToolbar } from "@/helpers/observe-sticky-toolbar";
 import { onClickActivateOrDeactivateToolbar } from "@/helpers/toolbar-activator";
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 const controller = buildToolbarController(toolbar_bus);
 
 const toolbar = ref<HTMLElement | undefined>();
-const is_stuck = ref(false);
 
 onMounted(() => {
     if (toolbar.value) {
         onClickActivateOrDeactivateToolbar(document, toolbar.value, toolbar_bus);
-        observeStickyToolbar(
-            toolbar.value,
-            () => {
-                is_stuck.value = true;
-            },
-            () => {
-                is_stuck.value = false;
-            },
-        );
     }
 });
 </script>
@@ -81,15 +69,15 @@ onMounted(() => {
     display: flex;
     position: sticky;
     z-index: zindex.$toolbar;
-    top: var(--sticky-top-position);
+    top: var(--artidoc-sticky-top-position);
     justify-content: center;
     width: 100%;
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tlp-white-color);
+}
 
-    &.is-stuck {
-        border-bottom: 0;
-        box-shadow: var(--tlp-sticky-header-shadow);
-    }
+.artidoc-container-scrolled .artidoc-toolbar {
+    border-bottom: 0;
+    box-shadow: var(--tlp-sticky-header-shadow);
 }
 </style>

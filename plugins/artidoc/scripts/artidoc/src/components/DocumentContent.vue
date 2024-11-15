@@ -22,7 +22,7 @@
     <editor-toolbar v-if="can_user_edit_document" />
     <notification-container />
     <div class="tlp-card">
-        <ol ref="sections_container">
+        <ol>
             <li
                 v-for="section in sections"
                 v-bind:key="section.internal_id"
@@ -50,7 +50,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { AT_THE_END } from "@/stores/useSectionsStore";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
@@ -58,7 +57,6 @@ import SectionContainer from "@/components/section/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { onScrollStickSectionNumbers } from "@/helpers/on-scroll-stick-section-numbers";
 import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
@@ -67,21 +65,11 @@ const { sections, insertSection } = strictInject(SECTIONS_STORE);
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const sections_container = ref<HTMLOListElement>();
-
 const has_add_button = can_user_edit_document;
 
 function getId(section: ArtidocSection): string {
     return `section-${section.id}`;
 }
-
-onMounted(() => {
-    if (sections_container.value === undefined) {
-        return;
-    }
-
-    onScrollStickSectionNumbers(sections_container.value);
-});
 </script>
 
 <style lang="scss" scoped>
@@ -174,6 +162,7 @@ li[data-is-sticking="true"]:first-child::before {
     width: size.$document-width;
     margin: var(--tlp-medium-spacing) 0 var(--tlp-x-large-spacing);
     padding: 0;
+    overflow: auto;
     border: 0;
     background-color: var(--tlp-white-color);
     box-shadow: var(--tlp-flyover-shadow);

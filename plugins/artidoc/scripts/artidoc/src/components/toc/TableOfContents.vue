@@ -51,17 +51,23 @@ const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
 </script>
 
 <style scoped lang="scss">
+$title-vertical-margin: var(--tlp-small-spacing);
+$title-height: var(--tlp-form-element-small-height);
+$toc-height: calc(
+    var(--artidoc-container-height) - #{$title-height} - 2 * #{$title-vertical-margin}
+);
+
 h1 {
     display: flex;
     align-items: center;
-    height: var(--tlp-form-element-small-height);
-    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    height: $title-height;
+    margin: $title-vertical-margin var(--tlp-medium-spacing);
 }
 
 ol {
-    height: var(--available-height-for-sidebar);
+    height: $toc-height;
     padding: 0;
-    overflow: hidden scroll;
+    overflow: hidden auto;
     list-style-position: inside;
     color: var(--tlp-dimmed-color);
 }

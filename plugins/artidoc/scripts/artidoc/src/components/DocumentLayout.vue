@@ -47,8 +47,6 @@ import DocumentContent from "./DocumentContent.vue";
 
     display: grid;
     grid-template-columns: $content-column $toc-column;
-    height: inherit;
-    border-top: 1px solid var(--tlp-neutral-normal-color);
 }
 
 .document-content {
@@ -62,13 +60,12 @@ import DocumentContent from "./DocumentContent.vue";
 aside {
     z-index: zindex.$toc;
     order: 1;
-    height: 100%;
     background: var(--tlp-fade-background-color);
 }
 
 .table-of-contents {
     position: sticky;
-    top: calc(var(--sticky-top-position) + var(--tlp-small-spacing));
+    top: calc(var(--artidoc-sticky-top-position) + var(--tlp-small-spacing));
     padding: 0;
 }
 
