@@ -44,6 +44,18 @@ function blockquoteRule(nodeType: NodeType): InputRule {
     return wrappingInputRule(/^\s*>\s$/, nodeType);
 }
 
+function largeHeadingRule(nodeType: NodeType): InputRule {
+    return textblockTypeInputRule(/^#\s$/, nodeType, { level: 1 });
+}
+
+function mediumHeadingRule(nodeType: NodeType): InputRule {
+    return textblockTypeInputRule(/^##\s$/, nodeType, { level: 2 });
+}
+
+function smallHeadingRule(nodeType: NodeType): InputRule {
+    return textblockTypeInputRule(/^###\s$/, nodeType, { level: 3 });
+}
+
 export function buildInputRules(schema: Schema): Plugin {
     return inputRules({
         rules: [
@@ -51,6 +63,9 @@ export function buildInputRules(schema: Schema): Plugin {
             orderedListRule(schema.nodes.ordered_list),
             bulletListRule(schema.nodes.bullet_list),
             blockquoteRule(schema.nodes.blockquote),
+            largeHeadingRule(schema.nodes.heading),
+            mediumHeadingRule(schema.nodes.heading),
+            smallHeadingRule(schema.nodes.heading),
             automagicLinksInputRule(),
         ],
     });
