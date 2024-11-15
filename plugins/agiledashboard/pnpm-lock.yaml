@@ -5,12 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/plugin-cardwall-column-colors':
+    specifier: workspace:^
+    version: link:../cardwall/scripts/lib/column-colors
   '@tuleap/plugin-tracker-color-picker':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/colorpicker
-  '@tuleap/tlp-swatch-colors':
-    specifier: workspace:^
-    version: link:../../lib/frontend/tlp-swatch-colors
 
 devDependencies:
   '@tuleap/build-system-configurator':

@@ -13,6 +13,7 @@
     }
   },
   "dependencies": {
+    "@tuleap/plugin-tracker-static-list-colors": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "vue": "3.3.4",

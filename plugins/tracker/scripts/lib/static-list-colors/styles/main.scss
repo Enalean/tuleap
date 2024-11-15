@@ -17,28 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/plugin-tracker-color-picker";
-@use "pkg:@tuleap/plugin-cardwall-column-colors";
+@use "sass:map";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
-.tracker-colorpicker {
-    font-weight: normal;
-}
-
-.colorpicker-circular-color {
-    font-size: 12.6px;
-}
-
-.old-color-picker-preview {
-    border: 1px solid #e3e5ed;
-}
-
-.table {
-    /* stylelint-disable-next-line selector-no-qualifying-type */
-    thead:first-child tr:first-child td.colorpicker-squared-shade {
-        border: 1px solid #000000;
-    }
-
-    .colorpicker-squared-shade {
-        padding: 0;
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
+    .colorpicker-preview-#{$color-name} {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        background-color: map.get($colors, "primary");
+        vertical-align: middle;
     }
 }

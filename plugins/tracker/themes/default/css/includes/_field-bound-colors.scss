@@ -19,6 +19,7 @@
 
 @use "sass:map";
 @use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/plugin-tracker-static-list-colors";
 
 .select-option-not-colored {
     padding-left: 16px;
@@ -27,15 +28,6 @@
 @each $color-name, $colors in tlp-swatch-colors.$color-map {
     .select-option-colored-#{$color-name} {
         border-left: 16px solid map.get($colors, "primary");
-    }
-
-    .colorpicker-preview-#{$color-name} {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        margin: 0;
-        background-color: map.get($colors, "primary");
-        vertical-align: middle;
     }
 }
 

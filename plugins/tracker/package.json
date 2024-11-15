@@ -9,6 +9,7 @@
     "@tuleap/flamingparrot-theme": "workspace:^",
     "@tuleap/mention": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
+    "@tuleap/plugin-tracker-static-list-colors": "workspace:^",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
