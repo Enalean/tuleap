@@ -106,15 +106,6 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                     self::assertEquals('Acme Gmbh', ForgeConfig::get(ConfigurationVariables::ORG_NAME));
                 },
             ],
-            'Default value is in local.inc.dist' => [
-                'local_inc' => [],
-                'database' => [],
-                'environment' => [],
-                'tests' => function () {
-                    ForgeConfig::loadInSequence();
-                    self::assertEquals('%sys_default_domain%', ForgeConfig::get('sys_default_domain'));
-                },
-            ],
             'Value is set in local.inc' => [
                 'local_inc' => [
                     'sys_default_domain' => 'tuleap.example.com',

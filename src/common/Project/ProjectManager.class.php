@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -52,6 +53,7 @@ use Tuleap\Webhook\Emitter;
 class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectByStatus, ProjectByIDFactory, ProjectByUnixNameFactory, ActivateProject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     #[ConfigKey('Is project creation allowed to regular users (1) or not (0)')]
+    #[ConfigKeyLegacyBool(true)]
     public const CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
 
     #[ConfigKey('Should project be approved by site admin (1) or auto approved (0)')]
@@ -67,6 +69,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
     public const CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS = 'restricted_users_can_create_projects';
 
     #[ConfigKey("Are project admin allowed to choose project's visibility (1) or not (0)")]
+    #[ConfigKeyLegacyBool(true)]
     public const SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY = 'sys_user_can_choose_project_privacy';
 
     /**

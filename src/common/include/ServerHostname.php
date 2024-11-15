@@ -36,7 +36,7 @@ final class ServerHostname
     the standard https protocols. You can also define a specific port number (useful for test servers - default 443)
     EOT)]
     #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString]
+    #[ConfigKeyString('%sys_default_domain%')]
     public const DEFAULT_DOMAIN = 'sys_default_domain';
 
     private function __construct()
