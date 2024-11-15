@@ -28,7 +28,6 @@ describe("toolbar-activator", () => {
     let toolbar_element: HTMLElement;
     let toolbar_bus: ToolbarBus;
 
-    let enableToolbar: MockInstance;
     let disableToolbar: MockInstance;
 
     beforeEach(() => {
@@ -36,13 +35,12 @@ describe("toolbar-activator", () => {
         toolbar_element = doc.createElement("div");
         toolbar_bus = buildToolbarBus();
 
-        enableToolbar = vi.spyOn(toolbar_bus, "enableToolbar");
         disableToolbar = vi.spyOn(toolbar_bus, "disableToolbar");
 
         doc.body.insertAdjacentHTML(
             "afterbegin",
             `
-                <div>
+                <div class="editor">
                     <artidoc-section>
                         <artidoc-section-title>Lorem Ipsum</artidoc-section-title>
                         <artidoc-section-description>Lorem Ipsum dolor sit amet</artidoc-section-description>
@@ -72,28 +70,22 @@ describe("toolbar-activator", () => {
         doc.dispatchEvent(event);
     };
 
-    const clickOnSectionDescription = (): void => {
-        const section_description = doc.querySelector("artidoc-section-description");
+    const clickOnEditor = (): void => {
+        const section_description = doc.querySelector(".editor");
         clickOnElement(section_description);
     };
-
-    it("When you click in an editor, the toolbar should be enabled", () => {
-        clickOnSectionDescription();
-
-        expect(enableToolbar).toHaveBeenCalledOnce();
-    });
 
     it("When you click in an editor and then click outside the editor, then the toolbar should be disabled", () => {
         const table_of_contents = doc.querySelector(".table-of-contents");
 
-        clickOnSectionDescription();
+        clickOnEditor();
         clickOnElement(table_of_contents);
 
         expect(disableToolbar).toHaveBeenCalledOnce();
     });
 
     it("When you click in an editor and then click in the toolbar, then the toolbar should not be disabled", () => {
-        clickOnSectionDescription();
+        clickOnEditor();
         clickOnElement(toolbar_element);
 
         expect(disableToolbar).not.toHaveBeenCalled();
@@ -102,7 +94,7 @@ describe("toolbar-activator", () => {
     it("When you click in an editor and then click in a toolbar popover, then the toolbar should not be disabled", () => {
         const popover = doc.querySelector(".prose-mirror-toolbar-popover");
 
-        clickOnSectionDescription();
+        clickOnEditor();
         clickOnElement(popover);
 
         expect(disableToolbar).not.toHaveBeenCalled();

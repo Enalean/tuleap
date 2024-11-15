@@ -37,7 +37,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
-import { setupMonoEditorPlugins } from "../mono-editor/jump-to-section-node";
+import { setupMonoEditorPlugins } from "../mono-editor/setupMonoEditorPlugins";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 
