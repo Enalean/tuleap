@@ -20,8 +20,9 @@
 import type { Plugin } from "prosemirror-state";
 import { wrappingInputRule, inputRules, textblockTypeInputRule } from "prosemirror-inputrules";
 import type { InputRule } from "prosemirror-inputrules";
-import type { NodeType, Schema } from "prosemirror-model";
+import type { NodeType, Schema, MarkType } from "prosemirror-model";
 import { automagicLinksInputRule } from "../automagic-links";
+import { markInputRule } from "../../helpers/MarkInputRule";
 
 function codeBlockRule(nodeType: NodeType): InputRule {
     return textblockTypeInputRule(/^```$/, nodeType);
@@ -56,6 +57,10 @@ function smallHeadingRule(nodeType: NodeType): InputRule {
     return textblockTypeInputRule(/^###\s$/, nodeType, { level: 3 });
 }
 
+function boldRule(markType: MarkType): InputRule {
+    return markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, markType);
+}
+
 export function buildInputRules(schema: Schema): Plugin {
     return inputRules({
         rules: [
@@ -66,6 +71,7 @@ export function buildInputRules(schema: Schema): Plugin {
             largeHeadingRule(schema.nodes.heading),
             mediumHeadingRule(schema.nodes.heading),
             smallHeadingRule(schema.nodes.heading),
+            boldRule(schema.marks.strong),
             automagicLinksInputRule(),
         ],
     });
