@@ -20,6 +20,7 @@
 import type { Ref } from "vue";
 import { ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { noop } from "@/helpers/noop";
 
 type PendingAttachment = { id: number; upload_url: string };
 export interface AttachmentFile {
@@ -34,6 +35,16 @@ export interface AttachmentFile {
 }
 
 export function useAttachmentFile(field_id: Ref<number>): AttachmentFile {
+    if (field_id.value === 0) {
+        return {
+            upload_url: "",
+            getWaitingListAttachments: () => ref([]),
+            setWaitingListAttachments: noop,
+            addAttachmentToWaitingList: noop,
+            mergeArtifactAttachments,
+        };
+    }
+
     const upload_url = `/api/v1/tracker_fields/${field_id.value}/files`;
     const not_saved_yet_description_attachments: Ref<PendingAttachment[]> = ref([]);
 

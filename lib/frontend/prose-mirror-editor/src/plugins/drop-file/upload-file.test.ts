@@ -20,7 +20,12 @@ import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { uploadAndDisplayFileInEditor } from "./upload-file";
-import { InvalidFileUploadError, MaxSizeUploadExceededError, UploadError } from "./types";
+import {
+    InvalidFileUploadError,
+    MaxSizeUploadExceededError,
+    NoUploadError,
+    UploadError,
+} from "./types";
 import type { FileUploadOptions, OnGoingUploadFile } from "./types";
 import * as fetch_result from "@tuleap/fetch-result";
 import * as download_file from "./helpers/upload-file-helper";
@@ -86,6 +91,26 @@ describe("uploadFile", () => {
                 onProgressCallback: vi.fn(),
                 onSuccessCallback: vi.fn(),
             };
+        });
+
+        describe("When there is no upload_url", () => {
+            it("should call error callback with an upload error", async () => {
+                await expect(() =>
+                    uploadAndDisplayFileInEditor(
+                        mockFileList([file]),
+                        {
+                            ...options,
+                            upload_url: "",
+                        },
+                        gettext_provider,
+                        [],
+                    ),
+                ).rejects.toThrowError();
+                expect(options.onErrorCallback).toHaveBeenCalledWith(
+                    new NoUploadError(gettext_provider),
+                    "",
+                );
+            });
         });
 
         describe("when file size exceeds max upload size", () => {
