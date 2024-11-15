@@ -40,12 +40,17 @@ function bulletListRule(nodeType: NodeType): InputRule {
     return wrappingInputRule(/^\s*([-+*])\s$/, nodeType);
 }
 
+function blockquoteRule(nodeType: NodeType): InputRule {
+    return wrappingInputRule(/^\s*>\s$/, nodeType);
+}
+
 export function buildInputRules(schema: Schema): Plugin {
     return inputRules({
         rules: [
             codeBlockRule(schema.nodes.code_block),
             orderedListRule(schema.nodes.ordered_list),
             bulletListRule(schema.nodes.bullet_list),
+            blockquoteRule(schema.nodes.blockquote),
             automagicLinksInputRule(),
         ],
     });
