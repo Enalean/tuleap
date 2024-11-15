@@ -25,14 +25,15 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetector;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetectorImpl;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatAreTechnicalUsers;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatCannotReadAnything;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatDoesntWantMailForTheirOwnActions;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatHaveUnsubscribedFromNotification;
-use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
 
@@ -51,6 +52,7 @@ class RecipientsManager
         private UnsubscribersNotificationDAO $unsubscribers_notification_dao,
         private UserNotificationSettingsRetriever $notification_settings_retriever,
         private UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
+        private readonly MentionedUserInCommentRetriever $mentioned_user_in_comment_retriever,
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
@@ -80,7 +82,13 @@ class RecipientsManager
                 }
             }
         }
-        // 2 Get from the commentators
+
+        // 2 Get from mentioned users in comment
+        $mentioned_usernames = $this->mentioned_user_in_comment_retriever->getMentionedUsernames($changeset)->usernames;
+
+        $recipients = array_merge($recipients, $mentioned_usernames);
+
+        // 3 Get from the commentators
         $recipients = array_merge($recipients, $changeset->getArtifact()->getCommentators());
         $recipients = array_values(array_unique($recipients));
 
@@ -96,7 +104,7 @@ class RecipientsManager
 
         $this->removeRecipientsWhenTrackerIsInOnlyStatusUpdateMode($changeset, $tablo);
 
-        // 3 Get from the global notif
+        // 4 Get from the global notif
         foreach ($changeset->getTracker()->getRecipients() as $r) {
             if ($r['on_updates'] == 1 || ! $is_update) {
                 foreach ($r['recipients'] as $recipient) {

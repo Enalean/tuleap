@@ -32,6 +32,7 @@ use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
@@ -105,7 +106,8 @@ trait NotificationsAdminSettingsControllerCommon
                         new UserNotificationOnlyStatusChangeDAO(),
                         new InvolvedNotificationDao()
                     ),
-                    new UserNotificationOnlyStatusChangeDAO()
+                    new UserNotificationOnlyStatusChangeDAO(),
+                    new MentionedUserInCommentRetriever()
                 ),
                 new UserNotificationSettingsDAO()
             )

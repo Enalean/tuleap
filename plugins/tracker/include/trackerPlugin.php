@@ -222,6 +222,7 @@ use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
@@ -2431,7 +2432,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new UserNotificationOnlyStatusChangeDAO(),
                     new InvolvedNotificationDao()
                 ),
-                new UserNotificationOnlyStatusChangeDAO()
+                new UserNotificationOnlyStatusChangeDAO(),
+                new MentionedUserInCommentRetriever()
             ),
             new UserNotificationSettingsDAO()
         );
