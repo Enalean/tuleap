@@ -262,6 +262,12 @@ msgstr ""
 msgid "Plan title"
 msgstr ""
 
+#, php-format
+msgid ""
+"Planning %s (#%d) updated - previous plan [ plan %s into %s (#%d) ] - "
+"current plan [ plan %s into %s (#%d)]"
+msgstr ""
+
 msgid "Planning deletion"
 msgstr ""
 
@@ -275,6 +281,9 @@ msgid "Planning succesfully created."
 msgstr ""
 
 msgid "Planning succesfully updated."
+msgstr ""
+
+msgid "Planning updated"
 msgstr ""
 
 msgid "Please welcome Backlog and Kanban tools"

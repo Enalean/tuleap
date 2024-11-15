@@ -33,7 +33,7 @@ final class GetHistoryKeyLabel implements Dispatchable
 
     private ?string $label = null;
 
-    public function __construct(private string $key)
+    public function __construct(private string $key, public array $parameters)
     {
         $invitation_entry = InvitationHistoryEntry::tryFrom($key);
         if ($invitation_entry) {

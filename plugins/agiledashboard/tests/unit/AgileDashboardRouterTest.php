@@ -72,6 +72,8 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                     $this->createMock(\Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder::class),
                     new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator(),
                     $this->createMock(BacklogTrackersUpdateChecker::class),
+                    $this->createMock(ProjectHistoryDao::class),
+                    $this->createMock(TrackerFactory::class),
                 ])
                 ->onlyMethods(['buildPlanningController', 'renderAction', 'executeAction'])
                 ->getMock();

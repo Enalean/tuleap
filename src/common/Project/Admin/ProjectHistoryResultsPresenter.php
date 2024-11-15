@@ -48,17 +48,16 @@ class ProjectHistoryResultsPresenter
             // If msg_key cannot be found in the localized message
             // catalog then display the msg has is because this is very
             // likely a legacy message (pre-localization version)
-            $arr_args = '';
+            $arr_args = [];
             if (strpos($field, ' %% ') !== false) {
                 [$msg_key, $args] = explode(' %% ', $field);
                 if ($args) {
                     $arr_args = explode('||', $args);
                 }
             } else {
-                $msg_key  = $field;
-                $arr_args = '';
+                $msg_key = $field;
             }
-            $event = $this->event_dispatcher->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key));
+            $event = $this->event_dispatcher->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key, $arr_args));
             $msg   = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText('project_admin_utils', $msg_key, $arr_args);
             if (strpos($msg, '*** Unkown msg') !== false) {
                 $msg = $field;

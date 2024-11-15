@@ -148,17 +148,16 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         // If msg_key cannot be found in the localized message
         // catalog then display the msg has is because this is very
         // likely a legacy message (pre-localization version)
-        $arr_args = '';
+        $arr_args = [];
         if (strpos($field, ' %% ') !== false) {
             [$msg_key, $args] = explode(' %% ', $field);
             if ($args) {
                 $arr_args = explode('||', $args);
             }
         } else {
-            $msg_key  = $field;
-            $arr_args = '';
+            $msg_key = $field;
         }
-        $event = EventManager::instance()->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key));
+        $event = EventManager::instance()->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key, $arr_args));
         $msg   = $event->getLabel() ?? $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
         if (! (strpos($msg, '*** Unkown msg') === false)) {
             $msg = $field;
@@ -182,7 +181,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $template = TemplateSingleton::instance();
             $val      = $template->getLabel($val);
         }
-        $event = new GetProjectHistoryEntryValue($row, $val);
+        $event = new GetProjectHistoryEntryValue($row, $val, $arr_args, $msg_key);
         EventManager::instance()->processEvent($event);
         $val = $event->getValue();
 
@@ -310,7 +309,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
         $translated_sub_events = [];
         foreach ($sub_events as $sub_event) {
             $event                             = EventManager::instance()->dispatch(
-                new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event)
+                new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event, [])
             );
             $translated_sub_events[$sub_event] = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText(
                 'project_admin_utils',
@@ -332,7 +331,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
         foreach (array_keys($subEventsBox) as $sub_event) {
             if (is_string($sub_event)) {
                 $event                                      = EventManager::instance()->dispatch(
-                    new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event)
+                    new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event, [])
                 );
                 $translated_selected_sub_events[$sub_event] = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText(
                     'project_admin_utils',

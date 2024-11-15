@@ -56,6 +56,7 @@ use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
+use Tuleap\AgileDashboard\Planning\BacklogHistoryEntry;
 use Tuleap\AgileDashboard\SplitModalPresenter;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
@@ -92,6 +93,8 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
@@ -577,6 +580,35 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
 
         $event->cannot_configure_instantiate_for_new_projects = $hierarchyChecker->isPartOfScrumHierarchy($event->tracker);
+    }
+
+    #[ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents(array $params): void
+    {
+        $params['subEvents']['event_others'][] = BacklogHistoryEntry::BacklogUpdate->value;
+    }
+
+    #[ListeningToEventClass]
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        $history_entry = BacklogHistoryEntry::tryFrom($event->getKey());
+
+        if ($history_entry) {
+            $event->setLabel(
+                $history_entry->getLabel($event->parameters)
+            );
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event): void
+    {
+        $history_entry = BacklogHistoryEntry::tryFrom($event->getKey());
+        if ($history_entry) {
+            $event->setValue(
+                $history_entry->getValue($event->getParameters())
+            );
+        }
     }
 
     public function tracker_event_project_creation_trackers_required($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
