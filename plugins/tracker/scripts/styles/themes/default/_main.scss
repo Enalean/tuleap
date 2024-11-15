@@ -308,7 +308,7 @@ button[name="tracker_query_submit"] {
     width: 16px;
     height: 16px;
     float: right;
-    background-image: url("../../default/images/ic/cross-disabled.png");
+    background-image: url("../default/images/ic/cross-disabled.png");
     background-repeat: no-repeat;
     background-position: left top;
     cursor: pointer;
@@ -316,7 +316,7 @@ button[name="tracker_query_submit"] {
 
 .tracker_report_table_remove_column:hover,
 .tracker_query_remove:hover {
-    background-image: url("../../default/images/ic/cross.png");
+    background-image: url("../default/images/ic/cross.png");
 }
 
 .tracker_report_table_remove_column {
@@ -367,7 +367,7 @@ button[name="tracker_query_submit"] {
     overflow: auto;
     border: 1px solid #808080;
     background-color: #ffffff;
-    background-image: url("../../default/images/gradient-white.png");
+    background-image: url("../default/images/gradient-white.png");
     background-repeat: repeat-x;
     background-position: left top;
     cursor: default;
@@ -378,7 +378,7 @@ button[name="tracker_query_submit"] {
     width: 16px;
     height: 18px;
     float: right;
-    background-image: url("../../default/images/pointer_down.png");
+    background-image: url("../default/images/pointer_down.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     vertical-align: middle;
@@ -404,7 +404,7 @@ button[name="tracker_query_submit"] {
 }
 
 .tracker_admin_static_value_hidden {
-    background: url("../../default/images/tracker_admin_static_value_hidden.png") top left repeat;
+    background: url("../default/images/tracker_admin_static_value_hidden.png") top left repeat;
 
     > .tracker-admin-bindvalue_grip,
     > .tracker-admin-bindvalue_actions,
@@ -486,7 +486,7 @@ button[name="tracker_query_submit"] {
 
         &.tracker_report_table_column_grip {
             width: 14px;
-            background-image: url("../../default/images/drag.png");
+            background-image: url("../default/images/drag.png");
             background-repeat: no-repeat;
             background-position: 0 5px;
             cursor: move;
@@ -997,13 +997,13 @@ button[name="tracker_query_submit"] {
         border-bottom: 2px solid var(--tlp-neutral-normal-color);
         border-top-left-radius: var(--tlp-large-radius);
         border-top-right-radius: var(--tlp-large-radius);
-        background-image: url("../../../../../src/www/themes/common/images/toggle-fontawesome-minus.png");
+        background-image: url("../../../../../../src/www/themes/common/images/toggle-fontawesome-minus.png");
     }
 
     &.toggler-hide-noajax {
         border-bottom: 0;
         border-radius: var(--tlp-large-radius);
-        background-image: url("../../../../../src/www/themes/common/images/toggle-fontawesome-plus.png");
+        background-image: url("../../../../../../src/www/themes/common/images/toggle-fontawesome-plus.png");
     }
 
     > table {
@@ -1124,7 +1124,7 @@ button[name="tracker_query_submit"] {
 
     &:not(.image) {
         background: #fcfcfc
-            url("../../../../../src/www/themes/common/images/ic/artifact_attachment_default.png")
+            url("../../../../../../src/www/themes/common/images/ic/artifact_attachment_default.png")
             no-repeat center center;
         box-shadow:
             inset 0 1px 0 #e5e5e5,
@@ -1234,7 +1234,7 @@ div.tracker-admin-field-controls {
 .tracker-submit-new {
     padding-bottom: 1em;
     padding-left: 1.5em;
-    background: url("../../default/images/ic/artifact-plus.png") top left no-repeat;
+    background: url("../default/images/ic/artifact-plus.png") top left no-repeat;
 }
 
 .tracker-admin-fieldset legend .tracker-admin-field-controls {
@@ -1338,7 +1338,7 @@ div.tracker-admin-field-controls {
 
     &.editable {
         .tracker_formelement_edit {
-            background: url("../../../../../src/www/themes/common/images/ic/artifact_editable_field.png")
+            background: url("../../../../../../src/www/themes/common/images/ic/artifact_editable_field.png")
                 no-repeat 4px center;
         }
 
@@ -1352,7 +1352,7 @@ div.tracker-admin-field-controls {
             border: 1px solid #8fcedb;
             border-radius: var(--tlp-medium-radius);
             background: #d9edf7
-                url("../../../../../src/www/themes/common/images/ic/artifact_editable_field_active.png")
+                url("../../../../../../src/www/themes/common/images/ic/artifact_editable_field_active.png")
                 no-repeat 4px center;
         }
     }
@@ -1381,7 +1381,7 @@ div.tracker-admin-field-controls {
 
         > label {
             display: block;
-            background-image: url("../../../../../src/www/themes/common/images/ic/artifact_editable_field_active.png");
+            background-image: url("../../../../../../src/www/themes/common/images/ic/artifact_editable_field_active.png");
             background-repeat: no-repeat;
             background-position: 4px center;
             cursor: default;
@@ -1417,7 +1417,7 @@ div.tracker-admin-field-controls {
 
     &.has_errors {
         > label {
-            background-image: url("../../../../../src/www/themes/common/images/ic/artifact_editable_field_error.png");
+            background-image: url("../../../../../../src/www/themes/common/images/ic/artifact_editable_field_error.png");
             background-repeat: no-repeat;
             background-position: 4px center;
             cursor: default;
@@ -1470,8 +1470,7 @@ div.tracker-admin-field-controls {
     padding: 2px 5px;
     padding-left: 16px;
     border: 1px solid #add8e6;
-    background: #f1fcff url("../../default/images/ic/information-small-white.png") top left
-        no-repeat;
+    background: #f1fcff url("../default/images/ic/information-small-white.png") top left no-repeat;
     color: #666666;
     font-size: 0.8em;
 }
@@ -1547,32 +1546,32 @@ li.tracker_aggregate_function_add_unused {
 li.tracker_report_table_add_column_used,
 li.tracker_report_add_criteria_used,
 li.tracker_aggregate_function_add_used {
-    background-image: url("../../default/images/ic/tick.png");
+    background-image: url("../default/images/ic/tick.png");
 }
 
 li.tracker_report_table_add_column_unused,
 li.tracker_report_add_criteria_unused,
 li.tracker_aggregate_function_add_unused {
-    background-image: url("../../default/images/ic/bullet_grey.png");
+    background-image: url("../default/images/ic/bullet_grey.png");
 }
 
 li.tracker_report_table_add_column_waiting,
 li.tracker_report_add_criteria_waiting,
 li.tracker_aggregate_function_add_waiting {
-    background-image: url("../../default/images/ic/spinner.gif");
+    background-image: url("../default/images/ic/spinner.gif");
     background-position: center left;
 }
 
 li.tracker_report_table_add_column_unused:hover,
 li.tracker_report_add_criteria_unused:hover,
 li.tracker_aggregate_function_add_unused:hover {
-    background-image: url("../../default/images/ic/bullet_green.png");
+    background-image: url("../default/images/ic/bullet_green.png");
 }
 
 li.tracker_report_table_add_column_used:hover,
 li.tracker_report_add_criteria_used:hover,
 li.tracker_aggregate_function_add_used:hover {
-    background-image: url("../../default/images/ic/tick-grey.png");
+    background-image: url("../default/images/ic/tick-grey.png");
 }
 
 li.tracker_report_table_add_column_used:hover,
@@ -1649,12 +1648,12 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 
 .workflow_existing_rules .pc_check_unchecked {
     float: right;
-    background-image: url("../../../../../src/www/themes/common/images/ic/bin_closed.png");
+    background-image: url("../../../../../../src/www/themes/common/images/ic/bin_closed.png");
 }
 
 .workflow_existing_rules .pc_check_checked {
     float: right;
-    background-image: url("../../../../../src/www/themes/common/images/ic/bin.png");
+    background-image: url("../../../../../../src/www/themes/common/images/ic/bin.png");
 }
 
 .workflow_action {
@@ -1667,7 +1666,7 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 }
 
 .workflow_action_ci_build {
-    background-image: url("../../default/images/ic/ci_build/server.png");
+    background-image: url("../default/images/ic/ci_build/server.png");
 }
 
 /* }}} */
@@ -1707,7 +1706,7 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     overflow: hidden;
     border: 1px solid #c2c2c2;
     border-radius: var(--tlp-medium-radius);
-    background: transparent url("../../default/images/button-gradient.png") top left repeat-x;
+    background: transparent url("../default/images/button-gradient.png") top left repeat-x;
     color: #565656;
     font-size: 0.85em;
     text-align: left;
@@ -1726,15 +1725,14 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 .tracker-admin-palette button:hover,
 .tracker-admin-palette a.button:focus,
 .tracker-admin-palette a.button:hover {
-    background: transparent url("../../default/images/button-gradient-hover.png") top left repeat-x;
+    background: transparent url("../default/images/button-gradient-hover.png") top left repeat-x;
 }
 
 .tracker-admin-palette button:active,
 .tracker-admin-palette a.button:active {
     padding-top: 5px; /* push text down 1px */
     padding-bottom: 2px; /* push text down 1px */
-    background: transparent url("../../default/images/button-gradient-hover.png") bottom left
-        repeat-x;
+    background: transparent url("../default/images/button-gradient-hover.png") bottom left repeat-x;
 }
 
 .tracker-admin-palette-content {
@@ -1936,7 +1934,7 @@ td.first-column {
     display: inline-block;
     width: 16px;
     height: 16px;
-    background-image: url("../../../../../src/www/themes/common/images/ic/toggle-small-expand.png");
+    background-image: url("../../../../../../src/www/themes/common/images/ic/toggle-small-expand.png");
     background-repeat: no-repeat;
     cursor: pointer;
 }
@@ -1976,11 +1974,11 @@ td.first-column {
     padding: 0;
     border: 2px solid #ffffff;
     border-radius: 50%;
-    background: #777777 url("../../../../../src/www/themes/common/images/ic/cross_white.png") center
-        center no-repeat;
+    background: #777777 url("../../../../../../src/www/themes/common/images/ic/cross_white.png")
+        center center no-repeat;
 
     &.pc_check_unchecked {
-        background: #777777 url("../../../../../src/www/themes/common/images/ic/cross_white.png")
+        background: #777777 url("../../../../../../src/www/themes/common/images/ic/cross_white.png")
             center center no-repeat;
 
         &:hover {
@@ -1989,7 +1987,7 @@ td.first-column {
     }
 
     &.pc_check_checked {
-        background: #f33c3c url("../../../../../src/www/themes/common/images/ic/cross_white.png")
+        background: #f33c3c url("../../../../../../src/www/themes/common/images/ic/cross_white.png")
             center center no-repeat;
 
         &:hover {

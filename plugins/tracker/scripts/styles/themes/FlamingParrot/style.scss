@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../default/css/style";
+@use "../default/main";
 @use "./tracker-creation";
 @use "pkg:@tuleap/mention";
 @use "pkg:@tuleap/tlp-badge";

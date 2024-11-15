@@ -23,7 +23,7 @@ import { viteExternalsPlugin } from "vite-plugin-externals";
 
 export default vite.defineAppConfig(
     {
-        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        plugin_name: "trackers",
         sub_app_name: path.basename(__dirname),
     },
     {

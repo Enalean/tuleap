@@ -21,7 +21,6 @@
 
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 
 /**
@@ -244,11 +243,13 @@ class Tracker_Widget_MyArtifacts extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/trackers'
+        return \Tuleap\Layout\CssViteAsset::buildCollectionFromMainFileName(
+            new \Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../../../scripts/styles/frontend-assets',
+                '/assets/trackers/styles'
+            ),
+            'themes/BurningParrot/tracker.scss'
         );
-        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'tracker-bp')]);
     }
 
     public function getJavascriptDependencies(): array
