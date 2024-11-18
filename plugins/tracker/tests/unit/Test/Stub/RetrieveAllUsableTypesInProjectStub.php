@@ -28,19 +28,22 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 final class RetrieveAllUsableTypesInProjectStub implements IRetrieveAllUsableTypesInProject
 {
     /**
-     * @param TypePresenter[] $types
+     * @param list<TypePresenter> $types
      */
     public function __construct(private readonly array $types)
     {
     }
 
-    public static function withUsableTypes(TypePresenter ...$types): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withUsableTypes(TypePresenter $type, TypePresenter ...$other_types): self
     {
-        return new self($types);
+        return new self([$type, ...$other_types]);
     }
 
     /**
-     * @return TypePresenter[]
+     * @return list<TypePresenter>
      */
     public function getAllUsableTypesInProject(\Project $project): array
     {

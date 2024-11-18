@@ -30,11 +30,18 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
     private int $calls_count             = 0;
     private ?NewChangeset $new_changeset = null;
 
+    /** @var callable(NewChangeset, PostCreationContext): \Tracker_Artifact_Changeset | null */
+    private $callback;
+
+    /**
+     * @param callable(NewChangeset, PostCreationContext): \Tracker_Artifact_Changeset | null $callback
+     */
     private function __construct(
         private readonly ?\Tracker_Artifact_Changeset $changeset,
         private readonly ?\Throwable $exception,
-        private readonly ?\Closure $callback,
+        ?callable $callback,
     ) {
+        $this->callback = $callback;
     }
 
     private function defaultCallback(): ?\Tracker_Artifact_Changeset

@@ -46,9 +46,9 @@ final class SendNotificationToTrackerAdministratorTest extends TestCase
         $tracker->method('getId')->willReturn(2);
         $artifact        = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($tracker)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->build();
-        $this->changeset = ChangesetTestBuilder::aChangeset('1')
+        $this->changeset = ChangesetTestBuilder::aChangeset(1)
             ->ofArtifact($artifact)
             ->build();
     }

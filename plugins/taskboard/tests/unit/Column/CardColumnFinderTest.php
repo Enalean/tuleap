@@ -95,7 +95,7 @@ final class CardColumnFinderTest extends TestCase
     {
         $release_tracker = TrackerTestBuilder::aTracker()->withId(8)->build();
 
-        $last_changeset = ChangesetTestBuilder::aChangeset('860')->build();
+        $last_changeset = ChangesetTestBuilder::aChangeset(860)->build();
         ChangesetValueListTestBuilder::aListOfValue(17649, $last_changeset, $this->mapped_list_field)
             ->withValues($card_mapped_field_value)
             ->build();

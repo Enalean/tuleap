@@ -29,7 +29,7 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 final class TextValueInterpreterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CommonMarkInterpreter $commonmark_interpreter;
-    private ?Codendi_HTMLPurifier $purifier;
+    private Codendi_HTMLPurifier $purifier;
 
     protected function setUp(): void
     {

@@ -57,7 +57,9 @@ final class ReverseLinksRetrieverTest extends TestCase
 
         $expected_artifact          = ArtifactTestBuilder::anArtifact(12)->userCanView($user)->build();
         $expected_retrieve_artifact = RetrieveArtifactStub::withArtifacts($expected_artifact);
-        $expected_reverse_links     = new CollectionOfReverseLinks([StoredReverseLink::fromRow($expected_retrieve_artifact, $user, $linked_artifact_1)]);
+        $stored_reverse_link        = StoredReverseLink::fromRow($expected_retrieve_artifact, $user, $linked_artifact_1);
+        \assert($stored_reverse_link instanceof ReverseLink);
+        $expected_reverse_links = new CollectionOfReverseLinks([$stored_reverse_link]);
 
         self::assertEquals($expected_reverse_links, $reverse_link);
     }

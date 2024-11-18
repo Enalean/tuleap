@@ -56,7 +56,7 @@ final class NewChangesetPostProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->post_action_queuer      = PostCreationActionsQueuerStub::doNothing();
 
         $this->artifact         = ArtifactTestBuilder::anArtifact(100)->build();
-        $this->changeset        = ChangesetTestBuilder::aChangeset('1')->ofArtifact($this->artifact)->build();
+        $this->changeset        = ChangesetTestBuilder::aChangeset(1)->ofArtifact($this->artifact)->build();
         $this->user             = UserTestBuilder::anActiveUser()->build();
         $this->comment_creation = CommentCreation::fromNewComment(
             NewComment::buildEmpty(UserTestBuilder::buildWithDefaults(), 1),

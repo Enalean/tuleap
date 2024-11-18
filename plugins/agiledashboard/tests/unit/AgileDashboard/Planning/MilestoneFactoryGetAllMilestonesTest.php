@@ -79,10 +79,10 @@ final class MilestoneFactoryGetAllMilestonesTest extends TestCase
     public function testItReturnsAsManyMilestonesAsThereAreArtifacts(): void
     {
         $artifact1 = ArtifactTestBuilder::anArtifact(1)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->build();
         $artifact2 = ArtifactTestBuilder::anArtifact(2)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('2')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(2)->build())
             ->build();
 
         $factory = $this->newMileStoneFactory();
@@ -93,7 +93,7 @@ final class MilestoneFactoryGetAllMilestonesTest extends TestCase
 
     public function testItReturnsMilestones(): void
     {
-        $changeset01 = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset01 = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact    = $this->createMock(Artifact::class);
 
         $artifact->method('getId')->willReturn(101);
@@ -172,7 +172,7 @@ final class MilestoneFactoryGetAllMilestonesTest extends TestCase
     protected function getAnArtifact(): Artifact
     {
         return ArtifactTestBuilder::anArtifact(1)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->build();
     }
 

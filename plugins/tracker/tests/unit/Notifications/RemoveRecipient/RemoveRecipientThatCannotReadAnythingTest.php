@@ -40,7 +40,7 @@ final class RemoveRecipientThatCannotReadAnythingTest extends TestCase
         $recipient = Recipient::fromUser(UserTestBuilder::anActiveUser()->build());
 
         $artifact  = ArtifactTestBuilder::anArtifact(101)->userCanView($recipient->user)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('2000')->ofArtifact($artifact)->withTextComment('my comment')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(2000)->ofArtifact($artifact)->withTextComment('my comment')->build();
         $changeset->setNoFieldValue(TextFieldBuilder::aTextField(120)->build());
 
         $expected_recipients = ['recipient' => $recipient];
@@ -62,7 +62,7 @@ final class RemoveRecipientThatCannotReadAnythingTest extends TestCase
         $recipient = Recipient::fromUser(UserTestBuilder::anActiveUser()->build());
 
         $artifact  = ArtifactTestBuilder::anArtifact(101)->userCanView($recipient->user)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('2000')->ofArtifact($artifact)->withTextComment('')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(2000)->ofArtifact($artifact)->withTextComment('')->build();
         $field     = TextFieldBuilder::aTextField(120)->withReadPermission($recipient->user, true)->build();
         $changeset->setFieldValue(
             $field,
@@ -91,7 +91,7 @@ final class RemoveRecipientThatCannotReadAnythingTest extends TestCase
 
         $remaining_recipients = $strategy->removeRecipient(
             new NullLogger(),
-            ChangesetTestBuilder::aChangeset('2000')->ofArtifact($artifact)->withTextComment('my comment')->build(),
+            ChangesetTestBuilder::aChangeset(2000)->ofArtifact($artifact)->withTextComment('my comment')->build(),
             ['recipient' => $recipient],
             true
         );
@@ -106,7 +106,7 @@ final class RemoveRecipientThatCannotReadAnythingTest extends TestCase
         $recipient = Recipient::fromUser(UserTestBuilder::anActiveUser()->build());
 
         $artifact  = ArtifactTestBuilder::anArtifact(101)->userCanView($recipient->user)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('2000')->ofArtifact($artifact)->withTextComment('')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(2000)->ofArtifact($artifact)->withTextComment('')->build();
         $field     = TextFieldBuilder::aTextField(120)->withReadPermission($recipient->user, false)->build();
         $changeset->setFieldValue(
             $field,

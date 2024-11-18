@@ -108,7 +108,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends TestCase
     {
         $artifact_1 = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($this->tracker)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
@@ -116,7 +116,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends TestCase
             ->build();
         $artifact_2 = ArtifactTestBuilder::anArtifact(2)
             ->inTracker($this->tracker)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('2')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(2)->build())
             ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
@@ -142,7 +142,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends TestCase
 
         $artifact_2 = ArtifactTestBuilder::anArtifact(2)
             ->inTracker($this->tracker)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)

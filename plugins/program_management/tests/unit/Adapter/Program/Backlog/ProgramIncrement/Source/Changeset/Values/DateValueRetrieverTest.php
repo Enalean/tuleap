@@ -44,7 +44,7 @@ final class DateValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
-        $this->changeset            = ChangesetTestBuilder::aChangeset('8298')->build();
+        $this->changeset            = ChangesetTestBuilder::aChangeset(8298)->build();
 
         $this->date_field = new \Tracker_FormElement_Field_Date(
             self::FIELD_ID,

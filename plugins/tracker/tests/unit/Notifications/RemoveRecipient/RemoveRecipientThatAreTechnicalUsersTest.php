@@ -45,7 +45,7 @@ final class RemoveRecipientThatAreTechnicalUsersTest extends TestCase
 
         self::assertEquals(
             $expected_users_to_keep,
-            $strategy->removeRecipient(new NullLogger(), ChangesetTestBuilder::aChangeset('1')->build(), $recipients, true),
+            $strategy->removeRecipient(new NullLogger(), ChangesetTestBuilder::aChangeset(1)->build(), $recipients, true),
         );
     }
 }

@@ -120,7 +120,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
 
         $release_1_0   = ArtifactTestBuilder::anArtifact(1)
             ->withTitle('release_1_0')
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
@@ -128,7 +128,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
             ->build();
         $sprint_1      = ArtifactTestBuilder::anArtifact(101)
             ->withTitle('sprint_1')
-            ->withChangesets(ChangesetTestBuilder::aChangeset('2')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(2)->build())
             ->inTracker($sprints_tracker)
             ->userCanView($this->user)
             ->withParent(null)
@@ -137,7 +137,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
             ->build();
         $sprint_2      = ArtifactTestBuilder::anArtifact(102)
             ->withTitle('sprint_2')
-            ->withChangesets(ChangesetTestBuilder::aChangeset('3')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(3)->build())
             ->inTracker($sprints_tracker)
             ->userCanView($this->user)
             ->withParent(null)
@@ -146,7 +146,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
             ->build();
         $hackfest_2012 = ArtifactTestBuilder::anArtifact(102)
             ->withTitle('hackfest_2012')
-            ->withChangesets(ChangesetTestBuilder::aChangeset('4')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(4)->build())
             ->inTracker($hackfests_tracker)
             ->userCanView($this->user)
             ->withParent(null)
@@ -198,7 +198,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
 
         $artifact = ArtifactTestBuilder::anArtifact(100)
             ->withTitle('release_1_0')
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->inTracker($tracker)
             ->userCanView($this->user)
             ->withParent(null)

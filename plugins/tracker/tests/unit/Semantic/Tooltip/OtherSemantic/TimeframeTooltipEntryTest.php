@@ -109,7 +109,7 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(101)
             ->withChangesets($changeset)
             ->build();
@@ -238,7 +238,7 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(101)
             ->withChangesets($changeset)
             ->build();
@@ -277,7 +277,7 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(101)
             ->withChangesets($changeset)
             ->build();
@@ -316,7 +316,7 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(101)
             ->withChangesets($changeset)
             ->build();
@@ -351,7 +351,7 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(101)
             ->withChangesets($changeset)
             ->build();

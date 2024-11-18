@@ -62,8 +62,8 @@ final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             UserTestBuilder::buildWithDefaults(),
             $this->workflow,
-            ChangesetTestBuilder::aChangeset('3311')->ofArtifact($artifact)->build(),
-            ChangesetTestBuilder::aChangeset('3310')->ofArtifact($artifact)->build()
+            ChangesetTestBuilder::aChangeset(3311)->ofArtifact($artifact)->build(),
+            ChangesetTestBuilder::aChangeset(3310)->ofArtifact($artifact)->build()
         );
     }
 

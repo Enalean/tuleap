@@ -54,7 +54,7 @@ final class ChangesetValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function save(): bool
     {
         $artifact           = ArtifactTestBuilder::anArtifact(85)->build();
-        $previous_changeset = ChangesetTestBuilder::aChangeset('865')->build();
+        $previous_changeset = ChangesetTestBuilder::aChangeset(865)->build();
         $submitter          = UserTestBuilder::buildWithDefaults();
 
         $saver = new ChangesetValueSaver();

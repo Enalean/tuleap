@@ -62,7 +62,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
         $this->fields               = SynchronizedFieldReferencesBuilder::build();
-        $this->changeset            = ChangesetTestBuilder::aChangeset((string) self::CHANGESET_ID)->build();
+        $this->changeset            = ChangesetTestBuilder::aChangeset(self::CHANGESET_ID)->build();
         $this->duration_reference   = DurationFieldReferenceStub::withDefaults();
         $this->end_date_reference   = EndDateFieldReferenceStub::withDefaults();
     }

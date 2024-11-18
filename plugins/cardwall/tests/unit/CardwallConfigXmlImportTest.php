@@ -166,10 +166,10 @@ final class CardwallConfigXmlImportTest extends TestCase
             </project>');
 
         $field    = ListFieldBuilder::aListField(1)->build();
-        $value_01 = ChangesetValueListTestBuilder::aListOfValue(401, ChangesetTestBuilder::aChangeset('1')->build(), $field)->build();
-        $value_02 = ChangesetValueListTestBuilder::aListOfValue(402, ChangesetTestBuilder::aChangeset('2')->build(), $field)->build();
-        $value_03 = ChangesetValueListTestBuilder::aListOfValue(403, ChangesetTestBuilder::aChangeset('3')->build(), $field)->build();
-        $value_04 = ChangesetValueListTestBuilder::aListOfValue(404, ChangesetTestBuilder::aChangeset('4')->build(), $field)->build();
+        $value_01 = ChangesetValueListTestBuilder::aListOfValue(401, ChangesetTestBuilder::aChangeset(1)->build(), $field)->build();
+        $value_02 = ChangesetValueListTestBuilder::aListOfValue(402, ChangesetTestBuilder::aChangeset(2)->build(), $field)->build();
+        $value_03 = ChangesetValueListTestBuilder::aListOfValue(403, ChangesetTestBuilder::aChangeset(3)->build(), $field)->build();
+        $value_04 = ChangesetValueListTestBuilder::aListOfValue(404, ChangesetTestBuilder::aChangeset(4)->build(), $field)->build();
 
         $this->mapping = [
             'T101' => 444,

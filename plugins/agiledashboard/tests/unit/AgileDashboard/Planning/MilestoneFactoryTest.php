@@ -158,7 +158,7 @@ final class MilestoneFactoryTest extends TestCase
     {
         return ArtifactTestBuilder::anArtifact($id)
             ->inTracker($tracker)
-            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->withChangesets(ChangesetTestBuilder::aChangeset(1)->build())
             ->userCanView($this->user)
             ->withParent(null)
             ->withStatus($status)

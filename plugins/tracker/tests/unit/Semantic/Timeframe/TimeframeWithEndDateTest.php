@@ -464,7 +464,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function anArtifact(string $start_date, string $end_date): Artifact
     {
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset->setFieldValue(
             $this->start_date_field,
             ChangesetValueDateTestBuilder::aValue(1, $changeset, $this->start_date_field)
@@ -490,7 +490,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function anArtifactWithoutEndDate(string $start_date): Artifact
     {
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset->setFieldValue(
             $this->start_date_field,
             ChangesetValueDateTestBuilder::aValue(1, $changeset, $this->start_date_field)
@@ -511,7 +511,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function anArtifactWithoutStartDate(string $end_date): Artifact
     {
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset->setFieldValue($this->start_date_field, null);
         $changeset->setFieldValue(
             $this->end_date_field,
@@ -532,7 +532,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function anArtifactWithoutAnyValue(): Artifact
     {
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset->setFieldValue($this->start_date_field, null);
         $changeset->setFieldValue($this->end_date_field, null);
 

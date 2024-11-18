@@ -76,6 +76,7 @@ final class StoredReverseLinkTest extends TestCase
             new StoredLinkRow(self::ARTIFACT_ID, self::TYPE),
         );
 
+        self::assertNotNull($reverse_link);
         self::assertSame(self::ARTIFACT_ID, $reverse_link->getSourceArtifactId());
         self::assertSame(self::TYPE, $reverse_link->getType());
     }
@@ -94,6 +95,7 @@ final class StoredReverseLinkTest extends TestCase
             new StoredLinkRow(self::ARTIFACT_ID, null),
         );
 
+        self::assertNotNull($reverse_link);
         self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $reverse_link->getType());
     }
 }

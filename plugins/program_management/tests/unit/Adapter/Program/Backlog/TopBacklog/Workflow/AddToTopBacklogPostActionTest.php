@@ -74,7 +74,7 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddArtifactToTheTopBacklogOnceTheTransitionIsExecuted(): void
     {
-        $changeset = ChangesetTestBuilder::aChangeset('432')
+        $changeset = ChangesetTestBuilder::aChangeset(432)
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(999)
                     ->inTracker(
@@ -94,7 +94,7 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingIfForSomeReasonWeTryToProcessAnArtifactThatIsNotPartOfAProgram(): void
     {
-        $changeset = ChangesetTestBuilder::aChangeset('465')
+        $changeset = ChangesetTestBuilder::aChangeset(465)
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(1)
                     ->inTracker(

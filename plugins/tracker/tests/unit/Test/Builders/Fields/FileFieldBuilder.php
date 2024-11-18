@@ -58,8 +58,8 @@ final class FileFieldBuilder
 
     public function withReadPermission(\PFUser $user, bool $user_can_read): self
     {
-        $this->user_with_read_permission[]      = $user;
-        $this->read_permissions[$user->getId()] = $user_can_read;
+        $this->user_with_read_permission[]            = $user;
+        $this->read_permissions[(int) $user->getId()] = $user_can_read;
         return $this;
     }
 
@@ -81,7 +81,7 @@ final class FileFieldBuilder
         );
         $field->setTracker($this->tracker);
         foreach ($this->user_with_read_permission as $user) {
-            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+            $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
         }
         return $field;
     }

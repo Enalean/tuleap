@@ -118,10 +118,10 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->reference              = new WebhookTuleapReference(self::ARTIFACT_ID, ClosingKeyword::buildResolves());
         $this->done_value_retriever   = $this->createStub(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
-            ChangesetTestBuilder::aChangeset('7290')->build()
+            ChangesetTestBuilder::aChangeset(7290)->build()
         );
         $this->changeset_creator      = CreateNewChangesetStub::withReturnChangeset(
-            ChangesetTestBuilder::aChangeset('4257')->build()
+            ChangesetTestBuilder::aChangeset(4257)->build()
         );
 
         $field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);

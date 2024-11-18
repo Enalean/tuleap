@@ -89,7 +89,7 @@ final class MentionedUserInCommentRetrieverTest extends TestCase
      */
     public function testItReturnsAnEmptyUsernamesCollection(string $comment): void
     {
-        $changeset = ChangesetTestBuilder::aChangeset('15')->withTextComment($comment)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(15)->withTextComment($comment)->build();
         $result    = $this->mentioned_user_in_comment_retriever->getMentionedUsernames($changeset);
         self::assertCount(0, $result->usernames);
     }
@@ -100,7 +100,7 @@ final class MentionedUserInCommentRetrieverTest extends TestCase
      */
     public function testItReturnsTheUsernamesFoundInCommentBody(string $comment, array $expected_usernames): void
     {
-        $changeset = ChangesetTestBuilder::aChangeset('15')->withTextComment($comment)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(15)->withTextComment($comment)->build();
         $result    = $this->mentioned_user_in_comment_retriever->getMentionedUsernames($changeset);
         self::assertEqualsCanonicalizing($expected_usernames, $result->usernames);
     }

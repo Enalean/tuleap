@@ -46,7 +46,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
         $this->artifact  = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($this->tracker)
             ->build();
-        $this->changeset = ChangesetTestBuilder::aChangeset('1')
+        $this->changeset = ChangesetTestBuilder::aChangeset(1)
             ->ofArtifact($this->artifact)
             ->build();
         $this->user      = UserTestBuilder::anActiveUser()->build();

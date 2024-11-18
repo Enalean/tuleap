@@ -27,14 +27,14 @@ use Tracker_XML_Importer_ArtifactImportedMapping;
 final class ArtifactImportedMappingBuilder
 {
     /**
-     * @psalm-param array{ source_id: int, destination_id: int }
+     * @param list<array{ source_id: int, destination_id: int }> $sources_and_destinations
      */
     public static function fromSourcesAndDestinations(array $sources_and_destinations): Tracker_XML_Importer_ArtifactImportedMapping
     {
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
 
-        foreach ($sources_and_destinations as $source_and_destination) {
-            $mapping->add($source_and_destination->source_id, $source_and_destination->destination_id);
+        foreach ($sources_and_destinations as $source_dest) {
+            $mapping->add($source_dest['source_id'], $source_dest['destination_id']);
         }
 
         return $mapping;

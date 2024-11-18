@@ -357,7 +357,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     private function anArtifact(int $artifact_id, Tracker $milestone_tracker): Artifact
     {
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
         return ArtifactTestBuilder::anArtifact($artifact_id)
             ->withTitle('title')

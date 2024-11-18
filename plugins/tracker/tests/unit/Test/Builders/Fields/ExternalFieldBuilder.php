@@ -86,45 +86,68 @@ final class ExternalFieldBuilder
             10,
             null
         ) extends Tracker_FormElement_Field implements TrackerFormElementExternalField {
+            /** @return void */
             public function accept(Tracker_FormElement_FieldVisitor $visitor)
             {
                 $visitor->visitExternalField($this);
             }
 
+            /** @return string */
             public static function getFactoryLabel()
             {
+                return '';
             }
 
+            /** @return string */
             public static function getFactoryDescription()
             {
+                return '';
             }
 
+            /** @return string */
             public static function getFactoryIconUseIt()
             {
+                return '';
             }
 
+            /** @return string */
             public static function getFactoryIconCreate()
             {
+                return '';
             }
 
+            /** @return void */
             public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
             {
             }
 
+            /** @return string */
             protected function fetchAdminFormElement()
             {
+                return '';
             }
 
+            /** @return void */
             public function getRESTAvailableValues()
             {
             }
 
+            /**
+             * @param Tracker_Report_Criteria $criteria
+             * @return string
+             */
             public function fetchCriteriaValue($criteria)
             {
+                return '';
             }
 
+            /**
+             * @param mixed $value
+             * @return string
+             */
             public function fetchRawValue($value)
             {
+                return '';
             }
 
             public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
@@ -132,47 +155,75 @@ final class ExternalFieldBuilder
                 return Option::nothing(ParametrizedFromWhere::class);
             }
 
+            /** @return void */
             protected function getCriteriaDao()
             {
             }
 
+            /** @return string */
             protected function fetchArtifactValue(
                 Artifact $artifact,
                 ?Tracker_Artifact_ChangesetValue $value,
                 array $submitted_values,
             ) {
+                return '';
             }
 
+            /** @return string */
             public function fetchArtifactValueReadOnly(
                 Artifact $artifact,
                 ?Tracker_Artifact_ChangesetValue $value = null,
             ) {
+                return '';
             }
 
+            /** @return string */
             protected function fetchSubmitValue(array $submitted_values)
             {
+                return '';
             }
 
+            /** @return string */
             protected function fetchSubmitValueMasschange()
             {
+                return '';
             }
 
+            /** @return string */
             protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
             {
+                return '';
             }
 
+            /** @return void */
             protected function getValueDao()
             {
             }
 
+            /**
+             * @param \Tracker_Artifact_Changeset $changeset
+             * @return string
+             */
             public function fetchRawValueFromChangeset($changeset)
             {
+                return '';
             }
 
+            /**
+             * @param mixed $value
+             * @return bool
+             */
             protected function validate(Artifact $artifact, $value)
             {
+                return true;
             }
 
+            /**
+             * @param Artifact $artifact
+             * @param int $changeset_value_id
+             * @param mixed $value
+             * @return bool
+             */
             protected function saveValue(
                 $artifact,
                 $changeset_value_id,
@@ -180,10 +231,18 @@ final class ExternalFieldBuilder
                 ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
                 CreatedFileURLMapping $url_mapping,
             ) {
+                return true;
             }
 
+            /**
+             * @param \Tracker_Artifact_Changeset $changeset
+             * @param int $value_id
+             * @param bool $has_changed
+             * @return \Tracker_Artifact_ChangesetValue|null
+             */
             public function getChangesetValue($changeset, $value_id, $has_changed)
             {
+                return null;
             }
 
             public function fetchChangesetValue(

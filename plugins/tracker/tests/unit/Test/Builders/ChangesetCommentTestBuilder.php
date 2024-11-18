@@ -45,7 +45,7 @@ final class ChangesetCommentTestBuilder
     {
         return new Tracker_Artifact_Changeset_Comment(
             10,
-            ChangesetTestBuilder::aChangeset('15')->build(),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             0,
             0,
             101,

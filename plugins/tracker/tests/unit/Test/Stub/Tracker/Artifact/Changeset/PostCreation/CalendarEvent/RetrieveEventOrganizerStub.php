@@ -52,6 +52,9 @@ final class RetrieveEventOrganizerStub implements RetrieveEventOrganizer
         if ($this->organizer_address === null) {
             throw new \Exception('Should not have been called');
         }
+        if ($this->organizer_name === null) {
+            throw new \Exception('Should not have been called');
+        }
 
         return Result::ok($calendar_event_data->withOrganizer(new EventOrganizer($this->organizer_name, $this->organizer_address)));
     }

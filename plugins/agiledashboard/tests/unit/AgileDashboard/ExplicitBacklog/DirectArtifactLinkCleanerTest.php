@@ -153,7 +153,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link_field->method('getId')->willReturn(124);
-        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getTracker')->willReturn($this->tracker);
@@ -182,7 +182,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link_field->method('getId')->willReturn(124);
-        $changeset       = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset       = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(12, $changeset, $artifact_link_field)->build();
         $changeset->setFieldValue($artifact_link_field, $changeset_value);
 
@@ -212,7 +212,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link_field->method('getId')->willReturn(124);
-        $changeset       = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset       = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(12, $changeset, $artifact_link_field)
             ->withLinks([
                 450 => new Tracker_ArtifactLinkInfo(450, '', 101, 1, 1, ''),

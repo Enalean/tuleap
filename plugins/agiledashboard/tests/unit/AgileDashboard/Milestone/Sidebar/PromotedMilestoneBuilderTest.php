@@ -61,7 +61,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->changeset   = ChangesetTestBuilder::aChangeset('501')->build();
+        $this->changeset   = ChangesetTestBuilder::aChangeset(501)->build();
         $this->user        = UserTestBuilder::anActiveUser()->build();
         $this->project     = ProjectTestBuilder::aProject()->withId(101)->build();
         $this->tracker     = TrackerTestBuilder::aTracker()->build();

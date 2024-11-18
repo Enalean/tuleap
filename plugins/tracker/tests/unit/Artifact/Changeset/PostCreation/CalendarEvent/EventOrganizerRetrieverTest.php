@@ -42,7 +42,7 @@ final class EventOrganizerRetrieverTest extends TestCase
         $project   = ProjectTestBuilder::aProject()->withPublicName('Project 1')->build();
         $tracker   = TrackerTestBuilder::aTracker()->withProject($project)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('1')->ofArtifact($artifact)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->ofArtifact($artifact)->build();
 
         $calendar_event_data = CalendarEventData::fromSummary('');
         $user                = UserTestBuilder::anActiveUser()->build();
@@ -65,7 +65,7 @@ final class EventOrganizerRetrieverTest extends TestCase
         $project   = ProjectTestBuilder::aProject()->withPublicName('Project 1')->build();
         $tracker   = TrackerTestBuilder::aTracker()->withProject($project)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('1')->ofArtifact($artifact)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)->ofArtifact($artifact)->build();
 
         $calendar_event_data = CalendarEventData::fromSummary('');
         $user                = UserTestBuilder::anActiveUser()->build();

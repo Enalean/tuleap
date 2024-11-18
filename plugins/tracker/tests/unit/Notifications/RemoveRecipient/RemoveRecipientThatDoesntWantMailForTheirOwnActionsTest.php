@@ -66,7 +66,7 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends Test
 
         $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
 
-        $changeset = ChangesetTestBuilder::aChangeset('1234')
+        $changeset = ChangesetTestBuilder::aChangeset(1234)
             ->submittedBy($this->john->getId())
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
@@ -91,7 +91,7 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends Test
 
         $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
 
-        $changeset = ChangesetTestBuilder::aChangeset('1234')
+        $changeset = ChangesetTestBuilder::aChangeset(1234)
             ->submittedBy($this->john->getId())
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
@@ -121,7 +121,7 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends Test
 
         $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
 
-        $changeset = ChangesetTestBuilder::aChangeset('1234')
+        $changeset = ChangesetTestBuilder::aChangeset(1234)
             ->submittedBy($this->jane->getId())
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
@@ -149,7 +149,7 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends Test
     {
         $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
 
-        $changeset = ChangesetTestBuilder::aChangeset('1234')
+        $changeset = ChangesetTestBuilder::aChangeset(1234)
             ->submittedBy($this->john->getId())
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
