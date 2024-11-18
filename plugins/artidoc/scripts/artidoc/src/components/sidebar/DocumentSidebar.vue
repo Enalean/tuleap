@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import TableOfContents from "@/components/toc/TableOfContents.vue";
+import TableOfContents from "./toc/TableOfContents.vue";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 
