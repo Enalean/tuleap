@@ -1,0 +1,14 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-static-list-colors",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./styles/main.scss"
+  },
+  "dependencies": {
+    "@tuleap/tlp-swatch-colors": "workspace:^"
+  }
+}

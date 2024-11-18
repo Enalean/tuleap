@@ -18,13 +18,7 @@
  */
 
 @use "sass:map";
-@use "pkg:@tuleap/tlp-swatch-colors";
-
-@each $color-name, $colors in tlp-swatch-colors.$color-map {
-    .cardwall-column-header-color-#{$color-name} {
-        background-color: map.get($colors, "primary");
-    }
-}
+@use "pkg:@tuleap/plugin-cardwall-column-colors";
 
 /* stylelint-disable selector-class-pattern, selector-id-pattern */
 #cardwall {

@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/plugin-tracker-rich-text-editor':
     specifier: workspace:*
     version: link:scripts/lib/rich-text-editor
+  '@tuleap/plugin-tracker-static-list-colors':
+    specifier: workspace:^
+    version: link:scripts/lib/static-list-colors
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../lib/frontend/project-background

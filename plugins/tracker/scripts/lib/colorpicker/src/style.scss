@@ -20,6 +20,7 @@
 @use "sass:color";
 @use "sass:map";
 @use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/plugin-tracker-static-list-colors";
 
 .planning-admin-color-picker {
     display: flex;

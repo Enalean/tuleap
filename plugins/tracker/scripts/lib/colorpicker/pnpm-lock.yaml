@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/plugin-tracker-static-list-colors':
+    specifier: workspace:^
+    version: link:../static-list-colors
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-swatch-colors

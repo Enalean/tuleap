@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/plugin-tracker-color-picker": "workspace:*",
-    "@tuleap/tlp-swatch-colors": "workspace:^"
+    "@tuleap/plugin-cardwall-column-colors": "workspace:^",
+    "@tuleap/plugin-tracker-color-picker": "workspace:*"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
