@@ -7,33 +7,33 @@ settings:
 dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:^
-    version: link:../../src/themes/BurningParrot
+    version: link:../../../../src/themes/BurningParrot
   '@tuleap/flamingparrot-theme':
     specifier: workspace:^
-    version: link:../../src/themes/FlamingParrot
+    version: link:../../../../src/themes/FlamingParrot
   '@tuleap/mention':
     specifier: workspace:*
-    version: link:../../lib/frontend/mention
+    version: link:../../../../lib/frontend/mention
   '@tuleap/plugin-tracker-rich-text-editor':
     specifier: workspace:*
-    version: link:scripts/lib/rich-text-editor
+    version: link:../lib/rich-text-editor
   '@tuleap/plugin-tracker-static-list-colors':
     specifier: workspace:^
-    version: link:scripts/lib/static-list-colors
+    version: link:../lib/static-list-colors
   '@tuleap/project-background':
     specifier: workspace:*
-    version: link:../../lib/frontend/project-background
+    version: link:../../../../lib/frontend/project-background
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../src/scripts/tlp
+    version: link:../../../../src/scripts/tlp
   '@tuleap/tlp-badge':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-badge
+    version: link:../../../../lib/frontend/tlp-badge
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:^
-    version: link:../../lib/frontend/tlp-swatch-colors
+    version: link:../../../../lib/frontend/tlp-swatch-colors
 
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
+    version: link:../../../../lib/frontend/build-system-configurator

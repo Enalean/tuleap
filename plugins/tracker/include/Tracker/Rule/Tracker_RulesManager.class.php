@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
@@ -126,14 +125,6 @@ class Tracker_RulesManager
         }
 
         return $this->rule_date_factory;
-    }
-
-    private function getIncludeAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/trackers'
-        );
     }
 
     /**
@@ -531,7 +522,15 @@ class Tracker_RulesManager
         $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Define dependencies');
 
-        $GLOBALS['HTML']->addStylesheet($this->getIncludeAssets()->getFileURL('dependencies-matrix.css'));
+        $GLOBALS['HTML']->addCssAsset(
+            \Tuleap\Layout\CssViteAsset::fromFileName(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/styles/frontend-assets',
+                    '/assets/trackers/styles'
+                ),
+                'themes/FlamingParrot/dependencies-matrix.scss'
+            )
+        );
         $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title, ['body_class' => ['has-sidebar-with-pinned-header']]);
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
         $target_field = $this->form_element_factory->getFieldById($target_field_id);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../default/css/includes/cards";
-@use "../../default/css/includes/field-bound-colors";
-@use "../../default/css/includes/xml-validation";
-@use "includes/widgets";
-@use "includes/administration";
-@use "includes/project-tracker-background";
-@use "includes/email-copy-paste";
+@use "./semantics";
 
-.header-column-deleted-tracker {
-    width: 50%;
-}
-
-.header-column-deleted-tracker-date {
-    white-space: nowrap;
-}
-
-.tracker-aggregate-single-line {
-    display: block;
+.tracker-administration-title {
+    margin: var(--tlp-medium-spacing) 0 var(--tlp-title-spacing);
 }

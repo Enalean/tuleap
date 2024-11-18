@@ -22,7 +22,6 @@
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
@@ -2658,11 +2657,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/trackers'
+        return \Tuleap\Layout\CssViteAsset::buildCollectionFromMainFileName(
+            new \Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../../../scripts/styles/frontend-assets',
+                '/assets/trackers/styles'
+            ),
+            'themes/BurningParrot/tracker.scss'
         );
-        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'tracker-bp')]);
     }
 
     /**
