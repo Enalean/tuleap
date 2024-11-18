@@ -162,7 +162,6 @@ li[data-is-sticking="true"]:first-child::before {
     width: size.$document-width;
     margin: var(--tlp-medium-spacing) 0 var(--tlp-x-large-spacing);
     padding: 0;
-    overflow: auto;
     border: 0;
     background-color: var(--tlp-white-color);
     box-shadow: var(--tlp-flyover-shadow);
