@@ -20,13 +20,13 @@
 import { ListPickersCreator } from "./ListPickersCreator";
 import { SelectWrappedByListPickerStore } from "./SelectWrappedByListPickerStore";
 
-document.addEventListener("DOMContentLoaded", () => {
+export function initListFields(): void {
     const creator = ListPickersCreator(document, SelectWrappedByListPickerStore());
     creator.listenToggleEditionEvents();
     creator.initListPickersInArtifactCreationView();
     creator.initListPickersPostUpdateErrorView();
     creator.initTrackerSelector();
-});
+}
 
 // List picker must be included **before** field dependencies execution
 import "./run-field-dependencies";

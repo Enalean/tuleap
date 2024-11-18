@@ -20,6 +20,7 @@
 
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreatorWithoutImageUpload } from "../rich-text-editor-creator/RichTextEditorsCreatorWithoutImageUpload";
+import { initListFields } from "../fields/list-fields";
 
 document.addEventListener("DOMContentLoaded", () => {
     const locale = document.body.dataset.userLocale ?? "en_US";
@@ -30,4 +31,5 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     rich_text_editor_creator.createTextFieldEditorForMassChange();
+    initListFields();
 });

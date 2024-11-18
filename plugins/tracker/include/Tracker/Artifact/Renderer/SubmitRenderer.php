@@ -22,9 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
-
-class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRenderer
+class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_IDisplayTrackerLayout
@@ -46,6 +44,14 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
 
     protected function displayHeader()
     {
+        $include_assets = new \Tuleap\Layout\IncludeViteAssets(
+            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
+            '/assets/trackers/artifact'
+        );
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'src/creation/create-view.ts')
+        );
+
         $breadcrumbs = [
             [
                 'title' => sprintf(dgettext('tuleap-tracker', 'New %s'), $this->tracker->getItemName()),
@@ -59,7 +65,6 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             $breadcrumbs,
             ['body_class' => ['widgetable']]
         );
-        ListFieldsIncluder::includeListFieldsAssets();
 
         echo $this->fetchSubmitInstructions();
     }
@@ -93,11 +98,6 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
 
     protected function displayFooter()
     {
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
-            '/assets/trackers/artifact'
-        );
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('create-view.js'));
         $this->tracker->displayFooter($this->layout);
     }
 }

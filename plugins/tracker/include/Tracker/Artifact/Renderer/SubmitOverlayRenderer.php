@@ -23,9 +23,8 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 
-class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbstractRenderer
+class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbstractRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Artifact
@@ -65,9 +64,14 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
 
     protected function displayHeader()
     {
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
+                'src/legacy-modal-v1/legacy-modal-v1.ts'
+            )
+        );
         $GLOBALS['HTML']->overlay_header();
         $this->displayTrackerSwitcher($this->current_user);
-        ListFieldsIncluder::includeListFieldsAssets();
         echo $this->fetchSubmitInstructions();
     }
 

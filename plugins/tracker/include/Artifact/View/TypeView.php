@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Artifact\View;
 
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 
 final readonly class TypeView extends TrackerArtifactView
 {
@@ -42,9 +42,9 @@ final readonly class TypeView extends TrackerArtifactView
     {
         $layout = $GLOBALS['HTML'];
         \assert($layout instanceof \Tuleap\Layout\BaseLayout);
-        $layout->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
-            'children-view.js',
+        $layout->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(__DIR__ . '/../../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
+            'src/children-view.ts',
         ));
 
         $warning_message = dgettext('tuleap-tracker', 'This view will be removed soon, it is replaced by the brand new Links tab');

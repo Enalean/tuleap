@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
 
 class PossibleParentSelectorRenderer
@@ -42,12 +43,13 @@ class PossibleParentSelectorRenderer
             return '';
         }
 
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
+        $include_assets = new \Tuleap\Layout\IncludeViteAssets(
             __DIR__ . '/../../../../../scripts/artifact/frontend-assets',
             '/assets/trackers/artifact'
         );
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('artifact-links-field.js'));
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new JavascriptViteAsset($include_assets, 'src/fields/artifact-links-field.ts')
+        );
 
         return $this->renderer->renderToString(
             'possible-parent-selector',

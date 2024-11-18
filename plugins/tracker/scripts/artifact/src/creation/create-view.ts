@@ -20,7 +20,8 @@
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
-import { reopenFieldsetsWithInvalidInput } from "./edition/reopen-fieldsets-with-invalid-input";
+import { reopenFieldsetsWithInvalidInput } from "../edition/reopen-fieldsets-with-invalid-input";
+import { initListFields } from "../fields/list-fields";
 
 document.addEventListener("DOMContentLoaded", () => {
     const locale = document.body.dataset.userLocale;
@@ -33,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
     creator.createTextFieldEditors();
+    initListFields();
 
     const submit_buttons = document.querySelectorAll(
         `.artifact-form input[name="submit_and_continue"],

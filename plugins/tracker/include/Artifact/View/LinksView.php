@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\View;
 
 use TemplateRendererFactory;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 
 final readonly class LinksView extends TrackerArtifactView
 {
@@ -43,9 +43,9 @@ final readonly class LinksView extends TrackerArtifactView
     {
         $layout = $GLOBALS['HTML'];
         \assert($layout instanceof \Tuleap\Layout\BaseLayout);
-        $layout->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
-            'link-view.js',
+        $layout->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(__DIR__ . '/../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
+            'src/link-tab/link-tab-view.ts',
         ));
 
         $field = \Tracker_FormElementFactory::instance()->getAnArtifactLinkField($this->user, $this->artifact->getTracker());

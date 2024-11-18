@@ -30,7 +30,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay;
-use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ParentOfArtifactCollection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -152,7 +151,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         ];
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
-        ListFieldsIncluder::includeListFieldsAssets();
 
         $event = new GetAdditionalAssetsForArtifactDisplay();
         $this->event_manager->dispatch($event);

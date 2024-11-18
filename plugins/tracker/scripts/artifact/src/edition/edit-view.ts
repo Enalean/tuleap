@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "./styles/edition.scss";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
@@ -26,6 +27,7 @@ import { LitHTMLAdapter } from "./comments/LitHTMLAdapter";
 import { DOMAdapter } from "./comments/DOMAdapter";
 import { TuleapAPIClient } from "./comments/TuleapAPIClient";
 import { LinkFieldEditor } from "./link-field/LinkFieldEditor";
+import { initListFields } from "../fields/list-fields";
 
 // Do not use DOMContentLoaded event because it arrives after jQuery document ready event
 // and it will cause the "submission bar" to stop working.
@@ -75,6 +77,7 @@ async function initComments(): Promise<void> {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    initListFields();
     initLinkField();
     await initComments();
 });
