@@ -20,36 +20,62 @@
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "./includes/project-background";
 @use "./includes/section-content";
+@use "./includes/size";
 
-.artidoc-header-title {
-    margin: 0;
+.artidoc-app {
+    --artidoc-app-height: calc(100vh - #{global-variables.$breadcrumb-height});
+    --artidoc-container-height: calc(var(--artidoc-app-height) - #{size.$header-height} - 1px);
+    --artidoc-sticky-top-position: 0px;
+
+    display: flex;
+    flex-direction: column;
+    height: var(--artidoc-app-height);
 }
 
-:root {
-    --header-height: 5vh;
-    --table-of-content-header-height: 10vh;
-    --help-dropdown-button-height: 15vh;
-    --available-height-for-sidebar: calc(
-        100vh - var(--header-height) - var(--table-of-content-header-height) - var(
-                --help-dropdown-button-height
-            )
+.sidebar-collapsed .artidoc-app {
+    --artidoc-app-height: calc(
+        100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar}
     );
-    --sticky-top-position: #{global-variables.$navbar-height};
 }
 
-.has-visible-platform-banner {
-    .artidoc-container {
-        --sticky-top-position: calc(
-            #{global-variables.$navbar-height} + #{global-variables.$platform-banner-base-height}
+.has-visible-project-banner {
+    .artidoc-app {
+        --artidoc-app-height: calc(
+            100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height}
         );
     }
 
-    &.has-visible-project-banner {
-        .artidoc-container {
-            --sticky-top-position: calc(
-                #{global-variables.$navbar-height} + #{global-variables.$platform-banner-base-height} +
-                    #{global-variables.$extra-platform-banner-white-space-height}
-            );
-        }
+    &.sidebar-collapsed .artidoc-app {
+        --artidoc-app-height: calc(
+            100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height}
+        );
+    }
+}
+
+.has-visible-platform-banner {
+    .artidoc-app {
+        --artidoc-app-height: calc(
+            100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$platform-banner-base-height}
+        );
+    }
+
+    &.sidebar-collapsed .artidoc-app {
+        --artidoc-app-height: calc(
+            100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$platform-banner-base-height}
+        );
+    }
+
+    &.has-visible-project-banner .artidoc-app {
+        --artidoc-app-height: calc(
+            100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} -
+                #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height}
+        );
+    }
+
+    &.has-visible-project-banner.sidebar-collapsed .artidoc-app {
+        --artidoc-app-height: calc(
+            100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} -
+                #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height}
+        );
     }
 }

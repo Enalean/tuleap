@@ -129,8 +129,6 @@ function getProjectId(): number {
 </script>
 
 <style lang="scss" scoped>
-@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
-@use "@/themes/includes/zindex";
 @use "@/themes/includes/whitespace";
 
 section {
@@ -154,9 +152,6 @@ section {
 }
 
 .section-header {
-    position: sticky;
-    z-index: zindex.$header;
-    top: global-variables.$navbar-height;
     margin-bottom: var(--tlp-medium-spacing);
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tuleap-artidoc-section-background);

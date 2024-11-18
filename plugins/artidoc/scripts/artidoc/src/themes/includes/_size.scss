@@ -28,3 +28,7 @@ $add-section-button-container-width: calc(
 );
 $document-container-width-ratio: 0.7;
 $document-width: 960px;
+$header-title-height: 40px; // line-height of TLP h1
+$header-height: calc(
+    $header-title-height + #{whitespace.$header-title-padding-top} + #{whitespace.$header-title-padding-bottom}
+);

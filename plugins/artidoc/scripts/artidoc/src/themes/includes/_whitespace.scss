@@ -26,3 +26,5 @@ $add-section-button-container-vertical-padding: var(--tlp-small-spacing);
 // and @media queries do not work when there is a CSS variable. So condensed mode will have to live with a 8px instead
 // of 6px padding for this button.
 $add-section-button-container-horizontal-padding: 8px;
+$header-title-padding-top: var(--tlp-medium-spacing);
+$header-title-padding-bottom: var(--tlp-title-spacing);

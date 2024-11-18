@@ -36,9 +36,16 @@ const title = strictInject(TITLE);
 </script>
 
 <style scoped lang="scss">
+@use "@/themes/includes/whitespace";
+
 .document-header {
     display: flex;
     gap: var(--tlp-medium-spacing);
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
+    padding: whitespace.$header-title-padding-top var(--tlp-medium-spacing)
+        whitespace.$header-title-padding-bottom;
+}
+
+.artidoc-header-title {
+    margin: 0;
 }
 </style>
