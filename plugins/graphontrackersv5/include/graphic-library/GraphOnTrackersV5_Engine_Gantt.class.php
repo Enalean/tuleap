@@ -325,7 +325,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
 
         $milestone = new Chart_GanttMileStone($pos, $aLabel, $aDate, $aCaption);
 
-        $milestone->SetCSIM($data['links'], $data['hint']);
+        $milestone->SetCSIM($data['links'], str_replace('%', '%%', (string) $data['hint']));
         $this->graph->Add($milestone);
         return $milestone;
     }
