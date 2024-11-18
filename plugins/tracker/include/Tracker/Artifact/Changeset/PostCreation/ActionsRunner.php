@@ -56,6 +56,7 @@ use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
@@ -154,7 +155,8 @@ class ActionsRunner
                         new UserNotificationOnlyStatusChangeDAO(),
                         new InvolvedNotificationDao()
                     ),
-                    new UserNotificationOnlyStatusChangeDAO()
+                    new UserNotificationOnlyStatusChangeDAO(),
+                    new MentionedUserInCommentRetriever()
                 ),
                 Tracker_Artifact_MailGateway_RecipientFactory::build(),
                 new MailGatewayConfig(
