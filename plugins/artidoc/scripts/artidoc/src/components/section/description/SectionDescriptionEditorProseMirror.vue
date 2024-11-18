@@ -77,7 +77,14 @@ watch(
     () => {
         if (!props.is_edit_mode) {
             resetProgressCallback();
-            if (editorView.value && useEditorInstance) {
+            if (
+                editorView.value &&
+                useEditorInstance &&
+                area_editor.value &&
+                String(
+                    area_editor.value.querySelector("artidoc-section-description")?.innerHTML,
+                ) !== props.editable_description
+            ) {
                 const artidoc_section = renderArtidocSectionNode(
                     props.title,
                     props.editable_description,
