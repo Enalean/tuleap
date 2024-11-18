@@ -25,3 +25,7 @@ $medium-screen-size: calc(
             2 * #{size.$add-section-button-container-width} + #{size.$document-width}
         ) / #{size.$document-container-width-ratio}
 );
+$medium-screen-size-when-document-sidebar-is-collapsed: calc(
+    #{global-variables.$sidebar-expanded-width} + 2 * #{size.$add-section-button-container-width} +
+        #{size.$document-width}
+);

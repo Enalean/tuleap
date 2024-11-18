@@ -26,6 +26,7 @@
     --artidoc-app-height: calc(100vh - #{global-variables.$breadcrumb-height});
     --artidoc-container-height: calc(var(--artidoc-app-height) - #{size.$header-height} - 1px);
     --artidoc-sticky-top-position: 0px;
+    --artidoc-sidebar-button-width: 30px;
 
     display: flex;
     flex-direction: column;

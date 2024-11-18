@@ -62,6 +62,9 @@ msgstr "Choisissez un tracker"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Close sidebar"
+msgstr "Fermer la barre latérale"
+
 msgid "Configuration failure"
 msgstr "Échec de la configuration"
 
@@ -139,6 +142,9 @@ msgstr "Ouvrir l'artéfact"
 
 msgid "Open contextual menu"
 msgstr "Ouvrir le menu contextuel"
+
+msgid "Open sidebar"
+msgstr "Ouvrir la barre latérale"
 
 msgid "Please log in in order to be able to export as PDF"
 msgstr "Veuillez vous connecter afin de pouvoir exporter en PDF"
