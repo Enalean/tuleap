@@ -169,7 +169,7 @@ class PlotMark
             }
 
             if (! empty($this->csimalt)) {
-                $tmp              = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
+                $tmp              = Codendi_HTMLPurifier::instance()->purify(sprintf($this->csimalt, $this->yvalue, $this->xvalue));
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\"";
             }
             $this->csimareas .= " />\n";
@@ -190,7 +190,7 @@ class PlotMark
             }
 
             if (! empty($this->csimalt)) {
-                $tmp              = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
+                $tmp              = Codendi_HTMLPurifier::instance()->purify(sprintf($this->csimalt, $this->yvalue, $this->xvalue));
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
             }
             $this->csimareas .= " />\n";
@@ -349,7 +349,7 @@ class PlotMark
                 }
 
                 if (! empty($this->csimalt)) {
-                    $tmp              = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
+                    $tmp              = Codendi_HTMLPurifier::instance()->purify(sprintf($this->csimalt, $this->yvalue, $this->xvalue));
                     $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
                 }
                 $this->csimareas .= " />\n";

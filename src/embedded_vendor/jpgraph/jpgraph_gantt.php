@@ -3648,7 +3648,7 @@ class GanttBar extends GanttPlotObject
                     }
 
                     if (! empty($this->title->csimalt[$i])) {
-                        $tmp             = $this->title->csimalt[$i];
+                        $tmp             = Codendi_HTMLPurifier::instance()->purify($this->title->csimalt[$i]);
                         $this->csimarea .= " title=\"$tmp\" alt=\"$tmp\" ";
                     }
                     $this->csimarea .= " />\n";
@@ -3697,7 +3697,7 @@ class GanttBar extends GanttPlotObject
             }
 
             if ($this->csimalt != '') {
-                $tmp             = $this->csimalt;
+                $tmp             = Codendi_HTMLPurifier::instance()->purify($this->csimalt);
                 $this->csimarea .= " title=\"$tmp\" alt=\"$tmp\" ";
             }
             $this->csimarea .= " />\n";
@@ -3835,7 +3835,7 @@ class MileStone extends GanttPlotObject
                     }
 
                     if (! empty($this->title->csimalt[$i])) {
-                        $tmp             = $this->title->csimalt[$i];
+                        $tmp             = Codendi_HTMLPurifier::instance()->purify($this->title->csimalt[$i]);
                         $this->csimarea .= " title=\"$tmp\" alt=\"$tmp\" ";
                     }
                     $this->csimarea .= " />\n";
