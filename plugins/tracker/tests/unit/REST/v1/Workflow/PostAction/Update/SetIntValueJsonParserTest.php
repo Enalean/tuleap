@@ -21,8 +21,6 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
-require_once __DIR__ . '/../../../../../bootstrap.php';
-
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\REST\I18NRestException;

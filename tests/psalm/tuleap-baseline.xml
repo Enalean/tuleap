@@ -50419,18 +50419,73 @@
       <code><![CDATA[testItStartsWithEmptyTable]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/ArtifactImportedMappingBuilder.php">
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ArtifactLink/ChangeForwardLinksCommandFormatterTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(55))]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkChangesetValueTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$new_parent_link]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkInitialChangesetValueFormatterTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(71))]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkInitialChangesetValueTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$parent]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ArtifactLink/ReverseLinksRetrieverTest.php">
+    <InvalidArgument>
+      <code><![CDATA[[StoredReverseLink::fromRow($expected_retrieve_artifact, $user, $linked_artifact_1)]]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ArtifactLink/ReverseLinksToNewChangesetsConverterTest.php">
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$first_added_changeset]]></code>
+      <code><![CDATA[$new_changeset_add_link]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ArtifactLink/StoredReverseLinkTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getSourceArtifactId]]></code>
+      <code><![CDATA[getType]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/ChangesetValuesContainerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(63))]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ChangesetValue/Text/TextValueInterpreterTest.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->purifier]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[purifyHTMLWithReferences]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/Creation/ReverseLinksAdderTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$parent]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Test/Builders/ArtifactImportedMappingBuilder.php">
     <InvalidDocblock>
       <code><![CDATA[public static function fromSourcesAndDestinations(array $sources_and_destinations): Tracker_XML_Importer_ArtifactImportedMapping]]></code>
     </InvalidDocblock>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/ArtifactTestBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/ArtifactTestBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->user_can_view]]></code>
       <code><![CDATA[$this->user_can_view]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/ArtifactValuesRepresentationBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/ArtifactValuesRepresentationBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[[$first_bind_value_id, ...$other_bind_value_ids]]]></code>
     </InvalidPropertyAssignmentValue>
@@ -50440,7 +50495,7 @@
       <code><![CDATA[$this->links]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/ChangesetTestBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/ChangesetTestBuilder.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->id]]></code>
     </ArgumentTypeCoercion>
@@ -50487,7 +50542,7 @@
       <code><![CDATA[$this]]></code>
     </ImpureVariable>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/CheckboxFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/CheckboxFieldBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->read_permissions]]></code>
     </InvalidPropertyAssignmentValue>
@@ -50495,7 +50550,7 @@
       <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
     </PossiblyInvalidArrayOffset>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/DateFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/DateFieldBuilder.php">
     <DeprecatedMethod>
       <code><![CDATA[setCacheSpecificProperties]]></code>
     </DeprecatedMethod>
@@ -50506,7 +50561,7 @@
       <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
     </PossiblyInvalidArrayOffset>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/ExternalFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/ExternalFieldBuilder.php">
     <InvalidReturnType>
       <code><![CDATA[fetchAdminFormElement]]></code>
       <code><![CDATA[fetchArtifactValue]]></code>
@@ -50534,7 +50589,7 @@
       <code><![CDATA[getValueDao]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/FileFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/FileFieldBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->read_permissions]]></code>
     </InvalidPropertyAssignmentValue>
@@ -50542,7 +50597,7 @@
       <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
     </PossiblyInvalidArrayOffset>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/ListFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/ListFieldBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->read_permissions]]></code>
     </InvalidPropertyAssignmentValue>
@@ -50550,7 +50605,7 @@
       <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
     </PossiblyInvalidArrayOffset>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/OpenListFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/OpenListFieldBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->read_permissions]]></code>
     </InvalidPropertyAssignmentValue>
@@ -50558,7 +50613,7 @@
       <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
     </PossiblyInvalidArrayOffset>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/RadioButtonFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/RadioButtonFieldBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->read_permissions]]></code>
     </InvalidPropertyAssignmentValue>
@@ -50566,7 +50621,7 @@
       <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
     </PossiblyInvalidArrayOffset>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/StringFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/StringFieldBuilder.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->read_permissions]]></code>
     </InvalidPropertyAssignmentValue>
@@ -50574,12 +50629,12 @@
       <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
     </PossiblyInvalidArrayOffset>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/Fields/TextFieldBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/TextFieldBuilder.php">
     <DeprecatedMethod>
       <code><![CDATA[setCacheSpecificProperties]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/LinkWithDirectionRepresentationBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/LinkWithDirectionRepresentationBuilder.php">
     <InaccessibleProperty>
       <code><![CDATA[$representation->direction]]></code>
       <code><![CDATA[$representation->id]]></code>
@@ -50590,7 +50645,7 @@
       <code><![CDATA[$this->id]]></code>
     </PropertyTypeCoercion>
   </file>
-  <file src="plugins/tracker/tests/unit/Builders/TrackerTestBuilder.php">
+  <file src="plugins/tracker/tests/unit/Test/Builders/TrackerTestBuilder.php">
     <MissingParamType>
       <code><![CDATA[$allow_copy]]></code>
       <code><![CDATA[$browse_instructions]]></code>
@@ -50608,32 +50663,22 @@
       <code><![CDATA[$submit_instructions]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/tests/unit/REST/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkChangesetValueBuilderTest.php">
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/tests/unit/Stub/BindValueIdCollectionStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/BindValueIdCollectionStub.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/CheckBeforeMoveStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/CheckBeforeMoveStub.php">
     <InaccessibleProperty>
       <code><![CDATA[$this->call_count]]></code>
     </InaccessibleProperty>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/CreateNewChangesetStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/CreateNewChangesetStub.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$callback]]></code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/FeedbackFieldCollectorInterfaceStub.php">
-    <UndefinedClass>
-      <code><![CDATA[FeedbackFieldCollectorInterface]]></code>
-    </UndefinedClass>
-  </file>
-  <file src="plugins/tracker/tests/unit/Stub/MoveDryRunStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/MoveDryRunStub.php">
     <ImpureMethodCall>
       <code><![CDATA[withoutDryRun]]></code>
     </ImpureMethodCall>
@@ -50641,17 +50686,17 @@
       <code><![CDATA[$this->call_count]]></code>
     </InaccessibleProperty>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/MoveRestArtifactStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/MoveRestArtifactStub.php">
     <InaccessibleProperty>
       <code><![CDATA[$this->call_count]]></code>
     </InaccessibleProperty>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/RetrieveAllUsableTypesInProjectStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/RetrieveAllUsableTypesInProjectStub.php">
     <LessSpecificImplementedReturnType>
       <code><![CDATA[TypePresenter[]]]></code>
     </LessSpecificImplementedReturnType>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventDatesStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventDatesStub.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[Result::err($this->error)]]></code>
     </LessSpecificReturnStatement>
@@ -50659,27 +50704,27 @@
       <code><![CDATA[Ok<CalendarEventData>|Err<non-falsy-string>]]></code>
     </MoreSpecificReturnType>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventOrganizerStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventOrganizerStub.php">
     <PossiblyNullArgument>
       <code><![CDATA[$this->organizer_name]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventSummaryStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventSummaryStub.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$summary]]></code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/PostCreationActionsQueuerStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/Tracker/Artifact/Changeset/PostCreation/PostCreationActionsQueuerStub.php">
     <MissingParamType>
       <code><![CDATA[$count]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/ProcessChangesetPostCreationStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/Tracker/Artifact/Changeset/ProcessChangesetPostCreationStub.php">
     <InaccessibleProperty>
       <code><![CDATA[$this->count]]></code>
     </InaccessibleProperty>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/Tracker/FormElement/Field/ListFields/Bind/BindVisitorStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/Tracker/FormElement/Field/ListFields/Bind/BindVisitorStub.php">
     <MissingReturnType>
       <code><![CDATA[visitListBindNull]]></code>
       <code><![CDATA[visitListBindStatic]]></code>
@@ -50687,81 +50732,15 @@
       <code><![CDATA[visitListBindUsers]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/Tracker/Permission/RetrieveUserPermissionOnTrackersStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/Tracker/Permission/RetrieveUserPermissionOnTrackersStub.php">
     <PropertyTypeCoercion>
       <code><![CDATA[$this->has_permission_on]]></code>
     </PropertyTypeCoercion>
   </file>
-  <file src="plugins/tracker/tests/unit/Stub/UpdateArtifactLinkXMLStub.php">
+  <file src="plugins/tracker/tests/unit/Test/Stub/UpdateArtifactLinkXMLStub.php">
     <InaccessibleProperty>
       <code><![CDATA[$this->nb_calls]]></code>
     </InaccessibleProperty>
-  </file>
-  <file src="plugins/tracker/tests/unit/Stub/UpdateBindValueForSemanticStub.php">
-    <UndefinedClass>
-      <code><![CDATA[UpdateBindValueForSemantic]]></code>
-    </UndefinedClass>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ArtifactLinksByChangesetCacheTest.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[101]]></code>
-      <code><![CDATA[102]]></code>
-    </InvalidScalarArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ChangeForwardLinksCommandFormatterTest.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(55))]]></code>
-    </InvalidPropertyAssignmentValue>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkChangesetValueTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$new_parent_link]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkInitialChangesetValueFormatterTest.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(71))]]></code>
-    </InvalidPropertyAssignmentValue>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkInitialChangesetValueTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$parent]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ReverseLinksRetrieverTest.php">
-    <InvalidArgument>
-      <code><![CDATA[[StoredReverseLink::fromRow($expected_retrieve_artifact, $user, $linked_artifact_1)]]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ReverseLinksToNewChangesetsConverterTest.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$first_added_changeset]]></code>
-      <code><![CDATA[$new_changeset_add_link]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/StoredReverseLinkTest.php">
-    <PossiblyNullReference>
-      <code><![CDATA[getSourceArtifactId]]></code>
-      <code><![CDATA[getType]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ChangesetValuesContainerTest.php">
-    <InvalidArgument>
-      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(63))]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/Text/TextValueInterpreterTest.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->purifier]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[purifyHTMLWithReferences]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/tests/unit/Tracker/Artifact/Creation/ReverseLinksAdderTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$parent]]></code>
-    </InvalidArgument>
   </file>
   <file src="plugins/tracker_date_reminder/include/ArtifactDateReminder.class.php">
     <DeprecatedFunction>

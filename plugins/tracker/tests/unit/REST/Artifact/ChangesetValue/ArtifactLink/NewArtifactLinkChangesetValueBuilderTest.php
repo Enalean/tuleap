@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
@@ -43,7 +44,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
     private const PARENT_ARTIFACT_ID           = 100;
     private const FIELD_ID                     = 242;
 
-    private function build(ArtifactValuesRepresentation $payload)
+    private function build(ArtifactValuesRepresentation $payload): NewArtifactLinkChangesetValue
     {
         $builder = new NewArtifactLinkChangesetValueBuilder(
             RetrieveForwardLinksStub::withLinks(
