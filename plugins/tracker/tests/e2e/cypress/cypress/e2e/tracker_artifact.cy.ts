@@ -22,16 +22,21 @@ function submitAndStay(): void {
     cy.get("[data-test=artifact-submit-and-stay]").click();
 }
 
-function createNewBug(bug_title: string): void {
-    cy.visitProjectService("tracker-artifact", "Trackers");
-    cy.getContains("[data-test=tracker-link]", "Bugs").click();
-    cy.get("[data-test=create-new]").click();
-    cy.get("[data-test=create-new-item]").first().click();
-    cy.get("[data-test=summary]").type(bug_title);
+function getCurrentTimestampInSeconds(): string {
+    return String(Date.now()).slice(0, -4);
+}
+
+function editSimpleField(label: string): Cypress.Chainable<JQuery<HTMLElement>> {
+    cy.getContains("[data-test-artifact-form-element]", label)
+        .find("[data-test-edit-field]")
+        .click();
+    return cy
+        .getContains("[data-test-artifact-form-element]", label)
+        .find("[data-test-field-input]");
 }
 
 describe("Tracker artifacts", function () {
-    const TITLE_FIELD_NAME = "summary";
+    const TITLE_FIELD_NAME = "title";
 
     describe("Site admin specific settings for move/deletion", function () {
         it("must be able to set the artifact deletion setting", function () {
@@ -47,313 +52,327 @@ describe("Tracker artifacts", function () {
         });
     });
 
-    describe("Tracker administration", function () {
+    context("", function () {
+        // Create once the project for tests in this context
+        let project_name: string;
         before(function () {
+            project_name = "tracker-" + getCurrentTimestampInSeconds();
+
             cy.projectAdministratorSession();
-            cy.getProjectId("tracker-artifact").as("project_id");
+            cy.log("Create a new project");
+            cy.createNewPublicProject(project_name, "issues").as("project_id");
         });
 
-        it("can access to admin section", function () {
-            cy.projectAdministratorSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.visit("/plugins/tracker/global-admin/" + this.project_id);
-        });
-
-        it("must be able to create tracker from Tuleap template Bug", function () {
-            cy.projectAdministratorSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.get("[data-test=new-tracker-creation]").click();
-            cy.get("[data-test=selected-option-default-bug]").click({ force: true });
-
-            cy.get("[data-test=button-next]").click();
-            cy.get("[data-test=tracker-name-input]").type(Date.now() + " from cypress");
-            cy.get("[data-test=button-create-my-tracker]").click();
-            cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
-        });
-
-        it("must be able to create tracker from empty", function () {
-            cy.projectAdministratorSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.get("[data-test=new-tracker-creation]").click();
-            cy.get("[data-test=selected-option-tracker_empty]").click({ force: true });
-
-            cy.get("[data-test=button-next]").click();
-            cy.get("[data-test=tracker-name-input]").type(Date.now() + " From empty");
-            cy.get("[data-test=button-create-my-tracker]").click();
-            cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
-        });
-
-        it("must be able to create tracker from an other project", function () {
-            cy.projectAdministratorSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.get("[data-test=new-tracker-creation]").click();
-            cy.get("[data-test=selected-option-tracker_another_project]").click({ force: true });
-
-            cy.get("[data-test=project-select]").select("Empty Followup");
-            cy.get("[data-test=project-tracker-select]").select("Bugs");
-
-            cy.get("[data-test=button-next]").click();
-            cy.get("[data-test=tracker-name-input]").type(Date.now() + " From an other project");
-            cy.get("[data-test=button-create-my-tracker]").click();
-            cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
-        });
-
-        it("can add a report on the project home page", function () {
-            cy.projectAdministratorSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.getContains("[data-test=tracker-link]", "artifact-link").click();
-            cy.get("[data-test=add-to-project-dashboard]").click();
-
-            cy.get("[data-test=artifact-report-table]").contains("test A");
-            cy.get("[data-test=artifact-report-table]").contains("test B");
-        });
-    });
-
-    describe("Tracker regular users", function () {
-        before(function () {
-            cy.projectAdministratorSession();
-            cy.getProjectId("tracker-artifact").as("project_id");
-        });
-
-        beforeEach(function () {
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").as("body");
-        });
-
-        describe("Artifact manipulation", function () {
-            it("must be able to create new artifact", function () {
-                cy.projectMemberSession();
-                cy.visitProjectService("tracker-artifact", "Trackers");
-                createNewBug("My new bug");
-                submitAndStay();
-
-                cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
-                cy.get("[data-test=tracker-artifact-value-summary]").contains("My new bug");
-
-                cy.log("Created artifact must be in recent elements");
-                cy.get("@body").type("{s}");
-                cy.get("[data-test=switch-to-modal]").should("be.visible");
-
-                cy.get("[data-test=switch-to-filter]").type("My new bug");
-                cy.get("[data-test=switch-to-recent-items]").should("contain", "My new bug");
+        describe("Tracker administration", function () {
+            it("can access to admin section", function () {
+                cy.projectAdministratorSession();
+                cy.visit("/plugins/tracker/global-admin/" + this.project_id);
+                cy.get("[data-test=tracker-global-admin-title]").should(
+                    "contain.text",
+                    "Tracker global administration",
+                );
             });
 
-            it("must be able to copy new artifact", function () {
+            it("must be able to create tracker from Tuleap template Bug", function () {
+                cy.projectAdministratorSession();
+                cy.visitProjectService(project_name, "Trackers");
+                cy.get("[data-test=new-tracker-creation]").click();
+                cy.get("[data-test=selected-option-default-bug]").click({ force: true });
+
+                cy.get("[data-test=button-next]").click();
+                cy.get("[data-test=tracker-name-input]").type(
+                    getCurrentTimestampInSeconds() + " from cypress",
+                );
+                cy.get("[data-test=button-create-my-tracker]").click();
+                cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
+            });
+
+            it("must be able to create tracker from empty", function () {
+                cy.projectAdministratorSession();
+                cy.visit(`/plugins/tracker/${encodeURIComponent(project_name)}/new`);
+                cy.get("[data-test=selected-option-tracker_empty]").click({ force: true });
+
+                cy.get("[data-test=button-next]").click();
+                cy.get("[data-test=tracker-name-input]").type(
+                    getCurrentTimestampInSeconds() + " From empty",
+                );
+                cy.get("[data-test=button-create-my-tracker]").click();
+                cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
+            });
+
+            it("must be able to create tracker from an other project", function () {
+                cy.projectAdministratorSession();
+                cy.visit(`/plugins/tracker/${encodeURIComponent(project_name)}/new`);
+                cy.get("[data-test=selected-option-tracker_another_project]").click({
+                    force: true,
+                });
+
+                cy.get("[data-test=project-select]").select("Empty Followup");
+                cy.get("[data-test=project-tracker-select]").select("Bugs");
+
+                cy.get("[data-test=button-next]").click();
+                cy.get("[data-test=tracker-name-input]").type(
+                    getCurrentTimestampInSeconds() + " From an other project",
+                );
+                cy.get("[data-test=button-create-my-tracker]").click();
+                cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
+            });
+
+            it("can add a report on the project home page", function () {
+                cy.projectAdministratorSession();
+                cy.visitProjectService("tracker-artifact", "Trackers");
+                cy.getContains("[data-test=tracker-link]", "artifact-link").click();
+                cy.get("[data-test=add-to-project-dashboard]").click();
+
+                cy.get("[data-test=artifact-report-table]").contains("test A");
+                cy.get("[data-test=artifact-report-table]").contains("test B");
+            });
+        });
+
+        describe("Tracker regular users", function () {
+            beforeEach(function () {
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").as("body");
+            });
+
+            describe("Artifact manipulation", function () {
+                it("must be able to create new artifact", function () {
+                    cy.projectMemberSession();
+                    cy.visitProjectService(project_name, "Trackers");
+                    cy.getContains("[data-test=tracker-link]", "Issues").click();
+                    cy.get("[data-test=create-new]").click();
+                    cy.get("[data-test=create-new-item]").first().click();
+                    cy.getContains("[data-test=artifact-form-element]", "Title")
+                        .find("[data-test-field-input]")
+                        .type("My new bug");
+                    submitAndStay();
+
+                    cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
+                    cy.getContains("[data-test-artifact-form-element]", "Title").contains(
+                        "My new bug",
+                    );
+
+                    cy.log("Created artifact must be in recent elements");
+                    cy.get("@body").type("{s}");
+                    cy.get("[data-test=switch-to-modal]").should("be.visible");
+
+                    cy.get("[data-test=switch-to-filter]").type("My new bug");
+                    cy.get("[data-test=switch-to-recent-items]").should("contain", "My new bug");
+                });
+
+                it(`can edit an existing artifact and leave comments`, function () {});
+
+                it("must be able to copy new artifact", function () {
+                    cy.projectMemberSession();
+                    cy.getTrackerIdFromREST(this.project_id, "issue").then((tracker_id) => {
+                        cy.createArtifact({
+                            tracker_id,
+                            artifact_title: "copy artifact",
+                            artifact_status: "New",
+                            title_field_name: TITLE_FIELD_NAME,
+                        }).then((artifact_id) => {
+                            cy.visit("https://tuleap/plugins/tracker/?&aid=" + artifact_id);
+                        });
+                    });
+
+                    cy.get("[data-test=tracker-artifact-actions]").click();
+                    cy.get("[data-test=artifact-copy-button]").click();
+                    editSimpleField("Title").clear().type("My updated summary");
+
+                    cy.get("[data-test=artifact-copy]").click();
+
+                    cy.get("[data-test=artifact-followups]").contains("Copy of issue");
+                    cy.getContains("[data-test-artifact-form-element]", "Title").contains(
+                        "My updated summary",
+                    );
+                });
+
+                it("can be displayed in printer version", function () {
+                    cy.projectMemberSession();
+                    cy.getTrackerIdFromREST(this.project_id, "issue").then((tracker_id) => {
+                        cy.createArtifact({
+                            tracker_id,
+                            artifact_title: "printer version",
+                            artifact_status: "New",
+                            title_field_name: TITLE_FIELD_NAME,
+                        }).then((artifact_id) => {
+                            cy.visit(`https://tuleap/plugins/tracker/?&aid=${artifact_id}&pv=1`);
+                        });
+                    });
+                    // check that followup block is displayed
+                    cy.get("[data-test=artifact-followups]").should("exist");
+                });
+
+                it("can switch from autocomputed mode to calculated mode and so on", function () {
+                    cy.projectMemberSession();
+                    cy.getProjectId("tracker-artifact")
+                        .then((project_id) => cy.getTrackerIdFromREST(project_id, "bug"))
+                        .then((tracker_id) => {
+                            return cy.createArtifact({
+                                tracker_id,
+                                artifact_title: "autocompute",
+                                artifact_status: "New",
+                                title_field_name: "summary",
+                            });
+                        })
+                        .then((artifact_id) => {
+                            cy.visit("https://tuleap/plugins/tracker/?&aid=" + artifact_id);
+                        });
+
+                    editSimpleField("remaining_effort").clear().type("20");
+
+                    // submit and check
+                    submitAndStay();
+                    cy.get("[data-test=computed-value]").contains(20);
+
+                    //edit field and go back in autocomputed mode
+                    cy.getContains("[data-test-artifact-form-element]", "remaining_effort").then(
+                        (form_element) => {
+                            cy.wrap(form_element).find("[data-test-edit-field]").click();
+                            cy.wrap(form_element).find("[data-test=switch-to-autocompute]").click();
+                        },
+                    );
+
+                    //submit and check
+                    submitAndStay();
+                    cy.get("[data-test=computed-value]").contains("Empty");
+                });
+            });
+
+            it("can add a report on his dashboard", function () {
                 cy.projectMemberSession();
                 cy.visitProjectService("tracker-artifact", "Trackers");
-                cy.getTrackerIdFromREST(parseInt(this.project_id, 10), "bug").then((tracker_id) => {
-                    cy.createArtifact({
-                        tracker_id: tracker_id,
-                        artifact_title: "copy artifact",
-                        artifact_status: "New",
-                        title_field_name: TITLE_FIELD_NAME,
-                    }).then((artifact_id) => {
+                cy.getContains("[data-test=tracker-link]", "artifact-link").click();
+                cy.get("[data-test=add-to-my-dashboard]").first().click({ force: true });
+
+                cy.get("[data-test=artifact-report-table]").contains("test A");
+                cy.get("[data-test=artifact-report-table]").contains("test B");
+            });
+        });
+
+        describe("Tracker dedicated permissions", function () {
+            it("should raise an error when user try to access to plugin Tracker admin page", function () {
+                cy.projectMemberSession();
+                cy.request({
+                    url: "/plugins/tracker/global-admin/" + this.project_id,
+                    failOnStatusCode: false,
+                }).then((response) => {
+                    expect(response.status).to.eq(403);
+                });
+            });
+
+            it("tracker admin must be able to delegate tracker administration privilege", function () {
+                cy.projectAdministratorSession();
+                cy.visitProjectService(project_name, "Trackers");
+                cy.getContains("[data-test=tracker-link]", "Issues").click();
+
+                // eslint-disable-next-line cypress/no-force -- Link is in a dropdown
+                cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+
+                cy.get("[data-test=admin-permissions]").click();
+                cy.get("[data-test=tracker-permissions]").click();
+
+                cy.get("[data-test=permissions_3]").select("are admin of the tracker");
+
+                cy.get("[data-test=tracker-permission-submit]").click();
+
+                cy.get("[data-test=feedback]").contains("Permissions Updated");
+            });
+
+            it("regular user must be able to move artifact", function () {
+                cy.projectAdministratorSession();
+                cy.getProjectId("tracker-artifact")
+                    .then((project_id) => cy.getTrackerIdFromREST(project_id, "bug"))
+                    .then((tracker_id) => {
+                        return cy.createArtifact({
+                            tracker_id,
+                            artifact_title: "move artifact",
+                            artifact_status: "New",
+                            title_field_name: "summary",
+                        });
+                    })
+                    .then((artifact_id) => {
                         cy.visit("https://tuleap/plugins/tracker/?&aid=" + artifact_id);
                     });
-                });
 
                 cy.get("[data-test=tracker-artifact-actions]").click();
-                cy.get("[data-test=artifact-copy-button]").click();
-                cy.get("[data-test=edit-field-summary]").click();
-                cy.get("[data-test=summary]").clear().type("My updated summary");
+                cy.get("[data-test=tracker-action-button-move]").click();
 
-                cy.get("[data-test=artifact-copy]").click();
+                cy.get("[data-test=move-artifact-project-selector]").select("tracker artifact");
+                cy.get("[data-test=move-artifact-tracker-selector]").select("Bugs for Move");
 
-                cy.get("[data-test=artifact-followups]").contains("Copy of bug");
-                cy.get("[data-test=tracker-artifact-value-summary]").contains("My updated summary");
+                cy.get("[data-test=move-artifact]").click();
+
+                cy.get("[data-test=feedback]").contains("has been successfully");
+                cy.getContains("[data-test-artifact-form-element]", "Summary").contains(
+                    "move artifact",
+                );
+                cy.getContains("[data-test-artifact-form-element]", "Status").contains("New");
             });
 
-            it("can be displayed in printer version", function () {
+            it("user with tracker admin permissions are tracker admin", function () {
                 cy.projectMemberSession();
-                cy.visitProjectService("tracker-artifact", "Trackers");
-                cy.getTrackerIdFromREST(parseInt(this.project_id, 10), "bug").then((tracker_id) => {
-                    cy.createArtifact({
-                        tracker_id: tracker_id,
-                        artifact_title: "printer version",
-                        artifact_status: "New",
-                        title_field_name: TITLE_FIELD_NAME,
-                    }).then((artifact_id) => {
-                        cy.visit("https://tuleap/plugins/tracker/?&aid=" + artifact_id);
+                cy.getProjectId("tracker-artifact")
+                    .then((project_id) => cy.getTrackerIdFromREST(project_id, "bug"))
+                    .then((tracker_id) =>
+                        cy.request({
+                            url: `/plugins/tracker?tracker=${tracker_id}&func=admin`,
+                        }),
+                    )
+                    .then((response) => {
+                        expect(response.status).to.eq(200);
                     });
-                });
-
-                let current_url;
-                cy.url().then((url) => {
-                    current_url = url;
-                    cy.visit(current_url + "&pv=1");
-
-                    // check that followup block is displayed
-                    cy.get("[data-test=artifact-followups]");
-                });
             });
+        });
 
-            it("can switch from autocomputed mode to calculated mode and so on", function () {
+        describe("Concurrent artifact edition", function () {
+            it("A popup is shown to warn the user that someone has edited the artifact while he was editing it.", function () {
                 cy.projectMemberSession();
-                cy.visitProjectService("tracker-artifact", "Trackers");
-                cy.getTrackerIdFromREST(parseInt(this.project_id, 10), "bug").then((tracker_id) => {
-                    cy.createArtifact({
-                        tracker_id: tracker_id,
-                        artifact_title: "autocompute",
-                        artifact_status: "New",
-                        title_field_name: TITLE_FIELD_NAME,
-                    }).then((artifact_id) => {
-                        cy.visit("https://tuleap/plugins/tracker/?&aid=" + artifact_id);
-                    });
+                cy.getTrackerIdFromREST(this.project_id, "issue").then((tracker_id) => {
+                    cy.visit(`/plugins/tracker/?tracker=${tracker_id}&func=new-artifact`);
                 });
-
-                //edit field and set 20 as values
-                cy.get("[data-test=edit-field-remaining_effort]").click();
-                cy.get("[data-test=remaining_effort]").clear().type("20");
-
-                // submit and check
+                cy.getContains("[data-test=artifact-form-element]", "Title")
+                    .find("[data-test-field-input]")
+                    .type("Concurrent edition test");
                 submitAndStay();
-                cy.get("[data-test=computed-value]").contains(20);
 
-                //edit field and go back in autocomputed mode
-                cy.get("[data-test=edit-field-remaining_effort]").click();
-                cy.get("[data-test=switch-to-autocompute]").click();
-
-                //submit and check
-                submitAndStay();
-                cy.get("[data-test=computed-value]").contains("Empty");
-            });
-        });
-
-        it("can add a report on his dashboard", function () {
-            cy.projectMemberSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.getContains("[data-test=tracker-link]", "artifact-link").click();
-            cy.get("[data-test=add-to-my-dashboard]").first().click({ force: true });
-
-            cy.get("[data-test=artifact-report-table]").contains("test A");
-            cy.get("[data-test=artifact-report-table]").contains("test B");
-        });
-    });
-
-    describe("Tracker dedicated permissions", function () {
-        before(function () {
-            cy.projectAdministratorSession();
-            cy.getProjectId("tracker-artifact").as("project_id");
-        });
-
-        it("should raise an error when user try to access to plugin Tracker admin page", function () {
-            cy.projectMemberSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.request({
-                url: "/plugins/tracker/global-admin/" + this.project_id,
-                failOnStatusCode: false,
-            }).then((response) => {
-                expect(response.status).to.eq(403);
-            });
-        });
-
-        it("tracker admin must be able to delegate tracker administration privilege", function () {
-            cy.projectAdministratorSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.getContains("[data-test=tracker-link]", "Bugs").click();
-
-            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
-
-            cy.get("[data-test=admin-permissions]").click();
-            cy.get("[data-test=tracker-permissions]").click();
-
-            cy.get("[data-test=permissions_3]").select("are admin of the tracker");
-
-            cy.get("[data-test=tracker-permission-submit]").click();
-
-            cy.get("[data-test=feedback]").contains("Permissions Updated");
-
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.getContains("[data-test=tracker-link]", "User Stories").click();
-            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
-
-            cy.get("[data-test=admin-permissions]").click();
-            cy.get("[data-test=tracker-permissions]").click();
-
-            cy.get("[data-test=permissions_3]").select("are admin of the tracker");
-
-            cy.get("[data-test=tracker-permission-submit]").click();
-
-            cy.get("[data-test=feedback]").contains("Permissions Updated");
-        });
-
-        it("regular user must be able to move artifact", function () {
-            cy.projectAdministratorSession();
-            cy.getTrackerIdFromREST(parseInt(this.project_id, 10), "bug").then((tracker_id) => {
-                cy.createArtifact({
-                    tracker_id: tracker_id,
-                    artifact_title: "move artifact",
-                    artifact_status: "New",
-                    title_field_name: TITLE_FIELD_NAME,
-                }).then((artifact_id) => {
-                    cy.visit("https://tuleap/plugins/tracker/?&aid=" + artifact_id);
-                });
-            });
-
-            cy.get("[data-test=tracker-artifact-actions]").click();
-            cy.get("[data-test=tracker-action-button-move]").click();
-
-            cy.get("[data-test=move-artifact-project-selector]").select("tracker artifact");
-            cy.get("[data-test=move-artifact-tracker-selector]").select("Bugs for Move");
-
-            cy.get("[data-test=move-artifact]").click();
-
-            cy.get("[data-test=feedback]").contains("has been successfully");
-            cy.get('[data-test="tracker-artifact-value-summary"]').contains("move artifact");
-            cy.get('[data-test="tracker-artifact-value-status"]').contains("New");
-        });
-
-        it("user with tracker admin permissions are tracker admin", function () {
-            cy.projectMemberSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.getContains("[data-test=tracker-link]", "Bugs").click();
-            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
-        });
-    });
-
-    describe("Concurrent artifact edition", () => {
-        it("A popup is shown to warn the user that someone has edited the artifact while he was editing it.", () => {
-            cy.projectMemberSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            createNewBug("Concurrent edition test");
-            submitAndStay();
-
-            cy.get("[data-test=current-artifact-id]")
-                .should("have.attr", "data-artifact-id")
-                .then((artifact_id) => {
-                    // Add a follow-up comment to the artifact via the REST API
-                    cy.putFromTuleapApi(`https://tuleap/api/artifacts/${artifact_id}`, {
-                        values: [],
-                        comment: {
-                            body: "I have commented this artifact while you were editing it. You mad bro?",
-                            post_processed_body: "string",
-                            format: "string",
-                        },
+                cy.get("[data-test=current-artifact-id]")
+                    .should("have.attr", "data-artifact-id")
+                    .then((artifact_id) => {
+                        // Add a follow-up comment to the artifact via the REST API
+                        cy.putFromTuleapApi(`https://tuleap/api/artifacts/${artifact_id}`, {
+                            values: [],
+                            comment: {
+                                body: "I have commented this artifact while you were editing it. You mad bro?",
+                                post_processed_body: "string",
+                                format: "string",
+                            },
+                        });
                     });
-                });
 
-            cy.get("[data-test=artifact_followup_comment]").type(
-                "This my freshly created artifact. Hope nobody has edited it in the meantime!",
-            );
+                cy.get("[data-test=artifact_followup_comment]").type(
+                    "This my freshly created artifact. Hope nobody has edited it in the meantime!",
+                );
 
-            submitAndStay();
+                submitAndStay();
 
-            // Check popup is shown and submit buttons disabled
-            cy.get("[data-test=concurrent-edition-popup-shown]");
-            cy.get("[data-test=artifact-submit]").should("be.disabled");
-            cy.get("[data-test=artifact-submit-and-stay]").should("be.disabled");
+                // Check popup is shown and submit buttons disabled
+                cy.get("[data-test=concurrent-edition-popup-shown]");
+                cy.get("[data-test=artifact-submit]").should("be.disabled");
+                cy.get("[data-test=artifact-submit-and-stay]").should("be.disabled");
 
-            // Acknowledge changes
-            cy.get("[data-test=acknowledge-concurrent-edition-button]").click();
+                // Acknowledge changes
+                cy.get("[data-test=acknowledge-concurrent-edition-button]").click();
 
-            // Check popup is hidden and submit buttons enabled
-            cy.get("[data-test=concurrent-edition-popup-shown]").should("not.exist");
-            cy.get("[data-test=artifact-submit]").should("not.be.disabled");
-            cy.get("[data-test=artifact-submit-and-stay]").should("not.be.disabled");
+                // Check popup is hidden and submit buttons enabled
+                cy.get("[data-test=concurrent-edition-popup-shown]").should("not.exist");
+                cy.get("[data-test=artifact-submit]").should("not.be.disabled");
+                cy.get("[data-test=artifact-submit-and-stay]").should("not.be.disabled");
 
-            submitAndStay();
+                submitAndStay();
 
-            cy.get("[data-test=artifact-follow-up]").should("have.length", 2);
+                cy.get("[data-test=artifact-follow-up]").should("have.length", 2);
+            });
         });
     });
 });
