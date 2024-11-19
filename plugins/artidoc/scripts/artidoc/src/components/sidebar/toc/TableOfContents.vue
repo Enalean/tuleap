@@ -24,6 +24,14 @@
     </h1>
     <ol>
         <li v-for="section in sections" v-bind:key="section.id">
+            <span
+                class="dragndrop-grip"
+                data-test="dragndrop-grip"
+                v-if="is_reorder_allowed"
+                v-bind:class="{ 'dragndrop-grip-when-sections-loading': is_sections_loading }"
+            >
+                <dragndrop-grip-illustration />
+            </span>
             <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
             <a
                 v-else-if="isArtifactSection(section)"
@@ -44,10 +52,15 @@ import { useGettext } from "vue3-gettext";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import DragndropGripIllustration from "@/components/sidebar/toc/DragndropGripIllustration.vue";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const { $gettext } = useGettext();
 
 const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+
+const is_reorder_allowed = can_user_edit_document;
 </script>
 
 <style scoped lang="scss">
@@ -67,10 +80,53 @@ ol {
 }
 
 li {
+    position: relative;
     padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-medium-spacing);
 
     &:first-child {
         padding-top: 0;
+    }
+
+    &:has(> .dragndrop-grip) {
+        padding-left: var(--tlp-large-spacing);
+    }
+
+    &:has(> .dragndrop-grip:hover) {
+        transition: background ease-in-out 250ms;
+        background: var(--tlp-main-color-lighter-90);
+    }
+
+    &:not(:hover) > .dragndrop-grip {
+        display: none;
+    }
+}
+
+.dragndrop-grip {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--tlp-medium-spacing);
+    height: 100%;
+    transition:
+        opacity ease-in-out 250ms,
+        background ease-in-out 250ms,
+        color ease-in-out 250ms;
+    opacity: 0.5;
+    background: var(--tlp-dimmed-color);
+    color: var(--tlp-white-color);
+    cursor: move;
+
+    &:hover {
+        opacity: 1;
+        background: var(--tlp-main-color);
+        color: var(--tlp-main-color-lighter-90);
+    }
+
+    &.dragndrop-grip-when-sections-loading {
+        visibility: hidden;
     }
 }
 
