@@ -75,7 +75,6 @@ function getId(section: ArtidocSection): string {
 <style lang="scss" scoped>
 @use "@/themes/includes/whitespace";
 @use "@/themes/includes/size";
-@use "@/themes/includes/viewport-breakpoint";
 
 $section-number-padding-left: var(--tlp-small-spacing);
 $section-number-padding-right: var(--tlp-medium-spacing);
@@ -165,11 +164,29 @@ li[data-is-sticking="true"]:first-child::before {
     border: 0;
     background-color: var(--tlp-white-color);
     box-shadow: var(--tlp-flyover-shadow);
+}
+</style>
 
-    @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
-        width: 100%;
-        margin: 0;
-        box-shadow: none;
+<style lang="scss">
+@use "@/themes/includes/viewport-breakpoint";
+
+.is-aside-expanded + .document-content {
+    > .tlp-card {
+        @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
+            width: 100%;
+            margin: 0;
+            box-shadow: none;
+        }
+    }
+}
+
+.is-aside-collapsed + .document-content {
+    > .tlp-card {
+        @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size-when-document-sidebar-is-collapsed}) {
+            width: 100%;
+            margin: 0;
+            box-shadow: none;
+        }
     }
 }
 </style>

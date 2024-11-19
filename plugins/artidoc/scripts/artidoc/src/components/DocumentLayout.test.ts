@@ -21,7 +21,7 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import DocumentLayout from "./DocumentLayout.vue";
 import DocumentContent from "./DocumentContent.vue";
-import TableOfContents from "./toc/TableOfContents.vue";
+import DocumentSidebar from "./sidebar/DocumentSidebar.vue";
 
 describe("DocumentLayout", () => {
     it("should display document content", () => {
@@ -30,9 +30,9 @@ describe("DocumentLayout", () => {
         expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
     });
 
-    it("should display table of contents", () => {
+    it("should display sidebar", () => {
         const wrapper = shallowMount(DocumentLayout);
 
-        expect(wrapper.findComponent(TableOfContents).exists()).toBe(true);
+        expect(wrapper.findComponent(DocumentSidebar).exists()).toBe(true);
     });
 });

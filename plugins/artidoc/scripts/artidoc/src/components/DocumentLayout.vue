@@ -20,11 +20,7 @@
 
 <template>
     <div class="document-layout">
-        <aside>
-            <div class="tlp-framed table-of-contents">
-                <table-of-contents />
-            </div>
-        </aside>
+        <document-sidebar />
         <section class="document-content" data-test="document-content">
             <document-content />
         </section>
@@ -32,45 +28,37 @@
 </template>
 
 <script setup lang="ts">
-import TableOfContents from "./toc/TableOfContents.vue";
 import DocumentContent from "./DocumentContent.vue";
+import DocumentSidebar from "./sidebar/DocumentSidebar.vue";
 </script>
 
 <style lang="scss" scoped>
 @use "@/themes/includes/size";
 @use "@/themes/includes/viewport-breakpoint";
-@use "@/themes/includes/zindex";
 
 .document-layout {
     $content-column: calc(100% * #{size.$document-container-width-ratio});
-    $toc-column: calc(100% * (1 - #{size.$document-container-width-ratio}));
+    $sidebar-column: calc(100% * (1 - #{size.$document-container-width-ratio}));
 
     display: grid;
-    grid-template-columns: $content-column $toc-column;
+    grid-template-columns: 100% 0;
+    transition: grid-template-columns ease-in-out 250ms;
+
+    &:has(.is-aside-expanded) {
+        grid-template-columns: $content-column $sidebar-column;
+    }
 }
 
 .document-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-right: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tlp-fade-background-color-darker-01);
 }
 
-aside {
-    z-index: zindex.$toc;
-    order: 1;
-    background: var(--tlp-fade-background-color);
-}
-
-.table-of-contents {
-    position: sticky;
-    top: calc(var(--artidoc-sticky-top-position) + var(--tlp-small-spacing));
-    padding: 0;
-}
-
 @media screen and (max-width: #{viewport-breakpoint.$small-screen-size}) {
-    .document-layout {
+    .document-layout,
+    .document-layout:has(.is-aside-expanded) {
         grid-template-columns: 1fr;
         grid-template-rows: max-content auto;
         height: inherit;
@@ -78,16 +66,6 @@ aside {
 
     .document-content {
         border-right: 0;
-    }
-
-    .table-of-contents {
-        top: 0;
-    }
-
-    aside {
-        order: -1;
-        height: fit-content;
-        border-bottom: 1px solid var(--tlp-neutral-normal-color);
     }
 }
 </style>

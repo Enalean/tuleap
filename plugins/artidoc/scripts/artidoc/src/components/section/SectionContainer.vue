@@ -62,6 +62,7 @@ defineProps<{ section: ArtidocSection }>();
 
 <style lang="scss" scoped>
 @use "@/themes/includes/whitespace";
+@use "@/themes/includes/viewport-breakpoint";
 
 .artidoc-section-container {
     --tuleap-artidoc-section-background: var(--tlp-white-color);
@@ -96,6 +97,12 @@ defineProps<{ section: ArtidocSection }>();
 
     &:has(.document-section-is-outdated) {
         --tuleap-artidoc-section-background: var(--tlp-alert-warning-background);
+    }
+}
+
+@media screen and (min-width: #{viewport-breakpoint.$small-screen-size}) and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
+    .artidoc-section-container {
+        padding-right: var(--artidoc-sidebar-button-width);
     }
 }
 </style>
