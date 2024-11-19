@@ -25,6 +25,7 @@
     "lit-html": "^2.8.0",
     "marked": "^4.0.10",
     "neverthrow": "6.0.0",
+    "prosemirror-model": "1.21.3",
     "prosemirror-state": "^1.4.3",
     "scroll-into-view-if-needed": "^3.1.0",
     "turndown": "^7.0.0",

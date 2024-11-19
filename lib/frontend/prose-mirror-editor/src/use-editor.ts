@@ -67,6 +67,7 @@ export async function useEditor(
     const schema = buildCustomSchema(custom_editor_nodes);
     const editor_id = uuidv4();
     const plugins: Plugin[] = [
+        ...setupAdditionalPlugins(),
         setupInputPlugin(),
         upload_plugin,
         ...(is_upload_allowed
@@ -82,7 +83,6 @@ export async function useEditor(
         ...setupToolbar(schema, toolbar_bus),
         initPluginTransformInput(project_id, references),
         initPluginCloseMarksAfterSpace(),
-        ...setupAdditionalPlugins(),
     ];
 
     const state: EditorState = getState(initial_content);

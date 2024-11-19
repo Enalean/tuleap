@@ -20,7 +20,6 @@
 import type { EditorState, Transaction } from "prosemirror-state";
 import { Plugin, PluginKey, TextSelection } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
-import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 
 // This value represents the number of positions between the end of the title content and the beginning of the description content.
 
@@ -55,7 +54,6 @@ const moveCursorToSectionDescription = (
     event: KeyboardEvent,
     state: EditorState,
     dispatch: (tr: Transaction) => void,
-    toolbar_bus: ToolbarBus,
 ): void => {
     const tr = state.tr;
     tr.setSelection(
@@ -65,7 +63,6 @@ const moveCursorToSectionDescription = (
         ),
     );
 
-    toolbar_bus.enableToolbar();
     event.preventDefault();
 
     dispatch(tr);
@@ -75,23 +72,17 @@ const moveCursorToSectionTitle = (
     event: KeyboardEvent,
     state: EditorState,
     dispatch: (tr: Transaction) => void,
-    toolbar_bus: ToolbarBus,
     end_of_title_position: number,
 ): void => {
     const tr = state.tr;
     tr.setSelection(TextSelection.create(state.doc, end_of_title_position));
 
-    toolbar_bus.disableToolbar();
     event.preventDefault();
 
     dispatch(tr);
 };
 
-function handleEnterEvent(
-    view: EditorView,
-    event: KeyboardEvent,
-    toolbar_bus: ToolbarBus,
-): boolean {
+function handleEnterEvent(view: EditorView, event: KeyboardEvent): boolean {
     const { state, dispatch } = view;
     const { $from } = state.selection;
     const current_node = $from.parent;
@@ -100,16 +91,12 @@ function handleEnterEvent(
         return false; // To allow new lines at the beginning of the description after hit enter
     }
 
-    moveCursorToSectionDescription(event, state, dispatch, toolbar_bus);
+    moveCursorToSectionDescription(event, state, dispatch);
 
     return true;
 }
 
-function handleBackspaceEvent(
-    view: EditorView,
-    event: KeyboardEvent,
-    toolbar_bus: ToolbarBus,
-): boolean {
+function handleBackspaceEvent(view: EditorView, event: KeyboardEvent): boolean {
     const { state, dispatch } = view;
     const { $from } = state.selection;
     const current_node = $from.parent;
@@ -124,7 +111,7 @@ function handleBackspaceEvent(
         return true; // To allow deleting the description after hit backspace
     }
 
-    moveCursorToSectionTitle(event, state, dispatch, toolbar_bus, end_of_title_position);
+    moveCursorToSectionTitle(event, state, dispatch, end_of_title_position);
 
     return true;
 }
@@ -133,7 +120,7 @@ function handleArrowRightEvent(): boolean {
     return true;
 }
 
-export const JumpToSectionNodePlugin = (toolbar_bus: ToolbarBus): Plugin =>
+export const JumpToSectionNodePlugin = (): Plugin =>
     new Plugin({
         key: new PluginKey("jump-to-section-node"),
         props: {
@@ -147,11 +134,11 @@ export const JumpToSectionNodePlugin = (toolbar_bus: ToolbarBus): Plugin =>
                     }
 
                     if (event.key === "Enter") {
-                        return handleEnterEvent(view, event, toolbar_bus);
+                        return handleEnterEvent(view, event);
                     }
 
                     if (event.key === "Backspace") {
-                        return handleBackspaceEvent(view, event, toolbar_bus);
+                        return handleBackspaceEvent(view, event);
                     }
 
                     if (event.key === "ArrowRight") {
@@ -163,7 +150,3 @@ export const JumpToSectionNodePlugin = (toolbar_bus: ToolbarBus): Plugin =>
             },
         },
     });
-
-export const setupMonoEditorPlugins = (toolbar_bus: ToolbarBus): Plugin[] => [
-    JumpToSectionNodePlugin(toolbar_bus),
-];
