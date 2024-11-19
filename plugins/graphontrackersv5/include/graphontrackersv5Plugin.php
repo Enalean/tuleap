@@ -20,9 +20,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\GraphOnTrackersV5\Async\ChartDataController;
 use Tuleap\GraphOnTrackersV5\XML\Template\CompleteIssuesTemplate;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
@@ -30,7 +32,7 @@ use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
-require_once __DIR__ .  '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -62,8 +64,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('cssfile', 'cssFile');
-
             //Tracker report renderer
             $this->addHook('tracker_report_renderer_instance', 'tracker_report_renderer_instance');
             $this->addHook(ImportRendererFromXmlEvent::NAME);
@@ -79,7 +79,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 
             $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories');
 
-            $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(CompleteIssuesTemplateEvent::NAME);
             $this->addHook(IssuesTemplateDashboardDefinition::NAME);
@@ -186,7 +185,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         $params['types'][self::RENDERER_TYPE] = dgettext('tuleap-tracker', 'Chart(s)');
     }
 
-     /**
+    /**
      * This hook adds a  GraphOnTrackersV5_Renderer in a renderers array
      *
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
@@ -266,13 +265,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         return $this->allowedForProject[$group_id];
     }
 
-    public function cssFile(): void
-    {
-        if ($this->canIncludeStylesheets()) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style.css') . '" />';
-        }
-    }
-
     private function canIncludeStylesheets()
     {
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0;
@@ -313,24 +305,11 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         ];
     }
 
-    /**
-     * @see javascript_file
-     */
-    public function javascript_file(array $params): void//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getAssets(): IncludeViteAssets
     {
-        $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
-        if ($tracker_plugin && $tracker_plugin->currentRequestIsForPlugin()) {
-            $layout = $params['layout'];
-            assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'graphontrackersv5.js'));
-        }
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/graphontrackersv5'
+        return new IncludeViteAssets(
+            __DIR__ . '/../scripts/graph-loader/frontend-assets',
+            '/assets/graphontrackersv5/graph-loader',
         );
     }
 

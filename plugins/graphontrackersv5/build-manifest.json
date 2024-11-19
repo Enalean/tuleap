@@ -1,9 +1,9 @@
 {
     "name": "graphontrackersv5",
     "gettext-ts": {
-        "graphontrackersv5": {
-            "src": "scripts/src",
-            "po" : "scripts/po"
+        "graph-loader": {
+            "src": "scripts/graph-loader/src",
+            "po" : "scripts/graph-loader/po"
         }
     }
 }

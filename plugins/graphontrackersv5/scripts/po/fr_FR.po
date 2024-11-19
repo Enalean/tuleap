@@ -1,2 +1,0 @@
-msgid "An error occurred while loading the chart: %s"
-msgstr "Une erreur est survenue pendant le chargement du graphique : %s"
