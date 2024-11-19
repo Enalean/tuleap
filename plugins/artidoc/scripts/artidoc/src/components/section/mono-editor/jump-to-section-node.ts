@@ -129,6 +129,10 @@ function handleBackspaceEvent(
     return true;
 }
 
+function handleArrowRightEvent(): boolean {
+    return true;
+}
+
 export const JumpToSectionNodePlugin = (toolbar_bus: ToolbarBus): Plugin =>
     new Plugin({
         key: new PluginKey("jump-to-section-node"),
@@ -149,6 +153,11 @@ export const JumpToSectionNodePlugin = (toolbar_bus: ToolbarBus): Plugin =>
                     if (event.key === "Backspace") {
                         return handleBackspaceEvent(view, event, toolbar_bus);
                     }
+
+                    if (event.key === "ArrowRight") {
+                        return handleArrowRightEvent();
+                    }
+
                     return false;
                 },
             },
