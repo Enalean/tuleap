@@ -121,6 +121,12 @@ msgstr "Artéfacts correspondants"
 msgid "Matching artifacts to use as section"
 msgstr "Artéfacts correspondants à utiliser comme section"
 
+msgid "Move down"
+msgstr "Déplacer vers le bas"
+
+msgid "Move up"
+msgstr "Déplacer vers le haut"
+
 msgid "No artifact is matching your query"
 msgstr "Aucun artéfact ne correspond à votre recherche"
 

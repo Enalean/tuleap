@@ -23,7 +23,7 @@
         {{ $gettext("Table of contents") }}
     </h1>
     <ol>
-        <li v-for="section in sections" v-bind:key="section.id">
+        <li v-for="(section, index) in sections" v-bind:key="section.id">
             <span
                 class="dragndrop-grip"
                 data-test="dragndrop-grip"
@@ -43,6 +43,17 @@
             <template v-else>
                 {{ section.display_title }}
             </template>
+            <span
+                class="reorder-arrows"
+                data-test="reorder-arrows"
+                v-if="is_reorder_allowed"
+                v-bind:class="{ 'reorder-arrows-when-sections-loading': is_sections_loading }"
+            >
+                <reorder-arrows
+                    v-bind:is_first="index === 0"
+                    v-bind:is_last="index === (sections?.length || 0) - 1"
+                />
+            </span>
         </li>
     </ol>
 </template>
@@ -54,6 +65,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import DragndropGripIllustration from "@/components/sidebar/toc/DragndropGripIllustration.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 
 const { $gettext } = useGettext();
 
@@ -73,7 +85,7 @@ h1 {
 
 ol {
     height: var(--artidoc-sidebar-content-height);
-    padding: 0;
+    padding: 0 0 var(--tlp-medium-spacing);
     overflow: hidden auto;
     list-style-position: inside;
     color: var(--tlp-dimmed-color);
@@ -91,6 +103,12 @@ li {
         padding-left: var(--tlp-large-spacing);
     }
 
+    &:has(> .reorder-arrows) {
+        padding-right: var(--tlp-large-spacing);
+    }
+
+    &:has(> .reorder-arrows:focus-within),
+    &:has(> .reorder-arrows:hover),
     &:has(> .dragndrop-grip:hover) {
         transition: background ease-in-out 250ms;
         background: var(--tlp-main-color-lighter-90);
@@ -98,6 +116,10 @@ li {
 
     &:not(:hover) > .dragndrop-grip {
         display: none;
+    }
+
+    &:not(:hover, :focus-within) > .reorder-arrows:not(:focus-within) {
+        opacity: 0;
     }
 }
 
@@ -126,6 +148,34 @@ li {
     }
 
     &.dragndrop-grip-when-sections-loading {
+        visibility: hidden;
+    }
+}
+
+$arrows-overflow: calc(var(--tlp-small-spacing) / 2);
+
+.reorder-arrows {
+    display: flex;
+    position: absolute;
+    top: calc(-1 * $arrows-overflow);
+    right: calc(var(--tlp-medium-spacing) / 2);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: calc(100% + 2 * $arrows-overflow);
+    transition:
+        opacity ease-in-out 250ms,
+        color ease-in-out 250ms;
+    opacity: 0.5;
+    color: var(--tlp-dimmed-color);
+
+    &:focus-within,
+    &:hover {
+        opacity: 1;
+        color: var(--tlp-main-color);
+    }
+
+    &.reorder-arrows-when-sections-loading {
         visibility: hidden;
     }
 }
