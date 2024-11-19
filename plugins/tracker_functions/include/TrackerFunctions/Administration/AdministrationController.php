@@ -28,8 +28,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -68,13 +67,13 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         }
 
         $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(
-                    __DIR__ . '/../../../../tracker/frontend-assets',
-                    '/assets/trackers',
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../tracker/scripts/styles/frontend-assets',
+                    '/assets/trackers/styles'
                 ),
-                'tracker-bp',
-            ),
+                'themes/BurningParrot/tracker.scss'
+            )
         );
 
         $layout->addJavascriptAsset(

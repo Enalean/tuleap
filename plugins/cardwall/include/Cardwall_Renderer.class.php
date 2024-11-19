@@ -24,7 +24,9 @@ use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
@@ -339,16 +341,16 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        $tracker_assets  = new IncludeAssets(
-            __DIR__ . '/../../tracker/frontend-assets',
-            '/assets/trackers'
+        $tracker_assets  = new IncludeViteAssets(
+            __DIR__ . '/../../tracker/scripts/styles/frontend-assets',
+            '/assets/trackers/styles'
         );
         $cardwall_assets = new IncludeAssets(
             __DIR__ . '/../frontend-assets/',
             '/assets/cardwall/'
         );
         return new CssAssetCollection([
-            new CssAssetWithoutVariantDeclinaisons($tracker_assets, 'style-fp'),
+            CssViteAsset::fromFileName($tracker_assets, 'themes/FlamingParrot/style.scss'),
             new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'flamingparrot-theme'),
         ]);
     }
