@@ -22,15 +22,15 @@
     "@tuleap/tlp-swatch-colors": "workspace:^"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^8.2.7",
-    "@storybook/addon-interactions": "^8.2.7",
-    "@storybook/addon-links": "^8.2.7",
-    "@storybook/addon-themes": "^8.2.7",
-    "@storybook/web-components": "^8.2.7",
-    "@storybook/web-components-vite": "^8.2.7",
+    "@storybook/addon-essentials": "^8.4.4",
+    "@storybook/addon-interactions": "^8.4.4",
+    "@storybook/addon-links": "^8.4.4",
+    "@storybook/addon-themes": "^8.4.4",
+    "@storybook/web-components": "^8.4.4",
+    "@storybook/web-components-vite": "^8.4.4",
     "@tuleap/build-system-configurator": "workspace:*",
     "lit": "^3.1.3",
-    "storybook": "^8.2.7"
+    "storybook": "^8.4.4"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -39,17 +39,8 @@
   },
   "pnpm": {
     "overrides": {
-      "cookie": "^0.7.2",
-      "assert": "npm:@nolyfill/assert@latest",
-      "deep-equal": "npm:@nolyfill/deep-equal@latest",
-      "hasown": "npm:@nolyfill/hasown@latest",
-      "is-arguments": "npm:@nolyfill/is-arguments@latest",
-      "is-generator-function": "npm:@nolyfill/is-generator-function@latest",
-      "is-typed-array": "npm:@nolyfill/is-typed-array@latest",
-      "isarray": "npm:@nolyfill/isarray@latest",
-      "side-channel": "npm:@nolyfill/side-channel@latest",
-      "which-typed-array": "npm:@nolyfill/which-typed-array@latest",
-      "path-to-regexp": "^0.1.10"
+      "is-typed-array": "npm:@nolyfill/is-typed-array@^1",
+      "which-typed-array": "npm:@nolyfill/which-typed-array@^1"
     }
   }
 }
