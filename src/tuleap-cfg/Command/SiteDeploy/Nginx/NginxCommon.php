@@ -28,24 +28,12 @@ use Psl\Str;
 
 class NginxCommon
 {
-    /**
-     * @var string
-     */
-    private $tuleap_base_dir;
-    /**
-     * @var string
-     */
-    private $nginx_base_dir;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger, string $tuleap_base_dir, string $nginx_base_dir)
-    {
-        $this->logger          = $logger;
-        $this->tuleap_base_dir = $tuleap_base_dir;
-        $this->nginx_base_dir  = $nginx_base_dir;
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly NginxServerNamesHashBucketSizeCalculator $hash_bucket_size_calculator,
+        private readonly string $tuleap_base_dir,
+        private readonly string $nginx_base_dir,
+    ) {
     }
 
     public function generateSSLCertificate(string $server_name, string $cert_filepath, string $key_filepath): void
@@ -82,30 +70,9 @@ class NginxCommon
         $this->logger->info("Deploy global settings chunk in {$this->nginx_base_dir}");
 
         $global_settings_template = File\read($this->tuleap_base_dir . '/src/etc/nginx/tuleap-managed-global-settings.conf');
-        $global_settings          = Str\replace($global_settings_template, '%hash_bucket_size%', (string) $this->computeServerNameHashBucketSize($server_name));
+        $global_settings          = Str\replace($global_settings_template, '%hash_bucket_size%', (string) $this->hash_bucket_size_calculator->computeServerNamesHashBucketSize($server_name));
 
         File\write($this->nginx_base_dir . '/conf.d/tuleap-managed-global-settings.conf', $global_settings, File\WriteMode::TRUNCATE);
-    }
-
-    private function computeServerNameHashBucketSize(string $server_name): int
-    {
-        $hash_bucket_size = 32;
-
-        // \posix_sysconf() is PHP 8.3+
-        $getconf_process = new Process(['getconf', 'LEVEL1_DCACHE_LINESIZE']);
-        $getconf_process->run();
-        if ($getconf_process->isSuccessful()) {
-            $hash_bucket_size = (int) $getconf_process->getOutput();
-        }
-
-        $server_name_length = strlen($server_name);
-
-        if ($hash_bucket_size >= $server_name_length) {
-            return $hash_bucket_size;
-        }
-
-        $closest_power_of_two_fitting_server_name_length = (int) pow(2, ceil(log($server_name_length, 2)));
-        return $closest_power_of_two_fitting_server_name_length;
     }
 
     private function copyTuleapDotD(): void

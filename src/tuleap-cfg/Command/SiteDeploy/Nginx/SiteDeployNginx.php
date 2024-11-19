@@ -52,7 +52,7 @@ class SiteDeployNginx
      */
     private $for_development;
 
-    public function __construct(LoggerInterface $logger, string $tuleap_base_dir, string $nginx_base_dir, string $server_name, bool $for_development)
+    public function __construct(LoggerInterface $logger, NginxServerNamesHashBucketSizeCalculator $hash_bucket_size_calculator, string $tuleap_base_dir, string $nginx_base_dir, string $server_name, bool $for_development)
     {
         $this->logger          = $logger;
         $this->tuleap_base_dir = $tuleap_base_dir;
@@ -60,7 +60,7 @@ class SiteDeployNginx
         $this->server_name     = $server_name;
         $this->for_development = $for_development;
 
-        $this->common = new NginxCommon($this->logger, $tuleap_base_dir, $nginx_base_dir);
+        $this->common = new NginxCommon($this->logger, $hash_bucket_size_calculator, $tuleap_base_dir, $nginx_base_dir);
     }
 
     public function configure(): void
