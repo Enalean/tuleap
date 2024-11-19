@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
 use Git_Driver_Gerrit;
@@ -27,48 +29,24 @@ use Git_Driver_Gerrit_User;
 use Git_Driver_Gerrit_UserAccountManager;
 use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Git_UserSynchronisationException;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UserAccountManagerPushSSHKeysTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserAccountManagerPushSSHKeysTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private PFUser $user;
-    /**
-     * @var Git_Driver_Gerrit&\Mockery\MockInterface
-     */
-    private $gerrit_driver;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_GerritDriverFactory
-     */
-    private $gerrit_driver_factory;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_gerrit_factory;
-    /**
-     * @var Git_Driver_Gerrit_User&\Mockery\MockInterface
-     */
-    private $gerrit_user;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_UserAccountManager
-     */
-    private $user_account_manager;
-    /**
-     * @var Git_RemoteServer_GerritServer&\Mockery\MockInterface
-     */
-    private $remote_server1;
-    /**
-     * @var Git_RemoteServer_GerritServer&\Mockery\MockInterface
-     */
-    private $remote_server2;
+    private Git_Driver_Gerrit&MockObject $gerrit_driver;
+    private Git_Driver_Gerrit_GerritDriverFactory&MockObject $gerrit_driver_factory;
+    private Git_RemoteServer_GerritServerFactory&MockObject $remote_gerrit_factory;
+    private Git_Driver_Gerrit_User&MockObject $gerrit_user;
+    private Git_Driver_Gerrit_UserAccountManager&MockObject $user_account_manager;
+    private Git_RemoteServer_GerritServer&MockObject $remote_server1;
+    private Git_RemoteServer_GerritServer&MockObject $remote_server2;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->user = new PFUser([
             'language_id' => 'en',
             'ldap_id'     => 'testUser',
@@ -78,23 +56,23 @@ class UserAccountManagerPushSSHKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user->setAuthorizedKeys($key1 . PFUser::SSH_KEY_SEPARATOR . $key2);
 
-        $this->gerrit_driver         = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->gerrit_driver_factory = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->gerrit_driver)->getMock();
-        $this->remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->gerrit_user           = \Mockery::spy(\Git_Driver_Gerrit_User::class);
+        $this->gerrit_driver         = $this->createMock(Git_Driver_Gerrit::class);
+        $this->gerrit_driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $this->remote_gerrit_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->gerrit_user           = $this->createMock(Git_Driver_Gerrit_User::class);
 
-        $this->user_account_manager = \Mockery::mock(
-            \Git_Driver_Gerrit_UserAccountManager::class,
-            [$this->gerrit_driver_factory, $this->remote_gerrit_factory]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $this->user_account_manager->shouldReceive('getGerritUser')->andReturns($this->gerrit_user);
+        $this->gerrit_driver_factory->method('getDriver')->willReturn($this->gerrit_driver);
 
-        $this->remote_server1 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $this->remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $this->user_account_manager = $this->getMockBuilder(Git_Driver_Gerrit_UserAccountManager::class)
+            ->setConstructorArgs([$this->gerrit_driver_factory, $this->remote_gerrit_factory])
+            ->onlyMethods(['getGerritUser'])
+            ->getMock();
+        $this->user_account_manager->method('getGerritUser')->willReturn($this->gerrit_user);
 
-        $this->remote_gerrit_factory->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns([
+        $this->remote_server1 = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $this->remote_server2 = $this->createMock(Git_RemoteServer_GerritServer::class);
+
+        $this->remote_gerrit_factory->method('getRemoteServersForUser')->with($this->user)->willReturn([
             $this->remote_server1,
             $this->remote_server2,
         ]);
@@ -102,11 +80,12 @@ class UserAccountManagerPushSSHKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesntPushIfUserHasNoRemoteServers(): void
     {
-        $remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns([])->getMock();
+        $remote_gerrit_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $remote_gerrit_factory->method('getRemoteServersForUser')->with($this->user)->willReturn([]);
 
         $user_account_manager = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver_factory, $remote_gerrit_factory);
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->never();
-        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->never();
+        $this->gerrit_driver->expects(self::never())->method('addSSHKeyToAccount');
+        $this->gerrit_driver->expects(self::never())->method('removeSSHKeyFromAccount');
 
         $user_account_manager->pushSSHKeys($this->user);
     }
@@ -115,42 +94,39 @@ class UserAccountManagerPushSSHKeysTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->setAuthorizedKeys('');
 
-        $this->remote_gerrit_factory->shouldReceive('getRemoteServersForUser')->with($this->user)->never();
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->never();
-        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->never();
+        $this->remote_gerrit_factory->expects(self::never())->method('getRemoteServersForUser')->with($this->user);
+        $this->gerrit_driver->expects(self::never())->method('addSSHKeyToAccount');
+        $this->gerrit_driver->expects(self::never())->method('removeSSHKeyFromAccount');
 
         $this->user_account_manager->pushSSHKeys($this->user);
     }
 
     public function testItCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes(): void
     {
-        $pushed_keys = [
-            'Im a new key',
-            'Im another new key',
-        ];
+        $pushed_keys = ['key1', 'key2'];
 
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server1, $this->user, $pushed_keys[1]);
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server2, $this->user, $pushed_keys[1]);
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server1, $this->user, $pushed_keys[0]);
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server2, $this->user, $pushed_keys[0]);
-
-        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->with($this->remote_server1, $this->user, $pushed_keys[0]);
-        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->with($this->remote_server2, $this->user, $pushed_keys[0]);
-        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->with($this->remote_server1, $this->user, $pushed_keys[1]);
-        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->with($this->remote_server2, $this->user, $pushed_keys[1]);
-
-        //for each remote server
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->times(4);
-        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->times(4);
+        $this->gerrit_driver->expects(self::exactly(4))->method('addSSHKeyToAccount')->withConsecutive(
+            [$this->remote_server1, $this->gerrit_user, $pushed_keys[0]],
+            [$this->remote_server1, $this->gerrit_user, $pushed_keys[1]],
+            [$this->remote_server2, $this->gerrit_user, $pushed_keys[0]],
+            [$this->remote_server2, $this->gerrit_user, $pushed_keys[1]],
+        );
+        $this->gerrit_driver->expects(self::exactly(4))->method('removeSSHKeyFromAccount')->withConsecutive(
+            [$this->remote_server1, $this->gerrit_user, $pushed_keys[0]],
+            [$this->remote_server1, $this->gerrit_user, $pushed_keys[1]],
+            [$this->remote_server2, $this->gerrit_user, $pushed_keys[0]],
+            [$this->remote_server2, $this->gerrit_user, $pushed_keys[1]],
+        );
 
         $this->user_account_manager->pushSSHKeys($this->user);
     }
 
     public function testItThrowsAnExceptionIfGerritDriverFails(): void
     {
-        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->andThrows(new Git_Driver_Gerrit_Exception());
+        $this->gerrit_driver->method('addSSHKeyToAccount')->willThrowException(new Git_Driver_Gerrit_Exception());
+        $this->gerrit_driver->method('removeSSHKeyFromAccount');
 
-        $this->expectException(\Git_UserSynchronisationException::class);
+        self::expectException(Git_UserSynchronisationException::class);
         $this->user_account_manager->pushSSHKeys($this->user);
     }
 }

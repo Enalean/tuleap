@@ -22,100 +22,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
 use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_MembershipManager;
 use Git_Driver_Gerrit_UmbrellaProjectManager;
 use Git_RemoteServer_GerritServer;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectManager;
 use ProjectUGroup;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class UmbrellaProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UmbrellaProjectManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var Git_RemoteServer_GerritServer */
-    protected $server;
-
-    /** @var Git_Driver_Gerrit */
-    protected $driver;
-
-    /** @var Project */
-    protected $project;
-    protected $project_id        = 103;
-    protected $project_unix_name = 'mozilla';
-
-    /** @var UGroupManager */
-    protected $ugroup_manager;
-
-    /** @var Git_Driver_Gerrit_MembershipManager */
-    protected $membership_manager;
-
-    /** @var ProjectManager */
-    protected $project_manager;
-
-    /** @var Git_Driver_Gerrit_UmbrellaProjectManager */
-    protected $umbrella_manager;
-
-    protected $project_admins_gerrit_name = 'mozilla/project_admins';
+    private Git_RemoteServer_GerritServer&MockObject $server;
+    private Git_Driver_Gerrit&MockObject $driver;
+    private Project $project;
+    private int $project_id           = 103;
+    private string $project_unix_name = 'mozilla';
+    private Git_Driver_Gerrit_MembershipManager&MockObject $membership_manager;
+    private ProjectManager&MockObject $project_manager;
+    private Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager;
+    private string $project_admins_gerrit_name = 'mozilla/project_admins';
     private string $project_admins_gerrit_parent_name;
-    /**
-     * @var Project&\Mockery\MockInterface
-     */
-    private $parent_project;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $parent_project_admins;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $project_admins;
+    private Project $parent_project;
+    private ProjectUGroup $parent_project_admins;
+    private ProjectUGroup $project_admins;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->server  = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getId')->andReturn($this->project_id);
-        $this->project->shouldReceive('getUnixName')->andReturn($this->project_unix_name);
-        $this->project->shouldReceive('isPublic')->andReturnTrue();
+        $this->server  = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $this->project = ProjectTestBuilder::aProject()
+            ->withId($this->project_id)
+            ->withUnixName($this->project_unix_name)
+            ->withAccessPublic()
+            ->build();
 
         $this->project_admins_gerrit_parent_name = 'grozilla/project_admins';
-        $this->parent_project                    = Mockery::mock(Project::class);
-        $this->parent_project->shouldReceive('getId')->andReturn(104);
-        $this->parent_project->shouldReceive('getUnixName')->andReturn('grozilla');
+        $this->parent_project                    = ProjectTestBuilder::aProject()->withId(104)->withUnixName('grozilla')->build();
 
-        $this->parent_project_admins = Mockery::mock(ProjectUGroup::class);
-        $this->parent_project_admins->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_ADMIN);
-        $this->parent_project_admins->shouldReceive('getNormalizedName')->andReturn('project_admins');
+        $this->parent_project_admins = ProjectUGroupTestBuilder::buildProjectAdmins();
 
-        $this->project_admins = Mockery::mock(ProjectUGroup::class);
-        $this->project_admins->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_ADMIN);
-        $this->project_admins->shouldReceive('getNormalizedName')->andReturn('project_admins');
+        $this->project_admins = ProjectUGroupTestBuilder::buildProjectAdmins();
 
-        $this->driver = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->driver->shouldReceive('doesTheParentProjectExist')->andReturns(false);
+        $this->driver = $this->createMock(Git_Driver_Gerrit::class);
+        $this->driver->method('doesTheParentProjectExist')->willReturn(false);
 
-        $driver_factory = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
+        $driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $driver_factory->method('getDriver')->willReturn($this->driver);
 
-        $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
-        $this->ugroup_manager->shouldReceive('getUGroups')->with($this->project)->andReturns([$this->project_admins]);
-        $this->ugroup_manager->shouldReceive('getUGroups')->with($this->parent_project)->andReturns([$this->parent_project_admins]);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $ugroup_manager->method('getUGroups')->willReturnCallback(fn(Project $project) => match ($project) {
+            $this->project        => [$this->project_admins],
+            $this->parent_project => [$this->parent_project_admins],
+        });
 
-        $this->membership_manager = \Mockery::spy(\Git_Driver_Gerrit_MembershipManager::class);
+        $this->membership_manager = $this->createMock(Git_Driver_Gerrit_MembershipManager::class);
 
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $this->umbrella_manager = new Git_Driver_Gerrit_UmbrellaProjectManager(
-            $this->ugroup_manager,
+            $ugroup_manager,
             $this->project_manager,
             $this->membership_manager,
             $driver_factory
@@ -124,58 +98,87 @@ class UmbrellaProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItOnlyCallsCreateParentProjectOnceIfTheProjectHasNoParents(): void
     {
-        $this->project_manager->shouldReceive('getParentProject')->with($this->project->getID())->andReturns(null);
+        $this->project_manager->method('getParentProject')->with($this->project->getID())->willReturn(null);
 
-        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name)->once();
+        $this->driver->expects(self::once())->method('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name);
+        $this->driver->method('resetProjectInheritance');
+        $this->membership_manager->method('createArrayOfGroupsForServer');
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItOnlyCallsCreateParentProjectTwiceIfTheProjectHasOneParent(): void
     {
-        $this->project_manager->shouldReceive('getParentProject')->with($this->project->getID())->andReturns($this->parent_project);
-        $this->project_manager->shouldReceive('getParentProject')->with($this->parent_project->getID())->andReturns(null);
-        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->times(2);
+        $this->project_manager->method('getParentProject')
+            ->willReturnCallback(fn($id) => match ((int) $id) {
+                (int) $this->project->getID()        => $this->parent_project,
+                (int) $this->parent_project->getID() => null,
+            });
+        $this->driver->expects(self::exactly(2))->method('createProjectWithPermissionsOnly');
+        $this->driver->method('resetProjectInheritance');
+        $this->driver->method('setProjectInheritance');
+        $this->membership_manager->method('createArrayOfGroupsForServer');
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItCallsCreateParentProjectWithTheCorrectParameters(): void
     {
-        $this->project_manager->shouldReceive('getParentProject')->with($this->project->getID())->andReturns($this->parent_project);
-        $this->project_manager->shouldReceive('getParentProject')->with($this->parent_project->getID())->andReturns(null);
-
-        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name)->ordered()->atLeast()->once();
-        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->parent_project, $this->project_admins_gerrit_parent_name)->ordered()->atLeast()->once();
+        $this->project_manager->method('getParentProject')
+            ->willReturnCallback(fn($id) => match ((int) $id) {
+                (int) $this->project->getID()        => $this->parent_project,
+                (int) $this->parent_project->getID() => null,
+            });
+        $this->driver->expects(self::atLeast(2))->method('createProjectWithPermissionsOnly')
+            ->withConsecutive(
+                [$this->server, $this->project, $this->project_admins_gerrit_name],
+                [$this->server, $this->parent_project, $this->project_admins_gerrit_parent_name],
+            );
+        $this->driver->method('resetProjectInheritance');
+        $this->driver->method('setProjectInheritance');
+        $this->membership_manager->method('createArrayOfGroupsForServer');
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItMigratesTheUserGroupsAlsoForParentUmbrellaProjects(): void
     {
-        $this->project_manager->shouldReceive('getParentProject')->with($this->project->getID())->andReturns($this->parent_project);
-        $this->project_manager->shouldReceive('getParentProject')->with($this->parent_project->getID())->andReturns(null);
+        $this->project_manager->method('getParentProject')
+            ->willReturnCallback(fn($id) => match ((int) $id) {
+                (int) $this->project->getID()        => $this->parent_project,
+                (int) $this->parent_project->getID() => null,
+            });
+        $this->driver->method('createProjectWithPermissionsOnly');
+        $this->driver->method('resetProjectInheritance');
+        $this->driver->method('setProjectInheritance');
 
-        $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')->times(2);
+        $this->membership_manager->expects(self::exactly(2))->method('createArrayOfGroupsForServer');
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItCallsTheDriverToSetTheParentProjectIfAny(): void
     {
-        $this->project_manager->shouldReceive('getParentProject')->with($this->project->getID())->andReturns($this->parent_project);
-        $this->project_manager->shouldReceive('getParentProject')->with($this->parent_project->getID())->andReturns(null);
-
-        $this->driver->shouldReceive('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName())->once();
+        $this->project_manager->method('getParentProject')
+            ->willReturnCallback(fn($id) => match ((int) $id) {
+                (int) $this->project->getID()        => $this->parent_project,
+                (int) $this->parent_project->getID() => null,
+            });
+        $this->driver->expects(self::once())->method('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName());
+        $this->driver->method('createProjectWithPermissionsOnly');
+        $this->driver->method('resetProjectInheritance');
+        $this->membership_manager->method('createArrayOfGroupsForServer');
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItDoesntCallTheDriverToSetTheParentProjectIfNone(): void
     {
-        $this->project_manager->shouldReceive('getParentProject')->with($this->project->getID())->andReturns(null);
-
-        $this->driver->shouldReceive('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName())->never();
+        $this->project_manager->method('getParentProject')->with($this->project->getID())->willReturn(null);
+        $this->driver->expects(self::never())->method('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName());
+        $this->driver->method('createProjectWithPermissionsOnly');
+        $this->driver->method('resetProjectInheritance');
+        $this->membership_manager->method('createArrayOfGroupsForServer');
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
