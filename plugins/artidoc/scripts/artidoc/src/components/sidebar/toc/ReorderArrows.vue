@@ -25,6 +25,7 @@
         data-test="move-up"
         class="tlp-button-primary"
         type="button"
+        v-on:click="up"
     >
         <i class="fa-solid fa-chevron-up" role="img"></i>
     </button>
@@ -35,6 +36,7 @@
         data-test="move-down"
         class="tlp-button-primary"
         type="button"
+        v-on:click="down"
     >
         <i class="fa-solid fa-chevron-down" role="img"></i>
     </button>
@@ -42,13 +44,34 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import type { StoredArtidocSection } from "@/stores/useSectionsStore";
 
-defineProps<{ is_first: boolean; is_last: boolean }>();
+const props = defineProps<{ is_first: boolean; is_last: boolean; section: StoredArtidocSection }>();
 
 const { $gettext } = useGettext();
 
 const title_up = $gettext("Move up");
 const title_down = $gettext("Move down");
+
+const { moveSectionUp, moveSectionDown } = strictInject(SECTIONS_STORE);
+
+function up(event: Event): void {
+    moveSectionUp(props.section).then(() => {
+        if (event.target instanceof HTMLButtonElement) {
+            event.target.focus();
+        }
+    });
+}
+
+function down(event: Event): void {
+    moveSectionDown(props.section).then(() => {
+        if (event.target instanceof HTMLButtonElement) {
+            event.target.focus();
+        }
+    });
+}
 </script>
 
 <style scoped lang="scss">

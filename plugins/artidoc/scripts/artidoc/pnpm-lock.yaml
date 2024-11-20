@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/lazybox':
     specifier: workspace:^
     version: link:../../../../lib/frontend/lazybox
+  '@tuleap/option':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/option
   '@tuleap/print-as-pdf':
     specifier: workspace:^
     version: link:../../../../lib/frontend/print-as-pdf
