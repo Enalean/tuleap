@@ -946,6 +946,14 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $renderer->updateArtifact($request, $current_user);
                 break;
             case 'copy-artifact':
+                if (! $this->getTracker()->isCopyAllowed()) {
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        dgettext('tuleap-tracker', 'This artifact cannot be duplicated.'),
+                    );
+                    $GLOBALS['Response']->redirect($this->getUri());
+                }
+
                 $art_link = $this->fetchDirectLinkToArtifact();
                 $GLOBALS['Response']->addFeedback(
                     'info',

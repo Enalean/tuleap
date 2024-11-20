@@ -40,6 +40,14 @@
         {{ tracker_log_priority_changes }}
     </label>
 
+    <label class="checkbox"><input
+        type="checkbox"
+        name="allow_copy"
+        value="1"
+        {{# is_copy_allowed }} checked {{/ is_copy_allowed }} />
+        {{# dgettext }} tuleap-tracker | Allow duplication of artifacts {{/ dgettext }}
+    </label>
+
     {{# enable_insecure_emailgateway }}
         <label class="checkbox">
             <input
