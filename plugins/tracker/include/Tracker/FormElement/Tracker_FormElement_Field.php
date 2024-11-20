@@ -482,6 +482,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $required           = $this->required ? ' <span class="highlight">*</span>' : '';
             $html              .= '<div class="' . $this->getClassNames($additional_classes, $is_field_read_only) . '"
                 data-field-id="' . $this->id . '"
+                data-test-artifact-form-element
                 data-test="tracker-artifact-value-' . $this->getName() . '"
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
 
@@ -489,6 +490,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 $title = $purifier->purify(sprintf(dgettext('tuleap-tracker', 'Edit the field "%1$s"'), $this->getLabel()));
                 $html .= '<button type="button" title="' . $title . '"
                                 class="tracker_formelement_edit"
+                                data-test-edit-field
                                 data-test="edit-field-' . $this->getName() . '">' .
                     $purifier->purify($this->getLabel()) . $required .
                     '</button>';
@@ -551,6 +553,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html    .= '<div class="' . $this->getClassNamesForSubmit() . '"
+                data-test="artifact-form-element"
                 data-field-id="' . $this->id . '"
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
             $html    .= '<label data-test="field-label" for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' . $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . $required . '</label>';

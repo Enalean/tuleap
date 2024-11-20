@@ -101,6 +101,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text"
+                         data-test-field-input
                          data-test="' . $this->getName() . '"
                          name="artifact[' . $this->id . ']"
                          ' . ($this->isRequired() ? 'required' : '') . '
@@ -175,6 +176,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         }
         $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text"
+                         data-test-field-input
                          data-test="' . $this->getName() . '"
                          name="artifact[' . $this->id . ']"
                          ' . ($this->isRequired() ? 'required' : '') . '
