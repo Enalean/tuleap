@@ -22,8 +22,13 @@
     <h1 class="tlp-pane-title">
         {{ $gettext("Table of contents") }}
     </h1>
-    <ol>
-        <li v-for="(section, index) in sections" v-bind:key="section.id">
+    <ol ref="list" data-is-container="true">
+        <li
+            v-for="(section, index) in sections"
+            v-bind:key="section.id"
+            draggable="true"
+            v-bind:data-internal-id="section.internal_id"
+        >
             <span
                 class="dragndrop-grip"
                 data-test="dragndrop-grip"
@@ -32,22 +37,26 @@
             >
                 <dragndrop-grip-illustration />
             </span>
+
             <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
             <a
                 v-else-if="isArtifactSection(section)"
                 v-bind:href="`#section-${section.id}`"
                 class="table-of-content-section-title"
+                data-not-drag-handle="true"
             >
                 {{ section.display_title }}
             </a>
-            <template v-else>
+            <span v-else class="table-of-content-section-title" data-not-drag-handle="true">
                 {{ section.display_title }}
-            </template>
+            </span>
+
             <span
                 class="reorder-arrows"
                 data-test="reorder-arrows"
                 v-if="is_reorder_allowed"
                 v-bind:class="{ 'reorder-arrows-when-sections-loading': is_sections_loading }"
+                data-not-drag-handle="true"
             >
                 <reorder-arrows
                     v-bind:is_first="index === 0"
@@ -67,16 +76,74 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import DragndropGripIllustration from "@/components/sidebar/toc/DragndropGripIllustration.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
+import { onMounted, onUnmounted, ref } from "vue";
+import { init } from "@tuleap/drag-and-drop";
+import type { Drekkenov } from "@tuleap/drag-and-drop";
+import { noop } from "@/helpers/noop";
+import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop/src";
 
 const { $gettext } = useGettext();
 
-const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
+const { sections, is_sections_loading, moveSectionAtTheEnd, moveSectionBefore } =
+    strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const is_reorder_allowed = can_user_edit_document;
+
+const list = ref<HTMLElement>();
+
+let drek: Drekkenov | undefined = undefined;
+
+onMounted(() => {
+    if (!list.value || !is_reorder_allowed) {
+        return;
+    }
+
+    drek = init({
+        mirror_container: list.value,
+        isDropZone: (element: HTMLElement) => Boolean(element.dataset.isContainer),
+        isDraggable: (element: HTMLElement) => element.draggable,
+        isInvalidDragHandle: (handle: HTMLElement) =>
+            Boolean(handle.closest("[data-not-drag-handle]")),
+        isConsideredInDropzone: (child: Element) => child.hasAttribute("draggable"),
+        doesDropzoneAcceptDraggable: () => true,
+        onDrop: (context: SuccessfulDropCallbackParameter): void => {
+            if (context.dropped_element.dataset.internalId === undefined) {
+                return;
+            }
+
+            const moved_section = {
+                internal_id: context.dropped_element.dataset.internalId,
+            };
+
+            if (context.next_sibling === null) {
+                moveSectionAtTheEnd(moved_section);
+                return;
+            }
+
+            if (
+                !(context.next_sibling instanceof HTMLElement) ||
+                context.next_sibling.dataset.internalId === undefined
+            ) {
+                return;
+            }
+            const sibling = {
+                internal_id: context.next_sibling.dataset.internalId,
+            };
+            moveSectionBefore(moved_section, sibling);
+        },
+        cleanupAfterDragCallback: noop,
+    });
+});
+
+onUnmounted(() => {
+    drek?.destroy();
+});
 </script>
 
 <style scoped lang="scss">
+@use "pkg:@tuleap/drag-and-drop";
+
 h1 {
     display: flex;
     align-items: center;
@@ -121,6 +188,16 @@ li {
 
     &:not(:hover, :focus-within) > .reorder-arrows:not(:focus-within) {
         opacity: 0;
+    }
+}
+
+.drek-ghost {
+    border-radius: 0;
+
+    > .dragndrop-grip,
+    > .table-of-content-section-title,
+    > .reorder-arrows {
+        visibility: hidden;
     }
 }
 

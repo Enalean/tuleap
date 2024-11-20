@@ -64,6 +64,11 @@ export interface SectionsStore {
     getReferencesForOneSection: (section: ArtidocSection, project_id: number) => void;
     moveSectionUp: (section: StoredArtidocSection) => Promise<void>;
     moveSectionDown: (section: StoredArtidocSection) => Promise<void>;
+    moveSectionBefore: (
+        section: InternalArtidocSectionId,
+        next_sibling: InternalArtidocSectionId,
+    ) => Promise<void>;
+    moveSectionAtTheEnd: (section: InternalArtidocSectionId) => Promise<void>;
 }
 
 type BeforeSection = { before: string };
@@ -329,12 +334,80 @@ export function useSectionsStore(): SectionsStore {
         );
     }
 
-    function findIndexOfSection(section: ArtidocSection): Option<number> {
+    function moveSectionBefore(
+        section: InternalArtidocSectionId,
+        next_sibling: InternalArtidocSectionId,
+    ): Promise<void> {
+        return findIndexOfSection(section).match(
+            (index_section) => {
+                return findIndexOfSection(next_sibling).match(
+                    (index_sibling) => {
+                        if (sections.value === undefined) {
+                            return Promise.resolve();
+                        }
+
+                        if (index_section < 0 || sections.value.length - 1 < index_section) {
+                            return Promise.resolve();
+                        }
+
+                        if (index_sibling < 0 || sections.value.length - 1 < index_sibling) {
+                            return Promise.resolve();
+                        }
+
+                        if (index_sibling === index_section + 1) {
+                            // same position, do nothing
+                            return Promise.resolve();
+                        }
+
+                        const section = sections.value[index_section];
+
+                        sections.value.splice(index_section, 1);
+                        sections.value.splice(index_sibling, 0, section);
+
+                        return Promise.resolve();
+                    },
+                    () => Promise.resolve(),
+                );
+            },
+            () => Promise.resolve(),
+        );
+    }
+
+    function moveSectionAtTheEnd(section: InternalArtidocSectionId): Promise<void> {
+        return findIndexOfSection(section).match(
+            (index_section) => {
+                if (sections.value === undefined) {
+                    return Promise.resolve();
+                }
+
+                if (index_section < 0 || sections.value.length - 1 < index_section) {
+                    return Promise.resolve();
+                }
+
+                if (index_section === sections.value.length - 1) {
+                    // same position, do nothing
+                    return Promise.resolve();
+                }
+
+                const section = sections.value[index_section];
+
+                sections.value.splice(index_section, 1);
+                sections.value.push(section);
+
+                return Promise.resolve();
+            },
+            () => Promise.resolve(),
+        );
+    }
+
+    function findIndexOfSection(section: InternalArtidocSectionId): Option<number> {
         if (sections.value === undefined) {
             return Option.nothing();
         }
 
-        const index = sections.value.findIndex((element) => element.id === section.id);
+        const index = sections.value.findIndex(
+            (element) => element.internal_id === section.internal_id,
+        );
         if (index === -1) {
             return Option.nothing();
         }
@@ -356,5 +429,7 @@ export function useSectionsStore(): SectionsStore {
         getReferencesForOneSection,
         moveSectionUp,
         moveSectionDown,
+        moveSectionBefore,
+        moveSectionAtTheEnd,
     };
 }

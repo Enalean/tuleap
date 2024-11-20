@@ -8,6 +8,7 @@
   "dependencies": {
     "@tuleap/core-constants": "workspace:^",
     "@tuleap/dom": "workspace:^",
+    "@tuleap/drag-and-drop": "workspace:^",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/gettext": "workspace:^",
