@@ -56,6 +56,7 @@ final class SiteDeployNginxCommand extends Command
         $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
         $deploy         = new SiteDeployNginx(
             $console_logger,
+            new NginxServerNamesHashBucketSizeCalculator(new CurrentCPUInformation()),
             ForgeConfig::get('tuleap_dir'),
             '/etc/nginx',
             ForgeConfig::get('sys_default_domain'),
