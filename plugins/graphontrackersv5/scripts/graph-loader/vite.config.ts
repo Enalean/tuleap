@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+export default vite.defineAppConfig(
+    {
+        plugin_name: "graphontrackersv5",
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        plugins: [POGettextPlugin.vite()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "graph-loader": path.resolve(__dirname, "src/loadGraphs.js"),
+                },
+            },
+        },
+    },
+);

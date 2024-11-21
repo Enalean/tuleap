@@ -1017,6 +1017,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 $html .= $fts_warning;
 
                 try {
+                    $current_renderer->fetchAssets($GLOBALS['Response']);
                     $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
                 } catch (\Tuleap\Tracker\Report\dao\TooManyMatchingArtifactsException $exception) {
                     BackendLogger::getDefaultLogger()->error('Report failure', ['exception' => $exception]);

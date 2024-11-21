@@ -24,6 +24,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
 use Tuleap\Tracker\Widget\WidgetWithAssetDependencies;
@@ -104,6 +105,14 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      * @return string
      */
     abstract public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user);
+
+    /**
+     * Adds assets to the current page
+     */
+    public function fetchAssets(BaseLayout $layout): void
+    {
+        // Nothing to do
+    }
 
     /**
      * Process the request

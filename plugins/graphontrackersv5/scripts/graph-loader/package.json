@@ -1,10 +1,18 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-graphontrackersv5",
+  "name": "@tuleap/plugin-graphontrackersv5-graph-loader",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-graphontrackersv5-graph-loader.js",
+      "require": "./dist/plugin-graphontrackersv5-graph-loader.umd.cjs"
+    }
+  },
   "dependencies": {
+    "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "d3-array": "^3.0.1",
@@ -17,14 +25,14 @@
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "d3-transition": "^3.0.1",
-    "node-gettext": "^3.0.0",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*"
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch"
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
   }
 }

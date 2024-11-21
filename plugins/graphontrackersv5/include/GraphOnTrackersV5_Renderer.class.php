@@ -19,9 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
@@ -125,6 +127,14 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $html        .= $this->fetchCharts($user, $in_dashboard, $readonly);
         }
         return $html;
+    }
+
+    public function fetchAssets(BaseLayout $layout): void
+    {
+        $layout->addJavascriptAsset(new JavascriptViteAsset(
+            $this->plugin->getAssets(),
+            'src/loadGraphs.js',
+        ));
     }
 
     /**

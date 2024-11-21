@@ -22,9 +22,8 @@
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\GraphOnTrackersV5\Widget\WidgetChartDao;
-use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -255,23 +254,16 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
-    public function getJavascriptDependencies(): array
+    public function getJavascriptAssets(): array
     {
-        return [
-            ['file' => $this->getAssets()->getFileURL('graphontrackersv5.js')],
-        ];
+        return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.js')];
     }
 
-    public function getStylesheetDependencies(): CssAssetCollection
+    private function getAssets(): IncludeViteAssets
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style')]);
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/graphontrackersv5'
+        return new IncludeViteAssets(
+            __DIR__ . '/../scripts/graph-loader/frontend-assets',
+            '/assets/graphontrackersv5/graph-loader',
         );
     }
 }
