@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
-use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RawSection;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;

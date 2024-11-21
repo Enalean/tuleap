@@ -22,13 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Artidoc\Domain\Service\DocumentService;
 use Tuleap\Docman\ServiceDocman;
 
 final readonly class ArtidocDocumentInformation
 {
     public function __construct(
-        public ArtidocDocument $document,
+        public Artidoc $document,
         public ServiceDocman $not_yet_hexagonal_service_docman,
         public DocumentService $document_service,
     ) {

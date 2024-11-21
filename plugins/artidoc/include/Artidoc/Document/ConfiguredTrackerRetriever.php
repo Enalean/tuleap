@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Tracker\RetrieveTracker;
 
 final readonly class ConfiguredTrackerRetriever
@@ -34,9 +35,9 @@ final readonly class ConfiguredTrackerRetriever
     ) {
     }
 
-    public function getTracker(ArtidocDocument $document): ?\Tracker
+    public function getTracker(Artidoc $document): ?\Tracker
     {
-        $tracker_id = $this->dao->getTracker((int) $document->getId());
+        $tracker_id = $this->dao->getTracker($document->getId());
 
         if ($tracker_id === null) {
             return null;

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Tracker;
 
-use Tuleap\Artidoc\Document\ArtidocDocument;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Fault;
 
 /**
@@ -30,7 +30,7 @@ use Tuleap\NeverThrow\Fault;
  */
 final readonly class TooManyRequiredFieldsFault extends Fault
 {
-    public static function forDocument(ArtidocDocument $document): Fault
+    public static function forDocument(Artidoc $document): Fault
     {
         return new self("The tracker for artidoc #{$document->getId()} should not have other required field than title and description fields.");
     }

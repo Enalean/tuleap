@@ -96,7 +96,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         );
 
         if (! $user->isAnonymous()) {
-            $this->recently_visited_dao->save((int) $user->getId(), (int) $document_information->document->getId(), \Tuleap\Request\RequestTime::getTimestamp());
+            $this->recently_visited_dao->save((int) $user->getId(), $document_information->document->getId(), \Tuleap\Request\RequestTime::getTimestamp());
         }
 
         $title            = $document_information->document->getTitle();
@@ -122,7 +122,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             ->renderToPage(
                 'artidoc',
                 new ArtidocPresenter(
-                    (int) $document_information->document->getId(),
+                    $document_information->document->getId(),
                     $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
                     $title,
                     $this->getTrackerRepresentation($this->configured_tracker_retriever->getTracker($document_information->document), $user),

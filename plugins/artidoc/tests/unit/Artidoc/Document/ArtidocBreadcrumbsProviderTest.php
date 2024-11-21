@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;

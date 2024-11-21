@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
-use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Stubs\Document\Tracker\CheckTrackerIsSuitableForDocumentStub;
 use Tuleap\Docman\ServiceDocman;

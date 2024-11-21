@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
@@ -241,7 +241,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function cloneOtherItemPostAction(CloneOtherItemPostAction $event): void
     {
         if ($event->source instanceof ArtidocDocument && $event->target instanceof ArtidocDocument) {
-            $this->getArtidocDao()->cloneItem((int) $event->source->getId(), (int) $event->target->getId());
+            $this->getArtidocDao()->cloneItem($event->source->getId(), $event->target->getId());
         }
     }
 

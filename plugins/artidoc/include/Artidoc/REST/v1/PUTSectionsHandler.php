@@ -66,8 +66,8 @@ final readonly class PUTSectionsHandler
      */
     private function ensureThatUserCanWriteDocument(ArtidocDocumentInformation $document_information, \PFUser $user): Ok|Err
     {
-        $permissions_manager = \Docman_PermissionsManager::instance((int) $document_information->document->getGroupId());
-        if (! $permissions_manager->userCanWrite($user, (int) $document_information->document->getId())) {
+        $permissions_manager = \Docman_PermissionsManager::instance($document_information->document->getProjectId());
+        if (! $permissions_manager->userCanWrite($user, $document_information->document->getId())) {
             return Result::err(Fault::fromMessage('User cannot write document'));
         }
 

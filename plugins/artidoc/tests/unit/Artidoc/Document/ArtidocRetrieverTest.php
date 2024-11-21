@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Artidoc\Stubs\Document\SearchArtidocDocumentStub;
 use Tuleap\Docman\ServiceDocman;
@@ -36,6 +37,7 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 final class ArtidocRetrieverTest extends TestCase
 {
     private const PROJECT_ID = 101;
+    private const ITEM_ID    = 12;
 
     private \PFUser $user;
     private \Docman_PermissionsManager & MockObject $permissions_manager;
@@ -105,7 +107,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenItemIsNotReadable(): void
     {
-        $row = ['group_id' => self::PROJECT_ID];
+        $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(false);
 
@@ -121,7 +123,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenItemIsInAnInvalidProject(): void
     {
-        $row = ['group_id' => self::PROJECT_ID];
+        $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
 
@@ -137,7 +139,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenProjectIsNotAllowed(): void
     {
-        $row = ['group_id' => self::PROJECT_ID];
+        $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
 
@@ -153,7 +155,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenProjectDoesNotHaveTrackerService(): void
     {
-        $row = ['group_id' => self::PROJECT_ID];
+        $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
 
@@ -173,7 +175,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenProjectDoesNotHaveDocmanService(): void
     {
-        $row = ['group_id' => self::PROJECT_ID];
+        $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
 
@@ -198,7 +200,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testHappyPath(): void
     {
-        $row = ['group_id' => self::PROJECT_ID];
+        $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
 

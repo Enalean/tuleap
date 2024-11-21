@@ -87,7 +87,7 @@ class Docman_Item
         }
     }
 
-    public function getTitle($key = false)
+    public function getTitle(bool $key = false)
     {
         if ($key && $this->titlekey !== null) {
             return $this->titlekey;

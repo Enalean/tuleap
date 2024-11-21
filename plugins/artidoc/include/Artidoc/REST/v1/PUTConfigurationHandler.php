@@ -59,8 +59,8 @@ final readonly class PUTConfigurationHandler
      */
     private function ensureThatUserCanWriteDocument(ArtidocDocumentInformation $document_information, \PFUser $user): Ok|Err
     {
-        $permissions_manager = \Docman_PermissionsManager::instance((int) $document_information->document->getGroupId());
-        if (! $permissions_manager->userCanWrite($user, (int) $document_information->document->getId())) {
+        $permissions_manager = \Docman_PermissionsManager::instance($document_information->document->getProjectId());
+        if (! $permissions_manager->userCanWrite($user, $document_information->document->getId())) {
             return Result::err(UserCannotWriteDocumentFault::build());
         }
 
@@ -84,7 +84,7 @@ final readonly class PUTConfigurationHandler
             ->checkTrackerIsSuitableForDocument($tracker, $document_information->document, $user)
             ->andThen(function ($tracker) use ($document_information) {
                 $this->save_configured_tracker->saveTracker(
-                    (int) $document_information->document->getId(),
+                    $document_information->document->getId(),
                     $tracker->getId()
                 );
 
