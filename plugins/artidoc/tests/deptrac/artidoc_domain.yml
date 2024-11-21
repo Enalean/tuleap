@@ -1,0 +1,11 @@
+deptrac:
+  paths:
+    - ../../include/
+  layers:
+    - name: Domain
+      collectors:
+        - type: directory
+          value: plugins/artidoc/include/Artidoc/Domain/.*
+  ruleset:
+    Domain:
+      - Domain

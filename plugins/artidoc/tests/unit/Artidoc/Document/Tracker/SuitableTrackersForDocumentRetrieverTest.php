@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker;
+use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Stubs\Document\Tracker\CheckTrackerIsSuitableForDocumentStub;
@@ -56,6 +57,7 @@ final class SuitableTrackersForDocumentRetrieverTest extends TestCase
         $this->document_information = new ArtidocDocumentInformation(
             new ArtidocDocument(['item_id' => 1]),
             $service_docman,
+            DocumentServiceDocmanProxy::build($service_docman)
         );
 
         $this->user = UserTestBuilder::aUser()->build();

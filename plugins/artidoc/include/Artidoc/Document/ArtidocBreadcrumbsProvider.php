@@ -55,7 +55,7 @@ final readonly class ArtidocBreadcrumbsProvider
 
     private function getRootBreadCrumb(ArtidocDocumentInformation $document_information, \PFUser $user): BreadCrumb
     {
-        $service = $document_information->service_docman;
+        $service = $document_information->document_service;
 
         $breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
@@ -64,7 +64,7 @@ final readonly class ArtidocBreadcrumbsProvider
             )
         );
 
-        $permissions_manager = Docman_PermissionsManager::instance((int) $service->getProject()->getID());
+        $permissions_manager = Docman_PermissionsManager::instance($service->getProjectIdentifier());
         if ($permissions_manager->userCanAdmin($user)) {
             $sub_items = new BreadCrumbSubItems();
             $sub_items->addSection(
@@ -75,7 +75,7 @@ final readonly class ArtidocBreadcrumbsProvider
                                 dgettext('tuleap-artidoc', 'Administration'),
                                 '/plugins/docman/?' . http_build_query(
                                     [
-                                        'group_id' => $service->getProject()->getID(),
+                                        'group_id' => $service->getProjectIdentifier(),
                                         'action'   => 'admin',
                                     ]
                                 ),
@@ -117,7 +117,7 @@ final readonly class ArtidocBreadcrumbsProvider
                 $hierarchy[] = new BreadCrumb(
                     new BreadCrumbLink(
                         $parent->getTitle(),
-                        $document_information->service_docman->getUrl() . 'folder/' . $parent->getId(),
+                        $document_information->document_service->getUrl() . 'folder/' . $parent->getId(),
                     ),
                 );
 

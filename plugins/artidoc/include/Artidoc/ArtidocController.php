@@ -99,10 +99,11 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             $this->recently_visited_dao->save((int) $user->getId(), (int) $document_information->document->getId(), \Tuleap\Request\RequestTime::getTimestamp());
         }
 
-        $title   = $document_information->document->getTitle();
-        $service = $document_information->service_docman;
+        $title            = $document_information->document->getTitle();
+        $service          = $document_information->not_yet_hexagonal_service_docman;
+        $document_service = $document_information->document_service;
 
-        $permissions_manager = \Docman_PermissionsManager::instance((int) $service->getProject()->getID());
+        $permissions_manager = \Docman_PermissionsManager::instance($document_service->getProjectIdentifier());
         $user_can_write      = $permissions_manager->userCanWrite($user, $document_information->document->getId());
 
         $allowed_max_size = \ForgeConfig::getInt('sys_max_size_upload');

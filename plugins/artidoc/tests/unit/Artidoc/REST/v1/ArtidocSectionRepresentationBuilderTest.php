@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RawSection;
@@ -81,12 +82,14 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             $attachments_representation
         );
 
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $builder        = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 )
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -125,12 +128,14 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
 
     public function testWhenTransformerReturnsNoRepresentationForMatchingSection(): void
     {
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $builder        = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 )
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -153,12 +158,14 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             null
         );
 
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $builder        = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 )
             ),
             TransformRawSectionsToRepresentationStub::withCollection(

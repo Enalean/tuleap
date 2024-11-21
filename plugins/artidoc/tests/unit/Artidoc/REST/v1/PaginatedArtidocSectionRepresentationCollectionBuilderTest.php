@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
@@ -99,11 +100,13 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
             10,
         );
 
-        $builder = new PaginatedArtidocSectionRepresentationCollectionBuilder(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $builder        = new PaginatedArtidocSectionRepresentationCollectionBuilder(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 123]),
                     $this->createMock(ServiceDocman::class),
+                    DocumentServiceDocmanProxy::build($service_docman)
                 )
             ),
             SearchPaginatedRawSectionsStub::withSections(
@@ -140,11 +143,13 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
 
     public function testFaultWhenPaginatedSectionsCannotBeTransformedIntoRepresentation(): void
     {
-        $builder = new PaginatedArtidocSectionRepresentationCollectionBuilder(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $builder        = new PaginatedArtidocSectionRepresentationCollectionBuilder(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 123]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 )
             ),
             SearchPaginatedRawSectionsStub::withSections(
