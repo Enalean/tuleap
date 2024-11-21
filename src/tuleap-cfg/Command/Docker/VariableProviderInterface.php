@@ -23,7 +23,14 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\Docker;
 
+use Tuleap\Option\Option;
+
 interface VariableProviderInterface
 {
     public function get(string $key): string;
+
+    /**
+     * @psalm-return Option<string>
+     */
+    public function getOr(string $key): Option;
 }

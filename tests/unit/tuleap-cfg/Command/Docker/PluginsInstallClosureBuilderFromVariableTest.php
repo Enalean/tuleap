@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\Docker;
 
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 use TuleapCfg\Command\ProcessFactory;
 
@@ -34,6 +35,11 @@ final class PluginsInstallClosureBuilderFromVariableTest extends TestCase
             public function get(string $key): string
             {
                 return '';
+            }
+
+            public function getOr(string $key): Option
+            {
+                return Option::nothing(\Psl\Type\string());
             }
         };
         $builder           = new PluginsInstallClosureBuilderFromVariable($variable_provider, new ProcessFactory());
@@ -49,6 +55,11 @@ final class PluginsInstallClosureBuilderFromVariableTest extends TestCase
             public function get(string $key): string
             {
                 return 'plugin_a plugin_b';
+            }
+
+            public function getOr(string $key): Option
+            {
+                return Option::nothing(\Psl\Type\string());
             }
         };
 

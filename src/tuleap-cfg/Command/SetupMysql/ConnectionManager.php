@@ -28,6 +28,10 @@ use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 class ConnectionManager implements ConnectionManagerInterface
 {
@@ -38,6 +42,8 @@ class ConnectionManager implements ConnectionManagerInterface
         'NO_ENGINE_SUBSTITUTION' => true,
         'ONLY_FULL_GROUP_BY' => true,
     ];
+
+    private const SUPPORTED_MYSQL_VERSION_PREFIX = '8.0.';
 
     public function getDBWithoutDBName(
         SymfonyStyle $io,
@@ -115,7 +121,7 @@ class ConnectionManager implements ConnectionManagerInterface
         return null;
     }
 
-    public function checkSQLModes(DBWrapperInterface $db): void
+    private function checkSQLModes(DBWrapperInterface $db): Ok|Err
     {
         $row    = $db->row('SHOW VARIABLES LIKE \'sql_mode\'');
         $errors = [];
@@ -125,7 +131,24 @@ class ConnectionManager implements ConnectionManagerInterface
             }
         }
         if (count($errors) > 0) {
-            throw new \RuntimeException(sprintf('Invalid SQL modes: %s, check MySQL server configuration', implode(', ', $errors)));
+            return Result::err(Fault::fromMessage(sprintf('Following SQL modes not supported: %s, remove them from MySQL server configuration (sql_mode)', implode(', ', $errors))));
         }
+        return Result::ok(null);
+    }
+
+    private function checkVersion(DBWrapperInterface $db): Ok|Err
+    {
+        $mysql_version = $db->row('SHOW VARIABLES LIKE \'version\'')['Value'];
+        if (! str_starts_with($mysql_version, self::SUPPORTED_MYSQL_VERSION_PREFIX)) {
+            $mysql_version_comment = $db->row('SHOW VARIABLES LIKE \'version_comment\'')['Value'] ?? '';
+            return Result::err(Fault::fromMessage(sprintf('Tuleap only support MySQL 8.0.x. Found: version %s - %s', $mysql_version_comment, $mysql_version)));
+        }
+        return Result::ok(null);
+    }
+
+    public function sanityCheck(DBWrapperInterface $db): Ok|Err
+    {
+        return $this->checkVersion($db)
+            ->andThen(fn () => $this->checkSQLModes($db));
     }
 }
