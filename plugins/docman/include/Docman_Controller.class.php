@@ -487,8 +487,12 @@ class Docman_Controller extends Controler
                     $item = $item_factory->getItemFromDb($id);
 
                     if (! $item) {
-                        $this->feedback->log('error', dgettext('tuleap-docman', 'Unable to retrieve item. Perhaps it was removed.'));
-                        $this->_setView('DocmanError');
+                        if ($this->request->get('action') === 'ajax_reference_tooltip') {
+                            $this->_setView('AjaxReferenceTooltipNoContent');
+                        } else {
+                            $this->feedback->log('error', dgettext('tuleap-docman', 'Unable to retrieve item. Perhaps it was removed.'));
+                            $this->_setView('DocmanError');
+                        }
                     }
                 } else {
                     $item = $root;
