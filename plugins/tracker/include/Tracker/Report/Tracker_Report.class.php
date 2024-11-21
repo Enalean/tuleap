@@ -30,6 +30,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPriva
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreatorBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -1361,15 +1362,18 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 break;
             case 'update-masschange-aids':
                 $form_element_factory = $this->getFormElementFactory();
-                $masschange_updater   = new MasschangeUpdater(
+                $artifact_factory     = Tracker_ArtifactFactory::instance();
+
+                $masschange_updater = new MasschangeUpdater(
                     $tracker,
                     $this,
                     new Tracker_MasschangeDataValueExtractor($form_element_factory),
                     new Tracker_RuleFactory(new Tracker_RuleDao()),
                     $form_element_factory,
-                    Tracker_ArtifactFactory::instance(),
+                    $artifact_factory,
                     new Tracker_ArtifactDao(),
-                    EventManager::instance()
+                    EventManager::instance(),
+                    NewChangesetCreatorBuilder::build()
                 );
                 $masschange_updater->updateArtifacts($current_user, $request);
                 break;

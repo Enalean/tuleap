@@ -1001,7 +1001,6 @@
             <file name="plugins/tracker/tests/unit/Hierarchy/TrackerHierarchyFactoryGetParentArtifactTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/TrackerHierarchyFactoryGetParentTest.php"/>
             <file name="plugins/tracker/tests/unit/Import/SpotterTest.php"/>
-            <file name="plugins/tracker/tests/unit/Masschange/MasschangeUpdaterTest.php"/>
             <file name="plugins/tracker/tests/unit/MasschangeDataValueExtractorTest.php"/>
             <file name="plugins/tracker/tests/unit/Migration/MigrationLoggerTest.php"/>
             <file name="plugins/tracker/tests/unit/NewDropdown/TrackerInNewDropdownRetrieverTest.php"/>

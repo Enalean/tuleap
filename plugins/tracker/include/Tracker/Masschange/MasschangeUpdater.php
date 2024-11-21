@@ -22,73 +22,41 @@
 namespace Tuleap\Tracker\Masschange;
 
 use Codendi_Request;
-use EventManager;
+use DateTimeImmutable;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactDao;
-use Tracker_ArtifactFactory;
 use Tracker_ArtifactNotificationSubscriber;
 use Tracker_Exception;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElementFactory;
 use Tracker_MasschangeDataValueExtractor;
 use Tracker_NoChangeException;
 use Tracker_Report;
 use Tracker_RuleFactory;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 
-class MasschangeUpdater
+final readonly class MasschangeUpdater
 {
-    /** @var Tracker */
-    private $tracker;
-
-    /** @var Tracker_Report */
-    private $tracker_report;
-    /**
-     * @var Tracker_MasschangeDataValueExtractor
-     */
-    private $masschange_values_extractor;
-    /**
-     * @var Tracker_RuleFactory
-     */
-    private $rule_factory;
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var Tracker_ArtifactDao
-     */
-    private $artifact_dao;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        Tracker $tracker,
-        Tracker_Report $tracker_report,
-        Tracker_MasschangeDataValueExtractor $masschange_values_extractor,
-        Tracker_RuleFactory $rule_factory,
-        Tracker_FormElementFactory $form_element_factory,
-        Tracker_ArtifactFactory $artifact_factory,
-        Tracker_ArtifactDao $artifact_dao,
-        EventManager $event_manager,
+        private Tracker $tracker,
+        private Tracker_Report $tracker_report,
+        private Tracker_MasschangeDataValueExtractor $masschange_values_extractor,
+        private Tracker_RuleFactory $rule_factory,
+        private RetrieveUsedListField $form_element_factory,
+        private RetrieveArtifact $artifact_factory,
+        private Tracker_ArtifactDao $artifact_dao,
+        private EventDispatcherInterface $event_manager,
+        private CreateNewChangeset $changeset_creator,
     ) {
-        $this->tracker                     = $tracker;
-        $this->tracker_report              = $tracker_report;
-        $this->masschange_values_extractor = $masschange_values_extractor;
-        $this->rule_factory                = $rule_factory;
-        $this->form_element_factory        = $form_element_factory;
-        $this->artifact_factory            = $artifact_factory;
-        $this->artifact_dao                = $artifact_dao;
-        $this->event_manager               = $event_manager;
     }
 
     public function updateArtifacts(PFUser $user, Codendi_Request $request): void
@@ -141,7 +109,7 @@ class MasschangeUpdater
                 $request,
                 $masschange_aids
             );
-            $this->event_manager->processEvent($event);
+            $this->event_manager->dispatch($event);
 
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
         } else {
@@ -166,6 +134,9 @@ class MasschangeUpdater
         $list_fields_used_in_tracker_rules = $this->getFieldListUsedInTrackerRules();
 
         $not_updated_aids = [];
+
+        $comment_format_identifier =  CommentFormatIdentifier::fromFormatString($comment_format);
+
         foreach ($masschange_aids as $aid) {
             $artifact = $this->artifact_factory->getArtifactById($aid);
             if ($artifact === null) {
@@ -179,19 +150,26 @@ class MasschangeUpdater
                 continue;
             }
 
-            $fields_data_for_artifact = $this->consolidateFieldListDataForArtifact(
+            $fields_data_for_artifact            = $this->consolidateFieldListDataForArtifact(
                 $last_changeset,
                 $list_fields_used_in_tracker_rules,
                 $fields_data
             );
-
+            $new_changeset                       = NewChangeset::fromFieldsDataArray(
+                $artifact,
+                $fields_data_for_artifact,
+                $comment,
+                $comment_format_identifier,
+                [],
+                $submitter,
+                (new DateTimeImmutable())->getTimestamp(),
+                new CreatedFileURLMapping()
+            );
+            $post_creation_context_configuration = PostCreationContext::withNoConfig($send_notifications);
             try {
-                $artifact->createNewChangeset(
-                    $fields_data_for_artifact,
-                    $comment,
-                    $submitter,
-                    $send_notifications,
-                    $comment_format
+                $this->changeset_creator->create(
+                    $new_changeset,
+                    $post_creation_context_configuration
                 );
             } catch (Tracker_NoChangeException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
