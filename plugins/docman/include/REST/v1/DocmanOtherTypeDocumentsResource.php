@@ -29,7 +29,6 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use Project;
 use ProjectManager;
-use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
@@ -207,7 +206,7 @@ class DocmanOtherTypeDocumentsResource extends AuthenticatedResource
             $this->getPermissionManager($project),
             $user,
             $item,
-            new DoesItemHasExpectedTypeVisitor(ArtidocDocument::class),
+            new DoesItemHasExpectedTypeVisitor(OtherDocument::class),
         );
 
         $item->accept($validator);
