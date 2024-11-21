@@ -97,12 +97,20 @@ describe("TableOfContents", () => {
                 const wrapper = getWrapper(true);
                 expect(wrapper.findAll("[data-test=dragndrop-grip]").length).toBe(2);
             });
+            it("should have arrows to reorder sections without dragndrop", () => {
+                const wrapper = getWrapper(true);
+                expect(wrapper.findAll("[data-test=reorder-arrows]").length).toBe(2);
+            });
         });
 
         describe("when user cannot edit document", () => {
             it("should NOT have dragndrop grip to reorder sections", () => {
                 const wrapper = getWrapper(false);
                 expect(wrapper.findAll("[data-test=dragndrop-grip]").length).toBe(0);
+            });
+            it("should NOT have arrows to reorder sections", () => {
+                const wrapper = getWrapper(false);
+                expect(wrapper.findAll("[data-test=reorder-arrows]").length).toBe(0);
             });
         });
 

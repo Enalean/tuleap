@@ -113,7 +113,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             [],
             HeaderConfigurationBuilder::get($title)
                 ->inProject($service->project, \DocmanPlugin::SERVICE_SHORTNAME)
-                ->withBodyClass(['has-sidebar-with-pinned-header'])
+                ->withBodyClass(['has-sidebar-with-pinned-header', 'reduce-help-button'])
                 ->build()
         );
         \TemplateRendererFactory::build()
