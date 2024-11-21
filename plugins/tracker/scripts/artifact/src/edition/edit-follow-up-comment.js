@@ -63,6 +63,7 @@ document.observe("dom:loaded", function () {
                     const format = getFormatOrDefault(document, id);
                     textarea.value = getTextAreaValue(comment_panel, format);
                     textarea.dataset.projectId = getProjectId(followup_body);
+                    textarea.setAttribute("data-test", "edit-comment-textarea");
 
                     var rteSpan = new Element("span", { style: "text-align: left;" }).update(
                         textarea,
@@ -127,6 +128,7 @@ document.observe("dom:loaded", function () {
                             Event.stop(evt);
                             return false;
                         });
+                    button.setAttribute("data-test", "edit-comment-submit");
 
                     edit.hide();
                     var cancel = new Element("a", {
