@@ -104,7 +104,7 @@ final class CollectSystemDataCommand extends Command
 
     private function gatherLogs(ZipArchive $archive, string $prefix): void
     {
-        $archive->addPattern('/.*(_syslog|_log|_error)$/', '/var/log/tuleap', ['add_path' => $prefix . '/log/tuleap/', 'remove_all_path' => true, 'comp_method' => ZipArchive::CM_XZ]);
+        $archive->addPattern('/.*(_syslog|log|_error)$/', '/var/log/tuleap', ['add_path' => $prefix . '/log/tuleap/', 'remove_all_path' => true, 'comp_method' => ZipArchive::CM_XZ]);
         $this->addCompressedFile($archive, $prefix, '/var/log/nginx/error.log', 'log/nginx/error.log');
         $this->addCompressedFile($archive, $prefix, '/var/log/nginx/access.log', 'log/nginx/access.log');
     }
