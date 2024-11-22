@@ -678,9 +678,6 @@ msgstr "Rótulo dos Usuários Autenticados (Registrados + Restritos)"
 msgid "Author"
 msgstr "Autor"
 
-msgid "Automatically extract this keyword?"
-msgstr "Extrair automaticamente esta palavra-chave?"
-
 msgid "Available?"
 msgstr "Disponível?"
 
@@ -772,9 +769,6 @@ msgstr ""
 
 msgid "Bypass filters"
 msgstr ""
-
-msgid "Bypass filters <em>(Site administrators only)</em>:"
-msgstr "Filtros de contorno <em>(Apenas administradores do site)</em>:"
 
 msgid "CSV date format"
 msgstr "CSV formato da data"
@@ -1656,10 +1650,6 @@ msgstr ""
 "Se habilitado, um email será enviado a todos os membros do projeto caso a "
 "visibilidade do mesmo seja alterada."
 
-msgid "If the reference pattern is specific to one service, select it here"
-msgstr ""
-"Se o padrão de referência é específico para um serviço, selecione-o aqui"
-
 msgid ""
 "If you requested this verification, visit the following URL to change your "
 "password:"
@@ -1844,9 +1834,6 @@ msgstr "Chaves e tokens"
 
 msgid "Keyword"
 msgstr "Palavra-chave"
-
-msgid "Keyword that will trigger a reference creation"
-msgstr "Palavra-chave que irá desencadear uma criação de referência"
 
 msgid "Label"
 msgstr "Rótulo"
@@ -2249,6 +2236,9 @@ msgstr "Nenhum email válido para enviar a pré-visualização."
 
 msgid "Nobody"
 msgstr "Ninguém"
+
+msgid "None"
+msgstr ""
 
 msgid "Not Found"
 msgstr "Não Encontrado"
@@ -3082,9 +3072,6 @@ msgstr "Grave o seu lugar"
 msgid "Scope"
 msgstr "Escopo"
 
-msgid "Scope of the reference pattern: project only or system-wide"
-msgstr "Âmbito do padrão de referência: apenas projeto ou em todo o sistema"
-
 msgid "Scopes"
 msgstr "Escopos"
 
@@ -3252,9 +3239,6 @@ msgstr ""
 
 msgid "Specific project"
 msgstr "Projeto específico"
-
-msgid "Specify the nature of the reference, or Other if any."
-msgstr "Especifique a natureza da referência, ou Outra, se houver."
 
 msgid "Start New Thread"
 msgstr "Iniciar Novo Tópico"
@@ -3687,10 +3671,6 @@ msgstr "Estes projetos já são relacionados."
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "O arquivo está pronto para ser importado em uma instância Tuleap."
 
-msgid "This description will be displayed in a tooltip above reference."
-msgstr ""
-"Esta descrição será exibida em uma dica de ferramenta acima da referência."
-
 msgid ""
 "This feature aims to provide a way to structure projects organizations from\n"
 "            permissions, user groups and control point of view. As of today, "
@@ -3991,9 +3971,6 @@ msgstr ""
 "rápidas com facilidade.\n"
 "Aqui você pode planejar, acompanhar, programar e colaborar em projetos de "
 "software."
-
-msgid "URL pointed by the reference"
-msgstr "URL apontada pela referência"
 
 #, php-format
 msgid "Unable to add %s as project member"
@@ -4988,9 +4965,6 @@ msgstr "excluído"
 msgid "edit"
 msgstr "edições"
 
-msgid "fields required"
-msgstr "campos obrigatórios"
-
 #, php-format
 msgid "in %s"
 msgstr "em %s"
@@ -5035,9 +5009,6 @@ msgstr "monitoramento de pessoas"
 msgid "permissions"
 msgstr "permissões"
 
-msgid "project"
-msgstr "projeto"
-
 msgid "reply"
 msgstr "responder"
 
@@ -5049,9 +5020,6 @@ msgstr "navegadores suportados"
 
 msgid "suspended"
 msgstr "suspenso"
-
-msgid "system"
-msgstr "sistema"
 
 msgid "unsupported browsers"
 msgstr "navegadores não suportados"
