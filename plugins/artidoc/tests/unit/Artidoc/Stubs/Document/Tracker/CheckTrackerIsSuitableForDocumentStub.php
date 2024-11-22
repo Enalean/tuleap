@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document\Tracker;
 
-use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\Tracker\CheckTrackerIsSuitableForDocument;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -63,7 +63,7 @@ final class CheckTrackerIsSuitableForDocumentStub implements CheckTrackerIsSuita
         return new self(null);
     }
 
-    public function checkTrackerIsSuitableForDocument(\Tracker $tracker, ArtidocDocument $document, \PFUser $user): Ok|Err
+    public function checkTrackerIsSuitableForDocument(\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
     {
         if ($this->trackers === null) {
             throw new \Exception('Unexpected call to checkTrackerIsSuitableForDocument');

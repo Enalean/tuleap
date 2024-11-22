@@ -63,8 +63,8 @@ final readonly class POSTSectionHandler
      */
     private function ensureThatUserCanWriteDocument(ArtidocDocumentInformation $document_information, \PFUser $user): Ok|Err
     {
-        $permissions_manager = \Docman_PermissionsManager::instance((int) $document_information->document->getGroupId());
-        if (! $permissions_manager->userCanWrite($user, (int) $document_information->document->getId())) {
+        $permissions_manager = \Docman_PermissionsManager::instance($document_information->document->getProjectId());
+        if (! $permissions_manager->userCanWrite($user, $document_information->document->getId())) {
             return Result::err(Fault::fromMessage('User cannot write document'));
         }
 
@@ -81,7 +81,7 @@ final readonly class POSTSectionHandler
     ): Ok|Err {
         $dummy_identifier = $this->identifier_factory->buildIdentifier();
 
-        $item_id = (int) $document_information->document->getId();
+        $item_id = $document_information->document->getId();
         return $this->transformer
             ->getRepresentation(
                 new PaginatedRawSections(

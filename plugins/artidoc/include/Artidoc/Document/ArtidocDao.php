@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;

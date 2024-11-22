@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
-use Tuleap\Artidoc\Document\ArtidocDocument;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -37,7 +37,7 @@ final class SuitableTrackerForDocumentChecker implements CheckTrackerIsSuitableF
     ) {
     }
 
-    public function checkTrackerIsSuitableForDocument(\Tracker $tracker, ArtidocDocument $document, \PFUser $user): Ok|Err
+    public function checkTrackerIsSuitableForDocument(\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
     {
         if ($tracker->isDeleted()) {
             return Result::err(TrackerNotFoundFault::forDocument($document));

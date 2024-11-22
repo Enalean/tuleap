@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
-use Tuleap\Artidoc\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;

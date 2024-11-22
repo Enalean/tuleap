@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Tracker;
 
-use Tuleap\Artidoc\Document\ArtidocDocument;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Fault;
 
 /**
@@ -30,7 +30,7 @@ use Tuleap\NeverThrow\Fault;
  */
 final readonly class NoSemanticTitleFault extends Fault
 {
-    public static function forDocument(ArtidocDocument $document): Fault
+    public static function forDocument(Artidoc $document): Fault
     {
         return new self("The tracker does not have a semantic title for artidoc #{$document->getId()}");
     }

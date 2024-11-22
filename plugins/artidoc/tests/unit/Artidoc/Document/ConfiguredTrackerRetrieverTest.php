@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Document;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Psr\Log\NullLogger;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Stubs\Document\SearchConfiguredTrackerStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;

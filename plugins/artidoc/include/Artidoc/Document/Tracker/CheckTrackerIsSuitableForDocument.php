@@ -22,7 +22,7 @@ namespace Tuleap\Artidoc\Document\Tracker;
 
 use PFUser;
 use Tracker;
-use Tuleap\Artidoc\Document\ArtidocDocument;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -32,5 +32,5 @@ interface CheckTrackerIsSuitableForDocument
     /**
      * @return Ok<Tracker>|Err<Fault>
      */
-    public function checkTrackerIsSuitableForDocument(Tracker $tracker, ArtidocDocument $document, PFUser $user): Ok|Err;
+    public function checkTrackerIsSuitableForDocument(Tracker $tracker, Artidoc $document, PFUser $user): Ok|Err;
 }
