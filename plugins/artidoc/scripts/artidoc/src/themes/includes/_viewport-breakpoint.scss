@@ -20,7 +20,7 @@
 @use "size";
 
 $small-screen-size: 1024px;
-$medium-screen-size: calc(
+$medium-screen-size-when-document-sidebar-is-expanded: calc(
     #{global-variables.$sidebar-expanded-width} + (
             2 * #{size.$add-section-button-container-width} + #{size.$document-width}
         ) / #{size.$document-container-width-ratio}
