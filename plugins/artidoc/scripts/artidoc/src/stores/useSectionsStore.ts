@@ -35,9 +35,12 @@ import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
 import type { Project } from "@/helpers/project.type";
+import { Option } from "@tuleap/option";
+
+export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 
 export interface SectionsStore {
-    sections: Ref<readonly (ArtidocSection & InternalArtidocSectionId)[] | undefined>;
+    sections: Ref<readonly StoredArtidocSection[] | undefined>;
     saved_sections: ComputedRef<readonly ArtifactSection[] | undefined>;
     is_sections_loading: Ref<boolean>;
     loadSections: (
@@ -59,6 +62,8 @@ export interface SectionsStore {
         section: ArtifactSection,
     ) => void;
     getReferencesForOneSection: (section: ArtidocSection, project_id: number) => void;
+    moveSectionUp: (section: StoredArtidocSection) => Promise<void>;
+    moveSectionDown: (section: StoredArtidocSection) => Promise<void>;
 }
 
 type BeforeSection = { before: string };
@@ -83,8 +88,7 @@ export function useSectionsStore(): SectionsStore {
         ArtifactSectionFactory.create(),
     ].map(injectInternalId);
 
-    const sections: Ref<(ArtidocSection & InternalArtidocSectionId)[] | undefined> =
-        ref(skeleton_data);
+    const sections: Ref<StoredArtidocSection[] | undefined> = ref(skeleton_data);
     const is_sections_loading = ref(true);
 
     const saved_sections: ComputedRef<readonly ArtifactSection[] | undefined> = computed(() => {
@@ -177,7 +181,7 @@ export function useSectionsStore(): SectionsStore {
         }
 
         function getIndexWhereSectionShouldBeInserted(
-            sections: (ArtidocSection & InternalArtidocSectionId)[],
+            sections: StoredArtidocSection[],
             position: PositionForSection,
         ): number {
             if (position === AT_THE_END) {
@@ -285,6 +289,59 @@ export function useSectionsStore(): SectionsStore {
         };
     }
 
+    function moveSectionUp(section: StoredArtidocSection): Promise<void> {
+        return findIndexOfSection(section).match(
+            (index): Promise<void> => {
+                if (sections.value === undefined) {
+                    return Promise.resolve();
+                }
+
+                if (index <= 0) {
+                    return Promise.resolve();
+                }
+
+                sections.value.splice(index, 1);
+                sections.value.splice(index - 1, 0, section);
+
+                return Promise.resolve();
+            },
+            () => Promise.resolve(),
+        );
+    }
+
+    function moveSectionDown(section: StoredArtidocSection): Promise<void> {
+        return findIndexOfSection(section).match(
+            (index) => {
+                if (sections.value === undefined) {
+                    return Promise.resolve();
+                }
+
+                if (index >= sections.value.length - 1) {
+                    return Promise.resolve();
+                }
+
+                sections.value.splice(index, 1);
+                sections.value.splice(index + 1, 0, section);
+
+                return Promise.resolve();
+            },
+            () => Promise.resolve(),
+        );
+    }
+
+    function findIndexOfSection(section: ArtidocSection): Option<number> {
+        if (sections.value === undefined) {
+            return Option.nothing();
+        }
+
+        const index = sections.value.findIndex((element) => element.id === section.id);
+        if (index === -1) {
+            return Option.nothing();
+        }
+
+        return Option.fromValue(index);
+    }
+
     return {
         sections,
         saved_sections,
@@ -297,5 +354,7 @@ export function useSectionsStore(): SectionsStore {
         getSectionPositionForSave,
         replacePendingByArtifactSection,
         getReferencesForOneSection,
+        moveSectionUp,
+        moveSectionDown,
     };
 }

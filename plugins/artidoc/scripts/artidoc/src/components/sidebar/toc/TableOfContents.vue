@@ -52,6 +52,7 @@
                 <reorder-arrows
                     v-bind:is_first="index === 0"
                     v-bind:is_last="index === (sections?.length || 0) - 1"
+                    v-bind:section="section"
                 />
             </span>
         </li>

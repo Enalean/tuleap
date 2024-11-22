@@ -43,6 +43,8 @@ export const InjectedSectionsStoreStub = {
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
         getReferencesForOneSection: noop,
+        moveSectionUp: promised_noop,
+        moveSectionDown: promised_noop,
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -56,6 +58,8 @@ export const InjectedSectionsStoreStub = {
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
         getReferencesForOneSection: noop,
+        moveSectionUp: promised_noop,
+        moveSectionDown: promised_noop,
     }),
     withSectionsInError: (): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -69,6 +73,8 @@ export const InjectedSectionsStoreStub = {
         sections: ref(undefined),
         saved_sections: computed(() => undefined),
         getReferencesForOneSection: noop,
+        moveSectionUp: promised_noop,
+        moveSectionDown: promised_noop,
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -82,6 +88,26 @@ export const InjectedSectionsStoreStub = {
         sections: ref([]),
         saved_sections: computed(() => []),
         getReferencesForOneSection: noop,
+        moveSectionUp: promised_noop,
+        moveSectionDown: promised_noop,
+    }),
+    withMockedMoveSection: (
+        moveSectionUp: SectionsStore["moveSectionUp"],
+        moveSectionDown: SectionsStore["moveSectionDown"],
+    ): SectionsStore => ({
+        replacePendingByArtifactSection: noop,
+        getSectionPositionForSave: () => null,
+        insertPendingArtifactSectionForEmptyDocument: noop,
+        insertSection: noop,
+        removeSection: resultasync_noop,
+        loadSections: promised_noop,
+        updateSection: noop,
+        is_sections_loading: ref(false),
+        sections: ref([]),
+        saved_sections: computed(() => []),
+        getReferencesForOneSection: noop,
+        moveSectionUp,
+        moveSectionDown,
     }),
     withMockedInsertPendingArtifactSectionForEmptyDocument: (
         insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void,
