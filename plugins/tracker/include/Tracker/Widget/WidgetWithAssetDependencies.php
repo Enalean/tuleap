@@ -18,12 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Widget;
+
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 interface WidgetWithAssetDependencies
 {
     public function getJavascriptDependencies();
 
-    /** @return \Tuleap\Layout\CssAssetCollection */
-    public function getStylesheetDependencies();
+    public function getStylesheetDependencies(): CssAssetCollection;
+
+    /** @return JavascriptAssetGeneric[] */
+    public function getJavascriptAssets(): array;
 }

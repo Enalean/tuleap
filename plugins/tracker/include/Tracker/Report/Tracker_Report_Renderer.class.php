@@ -317,4 +317,9 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     {
         return $this->report;
     }
+
+    public function getJavascriptAssets(): array
+    {
+        return [];
+    }
 }

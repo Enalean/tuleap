@@ -27,6 +27,7 @@ use Tracker_Report;
 use Tracker_Report_Renderer;
 use Tracker_Report_Renderer_Table;
 use TrackerManager;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -112,9 +113,9 @@ final class TableRendererForReportRetrieverTest extends TestCase
                 // TODO: Implement getJavascriptDependencies() method.
             }
 
-            public function getStylesheetDependencies()
+            public function getStylesheetDependencies(): CssAssetCollection
             {
-                // TODO: Implement getStylesheetDependencies() method.
+                return new CssAssetCollection([]);
             }
         };
 
