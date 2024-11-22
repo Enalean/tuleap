@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use Docman_PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
@@ -82,11 +83,13 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $handler = new POSTSectionHandler(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $handler        = new POSTSectionHandler(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman),
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -127,11 +130,13 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $handler = new POSTSectionHandler(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $handler        = new POSTSectionHandler(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -172,11 +177,13 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $handler = new POSTSectionHandler(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $handler        = new POSTSectionHandler(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -237,11 +244,13 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $handler = new POSTSectionHandler(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $handler        = new POSTSectionHandler(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -290,11 +299,13 @@ final class POSTSectionHandlerTest extends TestCase
 
         $this->permissions_manager->method('userCanWrite')->willReturn(false);
 
-        $handler = new POSTSectionHandler(
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $handler        = new POSTSectionHandler(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
+                    $service_docman,
+                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),

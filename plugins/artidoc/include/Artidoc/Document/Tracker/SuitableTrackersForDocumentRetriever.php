@@ -41,7 +41,7 @@ final readonly class SuitableTrackersForDocumentRetriever
     {
         return array_reduce(
             $this->tracker_factory->getTrackersByProjectIdUserCanView(
-                (int) $document_information->service_docman->getProject()->getID(),
+                $document_information->document_service->getProjectIdentifier(),
                 $user,
             ),
             /**

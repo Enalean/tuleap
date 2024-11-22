@@ -227,6 +227,6 @@ final class ArtidocRetrieverTest extends TestCase
         $result = $retriever->retrieveArtidoc(123, $this->user);
         self::assertTrue(Result::isOk($result));
         self::assertSame($item, $result->value->document);
-        self::assertSame($service_docman, $result->value->service_docman);
+        self::assertSame($service_docman, $result->value->not_yet_hexagonal_service_docman);
     }
 }

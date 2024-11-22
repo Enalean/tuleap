@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,21 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document;
+namespace Tuleap\Artidoc\Domain\Service;
 
-use Tuleap\Artidoc\Domain\Service\DocumentService;
-use Tuleap\Docman\ServiceDocman;
-
-final readonly class ArtidocDocumentInformation
+interface DocumentService
 {
-    public function __construct(
-        public ArtidocDocument $document,
-        public ServiceDocman $not_yet_hexagonal_service_docman,
-        public DocumentService $document_service,
-    ) {
-    }
+    public function getUrl(): string;
+
+    public function getProjectIdentifier(): int;
 }
