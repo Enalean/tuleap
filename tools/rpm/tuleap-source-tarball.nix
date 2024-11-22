@@ -31,7 +31,7 @@ let
           !src/tuleap-cfg/vendor/
           !src/themes/*/vendor/
           !plugins/*/vendor/
-          adr/
+          docs/
           src/additional-packages
           plugins/*/additional-packages
           tests/

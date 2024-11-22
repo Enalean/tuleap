@@ -13,7 +13,7 @@ let
     '';
   };
   npmCliFallback = pkgs.writeShellScriptBin "npm" ''
-    echo 'Please use pnpm. See adr/0007-js-package-manager.md for more information.'
+    echo 'Please use pnpm. See docs/decisions/0007-js-package-manager.md for more information.'
     exit 1
   '';
 

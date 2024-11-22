@@ -271,4 +271,4 @@ function handleErrors(): void {
 [5]: https://github.com/pkg/errors
 [6]: https://en.wikipedia.org/wiki/Structural_type_system
 [7]: <./src/Fault.test.ts>
-[8]: ../../../adr/0012-faults-over-exceptions.md
+[8]: ../../../docs/decisions/0012-faults-over-exceptions.md

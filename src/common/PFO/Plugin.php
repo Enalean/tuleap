@@ -27,7 +27,8 @@ interface PFO_Plugin
      * @param String  $callback   Callback method name (method of the current object)
      *
      * @return void
-     * @deprecated Use ListeningToEventClass attribute instead (adr/0021-attributes-based-events.md)
+     * @deprecated Use ListeningToEventClass attribute instead
+     * @link file://../../../docs/decisions/0021-attributes-based-events.md ADR-0021
      */
     public function addHook($hook, $callback = null);
 }

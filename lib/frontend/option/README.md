@@ -111,4 +111,4 @@ expect(option.unwrapOr(null)).toBe("dataset-value");
 
 * [ADR-0022: Option][0]
 
-[0]: ../../../adr/0022-option.md
+[0]: ../../../docs/decisions/0022-option.md
