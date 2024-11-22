@@ -21,8 +21,7 @@
 
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
@@ -460,21 +459,24 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
     public function getJavascriptDependencies(): array
     {
-        return [
-            ['file' => $this->getAssets()->getFileURL('graphontrackersv5.js')],
-        ];
+        return [];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style')]);
+        return new CssAssetCollection([]);
     }
 
-    private function getAssets(): IncludeAssets
+    public function getJavascriptAssets(): array
     {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/graphontrackersv5'
+        return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.js')];
+    }
+
+    private function getAssets(): IncludeViteAssets
+    {
+        return new IncludeViteAssets(
+            __DIR__ . '/../scripts/graph-loader/frontend-assets',
+            '/assets/graphontrackersv5/graph-loader',
         );
     }
 }

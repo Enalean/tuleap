@@ -242,4 +242,13 @@ abstract class Tracker_Widget_Renderer extends Widget
         }
         return $renderer->getStylesheetDependencies();
     }
+
+    public function getJavascriptAssets(): array
+    {
+        $renderer = $this->getRenderer();
+        if ($renderer === null) {
+            return parent::getJavascriptAssets();
+        }
+        return $renderer->getJavascriptAssets();
+    }
 }
