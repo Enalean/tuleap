@@ -428,6 +428,9 @@ msgstr ""
 "Suite à une mise à jour d'artéfact, les types de lien désactivés seront "
 "supprimés sans enlever les liens existants."
 
+msgid "Allow duplication of artifacts"
+msgstr "Autoriser la duplication des artéfacts"
+
 msgid "Allow to permanently delete an artifact."
 msgstr "Cette opération efface de manière permanente un artéfact."
 
@@ -651,6 +654,9 @@ msgstr ""
 
 msgid "Artifacts fields"
 msgstr "Liste des champs des artéfacts"
+
+msgid "Artifacts of this tracker cannot be duplicated."
+msgstr "Les artéfacts de cet outil de suivi ne peuvent pas être dupliqués."
 
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
@@ -3925,6 +3931,9 @@ msgstr ""
 #, php-format
 msgid "This artifact (of %2$s) will be linked to %1$s"
 msgstr "Cet artéfact (de %2$s) sera lié à %1$s"
+
+msgid "This artifact cannot be duplicated."
+msgstr "Cet artéfact ne peut pas être dupliqué."
 
 msgid "This artifact does not exist."
 msgstr "Cet artéfact n'existe pas."

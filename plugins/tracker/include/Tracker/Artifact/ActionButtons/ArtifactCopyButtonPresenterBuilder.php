@@ -18,25 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class ArtifactCopyButtonPresenterBuilder
+final class ArtifactCopyButtonPresenterBuilder
 {
-    public function getCopyArtifactButton(PFUser $user, Artifact $artifact)
+    public function getCopyArtifactButton(PFUser $user, Artifact $artifact): ?ArtifactCopyButtonPresenter
     {
-        if (! $user->isAnonymous() && ! $this->isAlreadyCopyingArtifact()) {
+        if (! $user->isAnonymous() && ! $this->isAlreadyCopyingArtifact() && $artifact->getTracker()->isCopyAllowed()) {
             return new ArtifactCopyButtonPresenter(
                 dgettext('tuleap-tracker', 'Duplicate this artifact'),
                 dgettext('tuleap-tracker', 'Duplicate this artifact'),
                 TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId()
             );
         }
+
+        return null;
     }
 
-    private function isAlreadyCopyingArtifact()
+    private function isAlreadyCopyingArtifact(): bool
     {
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=copy-artifact') === 0;
     }

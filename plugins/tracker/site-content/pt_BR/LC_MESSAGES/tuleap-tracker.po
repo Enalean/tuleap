@@ -361,6 +361,9 @@ msgid ""
 "removing the existing link."
 msgstr ""
 
+msgid "Allow duplication of artifacts"
+msgstr ""
+
 msgid "Allow to permanently delete an artifact."
 msgstr ""
 
@@ -557,6 +560,9 @@ msgid ""
 msgstr ""
 
 msgid "Artifacts fields"
+msgstr ""
+
+msgid "Artifacts of this tracker cannot be duplicated."
 msgstr ""
 
 msgid ""
@@ -3445,6 +3451,9 @@ msgstr ""
 
 #, php-format
 msgid "This artifact (of %2$s) will be linked to %1$s"
+msgstr ""
+
+msgid "This artifact cannot be duplicated."
 msgstr ""
 
 msgid "This artifact does not exist."

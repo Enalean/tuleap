@@ -833,6 +833,14 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-copy-artifact':
+                if (! $this->isCopyAllowed()) {
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        dgettext('tuleap-tracker', 'Artifacts of this tracker cannot be duplicated.'),
+                    );
+                    $GLOBALS['Response']->redirect($this->getUri());
+                }
+
                 $logger                    = new Tracker_XML_Importer_CopyArtifactInformationsAggregator(BackendLogger::getDefaultLogger());
                 $xml_importer              = $this->getArtifactXMLImporterForArtifactCopy($logger);
                 $artifact_factory          = $this->getTrackerArtifactFactory();
