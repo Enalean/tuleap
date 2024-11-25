@@ -78,9 +78,7 @@ final class TrackerStructureXMLExporter
         if ($tracker->isEmailgatewayEnabled()) {
             $xmlElem->addAttribute('enable_emailgateway', $tracker->isEmailgatewayEnabled());
         }
-        if ($tracker->isCopyAllowed()) {
-            $xmlElem->addAttribute('allow_copy', '1');
-        }
+        $xmlElem->addAttribute('allow_copy', $tracker->isCopyAllowed() ? '1' : '0');
         if ($tracker->instantiate_for_new_projects) {
             $xmlElem->addAttribute('instantiate_for_new_projects', (string) $tracker->instantiate_for_new_projects);
         }

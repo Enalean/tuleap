@@ -519,7 +519,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'status'                       => '',
             'deletion_date'                => '',
             'color'                        => 'inca-silver',
-            'allow_copy'                   => 0,
+            'allow_copy'                   => 1,
             'enable_emailgateway'          => 0,
             'instantiate_for_new_projects' => 1,
             'log_priority_changes'         => 0,
