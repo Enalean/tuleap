@@ -949,7 +949,7 @@ class TrackerXmlImport
             'color'               => $tracker_color->getName(),
         ];
         $row['allow_copy']                   = isset($att['allow_copy']) ?
-            (int) $att['allow_copy'] : 0;
+            (int) $att['allow_copy'] : 1;
         $row['enable_emailgateway']          = isset($att['enable_emailgateway']) ?
             (int) $att['enable_emailgateway'] : 0;
         $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
