@@ -44,6 +44,8 @@ export const InjectedSectionsStoreStub = {
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
         moveSectionUp: promised_noop,
         moveSectionDown: promised_noop,
+        moveSectionBefore: promised_noop,
+        moveSectionAtTheEnd: promised_noop,
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -58,6 +60,8 @@ export const InjectedSectionsStoreStub = {
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
         moveSectionUp: promised_noop,
         moveSectionDown: promised_noop,
+        moveSectionBefore: promised_noop,
+        moveSectionAtTheEnd: promised_noop,
     }),
     withSectionsInError: (): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -72,6 +76,8 @@ export const InjectedSectionsStoreStub = {
         saved_sections: computed(() => undefined),
         moveSectionUp: promised_noop,
         moveSectionDown: promised_noop,
+        moveSectionBefore: promised_noop,
+        moveSectionAtTheEnd: promised_noop,
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -86,6 +92,8 @@ export const InjectedSectionsStoreStub = {
         saved_sections: computed(() => []),
         moveSectionUp: promised_noop,
         moveSectionDown: promised_noop,
+        moveSectionBefore: promised_noop,
+        moveSectionAtTheEnd: promised_noop,
     }),
     withMockedMoveSection: (
         moveSectionUp: SectionsStore["moveSectionUp"],
@@ -103,6 +111,8 @@ export const InjectedSectionsStoreStub = {
         saved_sections: computed(() => []),
         moveSectionUp,
         moveSectionDown,
+        moveSectionBefore: promised_noop,
+        moveSectionAtTheEnd: promised_noop,
     }),
     withMockedInsertPendingArtifactSectionForEmptyDocument: (
         insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void,

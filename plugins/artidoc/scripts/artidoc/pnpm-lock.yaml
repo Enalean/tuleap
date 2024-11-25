@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom
+  '@tuleap/drag-and-drop':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/drag-and-drop
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fault

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, vi, expect } from "vitest";
+import { beforeEach, describe, it, vi, expect } from "vitest";
+import type { SectionsStore, StoredArtidocSection } from "@/stores/useSectionsStore";
 import { AT_THE_END, useSectionsStore } from "@/stores/useSectionsStore";
 import * as rest from "@/helpers/rest-querier";
 import { errAsync, okAsync } from "neverthrow";
@@ -632,6 +633,149 @@ describe("useSectionsStore", () => {
             expect(store.sections.value?.[1].id).toStrictEqual(section1.id);
             expect(store.sections.value?.[2].id).toStrictEqual(newone.id);
             expect(store.sections.value?.[3].id).toStrictEqual(section3.id);
+        });
+    });
+
+    describe("reorder sections", () => {
+        let store: SectionsStore;
+        let stored_section0: StoredArtidocSection;
+        let stored_section1: StoredArtidocSection;
+        let stored_section2: StoredArtidocSection;
+
+        beforeEach(async () => {
+            const section0 = ArtifactSectionFactory.override({ display_title: "A" });
+            const section1 = PendingArtifactSectionFactory.override({ display_title: "B" });
+            const section2 = ArtifactSectionFactory.override({ display_title: "C" });
+
+            vi.spyOn(rest, "getAllSections").mockReturnValue(
+                okAsync([section0, section1, section2]),
+            );
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
+
+            store = useSectionsStore();
+            store.loadSections(101, null, true, { id: 101 } as Project);
+            await flushPromises();
+
+            if (store.sections?.value === undefined) {
+                throw new Error("Sections should have been loaded");
+            }
+
+            stored_section0 = store.sections.value[0];
+            if (stored_section0 === undefined) {
+                throw Error("Cannot find section0");
+            }
+            stored_section1 = store.sections.value[1];
+            if (stored_section1 === undefined) {
+                throw Error("Cannot find section1");
+            }
+            stored_section2 = store.sections.value[2];
+            if (stored_section2 === undefined) {
+                throw Error("Cannot find section2");
+            }
+        });
+
+        describe("moveSectionUp", () => {
+            it("should do nothing if the section is already at the top", async () => {
+                await store.moveSectionUp(stored_section0);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C"],
+                );
+            });
+
+            it("should move a pending artifact section up", async () => {
+                await store.moveSectionUp(stored_section1);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["B", "A", "C"],
+                );
+            });
+
+            it("should move an artifact section up", async () => {
+                await store.moveSectionUp(stored_section2);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "C", "B"],
+                );
+            });
+        });
+
+        describe("moveSectionDown", () => {
+            it("should do nothing if the section is already at the bottom", async () => {
+                await store.moveSectionDown(stored_section2);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C"],
+                );
+            });
+
+            it("should move a pending artifact section down", async () => {
+                await store.moveSectionDown(stored_section1);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "C", "B"],
+                );
+            });
+
+            it("should move an artifact section down", async () => {
+                await store.moveSectionDown(stored_section0);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["B", "A", "C"],
+                );
+            });
+        });
+
+        describe("moveSectionBefore", () => {
+            it("should do nothing if the section is moved at the same place", async () => {
+                await store.moveSectionBefore(stored_section1, stored_section2);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C"],
+                );
+            });
+
+            it("should move a section before a pending artifact section", async () => {
+                await store.moveSectionBefore(stored_section2, stored_section1);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "C", "B"],
+                );
+            });
+
+            it("should move a section before an artifact section", async () => {
+                await store.moveSectionBefore(stored_section2, stored_section0);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["C", "A", "B"],
+                );
+            });
+        });
+
+        describe("moveSectionAtTheEnd", () => {
+            it("should do nothing if the section is moved at the same place", async () => {
+                await store.moveSectionAtTheEnd(stored_section2);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C"],
+                );
+            });
+
+            it("should move a pending artifact section at the end", async () => {
+                await store.moveSectionAtTheEnd(stored_section1);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "C", "B"],
+                );
+            });
+
+            it("should move an artifact section at the end", async () => {
+                await store.moveSectionAtTheEnd(stored_section0);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["B", "C", "A"],
+                );
+            });
         });
     });
 });
