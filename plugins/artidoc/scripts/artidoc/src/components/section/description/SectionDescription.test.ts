@@ -67,7 +67,6 @@ describe("SectionDescription", () => {
                 is_image_upload_allowed: true,
                 upload_file: UploadFileStub.uploadNotInProgress(),
                 project_id: 101,
-                references: [],
             },
         });
     };

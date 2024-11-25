@@ -52,7 +52,6 @@
                 v-bind:is_image_upload_allowed="is_image_upload_allowed"
                 v-bind:upload_file="upload_file"
                 v-bind:project_id="getProjectId()"
-                v-bind:references="props.section.references"
                 v-bind:title="editable_title"
                 v-bind:input_section_content="inputSectionContent"
             />

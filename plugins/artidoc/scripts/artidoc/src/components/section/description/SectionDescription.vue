@@ -31,7 +31,6 @@
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
             v-bind:upload_file="upload_file"
             v-bind:project_id="project_id"
-            v-bind:references="references"
             v-bind:title="title"
             v-bind:input_section_content="input_section_content"
             data-test="editor"
@@ -52,7 +51,6 @@ import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
-import type { CrossReference } from "@/stores/useSectionsStore";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const props = withDefaults(
@@ -67,7 +65,6 @@ const props = withDefaults(
         is_print_mode?: boolean;
         upload_file: UseUploadFileType;
         project_id: number;
-        references: Array<CrossReference>;
         input_section_content: EditorSectionContent["inputSectionContent"];
     }>(),
     {

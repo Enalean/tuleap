@@ -19,7 +19,6 @@
 
 import type { Tracker } from "@/stores/configuration-store";
 import type { Project } from "@/helpers/project.type";
-import type { CrossReference } from "@/stores/useSectionsStore";
 
 interface ArtifactFieldValueRepresentation {
     readonly field_id: number;
@@ -63,7 +62,6 @@ export interface ArtidocSection {
     display_title: string;
     description: ArtifactTextFieldValueRepresentation;
     attachments: ArtifactFieldValueFileFullRepresentation | null;
-    references: Array<CrossReference>;
 }
 
 export interface ArtifactSection extends ArtidocSection {
