@@ -17,14 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Plugin } from "prosemirror-state";
-import { inputRules } from "prosemirror-inputrules";
-import { DetectCrossReferenceAsYouTypeInputRule } from "./detect-cross-reference-as-you-type-input-rule";
+import type { PluginView } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
+import type { EditorView } from "prosemirror-view";
+import { AllCrossReferencesLoader } from "./first-loading/AllCrossReferencesLoader";
 
-import "./element/AsyncCrossReference";
-import { CrossReferencesPlugin } from "./cross-references-plugin";
-
-export const initCrossReferencesPlugins = (project_id: number): Plugin[] => [
-    inputRules({ rules: [DetectCrossReferenceAsYouTypeInputRule(project_id)] }),
-    CrossReferencesPlugin(project_id),
-];
+export const CrossReferencesPlugin = (project_id: number): Plugin => {
+    return new Plugin({
+        key: new PluginKey("CrossReferencesPlugin"),
+        view(view: EditorView): PluginView {
+            view.dispatch(
+                AllCrossReferencesLoader(view.state, project_id).loadAllCrossReferences(),
+            );
+            return {};
+        },
+    });
+};
