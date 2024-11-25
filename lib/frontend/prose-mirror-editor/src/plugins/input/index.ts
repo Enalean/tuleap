@@ -18,3 +18,4 @@
  */
 
 export * from "./input";
+export type { SerializeDOM } from "./DomSerializer";

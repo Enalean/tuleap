@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 @use "./links-popover";
+@use "./cross-references";
 
 #editor,
 .editor {
@@ -63,12 +64,6 @@
     outline: 1px solid var(--tlp-main-color);
 }
 /* stylelint-enable selector-class-pattern */
-
-.cross-reference {
-    color: var(--tlp-main-color);
-    text-decoration: none;
-    cursor: pointer;
-}
 
 .prose-mirror-editor-dropcursor {
     background-color: var(--tlp-main-color);

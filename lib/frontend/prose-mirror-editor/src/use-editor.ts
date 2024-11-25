@@ -24,7 +24,7 @@ import { DOMParser } from "prosemirror-model";
 import { dropCursor } from "prosemirror-dropcursor";
 import { buildCustomSchema } from "./custom_schema";
 import type { EditorNodes } from "./custom_schema";
-import type { PluginDropFile, PluginInput } from "./plugins";
+import type { PluginDropFile, PluginInput, SerializeDOM } from "./plugins";
 import { initLinkPopoverPlugin, setupToolbar } from "./plugins";
 import type { GetText } from "@tuleap/gettext";
 
@@ -36,6 +36,8 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { initPluginCloseMarksAfterSpace } from "./plugins/close-marks-after-space";
 import { type ToolbarBus } from "./plugins/toolbar/helper/toolbar-bus";
+import { initCrossReferencesPlugins } from "./plugins/cross-references";
+import { buildDOMSerializer } from "./plugins/input/DomSerializer";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -46,7 +48,7 @@ export type UseEditorType = {
 export async function useEditor(
     editor_element: HTMLElement,
     setupUploadPlugin: (gettext_provider: GetText) => PluginDropFile,
-    setupInputPlugin: () => PluginInput,
+    setupInputPlugin: (serializer: SerializeDOM) => PluginInput,
     setupAdditionalPlugins: () => Plugin[],
     is_upload_allowed: boolean,
     initial_content: HTMLElement,
@@ -66,7 +68,7 @@ export async function useEditor(
     const editor_id = uuidv4();
     const plugins: Plugin[] = [
         ...setupAdditionalPlugins(),
-        setupInputPlugin(),
+        setupInputPlugin(buildDOMSerializer(schema)),
         upload_plugin,
         ...(is_upload_allowed
             ? [
@@ -80,6 +82,7 @@ export async function useEditor(
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
         ...setupToolbar(schema, toolbar_bus),
         initPluginCloseMarksAfterSpace(),
+        ...initCrossReferencesPlugins(project_id),
     ];
 
     const state: EditorState = getState(initial_content);

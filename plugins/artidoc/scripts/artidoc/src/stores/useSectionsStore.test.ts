@@ -650,10 +650,9 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([section0, section1, section2]),
             );
-            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             store = useSectionsStore();
-            store.loadSections(101, null, true, { id: 101 } as Project);
+            store.loadSections(101, null, true);
             await flushPromises();
 
             if (store.sections?.value === undefined) {

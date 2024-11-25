@@ -21,6 +21,7 @@ import { Schema } from "prosemirror-model";
 import type { DOMOutputSpec, MarkSpec, NodeSpec } from "prosemirror-model";
 import { addListNodes } from "prosemirror-schema-list";
 import { schema } from "prosemirror-schema-basic";
+import { createAsyncCrossReference } from "./plugins/cross-references/element/AsyncCrossReference";
 
 const subscript_mark_spec: MarkSpec = {
     parseDOM: [{ tag: "sub" }],
@@ -33,6 +34,19 @@ const superscript_mark_spec: MarkSpec = {
     parseDOM: [{ tag: "sup" }],
     toDOM(): DOMOutputSpec {
         return ["sup", 0];
+    },
+};
+
+const async_cross_reference_mark_spec: MarkSpec = {
+    inclusive: false,
+    spanning: false,
+    attrs: {
+        text: { validate: "string" },
+        project_id: { validate: "number" },
+    },
+    toDOM(node): DOMOutputSpec {
+        const { text, project_id } = node.attrs;
+        return createAsyncCrossReference(text, project_id);
     },
 };
 
@@ -50,6 +64,7 @@ export const buildCustomSchema = (editor_nodes: EditorNodes = {}): Schema => {
             ...schema.spec.marks.toObject(),
             subscript: subscript_mark_spec,
             superscript: superscript_mark_spec,
+            async_cross_reference: async_cross_reference_mark_spec,
         },
     });
 };

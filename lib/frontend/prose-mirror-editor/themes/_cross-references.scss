@@ -1,4 +1,4 @@
-/*
+/**
  *  Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
@@ -17,22 +17,26 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Plugin } from "prosemirror-state";
-import type { SerializeDOM } from "./DomSerializer";
+.cross-reference {
+    color: var(--tlp-main-color);
+    text-decoration: none;
+    cursor: pointer;
+}
 
-export type PluginInput = Plugin;
+.cross-reference-loading {
+    position: relative;
 
-export const initPluginInput = (
-    serializer: SerializeDOM,
-    update_callback: (content: HTMLElement) => void,
-): PluginInput =>
-    new Plugin({
-        state: {
-            init(): void {},
-            apply(tr, plugin_state, old_editor_state, new_editor_state): void {
-                if (tr.docChanged) {
-                    update_callback(serializer.serializeDOM(new_editor_state.doc.content));
-                }
-            },
-        },
-    });
+    &::after {
+        $spinner-font-size: 12px;
+
+        content: "\f1ce"; // fa-spinner
+        position: absolute;
+        top: -$spinner-font-size;
+        right: calc(-#{$spinner-font-size} / 2);
+        animation: fa-spin 2s infinite linear;
+        color: var(--tlp-dimmed-color-lighter-30);
+        font-family: "Font Awesome 6 Free";
+        font-size: $spinner-font-size;
+        font-weight: 600;
+    }
+}
