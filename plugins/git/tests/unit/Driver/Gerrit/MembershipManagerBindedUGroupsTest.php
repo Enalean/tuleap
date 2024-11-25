@@ -18,141 +18,121 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
 use Git_Driver_Gerrit;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_MembershipDao;
 use Git_Driver_Gerrit_MembershipManager;
+use Git_Driver_Gerrit_User;
 use Git_Driver_Gerrit_UserAccountManager;
 use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use ProjectUGroup;
+use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MembershipManagerBindedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MembershipManagerBindedUGroupsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ProjectManager */
-    protected $project_manager;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory;
-    /**
-     * @var Git_RemoteServer_GerritServer&\Mockery\MockInterface
-     */
-    private Git_RemoteServer_GerritServer|\Mockery\MockInterface|\Mockery\LegacyMockInterface $remote_server;
-    /**
-     * @var Git_Driver_Gerrit_UserAccountManager&\Mockery\MockInterface
-     */
-    private $gerrit_user_manager;
-    /**
-     * @var Git_Driver_Gerrit&\Mockery\MockInterface
-     */
-    private $driver;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_GerritDriverFactory
-     */
-    private $driver_factory;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_MembershipManager
-     */
-    private $membership_manager;
+    private Git_RemoteServer_GerritServer&MockObject $remote_server;
+    private Git_Driver_Gerrit_UserAccountManager&MockObject $gerrit_user_manager;
+    private Git_Driver_Gerrit&MockObject $driver;
+    private Git_Driver_Gerrit_MembershipManager&MockObject $membership_manager;
     private ProjectUGroup $ugroup;
     private ProjectUGroup $source;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $remote_server_factory     = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->remote_server       = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $this->gerrit_user_manager = $this->createMock(Git_Driver_Gerrit_UserAccountManager::class);
+        $project_manager           = $this->createMock(ProjectManager::class);
 
-        $this->remote_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->remote_server         = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $this->gerrit_user_manager   = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
-        $this->project_manager       = \Mockery::spy(\ProjectManager::class);
+        $remote_server_factory->method('getServersForUGroup')->willReturn([$this->remote_server]);
+        $project_manager->method('getChildProjects')->willReturn([]);
 
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server]);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
+        $this->driver   = $this->createMock(Git_Driver_Gerrit::class);
+        $driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $driver_factory->method('getDriver')->willReturn($this->driver);
 
-        $this->driver         = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->driver_factory = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
-
-        $this->membership_manager = \Mockery::mock(
-            \Git_Driver_Gerrit_MembershipManager::class,
-            [
-                Mockery::mock(Git_Driver_Gerrit_MembershipDao::class),
-                $this->driver_factory,
+        $this->membership_manager = $this->getMockBuilder(Git_Driver_Gerrit_MembershipManager::class)
+            ->setConstructorArgs([
+                $this->createMock(Git_Driver_Gerrit_MembershipDao::class),
+                $driver_factory,
                 $this->gerrit_user_manager,
-                $this->remote_server_factory,
-                Mockery::mock(\Psr\Log\LoggerInterface::class),
-                Mockery::mock('UGroupManager'),
-                $this->project_manager,
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+                $remote_server_factory,
+                new NullLogger(),
+                $this->createMock(UGroupManager::class),
+                $project_manager,
+            ])
+            ->onlyMethods(['createGroupForServer'])
+            ->getMock();
 
-        $project      = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $this->ugroup = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
-        $this->ugroup->setProject($project);
-        $this->ugroup->setSourceGroup(null);
-        $this->source = new ProjectUGroup(['ugroup_id' => 124, 'name' => 'coders']);
-        $this->source->setProject($project);
+        $project      = ProjectTestBuilder::aProject()->withUnixName('mozilla')->build();
+        $this->ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(112)->withName('developers')->withProject($project)->build();
+        $this->source = ProjectUGroupTestBuilder::aCustomUserGroup(124)->withName('coders')->withProject($project)->build();
     }
 
     public function testItAddBindingToAGroup(): void
     {
         $gerrit_ugroup_name = 'mozilla/developers';
         $gerrit_source_name = 'mozilla/coders';
-        $this->driver->shouldReceive('addIncludedGroup')->with($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name)->once();
+        $this->driver->expects(self::once())->method('addIncludedGroup')->with($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name);
 
-        $this->membership_manager->shouldReceive('createGroupForServer')
-            ->with($this->remote_server, $this->source)->once()
-            ->andReturns('mozilla/coders');
+        $this->membership_manager->expects(self::once())->method('createGroupForServer')
+            ->with($this->remote_server, $this->source)
+            ->willReturn('mozilla/coders');
+        $this->driver->method('removeAllGroupMembers');
 
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
     }
 
     public function testItEmptyTheMemberListOnBindingAdd(): void
     {
-        $this->membership_manager->shouldReceive('createGroupForServer')->andReturns('mozilla/coders');
+        $this->membership_manager->method('createGroupForServer')->willReturn('mozilla/coders');
 
-        $this->driver->shouldReceive('removeAllGroupMembers')->with($this->remote_server, 'mozilla/developers')->once();
+        $this->driver->expects(self::once())->method('removeAllGroupMembers')->with($this->remote_server, 'mozilla/developers');
+        $this->driver->method('addIncludedGroup');
 
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
     }
 
     public function testItReplaceBindingFromAGroupToAnother(): void
     {
-        $this->membership_manager->shouldReceive('createGroupForServer');
+        $this->membership_manager->method('createGroupForServer');
 
         $this->ugroup->setSourceGroup($this->source);
 
-        $this->driver->shouldReceive('removeAllIncludedGroups')->with($this->remote_server, 'mozilla/developers')->once();
+        $this->driver->expects(self::once())->method('removeAllIncludedGroups')->with($this->remote_server, 'mozilla/developers');
+        $this->driver->method('removeAllGroupMembers');
+        $this->driver->method('addIncludedGroup');
 
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
     }
 
     public function testItReliesOnCreateGroupForSourceGroupCreation(): void
     {
-        $this->membership_manager->shouldReceive('createGroupForServer')->with($this->remote_server, $this->source)->once();
+        $this->membership_manager->expects(self::once())->method('createGroupForServer')->with($this->remote_server, $this->source);
+        $this->driver->method('removeAllGroupMembers');
+        $this->driver->method('addIncludedGroup');
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
     }
 
     public function testItRemovesBindingWithAGroup(): void
     {
-        $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $ugroup  = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
-        $ugroup->setProject($project);
-        $ugroup->setSourceGroup(null);
+        $project = ProjectTestBuilder::aProject()->withUnixName('mozilla')->build();
+        $ugroup  = ProjectUGroupTestBuilder::aCustomUserGroup(112)->withProject($project)->withName('developers')->build();
 
         $gerrit_ugroup_name = 'mozilla/developers';
-        $this->driver->shouldReceive('removeAllIncludedGroups')->with($this->remote_server, $gerrit_ugroup_name)->once();
+        $this->driver->expects(self::once())->method('removeAllIncludedGroups')->with($this->remote_server, $gerrit_ugroup_name);
 
         $this->membership_manager->removeUGroupBinding($ugroup);
     }
@@ -163,18 +143,17 @@ class MembershipManagerBindedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
             'language_id' => 'en',
             'ldap_id'     => 'blabla',
         ]);
-        $gerrit_user = \Mockery::spy(\Git_Driver_Gerrit_User::class);
-        $this->gerrit_user_manager->shouldReceive('getGerritUser')->with($user)->andReturns($gerrit_user);
+        $gerrit_user = $this->createMock(Git_Driver_Gerrit_User::class);
+        $this->gerrit_user_manager->method('getGerritUser')->with($user)->willReturn($gerrit_user);
 
-        $source_ugroup = \Mockery::spy(\ProjectUGroup::class);
-        $source_ugroup->shouldReceive('getMembers')->andReturns([$user]);
+        $source_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(452)->withUsers($user)->build();
 
-        $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $ugroup  = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
-        $ugroup->setProject($project);
-        $ugroup->setSourceGroup($source_ugroup);
+        $project = ProjectTestBuilder::aProject()->withUnixName('mozilla')->build();
+        $ugroup  = ProjectUGroupTestBuilder::aCustomUserGroup(112)->withProject($project)->withName('developers')->withSourceGroup($source_ugroup)->build();
 
-        $this->driver->shouldReceive('addUserToGroup')->with($this->remote_server, $gerrit_user, 'mozilla/developers')->once();
+        $this->driver->expects(self::once())->method('addUserToGroup')->with($this->remote_server, $gerrit_user, 'mozilla/developers');
+        $this->driver->method('removeAllIncludedGroups');
+        $this->driver->method('flushGerritCacheAccounts');
 
         $this->membership_manager->removeUGroupBinding($ugroup);
     }
