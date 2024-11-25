@@ -61,12 +61,7 @@ provide(
 
 onMounted(() => {
     store
-        .loadSections(
-            item_id,
-            configuration.selected_tracker.value,
-            can_user_edit_document,
-            configuration.current_project.value,
-        )
+        .loadSections(item_id, configuration.selected_tracker.value, can_user_edit_document)
         .then(() => {
             const hash = window.location.hash.slice(1);
             if (hash) {

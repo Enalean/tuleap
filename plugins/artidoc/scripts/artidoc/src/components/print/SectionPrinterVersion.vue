@@ -37,7 +37,6 @@
             v-bind:is_print_mode="true"
             v-bind:upload_file="UploadFileStub.uploadNotInProgress()"
             v-bind:project_id="section.artifact.tracker.project.id"
-            v-bind:references="section.references"
         />
     </article>
 </template>

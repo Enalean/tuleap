@@ -21,4 +21,3 @@ export * from "./input";
 export * from "./toolbar";
 export * from "./link-popover";
 export * from "./drop-file";
-export * from "./extract-referencies";

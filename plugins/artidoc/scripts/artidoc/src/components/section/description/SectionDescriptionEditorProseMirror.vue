@@ -32,7 +32,6 @@ import { initPluginDropFile, initPluginInput, useEditor } from "@tuleap/prose-mi
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { GetText } from "@tuleap/gettext";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
-import type { CrossReference } from "@/stores/useSectionsStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
@@ -49,7 +48,6 @@ const props = defineProps<{
     input_section_content: EditorSectionContent["inputSectionContent"];
     upload_file: UseUploadFileType;
     project_id: number;
-    references: Array<CrossReference>;
 }>();
 
 let useEditorInstance: UseEditorType | undefined;
@@ -107,7 +105,6 @@ onMounted(async () => {
             is_upload_allowed,
             renderArtidocSectionNode(props.title, props.editable_description),
             props.project_id,
-            props.references,
             toolbar_bus,
             artidoc_editor_schema,
         );

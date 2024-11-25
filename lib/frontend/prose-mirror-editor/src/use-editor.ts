@@ -25,7 +25,7 @@ import { dropCursor } from "prosemirror-dropcursor";
 import { buildCustomSchema } from "./custom_schema";
 import type { EditorNodes } from "./custom_schema";
 import type { PluginDropFile, PluginInput } from "./plugins";
-import { initLinkPopoverPlugin, initPluginTransformInput, setupToolbar } from "./plugins";
+import { initLinkPopoverPlugin, setupToolbar } from "./plugins";
 import type { GetText } from "@tuleap/gettext";
 
 import {
@@ -34,7 +34,6 @@ import {
     initGettext,
 } from "@tuleap/gettext";
 import { v4 as uuidv4 } from "uuid";
-import type { CrossReference } from "./plugins/extract-referencies/reference-extractor";
 import { initPluginCloseMarksAfterSpace } from "./plugins/close-marks-after-space";
 import { type ToolbarBus } from "./plugins/toolbar/helper/toolbar-bus";
 
@@ -52,7 +51,6 @@ export async function useEditor(
     is_upload_allowed: boolean,
     initial_content: HTMLElement,
     project_id: number,
-    references: Array<CrossReference>,
     toolbar_bus: ToolbarBus,
     custom_editor_nodes?: EditorNodes,
 ): Promise<UseEditorType> {
@@ -81,7 +79,6 @@ export async function useEditor(
             : []),
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
         ...setupToolbar(schema, toolbar_bus),
-        initPluginTransformInput(project_id, references),
         initPluginCloseMarksAfterSpace(),
     ];
 
