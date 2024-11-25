@@ -100,7 +100,7 @@ defineProps<{ section: ArtidocSection }>();
     }
 }
 
-@media screen and (min-width: #{viewport-breakpoint.$small-screen-size}) and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
+@media screen and (min-width: #{viewport-breakpoint.$small-screen-size}) and (max-width: #{viewport-breakpoint.$medium-screen-size-when-document-sidebar-is-expanded}) {
     .artidoc-section-container {
         padding-right: var(--artidoc-sidebar-button-width);
     }

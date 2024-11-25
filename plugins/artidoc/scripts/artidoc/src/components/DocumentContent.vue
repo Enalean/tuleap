@@ -172,7 +172,7 @@ li[data-is-sticking="true"]:first-child::before {
 
 .is-aside-expanded + .document-content {
     > .tlp-card {
-        @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
+        @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size-when-document-sidebar-is-expanded}) {
             width: 100%;
             margin: 0;
             box-shadow: none;

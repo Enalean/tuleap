@@ -147,6 +147,8 @@ function insertNewSection(): void {
 </script>
 
 <style lang="scss">
+@use "@/themes/includes/viewport-breakpoint";
+
 .artidoc-add-new-section-container:not(:hover) {
     transition: opacity ease-in-out 250ms 250ms;
     opacity: 0;
@@ -158,11 +160,27 @@ ol:has(> .artidoc-section-with-add-button:last-child:hover) + .artidoc-add-new-s
 {
     opacity: 1;
 }
+
+.is-aside-expanded + .document-content {
+    .artidoc-add-new-section-container {
+        @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size-when-document-sidebar-is-expanded}) {
+            margin: 0;
+        }
+    }
+}
+
+.is-aside-collapsed + .document-content {
+    .artidoc-add-new-section-container {
+        @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size-when-document-sidebar-is-collapsed}) {
+            margin: 0;
+        }
+    }
+}
 </style>
+
 <style scoped lang="scss">
 @use "@/themes/includes/whitespace";
 @use "@/themes/includes/size";
-@use "@/themes/includes/viewport-breakpoint";
 
 .artidoc-add-new-section-container {
     --add-new-section-button-background-color: var(--tlp-neutral-light-color);
@@ -175,10 +193,6 @@ ol:has(> .artidoc-section-with-add-button:last-child:hover) + .artidoc-add-new-s
     &:has(button:hover, button:focus-within) {
         --add-new-section-button-background-color: var(--tlp-main-color);
         --add-new-section-button-text-color: var(--tlp-white-color);
-    }
-
-    @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
-        margin: 0;
     }
 
     @media print {
