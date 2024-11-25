@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SearchOneSectionStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
@@ -52,7 +53,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->identifier_factory = new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
+        $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
     public function testHappyPath(): void

@@ -21,13 +21,13 @@
 declare(strict_types=1);
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
@@ -317,6 +317,6 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
 
     private function getArtidocDao(): ArtidocDao
     {
-        return (new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory())));
+        return (new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory())));
     }
 }

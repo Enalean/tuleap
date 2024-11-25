@@ -24,9 +24,9 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveSectionsStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
@@ -75,7 +75,7 @@ final class PUTSectionsHandlerTest extends TestCase
             ),
             TransformRawSectionsToRepresentationStub::withCollection($dummy_collection),
             $saver,
-            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
+            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -106,7 +106,7 @@ final class PUTSectionsHandlerTest extends TestCase
             RetrieveArtidocStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
             $saver,
-            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
+            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -143,7 +143,7 @@ final class PUTSectionsHandlerTest extends TestCase
             ),
             TransformRawSectionsToRepresentationStub::withoutCollection(),
             $saver,
-            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
+            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -180,7 +180,7 @@ final class PUTSectionsHandlerTest extends TestCase
             ),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
             $saver,
-            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
+            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(

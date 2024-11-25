@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 final class SectionIdentifierStub
 {
@@ -31,6 +31,6 @@ final class SectionIdentifierStub
     {
         $uuid_factory = new \Tuleap\DB\DatabaseUUIDV7Factory();
 
-        return (new SectionIdentifierFactory($uuid_factory))->buildIdentifier();
+        return (new UUIDSectionIdentifierFactory($uuid_factory))->buildIdentifier();
     }
 }

@@ -20,9 +20,9 @@
 
 namespace Tuleap\Artidoc\Document;
 
-use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
+use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 
 interface SaveOneSection
 {

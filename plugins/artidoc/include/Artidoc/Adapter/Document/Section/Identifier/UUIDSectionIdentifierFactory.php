@@ -20,11 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Section\Identifier;
+namespace Tuleap\Artidoc\Adapter\Document\Section\Identifier;
 
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\DB\DatabaseUUIDFactory;
 
-final readonly class SectionIdentifierFactory
+final readonly class UUIDSectionIdentifierFactory implements SectionIdentifierFactory
 {
     public function __construct(private DatabaseUUIDFactory $uuid_factory)
     {
@@ -32,14 +35,14 @@ final readonly class SectionIdentifierFactory
 
     public function buildIdentifier(): SectionIdentifier
     {
-        return SectionIdentifier::fromUUID(
+        return UUIDSectionIdentifier::fromUUID(
             $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())
         );
     }
 
     public function buildFromBytesData(string $bytes): SectionIdentifier
     {
-        return SectionIdentifier::fromUUID($this->uuid_factory->buildUUIDFromBytesData($bytes));
+        return UUIDSectionIdentifier::fromUUID($this->uuid_factory->buildUUIDFromBytesData($bytes));
     }
 
     /**
@@ -49,7 +52,7 @@ final readonly class SectionIdentifierFactory
     {
         return $this->uuid_factory->buildUUIDFromHexadecimalString($string)
             ->match(
-                SectionIdentifier::fromUUID(...),
+                UUIDSectionIdentifier::fromUUID(...),
                 static fn () => throw new InvalidSectionIdentifierStringException($string)
             );
     }

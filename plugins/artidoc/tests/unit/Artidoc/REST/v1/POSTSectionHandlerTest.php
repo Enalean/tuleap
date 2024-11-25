@@ -26,9 +26,10 @@ use Docman_PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveOneSectionStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
@@ -60,7 +61,7 @@ final class POSTSectionHandlerTest extends TestCase
         $this->permissions_manager = $this->createMock(Docman_PermissionsManager::class);
         Docman_PermissionsManager::setInstance(self::PROJECT_ID, $this->permissions_manager);
 
-        $this->identifier_factory = new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
+        $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
     protected function tearDown(): void

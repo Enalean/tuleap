@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
-use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -32,7 +32,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 {
     public function testSearchPaginatedRawSectionsById(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->insertMany('plugin_artidoc_document', [
@@ -103,7 +103,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testCloneItem(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $dao->save(101, [1001]);
         $dao->save(102, [2001, 1001]);
@@ -122,7 +122,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testCloneItemForEmptyDocument(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $dao->save(101, []);
         $dao->saveTracker(101, 10001);
@@ -138,7 +138,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSave(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $dao->save(101, [1001, 1002, 1003]);
 
@@ -157,7 +157,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSearchSectionById(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $dao->save(101, [1001, 1002, 1003]);
@@ -178,7 +178,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSaveTracker(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         self::assertNull($dao->getTracker(101));
@@ -192,7 +192,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSaveSectionAtTheEnd(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $item_1 = 101;
@@ -209,7 +209,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSaveAlreadyExistingSectionAtTheEnd(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $item_1 = 101;
@@ -225,7 +225,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSaveSectionBefore(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $item_1 = 101;
@@ -246,7 +246,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSaveAlreadyExistingSectionBefore(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $item_1 = 101;
@@ -264,7 +264,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSaveSectionBeforeUnknownSectionWillRaiseAnException(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $item_1 = 101;
@@ -284,7 +284,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testDeleteSectionsByArtifactId(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $dao->save(101, [1001, 1002, 1003]);
         $dao->save(102, [1002, 1003, 1004]);
@@ -300,7 +300,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testDeleteSectionsById(): void
     {
-        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $item_1 = 101;
