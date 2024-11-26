@@ -53,7 +53,7 @@ sleep 1
 test_phpunit_container_id="$($DOCKERCOMPOSE ps -q test-phpunit)"
 test_cypress_container_id="$($DOCKERCOMPOSE ps -q test-cypress)"
 
-$TIMEOUT "$MAX_TEST_EXECUTION_TIME" docker wait "$test_phpunit_container_id" "$test_cypress_container_id" || \
+COMPOSE_MENU=0 $TIMEOUT "$MAX_TEST_EXECUTION_TIME" docker wait "$test_phpunit_container_id" "$test_cypress_container_id" || \
         echo 'Tests take to much time to execute. End of execution will not be waited for!'
 
 mkdir -p "$test_results_folder/logs"

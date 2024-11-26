@@ -54,5 +54,5 @@ if [ -n "${SETUP_ONLY:-}" ] && [ "$SETUP_ONLY" != "0" ]; then
     $DOCKERCOMPOSE up -d --scale tests=0
     $DOCKERCOMPOSE run tests /usr/share/tuleap/tests/rest/bin/run.sh setup
 else
-    $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests
+    COMPOSE_MENU=0 $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests
 fi
