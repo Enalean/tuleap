@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CreateEditorTextNode } from "../../../helpers/EditorTextNodeCreator";
 import type { DispatchCrossReferenceUpdatedTransaction } from "../../../helpers/UpdatedCrossReferenceTransactionDispatcher";
 import type { EditCrossReferenceCallback } from "../element/forms/EditCrossReferenceFormElement";
 import { removePopover } from "./create-link-popover";
@@ -28,14 +27,13 @@ export type BuildEditCrossReferenceCallback = {
 
 export const EditCrossReferenceCallbackBuilder = (
     dispatcher: DispatchCrossReferenceUpdatedTransaction,
-    create_text_node: CreateEditorTextNode,
 ): BuildEditCrossReferenceCallback => ({
     build: (doc: Document, editor_id: string, position: number) => (cross_reference_text) => {
         removePopover(doc, editor_id);
 
         dispatcher.dispatch({
             position,
-            new_reference_node: create_text_node.create(cross_reference_text),
+            cross_reference_text,
         });
     },
 });

@@ -32,7 +32,6 @@ import { RemoveLinkCallbackBuilder } from "./helper/RemoveLinkCallbackBuilder";
 import { EditLinkCallbackBuilder } from "./helper/EditLinkCallbackBuilder";
 import { EditCrossReferenceCallbackBuilder } from "./helper/EditCrossReferenceCallbackBuilder";
 import { UpdatedCrossReferenceTransactionDispatcher } from "../../helpers/UpdatedCrossReferenceTransactionDispatcher";
-import { EditorTextNodeCreator } from "../../helpers/EditorTextNodeCreator";
 
 export const initLinkPopoverPlugin = (
     doc: Document,
@@ -58,7 +57,6 @@ export const initLinkPopoverPlugin = (
                     EditLinkCallbackBuilder(view),
                     EditCrossReferenceCallbackBuilder(
                         UpdatedCrossReferenceTransactionDispatcher(view, view.state),
-                        EditorTextNodeCreator(view.state),
                     ),
                 ).insertPopover(position),
         },

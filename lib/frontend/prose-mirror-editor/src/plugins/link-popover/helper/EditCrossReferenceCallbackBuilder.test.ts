@@ -22,9 +22,6 @@ import * as popover_remover from "./create-link-popover";
 import { createLocalDocument } from "../../../helpers";
 import { EditCrossReferenceCallbackBuilder } from "./EditCrossReferenceCallbackBuilder";
 import { DispatchCrossReferenceUpdatedTransactionStub } from "../../../helpers/stubs/DispatchCrossReferenceUpdatedTransactionStub";
-import { EditorTextNodeCreator } from "../../../helpers/EditorTextNodeCreator";
-import { buildCustomSchema } from "../../../custom_schema";
-import { EditorState } from "prosemirror-state";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 const cross_reference_text = "art #123";
@@ -36,16 +33,17 @@ describe("EditCrossReferenceCallbackBuilder", () => {
         const removePopover = vi.spyOn(popover_remover, "removePopover");
 
         const dispatcher = DispatchCrossReferenceUpdatedTransactionStub();
-        const callback = EditCrossReferenceCallbackBuilder(
-            dispatcher,
-            EditorTextNodeCreator(EditorState.create({ schema: buildCustomSchema() })),
-        ).build(doc, editor_id, cursor_position);
+        const callback = EditCrossReferenceCallbackBuilder(dispatcher).build(
+            doc,
+            editor_id,
+            cursor_position,
+        );
 
         callback(cross_reference_text);
 
         const dispatched_reference = dispatcher.getDispatchedReference();
         expect(dispatched_reference?.position).toBe(cursor_position);
-        expect(dispatched_reference?.new_reference_node.textContent).toBe(cross_reference_text);
+        expect(dispatched_reference?.cross_reference_text).toBe(cross_reference_text);
 
         expect(removePopover).toHaveBeenCalledOnce();
         expect(removePopover).toHaveBeenCalledWith(doc, editor_id);
