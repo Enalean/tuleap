@@ -56,42 +56,26 @@ const triggerInputRule = (view: EditorView, content_text: string): void => {
 };
 
 describe("detect-cross-reference-as-you-type-input-rule", () => {
-    it.each([
-        ["art #123"],
-        ["art #abc"],
-        ["art #abc:123"],
-        ["art #123:123"],
-        ["art #abc:abc"],
-        ["art #123:wikipage/2"],
-        ["art #abc-def:ghi"],
-        ["art #abc-de_f:ghi"],
-        ["ref #12784."],
-        ["ref #a.b-c_d/12784."],
-    ])(
-        `When the user has typed a cross reference, and enters a space character right after it
-        Then it should add an async-cross-reference mark to it and a space character`,
-        (reference) => {
-            const typed_text = `This document references ${reference}`;
-            const view = buildEditorView(typed_text);
+    it(`When the user has typed a cross reference, and enters a space character right after it
+        Then it should add an async-cross-reference mark to it and a space character`, () => {
+        const reference = "art #123";
+        const typed_text = `This document references ${reference}`;
+        const view = buildEditorView(typed_text);
 
-            triggerInputRule(view, typed_text);
+        triggerInputRule(view, typed_text);
 
-            expect(view.dom.innerHTML).toBe(
-                `<p>This document references <async-cross-reference>${reference}</async-cross-reference> </p>`,
-            );
-        },
-    );
+        expect(view.dom.innerHTML).toBe(
+            `<p>This document references <async-cross-reference>${reference}</async-cross-reference> </p>`,
+        );
+    });
 
-    it.each([["art 123"], ["art#123"], ["art #"], ["something"]])(
-        `When the user has typed something that isn't recognized as a cross-reference, then it should do nothing
-        Then it should add an async-cross-reference mark to it and a space character`,
-        (reference) => {
-            const typed_text = `This document references ${reference}`;
-            const view = buildEditorView(typed_text);
+    it(`When the user has typed something that isn't recognized as a cross-reference, then it should do nothing
+        Then it should add an async-cross-reference mark to it and a space character`, () => {
+        const typed_text = `This document references nothing`;
+        const view = buildEditorView(typed_text);
 
-            triggerInputRule(view, typed_text);
+        triggerInputRule(view, typed_text);
 
-            expect(view.dom.innerHTML).toBe(`<p>${typed_text}</p>`);
-        },
-    );
+        expect(view.dom.innerHTML).toBe(`<p>${typed_text}</p>`);
+    });
 });

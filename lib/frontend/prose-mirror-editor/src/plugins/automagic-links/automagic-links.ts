@@ -18,17 +18,15 @@
  */
 
 import { InputRule } from "prosemirror-inputrules";
+import { match_newly_typed_https_url_regexp } from "./regexps";
 
 export const automagicLinksInputRule = (): InputRule =>
-    new InputRule(
-        /https:\/\/(?:\w+:?\w*@)?\S+(?::[0-9]+)?(?:\/|\/[\w#!:.?+=&%@\-/])?\s$/,
-        (state, match, start, end) => {
-            const url = match[0].trim();
-            const transaction = state.tr;
+    new InputRule(match_newly_typed_https_url_regexp, (state, match, start, end) => {
+        const url = match[0].trim();
+        const transaction = state.tr;
 
-            transaction.addMark(start, end, state.schema.marks.link.create({ href: url }));
-            transaction.insertText(" ", end);
+        transaction.addMark(start, end, state.schema.marks.link.create({ href: url }));
+        transaction.insertText(" ", end);
 
-            return transaction;
-        },
-    );
+        return transaction;
+    });

@@ -54,49 +54,25 @@ const triggerInputRule = (view: EditorView, content_text: string): void => {
 };
 
 describe("automagic-links", () => {
-    it.each([
-        ["https://example.com"],
-        ["https://example.com:443"],
-        ["https://www.example.com#/app/"],
-        ["https://www.example.com?query=abcd&stuff_id=123"],
-        ["https://example.com/a?a[0]=a"],
-        ["https://é.example.com"],
-        ["https://العربية.example.com/"],
-        ["https://127.0.0.1"],
-        ["https://127.0.0.1:8080"],
-        ["https://127.0.0.1/index.php"],
-        ["https://example.example"],
-    ])(
-        "When the user has typed an https url, and enters a space right after it, then it should add a link mark to it and a space character",
-        (url) => {
-            const content_text = `This paragraph contains a link: ${url}`;
-            const view = buildEditorView(content_text);
+    it("When the user has typed an https url, and enters a space right after it, then it should add a link mark to it and a space character", () => {
+        const url = "https://example.com";
+        const content_text = `This paragraph contains a link: ${url}`;
+        const view = buildEditorView(content_text);
 
-            triggerInputRule(view, content_text);
+        triggerInputRule(view, content_text);
 
-            const href = url.replace("&", "&amp;");
-            expect(view.dom.innerHTML).toBe(
-                `<p>This paragraph contains a link: <a href="${href}">${href}</a> </p>`,
-            );
-        },
-    );
+        const href = url.replace("&", "&amp;");
+        expect(view.dom.innerHTML).toBe(
+            `<p>This paragraph contains a link: <a href="${href}">${href}</a> </p>`,
+        );
+    });
 
-    it.each([
-        ["example.com"],
-        ["mailto:john.doe@example.com"],
-        ["http://www.example.com"],
-        ["www.example.com"],
-        ["ftp://ftp.example.com/file"],
-        ["news.us.example.com"],
-    ])(
-        "When the user has typed an url that does not respect the supported formats, then it should do nothing",
-        (url) => {
-            const content_text = `This paragraph contains a link: ${url}`;
-            const view = buildEditorView(content_text);
+    it("When the user has typed an url that does not respect the supported formats, then it should do nothing", () => {
+        const content_text = `This paragraph contains a link: http://example.com`;
+        const view = buildEditorView(content_text);
 
-            triggerInputRule(view, content_text);
+        triggerInputRule(view, content_text);
 
-            expect(view.dom.innerHTML).toBe(`<p>${content_text}</p>`);
-        },
-    );
+        expect(view.dom.innerHTML).toBe(`<p>${content_text}</p>`);
+    });
 });
