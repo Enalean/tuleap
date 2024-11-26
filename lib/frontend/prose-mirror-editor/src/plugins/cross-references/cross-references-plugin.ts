@@ -20,11 +20,14 @@
 import type { PluginView, Transaction } from "prosemirror-state";
 import { Plugin, PluginKey } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
-import { AllCrossReferencesLoader } from "./first-loading/AllCrossReferencesLoader";
+import type { Slice } from "prosemirror-model";
 import { EditorNodeAtPositionFinder } from "../../helpers/EditorNodeAtPositionFinder";
+import { AllCrossReferencesLoader } from "./first-loading/AllCrossReferencesLoader";
 import { MarkExtentsRetriever } from "./update/MarkExtentsRetriever";
 import { UpdatedCrossReferenceHandler } from "./update/UpdatedCrossReferenceHandler";
 import { UpdatedCrossReferenceInTransactionFinder } from "./update/UpdatedCrossReferenceInTransactionFinder";
+import { PastedReferencesTransformer } from "./paste/PastedReferencesTransformer";
+import { TextNodeWithReferencesSplitter } from "./paste/TextNodeWithReferencesSplitter";
 
 export const CrossReferencesPlugin = (project_id: number): Plugin => {
     return new Plugin({
@@ -46,6 +49,12 @@ export const CrossReferencesPlugin = (project_id: number): Plugin => {
                 MarkExtentsRetriever(EditorNodeAtPositionFinder(old_state)),
                 project_id,
             ).handle(old_state, updated_cross_reference);
+        },
+        props: {
+            transformPasted: (slice, view): Slice =>
+                PastedReferencesTransformer(
+                    TextNodeWithReferencesSplitter(view.state.schema, project_id),
+                ).transformPastedCrossReferencesToMark(slice),
         },
     });
 };
