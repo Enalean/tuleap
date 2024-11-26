@@ -31,8 +31,9 @@ final class ProjectUGroupTestBuilder
     /**
      * @var list<\PFUser>
      */
-    private array $users         = [];
-    private ?string $description = null;
+    private array $users                  = [];
+    private ?string $description          = null;
+    private ?\ProjectUGroup $source_group = null;
 
     private function __construct(private int $id)
     {
@@ -132,6 +133,12 @@ final class ProjectUGroupTestBuilder
         return $this;
     }
 
+    public function withSourceGroup(\ProjectUGroup $source_group): self
+    {
+        $this->source_group = $source_group;
+        return $this;
+    }
+
     public function build(): \ProjectUGroup
     {
         $ugroup = new \ProjectUGroup([
@@ -143,6 +150,7 @@ final class ProjectUGroupTestBuilder
         if ($this->project !== null) {
             $ugroup->setProject($this->project);
         }
+        $ugroup->setSourceGroup($this->source_group);
 
         return $ugroup;
     }

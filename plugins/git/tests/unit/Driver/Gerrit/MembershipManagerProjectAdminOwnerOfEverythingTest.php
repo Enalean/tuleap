@@ -18,119 +18,95 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
 use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_MembershipDao;
 use Git_Driver_Gerrit_MembershipManager;
 use Git_Driver_Gerrit_UserAccountManager;
 use Git_RemoteServer_GerritServer;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use Git_RemoteServer_GerritServerFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use ProjectUGroup;
+use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MembershipManagerProjectAdminOwnerOfEverythingTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MembershipManagerProjectAdminOwnerOfEverythingTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var Git_Driver_Gerrit */
-    protected $driver;
-
-    /** @var Git_RemoteServer_GerritServer */
-    protected $remote_server;
-
-    /** @var Git_Driver_Gerrit_UserAccountManager */
-    protected $gerrit_user_manager;
-
-    /** @var ProjectUGroup */
-    protected $admin_ugroup;
-
-    /** @var ProjectUGroup */
-    protected $ugroup;
-
-    /** @var UGroupManager */
-    protected $ugroup_manager;
-
-    /** @var ProjectManager */
-    protected $project_manager;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_MembershipManager
-     */
-    private $membership_manager;
-    /**
-     * @var Project&\Mockery\MockInterface
-     */
-    private $project;
+    private Git_Driver_Gerrit&MockObject $driver;
+    private Git_RemoteServer_GerritServer&MockObject $remote_server;
+    private ProjectUGroup $admin_ugroup;
+    private ProjectUGroup $ugroup;
+    private Git_Driver_Gerrit_MembershipManager&MockObject $membership_manager;
 
     public function setUp(): void
     {
-        parent::setUp();
+        $this->driver        = $this->createMock(Git_Driver_Gerrit::class);
+        $this->remote_server = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $project_manager     = $this->createMock(ProjectManager::class);
 
-        $this->driver          = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->remote_server   = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
 
-        $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
+        $gerrit_driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $gerrit_driver_factory->method('getDriver')->willReturn($this->driver);
+        $membership_dao = $this->createMock(Git_Driver_Gerrit_MembershipDao::class);
+        $membership_dao->method('addReference');
+        $this->membership_manager = $this->getMockBuilder(Git_Driver_Gerrit_MembershipManager::class)
+            ->setConstructorArgs([
+                $membership_dao,
+                $gerrit_driver_factory,
+                $this->createMock(Git_Driver_Gerrit_UserAccountManager::class),
+                $this->createMock(Git_RemoteServer_GerritServerFactory::class),
+                new NullLogger(),
+                $ugroup_manager,
+                $project_manager,
+            ])
+            ->onlyMethods(['doesGroupExistOnServer'])
+            ->getMock();
 
-        $this->membership_manager = \Mockery::mock(
-            \Git_Driver_Gerrit_MembershipManager::class,
-            [
-                \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class),
-                \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock(),
-                \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
-                Mockery::mock('Git_RemoteServer_GerritServerFactory'),
-                Mockery::mock(\Psr\Log\LoggerInterface::class),
-                $this->ugroup_manager,
-                $this->project_manager,
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $project_id = 1236;
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->withUnixName('w3c')->build();
 
-        $project_id    = 1236;
-        $this->project = \Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getID')->andReturns($project_id);
-        $this->project->shouldReceive('getUnixName')->andReturns('w3c');
+        $this->ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(25698)
+            ->withName('coders')
+            ->withProject($project)
+            ->build();
 
-        $this->ugroup = \Mockery::spy(\ProjectUGroup::class);
-        $this->ugroup->shouldReceive('getId')->andReturns(25698);
-        $this->ugroup->shouldReceive('getNormalizedName')->andReturns('coders');
-        $this->ugroup->shouldReceive('getProject')->andReturns($this->project);
-        $this->ugroup->shouldReceive('getProjectId')->andReturns($project_id);
+        $this->admin_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_ADMIN)
+            ->withName(ProjectUGroup::PROJECT_ADMIN_NAME)
+            ->withProject($project)
+            ->withoutUsers()
+            ->build();
 
-        $this->admin_ugroup = \Mockery::spy(\ProjectUGroup::class);
-        $this->admin_ugroup->shouldReceive('getId')->andReturns(ProjectUGroup::PROJECT_ADMIN);
-        $this->admin_ugroup->shouldReceive('getNormalizedName')->andReturns('project_admins');
-        $this->admin_ugroup->shouldReceive('getProject')->andReturns($this->project);
-        $this->admin_ugroup->shouldReceive('getProjectId')->andReturns($project_id);
-        $this->admin_ugroup->shouldReceive('getMembers')->andReturns([]);
+        $ugroup_manager->method('getUGroup')->willReturn($this->admin_ugroup);
 
-        $this->ugroup_manager->shouldReceive('getUGroup')->andReturns($this->admin_ugroup);
-
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
+        $project_manager->method('getChildProjects')->willReturn([]);
     }
 
     public function testItCheckIfProjectAdminsGroupExist(): void
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
-
-        $this->membership_manager->shouldReceive('doesGroupExistOnServer')->with($this->remote_server, $this->admin_ugroup)->once();
+        $this->membership_manager->expects(self::once())->method('doesGroupExistOnServer')->with($this->remote_server, $this->admin_ugroup);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }
 
     public function testItCreatesTheProjectAdminGroupWhenNoExist(): void
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
-
-        $this->membership_manager->shouldReceive('doesGroupExistOnServer')->andReturns(false);
-        $this->driver->shouldReceive('createGroup')->times(2);
-        $this->driver->shouldReceive('createGroup')->with($this->remote_server, 'w3c/project_admins', 'w3c/project_admins')->ordered();
-        $this->driver->shouldReceive('createGroup')->with($this->remote_server, 'w3c/coders', 'w3c/project_admins')->ordered();
+        $this->membership_manager->method('doesGroupExistOnServer')->willReturn(false);
+        $this->driver->method('doesTheGroupExist')->willReturn(false);
+        $this->driver->expects(self::exactly(2))->method('createGroup')
+            ->withConsecutive(
+                [$this->remote_server, 'w3c/project_admins', 'w3c/project_admins'],
+                [$this->remote_server, 'w3c/coders', 'w3c/project_admins'],
+            );
+        $this->remote_server->method('getId');
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }
