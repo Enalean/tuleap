@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/dom':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/dom
   '@tuleap/fetch-result':
     specifier: workspace:^
     version: link:../../../../lib/frontend/fetch-result
@@ -14,6 +17,9 @@ dependencies:
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../../lib/frontend/list-picker
+  '@tuleap/option':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/option
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
     specifier: workspace:*
     version: link:../lib/artifact-ckeditor-image-upload

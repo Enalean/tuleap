@@ -856,7 +856,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 exit;
             case 'update-comment':
                 if ((int) $request->get('changeset_id') && $request->exist('content')) {
-                    if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
+                    if ($changeset = $this->getChangeset((int) $request->get('changeset_id'))) {
                         $comment_format = $this->validateCommentFormat($request, 'comment_format');
                         $changeset->updateComment(
                             $request->get('content'),
@@ -864,12 +864,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                             $comment_format,
                             $_SERVER['REQUEST_TIME']
                         );
-                        if ($request->isAjax()) {
-                            //We assume that we can only change a comment from a followUp
-                            $comment = $changeset->getComment();
-                            if ($comment !== null) {
-                                echo $comment->fetchFollowUp($current_user);
-                            }
+                        //We assume that we can only change a comment from a followUp
+                        $comment = $changeset->getComment();
+                        if ($comment !== null) {
+                            echo $comment->fetchFollowUp($current_user);
                         }
                     }
                 }

@@ -19,6 +19,7 @@
 
 @use "../default/main";
 @use "./tracker-creation";
+@use "./edit-view/comments";
 @use "pkg:@tuleap/mention";
 @use "pkg:@tuleap/tlp-badge";
 @use "pkg:@tuleap/plugin-tracker-rich-text-editor";

@@ -36,10 +36,12 @@ abstract class Tracker_Artifact_Followup_Item
 
     public function getFollowUpHTML(PFUser $user, Tracker_Artifact_Followup_Item $previous_item): ?string
     {
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $diff_to_previous = $this->diffToPreviousArtifactView($user, $previous_item);
         $classnames       = 'tracker_artifact_followup ';
         $classnames      .= $this->getFollowUpClassnames($diff_to_previous, $user);
-        $comment_html     = '<article id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up">';
+        $comment_html     = '<article id="followup_' . $purifier->purify($this->getId()) . '" class="' . $purifier->purify($classnames) . '" data-test="artifact-follow-up">';
         $comment_html    .= $this->fetchFollowUp($diff_to_previous, $user);
         $comment_html    .= '</article>';
 

@@ -22,26 +22,45 @@ import { getDatasetItemOrThrow, selectOrThrow } from "./main";
 
 describe(`DOM`, () => {
     describe(`getDatasetItemOrThrow`, () => {
-        const DATASET_NAME = "myDatasetName";
         const DATASET_VALUE = "lingberry";
 
-        let element: HTMLDivElement;
-        beforeEach(() => {
+        function createElement(key: string): HTMLDivElement {
             const doc = document.implementation.createHTMLDocument();
-            element = doc.createElement("div");
-            element.dataset[DATASET_NAME] = DATASET_VALUE;
-        });
+            const element = doc.createElement("div");
+            if (key.startsWith("data-")) {
+                element.setAttribute(key, DATASET_VALUE);
+            } else {
+                element.dataset[key] = DATASET_VALUE;
+            }
+            return element;
+        }
 
-        it(`returns the string value of the item's dataset for the given key`, () => {
-            expect(getDatasetItemOrThrow(element, DATASET_NAME)).toBe(DATASET_VALUE);
-        });
+        function* generateKeys(): Generator<[string]> {
+            yield ["name"];
+            yield ["myDatasetName"];
+            yield ["data-name"];
+            yield ["data-my-dataset-name"];
+        }
 
-        it(`throws when the item has no dataset for the given key`, () => {
-            const key = "unknownKey";
-            expect(() => getDatasetItemOrThrow(element, key)).toThrowError(
-                `Missing item ${key} in dataset`,
-            );
-        });
+        it.each([...generateKeys()])(
+            `returns the string value of the item's data-attribute for the given key`,
+            (key) => {
+                const element = createElement(key);
+                expect(getDatasetItemOrThrow(element, key)).toBe(DATASET_VALUE);
+            },
+        );
+
+        it.each([...generateKeys()])(
+            `throws when the item has no matching data-attribute for the given key`,
+            (key) => {
+                const element = createElement("unknownKey");
+                const error = key.startsWith("data-")
+                    ? `Missing attribute ${key}`
+                    : `Missing item ${key} in dataset`;
+
+                expect(() => getDatasetItemOrThrow(element, key)).toThrowError(error);
+            },
+        );
     });
 
     describe(`selectOrThrow()`, () => {

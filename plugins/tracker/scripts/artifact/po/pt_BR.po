@@ -6,10 +6,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Cancel"
+msgstr ""
+
 msgid "Choose a value in the list"
 msgstr "Escolha um valor na lista"
 
 msgid "Status"
+msgstr ""
+
+msgid "Submit"
 msgstr ""
 
 msgid "Title"

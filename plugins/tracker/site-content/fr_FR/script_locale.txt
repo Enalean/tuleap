@@ -13,8 +13,6 @@ codendi.locales['tracker_artifact'] = {
     masschange_uncheck_all: 'Décocher tout',
     always_expand_fieldset: 'Ce groupe est toujours fermé. Cliquez pour toujours l\'ouvrir.',
     always_collapse_fieldset: 'Ce groupe est toujours ouvert. Cliquez pour toujours le fermer.',
-    edit_followup_ok: 'Modifier',
-    edit_followup_cancel: 'Annuler',
     disable_notifications: 'Désactiver les notifications',
     enable_notifications: 'Activer les notifications',
     disable_notifications_alternate_text: 'Ne plus recevoir les notifications de cet artéfact',
