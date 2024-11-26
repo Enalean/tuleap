@@ -25,7 +25,6 @@ import {
 import type { EditorView } from "prosemirror-view";
 import { EditorState } from "prosemirror-state";
 import { buildCustomSchema } from "../custom_schema";
-import { EditorTextNodeCreator } from "./EditorTextNodeCreator";
 
 describe("UpdatedCrossReferenceTransactionDispatcher", () => {
     it('Given an UpdatedCrossReference, then it should dispatch an "updated-cross-reference" transaction', () => {
@@ -43,7 +42,7 @@ describe("UpdatedCrossReferenceTransactionDispatcher", () => {
 
         const updated_cross_reference = {
             position: 115,
-            new_reference_node: EditorTextNodeCreator(state).create("art #132"),
+            cross_reference_text: "art #132",
         };
 
         dispatcher.dispatch(updated_cross_reference);

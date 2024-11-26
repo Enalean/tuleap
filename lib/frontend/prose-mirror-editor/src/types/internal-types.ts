@@ -33,3 +33,8 @@ export type ImageProperties = {
     readonly src: string;
     readonly title: string;
 };
+
+export type Extents = {
+    from: number;
+    to: number;
+};

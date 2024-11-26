@@ -19,13 +19,12 @@
 
 import type { EditorState } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
-import type { EditorNode } from "../types/internal-types";
 
 export const UPDATED_CROSS_REFERENCE_TRANSACTION = "updated-cross-reference";
 
 export type UpdatedCrossReference = {
     readonly position: number;
-    readonly new_reference_node: EditorNode;
+    readonly cross_reference_text: string;
 };
 
 export type DispatchCrossReferenceUpdatedTransaction = {

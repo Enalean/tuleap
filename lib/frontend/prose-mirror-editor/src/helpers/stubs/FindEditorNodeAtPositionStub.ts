@@ -27,4 +27,7 @@ export const FindEditorNodeAtPositionStub = {
     withNode: (editor_node: EditorNode): FindEditorNodeAtPosition => ({
         findNodeAtPosition: () => editor_node,
     }),
+    withNodes: (editor_nodes: Map<number, EditorNode>): FindEditorNodeAtPosition => ({
+        findNodeAtPosition: (position) => editor_nodes.get(position) ?? null,
+    }),
 };

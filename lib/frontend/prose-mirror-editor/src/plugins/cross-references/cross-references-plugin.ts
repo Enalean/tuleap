@@ -17,10 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PluginView } from "prosemirror-state";
+import type { PluginView, Transaction } from "prosemirror-state";
 import { Plugin, PluginKey } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
 import { AllCrossReferencesLoader } from "./first-loading/AllCrossReferencesLoader";
+import { EditorNodeAtPositionFinder } from "../../helpers/EditorNodeAtPositionFinder";
+import { MarkExtentsRetriever } from "./update/MarkExtentsRetriever";
+import { UpdatedCrossReferenceHandler } from "./update/UpdatedCrossReferenceHandler";
+import { UpdatedCrossReferenceInTransactionFinder } from "./update/UpdatedCrossReferenceInTransactionFinder";
 
 export const CrossReferencesPlugin = (project_id: number): Plugin => {
     return new Plugin({
@@ -30,6 +34,18 @@ export const CrossReferencesPlugin = (project_id: number): Plugin => {
                 AllCrossReferencesLoader(view.state, project_id).loadAllCrossReferences(),
             );
             return {};
+        },
+        appendTransaction: (transactions, old_state): Transaction | null => {
+            const updated_cross_reference =
+                UpdatedCrossReferenceInTransactionFinder().find(transactions);
+            if (!updated_cross_reference) {
+                return null;
+            }
+
+            return UpdatedCrossReferenceHandler(
+                MarkExtentsRetriever(EditorNodeAtPositionFinder(old_state)),
+                project_id,
+            ).handle(old_state, updated_cross_reference);
         },
     });
 };
