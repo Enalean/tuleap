@@ -27,6 +27,7 @@ import type {
     UseEditorType,
     PluginDropFile,
     PluginInput,
+    SerializeDOM,
 } from "@tuleap/prose-mirror-editor";
 import { initPluginDropFile, initPluginInput, useEditor } from "@tuleap/prose-mirror-editor";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
@@ -61,8 +62,8 @@ function setupUploadPlugin(gettext_provider: GetText): PluginDropFile {
     return initPluginDropFile(file_upload_options, gettext_provider);
 }
 
-const setupInputPlugin = (): PluginInput =>
-    initPluginInput((content: HTMLElement) => {
+const setupInputPlugin = (serializer: SerializeDOM): PluginInput =>
+    initPluginInput(serializer, (content: HTMLElement) => {
         props.input_section_content(
             String(content.querySelector("artidoc-section-title")?.textContent),
             String(content.querySelector("artidoc-section-description")?.innerHTML),
