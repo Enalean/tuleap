@@ -89,24 +89,8 @@ function configureProgram(program_project_name: string, team_project_name: strin
 
     cy.wait("@linkTeamToProgram");
 
-    cy.reloadUntilCondition(
-        () => {},
-        (number_of_attempts, max_attempts) => {
-            cy.log(
-                `Check that the 'Program increments' panel is rendered (attempt ${number_of_attempts}/${max_attempts})`,
-            );
-            return cy
-                .get("[data-test=admin-program-increment-label]")
-                .should("exist")
-                .then(() => {
-                    return true;
-                });
-        },
-        "Timed out while checking if 'Program increments' panel is rendered",
-    );
-
     cy.log("Edit configuration");
-    cy.get("[data-test=admin-program-increment-label]").type("Foo");
+    cy.get("[data-test=admin-program-increment-label]").should("be.visible").type("Foo");
     cy.get("[data-test=admin-program-increment-sub-label]").type("Bar{enter}");
 
     cy.log("Check configuration is applied");
