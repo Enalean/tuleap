@@ -38,6 +38,10 @@ import { initPluginCloseMarksAfterSpace } from "./plugins/close-marks-after-spac
 import { type ToolbarBus } from "./plugins/toolbar/helper/toolbar-bus";
 import { initCrossReferencesPlugins } from "./plugins/cross-references";
 import { buildDOMSerializer } from "./plugins/input/DomSerializer";
+import {
+    initAddMarkAfterEnterPlugin,
+    buildAddMarkAfterEnterPluginMap,
+} from "./plugins/add-mark-after-enter";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -83,6 +87,7 @@ export async function useEditor(
         ...setupToolbar(schema, toolbar_bus),
         initPluginCloseMarksAfterSpace(),
         ...initCrossReferencesPlugins(project_id),
+        initAddMarkAfterEnterPlugin(buildAddMarkAfterEnterPluginMap(schema, project_id)),
     ];
 
     const state: EditorState = getState(initial_content);
