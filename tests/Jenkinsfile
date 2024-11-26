@@ -72,7 +72,7 @@ pipeline {
                     steps { script { execTestWithLimitedConcurrency({ actions.runRESTTests('mysql80', '82') }) } }
                     post { always { junit 'results/api-rest/*/*' } }
                 }
-                stage('DB/Integration CentOS 7 PHP 8.2 MySQL 8.0') {
+                stage('DB/Integration PHP 8.2 MySQL 8.0') {
                     steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '82') }) } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }

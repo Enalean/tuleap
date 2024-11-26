@@ -38,6 +38,7 @@ setup_database() {
     usermod -a -G codendiadm runner
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
+        --skip-sanity-check \
         --host="$DB_HOST" \
         --admin-user=root \
         --admin-password=welcome0 \
