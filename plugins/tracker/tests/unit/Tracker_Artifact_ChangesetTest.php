@@ -523,6 +523,6 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $follow_up_content = $changeset->fetchFollowUp('<div></div>', $user);
 
-        self::assertStringContainsString('<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_1234"></div>', $follow_up_content);
+        self::assertStringContainsString('<div class="tracker_artifact_followup_comment" data-test="follow-up-comment"></div>', $follow_up_content);
     }
 }

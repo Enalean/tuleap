@@ -136,7 +136,7 @@ describe("Tracker artifacts", function () {
             });
 
             describe("Artifact manipulation", function () {
-                it("must be able to create new artifact", function () {
+                it("can create and edit an artifact", function () {
                     cy.projectMemberSession();
                     cy.visitProjectService(project_name, "Trackers");
                     cy.getContains("[data-test=tracker-link]", "Issues").click();
@@ -153,14 +153,35 @@ describe("Tracker artifacts", function () {
                     );
 
                     cy.log("Created artifact must be in recent elements");
-                    cy.get("@body").type("{s}");
+                    cy.get("@body").type("s");
                     cy.get("[data-test=switch-to-modal]").should("be.visible");
 
                     cy.get("[data-test=switch-to-filter]").type("My new bug");
                     cy.get("[data-test=switch-to-recent-items]").should("contain", "My new bug");
-                });
+                    cy.get("@body").type("{esc}");
 
-                it(`can edit an existing artifact and leave comments`, function () {});
+                    cy.log("Edit the artifact and add a comment");
+                    editSimpleField("Title").clear().type("My edited bug");
+                    cy.get("[data-test=artifact_followup_comment]").type("Changed the title");
+                    submitAndStay();
+
+                    cy.log("Edit a comment");
+                    cy.intercept("POST", "/plugins/tracker/?aid=*").as("editComment");
+                    cy.getContains("[data-test=artifact-follow-up]", "Changed the title").then(
+                        (comment_panel) => {
+                            cy.wrap(comment_panel).find("[data-test=edit-comment]").click();
+                            cy.wrap(comment_panel)
+                                .find("[data-test=edit-comment-textarea]")
+                                .clear()
+                                .type("Edited the comment");
+                            cy.wrap(comment_panel).find("[data-test=edit-comment-submit]").click();
+                        },
+                    );
+                    cy.wait("@editComment");
+                    cy.get("[data-test=follow-up-comment]")
+                        .should("contain.text", "Edited the comment")
+                        .and("contain.text", "last edited by");
+                });
 
                 it("must be able to copy new artifact", function () {
                     cy.projectMemberSession();

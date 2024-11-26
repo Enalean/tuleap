@@ -247,7 +247,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 return '';
             }
 
-            $html .= '<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_' . $this->getId() . '">';
+            $html .= '<div class="tracker_artifact_followup_comment" data-test="follow-up-comment">';
             if ($follow_up) {
                 $html .= $follow_up;
             }
@@ -260,7 +260,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
         //The changes
         if ($diff_to_previous) {
-            $html .= '<ul class="tracker_artifact_followup_changes" data-test="tracker_artifact_followup_changes_followup_' . $this->getId() . '">';
+            $html .= '<ul class="tracker_artifact_followup_changes" data-test="follow-up-changes">';
             $html .= $diff_to_previous;
             $html .= '</ul>';
         }
@@ -325,7 +325,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
         $html  = '';
         $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
-        $html .= '<button class="btn btn-mini"><i class="far fa-edit"></i> ' . dgettext('tuleap-tracker', 'Edit') . '</button>';
+        $html .= '<button class="btn btn-mini" data-test="edit-comment"><i class="far fa-edit"></i> ' . dgettext('tuleap-tracker', 'Edit') . '</button>';
         $html .= '</a>';
 
         return $html;
