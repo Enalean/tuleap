@@ -45,6 +45,8 @@ use Tuleap\Artidoc\Domain\Document\Order\InvalidComparedToFault;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidDirectionFault;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidIdsFault;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
+use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
+use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
@@ -296,6 +298,14 @@ final class ArtidocResource extends AuthenticatedResource
                             400,
                             dgettext('tuleap-artidoc', 'The ids is invalid. Expected an array of one section identifier.'),
                         ),
+                        $fault instanceof UnableToReorderSectionOutsideOfDocumentFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'The section cannot be reordered outside of its document.'),
+                        ),
+                        $fault instanceof UnknownSectionToMoveFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'The section being moved does not belong to the document.'),
+                        ),
                         default => new RestException(404, (string) $fault),
                     };
                 }
@@ -528,6 +538,7 @@ final class ArtidocResource extends AuthenticatedResource
         return new PATCHSectionsHandler(
             $retriever,
             new SectionOrderBuilder($identifier_factory),
+            $dao,
         );
     }
 

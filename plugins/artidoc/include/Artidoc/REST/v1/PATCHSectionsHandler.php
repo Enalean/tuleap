@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\NeverThrow\Err;
@@ -36,6 +37,7 @@ final readonly class PATCHSectionsHandler
     public function __construct(
         private RetrieveArtidoc $retrieve_artidoc,
         private SectionOrderBuilder $section_order_builder,
+        private ReorderSections $dao,
     ) {
     }
 
@@ -67,6 +69,6 @@ final readonly class PATCHSectionsHandler
     {
         return $this->section_order_builder
             ->buildFromRest($order->ids, $order->direction, $order->compared_to)
-            ->andThen(fn (SectionOrder $order) => Result::err(Fault::fromMessage('Not yet implemented')));
+            ->andThen(fn (SectionOrder $order) => $this->dao->reorder($id, $order));
     }
 }

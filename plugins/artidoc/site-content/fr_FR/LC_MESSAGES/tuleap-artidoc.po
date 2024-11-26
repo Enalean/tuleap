@@ -45,8 +45,14 @@ msgstr ""
 "Le paramètre ids n'est pas valide. Un tableau d'un identifiant de section "
 "est attendu."
 
+msgid "The section being moved does not belong to the document."
+msgstr "La section à déplacer n'appartient pas au document."
+
 msgid "The section cannot be moved relatively to itself."
 msgstr "La section ne peut pas être déplacée par rapport à elle-même."
+
+msgid "The section cannot be reordered outside of its document."
+msgstr "La section ne peut pas être déplacée en dehors du document."
 
 msgid "The semantic title should be a string field."
 msgstr "La sémantique titre doit être un champ chaîne de caractères."

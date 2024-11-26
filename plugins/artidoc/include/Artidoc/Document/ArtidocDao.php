@@ -24,13 +24,21 @@ namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Domain\Document\Order\Direction;
+use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
+use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
+use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
+use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
 {
     public function __construct(private readonly SectionIdentifierFactory $identifier_factory)
     {
@@ -290,5 +298,61 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 'id' => $section_id->getBytes(),
             ]
         );
+    }
+
+    public function reorder(int $item_id, SectionOrder $order): Ok|Err
+    {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $order): Ok|Err {
+            $current_order = array_values($db->col(
+                'SELECT id
+                FROM plugin_artidoc_document
+                WHERE item_id = ?
+                ORDER BY `rank`',
+                0,
+                $item_id,
+            ));
+
+            $index_to_move = array_search($order->identifier->getBytes(), $current_order, true);
+            if ($index_to_move === false) {
+                return Result::err(UnknownSectionToMoveFault::build());
+            }
+
+            array_splice($current_order, $index_to_move, 1);
+
+            $index_compared_to = array_search($order->compared_to->getBytes(), $current_order, true);
+            if ($index_compared_to === false) {
+                return Result::err(UnableToReorderSectionOutsideOfDocumentFault::build());
+            }
+            if ($order->direction === Direction::Before) {
+                if ($index_compared_to === 0) {
+                    array_unshift($current_order, $order->identifier->getBytes());
+                } else {
+                    array_splice($current_order, $index_compared_to, 0, [$order->identifier->getBytes()]);
+                }
+            } else {
+                if ($index_compared_to === count($current_order) - 1) {
+                    $current_order[] = $order->identifier->getBytes();
+                } else {
+                    array_splice($current_order, $index_compared_to + 1, 0, [$order->identifier->getBytes()]);
+                }
+            }
+
+            $when   = '';
+            $values = [];
+            foreach ($current_order as $index => $value) {
+                $when    .= ' WHEN id = ? THEN ? ';
+                $values[] = $value;
+                $values[] = $index;
+            }
+
+            $sql = <<<EOS
+                UPDATE plugin_artidoc_document
+                SET `rank` = CASE $when ELSE `rank` END
+                WHERE item_id = ?
+                EOS;
+            $db->safeQuery($sql, [...$values, $item_id]);
+
+            return Result::ok(null);
+        });
     }
 }

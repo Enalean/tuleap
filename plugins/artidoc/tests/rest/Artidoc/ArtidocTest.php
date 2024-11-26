@@ -396,6 +396,50 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
     }
 
+    /**
+     * @depends testGetRootId
+     */
+    public function testReorderSection(int $root_id): void
+    {
+        $artidoc_id       = $this->createArtidoc($root_id, 'Test reorder section ' . $this->now)['id'];
+        $section_1_art_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
+        $section_2_art_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
+        $section_3_art_id = $this->createRequirementArtifact('Section 3', 'Content of section 3');
+
+        $this->setSectionsForArtidoc($artidoc_id, $section_1_art_id, $section_2_art_id, $section_3_art_id);
+
+        $this->assertSectionsMatchArtifactIdsForDocument(
+            $artidoc_id,
+            $section_1_art_id,
+            $section_2_art_id,
+            $section_3_art_id,
+        );
+
+        $uuid1 = $this->getSectionUuid($artidoc_id, $section_1_art_id);
+        $uuid2 = $this->getSectionUuid($artidoc_id, $section_2_art_id);
+
+        $order_response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+                $this->stream_factory->createStream(json_encode([
+                    'order' => [
+                        'ids'         => [$uuid1],
+                        'direction'   => 'after',
+                        'compared_to' => $uuid2,
+                    ],
+                ], JSON_THROW_ON_ERROR))
+            ),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(200, $order_response->getStatusCode());
+
+        $this->assertSectionsMatchArtifactIdsForDocument(
+            $artidoc_id,
+            $section_2_art_id,
+            $section_1_art_id,
+            $section_3_art_id,
+        );
+    }
+
     private function getSectionUuid(int $artidoc_id, int $section_artifact_id): string
     {
         $document_content = $this->getArtidocSections($artidoc_id);
