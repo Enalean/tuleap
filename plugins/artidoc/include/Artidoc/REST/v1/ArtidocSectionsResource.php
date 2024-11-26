@@ -24,11 +24,12 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Docman_ItemFactory;
 use Luracast\Restler\RestException;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
-use Tuleap\Artidoc\Document\Section\Identifier\InvalidSectionIdentifierStringException;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
@@ -185,6 +186,6 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
     private function getSectionIdentifierFactory(): SectionIdentifierFactory
     {
-        return new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
+        return new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 }

@@ -20,31 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Section\Identifier;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-use Tuleap\DB\UUID;
-
-final readonly class SectionIdentifier
+final class AlreadyExistingSectionWithSameArtifactException extends \Exception
 {
-    private function __construct(private UUID $uuid)
-    {
-    }
-
-    /**
-     * @psalm-internal Tuleap\Artidoc\Document\Section\Identifier
-     */
-    public static function fromUUID(UUID $uuid): self
-    {
-        return new self($uuid);
-    }
-
-    public function getBytes(): string
-    {
-        return $this->uuid->getBytes();
-    }
-
-    public function toString(): string
-    {
-        return $this->uuid->toString();
-    }
 }

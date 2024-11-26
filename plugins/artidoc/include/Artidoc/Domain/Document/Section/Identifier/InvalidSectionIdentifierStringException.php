@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Section\Identifier;
+namespace Tuleap\Artidoc\Domain\Document\Section\Identifier;
 
 final class InvalidSectionIdentifierStringException extends \Exception
 {

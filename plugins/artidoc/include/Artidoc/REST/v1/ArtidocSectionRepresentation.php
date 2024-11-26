@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;

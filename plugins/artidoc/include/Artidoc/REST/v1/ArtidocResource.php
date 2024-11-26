@@ -29,10 +29,10 @@ use EventManager;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
 use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
@@ -357,7 +357,7 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory()));
+        $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
         $retriever = new ArtidocRetriever(
             \ProjectManager::instance(),
             $dao,
@@ -380,7 +380,7 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $identifier_factory = new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocRetriever(
             \ProjectManager::instance(),
@@ -409,7 +409,7 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $identifier_factory = new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
+        $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocRetriever(
             \ProjectManager::instance(),
@@ -438,7 +438,7 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory()));
+        $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
         $retriever = new ArtidocRetriever(
             \ProjectManager::instance(),
             $dao,

@@ -20,8 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Section;
+namespace Tuleap\Artidoc\Adapter\Document\Section\Identifier;
 
-final class UnableToFindSiblingSectionException extends \Exception
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\DB\UUID;
+
+final readonly class UUIDSectionIdentifier implements SectionIdentifier
 {
+    private function __construct(private UUID $uuid)
+    {
+    }
+
+    /**
+     * @psalm-internal Tuleap\Artidoc\Adapter\Document\Section\Identifier
+     */
+    public static function fromUUID(UUID $uuid): self
+    {
+        return new self($uuid);
+    }
+
+    public function getBytes(): string
+    {
+        return $this->uuid->getBytes();
+    }
+
+    public function toString(): string
+    {
+        return $this->uuid->toString();
+    }
 }

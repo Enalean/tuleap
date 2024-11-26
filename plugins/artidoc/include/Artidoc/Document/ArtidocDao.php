@@ -24,10 +24,10 @@ namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
-use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
+use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
 
 final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker

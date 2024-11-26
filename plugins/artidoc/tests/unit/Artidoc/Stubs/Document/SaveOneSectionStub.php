@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Document;
 
 use Tuleap\Artidoc\Document\SaveOneSection;
-use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
+use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 
 final class SaveOneSectionStub implements SaveOneSection
 {

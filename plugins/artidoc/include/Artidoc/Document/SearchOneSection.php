@@ -20,7 +20,7 @@
 
 namespace Tuleap\Artidoc\Document;
 
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 interface SearchOneSection
 {

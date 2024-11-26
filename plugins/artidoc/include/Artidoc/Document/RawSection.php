@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 final readonly class RawSection
 {

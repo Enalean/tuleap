@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
-use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
-use Tuleap\Artidoc\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RawSection;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\SaveOneSection;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
+use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;

@@ -20,8 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Section;
+namespace Tuleap\Artidoc\Domain\Document\Section\Identifier;
 
-final class AlreadyExistingSectionWithSameArtifactException extends \Exception
+interface SectionIdentifierFactory
 {
+    public function buildIdentifier(): SectionIdentifier;
+
+    public function buildFromBytesData(string $bytes): SectionIdentifier;
+
+    /**
+     * @throws InvalidSectionIdentifierStringException
+     */
+    public function buildFromHexadecimalString(string $string): SectionIdentifier;
 }
