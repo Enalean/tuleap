@@ -9,6 +9,8 @@
     </div>
 
     <div class="tlp-modal-body">
+        <div class="tlp-alert-danger" ng-if="edit_error">{{ edit_error }}</div>
+
         <h2 class="tlp-modal-subtitle" translate>Jenkins job</h2>
         <div class="tlp-form-element"
              ng-class="{ 'tlp-form-element-error': editCampaignAutomatedForm.campaign_job_url.$dirty && editCampaignAutomatedForm.campaign_job_url.$invalid }"

@@ -55,14 +55,15 @@ function CampaignEditAutomatedCtrl(
 
         CampaignService.getCampaign(campaign_id).then((campaign) => {
             $scope.campaign = campaign;
+            $scope.edit_error = null;
         });
     }
 
     function editCampaignAutomated(campaign) {
         $scope.submitting_changes = true;
 
-        CampaignService.patchCampaign(campaign.id, campaign.label, campaign.job_configuration).then(
-            (response) => {
+        CampaignService.patchCampaign(campaign.id, campaign.label, campaign.job_configuration)
+            .then((response) => {
                 $scope.submitting_changes = false;
 
                 if (editCampaignAutomatedCallback) {
@@ -70,7 +71,17 @@ function CampaignEditAutomatedCtrl(
                 }
 
                 modal_instance.tlp_modal.hide();
-            },
-        );
+            })
+            .catch((error) => {
+                $scope.submitting_changes = false;
+                error.response.json().then((error_json) => {
+                    if ("error" in error_json && "message" in error_json.error) {
+                        $scope.edit_error = error_json.error.message;
+                        $scope.$apply();
+                    } else {
+                        $scope.edit_error = "Error while configuring automated tests";
+                    }
+                });
+            });
     }
 }

@@ -9,6 +9,8 @@
     </div>
 
     <div class="tlp-modal-body">
+        <div class="tlp-alert-danger" ng-if="edit_error">{{ edit_error }}</div>
+
         <div class="tlp-form-element"
              ng-class="{ 'tlp-form-element-error': editCampaignLabelForm.campaign_label.$dirty && editCampaignLabelForm.campaign_label.$invalid }">
             <label class="tlp-label" for="campaign-label">
