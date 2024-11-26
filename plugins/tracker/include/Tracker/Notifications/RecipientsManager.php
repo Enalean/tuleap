@@ -84,7 +84,8 @@ class RecipientsManager
         }
 
         // 2 Get from mentioned users in comment
-        $mentioned_usernames = $this->mentioned_user_in_comment_retriever->getMentionedUsernames($changeset)->usernames;
+        $mentioned_users     = $this->mentioned_user_in_comment_retriever->getMentionedUsers($changeset)->users;
+        $mentioned_usernames = array_map(static fn(PFUser $user) => $user->getUsername(), $mentioned_users);
 
         $recipients = array_merge($recipients, $mentioned_usernames);
 

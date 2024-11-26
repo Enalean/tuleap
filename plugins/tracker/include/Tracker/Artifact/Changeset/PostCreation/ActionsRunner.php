@@ -156,7 +156,7 @@ class ActionsRunner
                         new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO(),
-                    new MentionedUserInCommentRetriever()
+                    new MentionedUserInCommentRetriever($user_manager)
                 ),
                 Tracker_Artifact_MailGateway_RecipientFactory::build(),
                 new MailGatewayConfig(

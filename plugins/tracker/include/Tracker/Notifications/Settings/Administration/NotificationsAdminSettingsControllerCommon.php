@@ -107,7 +107,7 @@ trait NotificationsAdminSettingsControllerCommon
                         new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO(),
-                    new MentionedUserInCommentRetriever()
+                    new MentionedUserInCommentRetriever($user_manager)
                 ),
                 new UserNotificationSettingsDAO()
             )

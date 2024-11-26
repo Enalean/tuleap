@@ -89,7 +89,7 @@ final class RecipientsManagerTest extends TestCase
             $this->unsubscribers_notification_dao,
             $this->notification_settings_retriever,
             $this->user_status_change_only_dao,
-            new MentionedUserInCommentRetriever()
+            new MentionedUserInCommentRetriever($this->user_manager)
         );
 
         $this->user_manager->shouldReceive('getUserByUserName')->with('recipient1')->andReturns(
