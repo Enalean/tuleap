@@ -142,7 +142,7 @@ export class PluginDropFile extends Plugin {
                             files.length === 0 ||
                             !isPositionValid(view.state, view.state.selection.$from.pos)
                         ) {
-                            return true;
+                            return false;
                         }
 
                         handleEvent(
