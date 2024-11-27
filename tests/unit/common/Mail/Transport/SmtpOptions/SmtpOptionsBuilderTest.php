@@ -76,4 +76,23 @@ final class SmtpOptionsBuilderTest extends TestCase
         self::assertSame(['username' => 'username', 'password' => 'password', 'ssl' => 'tls'], $smtp_options->getConnectionConfig());
         self::assertSame('login', $smtp_options->getConnectionClass());
     }
+
+    public function testItBuildsSmtpOptionsForXOAuth2Config(): void
+    {
+        \ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
+
+        \ForgeConfig::set('email_relayhost_smtp_use_tls', '1');
+        \ForgeConfig::set('email_relayhost_smtp_auth_type', 'xoauth2');
+        \ForgeConfig::set('email_relayhost_smtp_username', 'username');
+        \ForgeConfig::set('email_relayhost_smtp_password', \ForgeConfig::encryptValue(new ConcealedString('password')));
+
+        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('smtp.example.com');
+
+        self::assertEqualsCanonicalizing([
+            'username' => 'username',
+            'access_token' => 'password',
+            'ssl' => 'tls',
+        ], $smtp_options->getConnectionConfig());
+        self::assertSame('xoauth2', $smtp_options->getConnectionClass());
+    }
 }
