@@ -66,6 +66,7 @@ describe("PastedReferencesTransformer", () => {
         And finally return a new Slice`, () => {
         const original_slice = buildSliceFromContentString(`
             <p>This paragraph references art #123</p>
+            <p>art #345 and art #234 are referenced in this paragraph</p>
             <blockquote>This quote references doc #123</blockquote>
             <ol>
                 <li>
@@ -86,6 +87,7 @@ describe("PastedReferencesTransformer", () => {
 
         expect(view.dom.innerHTML).toMatchInlineSnapshot(`
           <p>This paragraph references <async-cross-reference>art #123</async-cross-reference></p>
+          <p><async-cross-reference>art #345</async-cross-reference> and <async-cross-reference>art #234</async-cross-reference> are referenced in this paragraph</p>
           <blockquote>
             <p>This quote references <async-cross-reference>doc #123</async-cross-reference></p>
           </blockquote>
