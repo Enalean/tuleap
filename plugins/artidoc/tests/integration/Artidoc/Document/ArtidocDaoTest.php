@@ -23,9 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
+use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
+use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DBFactory;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class ArtidocDaoTest extends TestIntegrationTestCase
@@ -312,6 +316,104 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao->deleteSectionById($uuid_2);
 
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1001, 1003]);
+    }
+
+    public function testReorderSections(): void
+    {
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new ArtidocDao($identifier_factory);
+
+        $item_1 = 101;
+        $item_2 = 102;
+
+        $uuid_1 = $dao->saveSectionAtTheEnd($item_1, 1001);
+        $uuid_2 = $dao->saveSectionAtTheEnd($item_1, 1002);
+        $uuid_3 = $dao->saveSectionAtTheEnd($item_1, 1003);
+        $uuid_4 = $dao->saveSectionAtTheEnd($item_2, 1001);
+        $uuid_5 = $dao->saveSectionAtTheEnd($item_2, 1002);
+        $uuid_6 = $dao->saveSectionAtTheEnd($item_2, 1003);
+
+        $order_builder = new SectionOrderBuilder($identifier_factory);
+
+        // "before", at the beginning
+        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'before', $uuid_1->toString());
+        self::assertTrue(Result::isOk($order));
+        $result = $dao->reorder(
+            $item_1,
+            $order->value,
+        );
+        self::assertTrue(Result::isOk($result));
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1002, 1001, 1003]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1001, 1002, 1003]);
+
+        // "before", in the middle
+        $order = $order_builder->buildFromRest([$uuid_3->toString()], 'before', $uuid_1->toString());
+        self::assertTrue(Result::isOk($order));
+        $result = $dao->reorder(
+            $item_1,
+            $order->value,
+        );
+        self::assertTrue(Result::isOk($result));
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1002, 1003, 1001]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1001, 1002, 1003]);
+
+        // "after", at the end
+        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'after', $uuid_1->toString());
+        self::assertTrue(Result::isOk($order));
+        $result = $dao->reorder(
+            $item_1,
+            $order->value,
+        );
+        self::assertTrue(Result::isOk($result));
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1003, 1001, 1002]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1001, 1002, 1003]);
+
+        // "after", in the middle
+        $order = $order_builder->buildFromRest([$uuid_3->toString()], 'after', $uuid_1->toString());
+        self::assertTrue(Result::isOk($order));
+        $result = $dao->reorder(
+            $item_1,
+            $order->value,
+        );
+        self::assertTrue(Result::isOk($result));
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1001, 1003, 1002]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1001, 1002, 1003]);
+    }
+
+    public function testExceptionWhenReorderSectionsOutsideOfDocument(): void
+    {
+        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new ArtidocDao($identifier_factory);
+
+        $item_1 = 101;
+        $item_2 = 102;
+
+        $uuid_1 = $dao->saveSectionAtTheEnd($item_1, 1001);
+        $uuid_2 = $dao->saveSectionAtTheEnd($item_2, 1002);
+
+        $order_builder = new SectionOrderBuilder($identifier_factory);
+
+        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'before', $uuid_1->toString());
+        self::assertTrue(Result::isOk($order));
+        $result = $dao->reorder(
+            $item_1,
+            $order->value,
+        );
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(UnknownSectionToMoveFault::class, $result->error);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1001]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1002]);
+
+        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'before', $uuid_1->toString());
+        self::assertTrue(Result::isOk($order));
+        $result = $dao->reorder(
+            $item_2,
+            $order->value,
+        );
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(UnableToReorderSectionOutsideOfDocumentFault::class, $result->error);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1001]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1002]);
     }
 
     /**
