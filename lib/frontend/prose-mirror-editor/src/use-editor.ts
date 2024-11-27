@@ -106,7 +106,7 @@ export async function useEditor(
 
     function getState(initial_content: Node): EditorState {
         return EditorState.create({
-            doc: DOMParser.fromSchema(schema).parse(initial_content),
+            doc: DOMParser.fromSchema(schema).parse(initial_content, { preserveWhitespace: true }),
             schema,
             plugins,
         });
