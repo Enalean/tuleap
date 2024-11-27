@@ -28,6 +28,7 @@ setup_database() {
     echo "Use remote db $DB_HOST"
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
+        --skip-sanity-check \
         --host="$DB_HOST" \
         --admin-user=root \
         --admin-password=welcome0 \
@@ -35,8 +36,7 @@ setup_database() {
         --app-user="$MYSQL_USER" \
         --app-password="$MYSQL_PASSWORD" \
         --tuleap-fqdn="localhost" \
-        --site-admin-password="welcome0" \
-        --skip-sanity-check
+        --site-admin-password="welcome0"
 
     TLP_SYSTEMCTL=docker /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc

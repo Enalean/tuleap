@@ -4,6 +4,7 @@ services:
     environment:
       - DB_HOST=${DB_HOST}
       - PHP_VERSION=${PHP_VERSION}
+      - SKIP_SANITY_CHECK=1
       - SEED
     volumes:
       - ${BASEDIR}:/usr/share/tuleap:ro,cached
