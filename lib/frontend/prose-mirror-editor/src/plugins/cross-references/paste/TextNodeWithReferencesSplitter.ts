@@ -25,14 +25,23 @@ export type SplitTextNodeWithReferences = {
     split(node: EditorNode): EditorNode[];
 };
 
-type TextNodePart = {
+type CrossReferenceTextNode = {
     node: EditorNode;
     index: number;
 };
 
+const doesSentenceStartWithACrossReference = (
+    nodes_with_references: CrossReferenceTextNode[],
+): boolean => {
+    if (nodes_with_references.length === 0) {
+        return false;
+    }
+    return nodes_with_references[0].index === 0;
+};
+
 const sortNodesInSentenceOrder = (
     text_parts_without_reference: EditorNode[],
-    nodes_with_references: TextNodePart[],
+    nodes_with_references: CrossReferenceTextNode[],
 ): EditorNode[] => {
     const sorted_nodes: EditorNode[] = [];
     const appendNextTextPartIfAny = (): void => {
@@ -42,15 +51,18 @@ const sortNodesInSentenceOrder = (
         }
     };
 
-    nodes_with_references.forEach((part) => {
-        if (part.index === 0) {
-            sorted_nodes.push(part.node);
+    if (doesSentenceStartWithACrossReference(nodes_with_references)) {
+        nodes_with_references.forEach((reference) => {
+            sorted_nodes.push(reference.node);
             appendNextTextPartIfAny();
-            return;
-        }
+        });
 
+        return sorted_nodes;
+    }
+
+    nodes_with_references.forEach((reference) => {
         appendNextTextPartIfAny();
-        sorted_nodes.push(part.node);
+        sorted_nodes.push(reference.node);
     });
 
     appendNextTextPartIfAny();
@@ -74,7 +86,7 @@ export const TextNodeWithReferencesSplitter = (
             .filter((part) => part !== "")
             .map((part) => schema.text(part));
 
-        const nodes_with_references: TextNodePart[] = [];
+        const nodes_with_references: CrossReferenceTextNode[] = [];
 
         for (const match of matches) {
             if (match.index === undefined) {

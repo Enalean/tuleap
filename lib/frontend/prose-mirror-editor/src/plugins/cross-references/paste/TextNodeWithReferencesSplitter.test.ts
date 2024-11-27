@@ -58,6 +58,19 @@ describe("TextNodeWithReferencesSplitter", () => {
     });
 
     it(`Given a text node
+        When its text contains several cross-references and it starts with one
+        Then it should rebuild the sentence in the correct order`, () => {
+        const text_node = schema.text("art #123 and art #124 are referenced in this document.");
+
+        expect(splitter.split(text_node)).toStrictEqual([
+            buildTextNodeWithAsyncCrossReference("art #123"),
+            schema.text(" and "),
+            buildTextNodeWithAsyncCrossReference("art #124"),
+            schema.text(" are referenced in this document."),
+        ]);
+    });
+
+    it(`Given a text node
         When its text does not contain parts matching the Tuleap reference format
         Then it should return a full copy of the original text node`, () => {
         const text_node = schema.text("This document references nothing.");
