@@ -72,6 +72,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -115,6 +116,7 @@ class TrackerArtifactCreator
             DBFactory::getMainTuleapDBConnection()
         );
 
+        $user_manager = \UserManager::instance();
         return new self(
             $artifact_factory,
             $fields_validator,
@@ -170,6 +172,7 @@ class TrackerArtifactCreator
                             $event_dispatcher,
                             new \Tracker_Artifact_Changeset_CommentDao(),
                         ),
+                        new MentionedUserInCommentRetriever($user_manager),
                     ),
                 ),
             ),

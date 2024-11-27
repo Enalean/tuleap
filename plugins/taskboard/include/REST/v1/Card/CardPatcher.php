@@ -57,6 +57,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -95,8 +96,8 @@ class CardPatcher
         $artifact_factory     = \Tracker_ArtifactFactory::instance();
         $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $event_dispatcher     = \EventManager::instance();
-
-        $changeset_creator = new NewChangesetCreator(
+        $user_manager         =    \UserManager::instance();
+        $changeset_creator    = new NewChangesetCreator(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
@@ -141,6 +142,7 @@ class CardPatcher
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
 

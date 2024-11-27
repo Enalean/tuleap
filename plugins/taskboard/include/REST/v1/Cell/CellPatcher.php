@@ -61,6 +61,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -137,6 +138,7 @@ class CellPatcher
             $semantic_status_provider
         );
 
+        $user_manager      = UserManager::instance();
         $changeset_creator = new NewChangesetCreator(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
@@ -182,6 +184,7 @@ class CellPatcher
                     $event_dispatcher,
                     $changeset_comment_dao,
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation;
 
+use Closure;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 
@@ -29,18 +30,29 @@ final class PostCreationActionsQueuerStub implements PostCreationActionsQueuer
 {
     private int $count = 0;
 
-    private function __construct()
+    private function __construct(private ?Closure $callback)
     {
     }
 
     public static function doNothing(): self
     {
-        return new self();
+        return new self(null);
     }
 
-    public function queuePostCreation(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
+    public static function withParameterAssertionCallbackHelper(\Closure $callback): self
     {
+        return new self($callback);
+    }
+
+    public function queuePostCreation(
+        Tracker_Artifact_Changeset $changeset,
+        bool $send_notifications,
+        array $mentioned_users,
+    ): void {
         $this->count++;
+        if ($this->callback) {
+            ($this->callback)($changeset, $send_notifications, $mentioned_users);
+        }
     }
 
     public function getCount(): int

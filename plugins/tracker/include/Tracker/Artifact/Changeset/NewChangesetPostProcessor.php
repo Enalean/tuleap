@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
+use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tracker_Artifact_Changeset;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\Tracker\Notifications\Recipient\RetrieveMentionedUserInComment;
 
 final readonly class NewChangesetPostProcessor implements ProcessChangesetPostCreation
 {
@@ -34,11 +38,17 @@ final readonly class NewChangesetPostProcessor implements ProcessChangesetPostCr
         private EventDispatcherInterface $event_manager,
         private PostCreationActionsQueuer $post_creation_queuer,
         private ChangesetCommentIndexer $changeset_comment_indexer,
+        private RetrieveMentionedUserInComment $user_in_comment_retriever,
     ) {
     }
 
-    public function postProcessCreation(NewChangesetCreated $changeset_created, \Tuleap\Tracker\Artifact\Artifact $artifact, PostCreationContext $context, ?\Tracker_Artifact_Changeset $old_changeset, \PFUser $submitter): void
-    {
+    public function postProcessCreation(
+        NewChangesetCreated $changeset_created,
+        Artifact $artifact,
+        PostCreationContext $context,
+        ?Tracker_Artifact_Changeset $old_changeset,
+        PFUser $submitter,
+    ): void {
         $new_changeset = $changeset_created->changeset;
 
         if ($changeset_created->should_launch_fts_update) {
@@ -46,9 +56,15 @@ final readonly class NewChangesetPostProcessor implements ProcessChangesetPostCr
         }
 
         if (! $context->getImportConfig()->isFromXml()) {
+            $mentioned_users = $this->user_in_comment_retriever->getMentionedUsers($new_changeset);
+            $users_ids       = array_map(
+                static fn (PFUser $user) =>(int) $user->getId(),
+                $mentioned_users->users
+            );
             $this->post_creation_queuer->queuePostCreation(
                 $new_changeset,
-                $context->shouldSendNotifications()
+                $context->shouldSendNotifications(),
+                $users_ids,
             );
         }
 

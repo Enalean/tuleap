@@ -26,5 +26,8 @@ use Tracker_Artifact_Changeset;
 
 interface PostCreationActionsQueuer
 {
-    public function queuePostCreation(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void;
+    /**
+     * @param list<int> $mentioned_users
+     */
+    public function queuePostCreation(Tracker_Artifact_Changeset $changeset, bool $send_notifications, array $mentioned_users): void;
 }

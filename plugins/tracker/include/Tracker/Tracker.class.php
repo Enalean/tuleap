@@ -3216,6 +3216,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($this->getUserManager()),
             ),
         );
 

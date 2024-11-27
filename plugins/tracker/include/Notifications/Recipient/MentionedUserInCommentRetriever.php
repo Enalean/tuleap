@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Notifications\Recipient;
 use Tracker_Artifact_Changeset;
 use Tuleap\User\RetrieveUserByUserName;
 
-final readonly class MentionedUserInCommentRetriever
+final readonly class MentionedUserInCommentRetriever implements RetrieveMentionedUserInComment
 {
     public function __construct(private RetrieveUserByUserName $user_manager)
     {

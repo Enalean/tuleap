@@ -152,6 +152,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
+use Tuleap\Tracker\Notifications\Recipient\RetrieveMentionedUserInComment;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
@@ -2206,6 +2208,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $form_element_factory     = $this->getFormElementFactory();
         $event_dispatcher         = EventManager::instance();
         $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+
         return new NewChangesetCreator(
             $this->getTransactionExecutor(),
             $this->getChangesetSaver(),
@@ -2236,8 +2239,15 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                $this->getMentionedUserInCommentRetriever(),
             ),
         );
+    }
+
+    // for testing purpose
+    protected function getMentionedUserInCommentRetriever(): RetrieveMentionedUserInComment
+    {
+        return new MentionedUserInCommentRetriever($this->getUserManager());
     }
 
     private function getTransactionExecutor(): DBTransactionExecutor

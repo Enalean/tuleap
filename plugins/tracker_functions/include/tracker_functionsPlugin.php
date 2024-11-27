@@ -73,6 +73,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
@@ -377,6 +378,7 @@ final class tracker_functionsPlugin extends Plugin
         $event_manager       = EventManager::instance();
 
         $artifact_factory  = Tracker_ArtifactFactory::instance();
+        $user_manager      = UserManager::instance();
         $changeset_creator = new NewChangesetCreator(
             $transaction_executor,
             ArtifactChangesetSaver::build(),
@@ -422,6 +424,7 @@ final class tracker_functionsPlugin extends Plugin
                     $event_manager,
                     new Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
 

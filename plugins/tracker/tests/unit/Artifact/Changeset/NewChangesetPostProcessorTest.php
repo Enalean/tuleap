@@ -22,9 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
+use DateTimeImmutable;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tracker_Artifact_Changeset;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
@@ -33,21 +40,25 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuerStub;
 
-final class NewChangesetPostProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NewChangesetPostProcessorTest extends TestCase
 {
     private EventDispatcherInterface $event_manager;
-    private ChangesetCommentIndexer&\PHPUnit\Framework\MockObject\MockObject $changeset_comment_index;
+    private ChangesetCommentIndexer&MockObject $changeset_comment_index;
     private PostCreationActionsQueuer $post_action_queuer;
-    private \Tracker_Artifact_Changeset $changeset;
+    private Tracker_Artifact_Changeset $changeset;
     private CommentCreation $comment_creation;
-    private \Tuleap\Tracker\Artifact\Artifact $artifact;
-    private \PFUser $user;
-    private NewChangesetPostProcessor $post_creation_processor;
+    private Artifact $artifact;
+    private PFUser $user;
 
+    private const PERALTA_ID   = 101;
+    private const PERALTA_NAME = 'peralta';
+    private const HOLT_ID      = 102;
+    private const HOLT_NAME    = 'holt';
 
     protected function setUp(): void
     {
@@ -56,19 +67,27 @@ final class NewChangesetPostProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->post_action_queuer      = PostCreationActionsQueuerStub::doNothing();
 
         $this->artifact         = ArtifactTestBuilder::anArtifact(100)->build();
-        $this->changeset        = ChangesetTestBuilder::aChangeset(1)->ofArtifact($this->artifact)->build();
+        $this->changeset        = ChangesetTestBuilder::aChangeset(1)->ofArtifact($this->artifact)->withTextComment('@peralta and @holt')->build();
         $this->user             = UserTestBuilder::anActiveUser()->build();
         $this->comment_creation = CommentCreation::fromNewComment(
             NewComment::buildEmpty(UserTestBuilder::buildWithDefaults(), 1),
             (int) $this->changeset->getId(),
             new CreatedFileURLMapping()
         );
+    }
 
-        $this->post_creation_processor = new NewChangesetPostProcessor(
+    private function postProcessCreation(NewChangesetCreated $changeset_created, PostCreationContext $creation_context): void
+    {
+        $peralta      = UserTestBuilder::anActiveUser()->withId(self::PERALTA_ID)->withUserName(self::PERALTA_NAME)->build();
+        $holt         = UserTestBuilder::anActiveUser()->withUserName(self::HOLT_NAME)->withId(self::HOLT_ID)->build();
+        $user_manager = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithId(118))->withUsers([$peralta, $holt]);
+
+        (new NewChangesetPostProcessor(
             $this->event_manager,
             $this->post_action_queuer,
             $this->changeset_comment_index,
-        );
+            new MentionedUserInCommentRetriever($user_manager),
+        ))->postProcessCreation($changeset_created, $this->artifact, $creation_context, null, $this->user);
     }
 
     public function testItLaunchFTSUpdate(): void
@@ -81,36 +100,37 @@ final class NewChangesetPostProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->changeset_comment_index->expects(self::once())->method('indexNewChangesetComment');
 
-        $this->post_creation_processor->postProcessCreation(
+        $this->postProcessCreation(
             $new_changeset_created,
-            $this->artifact,
             PostCreationContext::withConfig(
                 new TrackerXmlImportConfig(
                     $this->user,
-                    new \DateTimeImmutable(),
+                    new DateTimeImmutable(),
                     MoveImportConfig::buildForMoveArtifact(false, [])
                 ),
                 false
             ),
-            null,
-            $this->user
         );
     }
 
     public function testLaunchPostCreationWhenImportDoesNotComeFromXML(): void
     {
-        $new_changeset_created = new NewChangesetCreated(
+        $new_changeset_created    = new NewChangesetCreated(
             $this->changeset,
             false,
             $this->comment_creation
         );
+        $this->post_action_queuer = PostCreationActionsQueuerStub::withParameterAssertionCallbackHelper(
+            function (Tracker_Artifact_Changeset $changeset, bool $send_notifications, array $mentioned_users) {
+                self::assertEqualsCanonicalizing([self::PERALTA_ID, self::HOLT_ID], $mentioned_users);
+                self::assertFalse($send_notifications);
+                self::assertSame($changeset, $this->changeset);
+            }
+        );
 
-        $this->post_creation_processor->postProcessCreation(
+        $this->postProcessCreation(
             $new_changeset_created,
-            $this->artifact,
             PostCreationContext::withNoConfig(false),
-            null,
-            $this->user
         );
 
         self::assertEquals(1, $this->post_action_queuer->getCount());
