@@ -18,6 +18,7 @@
  */
 
 import type { EditorState, Transaction } from "prosemirror-state";
+import { match_all_references_regexp } from "../regexps";
 
 type LoadAllCrossReferences = {
     loadAllCrossReferences(): Transaction;
@@ -37,7 +38,7 @@ export const AllCrossReferencesLoader = (
             }
 
             const node_text = node.text;
-            const matches = node_text.matchAll(/\w+\s#[\w\-:./]+/g);
+            const matches = node_text.matchAll(match_all_references_regexp);
 
             for (const match of matches) {
                 if (match.index === undefined) {

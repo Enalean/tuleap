@@ -19,6 +19,7 @@
 
 import type { Schema } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
+import { match_all_references_regexp } from "../regexps";
 
 export type SplitTextNodeWithReferences = {
     split(node: EditorNode): EditorNode[];
@@ -67,7 +68,6 @@ export const TextNodeWithReferencesSplitter = (
         }
 
         const node_text = node.text;
-        const match_all_references_regexp = /\w+\s#[\w\-:./]+/g;
 
         const matches = node_text.matchAll(match_all_references_regexp);
         const text_parts_without_reference = match_all_references_regexp[Symbol.split](node_text)

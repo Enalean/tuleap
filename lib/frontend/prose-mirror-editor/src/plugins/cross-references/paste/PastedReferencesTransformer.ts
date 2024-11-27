@@ -20,12 +20,14 @@
 import { Fragment, Slice } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
 import type { SplitTextNodeWithReferences } from "./TextNodeWithReferencesSplitter";
+import { match_single_reference_regexp } from "../regexps";
 
 export type TransformPastedReferences = {
     transformPastedCrossReferencesToMark(pasted_slice: Slice): Slice;
 };
 
-const doesTextContainAtLeastOneReference = (text: string): boolean => /\w+\s#[\w\-:./]+/.test(text);
+const doesTextContainAtLeastOneReference = (text: string): boolean =>
+    match_single_reference_regexp.test(text);
 
 export const PastedReferencesTransformer = (
     split_text_node: SplitTextNodeWithReferences,

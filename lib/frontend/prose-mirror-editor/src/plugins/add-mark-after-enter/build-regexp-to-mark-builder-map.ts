@@ -19,9 +19,11 @@
 
 import type { MarkType, Mark, Schema } from "prosemirror-model";
 import type { MarkAfterEnterKeyBuilder, RegexpToMarkMapEntry } from "./index";
+import { match_single_reference_regexp } from "../cross-references/regexps";
+import { match_single_https_url_regexp } from "../automagic-links/regexps";
 
 const getAutomagicLinksAfterEnterKeyBuilder = (link: MarkType): RegexpToMarkMapEntry => [
-    /https:\/\/(?:\w+:?\w*@)?\S+(?::[0-9]+)?(?:\/|\/[\w#!:.?+=&%@\-/])?/,
+    match_single_https_url_regexp,
     {
         type: link,
         buildFromText: (text: string): Mark => link.create({ href: text }),
@@ -32,7 +34,7 @@ const getCrossReferenceAfterEnterKeyBuilder = (
     async_cross_reference: MarkType,
     project_id: number,
 ): RegexpToMarkMapEntry => [
-    /\w+\s#[\w\-:./]+/,
+    match_single_reference_regexp,
     {
         type: async_cross_reference,
         buildFromText: (text: string): Mark => async_cross_reference.create({ text, project_id }),
