@@ -51,7 +51,7 @@ final class ArtidocSectionRepresentationBuilder
         }
 
         return $this->retrieve_artidoc
-            ->retrieveArtidoc($row->item_id, $user)
+            ->retrieveArtidocUserCanRead($row->item_id, $user)
             ->andThen(fn () => $this->transformer->getRepresentation(new PaginatedRawSections($row->item_id, [$row], 1), $user))
             ->andThen($this->getFirstAndOnlySectionFromCollection(...));
     }

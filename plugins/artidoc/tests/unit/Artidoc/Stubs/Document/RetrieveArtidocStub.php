@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Stubs\Document;
 
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -34,29 +35,47 @@ final readonly class RetrieveArtidocStub implements RetrieveArtidoc
     /**
      * @param Ok<ArtidocDocumentInformation>|Err<Fault>|null $result
      */
-    private function __construct(private Ok|Err|null $result)
+    private function __construct(private Ok|Err|null $result, private bool $can_write)
     {
     }
 
-    public static function withDocument(ArtidocDocumentInformation $document): self
+    public static function withDocumentUserCanRead(ArtidocDocumentInformation $document): self
     {
-        return new self(Result::ok($document));
+        return new self(Result::ok($document), false);
+    }
+
+    public static function withDocumentUserCanWrite(ArtidocDocumentInformation $document): self
+    {
+        return new self(Result::ok($document), true);
     }
 
     public static function withoutDocument(): self
     {
-        return new self(Result::err(Fault::fromMessage('Not found')));
+        return new self(Result::err(Fault::fromMessage('Not found')), false);
     }
 
     public static function shouldNotBeCalled(): self
     {
-        return new self(null);
+        return new self(null, false);
     }
 
-    public function retrieveArtidoc(int $id, \PFUser $user): Ok|Err
+    public function retrieveArtidocUserCanRead(int $id, \PFUser $user): Ok|Err
     {
         if ($this->result === null) {
-            throw new \Exception('Unexpected call to retrieveArtidoc()');
+            throw new \Exception('Unexpected call to retrieveArtidocUserCanRead()');
+        }
+
+        return $this->result;
+    }
+
+    public function retrieveArtidocUserCanWrite(int $id, \PFUser $user): Ok|Err
+    {
+        if ($this->result === null) {
+            throw new \Exception('Unexpected call to retrieveArtidocUserCanWrite()');
+        }
+
+        if (! $this->can_write) {
+            return Result::err(UserCannotWriteDocumentFault::build());
         }
 
         return $this->result;

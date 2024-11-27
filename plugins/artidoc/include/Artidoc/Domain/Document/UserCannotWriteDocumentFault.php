@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document;
 
 use Tuleap\NeverThrow\Fault;
 

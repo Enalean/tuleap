@@ -30,7 +30,6 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 
 final readonly class PATCHSectionsHandler
 {
@@ -47,22 +46,8 @@ final readonly class PATCHSectionsHandler
     public function handle(int $id, OrderRepresentation $order, \PFUser $user): Ok|Err
     {
         return $this->retrieve_artidoc
-            ->retrieveArtidoc($id, $user)
-            ->andThen(fn (ArtidocDocumentInformation $document_information) => $this->ensureThatUserCanWriteDocument($document_information, $user))
+            ->retrieveArtidocUserCanWrite($id, $user)
             ->andThen(fn (ArtidocDocumentInformation $document_information) => $this->reorder($id, $order));
-    }
-
-    /**
-     * @return Ok<ArtidocDocumentInformation>|Err<Fault>
-     */
-    private function ensureThatUserCanWriteDocument(ArtidocDocumentInformation $document_information, \PFUser $user): Ok|Err
-    {
-        $permissions_manager = \Docman_PermissionsManager::instance($document_information->document->getProjectId());
-        if (! $permissions_manager->userCanWrite($user, $document_information->document->getId())) {
-            return Result::err(Fault::fromMessage('User cannot write document'));
-        }
-
-        return Result::ok($document_information);
     }
 
     private function reorder(int $id, OrderRepresentation $order): Ok|Err

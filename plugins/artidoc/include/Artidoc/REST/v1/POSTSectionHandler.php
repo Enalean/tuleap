@@ -52,23 +52,9 @@ final readonly class POSTSectionHandler
     public function handle(int $id, ArtidocPOSTSectionRepresentation $section, \PFUser $user): Ok|Err
     {
         return $this->retrieve_artidoc
-            ->retrieveArtidoc($id, $user)
-            ->andThen(fn (ArtidocDocumentInformation $document_information) => $this->ensureThatUserCanWriteDocument($document_information, $user))
+            ->retrieveArtidocUserCanWrite($id, $user)
             ->andThen(fn (ArtidocDocumentInformation $document_information) => $this->getSectionRepresentationToMakeSureThatUserCanReadIt($document_information, $section, $user))
             ->andThen(fn (ArtidocSectionRepresentation $section_representation) => $this->saveSection($id, $section_representation, $section));
-    }
-
-    /**
-     * @return Ok<ArtidocDocumentInformation>|Err<Fault>
-     */
-    private function ensureThatUserCanWriteDocument(ArtidocDocumentInformation $document_information, \PFUser $user): Ok|Err
-    {
-        $permissions_manager = \Docman_PermissionsManager::instance($document_information->document->getProjectId());
-        if (! $permissions_manager->userCanWrite($user, $document_information->document->getId())) {
-            return Result::err(Fault::fromMessage('User cannot write document'));
-        }
-
-        return Result::ok($document_information);
     }
 
     /**

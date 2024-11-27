@@ -47,6 +47,7 @@ use Tuleap\Artidoc\Domain\Document\Order\InvalidIdsFault;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
+use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;

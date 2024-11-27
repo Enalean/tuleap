@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Docman_PermissionsManager;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
@@ -46,16 +44,12 @@ final class PATCHSectionsHandlerTest extends TestCase
     private const PROJECT_ID = 101;
 
     private PFUser $user;
-    private Docman_PermissionsManager & MockObject $permissions_manager;
     private UUIDSectionIdentifierFactory $identifier_factory;
     private ArtidocDocumentInformation $document;
 
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();
-
-        $this->permissions_manager = $this->createMock(Docman_PermissionsManager::class);
-        Docman_PermissionsManager::setInstance(self::PROJECT_ID, $this->permissions_manager);
 
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
 
@@ -67,19 +61,12 @@ final class PATCHSectionsHandlerTest extends TestCase
         );
     }
 
-    protected function tearDown(): void
-    {
-        Docman_PermissionsManager::clearInstances();
-    }
-
     public function testHappyPath(): void
     {
         $reorder = ReorderSectionsStub::withSuccessfulReorder();
 
-        $this->permissions_manager->method('userCanWrite')->willReturn(true);
-
         $handler = new PATCHSectionsHandler(
-            RetrieveArtidocStub::withDocument($this->document),
+            RetrieveArtidocStub::withDocumentUserCanWrite($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
@@ -102,11 +89,9 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::withFailedReorder();
 
-        $this->permissions_manager->method('userCanWrite')->willReturn(true);
-
         $service_docman = $this->createMock(ServiceDocman::class);
         $handler        = new PATCHSectionsHandler(
-            RetrieveArtidocStub::withDocument($this->document),
+            RetrieveArtidocStub::withDocumentUserCanWrite($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
@@ -128,8 +113,6 @@ final class PATCHSectionsHandlerTest extends TestCase
     public function testFaultWhenDocumentCannotBeRetrieved(): void
     {
         $reorder = ReorderSectionsStub::shouldNotBeCalled();
-
-        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $handler = new PATCHSectionsHandler(
             RetrieveArtidocStub::withoutDocument(),
@@ -155,11 +138,9 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::shouldNotBeCalled();
 
-        $this->permissions_manager->method('userCanWrite')->willReturn(false);
-
         $service_docman = $this->createMock(ServiceDocman::class);
         $handler        = new PATCHSectionsHandler(
-            RetrieveArtidocStub::withDocument($this->document),
+            RetrieveArtidocStub::withDocumentUserCanRead($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );

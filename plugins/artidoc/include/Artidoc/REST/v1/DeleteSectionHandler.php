@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\DeleteOneSection;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\SearchOneSection;
@@ -52,22 +51,8 @@ final class DeleteSectionHandler
         }
 
         return $this->retrieve_artidoc
-            ->retrieveArtidoc($row->item_id, $user)
-            ->andThen(fn (ArtidocDocumentInformation $document_information) => $this->ensureThatUserCanWriteDocument($document_information, $user))
+            ->retrieveArtidocUserCanWrite($row->item_id, $user)
             ->andThen(fn () => $this->delete($id));
-    }
-
-    /**
-     * @return Ok<ArtidocDocumentInformation>|Err<Fault>
-     */
-    private function ensureThatUserCanWriteDocument(ArtidocDocumentInformation $document_information, \PFUser $user): Ok|Err
-    {
-        $permissions_manager = \Docman_PermissionsManager::instance($document_information->document->getProjectId());
-        if (! $permissions_manager->userCanWrite($user, $document_information->document->getId())) {
-            return Result::err(Fault::fromMessage('User cannot write document'));
-        }
-
-        return Result::ok($document_information);
     }
 
     /**

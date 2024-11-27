@@ -64,7 +64,8 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanWrite(123, $this->user)));
     }
 
     public function testFaultWhenItemIsVoid(): void
@@ -76,7 +77,8 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanWrite(123, $this->user)));
     }
 
     public function testFaultWhenItemIsNull(): void
@@ -88,7 +90,8 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanWrite(123, $this->user)));
     }
 
     public function testFaultWhenItemIsNotAnArtidoc(): void
@@ -102,7 +105,8 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanWrite(123, $this->user)));
     }
 
     public function testFaultWhenItemIsNotReadable(): void
@@ -110,6 +114,7 @@ final class ArtidocRetrieverTest extends TestCase
         $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(false);
+        $this->permissions_manager->method('userCanWrite')->willReturn(false);
 
         $retriever = new ArtidocRetriever(
             ProjectByIDFactoryStub::buildWithoutProject(),
@@ -118,7 +123,8 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanWrite(123, $this->user)));
     }
 
     public function testFaultWhenItemIsInAnInvalidProject(): void
@@ -126,6 +132,7 @@ final class ArtidocRetrieverTest extends TestCase
         $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $retriever = new ArtidocRetriever(
             ProjectByIDFactoryStub::buildWithoutProject(),
@@ -134,7 +141,8 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanWrite(123, $this->user)));
     }
 
     public function testFaultWhenProjectIsNotAllowed(): void
@@ -142,6 +150,7 @@ final class ArtidocRetrieverTest extends TestCase
         $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $retriever = new ArtidocRetriever(
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
@@ -150,7 +159,7 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsNotAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
     }
 
     public function testFaultWhenProjectDoesNotHaveTrackerService(): void
@@ -158,6 +167,7 @@ final class ArtidocRetrieverTest extends TestCase
         $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $project = ProjectTestBuilder::aProject()
             ->withoutServices()
@@ -170,7 +180,7 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
     }
 
     public function testFaultWhenProjectDoesNotHaveDocmanService(): void
@@ -178,6 +188,7 @@ final class ArtidocRetrieverTest extends TestCase
         $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $service_tracker = $this->createMock(\ServiceTracker::class);
         $service_tracker->method('getShortName')->willReturn(\trackerPlugin::SERVICE_SHORTNAME);
@@ -195,10 +206,10 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        self::assertTrue(Result::isErr($retriever->retrieveArtidoc(123, $this->user)));
+        self::assertTrue(Result::isErr($retriever->retrieveArtidocUserCanRead(123, $this->user)));
     }
 
-    public function testHappyPath(): void
+    public function testHappyPathRead(): void
     {
         $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
 
@@ -226,7 +237,41 @@ final class ArtidocRetrieverTest extends TestCase
             new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
         );
 
-        $result = $retriever->retrieveArtidoc(123, $this->user);
+        $result = $retriever->retrieveArtidocUserCanRead(123, $this->user);
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($item, $result->value->document);
+        self::assertSame($service_docman, $result->value->not_yet_hexagonal_service_docman);
+    }
+
+    public function testHappyPathWrite(): void
+    {
+        $row = ['group_id' => self::PROJECT_ID, 'item_id' => self::ITEM_ID];
+
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
+
+        $service_tracker = $this->createMock(\ServiceTracker::class);
+        $service_tracker->method('getShortName')->willReturn(\trackerPlugin::SERVICE_SHORTNAME);
+
+        $service_docman = $this->createMock(ServiceDocman::class);
+        $service_docman->method('getShortName')->willReturn(\DocmanPlugin::SERVICE_SHORTNAME);
+
+        $project = ProjectTestBuilder::aProject()
+            ->withServices(
+                $service_tracker,
+                $service_docman,
+            )
+            ->build();
+
+        $item = new ArtidocDocument($row);
+
+        $retriever = new ArtidocRetriever(
+            ProjectByIDFactoryStub::buildWith($project),
+            SearchArtidocDocumentStub::withResults($row),
+            GetItemFromRowStub::withItem($item),
+            new DocumentServiceFromAllowedProjectRetriever(IsProjectAllowedToUsePluginStub::projectIsAllowed()),
+        );
+
+        $result = $retriever->retrieveArtidocUserCanWrite(123, $this->user);
         self::assertTrue(Result::isOk($result));
         self::assertSame($item, $result->value->document);
         self::assertSame($service_docman, $result->value->not_yet_hexagonal_service_docman);

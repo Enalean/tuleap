@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Document;
 use Project_NotFoundException;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
+use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\Docman\Item\GetItemFromRow;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Err;
@@ -35,6 +36,9 @@ use Tuleap\Project\ProjectByIDFactory;
 
 final class ArtidocRetriever implements RetrieveArtidoc
 {
+    private const USER_CAN_READ  = 'user-can-read';
+    private const USER_CAN_WRITE = 'user-can-write';
+
     public function __construct(
         private ProjectByIDFactory $project_manager,
         private SearchArtidocDocument $dao,
@@ -43,7 +47,20 @@ final class ArtidocRetriever implements RetrieveArtidoc
     ) {
     }
 
-    public function retrieveArtidoc(int $id, \PFUser $user): Ok|Err
+    public function retrieveArtidocUserCanRead(int $id, \PFUser $user): Ok|Err
+    {
+        return $this->retrieveArtidoc($id, $user, self::USER_CAN_READ);
+    }
+
+    public function retrieveArtidocUserCanWrite(int $id, \PFUser $user): Ok|Err
+    {
+        return $this->retrieveArtidoc($id, $user, self::USER_CAN_WRITE);
+    }
+
+    /**
+     * @param self::USER_CAN_* $perms
+     */
+    private function retrieveArtidoc(int $id, \PFUser $user, string $perms): Ok|Err
     {
         $row = $this->dao->searchByItemId($id);
         if ($row === null || count($row) === 0) {
@@ -56,8 +73,11 @@ final class ArtidocRetriever implements RetrieveArtidoc
         }
 
         $permissions_manager = \Docman_PermissionsManager::instance((int) $item->getGroupId());
-        if (! $permissions_manager->userCanRead($user, $item->getId())) {
+        if ($perms === self::USER_CAN_READ && ! $permissions_manager->userCanRead($user, $item->getId())) {
             return Result::err(Fault::fromMessage('User cannot read document'));
+        }
+        if ($perms === self::USER_CAN_WRITE && ! $permissions_manager->userCanWrite($user, $item->getId())) {
+            return Result::err(UserCannotWriteDocumentFault::build());
         }
 
         try {

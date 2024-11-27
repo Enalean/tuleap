@@ -29,5 +29,10 @@ interface RetrieveArtidoc
     /**
      * @return Ok<ArtidocDocumentInformation>|Err<Fault>
      */
-    public function retrieveArtidoc(int $id, \PFUser $user): Ok|Err;
+    public function retrieveArtidocUserCanRead(int $id, \PFUser $user): Ok|Err;
+
+    /**
+     * @return Ok<ArtidocDocumentInformation>|Err<Fault>
+     */
+    public function retrieveArtidocUserCanWrite(int $id, \PFUser $user): Ok|Err;
 }

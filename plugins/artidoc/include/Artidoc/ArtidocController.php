@@ -73,7 +73,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     {
         ServiceInstrumentation::increment('artidoc');
 
-        $this->retrieve_artidoc->retrieveArtidoc((int) $variables['id'], $request->getCurrentUser())
+        $this->retrieve_artidoc->retrieveArtidocUserCanRead((int) $variables['id'], $request->getCurrentUser())
             ->match(
                 fn (ArtidocDocumentInformation $document_information) => $this->renderPage($document_information, $layout, $request->getCurrentUser()),
                 function (Fault $fault) {
