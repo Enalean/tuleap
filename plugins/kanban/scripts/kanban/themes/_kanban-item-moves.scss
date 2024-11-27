@@ -22,22 +22,10 @@
 
     &:first-child {
         top: calc((-1) * var(--tlp-small-spacing));
-
-        > .kanban-item-content-move-icon {
-            position: relative;
-            top: -2px;
-            left: 0;
-        }
     }
 
     &:last-child {
         bottom: calc((-1) * var(--tlp-small-spacing));
-
-        > .kanban-item-content-move-icon {
-            position: relative;
-            top: -1px;
-            left: 0;
-        }
     }
 }
 
