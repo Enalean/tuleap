@@ -132,7 +132,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withAttachments($attachment1, $attachment2),
         );
-        $mail_notification_task->execute($this->changeset, true);
+        $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(true));
     }
 
     public function testNotifyStopped()
@@ -153,7 +153,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
-        $mail_notification_task->execute($this->changeset, true);
+        $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(true));
     }
 
     public function testWithoutNotifications()
@@ -174,7 +174,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
-        $mail_notification_task->execute($this->changeset, false);
+        $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(false));
     }
 
     public function testChangesetShouldUseUserLanguageInGetBody()

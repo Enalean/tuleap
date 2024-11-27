@@ -24,5 +24,5 @@ use Tracker_Artifact_Changeset;
 
 interface PostCreationTask
 {
-    public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications);
+    public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration);
 }

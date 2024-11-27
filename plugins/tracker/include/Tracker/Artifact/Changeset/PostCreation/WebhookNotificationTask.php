@@ -58,7 +58,7 @@ final class WebhookNotificationTask implements PostCreationTask
         $this->payload_builder = $payload_builder;
     }
 
-    public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
+    public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
         $tracker  = $changeset->getTracker();
         $webhooks = $this->webhook_factory->getWebhooksForTracker($tracker);

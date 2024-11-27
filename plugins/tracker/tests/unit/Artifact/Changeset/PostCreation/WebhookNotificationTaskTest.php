@@ -56,6 +56,6 @@ final class WebhookNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $emitter->shouldReceive('emit')
             ->with(\Mockery::type(ArtifactPayload::class), $webhook_1, $webhook_2)->once();
 
-        $webhook_notification_task->execute($changeset, true);
+        $webhook_notification_task->execute($changeset, new PostCreationTaskConfiguration(true));
     }
 }

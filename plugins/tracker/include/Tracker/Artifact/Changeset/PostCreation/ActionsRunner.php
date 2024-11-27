@@ -238,28 +238,28 @@ class ActionsRunner
      * Process actions in synchronous mode.
      * Actions that must be run async will not be processed
      */
-    public function processSyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
+    public function processSyncPostCreationActions(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
-        $this->processPostCreationActions($changeset, $send_notifications, false);
+        $this->processPostCreationActions($changeset, $configuration, false);
     }
 
     /**
      * Process actions when executed in background (should not be called by front-end)
      */
-    public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
+    public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
-        $this->processPostCreationActions($changeset, $send_notifications, true);
+        $this->processPostCreationActions($changeset, $configuration, true);
     }
 
-    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications, bool $execute_async): void
+    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration, bool $execute_async): void
     {
         foreach ($this->tasks_that_can_be_run_both_sync_and_async as $notification_task) {
-            $notification_task->execute($changeset, $send_notifications);
+            $notification_task->execute($changeset, $configuration);
         }
 
         if ($execute_async) {
             foreach ($this->tasks_that_can_be_run_only_async as $notification_task) {
-                $notification_task->execute($changeset, $send_notifications);
+                $notification_task->execute($changeset, $configuration);
             }
         }
     }

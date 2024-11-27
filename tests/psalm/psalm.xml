@@ -721,7 +721,6 @@
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/NewChangesetTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/NewChangesetValidatorTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/PostCreation/ActionsRunnerTest.php"/>
-            <file name="plugins/tracker/tests/unit/Artifact/Changeset/PostCreation/AsynchronousActionsRunnerTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/PostCreation/CalendarEvent/EventDatesRetrieverTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/PostCreation/CalendarEvent/EventDescriptionRetrieverTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/PostCreation/CalendarEvent/EventOrganizerRetrieverTest.php"/>

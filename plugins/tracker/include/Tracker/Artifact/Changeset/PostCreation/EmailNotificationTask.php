@@ -55,10 +55,10 @@ final class EmailNotificationTask implements PostCreationTask
     ) {
     }
 
-    public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
+    public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
         $tracker = $changeset->getTracker();
-        if ($tracker->isNotificationStopped() || ! $send_notifications) {
+        if ($tracker->isNotificationStopped() || ! $configuration->send_notifications) {
             return;
         }
         $logger = new \WrapperLogger($this->logger, sprintf('%d, %d', $changeset->getArtifact()->getId(), $changeset->getId()));
