@@ -43,6 +43,7 @@ Plugins and libraries can also have their own ADRs:
 * [Rich text editor](../../plugins/tracker/scripts/lib/rich-text-editor/docs/decisions/README.md)
 * [Lazybox](../../lib/frontend/lazybox/docs/decisions/README.md)
 * [Pullrequest](../../plugins/pullrequest/docs/decisions/README.md)
+* [ProseMirror Editor](../../lib/frontend/prose-mirror-editor/docs/decisions/README.md)
 
 For new ADRs, please use [template.md](./template.md) as basis.
 
