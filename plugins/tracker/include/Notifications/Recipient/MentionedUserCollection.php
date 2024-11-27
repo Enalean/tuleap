@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Notifications\Recipient;
 /**
  * @psalm-immutable
  */
-final readonly class MentionedUsernameCollection
+final readonly class MentionedUserCollection
 {
     /**
-     * @param list<string> $usernames
+     * @param list<\PFUser> $users
      */
-    public function __construct(public array $usernames)
+    public function __construct(public array $users)
     {
     }
 }

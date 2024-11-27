@@ -23,24 +23,37 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Notifications\Recipient;
 
 use Tracker_Artifact_Changeset;
+use Tuleap\User\RetrieveUserByUserName;
 
 final readonly class MentionedUserInCommentRetriever
 {
-    public function getMentionedUsernames(Tracker_Artifact_Changeset $changeset): MentionedUsernameCollection
+    public function __construct(private RetrieveUserByUserName $user_manager)
+    {
+    }
+
+    public function getMentionedUsers(Tracker_Artifact_Changeset $changeset): MentionedUserCollection
     {
         $comment_changeset = $changeset->getComment();
         if ($comment_changeset === null || $comment_changeset->hasEmptyBody()) {
-            return new MentionedUsernameCollection([]);
+            return new MentionedUserCollection([]);
         }
 
         $comment = $comment_changeset->body;
         preg_match_all('/(?:^|\W)@([a-zA-Z][a-zA-Z0-9\-_\.]{2,})/', $comment, $mentioned_users);
 
         if (\count($mentioned_users) === 0) {
-            return new MentionedUsernameCollection([]);
+            return new MentionedUserCollection([]);
         }
-
         $usernames = $mentioned_users[1];
-        return new MentionedUsernameCollection($usernames);
+
+        $users = [];
+        foreach ($usernames as $username) {
+            $user = $this->user_manager->getUserByUserName($username);
+            if ($user === null) {
+                continue;
+            }
+            $users[] = $user;
+        }
+        return new MentionedUserCollection($users);
     }
 }

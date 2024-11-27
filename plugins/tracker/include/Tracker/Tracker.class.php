@@ -1761,7 +1761,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO(),
-                    new MentionedUserInCommentRetriever()
+                    new MentionedUserInCommentRetriever($user_manager)
                 ),
                 new UserNotificationSettingsDAO()
             )

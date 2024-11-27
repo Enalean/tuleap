@@ -22,17 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Notifications\Recipient;
 
+use PFUser;
 use Tracker_Artifact_Changeset;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 final class MentionedUserInCommentRetrieverTest extends TestCase
 {
     private MentionedUserInCommentRetriever $mentioned_user_in_comment_retriever;
+    private PFUser $peralta;
+    private const PERALTA_ID    = 101;
+    private const PERALTA_NAME  = 'peralta';
+    private const SANTIAGO_ID   = 102;
+    private const SANTIAGO_NAME = 'santiago';
+    private const HOLT_ID       = 103;
+    private const HOLT_NAME     = 'holt';
+    private const BOYLE_ID      = 104;
+    private const BOYLE_NAME    = 'boyle';
+
+    private PFUser $holt;
+    private PFUser $santiago;
+    private PFUser $boyle;
 
     protected function setUp(): void
     {
-        $this->mentioned_user_in_comment_retriever = new MentionedUserInCommentRetriever();
+        $this->peralta  = UserTestBuilder::anActiveUser()->withId(self::PERALTA_ID)->withUserName(self::PERALTA_NAME)->build();
+        $this->holt     = UserTestBuilder::anActiveUser()->withId(self::HOLT_ID)->withUserName(self::HOLT_NAME)->build();
+        $this->santiago = UserTestBuilder::anActiveUser()->withId(self::SANTIAGO_ID)->withUserName(self::SANTIAGO_NAME)->build();
+        $this->boyle    = UserTestBuilder::anActiveUser()->withId(self::BOYLE_ID)->withUserName(self::BOYLE_NAME)->build();
+
+        $this->mentioned_user_in_comment_retriever = new MentionedUserInCommentRetriever(
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithId(101))->withUsers(
+                [$this->peralta, $this->santiago, $this->boyle, $this->holt]
+            )
+        );
     }
 
     public static function providerForEmptyUsername(): array
@@ -47,61 +72,73 @@ final class MentionedUserInCommentRetrieverTest extends TestCase
         ];
     }
 
-    public static function providerForFoundUsername(): array
+    public function providerForFoundUsername(): array
     {
+        $peralta  = UserTestBuilder::anActiveUser()->withId(self::PERALTA_ID)->withUserName(self::PERALTA_NAME)->build();
+        $holt     = UserTestBuilder::anActiveUser()->withId(self::HOLT_ID)->withUserName(self::HOLT_NAME)->build();
+        $santiago = UserTestBuilder::anActiveUser()->withId(self::SANTIAGO_ID)->withUserName(self::SANTIAGO_NAME)->build();
+        $boyle    = UserTestBuilder::anActiveUser()->withId(self::BOYLE_ID)->withUserName(self::BOYLE_NAME)->build();
+
+
         return [
             'Start with a mention' => [
                 '@peralta please review',
-                ['peralta'],
+                [$peralta],
             ],
             'Start with some text' => [
-                'I start with a text @holtr',
-                ['holtr'],
+                'I start with a text @holt',
+                [$holt],
             ],
             'With several users' => [
                 '@peralta and @santiago please review this report',
-                ['peralta' , 'santiago'],
+                [$peralta, $santiago],
             ],
             'Text with several line' => [
                 '
                  text with several lines
                  @peralta
                 ',
-                ['peralta'],
+                [$peralta],
             ],
             'Text wth username and a mail' => [
-                'I start with a text username@example.com and @boylec',
-                ['boylec'],
+                'I start with a text username@example.com and @boyle',
+                [$boyle],
+            ],
+            'Text with inexisting user' => [
+                'Inexisting user @linetti but @boyle exist',
+                [$boyle],
             ],
         ];
     }
 
-    public function testItReturnsAnEmptyUsernamesCollectionIfThereIsNoComment(): void
+    public function testItReturnsAnEmptyUserCollectionIfThereIsNoComment(): void
     {
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset->method('getComment')->willReturn(null);
-        $result = $this->mentioned_user_in_comment_retriever->getMentionedUsernames($changeset);
-        self::assertCount(0, $result->usernames);
+        $result = $this->mentioned_user_in_comment_retriever->getMentionedUsers($changeset);
+        self::assertCount(0, $result->users);
     }
 
     /**
      * @dataProvider providerForEmptyUsername
      */
-    public function testItReturnsAnEmptyUsernamesCollection(string $comment): void
+    public function testItReturnsAnEmptyUserCollection(string $comment): void
     {
         $changeset = ChangesetTestBuilder::aChangeset(15)->withTextComment($comment)->build();
-        $result    = $this->mentioned_user_in_comment_retriever->getMentionedUsernames($changeset);
-        self::assertCount(0, $result->usernames);
+        $result    = $this->mentioned_user_in_comment_retriever->getMentionedUsers($changeset);
+        self::assertCount(0, $result->users);
     }
 
     /**
      * @dataProvider providerForFoundUsername
-     * @param list<string> $expected_usernames
+     *
+     * @param list<\PFUser> $expected_users
      */
-    public function testItReturnsTheUsernamesFoundInCommentBody(string $comment, array $expected_usernames): void
+    public function testItReturnsTheUsernamesFoundInCommentBody(string $comment, array $expected_users): void
     {
         $changeset = ChangesetTestBuilder::aChangeset(15)->withTextComment($comment)->build();
-        $result    = $this->mentioned_user_in_comment_retriever->getMentionedUsernames($changeset);
-        self::assertEqualsCanonicalizing($expected_usernames, $result->usernames);
+        $result    = $this->mentioned_user_in_comment_retriever->getMentionedUsers($changeset);
+
+        self::assertEquals($expected_users, $result->users);
     }
 }
