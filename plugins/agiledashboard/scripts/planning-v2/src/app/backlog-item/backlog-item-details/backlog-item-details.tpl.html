@@ -116,11 +116,7 @@
         ng-click="details.moveToTop()"
         ng-hide="details.backlog_item.moving_to"
     >
-        <i class="fa backlog-item-details-move-icon"
-            ng-class="{
-                'fa-chevron-up': ! details.backlog_item.selected,
-                'fa-angle-double-up': details.backlog_item.selected
-            }"></i>
+        <i class="fa-solid fa-angles-up" role="img"></i>
     </span>
     <span class="tlp-button-primary backlog-item-details-move"
         title="{{::'Move to bottom' | translate }}"
@@ -128,12 +124,7 @@
         role="button"
         ng-click="details.moveToBottom()"
     >
-        <i class="fa backlog-item-details-move-icon"
-            ng-class="{
-                'fa-chevron-down': ! details.backlog_item.moving_to && ! details.backlog_item.selected,
-                'fa-angle-double-down': ! details.backlog_item.moving_to && details.backlog_item.selected,
-                'fa-spinner fa-spin': details.backlog_item.moving_to
-            }"></i>
+        <i class="fa-solid fa-angles-down" role="img"></i>
     </span>
 </div>
 
