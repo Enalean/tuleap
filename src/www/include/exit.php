@@ -7,6 +7,12 @@
  */
 function exit_error($title, $text = '')
 {
+    $request = HTTPRequest::instance();
+    if ($request && (bool) $request->get('as-json-for-tooltip') === true) {
+        // Avoid to display the site header, footer and feedback into a tooltip if the project retrieval fails
+        exit;
+    }
+
     global $HTML,$Language;
     $GLOBALS['feedback'] .= $title;
 
