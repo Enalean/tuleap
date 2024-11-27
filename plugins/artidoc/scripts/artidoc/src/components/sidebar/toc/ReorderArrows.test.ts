@@ -28,6 +28,7 @@ import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreSt
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { promised_noop } from "@/helpers/noop";
 import type { SectionsStore } from "@/stores/useSectionsStore";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 describe("ReorderArrows", () => {
     function getWrapper(
@@ -44,6 +45,7 @@ describe("ReorderArrows", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
+                    [DOCUMENT_ID.valueOf()]: 123,
                     [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withMockedMoveSection(
                         up,
                         down,

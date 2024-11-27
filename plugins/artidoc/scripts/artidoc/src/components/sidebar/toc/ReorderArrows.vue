@@ -47,6 +47,7 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { StoredArtidocSection } from "@/stores/useSectionsStore";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 const props = defineProps<{ is_first: boolean; is_last: boolean; section: StoredArtidocSection }>();
 
@@ -55,10 +56,11 @@ const { $gettext } = useGettext();
 const title_up = $gettext("Move up");
 const title_down = $gettext("Move down");
 
+const document_id = strictInject(DOCUMENT_ID);
 const { moveSectionUp, moveSectionDown } = strictInject(SECTIONS_STORE);
 
 function up(event: Event): void {
-    moveSectionUp(props.section).then(() => {
+    moveSectionUp(document_id, props.section).then(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }
@@ -66,7 +68,7 @@ function up(event: Event): void {
 }
 
 function down(event: Event): void {
-    moveSectionDown(props.section).then(() => {
+    moveSectionDown(document_id, props.section).then(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, it, vi, expect } from "vitest";
 import type { SectionsStore, StoredArtidocSection } from "@/stores/useSectionsStore";
 import { AT_THE_END, useSectionsStore } from "@/stores/useSectionsStore";
@@ -641,11 +642,14 @@ describe("useSectionsStore", () => {
         let stored_section0: StoredArtidocSection;
         let stored_section1: StoredArtidocSection;
         let stored_section2: StoredArtidocSection;
+        let reorder: MockInstance;
 
         beforeEach(async () => {
             const section0 = ArtifactSectionFactory.override({ display_title: "A" });
             const section1 = PendingArtifactSectionFactory.override({ display_title: "B" });
             const section2 = ArtifactSectionFactory.override({ display_title: "C" });
+
+            reorder = vi.spyOn(rest, "reorderSections");
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([section0, section1, section2]),
@@ -675,104 +679,156 @@ describe("useSectionsStore", () => {
 
         describe("moveSectionUp", () => {
             it("should do nothing if the section is already at the top", async () => {
-                await store.moveSectionUp(stored_section0);
+                await store.moveSectionUp(101, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "B", "C"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move a pending artifact section up", async () => {
-                await store.moveSectionUp(stored_section1);
+                await store.moveSectionUp(101, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["B", "A", "C"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move an artifact section up", async () => {
-                await store.moveSectionUp(stored_section2);
+                await store.moveSectionUp(101, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "C", "B"],
+                );
+                expect(reorder).not.toHaveBeenCalled();
+            });
+
+            it("should move an artifact section up and call reorder if it is above an artifact section", async () => {
+                await store.moveSectionUp(101, stored_section2);
+                await store.moveSectionUp(101, stored_section2);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["C", "A", "B"],
+                );
+                expect(reorder).toHaveBeenCalledWith(
+                    101,
+                    stored_section2.id,
+                    "before",
+                    stored_section0.id,
                 );
             });
         });
 
         describe("moveSectionDown", () => {
             it("should do nothing if the section is already at the bottom", async () => {
-                await store.moveSectionDown(stored_section2);
+                await store.moveSectionDown(101, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "B", "C"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move a pending artifact section down", async () => {
-                await store.moveSectionDown(stored_section1);
+                await store.moveSectionDown(101, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "C", "B"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move an artifact section down", async () => {
-                await store.moveSectionDown(stored_section0);
+                await store.moveSectionDown(101, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["B", "A", "C"],
+                );
+                expect(reorder).not.toHaveBeenCalled();
+            });
+
+            it("should move an artifact section down and call reorder if it is below an artifact section", async () => {
+                await store.moveSectionDown(101, stored_section0);
+                await store.moveSectionDown(101, stored_section0);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["B", "C", "A"],
+                );
+                expect(reorder).toHaveBeenCalledWith(
+                    101,
+                    stored_section0.id,
+                    "after",
+                    stored_section2.id,
                 );
             });
         });
 
         describe("moveSectionBefore", () => {
             it("should do nothing if the section is moved at the same place", async () => {
-                await store.moveSectionBefore(stored_section1, stored_section2);
+                await store.moveSectionBefore(101, stored_section1, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "B", "C"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move a section before a pending artifact section", async () => {
-                await store.moveSectionBefore(stored_section2, stored_section1);
+                await store.moveSectionBefore(101, stored_section2, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "C", "B"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move a section before an artifact section", async () => {
-                await store.moveSectionBefore(stored_section2, stored_section0);
+                await store.moveSectionBefore(101, stored_section2, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["C", "A", "B"],
+                );
+                expect(reorder).toHaveBeenCalledWith(
+                    101,
+                    stored_section2.id,
+                    "before",
+                    stored_section0.id,
                 );
             });
         });
 
         describe("moveSectionAtTheEnd", () => {
             it("should do nothing if the section is moved at the same place", async () => {
-                await store.moveSectionAtTheEnd(stored_section2);
+                await store.moveSectionAtTheEnd(101, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "B", "C"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move a pending artifact section at the end", async () => {
-                await store.moveSectionAtTheEnd(stored_section1);
+                await store.moveSectionAtTheEnd(101, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["A", "C", "B"],
                 );
+                expect(reorder).not.toHaveBeenCalled();
             });
 
             it("should move an artifact section at the end", async () => {
-                await store.moveSectionAtTheEnd(stored_section0);
+                await store.moveSectionAtTheEnd(101, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
                     ["B", "C", "A"],
+                );
+                expect(reorder).toHaveBeenCalledWith(
+                    101,
+                    stored_section0.id,
+                    "after",
+                    stored_section2.id,
                 );
             });
         });

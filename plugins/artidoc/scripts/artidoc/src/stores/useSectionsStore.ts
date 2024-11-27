@@ -26,7 +26,7 @@ import type {
     ArtifactSection,
 } from "@/helpers/artidoc-section.type";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { deleteSection, getAllSections } from "@/helpers/rest-querier";
+import { deleteSection, getAllSections, reorderSections } from "@/helpers/rest-querier";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
@@ -60,13 +60,14 @@ export interface SectionsStore {
         pending: PendingArtifactSection,
         section: ArtifactSection,
     ) => void;
-    moveSectionUp: (section: StoredArtidocSection) => Promise<void>;
-    moveSectionDown: (section: StoredArtidocSection) => Promise<void>;
+    moveSectionUp: (document_id: number, section: StoredArtidocSection) => Promise<void>;
+    moveSectionDown: (document_id: number, section: StoredArtidocSection) => Promise<void>;
     moveSectionBefore: (
+        document_id: number,
         section: InternalArtidocSectionId,
         next_sibling: InternalArtidocSectionId,
     ) => Promise<void>;
-    moveSectionAtTheEnd: (section: InternalArtidocSectionId) => Promise<void>;
+    moveSectionAtTheEnd: (document_id: number, section: InternalArtidocSectionId) => Promise<void>;
 }
 
 type BeforeSection = { before: string };
@@ -258,7 +259,7 @@ export function useSectionsStore(): SectionsStore {
         };
     }
 
-    function moveSectionUp(section: StoredArtidocSection): Promise<void> {
+    function moveSectionUp(document_id: number, section: StoredArtidocSection): Promise<void> {
         return findIndexOfSection(section).match(
             (index): Promise<void> => {
                 if (sections.value === undefined) {
@@ -272,13 +273,24 @@ export function useSectionsStore(): SectionsStore {
                 sections.value.splice(index, 1);
                 sections.value.splice(index - 1, 0, section);
 
+                if (isArtifactSection(section)) {
+                    getNextArtifactSection(index).apply((next_artifact_section) =>
+                        reorderSections(
+                            document_id,
+                            section.id,
+                            "before",
+                            next_artifact_section.id,
+                        ),
+                    );
+                }
+
                 return Promise.resolve();
             },
             () => Promise.resolve(),
         );
     }
 
-    function moveSectionDown(section: StoredArtidocSection): Promise<void> {
+    function moveSectionDown(document_id: number, section: StoredArtidocSection): Promise<void> {
         return findIndexOfSection(section).match(
             (index) => {
                 if (sections.value === undefined) {
@@ -292,6 +304,17 @@ export function useSectionsStore(): SectionsStore {
                 sections.value.splice(index, 1);
                 sections.value.splice(index + 1, 0, section);
 
+                if (isArtifactSection(section)) {
+                    getPreviousArtifactSection(index).apply((previous_artifact_section) =>
+                        reorderSections(
+                            document_id,
+                            section.id,
+                            "after",
+                            previous_artifact_section.id,
+                        ),
+                    );
+                }
+
                 return Promise.resolve();
             },
             () => Promise.resolve(),
@@ -299,6 +322,7 @@ export function useSectionsStore(): SectionsStore {
     }
 
     function moveSectionBefore(
+        document_id: number,
         section: InternalArtidocSectionId,
         next_sibling: InternalArtidocSectionId,
     ): Promise<void> {
@@ -328,6 +352,18 @@ export function useSectionsStore(): SectionsStore {
                         sections.value.splice(index_section, 1);
                         sections.value.splice(index_sibling, 0, section);
 
+                        if (isArtifactSection(section)) {
+                            getNextArtifactSection(index_sibling + 1).apply(
+                                (next_artifact_section) =>
+                                    reorderSections(
+                                        document_id,
+                                        section.id,
+                                        "before",
+                                        next_artifact_section.id,
+                                    ),
+                            );
+                        }
+
                         return Promise.resolve();
                     },
                     () => Promise.resolve(),
@@ -337,7 +373,10 @@ export function useSectionsStore(): SectionsStore {
         );
     }
 
-    function moveSectionAtTheEnd(section: InternalArtidocSectionId): Promise<void> {
+    function moveSectionAtTheEnd(
+        document_id: number,
+        section: InternalArtidocSectionId,
+    ): Promise<void> {
         return findIndexOfSection(section).match(
             (index_section) => {
                 if (sections.value === undefined) {
@@ -358,6 +397,19 @@ export function useSectionsStore(): SectionsStore {
                 sections.value.splice(index_section, 1);
                 sections.value.push(section);
 
+                if (isArtifactSection(section)) {
+                    const penultimate_index = sections.value.length - 2;
+                    getPreviousArtifactSection(penultimate_index).apply(
+                        (previous_artifact_section) =>
+                            reorderSections(
+                                document_id,
+                                section.id,
+                                "after",
+                                previous_artifact_section.id,
+                            ),
+                    );
+                }
+
                 return Promise.resolve();
             },
             () => Promise.resolve(),
@@ -377,6 +429,36 @@ export function useSectionsStore(): SectionsStore {
         }
 
         return Option.fromValue(index);
+    }
+
+    function getNextArtifactSection(start: number): Option<ArtifactSection> {
+        if (sections.value === undefined) {
+            return Option.nothing();
+        }
+
+        for (let i = start; i < sections.value.length; i++) {
+            const next_section = sections.value[i];
+            if (isArtifactSection(next_section)) {
+                return Option.fromValue(next_section);
+            }
+        }
+
+        return Option.nothing();
+    }
+
+    function getPreviousArtifactSection(start: number): Option<ArtifactSection> {
+        if (sections.value === undefined) {
+            return Option.nothing();
+        }
+
+        for (let i = start; i >= 0; i--) {
+            const previous_section = sections.value[i];
+            if (isArtifactSection(previous_section)) {
+                return Option.fromValue(previous_section);
+            }
+        }
+
+        return Option.nothing();
     }
 
     return {

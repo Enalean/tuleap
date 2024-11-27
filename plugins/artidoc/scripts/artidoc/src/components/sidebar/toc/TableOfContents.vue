@@ -81,12 +81,14 @@ import { init } from "@tuleap/drag-and-drop";
 import type { Drekkenov } from "@tuleap/drag-and-drop";
 import { noop } from "@/helpers/noop";
 import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop/src";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 const { $gettext } = useGettext();
 
 const { sections, is_sections_loading, moveSectionAtTheEnd, moveSectionBefore } =
     strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+const document_id = strictInject(DOCUMENT_ID);
 
 const is_reorder_allowed = can_user_edit_document;
 
@@ -117,7 +119,7 @@ onMounted(() => {
             };
 
             if (context.next_sibling === null) {
-                moveSectionAtTheEnd(moved_section);
+                moveSectionAtTheEnd(document_id, moved_section);
                 return;
             }
 
@@ -130,7 +132,7 @@ onMounted(() => {
             const sibling = {
                 internal_id: context.next_sibling.dataset.internalId,
             };
-            moveSectionBefore(moved_section, sibling);
+            moveSectionBefore(document_id, moved_section, sibling);
         },
         cleanupAfterDragCallback: noop,
     });

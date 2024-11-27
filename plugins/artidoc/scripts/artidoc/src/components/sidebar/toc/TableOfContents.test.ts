@@ -28,6 +28,7 @@ import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreSt
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
@@ -39,6 +40,7 @@ describe("TableOfContents", () => {
                 global: {
                     plugins: [createGettext({ silent: true })],
                     provide: {
+                        [DOCUMENT_ID.valueOf()]: 123,
                         [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections([
                             ArtifactSectionFactory.override({
                                 artifact: { ...default_section.artifact, id: 1 },
@@ -82,6 +84,7 @@ describe("TableOfContents", () => {
                 global: {
                     plugins: [createGettext({ silent: true })],
                     provide: {
+                        [DOCUMENT_ID.valueOf()]: 123,
                         [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadedSections([
                             section_1,
                             section_2,

@@ -18,7 +18,15 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { del, getAllJSON, putResponse, uri, getJSON, postJSON } from "@tuleap/fetch-result";
+import {
+    del,
+    getAllJSON,
+    putResponse,
+    uri,
+    getJSON,
+    patchJSON,
+    postJSON,
+} from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
@@ -114,6 +122,21 @@ export function postArtifact(
     return postJSON<{ id: number }>(uri`/api/artifacts`, {
         tracker: { id: tracker.id },
         values,
+    });
+}
+
+export function reorderSections(
+    document_id: number,
+    section_id: string,
+    direction: "before" | "after",
+    compared_to: string,
+): void {
+    patchJSON(uri`/api/artidoc/${document_id}/sections`, {
+        order: {
+            ids: [section_id],
+            direction,
+            compared_to,
+        },
     });
 }
 
