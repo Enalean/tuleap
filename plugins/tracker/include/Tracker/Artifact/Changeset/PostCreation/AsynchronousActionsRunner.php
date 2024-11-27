@@ -23,24 +23,14 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Tracker_ArtifactFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
-class AsynchronousActionsRunner
+final readonly class AsynchronousActionsRunner
 {
     public const TOPIC = 'tuleap.tracker.artifact';
 
-    /**
-     * @var ActionsRunner
-     */
-    private $actions_runner;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $tracker_artifact_factory;
-
-    public function __construct(ActionsRunner $actions_runner, Tracker_ArtifactFactory $tracker_artifact_factory)
+    public function __construct(private ActionsRunner $actions_runner, private RetrieveArtifact $tracker_artifact_factory)
     {
-        $this->actions_runner           = $actions_runner;
-        $this->tracker_artifact_factory = $tracker_artifact_factory;
     }
 
     public static function addListener(WorkerEvent $event)
@@ -53,7 +43,7 @@ class AsynchronousActionsRunner
         $async_runner->process($event);
     }
 
-    public function process(WorkerEvent $event)
+    public function process(WorkerEvent $event): void
     {
         $message = $event->getPayload();
 
@@ -83,6 +73,6 @@ class AsynchronousActionsRunner
             return;
         }
 
-        $this->actions_runner->processAsyncPostCreationActions($changeset, $send_notifications);
+        $this->actions_runner->processAsyncPostCreationActions($changeset, new PostCreationTaskConfiguration($send_notifications));
     }
 }

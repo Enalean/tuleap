@@ -32,6 +32,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskConfiguration;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\TrackerFunctions\Administration\CheckFunctionIsActivated;
 use Tuleap\TrackerFunctions\Logs\FunctionLogLineToSave;
@@ -58,7 +59,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
     ) {
     }
 
-    public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
+    public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
         $this->logger->debug("CustomCodeExecutionTask called on artifact #{$changeset->getArtifact()->getId()} for changeset #{$changeset->getId()}");
 

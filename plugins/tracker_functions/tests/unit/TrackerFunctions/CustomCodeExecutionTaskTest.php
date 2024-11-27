@@ -28,6 +28,7 @@ use Plugin;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskConfiguration;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -99,7 +100,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
             ->withUserName('forge__something')
             ->build());
 
-        $task->execute($changeset, true);
+        $task->execute($changeset, new PostCreationTaskConfiguration(true));
         self::assertTrue($logger->hasDebug('Changeset submitted by technical user (forge__something) -> skip'));
         self::assertFalse($caller->hasBeenCalled());
     }
@@ -124,7 +125,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset(1)->ofArtifact($artifact)->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $task->execute($changeset, true);
+        $task->execute($changeset, new PostCreationTaskConfiguration(true));
         self::assertTrue($logger->hasDebug('Function is deactivated -> skip'));
         self::assertFalse($caller->hasBeenCalled());
     }
@@ -149,7 +150,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset(1)->ofArtifact($artifact)->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $task->execute($changeset, true);
+        $task->execute($changeset, new PostCreationTaskConfiguration(true));
         self::assertTrue($logger->hasDebug('tracker functions plugins not allowed for project #101 -> skip'));
         self::assertFalse($caller->hasBeenCalled());
     }
@@ -176,7 +177,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $task->execute($changeset, true);
+        $task->execute($changeset, new PostCreationTaskConfiguration(true));
         self::assertTrue($logger->hasDebug('Tuleap function for tracker #23 not found or not readable'));
         self::assertFalse($caller->hasBeenCalled());
     }
@@ -202,7 +203,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $task->execute($changeset, true);
+        $task->execute($changeset, new PostCreationTaskConfiguration(true));
         self::assertTrue($logger->hasDebug('Caller error'));
     }
 
@@ -229,7 +230,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $task->execute($changeset, true);
+        $task->execute($changeset, new PostCreationTaskConfiguration(true));
         self::assertTrue($logger->hasDebug('Executor error'));
         $line_saved = $dao->getLineSaved();
         self::assertNotNull($line_saved);
@@ -260,7 +261,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
             ->build();
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $task->execute($changeset, true);
+        $task->execute($changeset, new PostCreationTaskConfiguration(true));
         self::assertFalse($logger->hasWarningRecords());
         self::assertTrue($logger->hasDebug('CustomCodeExecutionTask finished'));
         $line_saved = $dao->getLineSaved();

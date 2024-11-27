@@ -21,58 +21,68 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
-class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
+class AsynchronousActionsRunnerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $actions_runner;
-    private $artifact_factory;
+    private MockObject&ActionsRunner $actions_runner;
+    private RetrieveArtifact $artifact_factory;
 
     protected function setUp(): void
     {
-        $this->actions_runner   = \Mockery::mock(ActionsRunner::class);
-        $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->actions_runner   = $this->createMock(ActionsRunner::class);
+        $this->artifact_factory = RetrieveArtifactStub::withNoArtifact();
     }
 
-    public function testActionsAreProcessed()
+    public function testActionsAreProcessed(): void
     {
+        $changeset = ChangesetTestBuilder::aChangeset(15)->build();
+        $artifact  = $this->createMock(Artifact::class);
+        $artifact->expects($this->once())->method('getChangeset')->willReturn($changeset);
+        $this->artifact_factory = RetrieveArtifactStub::withArtifacts($artifact);
+
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
         $worker_event = new WorkerEvent(
             new NullLogger(),
-            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
+            new WorkerEventContent(
+                'Event name',
+                ['artifact_id' => 1, 'changeset_id' => 15, 'send_notifications' => true]
+            )
         );
 
-        $artifact  = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $artifact->shouldReceive('getChangeset')->andReturns($changeset);
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($artifact);
-
-        $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->with($changeset, true)->once();
+        $configuration = new PostCreationTaskConfiguration(true);
+        $this->actions_runner->expects(self::once())->method('processAsyncPostCreationActions')->with(
+            $changeset,
+            $configuration
+        );
 
         $async_actions_runner->process($worker_event);
     }
 
-    public function testNotWellFormedPayloadAreHandled()
+    public function testNotWellFormedPayloadAreHandled(): void
     {
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
         $logger       = new TestLogger();
         $worker_event = new WorkerEvent($logger, new WorkerEventContent('Event name', []));
 
-        $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->never();
+        $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
 
         $async_actions_runner->process($worker_event);
         self::assertTrue($logger->hasWarningRecords());
         self::assertTrue($logger->hasDebugRecords());
     }
 
-    public function testActionsAreNotProcessedWhenArtifactIsNotFound()
+    public function testActionsAreNotProcessedWhenArtifactIsNotFound(): void
     {
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
@@ -82,17 +92,19 @@ class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
         );
 
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturns(null);
-
-        $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->never();
+        $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
 
         $async_actions_runner->process($worker_event);
 
         self::assertTrue($logger->hasInfoRecords());
     }
 
-    public function testActionsAreNotProcessedWhenChangesetIsNotFound()
+    public function testActionsAreNotProcessedWhenChangesetIsNotFound(): void
     {
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getChangeset')->willReturn(null);
+        $this->artifact_factory = RetrieveArtifactStub::withArtifacts($artifact);
+
         $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
 
         $logger       = new TestLogger();
@@ -101,11 +113,7 @@ class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
         );
 
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getChangeset')->andReturns(null);
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($artifact);
-
-        $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->never();
+        $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
 
         $async_actions_runner->process($worker_event);
         self::assertTrue($logger->hasInfoRecords());
