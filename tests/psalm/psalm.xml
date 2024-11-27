@@ -692,7 +692,6 @@
             <file name="plugins/tracker/tests/unit/Artifact/ArtifactsDeletion/ArtifactFilesDeletorVisitorTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/ArtifactsDeletion/AsynchronousArtifactsDeletionActionsRunnerTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/ArtifactsDeletion/PostArtifactDeletionCleanerTest.php"/>
-            <file name="plugins/tracker/tests/unit/Artifact/ArtifactsDeletion/PostArtifactMoveReferencesCleanerTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Attachment/TemporaryFileManagerAppendChunkTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Attachment/TemporaryFileManagerGetDiskUsageTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Attachment/TemporaryFileManagerPurgeTest.php"/>

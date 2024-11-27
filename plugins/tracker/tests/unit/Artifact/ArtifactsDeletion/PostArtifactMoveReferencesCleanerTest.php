@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use PHPUnit\Framework\MockObject\Stub;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Reference\CrossReferenceManager;
+use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -45,8 +45,7 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
     private const SOURCE_PROJECT_ID         = 250;
     private const DESTINATION_PROJECT_ID    = 254;
 
-    private CrossReferenceManager & Stub $cross_references_manager;
-    private ArtifactLinker & Stub $artifact_linker;
+    private ArtifactLinker & MockObject $artifact_linker;
     private Artifact $first_parent;
     private Artifact $second_parent;
     private RetrieveArtifactStub $retrieve_artifact;
@@ -55,11 +54,14 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
     private RetrieveReverseLinksStub $retrieve_reverse_links;
     private Artifact $moved_artifact;
     private \PFUser $user;
+    private CrossReferencesDao&MockObject $cross_references_dao;
+    private PostArtifactMoveReferenceManager $cross_references_manager;
 
     protected function setUp(): void
     {
-        $this->cross_references_manager = $this->createStub(CrossReferenceManager::class);
-        $this->artifact_linker          = $this->createStub(ArtifactLinker::class);
+        $this->cross_references_dao     = $this->createMock(CrossReferencesDao::class);
+        $this->cross_references_manager = new PostArtifactMoveReferenceManager($this->cross_references_dao);
+        $this->artifact_linker          = $this->createMock(ArtifactLinker::class);
 
         $this->first_parent  = ArtifactTestBuilder::anArtifact(self::FIRST_PARENT_ARTIFACT_ID)->build();
         $this->second_parent = ArtifactTestBuilder::anArtifact(self::SECOND_PARENT_ARTIFACT_ID)->build();
@@ -85,8 +87,8 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
 
     public function testItDeletesReferencesAndResetsReverseLinksTypesWhenArtifactIsChildOfAnotherOneInAnotherProject(): void
     {
-        $this->cross_references_manager->expects(self::once())->method('deleteReferencesWhenArtifactIsSource')->with($this->moved_artifact);
-        $this->cross_references_manager->expects(self::once())->method('updateReferencesWhenArtifactIsInTarget')->with($this->moved_artifact);
+        $this->cross_references_dao->expects(self::once())->method('deleteReferencesWhenArtifactIsSource');
+        $this->cross_references_dao->expects(self::once())->method('updateReferencesWhenArtifactIsInTarget');
 
         $this->artifact_linker->expects(self::exactly(2))->method('linkArtifact')->withConsecutive(
             [
@@ -112,10 +114,10 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
         );
 
         $cleaner = new PostArtifactMoveReferencesCleaner(
-            $this->cross_references_manager,
             $this->retrieve_reverse_links,
             $this->artifact_linker,
-            $this->retrieve_artifact
+            $this->retrieve_artifact,
+            $this->cross_references_manager
         );
 
         $cleaner->cleanReferencesAfterArtifactMove(
@@ -127,16 +129,15 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
 
     public function testItOnlyDeletesReferencesWhenArtifactHasBeenMovedIntoATrackerOfTheSameProject(): void
     {
-        $this->cross_references_manager->expects(self::once())->method('deleteReferencesWhenArtifactIsSource');
-        $this->cross_references_manager->expects(self::never())->method('updateReferencesWhenArtifactIsInTarget');
-
+        $this->cross_references_dao->expects(self::once())->method('deleteReferencesWhenArtifactIsSource');
+        $this->cross_references_dao->expects(self::never())->method('updateReferencesWhenArtifactIsInTarget');
         $this->artifact_linker->expects(self::never())->method('linkArtifact');
 
         $cleaner = new PostArtifactMoveReferencesCleaner(
-            $this->cross_references_manager,
             $this->retrieve_reverse_links,
             $this->artifact_linker,
-            $this->retrieve_artifact
+            $this->retrieve_artifact,
+            $this->cross_references_manager
         );
 
         $cleaner->cleanReferencesAfterArtifactMove(

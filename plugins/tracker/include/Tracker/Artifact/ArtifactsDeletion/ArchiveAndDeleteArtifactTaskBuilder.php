@@ -54,9 +54,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
@@ -111,7 +111,8 @@ class ArchiveAndDeleteArtifactTaskBuilder
         $workflow_logger = new WorkflowBackendLogger(\BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
 
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
-        $cross_reference_manager  = new CrossReferenceManager(new CrossReferencesDao());
+        $cross_references_dao     = new CrossReferencesDao();
+        $cross_reference_manager  = new CrossReferenceManager($cross_references_dao);
         $tracker_artifact_dao     = new Tracker_ArtifactDao();
         $artifact_linker          = new ArtifactLinker(
             Tracker_FormElementFactory::instance(),
@@ -219,10 +220,10 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new RecentlyVisitedDao(),
                 new PendingArtifactRemovalDao(),
                 new PostArtifactMoveReferencesCleaner(
-                    $cross_reference_manager,
                     new ReverseLinksRetriever(new ReverseLinksDao(), $tracker_artifact_factory),
                     $artifact_linker,
-                    $tracker_artifact_factory
+                    $tracker_artifact_factory,
+                    new PostArtifactMoveReferenceManager($cross_references_dao)
                 ),
                 new PostArtifactDeletionCleaner(
                     $cross_reference_manager,
