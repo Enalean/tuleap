@@ -21,6 +21,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
@@ -411,9 +412,16 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         }
 
         // Duplicate Form Elements
-        $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id);
+        $field_mapping          = Tracker_FormElementFactory::instance()->duplicate($id_template, $id);
+        $ugroup_manager         = new UGroupManager();
+        $builder                = new Tracker_UgroupMappingBuilder(
+            new Tracker_UgroupPermissionsGoldenRetriever(new Tracker_PermissionsDao(), $ugroup_manager),
+            $ugroup_manager
+        );
+        $project                = $this->getProjectManager()->getProjectById($project_id);
+        $tracker_ugroup_mapping = TrackerDuplicationUserGroupMapping::fromMapping($builder, $ugroup_mapping, $template_tracker, $project);
 
-        $duplication_user_group_mapping = TrackerDuplicationUserGroupMapping::fromMapping($ugroup_mapping, $template_tracker, $project_id);
+        $duplication_user_group_mapping = DuplicationUserGroupMapping::fromTypeAndMapping($tracker_ugroup_mapping->duplication_type, $tracker_ugroup_mapping->ugroup_mapping);
 
         // Duplicate workflow
         foreach ($field_mapping as $mapping) {
@@ -511,7 +519,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
     * @param int $id          the id of the new tracker
     * @param array $field_mapping
     */
-    public function duplicatePermissions($id_template, $id, $field_mapping, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicatePermissions($id_template, $id, $field_mapping, DuplicationUserGroupMapping $duplication_user_group_mapping): void
     {
         $pm                      = PermissionsManager::instance();
         $permission_type_tracker = [Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_FULL, Tracker::PERMISSION_NONE];

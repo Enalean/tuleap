@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,66 +23,35 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use ProjectManager;
-use Tracker_PermissionsDao;
 use Tracker_UgroupMappingBuilder;
-use Tracker_UgroupPermissionsGoldenRetriever;
-use UGroupManager;
+use Tuleap\Project\Duplication\DuplicationType;
 
-final class TrackerDuplicationUserGroupMapping
+/**
+ * @psalm-immutable
+ */
+final readonly class TrackerDuplicationUserGroupMapping
 {
     /**
      * @param array<int, int> $ugroup_mapping
      */
-    private function __construct(public readonly TrackerDuplicationType $duplication_type, public readonly array $ugroup_mapping)
+    private function __construct(public DuplicationType $duplication_type, public array $ugroup_mapping)
     {
     }
 
-    public static function fromMapping(array|false $ugroup_mapping, \Tracker $template_tracker, int $project_id): self
+    public static function fromMapping(Tracker_UgroupMappingBuilder $builder, array|false $ugroup_mapping, \Tracker $template_tracker, \Project $project): self
     {
         if ($ugroup_mapping) {
-            return new self(TrackerDuplicationType::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
+            return new self(DuplicationType::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
         }
 
-        if ($project_id === (int) $template_tracker->getProject()->getID()) {
-            return new self(TrackerDuplicationType::DUPLICATE_SAME_PROJECT, []);
+        if ((int) $project->getID() === (int) $template_tracker->getProject()->getID()) {
+            return new self(DuplicationType::DUPLICATE_SAME_PROJECT, []);
         }
 
-        $ugroup_manager = new UGroupManager();
-        $builder        = new Tracker_UgroupMappingBuilder(
-            new Tracker_UgroupPermissionsGoldenRetriever(new Tracker_PermissionsDao(), $ugroup_manager),
-            $ugroup_manager
-        );
         $ugroup_mapping = $builder->getMapping(
             $template_tracker,
-            ProjectManager::instance()->getProject($project_id),
+            $project
         );
-        return new self(TrackerDuplicationType::DUPLICATE_OTHER_PROJECT, $ugroup_mapping);
-    }
-
-    public static function fromAnotherProjectWithoutMapping(): self
-    {
-        return new self(TrackerDuplicationType::DUPLICATE_OTHER_PROJECT, []);
-    }
-
-    public static function fromSameProjectWithoutMapping(): self
-    {
-        return new self(TrackerDuplicationType::DUPLICATE_SAME_PROJECT, []);
-    }
-
-    /**
-     * @param array<int, int> $mapping
-     */
-    public static function fromSameProjectWithMapping(array $mapping): self
-    {
-        return new self(TrackerDuplicationType::DUPLICATE_SAME_PROJECT, $mapping);
-    }
-
-    /**
-     * @param array<int, int> $mapping
-     */
-    public static function fromNewProjectWithMapping(array $mapping): self
-    {
-        return new self(TrackerDuplicationType::DUPLICATE_NEW_PROJECT, $mapping);
+        return new self(DuplicationType::DUPLICATE_OTHER_PROJECT, $ugroup_mapping);
     }
 }

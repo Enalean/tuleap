@@ -25,12 +25,12 @@ namespace Tuleap\Tracker\Notifications;
 
 use ProjectUGroup;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\Tracker\TrackerDuplicationType;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationType;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
 final class UgroupsToNotifyDuplicationDao extends DataAccessObject
 {
-    public function duplicate(int $source_notification_id, int $target_notification_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicate(int $source_notification_id, int $target_notification_id, DuplicationUserGroupMapping $duplication_user_group_mapping): void
     {
         $ugroup_id_statement = $this->getUGroupIdStatement($duplication_user_group_mapping);
 
@@ -43,9 +43,9 @@ final class UgroupsToNotifyDuplicationDao extends DataAccessObject
         $this->getDB()->run($sql, $target_notification_id, $source_notification_id);
     }
 
-    private function getUGroupIdStatement(TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): string
+    private function getUGroupIdStatement(DuplicationUserGroupMapping $duplication_user_group_mapping): string
     {
-        if ($duplication_user_group_mapping->duplication_type === TrackerDuplicationType::DUPLICATE_SAME_PROJECT) {
+        if ($duplication_user_group_mapping->duplication_type === DuplicationType::DUPLICATE_SAME_PROJECT) {
             return 'ugroup_id';
         }
 

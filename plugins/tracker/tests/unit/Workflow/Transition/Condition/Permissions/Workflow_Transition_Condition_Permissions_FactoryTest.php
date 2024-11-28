@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -90,7 +90,7 @@ final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tulea
     {
         $new_transition_id = 2;
 
-        $mapping = TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([103 => 122]);
+        $mapping = DuplicationUserGroupMapping::fromNewProjectWithMapping([103 => 122]);
 
         $this->permissions_manager->shouldReceive('duplicatePermissions')->with($this->transition->getId(), $new_transition_id, [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION], $mapping)->once();
         $this->permissions_factory->duplicate($this->transition, $new_transition_id, $mapping);

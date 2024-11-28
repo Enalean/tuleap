@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\DateReminder;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
 class DateReminderDao extends DataAccessObject
 {
@@ -232,7 +232,7 @@ class DateReminderDao extends DataAccessObject
         return $this->getDB()->column($sql, []);
     }
 
-    public function duplicate(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping, array $fields_mapping): void
+    public function duplicate(int $template_tracker_id, int $new_tracker_id, DuplicationUserGroupMapping $duplication_user_group_mapping, array $fields_mapping): void
     {
         if (count($fields_mapping) === 0) {
             return;

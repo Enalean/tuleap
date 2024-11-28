@@ -19,9 +19,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -316,7 +316,7 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
      * @param Array $values array of old and new values of the field
      * @param Array $field_mapping the field mapping
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, DuplicationUserGroupMapping $duplication_user_group_mapping): void
     {
         if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
             $is_used     = $workflow->getIsUsed();

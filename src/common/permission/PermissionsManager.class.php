@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
 class PermissionsManager implements IPermissionsManagerNG
 {
@@ -322,7 +322,7 @@ class PermissionsManager implements IPermissionsManagerNG
     *
     * @return bool
     */
-    public function duplicatePermissions($source, $target, array $permission_types, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping)
+    public function duplicatePermissions($source, $target, array $permission_types, DuplicationUserGroupMapping $duplication_user_group_mapping)
     {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, $duplication_user_group_mapping);
     }
@@ -337,7 +337,7 @@ class PermissionsManager implements IPermissionsManagerNG
      */
     public function duplicateWithStatic($source, $target, array $permission_types)
     {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromSameProjectWithoutMapping());
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, DuplicationUserGroupMapping::fromSameProjectWithoutMapping());
     }
 
     /**
@@ -350,7 +350,7 @@ class PermissionsManager implements IPermissionsManagerNG
      */
     public function duplicateWithStaticMapping($source, $target, array $permission_types, array $ugroup_mapping)
     {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
     }
 
     /**
@@ -363,7 +363,7 @@ class PermissionsManager implements IPermissionsManagerNG
      */
     public function duplicateWithoutStatic($source, $target, array $permission_types)
     {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, DuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
     }
 
     public function isPermissionExist($object_id, $ptype)
