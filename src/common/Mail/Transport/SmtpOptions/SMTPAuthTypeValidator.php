@@ -24,9 +24,16 @@ namespace Tuleap\Mail\Transport\SmtpOptions;
 
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Config\ValueValidator;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 
 final class SMTPAuthTypeValidator implements ValueValidator
 {
+    private const AUTHORIZED_AUTHS = [
+        MailTransportBuilder::EMAIL_AUTH_PLAIN,
+        MailTransportBuilder::EMAIL_AUTH_LOGIN,
+        MailTransportBuilder::EMAIL_AUTH_XOAUTH2,
+    ];
+
     public static function buildSelf(): self
     {
         return new self();
@@ -34,9 +41,12 @@ final class SMTPAuthTypeValidator implements ValueValidator
 
     public function checkIsValid(string $value): void
     {
-        if ($value === 'plain' || $value === 'login') {
+        if (in_array($value, self::AUTHORIZED_AUTHS, true)) {
             return;
         }
-        throw new InvalidConfigKeyValueException('SMTP auth type can only be either "plain" or "login"');
+        throw new InvalidConfigKeyValueException('SMTP auth type can only be one of: ' . implode(
+            ', ',
+            array_map(static fn(string $auth) => "\"$auth\"", self::AUTHORIZED_AUTHS),
+        ));
     }
 }

@@ -46,11 +46,14 @@ class SmtpOptionsBuilder
 
         $auth_username = (string) \ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_USERNAME);
         if ($auth_username !== '' && \ForgeConfig::exists(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)) {
-            $smtp_options->setConnectionClass(\ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_AUTH_TYPE));
-            $connection_config = [
-                'username' => $auth_username,
-                'password' => \ForgeConfig::getSecretAsClearText(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)->getString(),
-            ];
+            $connection_class = \ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_AUTH_TYPE);
+            $smtp_options->setConnectionClass($connection_class);
+            $connection_config = ['username' => $auth_username];
+            if ($connection_class === MailTransportBuilder::EMAIL_AUTH_XOAUTH2) {
+                $connection_config['access_token'] = \ForgeConfig::getSecretAsClearText(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)->getString();
+            } else {
+                $connection_config['password'] = \ForgeConfig::getSecretAsClearText(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)->getString();
+            }
         }
 
         if (\ForgeConfig::getStringAsBool(MailTransportBuilder::RELAYHOST_SMTP_USE_TLS)) {

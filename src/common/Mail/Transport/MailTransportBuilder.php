@@ -53,13 +53,17 @@ class MailTransportBuilder
     #[ConfigKey('Password to use to authenticate against the SMTP relay host')]
     #[ConfigKeySecret]
     public const RELAYHOST_SMTP_PASSWORD  = 'email_relayhost_smtp_password';
-    #[ConfigKey('Type of authentication to use against the SMTP relay host (either plain or login)')]
+    #[ConfigKey('Type of authentication to use against the SMTP relay host (either plain, login or xoauth2)')]
     #[ConfigKeyString('plain')]
     #[ConfigKeyValueValidator(SMTPAuthTypeValidator::class)]
     public const RELAYHOST_SMTP_AUTH_TYPE = 'email_relayhost_smtp_auth_type';
 
     public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
     public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
+
+    public const EMAIL_AUTH_PLAIN   = 'plain';
+    public const EMAIL_AUTH_LOGIN   = 'login';
+    public const EMAIL_AUTH_XOAUTH2 = 'xoauth2';
 
     private function __construct()
     {
