@@ -39,10 +39,8 @@ export class OngoingDrag implements AfterDropListener {
     }
 
     public hideDraggedElement(options: DrekkenovInitOptions): void {
-        if (this.dragged_element.parentNode !== options.mirror_container) {
-            options.mirror_container.append(this.dragged_element);
-            this.dragged_element.classList.add(HIDE_CSS_CLASS);
-        }
+        options.mirror_container.append(this.dragged_element);
+        this.dragged_element.classList.add(HIDE_CSS_CLASS);
     }
 
     private pinSourceDropzoneHeightToAvoidFlickerOverCollapsedColumns(): void {
