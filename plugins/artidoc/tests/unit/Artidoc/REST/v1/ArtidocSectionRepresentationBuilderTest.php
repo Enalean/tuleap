@@ -86,7 +86,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         $service_docman = $this->createMock(ServiceDocman::class);
         $builder        = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
-            RetrieveArtidocStub::withDocument(
+            RetrieveArtidocStub::withDocumentUserCanRead(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
                     $service_docman,
@@ -132,7 +132,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         $service_docman = $this->createMock(ServiceDocman::class);
         $builder        = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
-            RetrieveArtidocStub::withDocument(
+            RetrieveArtidocStub::withDocumentUserCanRead(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
                     $service_docman,
@@ -162,7 +162,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         $service_docman = $this->createMock(ServiceDocman::class);
         $builder        = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
-            RetrieveArtidocStub::withDocument(
+            RetrieveArtidocStub::withDocumentUserCanRead(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
                     $service_docman,

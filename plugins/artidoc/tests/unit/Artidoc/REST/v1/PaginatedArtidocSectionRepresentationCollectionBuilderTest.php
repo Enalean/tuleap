@@ -102,7 +102,7 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
 
         $service_docman = $this->createMock(ServiceDocman::class);
         $builder        = new PaginatedArtidocSectionRepresentationCollectionBuilder(
-            RetrieveArtidocStub::withDocument(
+            RetrieveArtidocStub::withDocumentUserCanRead(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 123]),
                     $this->createMock(ServiceDocman::class),
@@ -145,7 +145,7 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
     {
         $service_docman = $this->createMock(ServiceDocman::class);
         $builder        = new PaginatedArtidocSectionRepresentationCollectionBuilder(
-            RetrieveArtidocStub::withDocument(
+            RetrieveArtidocStub::withDocumentUserCanRead(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => 123]),
                     $service_docman,

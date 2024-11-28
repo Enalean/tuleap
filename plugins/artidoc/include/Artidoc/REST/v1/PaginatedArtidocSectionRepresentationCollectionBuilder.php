@@ -44,7 +44,7 @@ final readonly class PaginatedArtidocSectionRepresentationCollectionBuilder
     public function build(int $id, int $limit, int $offset, \PFUser $user): Ok|Err
     {
         return $this->retrieve_artidoc
-            ->retrieveArtidoc($id, $user)
+            ->retrieveArtidocUserCanRead($id, $user)
             ->map(fn () => $this->dao->searchPaginatedRawSectionsByItemId($id, $limit, $offset))
             ->andThen(fn (PaginatedRawSections $raw_sections) => $this->transformer->getRepresentation($raw_sections, $user));
     }
