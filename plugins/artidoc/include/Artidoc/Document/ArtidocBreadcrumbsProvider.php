@@ -24,6 +24,9 @@ namespace Tuleap\Artidoc\Document;
 
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Docman\ServiceDocman;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -40,12 +43,17 @@ final readonly class ArtidocBreadcrumbsProvider
     {
     }
 
-    public function getBreadcrumbs(ArtidocDocumentInformation $document_information, \PFUser $user): BreadCrumbCollection
+    public function getBreadcrumbs(ArtidocWithContext $document_information, \PFUser $user): BreadCrumbCollection
     {
-        $collection = new BreadCrumbCollection();
-        $collection->addBreadCrumb($this->getRootBreadCrumb($document_information, $user));
+        $service = $document_information->getContext(ServiceDocman::class);
+        if (! $service instanceof ServiceDocman) {
+            throw new \LogicException('Service is missing');
+        }
 
-        $hierarchy = $this->getParentsUntilDocumentBreadCrumbs($document_information);
+        $collection = new BreadCrumbCollection();
+        $collection->addBreadCrumb($this->getRootBreadCrumb($service, $user));
+
+        $hierarchy = $this->getParentsUntilDocumentBreadCrumbs($document_information->document, $service);
         foreach ($hierarchy as $child) {
             $collection->addBreadCrumb($child);
         }
@@ -53,9 +61,9 @@ final readonly class ArtidocBreadcrumbsProvider
         return $collection;
     }
 
-    private function getRootBreadCrumb(ArtidocDocumentInformation $document_information, \PFUser $user): BreadCrumb
+    private function getRootBreadCrumb(ServiceDocman $service, \PFUser $user): BreadCrumb
     {
-        $service = $document_information->document_service;
+        $project_id = (int) $service->getProject()->getId();
 
         $breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
@@ -64,7 +72,7 @@ final readonly class ArtidocBreadcrumbsProvider
             )
         );
 
-        $permissions_manager = Docman_PermissionsManager::instance($service->getProjectIdentifier());
+        $permissions_manager = Docman_PermissionsManager::instance($project_id);
         if ($permissions_manager->userCanAdmin($user)) {
             $sub_items = new BreadCrumbSubItems();
             $sub_items->addSection(
@@ -75,7 +83,7 @@ final readonly class ArtidocBreadcrumbsProvider
                                 dgettext('tuleap-artidoc', 'Administration'),
                                 '/plugins/docman/?' . http_build_query(
                                     [
-                                        'group_id' => $service->getProjectIdentifier(),
+                                        'group_id' => $project_id,
                                         'action'   => 'admin',
                                     ]
                                 ),
@@ -93,18 +101,19 @@ final readonly class ArtidocBreadcrumbsProvider
      * @return array<BreadCrumb|EllipsisBreadCrumb>
      */
     private function getParentsUntilDocumentBreadCrumbs(
-        ArtidocDocumentInformation $document_information,
+        Artidoc $document,
+        ServiceDocman $service,
     ): array {
         $hierarchy = [];
-        if ($document_information->document->getParentId()) {
+        if ($document->getParentId()) {
             $hierarchy[] = new BreadCrumb(
                 new BreadCrumbLink(
-                    $document_information->document->getTitle(),
-                    '/artidoc/' . $document_information->document->getId() . '/',
+                    $document->getTitle(),
+                    '/artidoc/' . $document->getId() . '/',
                 ),
             );
 
-            $parent = $this->item_factory->getItemFromDb($document_information->document->getParentId());
+            $parent = $this->item_factory->getItemFromDb($document->getParentId());
             $nb     = 1;
             while ($parent && $parent->getParentId() !== 0) {
                 if ($nb++ >= self::MAX_NB_ITEMS) {
@@ -117,7 +126,7 @@ final readonly class ArtidocBreadcrumbsProvider
                 $hierarchy[] = new BreadCrumb(
                     new BreadCrumbLink(
                         $parent->getTitle(),
-                        $document_information->document_service->getUrl() . 'folder/' . $parent->getId(),
+                        $service->getUrl() . 'folder/' . $parent->getId(),
                     ),
                 );
 

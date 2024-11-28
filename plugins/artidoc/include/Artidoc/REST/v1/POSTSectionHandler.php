@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RawSection;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
@@ -53,7 +53,7 @@ final readonly class POSTSectionHandler
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id, $user)
-            ->andThen(fn (ArtidocDocumentInformation $document_information) => $this->getSectionRepresentationToMakeSureThatUserCanReadIt($document_information, $section, $user))
+            ->andThen(fn (ArtidocWithContext $document_information) => $this->getSectionRepresentationToMakeSureThatUserCanReadIt($document_information, $section, $user))
             ->andThen(fn (ArtidocSectionRepresentation $section_representation) => $this->saveSection($id, $section_representation, $section));
     }
 
@@ -61,7 +61,7 @@ final readonly class POSTSectionHandler
      * @return Ok<ArtidocSectionRepresentation>|Err<Fault>
      */
     private function getSectionRepresentationToMakeSureThatUserCanReadIt(
-        ArtidocDocumentInformation $document_information,
+        ArtidocWithContext $document_information,
         ArtidocPOSTSectionRepresentation $section,
         \PFUser $user,
     ): Ok|Err {

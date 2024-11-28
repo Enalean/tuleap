@@ -25,13 +25,11 @@ namespace Tuleap\Artidoc\REST\v1;
 use PFUser;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
-use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Order\ReorderSectionsStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -45,7 +43,7 @@ final class PATCHSectionsHandlerTest extends TestCase
 
     private PFUser $user;
     private UUIDSectionIdentifierFactory $identifier_factory;
-    private ArtidocDocumentInformation $document;
+    private ArtidocWithContext $document;
 
     protected function setUp(): void
     {
@@ -53,11 +51,8 @@ final class PATCHSectionsHandlerTest extends TestCase
 
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $this->document = new ArtidocDocumentInformation(
+        $this->document = new ArtidocWithContext(
             new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-            $service_docman,
-            DocumentServiceDocmanProxy::build($service_docman)
         );
     }
 
@@ -89,8 +84,7 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::withFailedReorder();
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new PATCHSectionsHandler(
+        $handler = new PATCHSectionsHandler(
             RetrieveArtidocStub::withDocumentUserCanWrite($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
@@ -138,8 +132,7 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::shouldNotBeCalled();
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new PATCHSectionsHandler(
+        $handler = new PATCHSectionsHandler(
             RetrieveArtidocStub::withDocumentUserCanRead($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,

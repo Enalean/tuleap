@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker;
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Docman\ServiceDocman;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
 
 final readonly class SuitableTrackersForDocumentRetriever
@@ -37,11 +38,16 @@ final readonly class SuitableTrackersForDocumentRetriever
     /**
      * @return list<Tracker>
      */
-    public function getTrackers(ArtidocDocumentInformation $document_information, \PFUser $user): array
+    public function getTrackers(ArtidocWithContext $document_information, \PFUser $user): array
     {
+        $service = $document_information->getContext(ServiceDocman::class);
+        if (! $service instanceof ServiceDocman) {
+            throw new \LogicException('Service is missing');
+        }
+
         return array_reduce(
             $this->tracker_factory->getTrackersByProjectIdUserCanView(
-                $document_information->document_service->getProjectIdentifier(),
+                (int) $service->getProject()->getId(),
                 $user,
             ),
             /**
