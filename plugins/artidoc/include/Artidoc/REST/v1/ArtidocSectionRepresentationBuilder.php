@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
@@ -51,7 +51,7 @@ final class ArtidocSectionRepresentationBuilder
         }
 
         return $this->retrieve_artidoc
-            ->retrieveArtidocUserCanRead($row->item_id, $user)
+            ->retrieveArtidocUserCanRead($row->item_id)
             ->andThen(fn () => $this->transformer->getRepresentation(new PaginatedRawSections($row->item_id, [$row], 1), $user))
             ->andThen($this->getFirstAndOnlySectionFromCollection(...));
     }

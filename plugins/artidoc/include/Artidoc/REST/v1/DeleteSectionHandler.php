@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\DeleteOneSection;
-use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
@@ -43,7 +43,7 @@ final class DeleteSectionHandler
     /**
      * @return Ok<true>|Err<Fault>
      */
-    public function handle(SectionIdentifier $id, \PFUser $user): Ok|Err
+    public function handle(SectionIdentifier $id): Ok|Err
     {
         $row = $this->dao->searchSectionById($id);
         if ($row === null) {
@@ -51,7 +51,7 @@ final class DeleteSectionHandler
         }
 
         return $this->retrieve_artidoc
-            ->retrieveArtidocUserCanWrite($row->item_id, $user)
+            ->retrieveArtidocUserCanWrite($row->item_id)
             ->andThen(fn () => $this->delete($id));
     }
 

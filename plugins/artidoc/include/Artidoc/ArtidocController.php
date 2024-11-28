@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
-use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
@@ -74,7 +74,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     {
         ServiceInstrumentation::increment('artidoc');
 
-        $this->retrieve_artidoc->retrieveArtidocUserCanRead((int) $variables['id'], $request->getCurrentUser())
+        $this->retrieve_artidoc->retrieveArtidocUserCanRead((int) $variables['id'])
             ->match(
                 fn (ArtidocWithContext $document_information) => $this->renderPage($document_information, $layout, $request->getCurrentUser()),
                 function (Fault $fault) {

@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SaveOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
@@ -52,7 +52,7 @@ final readonly class POSTSectionHandler
     public function handle(int $id, ArtidocPOSTSectionRepresentation $section, \PFUser $user): Ok|Err
     {
         return $this->retrieve_artidoc
-            ->retrieveArtidocUserCanWrite($id, $user)
+            ->retrieveArtidocUserCanWrite($id)
             ->andThen(fn (ArtidocWithContext $document_information) => $this->getSectionRepresentationToMakeSureThatUserCanReadIt($document_information, $section, $user))
             ->andThen(fn (ArtidocSectionRepresentation $section_representation) => $this->saveSection($id, $section_representation, $section));
     }

@@ -22,16 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use PFUser;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
-use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocWithContextStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Order\ReorderSectionsStub;
+use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class PATCHSectionsHandlerTest extends TestCase
@@ -41,14 +39,11 @@ final class PATCHSectionsHandlerTest extends TestCase
 
     private const PROJECT_ID = 101;
 
-    private PFUser $user;
     private UUIDSectionIdentifierFactory $identifier_factory;
     private ArtidocWithContext $document;
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::buildWithDefaults();
-
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
 
         $this->document = new ArtidocWithContext(
@@ -73,7 +68,6 @@ final class PATCHSectionsHandlerTest extends TestCase
                 'after',
                 self::SECTION_REFERENCE_ID,
             ),
-            $this->user,
         );
 
         self::assertTrue(Result::isOk($result));
@@ -97,7 +91,6 @@ final class PATCHSectionsHandlerTest extends TestCase
                 'after',
                 self::SECTION_REFERENCE_ID,
             ),
-            $this->user,
         );
 
         self::assertTrue(Result::isErr($result));
@@ -121,7 +114,6 @@ final class PATCHSectionsHandlerTest extends TestCase
                 'after',
                 self::SECTION_REFERENCE_ID,
             ),
-            $this->user,
         );
 
         self::assertTrue(Result::isErr($result));
@@ -145,7 +137,6 @@ final class PATCHSectionsHandlerTest extends TestCase
                 'after',
                 self::SECTION_REFERENCE_ID,
             ),
-            $this->user,
         );
 
         self::assertTrue(Result::isErr($result));

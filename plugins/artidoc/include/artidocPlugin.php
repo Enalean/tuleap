@@ -21,11 +21,14 @@
 declare(strict_types=1);
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
+use Tuleap\Artidoc\Adapter\Document\CurrentCurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Document\ArtidocWithContextRetriever;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
@@ -120,10 +123,12 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         $form_element_factory = Tracker_FormElementFactory::instance();
         return new ArtidocController(
             new ArtidocWithContextRetriever(
-                ProjectManager::instance(),
-                $dao,
-                $docman_item_factory,
-                new DocumentServiceFromAllowedProjectRetriever($this),
+                new ArtidocRetriever($dao, $docman_item_factory),
+                CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser(HTTPRequest::instance()->getCurrentUser()),
+                new ArtidocWithContextDecorator(
+                    ProjectManager::instance(),
+                    new DocumentServiceFromAllowedProjectRetriever($this),
+                ),
             ),
             new ConfiguredTrackerRetriever(
                 $dao,
