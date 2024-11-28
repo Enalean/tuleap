@@ -10,6 +10,8 @@ informed: Thomas GERBET, Clarck ROBINSON, Kevin TRAINI, Manuel VACELET, Clarisse
 
 ## Context and Problem Statement
 
+[story #40114][0] Have better Cross-References in Artidoc
+
 When the user has typed some text containing parts matching a Tuleap cross-reference format, or when the editor content
 contains Tuleap cross-references, we need to:
 1. Detect it.
@@ -69,7 +71,8 @@ It is made through a plugin named "PluginTransformInput" whose role is to:
 
 It works as follows:
 1. It tests the RegExp `/\w+\s#[\w\-:./]+/` on what's returned by `view.doc.toString()`
-   ⚠️ The `toString()` method of `view.doc` is flagged "for debugging purposes" and returns a ProseMirror style representation
+
+     ⚠️ The `toString()` method of `view.doc` is flagged "for debugging purposes" and returns a ProseMirror style representation
       of the document tree, and not a textual/DOM representation of it.
 2. If the RegExp matches, the content of `view.doc.toString()` is sent to `POST /api/v1/projects/:id/extract_references`
    so it can extract the cross-references from the document.
@@ -80,6 +83,7 @@ It works as follows:
    the future Decoration's extents (`{ from: number, to: number }`) using the context word the backend provides us. The context word
    is the word placed before the cross-reference. For instance, in the following text: "These are the steps to implement story #123",
    "implements" is the context word.
+
    ⚠️ The usage of this context word is rather wobbly because if the context word contains accentuated or special characters,
       it will be truncated by the backend. Therefore, the computation of the decoration's position can be potentially false.
       For instance, with the following text: "Ce document référence art #123", the context word is "rence".
@@ -167,9 +171,9 @@ This solution is:
 
 * [ProseMirror introduction](https://prosemirror.net/docs/guide/#intro)
 
-[0](https://tuleap.net/plugins/tracker/?aid=40114)
-[1](https://prosemirror.net/docs/ref/#view.Decorations)
-[2](https://prosemirror.net/docs/ref/#inputrules)
-[3](https://prosemirror.net/docs/ref/#model.Mark)
-[4](https://hybrids.js.org/#/component-model/templates)
-[5](https://prosemirror.net/docs/ref/)
+[0]: https://tuleap.net/plugins/tracker/?aid=40114
+[1]: https://prosemirror.net/docs/ref/#view.Decorations
+[2]: https://prosemirror.net/docs/ref/#inputrules
+[3]: https://prosemirror.net/docs/ref/#model.Mark
+[4]: https://hybrids.js.org/#/component-model/templates
+[5]: https://prosemirror.net/docs/ref/
