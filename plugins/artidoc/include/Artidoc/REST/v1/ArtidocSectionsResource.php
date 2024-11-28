@@ -26,7 +26,7 @@ use Docman_ItemFactory;
 use Luracast\Restler\RestException;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -134,7 +134,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         }
 
         $dao       = new ArtidocDao($this->getSectionIdentifierFactory());
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),
@@ -152,7 +152,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         }
 
         $dao       = new ArtidocDao($this->getSectionIdentifierFactory());
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),

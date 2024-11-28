@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFact
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
+use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocWithContextStub;
 use Tuleap\Artidoc\Stubs\Document\SearchOneSectionStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
@@ -83,7 +83,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
 
         $builder = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
-            RetrieveArtidocStub::withDocumentUserCanRead(
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
                 )
@@ -102,7 +102,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
     {
         $builder = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withoutResults(),
-            RetrieveArtidocStub::shouldNotBeCalled(),
+            RetrieveArtidocWithContextStub::shouldNotBeCalled(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
         );
 
@@ -114,7 +114,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
     {
         $builder = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
-            RetrieveArtidocStub::withoutDocument(),
+            RetrieveArtidocWithContextStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
         );
 
@@ -126,7 +126,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
     {
         $builder = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
-            RetrieveArtidocStub::withDocumentUserCanRead(
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
                 )
@@ -153,7 +153,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
 
         $builder = new ArtidocSectionRepresentationBuilder(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
-            RetrieveArtidocStub::withDocumentUserCanRead(
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
                 )

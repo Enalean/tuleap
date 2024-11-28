@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
-use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
@@ -59,7 +59,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     public const EDIT_FEATURE_FLAG = 'enable_artidoc_edition';
 
     public function __construct(
-        private RetrieveArtidoc $retrieve_artidoc,
+        private RetrieveArtidocWithContext $retrieve_artidoc,
         private ConfiguredTrackerRetriever $configured_tracker_retriever,
         private SuitableTrackersForDocumentRetriever $suitable_trackers_retriever,
         private ArtidocBreadcrumbsProvider $breadcrumbs_provider,

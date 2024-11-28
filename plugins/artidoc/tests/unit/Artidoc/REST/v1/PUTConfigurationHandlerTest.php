@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
-use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
+use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocWithContextStub;
 use Tuleap\Artidoc\Stubs\Document\SaveConfiguredTrackerStub;
 use Tuleap\Artidoc\Stubs\Document\Tracker\CheckTrackerIsSuitableForDocumentStub;
 use Tuleap\NeverThrow\Result;
@@ -56,7 +56,7 @@ final class PUTConfigurationHandlerTest extends TestCase
             ->build();
 
         $handler = new PUTConfigurationHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
@@ -82,7 +82,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         $saver = SaveConfiguredTrackerStub::build();
 
         $handler = new PUTConfigurationHandler(
-            RetrieveArtidocStub::withoutDocument(),
+            RetrieveArtidocWithContextStub::withoutDocument(),
             $saver,
             RetrieveTrackerStub::withTracker(
                 TrackerTestBuilder::aTracker()
@@ -108,7 +108,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         $saver = SaveConfiguredTrackerStub::build();
 
         $handler = new PUTConfigurationHandler(
-            RetrieveArtidocStub::withDocumentUserCanRead(
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
@@ -139,7 +139,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         $saver = SaveConfiguredTrackerStub::build();
 
         $handler = new PUTConfigurationHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
@@ -164,7 +164,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         $saver = SaveConfiguredTrackerStub::build();
 
         $handler = new PUTConfigurationHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),

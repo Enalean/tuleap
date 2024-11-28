@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
@@ -34,7 +34,7 @@ use Tuleap\NeverThrow\Ok;
 final readonly class PATCHSectionsHandler
 {
     public function __construct(
-        private RetrieveArtidoc $retrieve_artidoc,
+        private RetrieveArtidocWithContext $retrieve_artidoc,
         private SectionOrderBuilder $section_order_builder,
         private ReorderSections $dao,
     ) {

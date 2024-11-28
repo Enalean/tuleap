@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
+use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocWithContextStub;
 use Tuleap\Artidoc\Stubs\Document\SaveOneSectionStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -70,7 +70,7 @@ final class POSTSectionHandlerTest extends TestCase
         );
 
         $handler = new POSTSectionHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
@@ -112,7 +112,7 @@ final class POSTSectionHandlerTest extends TestCase
         );
 
         $handler = new POSTSectionHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
@@ -154,7 +154,7 @@ final class POSTSectionHandlerTest extends TestCase
         );
 
         $handler = new POSTSectionHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
@@ -216,7 +216,7 @@ final class POSTSectionHandlerTest extends TestCase
         );
 
         $handler = new POSTSectionHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
@@ -240,7 +240,7 @@ final class POSTSectionHandlerTest extends TestCase
         $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
         $handler = new POSTSectionHandler(
-            RetrieveArtidocStub::withoutDocument(),
+            RetrieveArtidocWithContextStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
             $saver,
             $this->identifier_factory,
@@ -264,7 +264,7 @@ final class POSTSectionHandlerTest extends TestCase
         $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
         $handler = new POSTSectionHandler(
-            RetrieveArtidocStub::withDocumentUserCanRead(
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),

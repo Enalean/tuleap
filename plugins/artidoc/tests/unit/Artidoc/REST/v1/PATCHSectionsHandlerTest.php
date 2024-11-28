@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
-use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
+use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocWithContextStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Order\ReorderSectionsStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
@@ -61,7 +61,7 @@ final class PATCHSectionsHandlerTest extends TestCase
         $reorder = ReorderSectionsStub::withSuccessfulReorder();
 
         $handler = new PATCHSectionsHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite($this->document),
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
@@ -85,7 +85,7 @@ final class PATCHSectionsHandlerTest extends TestCase
         $reorder = ReorderSectionsStub::withFailedReorder();
 
         $handler = new PATCHSectionsHandler(
-            RetrieveArtidocStub::withDocumentUserCanWrite($this->document),
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
@@ -109,7 +109,7 @@ final class PATCHSectionsHandlerTest extends TestCase
         $reorder = ReorderSectionsStub::shouldNotBeCalled();
 
         $handler = new PATCHSectionsHandler(
-            RetrieveArtidocStub::withoutDocument(),
+            RetrieveArtidocWithContextStub::withoutDocument(),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
@@ -133,7 +133,7 @@ final class PATCHSectionsHandlerTest extends TestCase
         $reorder = ReorderSectionsStub::shouldNotBeCalled();
 
         $handler = new PATCHSectionsHandler(
-            RetrieveArtidocStub::withDocumentUserCanRead($this->document),
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead($this->document),
             new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );

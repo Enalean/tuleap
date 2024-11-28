@@ -34,7 +34,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\ProjectByIDFactory;
 
-final class ArtidocRetriever implements RetrieveArtidoc
+final class ArtidocWithContextRetriever implements RetrieveArtidocWithContext
 {
     private const USER_CAN_READ  = 'user-can-read';
     private const USER_CAN_WRITE = 'user-can-write';

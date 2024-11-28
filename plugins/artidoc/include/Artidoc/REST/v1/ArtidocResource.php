@@ -31,7 +31,7 @@ use ProjectManager;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
@@ -447,7 +447,7 @@ final class ArtidocResource extends AuthenticatedResource
         }
 
         $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),
@@ -471,7 +471,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
-        $retriever          = new ArtidocRetriever(
+        $retriever          = new ArtidocWithContextRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),
@@ -500,7 +500,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
-        $retriever          = new ArtidocRetriever(
+        $retriever          = new ArtidocWithContextRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),
@@ -529,7 +529,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
-        $retriever          = new ArtidocRetriever(
+        $retriever          = new ArtidocWithContextRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),
@@ -554,7 +554,7 @@ final class ArtidocResource extends AuthenticatedResource
         }
 
         $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             \ProjectManager::instance(),
             $dao,
             new Docman_ItemFactory(),

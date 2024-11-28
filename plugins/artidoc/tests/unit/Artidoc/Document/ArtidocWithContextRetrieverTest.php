@@ -34,7 +34,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
-final class ArtidocRetrieverTest extends TestCase
+final class ArtidocWithContextRetrieverTest extends TestCase
 {
     private const PROJECT_ID = 101;
     private const ITEM_ID    = 12;
@@ -57,7 +57,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenIdIsNotFound(): void
     {
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withoutResults(),
             GetItemFromRowStub::withVoid(),
@@ -70,7 +70,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenItemIsVoid(): void
     {
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults(['group_id' => self::PROJECT_ID]),
             GetItemFromRowStub::withVoid(),
@@ -83,7 +83,7 @@ final class ArtidocRetrieverTest extends TestCase
 
     public function testFaultWhenItemIsNull(): void
     {
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults(['group_id' => self::PROJECT_ID]),
             GetItemFromRowStub::withNull(),
@@ -98,7 +98,7 @@ final class ArtidocRetrieverTest extends TestCase
     {
         $row = ['group_id' => self::PROJECT_ID];
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new \Docman_File($row)),
@@ -116,7 +116,7 @@ final class ArtidocRetrieverTest extends TestCase
         $this->permissions_manager->method('userCanRead')->willReturn(false);
         $this->permissions_manager->method('userCanWrite')->willReturn(false);
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWithoutProject(),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
@@ -134,7 +134,7 @@ final class ArtidocRetrieverTest extends TestCase
         $this->permissions_manager->method('userCanRead')->willReturn(true);
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWithoutProject(),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
@@ -152,7 +152,7 @@ final class ArtidocRetrieverTest extends TestCase
         $this->permissions_manager->method('userCanRead')->willReturn(true);
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
@@ -173,7 +173,7 @@ final class ArtidocRetrieverTest extends TestCase
             ->withoutServices()
             ->build();
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith($project),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
@@ -199,7 +199,7 @@ final class ArtidocRetrieverTest extends TestCase
             )
             ->build();
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith($project),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem(new ArtidocDocument($row)),
@@ -230,7 +230,7 @@ final class ArtidocRetrieverTest extends TestCase
 
         $item = new ArtidocDocument($row);
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith($project),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem($item),
@@ -264,7 +264,7 @@ final class ArtidocRetrieverTest extends TestCase
 
         $item = new ArtidocDocument($row);
 
-        $retriever = new ArtidocRetriever(
+        $retriever = new ArtidocWithContextRetriever(
             ProjectByIDFactoryStub::buildWith($project),
             SearchArtidocDocumentStub::withResults($row),
             GetItemFromRowStub::withItem($item),
