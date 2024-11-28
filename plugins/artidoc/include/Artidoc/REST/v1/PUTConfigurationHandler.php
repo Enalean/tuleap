@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SaveConfiguredTracker;
 use Tuleap\Artidoc\Document\Tracker\CheckTrackerIsSuitableForDocument;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
@@ -36,7 +36,7 @@ use Tuleap\Tracker\RetrieveTracker;
 final readonly class PUTConfigurationHandler
 {
     public function __construct(
-        private RetrieveArtidoc $retrieve_artidoc,
+        private RetrieveArtidocWithContext $retrieve_artidoc,
         private SaveConfiguredTracker $save_configured_tracker,
         private RetrieveTracker $retrieve_tracker,
         private CheckTrackerIsSuitableForDocument $suitable_tracker_for_document_checker,

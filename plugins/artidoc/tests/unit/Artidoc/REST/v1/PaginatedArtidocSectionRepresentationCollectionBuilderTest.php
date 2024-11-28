@@ -26,7 +26,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
+use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocWithContextStub;
 use Tuleap\Artidoc\Stubs\Document\SearchPaginatedRawSectionsStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
@@ -99,7 +99,7 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
         );
 
         $builder = new PaginatedArtidocSectionRepresentationCollectionBuilder(
-            RetrieveArtidocStub::withDocumentUserCanRead(
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 123]),
                 )
@@ -127,7 +127,7 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
     public function testFaultWhenArtidocDocumentCannotBeRetrieved(): void
     {
         $builder = new PaginatedArtidocSectionRepresentationCollectionBuilder(
-            RetrieveArtidocStub::withoutDocument(),
+            RetrieveArtidocWithContextStub::withoutDocument(),
             SearchPaginatedRawSectionsStub::shouldNotBeCalled(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
         );
@@ -139,7 +139,7 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
     public function testFaultWhenPaginatedSectionsCannotBeTransformedIntoRepresentation(): void
     {
         $builder = new PaginatedArtidocSectionRepresentationCollectionBuilder(
-            RetrieveArtidocStub::withDocumentUserCanRead(
+            RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 123]),
                 )

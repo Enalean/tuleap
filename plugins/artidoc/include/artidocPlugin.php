@@ -25,7 +25,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFact
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
@@ -119,7 +119,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         return new ArtidocController(
-            new ArtidocRetriever(
+            new ArtidocWithContextRetriever(
                 ProjectManager::instance(),
                 $dao,
                 $docman_item_factory,

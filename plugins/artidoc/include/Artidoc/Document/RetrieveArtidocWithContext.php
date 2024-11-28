@@ -25,7 +25,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-interface RetrieveArtidoc
+interface RetrieveArtidocWithContext
 {
     /**
      * @return Ok<ArtidocWithContext>|Err<Fault>

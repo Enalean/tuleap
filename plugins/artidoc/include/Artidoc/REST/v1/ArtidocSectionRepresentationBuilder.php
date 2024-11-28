@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
@@ -35,7 +35,7 @@ final class ArtidocSectionRepresentationBuilder
 {
     public function __construct(
         private SearchOneSection $dao,
-        private RetrieveArtidoc $retrieve_artidoc,
+        private RetrieveArtidocWithContext $retrieve_artidoc,
         private TransformRawSectionsToRepresentation $transformer,
     ) {
     }

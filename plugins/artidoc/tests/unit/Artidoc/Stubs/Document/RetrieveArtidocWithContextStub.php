@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Document;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final readonly class RetrieveArtidocStub implements RetrieveArtidoc
+final readonly class RetrieveArtidocWithContextStub implements RetrieveArtidocWithContext
 {
     /**
      * @param Ok<ArtidocWithContext>|Err<Fault>|null $result

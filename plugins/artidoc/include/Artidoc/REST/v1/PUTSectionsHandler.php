@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SaveSections;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\NeverThrow\Err;
@@ -35,7 +35,7 @@ use Tuleap\NeverThrow\Result;
 final readonly class PUTSectionsHandler
 {
     public function __construct(
-        private RetrieveArtidoc $retrieve_artidoc,
+        private RetrieveArtidocWithContext $retrieve_artidoc,
         private TransformRawSectionsToRepresentation $transformer,
         private SaveSections $dao,
         private SectionIdentifierFactory $identifier_factory,
