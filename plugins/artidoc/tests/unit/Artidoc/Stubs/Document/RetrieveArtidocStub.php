@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\NeverThrow\Err;
@@ -33,18 +33,18 @@ use Tuleap\NeverThrow\Result;
 final readonly class RetrieveArtidocStub implements RetrieveArtidoc
 {
     /**
-     * @param Ok<ArtidocDocumentInformation>|Err<Fault>|null $result
+     * @param Ok<ArtidocWithContext>|Err<Fault>|null $result
      */
     private function __construct(private Ok|Err|null $result, private bool $can_write)
     {
     }
 
-    public static function withDocumentUserCanRead(ArtidocDocumentInformation $document): self
+    public static function withDocumentUserCanRead(ArtidocWithContext $document): self
     {
         return new self(Result::ok($document), false);
     }
 
-    public static function withDocumentUserCanWrite(ArtidocDocumentInformation $document): self
+    public static function withDocumentUserCanWrite(ArtidocWithContext $document): self
     {
         return new self(Result::ok($document), true);
     }

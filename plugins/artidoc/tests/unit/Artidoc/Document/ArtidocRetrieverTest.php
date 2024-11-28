@@ -240,7 +240,7 @@ final class ArtidocRetrieverTest extends TestCase
         $result = $retriever->retrieveArtidocUserCanRead(123, $this->user);
         self::assertTrue(Result::isOk($result));
         self::assertSame($item, $result->value->document);
-        self::assertSame($service_docman, $result->value->not_yet_hexagonal_service_docman);
+        self::assertSame($service_docman, $result->value->getContext(ServiceDocman::class));
     }
 
     public function testHappyPathWrite(): void
@@ -274,6 +274,6 @@ final class ArtidocRetrieverTest extends TestCase
         $result = $retriever->retrieveArtidocUserCanWrite(123, $this->user);
         self::assertTrue(Result::isOk($result));
         self::assertSame($item, $result->value->document);
-        self::assertSame($service_docman, $result->value->not_yet_hexagonal_service_docman);
+        self::assertSame($service_docman, $result->value->getContext(ServiceDocman::class));
     }
 }

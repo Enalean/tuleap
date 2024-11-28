@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\Document;
 
 use Project_NotFoundException;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
-use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\Docman\Item\GetItemFromRow;
 use Tuleap\Docman\ServiceDocman;
@@ -88,6 +88,10 @@ final class ArtidocRetriever implements RetrieveArtidoc
 
         return $this->service_from_allowed_project_retriever
             ->getDocumentServiceFromAllowedProject($project)
-            ->map(static fn(ServiceDocman $service) => new ArtidocDocumentInformation($item, $service, DocumentServiceDocmanProxy::build($service)));
+            ->map(
+                static fn(ServiceDocman $service) =>
+                    (new ArtidocWithContext($item))
+                        ->withContext(ServiceDocman::class, $service)
+            );
     }
 }

@@ -26,13 +26,14 @@ use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Docman\ServiceDocman;
 use Tuleap\Document\RecentlyVisited\RecordVisit;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
 use Tuleap\Layout\BaseLayout;
@@ -75,7 +76,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
 
         $this->retrieve_artidoc->retrieveArtidocUserCanRead((int) $variables['id'], $request->getCurrentUser())
             ->match(
-                fn (ArtidocDocumentInformation $document_information) => $this->renderPage($document_information, $layout, $request->getCurrentUser()),
+                fn (ArtidocWithContext $document_information) => $this->renderPage($document_information, $layout, $request->getCurrentUser()),
                 function (Fault $fault) {
                     Fault::writeToLogger($fault, $this->logger);
                     throw new NotFoundException();
@@ -83,7 +84,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             );
     }
 
-    private function renderPage(ArtidocDocumentInformation $document_information, BaseLayout $layout, \PFUser $user): void
+    private function renderPage(ArtidocWithContext $document_information, BaseLayout $layout, \PFUser $user): void
     {
         $layout->addJavascriptAsset(
             new JavascriptViteAsset(
@@ -99,11 +100,13 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             $this->recently_visited_dao->save((int) $user->getId(), $document_information->document->getId(), \Tuleap\Request\RequestTime::getTimestamp());
         }
 
-        $title            = $document_information->document->getTitle();
-        $service          = $document_information->not_yet_hexagonal_service_docman;
-        $document_service = $document_information->document_service;
+        $title   = $document_information->document->getTitle();
+        $service = $document_information->getContext(ServiceDocman::class);
+        if (! $service instanceof ServiceDocman) {
+            throw new \LogicException('Service is missing');
+        }
 
-        $permissions_manager = \Docman_PermissionsManager::instance($document_service->getProjectIdentifier());
+        $permissions_manager = \Docman_PermissionsManager::instance((int) $service->getProject()->getId());
         $user_can_write      = $permissions_manager->userCanWrite($user, $document_information->document->getId());
 
         $allowed_max_size = \ForgeConfig::getInt('sys_max_size_upload');
@@ -113,7 +116,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             $this->breadcrumbs_provider->getBreadcrumbs($document_information, $user),
             [],
             HeaderConfigurationBuilder::get($title)
-                ->inProject($service->project, \DocmanPlugin::SERVICE_SHORTNAME)
+                ->inProject($service->getProject(), \DocmanPlugin::SERVICE_SHORTNAME)
                 ->withBodyClass(['has-sidebar-with-pinned-header', 'reduce-help-button'])
                 ->build()
         );

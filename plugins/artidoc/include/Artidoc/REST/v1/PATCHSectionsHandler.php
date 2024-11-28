@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
@@ -47,7 +47,7 @@ final readonly class PATCHSectionsHandler
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id, $user)
-            ->andThen(fn (ArtidocDocumentInformation $document_information) => $this->reorder($id, $order));
+            ->andThen(fn (ArtidocWithContext $document_information) => $this->reorder($id, $order));
     }
 
     private function reorder(int $id, OrderRepresentation $order): Ok|Err

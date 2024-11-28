@@ -20,6 +20,7 @@
 
 namespace Tuleap\Artidoc\Document;
 
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -27,12 +28,12 @@ use Tuleap\NeverThrow\Ok;
 interface RetrieveArtidoc
 {
     /**
-     * @return Ok<ArtidocDocumentInformation>|Err<Fault>
+     * @return Ok<ArtidocWithContext>|Err<Fault>
      */
     public function retrieveArtidocUserCanRead(int $id, \PFUser $user): Ok|Err;
 
     /**
-     * @return Ok<ArtidocDocumentInformation>|Err<Fault>
+     * @return Ok<ArtidocWithContext>|Err<Fault>
      */
     public function retrieveArtidocUserCanWrite(int $id, \PFUser $user): Ok|Err;
 }

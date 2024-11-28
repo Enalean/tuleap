@@ -25,14 +25,12 @@ namespace Tuleap\Artidoc\REST\v1;
 use PFUser;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
-use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveOneSectionStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -71,13 +69,10 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new POSTSectionHandler(
+        $handler = new POSTSectionHandler(
             RetrieveArtidocStub::withDocumentUserCanWrite(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $service_docman,
-                    DocumentServiceDocmanProxy::build($service_docman),
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -116,13 +111,10 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new POSTSectionHandler(
+        $handler = new POSTSectionHandler(
             RetrieveArtidocStub::withDocumentUserCanWrite(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $service_docman,
-                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -161,13 +153,10 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new POSTSectionHandler(
+        $handler = new POSTSectionHandler(
             RetrieveArtidocStub::withDocumentUserCanWrite(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $service_docman,
-                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -226,13 +215,10 @@ final class POSTSectionHandlerTest extends TestCase
             null,
         );
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new POSTSectionHandler(
+        $handler = new POSTSectionHandler(
             RetrieveArtidocStub::withDocumentUserCanWrite(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $service_docman,
-                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection(
@@ -277,13 +263,10 @@ final class POSTSectionHandlerTest extends TestCase
     {
         $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new POSTSectionHandler(
+        $handler = new POSTSectionHandler(
             RetrieveArtidocStub::withDocumentUserCanRead(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $service_docman,
-                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),

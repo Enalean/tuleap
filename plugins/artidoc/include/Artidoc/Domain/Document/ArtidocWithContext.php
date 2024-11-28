@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,34 +16,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Adapter\Service;
+namespace Tuleap\Artidoc\Domain\Document;
 
-use Tuleap\Artidoc\Domain\Service\DocumentService;
-use Tuleap\Docman\ServiceDocman;
-
-final class DocumentServiceDocmanProxy implements DocumentService
+/**
+ * @psalm-immutable
+ */
+final class ArtidocWithContext
 {
-    private function __construct(private ServiceDocman $service_docman)
-    {
+    /** @var array<string, mixed> */
+    private array $contexts;
+
+    public function __construct(
+        public readonly Artidoc $document,
+    ) {
+        $this->contexts = [];
     }
 
-    public static function build(ServiceDocman $service_docman): self
+    public function withContext(string $name, mixed $value): self
     {
-        return new self($service_docman);
+        $new = clone $this;
+
+        $new->contexts[$name] = $value;
+
+        return $new;
     }
 
-    public function getUrl(): string
+    public function getContext(string $name): mixed
     {
-        return $this->service_docman->getUrl();
-    }
-
-    public function getProjectIdentifier(): int
-    {
-        return (int) $this->service_docman->getProject()->getID();
+        return $this->contexts[$name] ?? null;
     }
 }

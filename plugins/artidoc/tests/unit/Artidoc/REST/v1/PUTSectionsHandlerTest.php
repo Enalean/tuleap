@@ -24,13 +24,11 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
-use Tuleap\Artidoc\Adapter\Service\DocumentServiceDocmanProxy;
-use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveSectionsStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -52,13 +50,10 @@ final class PUTSectionsHandlerTest extends TestCase
 
         $dummy_collection = new PaginatedArtidocSectionRepresentationCollection([], 0);
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new PUTSectionsHandler(
+        $handler = new PUTSectionsHandler(
             RetrieveArtidocStub::withDocumentUserCanWrite(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
-                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withCollection($dummy_collection),
@@ -116,13 +111,10 @@ final class PUTSectionsHandlerTest extends TestCase
     {
         $saver = SaveSectionsStub::build();
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new PUTSectionsHandler(
+        $handler = new PUTSectionsHandler(
             RetrieveArtidocStub::withDocumentUserCanWrite(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
-                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::withoutCollection(),
@@ -151,13 +143,10 @@ final class PUTSectionsHandlerTest extends TestCase
     {
         $saver = SaveSectionsStub::build();
 
-        $service_docman = $this->createMock(ServiceDocman::class);
-        $handler        = new PUTSectionsHandler(
+        $handler = new PUTSectionsHandler(
             RetrieveArtidocStub::withDocumentUserCanRead(
-                new ArtidocDocumentInformation(
+                new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
-                    DocumentServiceDocmanProxy::build($service_docman)
                 ),
             ),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
