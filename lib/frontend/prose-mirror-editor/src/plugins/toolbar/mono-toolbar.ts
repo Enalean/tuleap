@@ -92,8 +92,6 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
         view(): PluginView {
             return {
                 update: (view: EditorView): void => {
-                    view.focus();
-
                     const schema = view.state.schema;
                     const toolbar_activator = getToolbarActivator(view.state);
 
@@ -102,30 +100,39 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                     toolbar_bus.setCurrentHandler({
                         toggleBold(): void {
                             MarkToggle().toggleMark(view, schema.marks.strong);
+                            view.focus();
                         },
                         toggleItalic(): void {
                             MarkToggle().toggleMark(view, schema.marks.em);
+                            view.focus();
                         },
                         toggleCode(): void {
                             MarkToggle().toggleMark(view, schema.marks.code);
+                            view.focus();
                         },
                         toggleQuote(): void {
                             getQuoteCommand()(view.state, view.dispatch);
+                            view.focus();
                         },
                         toggleSubscript(): void {
                             MarkToggle().toggleMark(view, schema.marks.subscript);
+                            view.focus();
                         },
                         toggleSuperScript(): void {
                             MarkToggle().toggleMark(view, schema.marks.superscript);
+                            view.focus();
                         },
                         applyLink(link): void {
                             replaceLinkNode(view, link);
+                            view.focus();
                         },
                         applyUnlink(): void {
                             removeSelectedLinks(view.state, view.dispatch);
+                            view.focus();
                         },
                         applyImage(image): void {
                             ImageNodeInserter(view.state, view.dispatch).insertImage(image);
+                            view.focus();
                         },
                         toggleOrderedList(): void {
                             ListNodeInserter(
@@ -135,6 +142,7 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                                 liftListItem(schema.nodes.list_item),
                                 wrapInList(schema.nodes.ordered_list),
                             ).insertList();
+                            view.focus();
                         },
                         toggleBulletList(): void {
                             ListNodeInserter(
@@ -144,18 +152,22 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                                 liftListItem(schema.nodes.list_item),
                                 wrapInList(schema.nodes.bullet_list),
                             ).insertList();
+                            view.focus();
                         },
                         toggleHeading(heading): void {
                             getHeadingCommand(heading.level)(view.state, view.dispatch);
+                            view.focus();
                         },
                         togglePlainText(): void {
                             getPlainTextCommand(schema.nodes.paragraph)(view.state, view.dispatch);
+                            view.focus();
                         },
                         togglePreformattedText(): void {
                             getFormattedTextCommand(schema.nodes.code_block)(
                                 view.state,
                                 view.dispatch,
                             );
+                            view.focus();
                         },
                     });
                 },
