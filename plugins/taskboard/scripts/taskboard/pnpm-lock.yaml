@@ -32,6 +32,9 @@ dependencies:
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-swatch-colors
+  '@tuleap/vue2-dompurify-html':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/vue2-dompurify-html
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-gettext-init
@@ -50,9 +53,6 @@ dependencies:
   vue:
     specifier: ^2.7.8
     version: 2.7.8
-  vue-dompurify-html:
-    specifier: ^4.0.0
-    version: 4.0.0(vue@2.7.8)
   vuex:
     specifier: ^3.6.2
     version: 3.6.2(vue@2.7.8)
@@ -422,33 +422,6 @@ packages:
     dependencies:
       vue: 2.7.8
     dev: true
-
-  /vue-demi@0.13.11(vue@2.7.8):
-    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
-    engines: {node: '>=12'}
-    hasBin: true
-    requiresBuild: true
-    peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-    dependencies:
-      vue: 2.7.8
-    dev: false
-
-  /vue-dompurify-html@4.0.0(vue@2.7.8):
-    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
-    peerDependencies:
-      vue: ^2.7.0 || ^3.0.0
-    dependencies:
-      dompurify: 3.1.4
-      vue: 2.7.8
-      vue-demi: 0.13.11(vue@2.7.8)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-    dev: false
 
   /vue-property-decorator@9.1.2(vue-class-component@7.2.6)(vue@2.7.8):
     resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}

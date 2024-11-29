@@ -20,7 +20,7 @@
 
 import Vue from "vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import router from "./router/index";
 import App from "./components/App.vue";
 import store from "./store/index";

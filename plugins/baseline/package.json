@@ -14,6 +14,7 @@
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
+    "@tuleap/vue2-dompurify-html": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:^",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "moment": "^2.29.4",
@@ -21,7 +22,6 @@
     "node-htmldiff": "^0.9.3",
     "sprintf-js": "^1.1.2",
     "vue": "^2.7.8",
-    "vue-dompurify-html": "^4.0.0",
     "vue-router": "^3.5.3",
     "vuex": "^3.6.2",
     "vuex-composition-helpers": "^1.2.0"
