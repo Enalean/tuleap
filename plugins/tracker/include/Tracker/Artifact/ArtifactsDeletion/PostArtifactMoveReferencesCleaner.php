@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
@@ -34,21 +33,19 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 class PostArtifactMoveReferencesCleaner
 {
     public function __construct(
-        private readonly CrossReferenceManager $cross_reference_manager,
         private readonly RetrieveReverseLinks $reverse_links_retriever,
         private readonly ArtifactLinker $artifact_linker,
         private readonly RetrieveArtifact $artifact_factory,
+        private readonly PostArtifactMoveReferenceManager $reference_move_manager,
     ) {
     }
 
     public function cleanReferencesAfterArtifactMove(Artifact $artifact, DeletionContext $context, \PFUser $user): void
     {
-        $this->cross_reference_manager->deleteReferencesWhenArtifactIsSource(
-            $artifact
-        );
+        $this->reference_move_manager->deleteReferencesWhenArtifactIsSource($artifact);
 
         if ($context->getSourceProjectId() !== $context->getDestinationProjectId()) {
-            $this->cross_reference_manager->updateReferencesWhenArtifactIsInTarget($artifact, $context);
+            $this->reference_move_manager->updateReferencesWhenArtifactIsInTarget($artifact, $context);
 
             $reverse_link_collection = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $user);
             foreach ($reverse_link_collection->links as $reverse_link) {
