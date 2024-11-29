@@ -27,5 +27,6 @@ Tuleap internals
 * [Redis](./back-end/redis.md)
 * [Config](./back-end/config.md)
 * [Flowcharts](./back-end/flowcharts.md)
+* [Cross-Tracker Search](./back-end/cross-tracker-search.md)
 
 * ["Life of a request in Tuleap" slides with some architecture diagrams](../slides/life-tuleap-request/)
