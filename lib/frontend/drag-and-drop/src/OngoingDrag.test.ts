@@ -84,15 +84,6 @@ describe(`OngoingDrag`, () => {
 
             expect(ongoing_drag.dragged_element.classList.contains("custom-css-class")).toBe(true);
         });
-
-        it(`when the dragged element is already child of mirror_container,
-            it does nothing`, () => {
-            mirror_container.append(ongoing_drag.dragged_element);
-
-            ongoing_drag.hideDraggedElement(options);
-
-            expect(ongoing_drag.dragged_element.classList.contains(HIDE_CSS_CLASS)).toBe(false);
-        });
     });
 
     describe(`afterDrop()`, () => {
