@@ -23,6 +23,7 @@
         aria-labelledby="fetch-gitlab-repository-modal-title"
         id="fetch-gitlab-repositories-modal"
         class="tlp-modal fetch-gitlab-repositories-modal"
+        ref="modal_element"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
@@ -43,90 +44,101 @@
             v-on:on-close-modal="onCloseModal"
             ref="credentialsForm"
             v-bind:gitlab_api_token="gitlab_api_token"
-            v-bind:server_url="server_url"
+            v-bind:server_url="gitlab_server_url"
         />
         <list-repositories-modal
             v-else
             v-bind:repositories="gitlab_projects"
             v-bind:gitlab_api_token="gitlab_api_token"
-            v-bind:server_url="server_url"
+            v-bind:server_url="gitlab_server_url"
             v-on:to-back-button="clickBackButton"
             v-on:on-success-close-modal="onSuccessCloseModal"
-            ref="listRepositoriesModal"
+            ref="listRepositories"
         />
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useMutations, useNamespacedMutations } from "vuex-composition-helpers";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import ListRepositoriesModal from "./ListRepositoriesModal.vue";
-import CredentialsFormModal from "./CredentialsFormModal.vue";
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { GitLabCredentialsWithProjects, GitlabProject } from "../../../type";
+import CredentialsFormModal from "./CredentialsFormModal.vue";
+import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 
-@Component({ components: { CredentialsFormModal, ListRepositoriesModal } })
-export default class GitlabRepositoryModal extends Vue {
-    gitlab_projects: null | GitlabProject[] = null;
-    back_button_clicked = false;
-    private modal: null | Modal = null;
-    gitlab_api_token = "";
-    server_url = "";
+const { setAddGitlabRepositoryModal } = useNamespacedMutations("gitlab", [
+    "setAddGitlabRepositoryModal",
+]);
+const { setSuccessMessage } = useMutations(["setSuccessMessage"]);
 
-    get close_label(): string {
-        return this.$gettext("Close");
+const gettext_provider = useGettext();
+
+const gitlab_projects = ref<null | GitlabProject[]>(null);
+const back_button_clicked = ref(false);
+const modal = ref<null | Modal>(null);
+const gitlab_api_token = ref("");
+const gitlab_server_url = ref("");
+const modal_element = ref();
+
+const credentialsForm = ref<null | InstanceType<typeof CredentialsFormModal>>(null);
+const listRepositories = ref<null | InstanceType<typeof ListRepositoriesModal>>(null);
+
+const close_label = computed((): string => gettext_provider.$gettext("Close"));
+
+onMounted(() => {
+    modal.value = createModal(modal_element.value);
+    modal.value.addEventListener("tlp-modal-hidden", reset);
+    setAddGitlabRepositoryModal(modal.value);
+});
+
+const clickBackButton = (): void => {
+    back_button_clicked.value = true;
+    gitlab_projects.value = null;
+};
+
+const onGetGitlabRepositories = ({
+    projects,
+    token,
+    server_url,
+}: GitLabCredentialsWithProjects): void => {
+    back_button_clicked.value = false;
+    gitlab_projects.value = projects;
+    gitlab_api_token.value = token;
+    gitlab_server_url.value = server_url;
+};
+
+const onCloseModal = (): void => {
+    reset();
+    if (modal.value) {
+        modal.value.hide();
+    }
+};
+
+const onSuccessCloseModal = ({ repository }: { repository: GitlabProject }): void => {
+    onCloseModal();
+    const success_message = gettext_provider.interpolate(
+        gettext_provider.$gettext("GitLab repository %{ label } has been successfully integrated!"),
+        {
+            label: repository.path_with_namespace,
+        },
+    );
+    setSuccessMessage(success_message);
+};
+
+function reset(): void {
+    if (credentialsForm.value) {
+        credentialsForm.value.reset();
     }
 
-    mounted(): void {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("gitlab/setAddGitlabRepositoryModal", this.modal);
+    if (listRepositories.value) {
+        listRepositories.value.reset();
     }
 
-    clickBackButton(): void {
-        this.back_button_clicked = true;
-        this.gitlab_projects = null;
-    }
-
-    onGetGitlabRepositories({ projects, token, server_url }: GitLabCredentialsWithProjects): void {
-        this.back_button_clicked = false;
-        this.gitlab_projects = projects;
-        this.gitlab_api_token = token;
-        this.server_url = server_url;
-    }
-
-    onCloseModal(): void {
-        this.reset();
-        if (this.modal) {
-            this.modal.hide();
-        }
-    }
-
-    onSuccessCloseModal({ repository }: { repository: GitlabProject }): void {
-        this.onCloseModal();
-        const success_message = this.$gettextInterpolate(
-            this.$gettext("GitLab repository %{ label } has been successfully integrated!"),
-            {
-                label: repository.path_with_namespace,
-            },
-        );
-        this.$store.commit("setSuccessMessage", success_message);
-    }
-
-    reset(): void {
-        const credentialsForm = this.$refs.credentialsForm;
-        if (credentialsForm instanceof CredentialsFormModal) {
-            credentialsForm.reset();
-        }
-        const listRepositoriesModal = this.$refs.listRepositoriesModal;
-        if (listRepositoriesModal instanceof ListRepositoriesModal) {
-            listRepositoriesModal.reset();
-        }
-        this.gitlab_projects = null;
-        this.back_button_clicked = false;
-        this.gitlab_api_token = "";
-        this.server_url = "";
-    }
+    gitlab_projects.value = null;
+    back_button_clicked.value = false;
+    gitlab_api_token.value = "";
+    gitlab_server_url.value = "";
 }
 </script>

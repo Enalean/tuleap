@@ -25,6 +25,16 @@ import GitlabRepositoryModal from "./GitlabRepositoryModal.vue";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
+import type Vue from "vue";
+
+type GitlabRepositoryModalExposed = {
+    credentialsForm: InstanceType<typeof CredentialsFormModal>;
+    listRepositories: InstanceType<typeof ListRepositoriesModal>;
+};
+
+const noop = (): void => {
+    // Do nothing
+};
 
 describe("GitlabRepositoryModal", () => {
     let store_options = {},
@@ -34,15 +44,16 @@ describe("GitlabRepositoryModal", () => {
         store_options = {
             state: {},
             getters: {},
+            mutations: { setSuccessMessage: noop },
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<GitlabRepositoryModal>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue & GitlabRepositoryModalExposed>> {
         store = createStoreMock(store_options);
         return shallowMount(GitlabRepositoryModal, {
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & GitlabRepositoryModalExposed>;
     }
 
     it("When a user displays the modal ,then the CredentialsFormModal is displayed", async () => {
@@ -126,6 +137,9 @@ describe("GitlabRepositoryModal", () => {
             ],
             back_button_clicked: false,
         });
+        wrapper.vm.listRepositories = { reset: noop } as unknown as InstanceType<
+            typeof ListRepositoriesModal
+        >;
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
@@ -140,7 +154,7 @@ describe("GitlabRepositoryModal", () => {
 
         const success_message =
             "GitLab repository my-path/my-project has been successfully integrated!";
-        expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
     });
 
     it("When CredentialsFormModal emits on-close-modal, Then form and list of repositories are reset", async () => {
@@ -151,18 +165,14 @@ describe("GitlabRepositoryModal", () => {
         });
 
         const reset_credentials_form = jest.fn();
-
-        wrapper.vm.$refs.credentialsForm = new CredentialsFormModal({
-            propsData: { gitlab_api_token: "", server_url: "" },
-            methods: { reset: reset_credentials_form },
-        });
+        wrapper.vm.credentialsForm = { reset: reset_credentials_form } as unknown as InstanceType<
+            typeof CredentialsFormModal
+        >;
 
         const reset_list_repositories_modal = jest.fn();
-
-        wrapper.vm.$refs.listRepositoriesModal = new ListRepositoriesModal({
-            propsData: { repositories: [], gitlab_api_token: "", server_url: "" },
-            methods: { reset: reset_list_repositories_modal },
-        });
+        wrapper.vm.listRepositories = {
+            reset: reset_list_repositories_modal,
+        } as unknown as InstanceType<typeof ListRepositoriesModal>;
 
         wrapper.findComponent(CredentialsFormModal).vm.$emit("on-close-modal");
         await wrapper.vm.$nextTick();
@@ -179,18 +189,14 @@ describe("GitlabRepositoryModal", () => {
         });
 
         const reset_credentials_form = jest.fn();
-
-        wrapper.vm.$refs.credentialsForm = new CredentialsFormModal({
-            propsData: { gitlab_api_token: "", server_url: "" },
-            methods: { reset: reset_credentials_form },
-        });
+        wrapper.vm.credentialsForm = { reset: reset_credentials_form } as unknown as InstanceType<
+            typeof CredentialsFormModal
+        >;
 
         const reset_list_repositories_modal = jest.fn();
-
-        wrapper.vm.$refs.listRepositoriesModal = new ListRepositoriesModal({
-            propsData: { repositories: [], gitlab_api_token: "", server_url: "" },
-            methods: { reset: reset_list_repositories_modal },
-        });
+        wrapper.vm.listRepositories = {
+            reset: reset_list_repositories_modal,
+        } as unknown as InstanceType<typeof ListRepositoriesModal>;
 
         wrapper.findComponent(CredentialsFormModal).vm.$emit("on-close-modal");
         await wrapper.vm.$nextTick();

@@ -24,6 +24,8 @@ import { shallowMount } from "@vue/test-utils";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
+type CredentialsFormModalExposed = { empty_message: string };
+
 describe("CredentialsFormModal", () => {
     let store_options = {},
         store: Store;
@@ -35,7 +37,7 @@ describe("CredentialsFormModal", () => {
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<CredentialsFormModal>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue & CredentialsFormModalExposed>> {
         store = createStoreMock(store_options, { gitlab: {} });
 
         return shallowMount(CredentialsFormModal, {
@@ -45,7 +47,7 @@ describe("CredentialsFormModal", () => {
             },
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & CredentialsFormModalExposed>;
     }
 
     it("When the user clicked on the button, Then the submit button is disabled and icon changed and api is called", async () => {
@@ -189,7 +191,7 @@ describe("CredentialsFormModal", () => {
 
     it("When api returns empty array, Then error message is displayed", async () => {
         const wrapper = await instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([]));
+        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve(null));
 
         await wrapper.setData({
             is_loading: false,
@@ -203,7 +205,7 @@ describe("CredentialsFormModal", () => {
             .find("[data-test=fetch-gitlab-repository-modal-form]")
             .trigger("submit.prevent");
 
-        expect(wrapper.vm.$data.empty_message).toBe(
+        expect(wrapper.vm.empty_message).toBe(
             "No repository is available with your GitLab account",
         );
     });
