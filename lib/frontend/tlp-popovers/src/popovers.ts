@@ -511,4 +511,9 @@ function showPopover(popover_content: HTMLElement, updatePositionOfContent: () =
     popover_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
     popover_content.dispatchEvent(new CustomEvent(EVENT_TLP_POPOVER_SHOWN));
     updatePositionOfContent();
+
+    const autofocused_input = popover_content.querySelector("input[autofocus]");
+    if (autofocused_input instanceof HTMLInputElement) {
+        autofocused_input.focus();
+    }
 }

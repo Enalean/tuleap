@@ -26,6 +26,7 @@ import { setupMonoToolbar } from "./mono-toolbar";
 import type { ToolbarBus } from "./helper/toolbar-bus";
 import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
 import type { Schema } from "prosemirror-model";
+import { OpenImageMenuCommandBuilder } from "./image/OpenImageMenuCommandBuilder";
 
 export { buildKeymap };
 export type { LinkState } from "./links/LinkState";
@@ -42,6 +43,7 @@ export function setupToolbar(schema: Schema, toolbar_bus: ToolbarBus): Plugin[] 
                 schema,
                 SingleListInSelectionDetector(schema.nodes.ordered_list),
                 SingleListInSelectionDetector(schema.nodes.bullet_list),
+                OpenImageMenuCommandBuilder(toolbar_bus),
                 NB_HEADING,
             ),
         ),

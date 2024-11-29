@@ -20,6 +20,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
+import { EVENT_TLP_POPOVER_HIDDEN } from "@tuleap/tlp-popovers";
+import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import { createLocalDocument } from "../../../helpers/helper-for-test";
 import type { PopoverHost } from "./connect-popover";
 import { connectPopover } from "./connect-popover";
@@ -38,6 +40,7 @@ describe("connect-popover", () => {
         return Object.assign(host_element, {
             button_element: doc.createElement("button"),
             popover_element: doc.createElement("div"),
+            toolbar_bus: buildToolbarBus(),
             render(): HTMLElement {
                 return host_element;
             },
@@ -60,23 +63,53 @@ describe("connect-popover", () => {
         });
         expect(host.popover_instance).toBe(popover_instance);
     });
+
     it("When the component is connected, then it should move its popover element to document.body", () => {
         const host = getHost();
         connectPopover(host, doc);
 
         expect(host.popover_element.parentElement).toBe(doc.body);
     });
-    it("When the component is disconnected, then it should destroy the popover instance, and put back its popover element inside itself", () => {
+
+    it("When the component is connected, then it make the popover element listen for EVENT_TLP_POPOVER_HIDDEN so it can give back the focus to the editor", () => {
+        const host = getHost();
+        const popover_instance = {
+            hide() {
+                host.popover_element.dispatchEvent(new CustomEvent(EVENT_TLP_POPOVER_HIDDEN));
+            },
+        } as Popover;
+
+        vi.spyOn(tlp_popovers, "createPopover").mockReturnValue(popover_instance);
+
+        const focusEditor = vi.spyOn(host.toolbar_bus, "focusEditor");
+        connectPopover(host, doc);
+
+        popover_instance.hide();
+
+        expect(focusEditor).toHaveBeenCalledOnce();
+    });
+
+    it(`When the component is disconnected, then it should:
+        - destroy the popover instance
+        - remove the EVENT_TLP_POPOVER_HIDDEN listener from the popover element
+        - move back the popover element inside itself`, () => {
         const host = getHost();
 
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({
             destroy: vi.fn(),
         } as unknown as Popover);
 
+        const removeEventListener = vi.spyOn(host.popover_element, "removeEventListener");
+
         const disconnect = connectPopover(host, doc);
 
         disconnect();
 
+        expect(removeEventListener).toHaveBeenCalledOnce();
+        expect(removeEventListener).toHaveBeenCalledWith(
+            EVENT_TLP_POPOVER_HIDDEN,
+            expect.any(Function),
+        );
         expect(host.popover_instance.destroy).toHaveBeenCalledOnce();
         expect(host.popover_element.parentElement).toBe(host);
     });

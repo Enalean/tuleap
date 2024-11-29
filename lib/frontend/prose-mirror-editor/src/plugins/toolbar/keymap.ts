@@ -20,16 +20,18 @@
 import { chainCommands, exitCode, lift, toggleMark, wrapIn } from "prosemirror-commands";
 import type { Command } from "prosemirror-state";
 import { TextSelection } from "prosemirror-state";
+import type { Schema } from "prosemirror-model";
 import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
 import { getHeadingCommand } from "./text-style/transform-text";
 import type { DetectSingleListInSelection } from "./list/SingleListInSelectionDetector";
-import type { Schema } from "prosemirror-model";
+import type { BuildOpenImageMenuCommand } from "./image/OpenImageMenuCommandBuilder";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
 export function buildKeymap(
     schema: Schema,
     detect_ordered_list: DetectSingleListInSelection,
     detect_bullet_list: DetectSingleListInSelection,
+    open_image_command: BuildOpenImageMenuCommand,
     nb_heading: number,
     map_keys?: { [key: string]: false | string },
 ): ProseMirrorKeyMap {
@@ -59,6 +61,7 @@ export function buildKeymap(
 
     bind("Mod-,", toggleMark(schema.marks.subscript));
     bind("Mod-.", toggleMark(schema.marks.superscript));
+    bind("Mod-k", open_image_command.build());
 
     const listCommand = chainCommands(exitCode, (state, dispatch) => {
         const node_type = schema.nodes.bullet_list;

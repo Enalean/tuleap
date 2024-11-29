@@ -136,6 +136,7 @@ export const getToolbarDemoBus = (): ToolbarBus => {
         toggleHeading: noop,
         togglePlainText: noop,
         togglePreformattedText: noop,
+        focus: noop,
     });
 
     return toolbar_bus;

@@ -20,7 +20,7 @@
 
 import type { LinkState } from "../links/LinkState";
 import type { ImageState } from "../image/ImageState";
-import type { ImageProperties, LinkProperties } from "../../../types/internal-types";
+import type { ImageProperties, LinkProperties } from "../../../types";
 import type { ListState } from "../list/ListState";
 import type { Heading } from "../text-style/Heading";
 
@@ -39,6 +39,7 @@ export interface ToolbarHandler {
     applyImage: (image: ImageProperties) => void;
     toggleOrderedList: () => void;
     toggleBulletList: () => void;
+    focus: () => void;
 }
 
 export interface ToolbarView {
@@ -57,6 +58,7 @@ export interface ToolbarView {
     activatePlainText: (is_activated: boolean) => void;
     activatePreformattedText: (is_activated: boolean) => void;
     toggleToolbarState: (is_enabled: boolean) => void;
+    toggleToolbarMenu: (menu: string) => void;
 }
 
 export interface ToolbarBus {
@@ -80,6 +82,8 @@ export interface ToolbarBus {
     setView: (view: Partial<ToolbarView>) => void;
     disableToolbar: () => void;
     enableToolbar: () => void;
+    toggleMenu: (menu: string) => void;
+    focusEditor: () => void;
 }
 
 const noop = (): void => {
@@ -101,6 +105,7 @@ const default_view: ToolbarView = {
     activatePlainText: noop,
     activatePreformattedText: noop,
     toggleToolbarState: noop,
+    toggleToolbarMenu: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -163,5 +168,11 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     enableToolbar(): void {
         this.view.toggleToolbarState(true);
+    },
+    toggleMenu(menu: string): void {
+        this.view.toggleToolbarMenu(menu);
+    },
+    focusEditor(): void {
+        this.handler?.focus();
     },
 });

@@ -17,23 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { html } from "hybrids";
-import type { UpdateFunction } from "hybrids";
-import type { InternalImageButton } from "./image";
-import { getClass } from "../../../helpers/class-getter";
-import type { GetText } from "@tuleap/gettext";
+import type { Command } from "prosemirror-state";
+import type { ToolbarBus } from "../helper/toolbar-bus";
 
-export const renderImageButton = (
-    host: InternalImageButton,
-    gettext_provider: GetText,
-): UpdateFunction<InternalImageButton> => html`
-    <button
-        class="${getClass(host)}"
-        data-role="popover-trigger"
-        disabled="${host.is_disabled}"
-        title="${gettext_provider.gettext("Insert or edit image `Ctrl+k`")}"
-        data-test="button-image"
-    >
-        <i class="prose-mirror-toolbar-button-icon fa-solid fa-image"></i>
-    </button>
-`;
+export type BuildOpenImageMenuCommand = {
+    build(): Command;
+};
+
+export const OpenImageMenuCommandBuilder = (
+    toolbar_bus: ToolbarBus,
+): BuildOpenImageMenuCommand => ({
+    build: (): Command => (): boolean => {
+        toolbar_bus.toggleMenu("image");
+        return true;
+    },
+});

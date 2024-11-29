@@ -71,6 +71,7 @@ export const renderImagePopover = (
                     pattern="https?://.+"
                     value="${host.image_src}"
                     oninput="${html.set("image_src")}"
+                    autofocus
                 />
             </div>
             <div class="tlp-form-element">
