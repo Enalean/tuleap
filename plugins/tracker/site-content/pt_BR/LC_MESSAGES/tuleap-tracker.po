@@ -4003,6 +4003,9 @@ msgid ""
 "calendar (Outlook, Google Calendar, etc.)."
 msgstr ""
 
+msgid "When you use @ to mention someone, they will get an email notification."
+msgstr ""
+
 msgid "Workflow"
 msgstr ""
 

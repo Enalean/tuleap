@@ -90,6 +90,10 @@ $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $track
     margin: 0 0 5px;
 }
 
+.artifact-comment-at-mention-info-icon {
+    margin: 0 5px 0 0;
+}
+
 /* stylelint-disable-next-line selector-class-pattern -- Still used in JavaScript */
 .tracker_artifact_followup_comment_controls {
     position: relative;

@@ -91,7 +91,10 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         data-test="artifact_followup_comment"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="tracker_followup_comment_new-help"></div>
-
+    <p class="alert alert-info">
+        <i class="fa-solid fa-exclamation-circle artifact-comment-at-mention-info-icon" aria-hidden="true"></i>
+        When you use @ to mention someone, they will get an email notification.
+    </p>\n
 EOL
             ,
             $textarea
