@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SaveConfiguredTracker;
 use Tuleap\Artidoc\Document\Tracker\CheckTrackerIsSuitableForDocument;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
@@ -49,7 +49,7 @@ final readonly class PUTConfigurationHandler
     public function handle(int $id, ArtidocPUTConfigurationRepresentation $configuration, \PFUser $user): Ok|Err
     {
         return $this->retrieve_artidoc
-            ->retrieveArtidocUserCanWrite($id, $user)
+            ->retrieveArtidocUserCanWrite($id)
             ->andThen(fn (ArtidocWithContext $document_information) => $this->saveConfiguration($document_information, $configuration, $user));
     }
 

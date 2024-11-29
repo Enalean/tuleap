@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Document;
+declare(strict_types=1);
 
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+namespace Tuleap\Artidoc\Domain\Document;
+
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-interface RetrieveArtidocWithContext
+interface CheckCurrentUserHasArtidocPermissions
 {
     /**
-     * @return Ok<ArtidocWithContext>|Err<Fault>
+     * @return Ok<Artidoc>|Err<Fault>
      */
-    public function retrieveArtidocUserCanRead(int $id, \PFUser $user): Ok|Err;
+    public function checkUserCanRead(Artidoc $artidoc): Ok|Err;
 
     /**
-     * @return Ok<ArtidocWithContext>|Err<Fault>
+     * @return Ok<Artidoc>|Err<Fault>
      */
-    public function retrieveArtidocUserCanWrite(int $id, \PFUser $user): Ok|Err;
+    public function checkUserCanWrite(Artidoc $artidoc): Ok|Err;
 }

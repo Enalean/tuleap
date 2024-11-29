@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Document;
+namespace Tuleap\Artidoc\Stubs\Domain\Document;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -59,7 +59,7 @@ final readonly class RetrieveArtidocWithContextStub implements RetrieveArtidocWi
         return new self(null, false);
     }
 
-    public function retrieveArtidocUserCanRead(int $id, \PFUser $user): Ok|Err
+    public function retrieveArtidocUserCanRead(int $id): Ok|Err
     {
         if ($this->result === null) {
             throw new \Exception('Unexpected call to retrieveArtidocUserCanRead()');
@@ -68,7 +68,7 @@ final readonly class RetrieveArtidocWithContextStub implements RetrieveArtidocWi
         return $this->result;
     }
 
-    public function retrieveArtidocUserCanWrite(int $id, \PFUser $user): Ok|Err
+    public function retrieveArtidocUserCanWrite(int $id): Ok|Err
     {
         if ($this->result === null) {
             throw new \Exception('Unexpected call to retrieveArtidocUserCanWrite()');

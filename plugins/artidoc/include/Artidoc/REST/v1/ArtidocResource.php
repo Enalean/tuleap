@@ -29,9 +29,12 @@ use EventManager;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
+use Tuleap\Artidoc\Adapter\Document\CurrentCurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Document\ArtidocWithContextRetriever;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
@@ -172,8 +175,9 @@ final class ArtidocResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        return $this->getBuilder()
-            ->build($id, $limit, $offset, UserManager::instance()->getCurrentUser())
+        $user = UserManager::instance()->getCurrentUser();
+        return $this->getBuilder($user)
+            ->build($id, $limit, $offset, $user)
             ->match(
                 function (PaginatedArtidocSectionRepresentationCollection $collection) use ($limit, $offset) {
                     Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
@@ -216,8 +220,9 @@ final class ArtidocResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $this->getPutHandler()
-            ->handle($id, $sections, UserManager::instance()->getCurrentUser())
+        $user = UserManager::instance()->getCurrentUser();
+        $this->getPutHandler($user)
+            ->handle($id, $sections, $user)
             ->match(
                 static function () {
                     // nothing to do
@@ -266,8 +271,9 @@ final class ArtidocResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $this->getPatchHandler()
-            ->handle($id, $order, UserManager::instance()->getCurrentUser())
+        $user = UserManager::instance()->getCurrentUser();
+        $this->getPatchHandler($user)
+            ->handle($id, $order)
             ->match(
                 static function () {
                     // nothing to do
@@ -347,8 +353,9 @@ final class ArtidocResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        return $this->getPostHandler()
-            ->handle($id, $section, UserManager::instance()->getCurrentUser())
+        $user = UserManager::instance()->getCurrentUser();
+        return $this->getPostHandler($user)
+            ->handle($id, $section, $user)
             ->match(
                 static function (ArtidocSectionRepresentation $representation) {
                     return $representation;
@@ -400,8 +407,9 @@ final class ArtidocResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $this->getPutConfigurationHandler()
-            ->handle($id, $configuration, UserManager::instance()->getCurrentUser())
+        $user = UserManager::instance()->getCurrentUser();
+        $this->getPutConfigurationHandler($user)
+            ->handle($id, $configuration, $user)
             ->match(
                 static function () {
                     // nothing to do
@@ -439,7 +447,7 @@ final class ArtidocResource extends AuthenticatedResource
             );
     }
 
-    private function getBuilder(): PaginatedArtidocSectionRepresentationCollectionBuilder
+    private function getBuilder(\PFUser $user): PaginatedArtidocSectionRepresentationCollectionBuilder
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -448,10 +456,12 @@ final class ArtidocResource extends AuthenticatedResource
 
         $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
         $retriever = new ArtidocWithContextRetriever(
-            \ProjectManager::instance(),
-            $dao,
-            new Docman_ItemFactory(),
-            new DocumentServiceFromAllowedProjectRetriever($plugin),
+            new ArtidocRetriever($dao, new Docman_ItemFactory()),
+            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($plugin),
+            ),
         );
 
         $transformer = $this->getRepresentationTransformer();
@@ -462,7 +472,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getPutHandler(): PUTSectionsHandler
+    private function getPutHandler(\PFUser $user): PUTSectionsHandler
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -472,10 +482,12 @@ final class ArtidocResource extends AuthenticatedResource
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocWithContextRetriever(
-            \ProjectManager::instance(),
-            $dao,
-            new Docman_ItemFactory(),
-            new DocumentServiceFromAllowedProjectRetriever($plugin),
+            new ArtidocRetriever($dao, new Docman_ItemFactory()),
+            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($plugin),
+            ),
         );
 
         $transformer = $this->getRepresentationTransformer();
@@ -491,7 +503,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getPostHandler(): POSTSectionHandler
+    private function getPostHandler(\PFUser $user): POSTSectionHandler
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -501,10 +513,12 @@ final class ArtidocResource extends AuthenticatedResource
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocWithContextRetriever(
-            \ProjectManager::instance(),
-            $dao,
-            new Docman_ItemFactory(),
-            new DocumentServiceFromAllowedProjectRetriever($plugin),
+            new ArtidocRetriever($dao, new Docman_ItemFactory()),
+            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($plugin),
+            ),
         );
 
         $transformer = $this->getRepresentationTransformer();
@@ -520,7 +534,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getPatchHandler(): PATCHSectionsHandler
+    private function getPatchHandler(\PFUser $user): PATCHSectionsHandler
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -530,10 +544,12 @@ final class ArtidocResource extends AuthenticatedResource
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocWithContextRetriever(
-            \ProjectManager::instance(),
-            $dao,
-            new Docman_ItemFactory(),
-            new DocumentServiceFromAllowedProjectRetriever($plugin),
+            new ArtidocRetriever($dao, new Docman_ItemFactory()),
+            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($plugin),
+            ),
         );
 
         return new PATCHSectionsHandler(
@@ -546,7 +562,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getPutConfigurationHandler(): PUTConfigurationHandler
+    private function getPutConfigurationHandler(\PFUser $user): PUTConfigurationHandler
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -555,10 +571,12 @@ final class ArtidocResource extends AuthenticatedResource
 
         $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
         $retriever = new ArtidocWithContextRetriever(
-            \ProjectManager::instance(),
-            $dao,
-            new Docman_ItemFactory(),
-            new DocumentServiceFromAllowedProjectRetriever($plugin),
+            new ArtidocRetriever($dao, new Docman_ItemFactory()),
+            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($plugin),
+            ),
         );
 
         return new PUTConfigurationHandler(

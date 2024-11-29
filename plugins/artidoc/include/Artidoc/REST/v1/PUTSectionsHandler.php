@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SaveSections;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\NeverThrow\Err;
@@ -49,7 +49,7 @@ final readonly class PUTSectionsHandler
     public function handle(int $id, array $sections, \PFUser $user): Ok|Err
     {
         return $this->retrieve_artidoc
-            ->retrieveArtidocUserCanWrite($id, $user)
+            ->retrieveArtidocUserCanWrite($id)
             ->andThen(fn() => $this->ensureThatUserCanReadAllNewSections($id, $sections, $user))
             ->andThen(
                 /**
