@@ -17,16 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./components/App.vue";
-import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue2-gettext-init";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 export async function init(mount_point: HTMLDivElement, button: HTMLElement): Promise<void> {
-    await initVueGettext(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
-
     const repository_id = Number(button.dataset.repositoryId);
     const repository_url = button.dataset.repositoryUrl;
     if (!repository_url) {
@@ -45,19 +41,19 @@ export async function init(mount_point: HTMLDivElement, button: HTMLElement): Pr
 
     const url_parameters = JSON.parse(button.dataset.urlParameters);
 
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Temporary while we migrate to Vue 3
-    //@ts-ignore
-    const RootComponent = Vue.extend(App);
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
 
-    new RootComponent({
-        propsData: {
-            button,
-            repository_id,
-            repository_url,
-            repository_default_branch,
-            is_tag,
-            current_ref_name,
-            url_parameters,
-        },
-    }).$mount(mount_point);
+    createApp(App, {
+        button,
+        repository_id,
+        repository_url,
+        repository_default_branch,
+        is_tag,
+        current_ref_name,
+        url_parameters,
+    })
+        .use(gettext)
+        .mount(mount_point);
 }

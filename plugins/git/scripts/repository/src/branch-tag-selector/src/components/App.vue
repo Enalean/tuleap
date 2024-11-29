@@ -62,6 +62,7 @@ import BranchesSection from "./BranchesSection.vue";
 import TagsSection from "./TagsSection.vue";
 import { onMounted, ref } from "vue";
 import type { URLParameter } from "../type";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     button: HTMLButtonElement;
@@ -75,6 +76,8 @@ const props = defineProps<{
 
 const is_displaying_branches = ref(true);
 const dropdown_menu = ref<HTMLDivElement>();
+
+const { $gettext } = useGettext();
 
 onMounted(() => {
     if (dropdown_menu.value instanceof HTMLDivElement) {

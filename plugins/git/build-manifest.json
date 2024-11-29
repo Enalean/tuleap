@@ -4,10 +4,6 @@
         "git-repositories": {
             "src": "scripts/repositories-list/src",
             "po": "scripts/repositories-list/po"
-        },
-        "branch-tag-selector": {
-            "src": "scripts/repository/src/branch-tag-selector/src",
-            "po": "scripts/repository/src/branch-tag-selector/po"
         }
     },
     "gettext-vue3": {
@@ -18,6 +14,10 @@
         "permissions-per-group": {
             "src": "scripts/permissions-per-group/src",
             "po": "scripts/permissions-per-group/po"
+        },
+        "branch-tag-selector": {
+            "src": "scripts/repository/src/branch-tag-selector/src",
+            "po": "scripts/repository/src/branch-tag-selector/po"
         }
     },
     "gettext-smarty": {

@@ -24,7 +24,10 @@
             class="git-repository-branch-tag-selector-filter"
             v-if="!is_loading_tags && tags.length"
         >
-            <refs-filter v-model="filter_text" v-bind:placeholder="$gettext('Tag name')" />
+            <refs-filter
+                v-bind:placeholder="$gettext('Tag name')"
+                v-on:update-filter="updateFilter"
+            />
         </div>
         <a
             v-for="tag in filtered_tags"
@@ -67,6 +70,9 @@ import RefsFilter from "./RefsFilter.vue";
 import type { Ref } from "vue";
 import { computed, ref, watch } from "vue";
 import type { Tag, URLParameter } from "../type";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     repository_id: number;
@@ -120,5 +126,9 @@ async function loadTags(): Promise<void> {
 
 function url(ref: string): string {
     return props.repository_url + "?" + encodeData({ ...props.url_parameters, hb: ref });
+}
+
+function updateFilter(value: string): void {
+    filter_text.value = value;
 }
 </script>
