@@ -797,6 +797,22 @@ describe("useSectionsStore", () => {
                     stored_section0.id,
                 );
             });
+
+            it("A before C should move ABC to BAC", async () => {
+                await store.moveSectionBefore(101, stored_section0, stored_section2);
+
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["B", "A", "C"],
+                );
+
+                expect(reorder).toHaveBeenCalledOnce();
+                expect(reorder).toHaveBeenCalledWith(
+                    101,
+                    stored_section0.id,
+                    "before",
+                    stored_section2.id,
+                );
+            });
         });
 
         describe("moveSectionAtTheEnd", () => {
