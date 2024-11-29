@@ -21,13 +21,14 @@
 import type Vue from "vue";
 import { createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import VueRouter from "vue-router";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
 
 export const createLocalVueForTests = async (): Promise<typeof Vue> => {
     const local_vue = createLocalVue();
     local_vue.use(Vuex);
+    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
     local_vue.use(VueDOMPurifyHTML);
     local_vue.use(VueRouter);
     await initVueGettext(local_vue, () => {

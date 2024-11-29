@@ -15,13 +15,13 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
+    "@tuleap/vue2-dompurify-html": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "dompurify": "^3.1.4",
     "fscreen": "^1.2.0",
     "mustache": "^4.2.0",
     "p-retry": "^4.5.0",
     "vue": "^2.7.8",
-    "vue-dompurify-html": "^4.0.0",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

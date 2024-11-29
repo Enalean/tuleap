@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,21 +15,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import type { Vue } from "vue/types/vue";
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-export async function createRoadmapLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
-    local_vue.use(VueDOMPurifyHTML);
-
-    return local_vue;
-}
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "Vue2DompurifyHtml",
+        },
+        rollupOptions: {
+            external: ["dompurify", "vue"],
+            output: {
+                globals: {
+                    dompurify: "DOMPurify",
+                    vue: "Vue",
+                },
+            },
+        },
+    },
+});

@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import App from "./components/App.vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ),
     );
     Vue.use(Vuex);
+    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
     Vue.use(VueDOMPurifyHTML);
 
     const AppComponent = Vue.extend(App);

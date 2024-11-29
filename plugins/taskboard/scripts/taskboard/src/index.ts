@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import { createStore } from "./store";
 import App from "./components/App.vue";
 import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue2-gettext-init";
@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
     Vue.use(Vuex);
+    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
     Vue.use(VueDOMPurifyHTML);
 
     const AppComponent = Vue.extend(App);

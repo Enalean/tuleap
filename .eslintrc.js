@@ -142,7 +142,7 @@ module.exports = {
             "error",
             {
                 escape: {
-                    methods: ["sanitize", "render"],
+                    methods: ["sanitize", "DOMPurify.sanitize", "render"],
                 },
             },
         ],
@@ -152,6 +152,7 @@ module.exports = {
                 escape: {
                     methods: [
                         "sanitize",
+                        "DOMPurify.sanitize",
                         "render",
                         "getPOFileFromLocale",
                         "getPOFileFromLocaleWithoutExtension",
