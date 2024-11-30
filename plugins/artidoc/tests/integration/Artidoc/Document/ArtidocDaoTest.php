@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Result;
@@ -168,16 +169,22 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $rows = $dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->rows;
 
         foreach ($rows as $row) {
-            $section = $dao->searchSectionById($row->id);
-            self::assertNotNull($section);
-            self::assertSame($row->id->toString(), $section->id->toString());
-            self::assertSame($row->artifact_id, $section->artifact_id);
-            self::assertSame(101, $section->item_id);
+            $dao->searchSectionById($row->id)->match(
+                function (RawSection $section) use ($row) {
+                    self::assertNotNull($section);
+                    self::assertSame($row->id->toString(), $section->id->toString());
+                    self::assertSame($row->artifact_id, $section->artifact_id);
+                    self::assertSame(101, $section->item_id);
+                },
+                function () {
+                    self::fail('Section is expected');
+                },
+            );
         }
 
         $first_section_id = $rows[0]->id;
         $dao->save(101, []);
-        self::assertNull($dao->searchSectionById($first_section_id));
+        self::assertTrue(Result::isErr($dao->searchSectionById($first_section_id)));
     }
 
     public function testSaveTracker(): void

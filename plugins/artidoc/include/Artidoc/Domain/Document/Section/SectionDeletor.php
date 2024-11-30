@@ -20,18 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-use Tuleap\Artidoc\Document\DeleteOneSection;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
-use Tuleap\Artidoc\Document\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class DeleteSectionHandler
+final class SectionDeletor
 {
     public function __construct(
         private SearchOneSection $dao,
@@ -43,15 +41,10 @@ final class DeleteSectionHandler
     /**
      * @return Ok<true>|Err<Fault>
      */
-    public function handle(SectionIdentifier $id): Ok|Err
+    public function deleteSection(SectionIdentifier $id): Ok|Err
     {
-        $row = $this->dao->searchSectionById($id);
-        if ($row === null) {
-            return Result::err(Fault::fromMessage('Unable to find section'));
-        }
-
-        return $this->retrieve_artidoc
-            ->retrieveArtidocUserCanWrite($row->item_id)
+        return $this->dao->searchSectionById($id)
+            ->andThen(fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanWrite($raw_section->item_id))
             ->andThen(fn () => $this->delete($id));
     }
 

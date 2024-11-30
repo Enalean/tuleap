@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\Artidoc\Document\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Stubs\Document\SearchPaginatedRawSectionsStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;

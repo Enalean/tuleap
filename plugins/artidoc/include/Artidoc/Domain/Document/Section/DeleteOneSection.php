@@ -18,32 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\Artidoc\Document;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
-final readonly class RawSection
+interface DeleteOneSection
 {
-    public function __construct(
-        public SectionIdentifier $id,
-        public int $item_id,
-        public int $artifact_id,
-        public int $rank,
-    ) {
-    }
-
-    /**
-     * @param array{ id: SectionIdentifier, item_id: int, artifact_id: int, rank: int } $row
-     */
-    public static function fromRow(array $row): self
-    {
-        return new self(
-            $row['id'],
-            $row['item_id'],
-            $row['artifact_id'],
-            $row['rank'],
-        );
-    }
+    public function deleteSectionById(SectionIdentifier $section_id): void;
 }

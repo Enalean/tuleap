@@ -22,28 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\SearchOneSection;
+use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 final class SearchOneSectionStub implements SearchOneSection
 {
-    private function __construct(private ?RawSection $row)
+    private function __construct(private Ok|Err $result)
     {
     }
 
     public static function withResults(RawSection $row): self
     {
-        return new self($row);
+        return new self(Result::ok($row));
     }
 
     public static function withoutResults(): self
     {
-        return new self(null);
+        return new self(Result::err(Fault::fromMessage('Section not found')));
     }
 
-    public function searchSectionById(SectionIdentifier $section_id): ?RawSection
+    public function searchSectionById(SectionIdentifier $section_id): Ok|Err
     {
-        return $this->row;
+        return $this->result;
     }
 }
