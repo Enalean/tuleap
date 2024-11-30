@@ -20,31 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Order;
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Stubs\Domain\Document\Order\ReorderSectionsStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class PATCHSectionsHandlerTest extends TestCase
+final class ChangeSectionOrderTest extends TestCase
 {
     public const SECTION_TO_MOVE_ID   = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';
     public const SECTION_REFERENCE_ID = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b6';
 
     private const PROJECT_ID = 101;
 
-    private UUIDSectionIdentifierFactory $identifier_factory;
     private ArtidocWithContext $document;
+    private SectionOrderBuilder $order_builder;
 
     protected function setUp(): void
     {
-        $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
+        $this->order_builder = new SectionOrderBuilder(
+            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory())
+        );
 
         $this->document = new ArtidocWithContext(
             new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
@@ -55,20 +56,13 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::withSuccessfulReorder();
 
-        $handler = new PATCHSectionsHandler(
+        $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
-            new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
 
-        $result = $handler->handle(
-            1,
-            OrderRepresentation::build(
-                [self::SECTION_TO_MOVE_ID],
-                'after',
-                self::SECTION_REFERENCE_ID,
-            ),
-        );
+        $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
+            ->andThen(static fn (SectionOrder $order) => $handler->reorder(1, $order));
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($reorder->isCalled());
@@ -78,20 +72,13 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::withFailedReorder();
 
-        $handler = new PATCHSectionsHandler(
+        $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
-            new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
 
-        $result = $handler->handle(
-            1,
-            OrderRepresentation::build(
-                [self::SECTION_TO_MOVE_ID],
-                'after',
-                self::SECTION_REFERENCE_ID,
-            ),
-        );
+        $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
+            ->andThen(static fn (SectionOrder $order) => $handler->reorder(1, $order));
 
         self::assertTrue(Result::isErr($result));
         self::assertTrue($reorder->isCalled());
@@ -101,20 +88,13 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::shouldNotBeCalled();
 
-        $handler = new PATCHSectionsHandler(
+        $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withoutDocument(),
-            new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
 
-        $result = $handler->handle(
-            1,
-            OrderRepresentation::build(
-                [self::SECTION_TO_MOVE_ID],
-                'after',
-                self::SECTION_REFERENCE_ID,
-            ),
-        );
+        $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
+            ->andThen(static fn (SectionOrder $order) => $handler->reorder(1, $order));
 
         self::assertTrue(Result::isErr($result));
         self::assertFalse($reorder->isCalled());
@@ -124,20 +104,13 @@ final class PATCHSectionsHandlerTest extends TestCase
     {
         $reorder = ReorderSectionsStub::shouldNotBeCalled();
 
-        $handler = new PATCHSectionsHandler(
+        $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withDocumentUserCanRead($this->document),
-            new SectionOrderBuilder($this->identifier_factory),
             $reorder,
         );
 
-        $result = $handler->handle(
-            1,
-            OrderRepresentation::build(
-                [self::SECTION_TO_MOVE_ID],
-                'after',
-                self::SECTION_REFERENCE_ID,
-            ),
-        );
+        $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
+            ->andThen(static fn (SectionOrder $order) => $handler->reorder(1, $order));
 
         self::assertTrue(Result::isErr($result));
         self::assertFalse($reorder->isCalled());

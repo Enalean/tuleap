@@ -336,7 +336,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $order_builder = new SectionOrderBuilder($identifier_factory);
 
         // "before", at the beginning
-        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
         $result = $dao->reorder(
             $item_1,
@@ -347,7 +347,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1001, 1002, 1003]);
 
         // "before", in the middle
-        $order = $order_builder->buildFromRest([$uuid_3->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_3->toString()], 'before', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
         $result = $dao->reorder(
             $item_1,
@@ -358,7 +358,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1001, 1002, 1003]);
 
         // "after", at the end
-        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'after', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2->toString()], 'after', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
         $result = $dao->reorder(
             $item_1,
@@ -369,7 +369,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1001, 1002, 1003]);
 
         // "after", in the middle
-        $order = $order_builder->buildFromRest([$uuid_3->toString()], 'after', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_3->toString()], 'after', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
         $result = $dao->reorder(
             $item_1,
@@ -393,7 +393,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
         $order_builder = new SectionOrderBuilder($identifier_factory);
 
-        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
         $result = $dao->reorder(
             $item_1,
@@ -404,7 +404,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1001]);
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1002]);
 
-        $order = $order_builder->buildFromRest([$uuid_2->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
         $result = $dao->reorder(
             $item_2,
