@@ -30,7 +30,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final readonly class CurrentCurrentUserHasArtidocPermissionsChecker implements CheckCurrentUserHasArtidocPermissions
+final readonly class CurrentUserHasArtidocPermissionsChecker implements CheckCurrentUserHasArtidocPermissions
 {
     private function __construct(private \PFUser $current_user)
     {

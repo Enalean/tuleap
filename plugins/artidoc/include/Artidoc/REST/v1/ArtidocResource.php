@@ -31,7 +31,7 @@ use ProjectManager;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
-use Tuleap\Artidoc\Adapter\Document\CurrentCurrentUserHasArtidocPermissionsChecker;
+use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
@@ -461,7 +461,7 @@ final class ArtidocResource extends AuthenticatedResource
         $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
         $retriever = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
-            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
                 new DocumentServiceFromAllowedProjectRetriever($plugin),
@@ -487,7 +487,7 @@ final class ArtidocResource extends AuthenticatedResource
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
-            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
                 new DocumentServiceFromAllowedProjectRetriever($plugin),
@@ -518,7 +518,7 @@ final class ArtidocResource extends AuthenticatedResource
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
-            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
                 new DocumentServiceFromAllowedProjectRetriever($plugin),
@@ -549,7 +549,7 @@ final class ArtidocResource extends AuthenticatedResource
         $dao                = new ArtidocDao($identifier_factory);
         $retriever          = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
-            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
                 new DocumentServiceFromAllowedProjectRetriever($plugin),
@@ -575,7 +575,7 @@ final class ArtidocResource extends AuthenticatedResource
         $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
         $retriever = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
-            CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
                 new DocumentServiceFromAllowedProjectRetriever($plugin),

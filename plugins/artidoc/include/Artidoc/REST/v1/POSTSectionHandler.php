@@ -100,7 +100,6 @@ final readonly class POSTSectionHandler
         ArtidocSectionRepresentation $section_representation,
         ArtidocPOSTSectionRepresentation $section,
     ): Ok|Err {
-        \BackendLogger::getDefaultLogger()->info(var_export($section, true));
         try {
             $section_id = $section->position
                 ? $this->dao->saveSectionBefore($id, $section->artifact->id, $this->identifier_factory->buildFromHexadecimalString($section->position->before))
