@@ -4023,6 +4023,13 @@ msgstr "Cet outil de suivi n'a pas de workflow."
 msgid "This tracker is deleted"
 msgstr "Ce tracker a été supprimé"
 
+msgid ""
+"This tracker's notifications are disabled, when you use @ to mention "
+"someone, no email will be sent."
+msgstr ""
+"Les notifications de ce tracker sont désactivées, lorsque vous utilisez @ "
+"pour mentionner quelqu'un, aucun e-mail ne sera envoyé."
+
 msgid "This transition already exists."
 msgstr "Cette transition existe déjà."
 

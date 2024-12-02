@@ -3532,6 +3532,11 @@ msgstr ""
 msgid "This tracker is deleted"
 msgstr ""
 
+msgid ""
+"This tracker's notifications are disabled, when you use @ to mention "
+"someone, no email will be sent."
+msgstr ""
+
 msgid "This transition already exists."
 msgstr ""
 
