@@ -64,6 +64,7 @@ export const renderEditLinkForm = (
                         pattern="https?://.+"
                         value="${host.link_href}"
                         oninput="${html.set("link_href")}"
+                        autofocus
                     />
                 </div>
                 <div class="tlp-form-element">

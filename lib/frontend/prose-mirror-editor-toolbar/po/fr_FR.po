@@ -51,8 +51,8 @@ msgstr "Source de l'image"
 msgid "Insert new image"
 msgstr "Insérer une nouvelle image"
 
-msgid "Insert or edit image"
-msgstr "Insérer ou éditer une image"
+msgid "Insert or edit image `Ctrl+k`"
+msgstr "Insérer ou éditer une image `Ctrl+k`"
 
 msgid "Large heading"
 msgstr "Grand titre"

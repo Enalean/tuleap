@@ -60,6 +60,7 @@ export const renderEditCrossReferenceFormElement = (
                         oninput="${html.set("reference_text")}"
                         pattern="\\w+\\s#(?:\\w|:|\\.|\\/|-)+"
                         required
+                        autofocus
                     />
                 </div>
             </div>

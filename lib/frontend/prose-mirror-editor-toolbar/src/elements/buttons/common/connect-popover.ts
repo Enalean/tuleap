@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createPopover } from "@tuleap/tlp-popovers";
+import { createPopover, EVENT_TLP_POPOVER_HIDDEN } from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
+import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 
 export type PopoverHost = {
     button_element: HTMLButtonElement;
     popover_element: HTMLElement;
     popover_instance: Popover;
+    toolbar_bus: ToolbarBus;
     render(): HTMLElement;
 };
 
@@ -48,10 +50,17 @@ export const connectPopover = (host: PopoverHost, doc: Document): DisconnectFunc
     // Keep track of the HTMLElement so we'll be able to put it back in the toolbar when it is disconnected
     const popover_element = host.popover_element;
 
+    const onPopoverHidden = (): void => {
+        host.toolbar_bus.focusEditor();
+    };
+
+    popover_element.addEventListener(EVENT_TLP_POPOVER_HIDDEN, onPopoverHidden);
+
     movePopoverToDocumentBody(host, doc);
 
     return () => {
         host.popover_instance.destroy();
+        popover_element.removeEventListener(EVENT_TLP_POPOVER_HIDDEN, onPopoverHidden);
         movePopoverBackToHostElement(host, popover_element);
     };
 };

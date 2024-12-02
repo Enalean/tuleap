@@ -169,6 +169,9 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                             );
                             view.focus();
                         },
+                        focus(): void {
+                            view.focus();
+                        },
                     });
                 },
             };

@@ -17,23 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { html } from "hybrids";
-import type { UpdateFunction } from "hybrids";
-import type { InternalImageButton } from "./image";
-import { getClass } from "../../../helpers/class-getter";
-import type { GetText } from "@tuleap/gettext";
+import { describe, it, expect, vi } from "vitest";
+import type { EditorState } from "prosemirror-state";
+import { buildToolbarBus } from "../helper/toolbar-bus";
+import { OpenImageMenuCommandBuilder } from "./OpenImageMenuCommandBuilder";
 
-export const renderImageButton = (
-    host: InternalImageButton,
-    gettext_provider: GetText,
-): UpdateFunction<InternalImageButton> => html`
-    <button
-        class="${getClass(host)}"
-        data-role="popover-trigger"
-        disabled="${host.is_disabled}"
-        title="${gettext_provider.gettext("Insert or edit image `Ctrl+k`")}"
-        data-test="button-image"
-    >
-        <i class="prose-mirror-toolbar-button-icon fa-solid fa-image"></i>
-    </button>
-`;
+describe("OpenImageMenuCommandBuilder", () => {
+    it("should build a command that opens the image menu of the toolbar", () => {
+        const toolbar_bus = buildToolbarBus();
+        const toggleMenu = vi.spyOn(toolbar_bus, "toggleMenu");
+        const builder = OpenImageMenuCommandBuilder(toolbar_bus);
+
+        builder.build()({} as EditorState);
+
+        expect(toggleMenu).toHaveBeenCalledOnce();
+        expect(toggleMenu).toHaveBeenCalledWith("image");
+    });
+});
