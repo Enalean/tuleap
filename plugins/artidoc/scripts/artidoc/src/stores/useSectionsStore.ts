@@ -349,11 +349,14 @@ export function useSectionsStore(): SectionsStore {
 
                         const section = sections.value[index_section];
 
+                        const new_section_index =
+                            index_section > index_sibling ? index_sibling : index_sibling - 1;
+
                         sections.value.splice(index_section, 1);
-                        sections.value.splice(index_sibling, 0, section);
+                        sections.value.splice(new_section_index, 0, section);
 
                         if (isArtifactSection(section)) {
-                            getNextArtifactSection(index_sibling + 1).apply(
+                            getNextArtifactSection(new_section_index + 1).apply(
                                 (next_artifact_section) =>
                                     reorderSections(
                                         document_id,
