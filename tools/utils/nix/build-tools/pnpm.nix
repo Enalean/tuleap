@@ -2,11 +2,11 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "pnpm";
-  version = "8.7.0";
+  version = "8.15.9";
 
   src = fetchurl {
     url = "https://registry.npmjs.org/pnpm/-/pnpm-${finalAttrs.version}.tgz";
-    hash = "sha256-rvjSa8F2FsYNyxXS2zCAN2YFGicg7cw71guH+4ySVHA=";
+    hash = "sha256-2qJ6C1QbxjUyP/lsLe2ZVGf/n+bWn/ZwIVWKqa2dzDY=";
   };
 
   buildInputs = [ nodejs ];

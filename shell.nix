@@ -11,4 +11,8 @@ pkgs.mkShellNoCC {
 
   # Enable Console Do Not Track
   DO_NOT_TRACK = 1;
+
+  shellHook = ''
+    export PATH="$PATH:$(pwd)/node_modules/.bin"
+  '';
 }
