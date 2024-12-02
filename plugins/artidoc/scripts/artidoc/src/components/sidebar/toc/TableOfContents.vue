@@ -78,9 +78,8 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import { onMounted, onUnmounted, ref } from "vue";
 import { init } from "@tuleap/drag-and-drop";
-import type { Drekkenov } from "@tuleap/drag-and-drop";
+import type { Drekkenov, SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
 import { noop } from "@/helpers/noop";
-import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop/src";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 const { $gettext } = useGettext();
