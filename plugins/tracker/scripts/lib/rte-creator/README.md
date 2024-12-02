@@ -23,7 +23,9 @@ Also, make sure to include jQuery and CKEDITOR sources in PHP **before** loading
 
 `<textarea>` elements are assumed to be created beforehand. They are not created by this lib. The lib wraps them with rich text editors and sets up image upload capability if it's possible (if there is a File field with update permission).
 
-For the "New follow-up editor" and the "Edit follow-up editor", `<textarea>` elements MUST have specific ids (see the constants in [RichTextEditorsCreator.ts](./src/RichTextEditorsCreator.ts)).
+For the "New comment editor", `<textarea>` elements MUST have specific ids (see the constants in [RichTextEditorsCreator.ts](./src/RichTextEditorsCreator.ts)).
+
+For the "Edit comment editor", `<textarea>` element must be given directly (it is not searched in the DOM).
 
 For the "Text field editors", creation is delayed until the `<textarea>` appears in the viewport. It uses an IntersectionObserver. The `<textarea>` elements must be contained by an element with a certain CSS classname (see the constants in [RichTextEditorsCreator.ts](./src/RichTextEditorsCreator.ts)).
 
@@ -41,7 +43,7 @@ const creator = new RichTextEditorsCreator(
     new UploadImageFormFactory(document, locale),
     RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
 );
-creator.createNewFollowupEditor();
-creator.createEditFollowupEditor(changeset_id, format);
+creator.createNewCommentEditor();
+creator.createEditCommentEditor(textarea, changeset_id, format);
 creator.createTextFieldEditors();
 ```

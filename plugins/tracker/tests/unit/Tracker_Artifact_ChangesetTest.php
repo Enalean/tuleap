@@ -21,7 +21,9 @@
 
 declare(strict_types=1);
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -489,14 +491,15 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetFollowUpCommentSectionIfThereIsAtLeastFollowUpChanges(): void
     {
-        $user = \Mockery::spy(\PFUser::class)->shouldReceive('isSuperUser')->andReturns(true)->getMock();
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $tracker = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
+        $tracker = $this->createStub(Tracker::class);
+        $tracker->method('getId')->willReturn(86);
+        $tracker->method('userIsAdmin')->willReturn(true);
+        $tracker->method('getGroupId')->willReturn(173);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $comment = $this->getEmptyComment();
+        $artifact = ArtifactTestBuilder::anArtifact(25)->inTracker($tracker)->build();
+        $comment  = $this->getEmptyComment();
 
         $changeset = $this->buildChangeset(1234, $artifact, 101, time(), 'user@example.com', $comment);
 
@@ -523,6 +526,6 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $follow_up_content = $changeset->fetchFollowUp('<div></div>', $user);
 
-        self::assertStringContainsString('<div class="tracker_artifact_followup_comment" data-test="follow-up-comment"></div>', $follow_up_content);
+        self::assertStringContainsString('<div class="tracker_artifact_followup_comment" data-read-only-comment data-test="follow-up-comment"></div>', $follow_up_content);
     }
 }

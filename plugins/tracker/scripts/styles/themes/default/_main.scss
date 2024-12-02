@@ -29,10 +29,6 @@
 @use "./includes/project-header-background";
 @use "./includes/cross-references-fields";
 
-$tracker-artifact-submit-buttons-height: 80px;
-$tracker-artifact-submit-buttons-concurrent-edition-height: 286px;
-$tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $tracker-artifact-submit-buttons-height +
-    $tracker-artifact-submit-buttons-concurrent-edition-height;
 $tracker-artifact-markup-diff-text-color: #838383;
 
 /* stylelint-disable selector-id-pattern, selector-class-pattern, selector-no-qualifying-type, selector-max-compound-selectors */
@@ -762,64 +758,6 @@ button[name="tracker_query_submit"] {
     position: relative;
 }
 
-#tracker_artifact_followup_comments {
-    left: -12px;
-    box-sizing: border-box;
-    width: 960px;
-    /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
-    width: 100%;
-    margin-top: 30px;
-    padding: 30px 12px $tracker-artifact-submit-buttons-height;
-    border-top: 1px solid var(--tlp-neutral-normal-color);
-    background: var(--tlp-fade-background-color);
-
-    &.tracker-artifact-in-concurrent-edition {
-        padding: 30px 12px $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom;
-    }
-
-    #tracker_artifact_followup_comments-content {
-        max-width: 960px;
-    }
-
-    h1 {
-        margin: 0 0 20px;
-        color: #474747;
-        font-size: 2em;
-        font-weight: bold;
-    }
-
-    // To avoid to apply the generic H1 style class.
-    .helper-popover-title {
-        margin: 0;
-        color: var(--tlp-white-color);
-        font-size: 16px;
-    }
-
-    .tracker_artifact_followup_comments_display_settings {
-        position: relative;
-        top: 5px;
-        float: right;
-    }
-
-    #tracker_followup_comment_new {
-        box-sizing: border-box;
-        width: 100%;
-        margin: 0 0 5px;
-    }
-
-    &:not(.tracker_artifact_followup_comments-display_changes) {
-        .tracker_artifact_followup.tracker_artifact_followup-with_changes:not(
-                .tracker_artifact_followup-with_comment
-            ),
-        .tracker_artifact_followup.tracker_artifact_followup-priority,
-        .tracker_artifact_followup.tracker_artifact_followup-by_system_user,
-        .tracker_artifact_followup_changes,
-        .tracker_artifact_followup_content > hr {
-            display: none;
-        }
-    }
-}
-
 .tracker_artifact_followups {
     margin: var(--tlp-medium-spacing) 0 0;
 }
@@ -917,31 +855,6 @@ button[name="tracker_query_submit"] {
     height: 1px;
     border: 0;
     background-color: #f3f3f3;
-}
-
-.tracker_artifact_followup_comment_controls {
-    position: relative;
-    top: -1px;
-    float: right;
-    font-style: normal;
-
-    a {
-        color: #222222;
-
-        &:hover {
-            color: #444444;
-            text-decoration: none;
-        }
-    }
-}
-
-.tracker_artifact_followup_comment_body {
-    margin-bottom: 5px;
-    word-wrap: break-word;
-
-    > ul {
-        margin-bottom: 10px;
-    }
 }
 
 .tracker_artifact_followup_changes {

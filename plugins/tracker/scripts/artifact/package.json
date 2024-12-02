@@ -5,9 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/dom": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
+    "@tuleap/option": "workspace:^",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",

@@ -13,8 +13,6 @@ codendi.locales['tracker_artifact'] = {
     masschange_uncheck_all: 'Uncheck all',
     always_expand_fieldset: 'This fieldset is always collapsed. Click to always expand it.',
     always_collapse_fieldset: 'This fieldset is always expanded. Click to always collapse it.',
-    edit_followup_ok: 'Submit',
-    edit_followup_cancel: 'Cancel',
     disable_notifications: 'Disable notifications',
     enable_notifications: 'Enable notifications',
     disable_notifications_alternate_text: 'Stop receiving notifications for this artifact',

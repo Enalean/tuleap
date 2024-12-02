@@ -22,13 +22,13 @@ import { getUploadImageOptions } from "@tuleap/plugin-tracker-artifact-ckeditor-
 import type {
     RichTextEditorFactory,
     RichTextEditorOptions,
+    TextEditorInterface,
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { initMentionsOnEditorDataReady } from "./init-mentions";
 
 const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
-const EDIT_FOLLOWUP_TEXTAREA_BASE_ID = "tracker_followup_comment_edit_";
 const NEW_FOLLOWUP_ID_SUFFIX = "new";
 const TEXT_FIELDS_SELECTOR = ".tracker_artifact_field textarea";
 
@@ -39,13 +39,13 @@ export class RichTextEditorsCreator {
         private readonly editor_factory: RichTextEditorFactory,
     ) {}
 
-    public createNewFollowupEditor(): void {
-        const new_followup_textarea = this.doc.getElementById(NEW_FOLLOWUP_TEXTAREA_ID);
-        if (!(new_followup_textarea instanceof HTMLTextAreaElement)) {
+    public createNewCommentEditor(): void {
+        const new_comment_textarea = this.doc.getElementById(NEW_FOLLOWUP_TEXTAREA_ID);
+        if (!(new_comment_textarea instanceof HTMLTextAreaElement)) {
             // When copying artifacts or browsing as anonymous, there is no "new follow-up" textarea
             return;
         }
-        const help_block = this.image_upload_factory.createHelpBlock(new_followup_textarea);
+        const help_block = this.image_upload_factory.createHelpBlock(new_comment_textarea);
         const options: RichTextEditorOptions = {
             format_selectbox_id: NEW_FOLLOWUP_ID_SUFFIX,
             getAdditionalOptions: getUploadImageOptions,
@@ -54,24 +54,21 @@ export class RichTextEditorsCreator {
                 this.image_upload_factory.initiateImageUpload(ckeditor, textarea),
             onEditorDataReady: initMentionsOnEditorDataReady,
         };
-        this.editor_factory.createRichTextEditor(new_followup_textarea, options);
+        this.editor_factory.createRichTextEditor(new_comment_textarea, options);
     }
 
-    public createEditFollowupEditor(changeset_id: number, format: TextFieldFormat): void {
-        const edit_followup_textarea = this.doc.getElementById(
-            EDIT_FOLLOWUP_TEXTAREA_BASE_ID + changeset_id,
-        );
-        if (!(edit_followup_textarea instanceof HTMLTextAreaElement)) {
-            // When copying artifacts or browsing as anonymous, there is no "edit follow-up" textarea
-            return;
-        }
+    public createEditCommentEditor(
+        textarea: HTMLTextAreaElement,
+        changeset_id: string,
+        format: TextFieldFormat,
+    ): TextEditorInterface {
         const options: RichTextEditorOptions = {
-            format_selectbox_id: changeset_id.toString(),
+            format_selectbox_id: changeset_id,
             format_selectbox_value: format,
             onEditorInit: (ckeditor) => this.image_upload_factory.forbidImageUpload(ckeditor),
             onEditorDataReady: initMentionsOnEditorDataReady,
         };
-        this.editor_factory.createRichTextEditor(edit_followup_textarea, options);
+        return this.editor_factory.createRichTextEditor(textarea, options);
     }
 
     /**

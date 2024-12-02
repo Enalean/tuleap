@@ -20,6 +20,11 @@
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
+import { initGettext, getLocaleWithDefault, getPOFileFromLocale } from "@tuleap/gettext";
+import { CommentEditor } from "./comments/CommentEditor";
+import { LitHTMLAdapter } from "./comments/LitHTMLAdapter";
+import { DOMAdapter } from "./comments/DOMAdapter";
+import { TuleapAPIClient } from "./comments/TuleapAPIClient";
 
 // Do not use DOMContentLoaded event because it arrives after jQuery document ready event
 // and it will cause the "submission bar" to stop working.
@@ -27,21 +32,41 @@ document.addEventListener("readystatechange", () => {
     if (document.readyState !== "interactive") {
         return;
     }
-    const locale = document.body.dataset.userLocale;
-    if (locale === undefined) {
-        return;
-    }
+    const locale = getLocaleWithDefault(document);
     const creator = new RichTextEditorsCreator(
         document,
         new UploadImageFormFactory(document, locale),
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
-    creator.createNewFollowupEditor();
+    creator.createNewCommentEditor();
     creator.createTextFieldEditors();
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const locale = getLocaleWithDefault(document);
+    const gettext_provider = await initGettext(
+        locale,
+        "tracker_artifact",
+        (locale) => import(`../../po/${getPOFileFromLocale(locale)}`),
+    );
+    const editor_creator = new RichTextEditorsCreator(
+        document,
+        new UploadImageFormFactory(document, locale),
+        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
+    );
+
+    const dom_adapter = DOMAdapter(document);
+    const editor = CommentEditor(
+        LitHTMLAdapter(),
+        dom_adapter,
+        editor_creator,
+        gettext_provider,
+        TuleapAPIClient(document, window),
+    );
+    dom_adapter.findEditCommentButtons().forEach(editor.init);
 });
 
 // Edition-switcher must execute after CKEditors are initialized, otherwise the
 // "submission bar" won't work properly.
 import "./TrackerArtifactEditionSwitcher.js";
 import "./text-follow-up";
-import "./edit-follow-up-comment.js";
