@@ -21,9 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Project\Duplication;
 
-enum TrackerDuplicationType
+enum DuplicationType
 {
     case DUPLICATE_NEW_PROJECT;
     case DUPLICATE_SAME_PROJECT;

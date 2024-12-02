@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Workflow_Transition_ConditionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -199,7 +199,7 @@ final class Workflow_Transition_ConditionFactoryTest extends \Tuleap\Test\PHPUni
         $new_transition_id = 2;
         $field_mapping     = ['some fields mapping'];
 
-        $mapping = TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([103 => 122]);
+        $mapping = DuplicationUserGroupMapping::fromNewProjectWithMapping([103 => 122]);
 
         $this->permissions_factory->shouldReceive('duplicate')->with($this->transition, $new_transition_id, $mapping)->once();
         $this->fieldnotempty_factory->shouldReceive('duplicate')->with($this->transition, $new_transition_id, $field_mapping)->once();

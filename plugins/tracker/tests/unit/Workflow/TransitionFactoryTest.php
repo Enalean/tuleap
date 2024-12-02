@@ -112,7 +112,7 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $t3          = new Transition(3, 1, $field_value_analyzed, $field_value_new);
         $transitions = [$t1, $t2, $t3];
 
-        $user_groups_mapping = \Tuleap\Tracker\TrackerDuplicationUserGroupMapping::fromSameProjectWithoutMapping();
+        $user_groups_mapping = \Tuleap\Project\Duplication\DuplicationUserGroupMapping::fromSameProjectWithoutMapping();
 
         $tf = \Mockery::mock(
             \TransitionFactory::class,

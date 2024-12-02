@@ -24,13 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Notifications\Settings;
 
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 
 final class NotificationSettingsDuplicator
 {
@@ -46,12 +46,12 @@ final class NotificationSettingsDuplicator
     ) {
     }
 
-    public function duplicate(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping, array $field_mapping): void
+    public function duplicate(int $template_tracker_id, int $new_tracker_id, DuplicationUserGroupMapping $duplication_user_group_mapping, array $field_mapping): void
     {
         $this->transaction_executor->execute(fn () => $this->duplicateNotificationsSettings($template_tracker_id, $new_tracker_id, $duplication_user_group_mapping, $field_mapping));
     }
 
-    private function duplicateNotificationsSettings(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping, array $field_mapping): void
+    private function duplicateNotificationsSettings(int $template_tracker_id, int $new_tracker_id, DuplicationUserGroupMapping $duplication_user_group_mapping, array $field_mapping): void
     {
         $this->duplicateGlobalNotifications($template_tracker_id, $new_tracker_id, $duplication_user_group_mapping);
         $this->duplicateAssignedTo($template_tracker_id, $new_tracker_id);
@@ -60,7 +60,7 @@ final class NotificationSettingsDuplicator
         $this->duplicateCalendarEventConfig($template_tracker_id, $new_tracker_id);
     }
 
-    private function duplicateGlobalNotifications(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    private function duplicateGlobalNotifications(int $template_tracker_id, int $new_tracker_id, DuplicationUserGroupMapping $duplication_user_group_mapping): void
     {
         foreach ($this->global_notification_dao->getByTrackerId($template_tracker_id) as $template_notification_id) {
             $new_notification_id = $this->global_notification_dao->duplicate($template_notification_id, $new_tracker_id);
@@ -79,7 +79,7 @@ final class NotificationSettingsDuplicator
         $this->custom_sender_dao->duplicate($template_tracker_id, $new_tracker_id);
     }
 
-    private function duplicateReminders(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping, array $field_mapping): void
+    private function duplicateReminders(int $template_tracker_id, int $new_tracker_id, DuplicationUserGroupMapping $duplication_user_group_mapping, array $field_mapping): void
     {
         $this->date_reminder_dao->duplicate($template_tracker_id, $new_tracker_id, $duplication_user_group_mapping, $field_mapping);
     }

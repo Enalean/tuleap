@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
@@ -30,7 +31,6 @@ use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 
 class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
 {
@@ -71,7 +71,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
             [],
         );
 
@@ -96,7 +96,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
             [],
         );
 
@@ -132,7 +132,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
             [],
         );
 
@@ -166,7 +166,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
             [],
         );
 
@@ -192,7 +192,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
             [],
         );
 
@@ -219,7 +219,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping([]),
             [],
         );
 
@@ -234,7 +234,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping([]),
             [],
         );
 
@@ -252,7 +252,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping([]),
             [],
         );
 
@@ -270,7 +270,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping([]),
             [],
         );
 
@@ -311,7 +311,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
             $field_mapping,
         );
 
@@ -360,7 +360,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping([]),
             $field_mapping,
         );
 
@@ -391,7 +391,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            DuplicationUserGroupMapping::fromNewProjectWithMapping([]),
             [],
         );
 

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -250,7 +250,7 @@ class Workflow_Transition_ConditionFactory
         return isset($xml->permissions);
     }
 
-    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, DuplicationUserGroupMapping $duplication_user_group_mapping): void
     {
         $this->permissions_factory->duplicate($from_transition, $new_transition_id, $duplication_user_group_mapping);
         $this->fieldnotempty_factory->duplicate($from_transition, $new_transition_id, $field_mapping);

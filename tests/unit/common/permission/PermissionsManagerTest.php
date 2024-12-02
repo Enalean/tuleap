@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +36,7 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             120 => 220,
         ];
 
-        $duplication_mapping = TrackerDuplicationUserGroupMapping::fromSameProjectWithMapping($ugroup_mapping);
+        $duplication_mapping = DuplicationUserGroupMapping::fromSameProjectWithMapping($ugroup_mapping);
 
         $dao = $this->createMock(PermissionsDao::class);
         $dao->method('duplicatePermissions')->with($source, $target, $permission_types, $duplication_mapping);
@@ -56,7 +56,7 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_types = ['STUFF_READ'];
 
         $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromSameProjectWithoutMapping());
+        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromSameProjectWithoutMapping());
 
         $permissionsManager = new PermissionsManager($dao);
         $permissionsManager->duplicateWithStatic($source, $target, $permission_types);
@@ -75,7 +75,7 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
+        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
 
         $permissionsManager = new PermissionsManager($dao);
         $permissionsManager->duplicateWithStaticMapping($source, $target, $permission_types, $ugroup_mapping);
@@ -91,7 +91,7 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_types = ['STUFF_READ'];
 
         $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
+        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
 
         $permissionsManager = new PermissionsManager($dao);
 

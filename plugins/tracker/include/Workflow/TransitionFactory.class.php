@@ -22,7 +22,7 @@
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
@@ -423,7 +423,7 @@ class TransitionFactory
      * @param int $workflow_id the workflow id
      * @param Transition[] $transitions the transitions to duplicate
      */
-    public function duplicate($values, $workflow_id, array $transitions, array $field_mapping, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicate($values, $workflow_id, array $transitions, array $field_mapping, DuplicationUserGroupMapping $duplication_user_group_mapping): void
     {
         if ($transitions != null) {
             foreach ($transitions as $transition) {

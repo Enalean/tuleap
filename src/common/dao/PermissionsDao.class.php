@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\TrackerDuplicationType;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Project\Duplication\DuplicationType;
+use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
 class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 {
@@ -178,7 +178,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     * @param int    $to
     * @param Array $permission_type
     */
-    public function duplicatePermissions($from, $to, array $permission_type, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): bool
+    public function duplicatePermissions($from, $to, array $permission_type, DuplicationUserGroupMapping $duplication_user_group_mapping): bool
     {
         $from            = $this->da->quoteSmart($from, ['force_string' => true]);
         $to              = $this->da->quoteSmart($to, ['force_string' => true]);
@@ -198,7 +198,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         }
 
         $and = '';
-        if ($duplication_user_group_mapping->duplication_type === TrackerDuplicationType::DUPLICATE_NEW_PROJECT || $duplication_user_group_mapping->duplication_type === TrackerDuplicationType::DUPLICATE_OTHER_PROJECT) {
+        if ($duplication_user_group_mapping->duplication_type === DuplicationType::DUPLICATE_NEW_PROJECT || $duplication_user_group_mapping->duplication_type === DuplicationType::DUPLICATE_OTHER_PROJECT) {
             $and = ' AND ugroup_id <= 100';
         }
         //Duplicate dynamic perms
