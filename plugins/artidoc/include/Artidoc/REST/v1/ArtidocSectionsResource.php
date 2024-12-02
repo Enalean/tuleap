@@ -33,6 +33,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\SectionDeletor;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
@@ -120,7 +121,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         $user = UserManager::instance()->getCurrentUser();
         $this->getDeleteHandler($user)
-            ->handle($section_id)
+            ->deleteSection($section_id)
             ->match(
                 function () {
                 },
@@ -131,7 +132,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             );
     }
 
-    private function getDeleteHandler(\PFUser $user): DeleteSectionHandler
+    private function getDeleteHandler(\PFUser $user): SectionDeletor
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -148,7 +149,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             ),
         );
 
-        return new DeleteSectionHandler($dao, $retriever, $dao);
+        return new SectionDeletor($dao, $retriever, $dao);
     }
 
     private function getBuilder(\PFUser $user): ArtidocSectionRepresentationBuilder

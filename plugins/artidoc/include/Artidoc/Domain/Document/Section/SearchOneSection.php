@@ -18,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Document;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
 interface SearchOneSection
 {
-    public function searchSectionById(SectionIdentifier $section_id): ?RawSection;
+    /**
+     * @return Ok<RawSection>|Err<Fault>
+     */
+    public function searchSectionById(SectionIdentifier $section_id): Ok|Err;
 }

@@ -30,11 +30,15 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\DeleteOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
@@ -62,7 +66,7 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         );
     }
 
-    public function searchSectionById(SectionIdentifier $section_id): ?RawSection
+    public function searchSectionById(SectionIdentifier $section_id): Ok|Err
     {
         $row = $this->getDB()->row(
             <<<EOS
@@ -74,12 +78,12 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         );
 
         if ($row === null) {
-            return null;
+            return Result::err(Fault::fromMessage('Unable to find section'));
         }
 
         $row['id'] = $section_id;
 
-        return RawSection::fromRow($row);
+        return Result::ok(RawSection::fromRow($row));
     }
 
     public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections

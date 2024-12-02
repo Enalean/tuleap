@@ -24,8 +24,9 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
-use Tuleap\Artidoc\Document\SearchOneSection;
+use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -45,15 +46,13 @@ final class ArtidocSectionRepresentationBuilder
      */
     public function build(SectionIdentifier $id, \PFUser $user): Ok|Err
     {
-        $row = $this->dao->searchSectionById($id);
-        if ($row === null) {
-            return Result::err(Fault::fromMessage('Unable to find section'));
-        }
-
-        return $this->retrieve_artidoc
-            ->retrieveArtidocUserCanRead($row->item_id)
-            ->andThen(fn () => $this->transformer->getRepresentation(new PaginatedRawSections($row->item_id, [$row], 1), $user))
-            ->andThen($this->getFirstAndOnlySectionFromCollection(...));
+        return $this->dao->searchSectionById($id)
+            ->match(
+                fn (RawSection $row) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($row->item_id)
+                    ->andThen(fn () => $this->transformer->getRepresentation(new PaginatedRawSections($row->item_id, [$row], 1), $user))
+                    ->andThen($this->getFirstAndOnlySectionFromCollection(...)),
+                static fn (Fault $fault) => Result::err($fault),
+            );
     }
 
     private function getFirstAndOnlySectionFromCollection(
