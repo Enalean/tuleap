@@ -51,7 +51,7 @@ final class SectionOrderBuilderTest extends TestCase
 
     public function testDirectionIsUnknown(): void
     {
-        $result = $this->getBuilder()->buildFromRest(
+        $result = $this->getBuilder()->build(
             [$this->section_2->toString()],
             'unknown',
             $this->section_1->toString(),
@@ -63,7 +63,7 @@ final class SectionOrderBuilderTest extends TestCase
 
     public function testComparedToIsNotValid(): void
     {
-        $result = $this->getBuilder()->buildFromRest(
+        $result = $this->getBuilder()->build(
             [$this->section_2->toString()],
             'before',
             $this->section_1->toString() . 'invalid-uuid-chars',
@@ -75,7 +75,7 @@ final class SectionOrderBuilderTest extends TestCase
 
     public function testIdsIsEmpty(): void
     {
-        $result = $this->getBuilder()->buildFromRest(
+        $result = $this->getBuilder()->build(
             [],
             'before',
             $this->section_1->toString(),
@@ -87,7 +87,7 @@ final class SectionOrderBuilderTest extends TestCase
 
     public function testIdsDoesNotContainAValidSectionIdentifier(): void
     {
-        $result = $this->getBuilder()->buildFromRest(
+        $result = $this->getBuilder()->build(
             [$this->section_2->toString() . 'invalid-uuid-chars'],
             'before',
             $this->section_1->toString(),
@@ -99,7 +99,7 @@ final class SectionOrderBuilderTest extends TestCase
 
     public function testIdsContainsMoreThanOneSection(): void
     {
-        $result = $this->getBuilder()->buildFromRest(
+        $result = $this->getBuilder()->build(
             [$this->section_2->toString(), $this->section_3->toString()],
             'before',
             $this->section_1->toString(),
@@ -111,7 +111,7 @@ final class SectionOrderBuilderTest extends TestCase
 
     public function testComparedToIsInIds(): void
     {
-        $result = $this->getBuilder()->buildFromRest(
+        $result = $this->getBuilder()->build(
             [$this->section_2->toString()],
             'before',
             $this->section_2->toString(),
@@ -127,7 +127,7 @@ final class SectionOrderBuilderTest extends TestCase
      */
     public function testHappyPath(string $direction): void
     {
-        $result = $this->getBuilder()->buildFromRest(
+        $result = $this->getBuilder()->build(
             [$this->section_2->toString()],
             $direction,
             $this->section_1->toString(),

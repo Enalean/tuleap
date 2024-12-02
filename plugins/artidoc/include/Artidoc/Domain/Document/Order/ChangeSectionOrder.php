@@ -20,40 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Order;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
-use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
-use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-final readonly class PATCHSectionsHandler
+final readonly class ChangeSectionOrder
 {
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private SectionOrderBuilder $section_order_builder,
         private ReorderSections $dao,
     ) {
     }
 
     /**
-     * @return Ok<ArtidocSectionRepresentation>|Err<Fault>
+     * @return Ok<null>|Err<Fault>
      */
-    public function handle(int $id, OrderRepresentation $order): Ok|Err
+    public function reorder(int $id, SectionOrder $order): Ok|Err
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(fn (ArtidocWithContext $document_information) => $this->reorder($id, $order));
-    }
-
-    private function reorder(int $id, OrderRepresentation $order): Ok|Err
-    {
-        return $this->section_order_builder
-            ->buildFromRest($order->ids, $order->direction, $order->compared_to)
-            ->andThen(fn (SectionOrder $order) => $this->dao->reorder($id, $order));
+            ->andThen(fn (ArtidocWithContext $artidoc) => $this->dao->reorder($id, $order));
     }
 }

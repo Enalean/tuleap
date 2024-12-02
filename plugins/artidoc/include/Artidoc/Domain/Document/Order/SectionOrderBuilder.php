@@ -39,7 +39,7 @@ final readonly class SectionOrderBuilder
     /**
      * @return Ok<SectionOrder>|Err<Fault>
      */
-    public function buildFromRest(
+    public function build(
         array $submitted_ids,
         string $submitted_direction,
         string $submitted_compared_to,

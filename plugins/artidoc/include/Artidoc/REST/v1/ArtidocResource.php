@@ -34,7 +34,6 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentCurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
@@ -42,11 +41,14 @@ use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\TooManyRequiredFieldsFault;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\Order\CannotMoveSectionRelativelyToItselfFault;
+use Tuleap\Artidoc\Domain\Document\Order\ChangeSectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\Direction;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidComparedToFault;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidDirectionFault;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidIdsFault;
+use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
@@ -272,8 +274,10 @@ final class ArtidocResource extends AuthenticatedResource
         $this->checkAccess();
 
         $user = UserManager::instance()->getCurrentUser();
-        $this->getPatchHandler($user)
-            ->handle($id, $order)
+
+        $this->getSectionOrderBuilder()
+            ->build($order->ids, $order->direction, $order->compared_to)
+            ->andThen(fn (SectionOrder $order) => $this->getReorderHandler($user)->reorder($id, $order))
             ->match(
                 static function () {
                     // nothing to do
@@ -534,7 +538,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getPatchHandler(\PFUser $user): PATCHSectionsHandler
+    private function getReorderHandler(\PFUser $user): ChangeSectionOrder
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -552,9 +556,8 @@ final class ArtidocResource extends AuthenticatedResource
             ),
         );
 
-        return new PATCHSectionsHandler(
+        return new ChangeSectionOrder(
             $retriever,
-            new SectionOrderBuilder($identifier_factory),
             $dao,
         );
     }
@@ -611,5 +614,10 @@ final class ArtidocResource extends AuthenticatedResource
             )
         );
         return $transformer;
+    }
+
+    private function getSectionOrderBuilder(): SectionOrderBuilder
+    {
+        return (new SectionOrderBuilder(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory())));
     }
 }
