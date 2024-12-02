@@ -46,7 +46,7 @@ describe("image", () => {
             expect(host.image_title).toBe(image_state.image_title);
         });
 
-        it("It when the toolbar view wants to open the image menu, then it should open it", () => {
+        it("when the toolbar view wants to open the image menu, then it should open it", () => {
             const toolbar_bus = buildToolbarBus();
             const host = {
                 toolbar_bus,
@@ -59,7 +59,7 @@ describe("image", () => {
             expect(host.popover_instance.show).toHaveBeenCalledOnce();
         });
 
-        it("It when the toolbar view wants to open another menu, then it should do nothing", () => {
+        it("when the toolbar view wants to open another menu, then it should do nothing", () => {
             const toolbar_bus = buildToolbarBus();
             const host = {
                 toolbar_bus,
