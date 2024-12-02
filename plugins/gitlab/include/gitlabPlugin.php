@@ -142,6 +142,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
@@ -353,7 +354,8 @@ class gitlabPlugin extends Plugin
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
-                )
+                ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
 
@@ -589,6 +591,7 @@ class gitlabPlugin extends Plugin
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             )
         );
 

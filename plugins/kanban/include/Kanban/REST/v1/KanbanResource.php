@@ -98,6 +98,7 @@ use Tuleap\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentation;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentationBuilder;
@@ -1643,6 +1644,7 @@ final class KanbanResource extends AuthenticatedResource
         $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $usage_dao                = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
 
+        $user_manager = UserManager::instance();
         return new NewChangesetCreator(
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
@@ -1694,6 +1696,7 @@ final class KanbanResource extends AuthenticatedResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
     }

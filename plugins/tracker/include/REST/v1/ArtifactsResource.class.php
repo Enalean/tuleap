@@ -130,6 +130,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
@@ -774,6 +775,7 @@ class ArtifactsResource extends AuthenticatedResource
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
         $event_dispatcher = EventManager::instance();
 
+        $user_manager      = UserManager::instance();
         $changeset_creator = new NewChangesetCreator(
             $transaction_executor,
             ArtifactChangesetSaver::build(),
@@ -819,6 +821,7 @@ class ArtifactsResource extends AuthenticatedResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
 

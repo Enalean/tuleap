@@ -45,6 +45,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -69,7 +70,7 @@ final readonly class NewChangesetCreatorBuilder
         $event_manager            = EventManager::instance();
 
         $comment_changeset_dao =                 new Tracker_Artifact_Changeset_CommentDao();
-
+        $user_manager          = \UserManager::instance();
 
         return new NewChangesetCreator(
             $db_transaction_executor,
@@ -120,7 +121,8 @@ final readonly class NewChangesetCreatorBuilder
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     $comment_changeset_dao,
-                )
+                ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
     }

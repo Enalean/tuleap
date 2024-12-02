@@ -51,6 +51,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\RetrieveMentionedUserInCommentStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
@@ -264,9 +265,10 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 \Mockery::spy(\EventManager::class),
                 PostCreationActionsQueuerStub::doNothing(),
                 $changeset_comment_indexer,
+                RetrieveMentionedUserInCommentStub::withoutMentionedUser(),
             ),
         );
-        $creator->create($changeset_creation, PostCreationContext::withNoConfig(false));
+        $creator->create($changeset_creation, PostCreationContext::withNoConfig($send_notification));
     }
 
     public function testDontCreateNewChangesetIfNoCommentOrNoChanges(): void
@@ -438,6 +440,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
         $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
         $artifact->shouldReceive('getActionsQueuer')->andReturns(PostCreationActionsQueuerStub::doNothing());
+        $artifact->shouldReceive('getMentionedUserInCommentRetriever')->andReturns(RetrieveMentionedUserInCommentStub::withoutMentionedUser());
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -701,6 +704,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $workflow->shouldReceive('validate')->andReturns(true);
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
         $artifact->shouldReceive('getWorkflowRetriever')->andReturns(RetrieveWorkflowStub::withWorkflow($workflow));
+        $artifact->shouldReceive('getMentionedUserInCommentRetriever')->andReturns(RetrieveMentionedUserInCommentStub::withoutMentionedUser());
 
         // Valid
         $fields_data = [

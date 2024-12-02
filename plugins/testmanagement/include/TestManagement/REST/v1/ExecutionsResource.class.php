@@ -97,6 +97,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
@@ -271,6 +272,7 @@ class ExecutionsResource
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
         $event_dispatcher = \EventManager::instance();
 
+        $user_manager      = UserManager::instance();
         $changeset_creator = new NewChangesetCreator(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
@@ -308,6 +310,7 @@ class ExecutionsResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
 

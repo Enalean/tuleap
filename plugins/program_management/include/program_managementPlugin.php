@@ -260,6 +260,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
+use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
@@ -918,6 +919,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $after_new_changeset_handler    = new AfterNewChangesetHandler($artifact_factory, $fields_retriever);
         $retrieve_workflow              = \WorkflowFactory::instance();
         $event_dispatcher               = EventManager::instance();
+        $user_manager                   = UserManager::instance();
 
         $new_changeset_creator = new NewChangesetCreator(
             $transaction_executor,
@@ -970,6 +972,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new MentionedUserInCommentRetriever($user_manager),
             ),
         );
 
