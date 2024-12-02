@@ -24,7 +24,7 @@ import {
     putResponse,
     uri,
     getJSON,
-    patchJSON,
+    patchResponse,
     postJSON,
 } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
@@ -130,14 +130,18 @@ export function reorderSections(
     section_id: string,
     direction: "before" | "after",
     compared_to: string,
-): void {
-    patchJSON(uri`/api/artidoc/${document_id}/sections`, {
-        order: {
-            ids: [section_id],
-            direction,
-            compared_to,
+): ResultAsync<Response, Fault> {
+    return patchResponse(
+        uri`/api/artidoc/${document_id}/sections`,
+        {},
+        {
+            order: {
+                ids: [section_id],
+                direction,
+                compared_to,
+            },
         },
-    });
+    );
 }
 
 export function createSection(

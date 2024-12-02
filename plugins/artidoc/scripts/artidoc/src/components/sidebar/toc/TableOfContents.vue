@@ -24,11 +24,16 @@
     </h1>
     <ol ref="list" data-is-container="true">
         <li
+            data-test="section-in-toc"
             v-for="(section, index) in sections"
             v-bind:key="section.id"
-            draggable="true"
+            v-bind:draggable="section_being_moved === null"
             v-bind:data-internal-id="section.internal_id"
-            data-test="section-in-toc"
+            v-bind:class="{
+                'section-moved-with-success':
+                    just_moved_section?.internal_id === section.internal_id,
+                'section-being-moved': section_being_moved?.internal_id === section.internal_id,
+            }"
         >
             <span
                 class="dragndrop-grip"
@@ -63,6 +68,8 @@
                     v-bind:is_first="index === 0"
                     v-bind:is_last="index === (sections?.length || 0) - 1"
                     v-bind:section="section"
+                    v-on:moved-section-up-or-down="showJustSavedTemporaryFeedback"
+                    v-on:moving-section-up-or-down="showSectionBeingMovedTemporaryFeedback"
                 />
             </span>
         </li>
@@ -71,18 +78,21 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import { onMounted, onUnmounted, ref } from "vue";
+import type { Ref } from "vue";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import DragndropGripIllustration from "@/components/sidebar/toc/DragndropGripIllustration.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
-import { onMounted, onUnmounted, ref } from "vue";
 import { init } from "@tuleap/drag-and-drop";
 import type { Drekkenov } from "@tuleap/drag-and-drop";
 import { noop } from "@/helpers/noop";
 import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop/src";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import type { InternalArtidocSectionId } from "@/stores/useSectionsStore";
+import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 
 const { $gettext } = useGettext();
 
@@ -96,6 +106,22 @@ const is_reorder_allowed = can_user_edit_document;
 const list = ref<HTMLElement>();
 
 let drek: Drekkenov | undefined = undefined;
+
+const just_moved_section: Ref<null | InternalArtidocSectionId> = ref(null);
+const section_being_moved: Ref<null | InternalArtidocSectionId> = ref(null);
+
+const showJustSavedTemporaryFeedback = (moved_section: InternalArtidocSectionId): void => {
+    just_moved_section.value = moved_section;
+    section_being_moved.value = null;
+
+    setTimeout(() => {
+        just_moved_section.value = null;
+    }, TEMPORARY_FLAG_DURATION_IN_MS);
+};
+
+const showSectionBeingMovedTemporaryFeedback = (moved_section: InternalArtidocSectionId): void => {
+    section_being_moved.value = moved_section;
+};
 
 onMounted(() => {
     if (!list.value || !is_reorder_allowed) {
@@ -119,8 +145,12 @@ onMounted(() => {
                 internal_id: context.dropped_element.dataset.internalId,
             };
 
+            showSectionBeingMovedTemporaryFeedback(moved_section);
+
             if (context.next_sibling === null) {
-                moveSectionAtTheEnd(document_id, moved_section);
+                moveSectionAtTheEnd(document_id, moved_section).then(() =>
+                    showJustSavedTemporaryFeedback(moved_section),
+                );
                 return;
             }
 
@@ -133,7 +163,9 @@ onMounted(() => {
             const sibling = {
                 internal_id: context.next_sibling.dataset.internalId,
             };
-            moveSectionBefore(document_id, moved_section, sibling);
+            moveSectionBefore(document_id, moved_section, sibling).map(() => {
+                showJustSavedTemporaryFeedback(moved_section);
+            });
         },
         cleanupAfterDragCallback: noop,
     });
@@ -146,6 +178,20 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 @use "pkg:@tuleap/drag-and-drop";
+
+@keyframes blink-toc-item {
+    0% {
+        background: var(--tlp-info-color-transparent-90);
+    }
+
+    50% {
+        background: transparent;
+    }
+
+    100% {
+        background: var(--tlp-info-color-transparent-90);
+    }
+}
 
 h1 {
     display: flex;
@@ -191,6 +237,24 @@ li {
 
     &:not(:hover, :focus-within) > .reorder-arrows:not(:focus-within) {
         opacity: 0;
+    }
+}
+
+.section-moved-with-success {
+    animation: pulse-section 500ms ease-in-out;
+    background-color: var(--tlp-success-color-lighter-90);
+}
+
+.section-being-moved {
+    animation: blink-toc-item 1200ms ease-in-out alternate infinite;
+}
+
+.section-moved-with-success,
+.section-being-moved,
+li[draggable="false"] {
+    > .reorder-arrows,
+    > .dragndrop-grip {
+        display: none;
     }
 }
 

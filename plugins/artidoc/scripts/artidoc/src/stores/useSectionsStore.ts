@@ -19,6 +19,7 @@
 
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
+import { okAsync } from "neverthrow";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import type {
     ArtidocSection,
@@ -31,7 +32,6 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
 import type { ResultAsync } from "neverthrow";
-import { okAsync } from "neverthrow";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
@@ -60,14 +60,23 @@ export interface SectionsStore {
         pending: PendingArtifactSection,
         section: ArtifactSection,
     ) => void;
-    moveSectionUp: (document_id: number, section: StoredArtidocSection) => Promise<void>;
-    moveSectionDown: (document_id: number, section: StoredArtidocSection) => Promise<void>;
+    moveSectionUp: (
+        document_id: number,
+        section: StoredArtidocSection,
+    ) => ResultAsync<unknown, Fault>;
+    moveSectionDown: (
+        document_id: number,
+        section: StoredArtidocSection,
+    ) => ResultAsync<unknown, Fault>;
     moveSectionBefore: (
         document_id: number,
         section: InternalArtidocSectionId,
         next_sibling: InternalArtidocSectionId,
-    ) => Promise<void>;
-    moveSectionAtTheEnd: (document_id: number, section: InternalArtidocSectionId) => Promise<void>;
+    ) => ResultAsync<unknown, Fault>;
+    moveSectionAtTheEnd: (
+        document_id: number,
+        section: InternalArtidocSectionId,
+    ) => ResultAsync<unknown, Fault>;
 }
 
 type BeforeSection = { before: string };
@@ -259,65 +268,84 @@ export function useSectionsStore(): SectionsStore {
         };
     }
 
-    function moveSectionUp(document_id: number, section: StoredArtidocSection): Promise<void> {
+    function moveArtifactSectionBeforeSibling(
+        moved_section_index: number,
+        document_id: number,
+        section: StoredArtidocSection,
+    ): ResultAsync<unknown, Fault> {
+        const next_artifact_section = getNextArtifactSection(moved_section_index).unwrapOr(null);
+        if (!next_artifact_section) {
+            return okAsync(null);
+        }
+
+        return reorderSections(document_id, section.id, "before", next_artifact_section.id);
+    }
+
+    function moveArtifactSectionAfterSibling(
+        moved_section_index: number,
+        document_id: number,
+        section: StoredArtidocSection,
+    ): ResultAsync<unknown, Fault> {
+        const next_artifact_section =
+            getPreviousArtifactSection(moved_section_index).unwrapOr(null);
+        if (!next_artifact_section) {
+            return okAsync(null);
+        }
+
+        return reorderSections(document_id, section.id, "after", next_artifact_section.id);
+    }
+
+    function moveSectionUp(
+        document_id: number,
+        section: StoredArtidocSection,
+    ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
-            (index): Promise<void> => {
+            (index): ResultAsync<unknown, Fault> => {
                 if (sections.value === undefined) {
-                    return Promise.resolve();
+                    return okAsync(null);
                 }
 
                 if (index <= 0) {
-                    return Promise.resolve();
+                    return okAsync(null);
                 }
 
                 sections.value.splice(index, 1);
                 sections.value.splice(index - 1, 0, section);
 
                 if (isArtifactSection(section)) {
-                    getNextArtifactSection(index).apply((next_artifact_section) =>
-                        reorderSections(
-                            document_id,
-                            section.id,
-                            "before",
-                            next_artifact_section.id,
-                        ),
-                    );
+                    return moveArtifactSectionBeforeSibling(index, document_id, section);
                 }
 
-                return Promise.resolve();
+                return okAsync(null);
             },
-            () => Promise.resolve(),
+            () => okAsync(null),
         );
     }
 
-    function moveSectionDown(document_id: number, section: StoredArtidocSection): Promise<void> {
+    function moveSectionDown(
+        document_id: number,
+        section: StoredArtidocSection,
+    ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
             (index) => {
                 if (sections.value === undefined) {
-                    return Promise.resolve();
+                    return okAsync(null);
                 }
 
                 if (index >= sections.value.length - 1) {
-                    return Promise.resolve();
+                    return okAsync(null);
                 }
 
                 sections.value.splice(index, 1);
                 sections.value.splice(index + 1, 0, section);
 
                 if (isArtifactSection(section)) {
-                    getPreviousArtifactSection(index).apply((previous_artifact_section) =>
-                        reorderSections(
-                            document_id,
-                            section.id,
-                            "after",
-                            previous_artifact_section.id,
-                        ),
-                    );
+                    return moveArtifactSectionAfterSibling(index, document_id, section);
                 }
 
-                return Promise.resolve();
+                return okAsync(null);
             },
-            () => Promise.resolve(),
+            () => okAsync(null),
         );
     }
 
@@ -325,26 +353,26 @@ export function useSectionsStore(): SectionsStore {
         document_id: number,
         section: InternalArtidocSectionId,
         next_sibling: InternalArtidocSectionId,
-    ): Promise<void> {
+    ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
             (index_section) => {
                 return findIndexOfSection(next_sibling).match(
                     (index_sibling) => {
                         if (sections.value === undefined) {
-                            return Promise.resolve();
+                            return okAsync(null);
                         }
 
                         if (index_section < 0 || sections.value.length - 1 < index_section) {
-                            return Promise.resolve();
+                            return okAsync(null);
                         }
 
                         if (index_sibling < 0 || sections.value.length - 1 < index_sibling) {
-                            return Promise.resolve();
+                            return okAsync(null);
                         }
 
                         if (index_sibling === index_section + 1) {
                             // same position, do nothing
-                            return Promise.resolve();
+                            return okAsync(null);
                         }
 
                         const section = sections.value[index_section];
@@ -356,43 +384,39 @@ export function useSectionsStore(): SectionsStore {
                         sections.value.splice(new_section_index, 0, section);
 
                         if (isArtifactSection(section)) {
-                            getNextArtifactSection(new_section_index + 1).apply(
-                                (next_artifact_section) =>
-                                    reorderSections(
-                                        document_id,
-                                        section.id,
-                                        "before",
-                                        next_artifact_section.id,
-                                    ),
+                            return moveArtifactSectionBeforeSibling(
+                                new_section_index + 1,
+                                document_id,
+                                section,
                             );
                         }
 
-                        return Promise.resolve();
+                        return okAsync(null);
                     },
-                    () => Promise.resolve(),
+                    () => okAsync(null),
                 );
             },
-            () => Promise.resolve(),
+            () => okAsync(null),
         );
     }
 
     function moveSectionAtTheEnd(
         document_id: number,
         section: InternalArtidocSectionId,
-    ): Promise<void> {
+    ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
             (index_section) => {
                 if (sections.value === undefined) {
-                    return Promise.resolve();
+                    return okAsync(null);
                 }
 
                 if (index_section < 0 || sections.value.length - 1 < index_section) {
-                    return Promise.resolve();
+                    return okAsync(null);
                 }
 
                 if (index_section === sections.value.length - 1) {
                     // same position, do nothing
-                    return Promise.resolve();
+                    return okAsync(null);
                 }
 
                 const section = sections.value[index_section];
@@ -402,20 +426,12 @@ export function useSectionsStore(): SectionsStore {
 
                 if (isArtifactSection(section)) {
                     const penultimate_index = sections.value.length - 2;
-                    getPreviousArtifactSection(penultimate_index).apply(
-                        (previous_artifact_section) =>
-                            reorderSections(
-                                document_id,
-                                section.id,
-                                "after",
-                                previous_artifact_section.id,
-                            ),
-                    );
+                    return moveArtifactSectionAfterSibling(penultimate_index, document_id, section);
                 }
 
-                return Promise.resolve();
+                return okAsync(null);
             },
-            () => Promise.resolve(),
+            () => okAsync(null),
         );
     }
 
