@@ -4561,6 +4561,11 @@ msgstr ""
 "email pour les artifacts comprennent les informations nécessaires pour "
 "ajouter l’évènement à un calendrier (Outlook, Google Calendar, etc.)."
 
+msgid "When you use @ to mention someone, they will get an email notification."
+msgstr ""
+"Lorsque vous utilisez @ pour mentionner quelqu'un, cette personne recevra un "
+"e-mail de notification."
+
 msgid "Workflow"
 msgstr "Workflow"
 

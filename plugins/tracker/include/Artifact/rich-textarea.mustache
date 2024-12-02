@@ -13,3 +13,9 @@
         data-test="{{ name }}"
 >{{ value }}</textarea>
 <div class="muted tracker-richtexteditor-help" id="{{ help_id }}"></div>
+{{# allows_mentions }}
+    <p class="alert alert-info">
+        <i class="fa-solid fa-exclamation-circle artifact-comment-at-mention-info-icon" aria-hidden="true"></i>
+        {{# dgettext }}tuleap-tracker| When you use @ to mention someone, they will get an email notification.{{/ dgettext }}
+    </p>
+{{/ allows_mentions }}
