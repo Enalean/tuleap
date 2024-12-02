@@ -1,0 +1,16 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": [
+        "package.json",
+        "tsconfig*.json",
+        "pnpm-lock.yaml",
+        "vite.config.ts",
+        "src/**",
+        "!src/assets/style.css"
+      ],
+      "outputs": ["src/assets/style.css"]
+    }
+  }
+}
