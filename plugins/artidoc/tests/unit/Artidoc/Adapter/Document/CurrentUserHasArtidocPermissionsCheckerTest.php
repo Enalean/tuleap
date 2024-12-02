@@ -50,7 +50,7 @@ final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
 
     public function testCheckUserCanReadReturnFault(): void
     {
-        $checker = CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
+        $checker = CurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
 
         $this->permissions_manager->method('userCanRead')->willReturn(false);
 
@@ -62,7 +62,7 @@ final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
 
     public function testCheckUserCanReadReturnArtidocWhenUserIsAReader(): void
     {
-        $checker = CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
+        $checker = CurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
 
         $this->permissions_manager->method('userCanRead')->willReturn(true);
 
@@ -75,7 +75,7 @@ final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
 
     public function testCheckUserCanWriteReturnFault(): void
     {
-        $checker = CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
+        $checker = CurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
 
         $this->permissions_manager->method('userCanWrite')->willReturn(false);
 
@@ -87,7 +87,7 @@ final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
 
     public function testCheckUserCanWriteReturnArtidocWhenUserIsAWriter(): void
     {
-        $checker = CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
+        $checker = CurrentUserHasArtidocPermissionsChecker::withCurrentUser($this->user);
 
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
-use Tuleap\Artidoc\Adapter\Document\CurrentCurrentUserHasArtidocPermissionsChecker;
+use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
@@ -124,7 +124,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         return new ArtidocController(
             new ArtidocWithContextRetriever(
                 new ArtidocRetriever($dao, $docman_item_factory),
-                CurrentCurrentUserHasArtidocPermissionsChecker::withCurrentUser(HTTPRequest::instance()->getCurrentUser()),
+                CurrentUserHasArtidocPermissionsChecker::withCurrentUser(HTTPRequest::instance()->getCurrentUser()),
                 new ArtidocWithContextDecorator(
                     ProjectManager::instance(),
                     new DocumentServiceFromAllowedProjectRetriever($this),

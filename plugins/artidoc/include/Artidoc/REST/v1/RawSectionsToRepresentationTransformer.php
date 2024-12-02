@@ -39,9 +39,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
 final readonly class RawSectionsToRepresentationTransformer implements TransformRawSectionsToRepresentation
 {
-    public const DEFAULT_TRACKER_REPRESENTATION      = null;
-    public const DEFAULT_STATUS_VALUE_REPRESENTATION = null;
-
     public function __construct(
         private \Tracker_ArtifactDao $artifact_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
