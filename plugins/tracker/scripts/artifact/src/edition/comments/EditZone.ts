@@ -23,6 +23,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 
 export type EditZonePresenter = {
     readonly textarea: HTMLTextAreaElement;
+    readonly are_notifications_enabled: boolean;
     onSubmit(): void;
     onCancel(): void;
 };
@@ -33,6 +34,25 @@ export const EditZone = (
 ): TemplateResult => {
     return html`<div class="artifact-comment-edit-panel">
         ${presenter.textarea}
+        ${presenter.are_notifications_enabled
+            ? html`<p class="alert alert-info">
+                  <i
+                      class="fa-solid fa-exclamation-circle artifact-comment-at-mention-info-icon"
+                      aria-hidden="true"
+                  ></i>
+                  ${gettext_provider.gettext(
+                      "When you use @ to mention someone, they will get an email notification.",
+                  )}
+              </p>`
+            : html`<p class="alert alert-warning">
+                  <i
+                      class="fa-solid fa-triangle-exclamation artifact-comment-at-mention-info-icon"
+                      aria-hidden="true"
+                  ></i>
+                  ${gettext_provider.gettext(
+                      "This tracker's notifications are disabled, when you use @ to mention someone, no email will be sent.",
+                  )}
+              </p>`}
         <div class="artifact-comment-edit-panel-actions">
             <button
                 type="button"

@@ -42,6 +42,7 @@ export const HIGHLIGHT_CLASS = "artifact-comment-highlight";
 export type InitDataFromBackend = {
     readonly changeset_id: string;
     readonly project_id: string;
+    readonly are_notifications_enabled: boolean;
     readonly follow_up_content: HTMLElement;
     readonly read_only_comment: HTMLElement;
 };
@@ -95,6 +96,9 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
             }
             const changeset_id = getDatasetItemOrThrow(follow_up_content, "data-changeset-id");
             const project_id = getDatasetItemOrThrow(follow_up_content, "data-project-id");
+            const are_notifications_enabled = !follow_up_content.hasAttribute(
+                "data-notifications-disabled",
+            );
             const read_only_comment = follow_up_content.querySelector(READ_ONLY_COMMENT_SELECTOR);
             if (!(read_only_comment instanceof HTMLElement)) {
                 return Option.nothing();
@@ -103,6 +107,7 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
             const init_data_from_backend: InitDataFromBackend = {
                 changeset_id,
                 project_id,
+                are_notifications_enabled,
                 follow_up_content,
                 read_only_comment,
             };

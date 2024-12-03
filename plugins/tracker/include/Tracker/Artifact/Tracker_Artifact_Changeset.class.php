@@ -278,7 +278,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             return '';
         }
 
-        $project_id = $this->getTracker()->getGroupId();
+        $tracker    = $this->getTracker();
+        $project_id = $tracker->getGroupId();
         $purifier   = Codendi_HTMLPurifier::instance();
 
         $html = $this->getAvatar();
@@ -291,8 +292,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $html .= $this->getTimeAgo($current_user);
         $html .= '</div>';
 
+        $data_has_notifications = $tracker->isNotificationStopped() ? 'data-notifications-disabled' : '';
+
         // The content
-        $html .= '<div class="tracker_artifact_followup_content" data-follow-up-content data-changeset-id="' . $purifier->purify($this->getId()) . '" data-project-id="' . $purifier->purify($project_id) . '">';
+        $html .= '<div class="tracker_artifact_followup_content" data-follow-up-content data-changeset-id="' . $purifier->purify($this->getId()) . '" data-project-id="' . $purifier->purify($project_id) . '" ' . $data_has_notifications . '>';
         $html .= $follow_up_content;
         $html .= '</div>';
 

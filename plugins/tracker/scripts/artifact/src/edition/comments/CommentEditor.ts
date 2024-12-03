@@ -67,6 +67,7 @@ export const CommentEditor = (
         const edit_zone = EditZone(
             {
                 textarea,
+                are_notifications_enabled: init_data_from_backend.are_notifications_enabled,
                 onSubmit() {
                     maybe_editor.apply((editor) => {
                         const format_at_submit = dom_adapter.readCommentFormatOrDefault(
