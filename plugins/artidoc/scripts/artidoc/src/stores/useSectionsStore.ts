@@ -19,7 +19,7 @@
 
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
-import { okAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import type {
     ArtidocSection,
@@ -36,6 +36,7 @@ import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
+import { CannotReorderSectionsFault } from "@/stores/CannotReorderSectionsFault";
 
 export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 
@@ -273,6 +274,10 @@ export function useSectionsStore(): SectionsStore {
         document_id: number,
         section: StoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
+        if (!isArtifactSection(section)) {
+            return okAsync(null);
+        }
+
         const next_artifact_section = getNextArtifactSection(moved_section_index).unwrapOr(null);
         if (!next_artifact_section) {
             return okAsync(null);
@@ -286,6 +291,10 @@ export function useSectionsStore(): SectionsStore {
         document_id: number,
         section: StoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
+        if (!isArtifactSection(section)) {
+            return okAsync(null);
+        }
+
         const next_artifact_section =
             getPreviousArtifactSection(moved_section_index).unwrapOr(null);
         if (!next_artifact_section) {
@@ -302,23 +311,27 @@ export function useSectionsStore(): SectionsStore {
         return findIndexOfSection(section).match(
             (index): ResultAsync<unknown, Fault> => {
                 if (sections.value === undefined) {
-                    return okAsync(null);
+                    return errAsync(CannotReorderSectionsFault.build());
                 }
 
                 if (index <= 0) {
-                    return okAsync(null);
+                    return errAsync(CannotReorderSectionsFault.build());
                 }
+
+                const sections_before_move = [...sections.value];
 
                 sections.value.splice(index, 1);
                 sections.value.splice(index - 1, 0, section);
 
-                if (isArtifactSection(section)) {
-                    return moveArtifactSectionBeforeSibling(index, document_id, section);
-                }
+                return moveArtifactSectionBeforeSibling(index, document_id, section).mapErr(
+                    (fault) => {
+                        sections.value = sections_before_move;
 
-                return okAsync(null);
+                        return fault;
+                    },
+                );
             },
-            () => okAsync(null),
+            () => errAsync(CannotReorderSectionsFault.build()),
         );
     }
 
@@ -329,23 +342,27 @@ export function useSectionsStore(): SectionsStore {
         return findIndexOfSection(section).match(
             (index) => {
                 if (sections.value === undefined) {
-                    return okAsync(null);
+                    return errAsync(CannotReorderSectionsFault.build());
                 }
 
                 if (index >= sections.value.length - 1) {
-                    return okAsync(null);
+                    return errAsync(CannotReorderSectionsFault.build());
                 }
+
+                const sections_before_move = [...sections.value];
 
                 sections.value.splice(index, 1);
                 sections.value.splice(index + 1, 0, section);
 
-                if (isArtifactSection(section)) {
-                    return moveArtifactSectionAfterSibling(index, document_id, section);
-                }
+                return moveArtifactSectionAfterSibling(index, document_id, section).mapErr(
+                    (fault) => {
+                        sections.value = sections_before_move;
 
-                return okAsync(null);
+                        return fault;
+                    },
+                );
             },
-            () => okAsync(null),
+            () => errAsync(CannotReorderSectionsFault.build()),
         );
     }
 
@@ -359,15 +376,15 @@ export function useSectionsStore(): SectionsStore {
                 return findIndexOfSection(next_sibling).match(
                     (index_sibling) => {
                         if (sections.value === undefined) {
-                            return okAsync(null);
+                            return errAsync(CannotReorderSectionsFault.build());
                         }
 
                         if (index_section < 0 || sections.value.length - 1 < index_section) {
-                            return okAsync(null);
+                            return errAsync(CannotReorderSectionsFault.build());
                         }
 
                         if (index_sibling < 0 || sections.value.length - 1 < index_sibling) {
-                            return okAsync(null);
+                            return errAsync(CannotReorderSectionsFault.build());
                         }
 
                         if (index_sibling === index_section + 1) {
@@ -377,26 +394,28 @@ export function useSectionsStore(): SectionsStore {
 
                         const section = sections.value[index_section];
 
+                        const sections_before_move = [...sections.value];
+
                         const new_section_index =
                             index_section > index_sibling ? index_sibling : index_sibling - 1;
 
                         sections.value.splice(index_section, 1);
                         sections.value.splice(new_section_index, 0, section);
 
-                        if (isArtifactSection(section)) {
-                            return moveArtifactSectionBeforeSibling(
-                                new_section_index + 1,
-                                document_id,
-                                section,
-                            );
-                        }
+                        return moveArtifactSectionBeforeSibling(
+                            new_section_index + 1,
+                            document_id,
+                            section,
+                        ).mapErr((fault) => {
+                            sections.value = sections_before_move;
 
-                        return okAsync(null);
+                            return fault;
+                        });
                     },
-                    () => okAsync(null),
+                    () => errAsync(CannotReorderSectionsFault.build()),
                 );
             },
-            () => okAsync(null),
+            () => errAsync(CannotReorderSectionsFault.build()),
         );
     }
 
@@ -407,11 +426,11 @@ export function useSectionsStore(): SectionsStore {
         return findIndexOfSection(section).match(
             (index_section) => {
                 if (sections.value === undefined) {
-                    return okAsync(null);
+                    return errAsync(CannotReorderSectionsFault.build());
                 }
 
                 if (index_section < 0 || sections.value.length - 1 < index_section) {
-                    return okAsync(null);
+                    return errAsync(CannotReorderSectionsFault.build());
                 }
 
                 if (index_section === sections.value.length - 1) {
@@ -419,19 +438,23 @@ export function useSectionsStore(): SectionsStore {
                     return okAsync(null);
                 }
 
+                const sections_before_move = [...sections.value];
                 const section = sections.value[index_section];
 
                 sections.value.splice(index_section, 1);
                 sections.value.push(section);
 
-                if (isArtifactSection(section)) {
-                    const penultimate_index = sections.value.length - 2;
-                    return moveArtifactSectionAfterSibling(penultimate_index, document_id, section);
-                }
-
-                return okAsync(null);
+                const penultimate_index = sections.value.length - 2;
+                return moveArtifactSectionAfterSibling(
+                    penultimate_index,
+                    document_id,
+                    section,
+                ).mapErr((fault) => {
+                    sections.value = sections_before_move;
+                    return fault;
+                });
             },
-            () => okAsync(null),
+            () => errAsync(CannotReorderSectionsFault.build()),
         );
     }
 
