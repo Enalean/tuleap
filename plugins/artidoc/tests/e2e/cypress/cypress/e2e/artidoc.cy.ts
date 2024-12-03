@@ -135,6 +135,49 @@ describe("Artidoc", () => {
                 .should("have.attr", "src")
                 .should("include", "/plugins/tracker/attachments/");
         });
+
+        cy.log("User should be able to reorder sections with arrows");
+        cy.intercept("PATCH", "/api/artidoc/*/sections").as("patchSectionsOrder");
+
+        cy.get("[data-test=move-down]").first().click({ force: true });
+        cy.wait("@patchSectionsOrder");
+        cy.get("[data-test=artidoc-section]:first-child").within(() => {
+            getSectionTitle().should("contain.text", "Functional Requirement");
+        });
+
+        cy.get("[data-test=move-up]").last().click({ force: true });
+        cy.wait("@patchSectionsOrder");
+        cy.get("[data-test=artidoc-section]:last-child").within(() => {
+            getSectionTitle().should("contain.text", "Performance Requirement");
+        });
+
+        cy.log("User should be able to reorder sections with drag and drop");
+        const dataTransfer = new DataTransfer();
+
+        cy.get("[data-test=section-in-toc]:last-child")
+            .find("[data-test=dragndrop-grip]")
+            .trigger("dragstart", { dataTransfer, force: true });
+
+        cy.get("[data-test=section-in-toc]:first-child")
+            .trigger("dragenter", { dataTransfer })
+            .trigger("drop", { dataTransfer })
+            .trigger("dragend", { dataTransfer });
+
+        cy.wait("@patchSectionsOrder");
+        cy.get("[data-test=artidoc-section]:first-child").within(() => {
+            getSectionTitle().should("contain.text", "Performance Requirement");
+        });
+        cy.get("[data-test=section-in-toc]:first-child").should(
+            "contain.text",
+            "Performance Requirement",
+        );
+        cy.get("[data-test=artidoc-section]:last-child").within(() => {
+            getSectionTitle().should("contain.text", "Security Requirement");
+        });
+        cy.get("[data-test=section-in-toc]:last-child").should(
+            "contain.text",
+            "Security Requirement",
+        );
     });
 });
 

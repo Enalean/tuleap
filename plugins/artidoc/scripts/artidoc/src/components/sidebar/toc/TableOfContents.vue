@@ -28,6 +28,7 @@
             v-bind:key="section.id"
             draggable="true"
             v-bind:data-internal-id="section.internal_id"
+            data-test="section-in-toc"
         >
             <span
                 class="dragndrop-grip"
