@@ -65,6 +65,10 @@ function inlineCodeRule(markType: MarkType): InputRule {
     return markInputRule(/`([^`]+)`$/, markType);
 }
 
+function italicRule(markType: MarkType): InputRule {
+    return markInputRule(/(?<![*_])[*_]([^*_]+)[*_]$/, markType);
+}
+
 export function buildInputRules(schema: Schema): Plugin {
     return inputRules({
         rules: [
@@ -77,6 +81,7 @@ export function buildInputRules(schema: Schema): Plugin {
             smallHeadingRule(schema.nodes.heading),
             boldRule(schema.marks.strong),
             inlineCodeRule(schema.marks.code),
+            italicRule(schema.marks.em),
             automagicLinksInputRule(),
         ],
     });
