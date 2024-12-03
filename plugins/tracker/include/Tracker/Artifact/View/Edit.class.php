@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\EditView\NewCommentPresenter;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -235,8 +236,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         }
 
         if ($this->artifact->userCanUpdate($this->user)) {
+            $renderer_factory       = TemplateRendererFactory::build();
+            $renderer               = $renderer_factory->getRenderer(__DIR__ . '/../../../Artifact');
             $rich_textarea_provider = new RichTextareaProvider(
-                TemplateRendererFactory::build(),
                 new \Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder(
                     new FileUploadDataProvider(
                         new FrozenFieldDetector(
@@ -254,14 +256,20 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
                 )
             );
 
-            $html .= $rich_textarea_provider->getTextarea(
-                RichTextareaConfiguration::fromNewFollowUpComment(
+            $html .= $renderer->renderToString(
+                'EditView/new-comment',
+                new NewCommentPresenter(
                     $tracker,
-                    $this->artifact,
-                    $this->user,
-                    $submitted_comment
-                ),
-                false
+                    $rich_textarea_provider->getTextarea(
+                        RichTextareaConfiguration::fromNewFollowUpComment(
+                            $tracker,
+                            $this->artifact,
+                            $this->user,
+                            $submitted_comment
+                        ),
+                        false
+                    )
+                )
             );
             $html .= $this->fetchReplyByMailHelp();
         }

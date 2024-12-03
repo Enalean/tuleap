@@ -433,11 +433,10 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     /**
-     * Returns true is notifications are stopped for this tracker
-     *
-     * @return bool true is notifications are stopped for this tracker, false otherwise
+     * Returns true if notifications are stopped for this tracker, false otherwise
+     * @psalm-mutation-free
      */
-    public function isNotificationStopped()
+    public function isNotificationStopped(): bool
     {
         return (int) $this->notifications_level === self::NOTIFICATIONS_LEVEL_DISABLED;
     }

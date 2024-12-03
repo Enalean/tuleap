@@ -22,20 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use TemplateRendererFactory;
-
 final readonly class RichTextareaProvider
 {
     public function __construct(
-        private TemplateRendererFactory $template_renderer_factory,
         private UploadDataAttributesForRichTextEditorBuilder $data_attributes_builder,
     ) {
     }
 
-    public function getTextarea(RichTextareaConfiguration $configuration, bool $is_artifact_copy): string
+    public function getTextarea(RichTextareaConfiguration $configuration, bool $is_artifact_copy): RichTextareaPresenter
     {
-        $renderer = $this->template_renderer_factory->getRenderer(__DIR__);
-
         $data_attributes                  = [
             ['name' => 'project-id', 'value' => (string) $configuration->tracker->getGroupId()],
         ];
@@ -53,13 +48,10 @@ final readonly class RichTextareaProvider
         }
         $is_image_upload_allowed = $data_attributes_for_image_upload !== [] && ! $is_artifact_copy;
 
-        return $renderer->renderToString(
-            'rich-textarea',
-            new RichTextareaPresenter(
-                $configuration,
-                $is_image_upload_allowed,
-                $data_attributes
-            )
+        return new RichTextareaPresenter(
+            $configuration,
+            $is_image_upload_allowed,
+            $data_attributes
         );
     }
 }
