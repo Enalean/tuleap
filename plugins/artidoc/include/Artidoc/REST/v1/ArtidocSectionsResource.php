@@ -29,8 +29,8 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\SectionDeletor;
@@ -83,8 +83,8 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         }
 
         $user = UserManager::instance()->getCurrentUser();
-        return $this->getBuilder($user)
-            ->build($section_id, $user)
+        return $this->getHandler($user)
+            ->handle($section_id, $user)
             ->match(
                 function (ArtidocSectionRepresentation $representation) {
                     return $representation;
@@ -152,7 +152,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         return new SectionDeletor($dao, $retriever, $dao);
     }
 
-    private function getBuilder(\PFUser $user): ArtidocSectionRepresentationBuilder
+    private function getHandler(\PFUser $user): GETSectionHandler
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -170,28 +170,32 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         );
 
         $form_element_factory = \Tracker_FormElementFactory::instance();
+        $artifact_factory     = \Tracker_ArtifactFactory::instance();
         $transformer          = new RawSectionsToRepresentationTransformer(
             new \Tracker_ArtifactDao(),
-            \Tracker_ArtifactFactory::instance(),
-            new FileUploadDataProvider(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            \TransitionFactory::instance(),
-                            new SimpleWorkflowDao()
+            $artifact_factory,
+            new SectionRepresentationBuilder(
+                new FileUploadDataProvider(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                \TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
                         ),
-                        new TransitionExtractor()
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao(),
+                            $form_element_factory
+                        )
                     ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        $form_element_factory
-                    )
+                    $form_element_factory
                 ),
-                $form_element_factory
             ),
+            new RequiredArtifactInformationBuilder($artifact_factory),
         );
 
-        return new ArtidocSectionRepresentationBuilder($dao, $retriever, $transformer);
+        return new GETSectionHandler($dao, $retriever, $transformer);
     }
 
     private function getSectionIdentifierFactory(): SectionIdentifierFactory

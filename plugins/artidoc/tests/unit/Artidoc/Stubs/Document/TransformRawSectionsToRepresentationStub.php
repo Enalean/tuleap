@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Document;
 
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\REST\v1\PaginatedArtidocSectionRepresentationCollection;
 use Tuleap\Artidoc\REST\v1\TransformRawSectionsToRepresentation;
 use Tuleap\NeverThrow\Err;
@@ -54,7 +55,7 @@ final class TransformRawSectionsToRepresentationStub implements TransformRawSect
         return new self(null);
     }
 
-    public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
+    public function getRepresentation(ArtidocWithContext $artidoc, PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
     {
         if ($this->result === null) {
             throw new \Exception('Unexpected call to getRepresentation()');

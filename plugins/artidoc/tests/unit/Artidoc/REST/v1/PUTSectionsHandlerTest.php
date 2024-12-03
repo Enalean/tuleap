@@ -23,15 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
-use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Stubs\BuildRequiredArtifactInformationStub;
 use Tuleap\Artidoc\Stubs\Document\SaveSectionsStub;
-use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class PUTSectionsHandlerTest extends TestCase
 {
@@ -48,17 +47,21 @@ final class PUTSectionsHandlerTest extends TestCase
     {
         $saver = SaveSectionsStub::build();
 
-        $dummy_collection = new PaginatedArtidocSectionRepresentationCollection([], 0);
-
         $handler = new PUTSectionsHandler(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::withCollection($dummy_collection),
+            BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
+                101 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(101)->build(),
+                )->build(),
+                102 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(102)->build(),
+                )->build(),
+            ]),
             $saver,
-            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -85,9 +88,8 @@ final class PUTSectionsHandlerTest extends TestCase
 
         $handler = new PUTSectionsHandler(
             RetrieveArtidocWithContextStub::withoutDocument(),
-            TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
+            BuildRequiredArtifactInformationStub::shouldNotBeCalled(),
             $saver,
-            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -117,9 +119,8 @@ final class PUTSectionsHandlerTest extends TestCase
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::withoutCollection(),
+            BuildRequiredArtifactInformationStub::withoutRequiredArtifactInformation(),
             $saver,
-            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -149,9 +150,8 @@ final class PUTSectionsHandlerTest extends TestCase
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
+            BuildRequiredArtifactInformationStub::shouldNotBeCalled(),
             $saver,
-            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(

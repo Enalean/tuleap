@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SearchPaginatedRawSections;
 use Tuleap\NeverThrow\Err;
@@ -45,7 +45,14 @@ final readonly class PaginatedArtidocSectionRepresentationCollectionBuilder
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanRead($id)
-            ->map(fn () => $this->dao->searchPaginatedRawSectionsByItemId($id, $limit, $offset))
-            ->andThen(fn (PaginatedRawSections $raw_sections) => $this->transformer->getRepresentation($raw_sections, $user));
+            ->andThen(function (ArtidocWithContext $artidoc) use ($limit, $offset, $user) {
+                $raw_sections = $this->dao->searchPaginatedRawSectionsByItemId(
+                    $artidoc->document->getId(),
+                    $limit,
+                    $offset,
+                );
+
+                return $this->transformer->getRepresentation($artidoc, $raw_sections, $user);
+            });
     }
 }
