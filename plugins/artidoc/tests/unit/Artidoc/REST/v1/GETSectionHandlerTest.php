@@ -42,7 +42,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
-final class ArtidocSectionRepresentationBuilderTest extends TestCase
+final class GETSectionHandlerTest extends TestCase
 {
     public const SECTION_ID  = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';
     public const ITEM_ID     = 123;
@@ -81,7 +81,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             $attachments_representation
         );
 
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $builder = new GETSectionHandler(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
@@ -93,38 +93,38 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
+        $result = $builder->handle($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isOk($result));
         self::assertSame($section_representation, $result->value);
     }
 
     public function testWhenSectionIsNotFound(): void
     {
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $builder = new GETSectionHandler(
             SearchOneSectionStub::withoutResults(),
             RetrieveArtidocWithContextStub::shouldNotBeCalled(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
         );
 
-        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
+        $result = $builder->handle($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenDocumentIsNotFound(): void
     {
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $builder = new GETSectionHandler(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocWithContextStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
         );
 
-        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
+        $result = $builder->handle($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenTransformerReturnsNoRepresentationForMatchingSection(): void
     {
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $builder = new GETSectionHandler(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
@@ -136,7 +136,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
+        $result = $builder->handle($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
     }
 
@@ -151,7 +151,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             null
         );
 
-        $builder = new ArtidocSectionRepresentationBuilder(
+        $builder = new GETSectionHandler(
             SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
@@ -169,7 +169,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
+        $result = $builder->handle($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
     }
 

@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SaveSections;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -36,9 +34,8 @@ final readonly class PUTSectionsHandler
 {
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private TransformRawSectionsToRepresentation $transformer,
+        private BuildRequiredArtifactInformation $required_artifact_information_builder,
         private SaveSections $dao,
-        private SectionIdentifierFactory $identifier_factory,
     ) {
     }
 
@@ -50,48 +47,41 @@ final readonly class PUTSectionsHandler
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(fn() => $this->ensureThatUserCanReadAllNewSections($id, $sections, $user))
-            ->andThen(
-                /**
-                 * @param list<int> $artifact_ids
-                 */
-                fn(array $artifact_ids) => $this->saveSections($id, $artifact_ids)
-            );
+            ->andThen(fn(ArtidocWithContext $artidoc) => $this->ensureThatUserCanReadAllNewSections($artidoc, $sections, $user))
+            ->andThen(fn() => $this->saveSections($id, $sections));
     }
 
     /**
      * @param ArtidocPUTSectionRepresentation[] $sections
-     * @return Ok<list<int>>|Err<Fault>
+     * @return Ok<true>|Err<Fault>
      */
-    private function ensureThatUserCanReadAllNewSections(int $id, array $sections, \PFUser $user): Ok|Err
+    private function ensureThatUserCanReadAllNewSections(ArtidocWithContext $artidoc, array $sections, \PFUser $user): Ok|Err
     {
-        $artifact_ids = [];
         foreach ($sections as $section) {
-            $dummy_identifier = $this->identifier_factory->buildIdentifier();
+            $result = $this->required_artifact_information_builder
+                ->getRequiredArtifactInformation($artidoc, $section->artifact->id, $user);
 
-            $artifact_ids[] = RawSection::fromRow([
-                'artifact_id' => $section->artifact->id,
-                'id'          => $dummy_identifier,
-                'item_id'     => $id,
-                'rank'        => 0,
-            ]);
+            if (Result::isErr($result)) {
+                return Result::err(UserCannotReadSectionFault::fromFault($result->error));
+            }
         }
 
-        $raw_sections = new PaginatedRawSections($id, $artifact_ids, count($artifact_ids));
-
-        return $this->transformer
-            ->getRepresentation($raw_sections, $user)
-            ->andThen(static fn() => Result::ok(array_column($artifact_ids, 'artifact_id')))
-            ->mapErr(static fn(Fault $fault) => UserCannotReadSectionFault::fromFault($fault));
+        return Result::ok(true);
     }
 
     /**
-     * @param list<int> $artifact_ids
+     * @param ArtidocPUTSectionRepresentation[] $sections
      * @return Ok<true>|Err<Fault>
      */
-    private function saveSections(int $id, array $artifact_ids): Ok|Err
+    private function saveSections(int $id, array $sections): Ok|Err
     {
-        $this->dao->save($id, $artifact_ids);
+        $this->dao->save(
+            $id,
+            array_map(
+                static fn (ArtidocPUTSectionRepresentation $section) => $section->artifact->id,
+                $sections,
+            ),
+        );
 
         return Result::ok(true);
     }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use PFUser;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
@@ -77,6 +78,7 @@ final class ArtifactTestBuilder
             ->withId(101)
             ->withName('bug')
             ->withColor(TrackerColor::fromName('fiesta-red'))
+            ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
     }
 

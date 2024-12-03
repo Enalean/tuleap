@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -44,17 +43,5 @@ final readonly class ArtidocSectionRepresentation
         public bool $can_user_edit_section,
         public ?ArtifactFieldValueFileFullRepresentation $attachments,
     ) {
-    }
-
-    public static function fromRepresentationWithId(self $representation, SectionIdentifier $id): self
-    {
-        return new self(
-            $id->toString(),
-            $representation->artifact,
-            $representation->title,
-            $representation->description,
-            $representation->can_user_edit_section,
-            $representation->attachments,
-        );
     }
 }

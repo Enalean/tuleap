@@ -494,13 +494,10 @@ final class ArtidocResource extends AuthenticatedResource
             ),
         );
 
-        $transformer = $this->getRepresentationTransformer();
-
         return new PUTSectionsHandler(
             $retriever,
-            $transformer,
+            new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance()),
             $dao,
-            $identifier_factory,
         );
     }
 
@@ -525,13 +522,31 @@ final class ArtidocResource extends AuthenticatedResource
             ),
         );
 
-        $transformer = $this->getRepresentationTransformer();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
 
         return new POSTSectionHandler(
             $retriever,
-            $transformer,
+            new SectionRepresentationBuilder(
+                new FileUploadDataProvider(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                \TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao(),
+                            $form_element_factory
+                        )
+                    ),
+                    $form_element_factory
+                )
+            ),
             $dao,
             $identifier_factory,
+            new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance()),
         );
     }
 
@@ -593,27 +608,31 @@ final class ArtidocResource extends AuthenticatedResource
     private function getRepresentationTransformer(): RawSectionsToRepresentationTransformer
     {
         $form_element_factory = \Tracker_FormElementFactory::instance();
-        $transformer          = new RawSectionsToRepresentationTransformer(
+        $artifact_factory     = \Tracker_ArtifactFactory::instance();
+
+        return new RawSectionsToRepresentationTransformer(
             new \Tracker_ArtifactDao(),
-            \Tracker_ArtifactFactory::instance(),
-            new FileUploadDataProvider(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            \TransitionFactory::instance(),
-                            new SimpleWorkflowDao()
+            $artifact_factory,
+            new SectionRepresentationBuilder(
+                new FileUploadDataProvider(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                \TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
                         ),
-                        new TransitionExtractor()
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao(),
+                            $form_element_factory
+                        )
                     ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        $form_element_factory
-                    )
+                    $form_element_factory
                 ),
-                $form_element_factory
-            )
+            ),
+            new RequiredArtifactInformationBuilder($artifact_factory),
         );
-        return $transformer;
     }
 
     private function getSectionOrderBuilder(): SectionOrderBuilder

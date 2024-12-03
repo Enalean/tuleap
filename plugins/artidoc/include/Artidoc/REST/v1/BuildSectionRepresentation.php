@@ -20,16 +20,13 @@
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
-interface TransformRawSectionsToRepresentation
+interface BuildSectionRepresentation
 {
-    /**
-     * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
-     */
-    public function getRepresentation(ArtidocWithContext $artidoc, PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err;
+    public function build(
+        RequiredArtifactInformation $artifact_information,
+        SectionIdentifier $section_identifier,
+        \PFUser $user,
+    ): ArtidocSectionRepresentation;
 }

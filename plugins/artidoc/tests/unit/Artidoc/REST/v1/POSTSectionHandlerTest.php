@@ -27,16 +27,15 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Stubs\BuildRequiredArtifactInformationStub;
+use Tuleap\Artidoc\Stubs\BuildSectionRepresentationStub;
 use Tuleap\Artidoc\Stubs\Document\SaveOneSectionStub;
-use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class POSTSectionHandlerTest extends TestCase
 {
@@ -60,26 +59,20 @@ final class POSTSectionHandlerTest extends TestCase
     {
         $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
-        $section_representation = new ArtidocSectionRepresentation(
-            self::DUMMY_SECTION_ID,
-            $this->createMock(ArtifactReference::class),
-            $this->createMock(ArtifactFieldValueFullRepresentation::class),
-            $this->createMock(ArtifactTextFieldValueRepresentation::class),
-            true,
-            null,
-        );
-
         $handler = new POSTSectionHandler(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::withCollection(
-                new PaginatedArtidocSectionRepresentationCollection([$section_representation], 1),
-            ),
+            BuildSectionRepresentationStub::instance(),
             $saver,
             $this->identifier_factory,
+            BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
+                101 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(101)->build(),
+                )->build(),
+            ]),
         );
 
         $result = $handler->handle(
@@ -102,26 +95,20 @@ final class POSTSectionHandlerTest extends TestCase
     {
         $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
-        $section_representation = new ArtidocSectionRepresentation(
-            self::DUMMY_SECTION_ID,
-            $this->createMock(ArtifactReference::class),
-            $this->createMock(ArtifactFieldValueFullRepresentation::class),
-            $this->createMock(ArtifactTextFieldValueRepresentation::class),
-            true,
-            null,
-        );
-
         $handler = new POSTSectionHandler(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::withCollection(
-                new PaginatedArtidocSectionRepresentationCollection([$section_representation], 1),
-            ),
+            BuildSectionRepresentationStub::instance(),
             $saver,
             $this->identifier_factory,
+            BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
+                101 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(101)->build(),
+                )->build(),
+            ]),
         );
 
         $result = $handler->handle(
@@ -144,26 +131,20 @@ final class POSTSectionHandlerTest extends TestCase
     {
         $saver = SaveOneSectionStub::withUnableToFindSiblingSection(self::NEW_SECTION_ID);
 
-        $section_representation = new ArtidocSectionRepresentation(
-            self::DUMMY_SECTION_ID,
-            $this->createMock(ArtifactReference::class),
-            $this->createMock(ArtifactFieldValueFullRepresentation::class),
-            $this->createMock(ArtifactTextFieldValueRepresentation::class),
-            true,
-            null,
-        );
-
         $handler = new POSTSectionHandler(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::withCollection(
-                new PaginatedArtidocSectionRepresentationCollection([$section_representation], 1),
-            ),
+            BuildSectionRepresentationStub::instance(),
             $saver,
             $this->identifier_factory,
+            BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
+                101 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(101)->build(),
+                )->build(),
+            ]),
         );
 
         $result = $handler->handle(
@@ -206,26 +187,20 @@ final class POSTSectionHandlerTest extends TestCase
     ): void {
         $saver = SaveOneSectionStub::withAlreadyExistingSectionWithSameArtifact(self::NEW_SECTION_ID);
 
-        $section_representation = new ArtidocSectionRepresentation(
-            self::DUMMY_SECTION_ID,
-            $this->createMock(ArtifactReference::class),
-            $this->createMock(ArtifactFieldValueFullRepresentation::class),
-            $this->createMock(ArtifactTextFieldValueRepresentation::class),
-            true,
-            null,
-        );
-
         $handler = new POSTSectionHandler(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::withCollection(
-                new PaginatedArtidocSectionRepresentationCollection([$section_representation], 1),
-            ),
+            BuildSectionRepresentationStub::instance(),
             $saver,
             $this->identifier_factory,
+            BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
+                101 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(101)->build(),
+                )->build(),
+            ]),
         );
 
         $result = $handler->handle(1, $section, $this->user);
@@ -241,9 +216,14 @@ final class POSTSectionHandlerTest extends TestCase
 
         $handler = new POSTSectionHandler(
             RetrieveArtidocWithContextStub::withoutDocument(),
-            TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
+            BuildSectionRepresentationStub::instance(),
             $saver,
             $this->identifier_factory,
+            BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
+                101 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(101)->build(),
+                )->build(),
+            ]),
         );
 
         $result = $handler->handle(
@@ -269,9 +249,14 @@ final class POSTSectionHandlerTest extends TestCase
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
                 ),
             ),
-            TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
+            BuildSectionRepresentationStub::instance(),
             $saver,
             $this->identifier_factory,
+            BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
+                101 => RequiredArtifactInformationTestBuilder::fromArtifact(
+                    ArtifactTestBuilder::anArtifact(101)->build(),
+                )->build(),
+            ]),
         );
 
         $result = $handler->handle(

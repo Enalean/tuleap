@@ -22,34 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\GetFileUploadData;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
 final readonly class RawSectionsToRepresentationTransformer implements TransformRawSectionsToRepresentation
 {
     public function __construct(
         private \Tracker_ArtifactDao $artifact_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
-        private GetFileUploadData $file_upload_data_provider,
+        private SectionRepresentationBuilder $section_representation_builder,
+        private RequiredArtifactInformationBuilder $required_artifact_information_builder,
     ) {
     }
 
-    public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
+    public function getRepresentation(ArtidocWithContext $artidoc, PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
     {
         return $this->instantiateArtifacts($raw_sections, $user)
-            ->andThen(fn (array $artifacts) => $this->instantiateSections($raw_sections, $artifacts, $user))
+            ->andThen(fn (array $artifacts) => $this->instantiateSections($artidoc, $artifacts, $user))
             ->map(
                 /**
                  * @param list<ArtidocSectionRepresentation> $sections
@@ -99,61 +94,29 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
      * @param list<array{artifact: Artifact, section_identifier: SectionIdentifier}> $artifacts
      * @return Ok<list<ArtidocSectionRepresentation>>|Err<Fault>
      */
-    private function instantiateSections(PaginatedRawSections $raw_sections, array $artifacts, \PFUser $user): Ok|Err
+    private function instantiateSections(ArtidocWithContext $artidoc, array $artifacts, \PFUser $user): Ok|Err
     {
         $sections = [];
         foreach ($artifacts as $section) {
             $artifact = $section['artifact'];
 
-            $last_changeset = $artifact->getLastChangeset();
-            if ($last_changeset === null) {
-                return Result::err(Fault::fromMessage("No changeset for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
-            }
+            $result = $this->required_artifact_information_builder
+                ->getRequiredArtifactInformation($artidoc, $artifact, $user)
+                ->andThen(
+                    function (RequiredArtifactInformation $artifact_information) use ($user, $section, &$sections) {
+                        $sections[] = $this->section_representation_builder->build(
+                            $artifact_information,
+                            $section['section_identifier'],
+                            $user,
+                        );
 
-            $title_field = Tracker_Semantic_Title::load($artifact->getTracker())->getField();
-            if (! $title_field) {
-                return Result::err(Fault::fromMessage("There is no title field for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
-            }
-            if (! $title_field->userCanRead($user)) {
-                return Result::err(Fault::fromMessage("User cannot read title of artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
-            }
+                        return Result::ok(true);
+                    },
+                );
 
-            $title = $title_field->getFullRESTValue($user, $last_changeset);
-            if (! $title instanceof ArtifactFieldValueFullRepresentation && ! $title instanceof ArtifactTextFieldValueRepresentation) {
-                return Result::err(Fault::fromMessage("There is no title data for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            if (Result::isErr($result)) {
+                return $result;
             }
-
-            $description_field = Tracker_Semantic_Description::load($artifact->getTracker())->getField();
-            if (! $description_field) {
-                return Result::err(Fault::fromMessage("There is no description field for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
-            }
-            if (! $description_field->userCanRead($user)) {
-                return Result::err(Fault::fromMessage("User cannot read title of artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
-            }
-
-            $description = $description_field->getFullRESTValue($user, $last_changeset);
-            if (! $description instanceof ArtifactTextFieldValueRepresentation) {
-                return Result::err(Fault::fromMessage("There is no description data for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
-            }
-
-            $can_user_edit_section = $title_field->userCanUpdate($user) && $description_field->userCanUpdate($user);
-
-            $file_upload_data = $this->file_upload_data_provider->getFileUploadData($artifact->getTracker(), $artifact, $user);
-
-            $attachments = null;
-            if ($file_upload_data) {
-                $attachments = $file_upload_data->getField()->getRESTValue($user, $last_changeset)
-                    ?? ArtifactFieldValueFileFullRepresentation::fromEmptyValues($file_upload_data->getField());
-            }
-
-            $sections[] = new ArtidocSectionRepresentation(
-                $section['section_identifier']->toString(),
-                ArtifactReference::build($artifact),
-                $title,
-                $description,
-                $can_user_edit_section,
-                $attachments
-            );
         }
 
         return Result::ok($sections);

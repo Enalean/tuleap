@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -32,7 +33,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class ArtidocSectionRepresentationBuilder
+final class GETSectionHandler
 {
     public function __construct(
         private SearchOneSection $dao,
@@ -44,12 +45,12 @@ final class ArtidocSectionRepresentationBuilder
     /**
      * @return Ok<ArtidocSectionRepresentation>|Err<Fault>
      */
-    public function build(SectionIdentifier $id, \PFUser $user): Ok|Err
+    public function handle(SectionIdentifier $id, \PFUser $user): Ok|Err
     {
         return $this->dao->searchSectionById($id)
             ->match(
                 fn (RawSection $row) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($row->item_id)
-                    ->andThen(fn () => $this->transformer->getRepresentation(new PaginatedRawSections($row->item_id, [$row], 1), $user))
+                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->transformer->getRepresentation($artidoc, new PaginatedRawSections($row->item_id, [$row], 1), $user))
                     ->andThen($this->getFirstAndOnlySectionFromCollection(...)),
                 static fn (Fault $fault) => Result::err($fault),
             );

@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\SaveOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
@@ -40,9 +38,10 @@ final readonly class POSTSectionHandler
 {
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private TransformRawSectionsToRepresentation $transformer,
+        private BuildSectionRepresentation $section_representation_builder,
         private SaveOneSection $dao,
         private SectionIdentifierFactory $identifier_factory,
+        private BuildRequiredArtifactInformation $required_artifact_information_builder,
     ) {
     }
 
@@ -53,43 +52,8 @@ final readonly class POSTSectionHandler
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(fn (ArtidocWithContext $document_information) => $this->getSectionRepresentationToMakeSureThatUserCanReadIt($document_information, $section, $user))
-            ->andThen(fn (ArtidocSectionRepresentation $section_representation) => $this->saveSection($id, $section_representation, $section));
-    }
-
-    /**
-     * @return Ok<ArtidocSectionRepresentation>|Err<Fault>
-     */
-    private function getSectionRepresentationToMakeSureThatUserCanReadIt(
-        ArtidocWithContext $document_information,
-        ArtidocPOSTSectionRepresentation $section,
-        \PFUser $user,
-    ): Ok|Err {
-        $dummy_identifier = $this->identifier_factory->buildIdentifier();
-
-        $item_id = $document_information->document->getId();
-        return $this->transformer
-            ->getRepresentation(
-                new PaginatedRawSections(
-                    $item_id,
-                    [RawSection::fromRow(['id' => $dummy_identifier, 'artifact_id' => $section->artifact->id, 'item_id' => $item_id, 'rank' => 0])],
-                    1,
-                ),
-                $user,
-            )->andThen($this->getFirstAndOnlySectionFromCollection(...));
-    }
-
-    /**
-     * @return Ok<ArtidocSectionRepresentation>|Err<Fault>
-     */
-    private function getFirstAndOnlySectionFromCollection(
-        PaginatedArtidocSectionRepresentationCollection $collection,
-    ): Ok|Err {
-        if (count($collection->sections) !== 1) {
-            return Result::err(Fault::fromMessage('We should have exactly one matching section'));
-        }
-
-        return Result::ok($collection->sections[0]);
+            ->andThen(fn (ArtidocWithContext $artidoc) => $this->required_artifact_information_builder->getRequiredArtifactInformation($artidoc, $section->artifact->id, $user))
+            ->andThen(fn (RequiredArtifactInformation $artifact_information) => $this->saveSection($id, $artifact_information, $section, $user));
     }
 
     /**
@@ -97,8 +61,9 @@ final readonly class POSTSectionHandler
      */
     private function saveSection(
         int $id,
-        ArtidocSectionRepresentation $section_representation,
+        RequiredArtifactInformation $artifact_information,
         ArtidocPOSTSectionRepresentation $section,
+        \PFUser $user,
     ): Ok|Err {
         try {
             $section_id = $section->position
@@ -112,6 +77,6 @@ final readonly class POSTSectionHandler
             return Result::err(UnableToFindSiblingSectionFault::fromThrowable($exception));
         }
 
-        return Result::ok(ArtidocSectionRepresentation::fromRepresentationWithId($section_representation, $section_id));
+        return Result::ok($this->section_representation_builder->build($artifact_information, $section_id, $user));
     }
 }

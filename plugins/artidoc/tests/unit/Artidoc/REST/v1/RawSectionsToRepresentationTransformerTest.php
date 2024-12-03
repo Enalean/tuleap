@@ -33,7 +33,9 @@ use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Result;
@@ -48,8 +50,10 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
 final class RawSectionsToRepresentationTransformerTest extends TestCase
@@ -78,15 +82,20 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
     private function getArtifact(int $id, Tracker_FormElement_Field_String $title, PFUser $user): Artifact
     {
-        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $artifact = ArtifactTestBuilder::anArtifact($id)
+            ->inTracker($this->tracker)
+            ->userCanView($user)
+            ->build();
+
+        $changeset = ChangesetTestBuilder::aChangeset(1000 + $id)
+            ->ofArtifact($artifact)
+            ->build();
 
         $this->setTitleValue($title, $changeset, $id);
 
-        return ArtifactTestBuilder::anArtifact($id)
-            ->inTracker($this->tracker)
-            ->withChangesets($changeset)
-            ->userCanView($user)
-            ->build();
+        $artifact->setChangesets([$changeset]);
+
+        return $artifact;
     }
 
     private function getArtifactUserCannotView(int $id, PFUser $user): Artifact
@@ -94,11 +103,12 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         return ArtifactTestBuilder::anArtifact($id)->userCannotView($user)->build();
     }
 
-    private function setTitleValue(Tracker_FormElement_Field_String $title, Tracker_Artifact_Changeset & MockObject $changeset, int $id): void
+    private function setTitleValue(Tracker_FormElement_Field_String $title, Tracker_Artifact_Changeset $changeset, int $id): void
     {
-        $changeset->method('getValue')
-            ->with($title)
-            ->willReturn(ChangesetValueTextTestBuilder::aValue(1, $changeset, $title)->withValue("Title for #{$id}")->build());
+        $changeset->setFieldValue(
+            $title,
+            ChangesetValueTextTestBuilder::aValue(1, $changeset, $title)->withValue("Title for #{$id}")->build()
+        );
     }
 
     private function getDescriptionValue(Artifact $artifact): ArtifactFieldValueCommonmarkRepresentation
@@ -140,11 +150,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $title->method('userCanUpdate')->willReturn($can_user_edit_title);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $description->method('userCanUpdate')->willReturn($can_user_edit_description);
         $this->semantic_description->method('getField')->willReturn($description);
@@ -206,9 +218,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -252,11 +266,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $title->method('userCanUpdate')->willReturn(true);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $description->method('userCanUpdate')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
@@ -291,9 +307,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -315,11 +333,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $title->method('userCanUpdate')->willReturn(true);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $description->method('userCanUpdate')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
@@ -357,9 +377,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -397,11 +419,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $title->method('userCanUpdate')->willReturn(false);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $description->method('userCanUpdate')->willReturn(false);
         $this->semantic_description->method('getField')->willReturn($description);
@@ -458,9 +482,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -501,10 +527,12 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $this->semantic_title->method('getField')->willReturn(null);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
 
@@ -547,9 +575,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -571,10 +601,12 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(false);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
 
@@ -617,9 +649,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -641,10 +675,12 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(false);
         $this->semantic_description->method('getField')->willReturn($description);
 
@@ -695,9 +731,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -719,10 +757,12 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn(null);
 
@@ -773,9 +813,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -797,10 +839,12 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
         $title->method('userCanRead')->willReturn(true);
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
 
@@ -835,9 +879,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [
@@ -869,9 +915,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            $file_upload_provider
+            new SectionRepresentationBuilder($file_upload_provider),
+            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
+            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
                 101,
                 [],

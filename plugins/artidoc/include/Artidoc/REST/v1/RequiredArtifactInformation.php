@@ -18,18 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
-interface TransformRawSectionsToRepresentation
+final readonly class RequiredArtifactInformation
 {
-    /**
-     * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
-     */
-    public function getRepresentation(ArtidocWithContext $artidoc, PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err;
+    public function __construct(
+        public \Tracker_Artifact_Changeset $last_changeset,
+        public Tracker_FormElement_Field_Text $title_field,
+        public ArtifactFieldValueFullRepresentation|ArtifactTextFieldValueRepresentation $title,
+        public Tracker_FormElement_Field_Text $description_field,
+        public ArtifactTextFieldValueRepresentation $description,
+    ) {
+    }
 }
