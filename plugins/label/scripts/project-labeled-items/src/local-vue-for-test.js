@@ -19,7 +19,7 @@
 
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 
 export async function createProjectLabeledItemsLocalVue() {
     const local_vue = createLocalVue();

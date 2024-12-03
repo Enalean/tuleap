@@ -22,7 +22,7 @@ import App from "./components/App.vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import type { ConfigurationState } from "./store/configuration";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import "../themes/main.scss";
 
@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const locale = getDatasetItemOrThrow(document.body, "userLocale");
 
     Vue.config.language = locale;
+    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
     Vue.use(VueDOMPurifyHTML);
 
     const project_name = getDatasetItemOrThrow(vue_mount_point, "projectName");
