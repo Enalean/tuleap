@@ -497,6 +497,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('getId')->willReturn(86);
         $tracker->method('userIsAdmin')->willReturn(true);
         $tracker->method('getGroupId')->willReturn(173);
+        $tracker->method('isNotificationStopped')->willReturn(false);
 
         $artifact = ArtifactTestBuilder::anArtifact(25)->inTracker($tracker)->build();
         $comment  = $this->getEmptyComment();

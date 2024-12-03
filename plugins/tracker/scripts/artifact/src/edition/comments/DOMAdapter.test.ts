@@ -65,7 +65,7 @@ describe(`DOMAdapter`, () => {
                 "beforeend",
                 `<div data-follow-up>
                     <div><button data-edit-comment-button></button></div>
-                    <div data-follow-up-content data-changeset-id="${changeset_id}" data-project-id="${project_id}">
+                    <div data-follow-up-content data-changeset-id="${changeset_id}" data-project-id="${project_id}" data-notifications-disabled>
                         <div data-read-only-comment>Comment body</div>
                     </div>
                 </div>`,
@@ -81,6 +81,7 @@ describe(`DOMAdapter`, () => {
             expect(init_data.read_only_comment).toBe(doc.querySelector("[data-read-only-comment]"));
             expect(init_data.changeset_id).toBe(changeset_id);
             expect(init_data.project_id).toBe(project_id);
+            expect(init_data.are_notifications_enabled).toBe(false);
         });
 
         function* generateInvalidHTML(): Generator<[string]> {

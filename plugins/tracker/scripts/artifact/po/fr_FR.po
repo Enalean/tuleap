@@ -24,5 +24,17 @@ msgstr "Statut"
 msgid "Submit"
 msgstr "Modifier"
 
+msgid ""
+"This tracker's notifications are disabled, when you use @ to mention "
+"someone, no email will be sent."
+msgstr ""
+"Les notifications de ce tracker sont désactivées, lorsque vous utilisez @ "
+"pour mentionner quelqu'un, aucun e-mail ne sera envoyé."
+
 msgid "Title"
 msgstr "Titre"
+
+msgid "When you use @ to mention someone, they will get an email notification."
+msgstr ""
+"Lorsque vous utilisez @ pour mentionner quelqu'un, cette personne recevra un "
+"e-mail de notification."
