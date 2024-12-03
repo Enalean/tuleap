@@ -2,10 +2,10 @@
 
 let
   devToolsPhpBase = import ./dev-tools-php.nix { inherit pkgs; };
-  buildTools = import ../build-tools { inherit pkgs; phpBase = devToolsPhpBase; };
-in pkgs.mkShellNoCC {
+  buildToolsShell = import ../build-tools { inherit pkgs; phpBase = devToolsPhpBase; };
+in buildToolsShell.overrideAttrs {
   name = "dev-tools";
-  buildInputs = buildTools.buildInputs ++ [
+  buildInputs = buildToolsShell.buildInputs ++ [
     pkgs.osv-scanner
     (import ./dev-tools-docker.nix { inherit pkgs; })
     (import ./dev-tools-old-browsers.nix { inherit pkgs; })

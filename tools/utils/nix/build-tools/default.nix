@@ -7,4 +7,12 @@ in pkgs.mkShellNoCC {
     (import ./build-tools-packages.nix { inherit pkgs; }) ++
     (php) ++
     [(import ./build-tools-js.nix { inherit pkgs; })];
+
+  # Enable Console Do Not Track / disable telemetry
+  DO_NOT_TRACK = 1;
+  STORYBOOK_DISABLE_TELEMETRY = 1;
+
+  shellHook = ''
+    export PATH="$PATH:$(pwd)/node_modules/.bin"
+  '';
 }
