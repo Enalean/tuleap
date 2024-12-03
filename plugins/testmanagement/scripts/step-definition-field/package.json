@@ -11,10 +11,10 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/tlp": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/vue2-dompurify-html": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:^",
     "uuid": "^8.3.2",
     "vue": "^2.7.8",
-    "vue-dompurify-html": "^4.0.0",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import { createStore } from "./store/index.js";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import StepDefinitionField from "./StepDefinitionField.vue";

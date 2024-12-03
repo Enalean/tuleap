@@ -19,7 +19,7 @@
 
 import { createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
 
 export const createLocalVueForTests = async () => {

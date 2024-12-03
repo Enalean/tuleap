@@ -21,7 +21,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import store_options from "./store/index.js";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
 import "./tracker-email-copy-paste-bp.js";
 
