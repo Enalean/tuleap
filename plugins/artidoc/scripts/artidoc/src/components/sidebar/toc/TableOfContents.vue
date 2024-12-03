@@ -271,7 +271,8 @@ li {
 li[draggable="false"] {
     > .reorder-arrows,
     > .dragndrop-grip {
-        display: none;
+        opacity: 0.1;
+        pointer-events: none;
     }
 }
 
