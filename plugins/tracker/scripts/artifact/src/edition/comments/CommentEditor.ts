@@ -22,6 +22,7 @@ import type { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator"
 import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
 import { Option } from "@tuleap/option";
 import { sanitize } from "dompurify";
+import { initMentions } from "@tuleap/mention";
 import type { LitHTMLAdapter } from "./LitHTMLAdapter";
 import { EditZone } from "./EditZone";
 import type { DOMAdapter, InitDataFromBackend } from "./DOMAdapter";
@@ -114,6 +115,7 @@ export const CommentEditor = (
             mount_point: init_data_from_backend.follow_up_content,
             render_before: read_only_comment,
         });
+        initMentions(textarea);
         const editor = editor_creator.createEditCommentEditor(
             textarea,
             changeset_id,
