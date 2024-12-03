@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
@@ -26,11 +26,18 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { promised_noop } from "@/helpers/noop";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import { result_noop } from "@/helpers/noop";
+import type { InternalArtidocSectionId, SectionsStore } from "@/stores/useSectionsStore";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 describe("ReorderArrows", () => {
+    let section: ArtidocSection & InternalArtidocSectionId;
+
+    beforeEach(() => {
+        section = injectInternalId(ArtifactSectionFactory.create());
+    });
+
     function getWrapper(
         { is_first, is_last }: { is_first: boolean; is_last: boolean },
         up: SectionsStore["moveSectionUp"],
@@ -40,7 +47,7 @@ describe("ReorderArrows", () => {
             props: {
                 is_first,
                 is_last,
-                section: injectInternalId(ArtifactSectionFactory.create()),
+                section,
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -82,31 +89,65 @@ describe("ReorderArrows", () => {
     });
 
     it("should display one move button for the first section", () => {
-        const wrapper = getWrapper(
-            { is_first: true, is_last: false },
-            promised_noop,
-            promised_noop,
-        );
+        const wrapper = getWrapper({ is_first: true, is_last: false }, result_noop, result_noop);
 
         expect(wrapper.find("[data-test=move-up]").exists()).toBe(false);
         expect(wrapper.find("[data-test=move-down]").exists()).toBe(true);
     });
 
     it("should display one move button for the last section", () => {
-        const wrapper = getWrapper(
-            { is_first: false, is_last: true },
-            promised_noop,
-            promised_noop,
-        );
+        const wrapper = getWrapper({ is_first: false, is_last: true }, result_noop, result_noop);
 
         expect(wrapper.find("[data-test=move-up]").exists()).toBe(true);
         expect(wrapper.find("[data-test=move-down]").exists()).toBe(false);
     });
 
     it("should NOT display any move button when there is only one section", () => {
-        const wrapper = getWrapper({ is_first: true, is_last: true }, promised_noop, promised_noop);
+        const wrapper = getWrapper({ is_first: true, is_last: true }, result_noop, result_noop);
 
         expect(wrapper.find("[data-test=move-up]").exists()).toBe(false);
         expect(wrapper.find("[data-test=move-down]").exists()).toBe(false);
+    });
+
+    describe("onclick", () => {
+        it.each([["move-up"], ["move-down"]])(
+            "When the %s button is clicked, then it should emit a moving-section-up-or-down event",
+            (button_name) => {
+                const wrapper = getWrapper(
+                    { is_first: false, is_last: false },
+                    result_noop,
+                    result_noop,
+                );
+
+                wrapper.find(`[data-test=${button_name}]`).trigger("click");
+
+                const event = wrapper.emitted("moving-section-up-or-down");
+                if (!event) {
+                    throw new Error("Expected a moving-section-up-or-down event");
+                }
+
+                expect(event[0]).toStrictEqual([section]);
+            },
+        );
+
+        it.each([["move-up"], ["move-down"]])(
+            "When the section has been %s successfully, then it should emit a moved-section-up-or-down event",
+            async (button_name) => {
+                const wrapper = getWrapper(
+                    { is_first: false, is_last: false },
+                    result_noop,
+                    result_noop,
+                );
+
+                await wrapper.find(`[data-test=${button_name}]`).trigger("click");
+
+                const event = wrapper.emitted("moved-section-up-or-down");
+                if (!event) {
+                    throw new Error("Expected a moved-section-up-or-down event");
+                }
+
+                expect(event[0]).toStrictEqual([section]);
+            },
+        );
     });
 });

@@ -46,7 +46,7 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import type { StoredArtidocSection } from "@/stores/useSectionsStore";
+import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/useSectionsStore";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 const props = defineProps<{ is_first: boolean; is_last: boolean; section: StoredArtidocSection }>();
@@ -59,19 +59,40 @@ const title_down = $gettext("Move down");
 const document_id = strictInject(DOCUMENT_ID);
 const { moveSectionUp, moveSectionDown } = strictInject(SECTIONS_STORE);
 
+const emit = defineEmits<{
+    (event: "moved-section-up-or-down", section: InternalArtidocSectionId): void;
+    (event: "moving-section-up-or-down", section: InternalArtidocSectionId): void;
+}>();
+
+const dispatchMovedSection = (): void => {
+    emit("moved-section-up-or-down", props.section);
+};
+
+const dispatchMovingSection = (): void => {
+    emit("moving-section-up-or-down", props.section);
+};
+
 function up(event: Event): void {
+    dispatchMovingSection();
+
     moveSectionUp(document_id, props.section).then(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }
+
+        dispatchMovedSection();
     });
 }
 
 function down(event: Event): void {
+    dispatchMovingSection();
+
     moveSectionDown(document_id, props.section).then(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }
+
+        dispatchMovedSection();
     });
 }
 </script>
