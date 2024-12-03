@@ -45,17 +45,15 @@ final class CommentFormatIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT, (string) $format);
     }
 
-    public static function dataProviderFormat(): array
+    public static function generateFormats(): iterable
     {
-        return [
-            'Text'       => [\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,],
-            'HTML'       => [\Tracker_Artifact_Changeset_Comment::HTML_COMMENT],
-            'CommonMark' => [\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT],
-        ];
+        yield [\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT];
+        yield [\Tracker_Artifact_Changeset_Comment::HTML_COMMENT];
+        yield [\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT];
     }
 
     /**
-     * @dataProvider dataProviderFormat
+     * @dataProvider generateFormats
      */
     public function testItBuildsFromFormatString(string $format_string): void
     {

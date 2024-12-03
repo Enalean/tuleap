@@ -56,10 +56,21 @@ describe(`CommentEditor`, () => {
                 "beforeend",
                 `<div data-follow-up>
                     <div><button data-edit-comment-button></button></div>
-                    <div data-follow-up-content data-changeset-id="${changeset_id}" data-project-id="${project_id}">
-                        <div data-read-only-comment >
-                            <input type="hidden" id="tracker_artifact_followup_comment_body_format_${changeset_id}" value="${TEXT_FORMAT_COMMONMARK}" />
-                            <div data-comment-body data-commonmark-source="${comment_body}">${rendered_comment}</div>
+                    <div
+                        data-follow-up-content
+                        data-changeset-id="${changeset_id}"
+                        data-project-id="${project_id}"
+                        data-user-preferred-format="${TEXT_FORMAT_COMMONMARK}"
+                    >
+                        <div data-read-only-comment>
+                            <input
+                                type="hidden"
+                                id="tracker_artifact_followup_comment_body_format_${changeset_id}"
+                                value="${TEXT_FORMAT_COMMONMARK}"
+                            />
+                            <div data-comment-body data-commonmark-source="${comment_body}">
+                                ${rendered_comment}
+                            </div>
                         </div>
                     </div>
                 </div>`,

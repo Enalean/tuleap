@@ -52,6 +52,7 @@ export const CommentEditor = (
         const read_only_comment = init_data_from_backend.read_only_comment;
         const comment_format = dom_adapter.readCommentFormatOrDefault(
             FORMAT_HIDDEN_INPUT_ID_PREFIX + changeset_id,
+            init_data_from_backend.user_preferred_format,
         );
         const comment_body = dom_adapter.readCommentBodyOrDefault(
             init_data_from_backend.follow_up_content,
@@ -73,6 +74,7 @@ export const CommentEditor = (
                     maybe_editor.apply((editor) => {
                         const format_at_submit = dom_adapter.readCommentFormatOrDefault(
                             FORMAT_SELECTBOX_ID_PREFIX + changeset_id,
+                            init_data_from_backend.user_preferred_format,
                         );
                         api_client
                             .postComment(changeset_id, editor.getContent(), format_at_submit)

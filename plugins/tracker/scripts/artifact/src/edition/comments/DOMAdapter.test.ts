@@ -65,7 +65,13 @@ describe(`DOMAdapter`, () => {
                 "beforeend",
                 `<div data-follow-up>
                     <div><button data-edit-comment-button></button></div>
-                    <div data-follow-up-content data-changeset-id="${changeset_id}" data-project-id="${project_id}" data-notifications-disabled>
+                    <div
+                        data-follow-up-content
+                        data-changeset-id="${changeset_id}"
+                        data-project-id="${project_id}"
+                        data-notifications-disabled
+                        data-user-preferred-format="${TEXT_FORMAT_HTML}"
+                    >
                         <div data-read-only-comment>Comment body</div>
                     </div>
                 </div>`,
@@ -82,6 +88,7 @@ describe(`DOMAdapter`, () => {
             expect(init_data.changeset_id).toBe(changeset_id);
             expect(init_data.project_id).toBe(project_id);
             expect(init_data.are_notifications_enabled).toBe(false);
+            expect(init_data.user_preferred_format).toBe(TEXT_FORMAT_HTML);
         });
 
         function* generateInvalidHTML(): Generator<[string]> {
@@ -97,7 +104,12 @@ describe(`DOMAdapter`, () => {
             yield [
                 `<div data-follow-up>
                     <div><button data-edit-comment-button></button></div>
-                    <div data-follow-up-content data-changeset-id="140" data-project-id="387"></div>
+                    <div
+                        data-follow-up-content
+                        data-changeset-id="140"
+                        data-project-id="387"
+                        data-user-preferred-format="text"
+                    ></div>
                 </div>`,
             ];
         }
@@ -155,17 +167,23 @@ describe(`DOMAdapter`, () => {
     }
 
     describe(`readCommentFormatOrDefault()`, () => {
-        it(`when the hidden input can't be found, it will default to "commonmark" format`, () => {
+        it(`when the hidden input can't be found, it will default to the user's preferred format`, () => {
             expect(
-                dom_adapter.readCommentFormatOrDefault(FORMAT_HIDDEN_INPUT_ID_PREFIX + "123"),
-            ).toBe(TEXT_FORMAT_COMMONMARK);
+                dom_adapter.readCommentFormatOrDefault(
+                    FORMAT_HIDDEN_INPUT_ID_PREFIX + "123",
+                    TEXT_FORMAT_HTML,
+                ),
+            ).toBe(TEXT_FORMAT_HTML);
         });
 
         it(`when the hidden input's value is not a valid format, it will default to "commonmark" format`, () => {
             createHiddenInput("invalid");
 
             expect(
-                dom_adapter.readCommentFormatOrDefault(FORMAT_HIDDEN_INPUT_ID_PREFIX + "123"),
+                dom_adapter.readCommentFormatOrDefault(
+                    FORMAT_HIDDEN_INPUT_ID_PREFIX + "123",
+                    TEXT_FORMAT_HTML,
+                ),
             ).toBe(TEXT_FORMAT_COMMONMARK);
         });
 
@@ -174,7 +192,10 @@ describe(`DOMAdapter`, () => {
             (expected_format) => {
                 createHiddenInput(expected_format);
                 expect(
-                    dom_adapter.readCommentFormatOrDefault(FORMAT_HIDDEN_INPUT_ID_PREFIX + "123"),
+                    dom_adapter.readCommentFormatOrDefault(
+                        FORMAT_HIDDEN_INPUT_ID_PREFIX + "123",
+                        TEXT_FORMAT_HTML,
+                    ),
                 ).toBe(expected_format);
             },
         );
@@ -187,7 +208,10 @@ describe(`DOMAdapter`, () => {
                     `<select id="rte_format_selectbox603"><option value="${expected_format}" selected></option></select>`,
                 );
                 expect(
-                    dom_adapter.readCommentFormatOrDefault(FORMAT_SELECTBOX_ID_PREFIX + "603"),
+                    dom_adapter.readCommentFormatOrDefault(
+                        FORMAT_SELECTBOX_ID_PREFIX + "603",
+                        TEXT_FORMAT_HTML,
+                    ),
                 ).toBe(expected_format);
             },
         );
