@@ -21,6 +21,8 @@ import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
+import { errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { injectInternalId } from "@/helpers/inject-internal-id";
@@ -63,8 +65,8 @@ describe("ReorderArrows", () => {
     }
 
     it("should display two move buttons for a section", async () => {
-        const up = vi.fn();
-        const down = vi.fn();
+        const up = vi.fn().mockImplementation(result_noop);
+        const down = vi.fn().mockImplementation(result_noop);
 
         const wrapper = getWrapper({ is_first: false, is_last: false }, up, down);
 
@@ -74,15 +76,13 @@ describe("ReorderArrows", () => {
         expect(up_button.exists()).toBe(true);
         expect(down_button.exists()).toBe(true);
 
-        up.mockResolvedValue(true);
         await up_button.trigger("click");
         expect(up).toHaveBeenCalled();
         expect(down).not.toHaveBeenCalled();
 
-        up.mockReset();
-        down.mockReset();
+        up.mockClear();
+        down.mockClear();
 
-        down.mockResolvedValue(true);
         await down_button.trigger("click");
         expect(up).not.toHaveBeenCalled();
         expect(down).toHaveBeenCalled();
@@ -147,6 +147,26 @@ describe("ReorderArrows", () => {
                 }
 
                 expect(event[0]).toStrictEqual([section]);
+            },
+        );
+
+        it.each([["move-up"], ["move-down"]])(
+            "when the section %s unsuccessfully, then it should emit the moved-section-up-or-down-fault, ",
+            async (button_name) => {
+                const fault = Fault.fromMessage("Great Scott!");
+                const wrapper = getWrapper(
+                    { is_first: false, is_last: false },
+                    () => errAsync(fault),
+                    () => errAsync(fault),
+                );
+
+                await wrapper.find(`[data-test=${button_name}]`).trigger("click");
+
+                const event = wrapper.emitted("moved-section-up-or-down-fault");
+                if (!event) {
+                    throw new Error("Expected a moved-section-up-or-down-fault event");
+                }
+                expect(event[0]).toStrictEqual([fault]);
             },
         );
     });

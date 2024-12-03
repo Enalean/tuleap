@@ -70,6 +70,7 @@
                     v-bind:section="section"
                     v-on:moved-section-up-or-down="showJustSavedTemporaryFeedback"
                     v-on:moving-section-up-or-down="showSectionBeingMovedTemporaryFeedback"
+                    v-on:moved-section-up-or-down-fault="handleReorderingFault"
                 />
             </span>
         </li>
@@ -82,6 +83,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import type { Ref } from "vue";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { Fault } from "@tuleap/fault";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import DragndropGripIllustration from "@/components/sidebar/toc/DragndropGripIllustration.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -92,6 +94,8 @@ import { noop } from "@/helpers/noop";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { InternalArtidocSectionId } from "@/stores/useSectionsStore";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
+import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
+import { isCannotReorderSectionsFault } from "@/stores/CannotReorderSectionsFault";
 
 const { $gettext } = useGettext();
 
@@ -99,6 +103,7 @@ const { sections, is_sections_loading, moveSectionAtTheEnd, moveSectionBefore } 
     strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const document_id = strictInject(DOCUMENT_ID);
+const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 
 const is_reorder_allowed = can_user_edit_document;
 
@@ -120,6 +125,19 @@ const showJustSavedTemporaryFeedback = (moved_section: InternalArtidocSectionId)
 
 const showSectionBeingMovedTemporaryFeedback = (moved_section: InternalArtidocSectionId): void => {
     section_being_moved.value = moved_section;
+};
+
+const handleReorderingFault = (fault: Fault): void => {
+    section_being_moved.value = null;
+
+    const details = isCannotReorderSectionsFault(fault)
+        ? $gettext("An error occurred")
+        : String(fault);
+
+    setGlobalErrorMessage({
+        message: $gettext("Unable to reorder the sections"),
+        details,
+    });
 };
 
 onMounted(() => {
@@ -147,9 +165,9 @@ onMounted(() => {
             showSectionBeingMovedTemporaryFeedback(moved_section);
 
             if (context.next_sibling === null) {
-                moveSectionAtTheEnd(document_id, moved_section).then(() =>
-                    showJustSavedTemporaryFeedback(moved_section),
-                );
+                moveSectionAtTheEnd(document_id, moved_section).match(() => {
+                    showJustSavedTemporaryFeedback(moved_section);
+                }, handleReorderingFault);
                 return;
             }
 
@@ -162,9 +180,9 @@ onMounted(() => {
             const sibling = {
                 internal_id: context.next_sibling.dataset.internalId,
             };
-            moveSectionBefore(document_id, moved_section, sibling).map(() => {
+            moveSectionBefore(document_id, moved_section, sibling).match(() => {
                 showJustSavedTemporaryFeedback(moved_section);
-            });
+            }, handleReorderingFault);
         },
         cleanupAfterDragCallback: noop,
     });

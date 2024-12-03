@@ -24,6 +24,9 @@ msgstr "Ajouter la section"
 msgid "Already existing as section in this document"
 msgstr "Existent déjà en tant que section dans ce document"
 
+msgid "An error occurred"
+msgstr "Une erreur est survenue"
+
 msgid ""
 "An error occurred while creating section from existing artifact %{ xref }: "
 "%{ details }"
@@ -213,6 +216,9 @@ msgstr "Titre..."
 
 msgid "Tracker"
 msgstr "Tracker"
+
+msgid "Unable to reorder the sections"
+msgstr "Impossible de réorganiser les sections"
 
 msgid ""
 "You can now go back to the document and create new sections, they will be "

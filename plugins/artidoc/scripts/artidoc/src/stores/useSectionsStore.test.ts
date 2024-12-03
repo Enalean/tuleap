@@ -642,17 +642,19 @@ describe("useSectionsStore", () => {
         let stored_section0: StoredArtidocSection;
         let stored_section1: StoredArtidocSection;
         let stored_section2: StoredArtidocSection;
+        let stored_section3: StoredArtidocSection;
         let reorder: MockInstance;
 
         beforeEach(async () => {
             const section0 = ArtifactSectionFactory.override({ display_title: "A" });
             const section1 = PendingArtifactSectionFactory.override({ display_title: "B" });
             const section2 = ArtifactSectionFactory.override({ display_title: "C" });
+            const section3 = ArtifactSectionFactory.override({ display_title: "D" });
 
-            reorder = vi.spyOn(rest, "reorderSections");
+            reorder = vi.spyOn(rest, "reorderSections").mockReturnValue(okAsync({} as Response));
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([section0, section1, section2]),
+                okAsync([section0, section1, section2, section3]),
             );
 
             store = useSectionsStore();
@@ -675,6 +677,10 @@ describe("useSectionsStore", () => {
             if (stored_section2 === undefined) {
                 throw Error("Cannot find section2");
             }
+            stored_section3 = store.sections.value[3];
+            if (stored_section3 === undefined) {
+                throw Error("Cannot find section3");
+            }
         });
 
         describe("moveSectionUp", () => {
@@ -682,7 +688,7 @@ describe("useSectionsStore", () => {
                 await store.moveSectionUp(101, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "B", "C"],
+                    ["A", "B", "C", "D"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -691,7 +697,7 @@ describe("useSectionsStore", () => {
                 await store.moveSectionUp(101, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["B", "A", "C"],
+                    ["B", "A", "C", "D"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -700,9 +706,14 @@ describe("useSectionsStore", () => {
                 await store.moveSectionUp(101, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "C", "B"],
+                    ["A", "C", "B", "D"],
                 );
-                expect(reorder).not.toHaveBeenCalled();
+                expect(reorder).toHaveBeenCalledWith(
+                    101,
+                    stored_section2.id,
+                    "before",
+                    stored_section3.id,
+                );
             });
 
             it("should move an artifact section up and call reorder if it is above an artifact section", async () => {
@@ -710,7 +721,7 @@ describe("useSectionsStore", () => {
                 await store.moveSectionUp(101, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["C", "A", "B"],
+                    ["C", "A", "B", "D"],
                 );
                 expect(reorder).toHaveBeenCalledWith(
                     101,
@@ -719,14 +730,29 @@ describe("useSectionsStore", () => {
                     stored_section0.id,
                 );
             });
+
+            it("When an error occurred, then it should not reorder the sections and return a Fault", async () => {
+                const fault = Fault.fromMessage("Great Scott!");
+                reorder.mockReturnValue(errAsync(fault));
+
+                const result = await store.moveSectionUp(101, stored_section3);
+                if (result.isOk()) {
+                    throw new Error("Expected an error");
+                }
+
+                expect(result.error).toBe(fault);
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C", "D"],
+                );
+            });
         });
 
         describe("moveSectionDown", () => {
             it("should do nothing if the section is already at the bottom", async () => {
-                await store.moveSectionDown(101, stored_section2);
+                await store.moveSectionDown(101, stored_section3);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "B", "C"],
+                    ["A", "B", "C", "D"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -735,7 +761,7 @@ describe("useSectionsStore", () => {
                 await store.moveSectionDown(101, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "C", "B"],
+                    ["A", "C", "B", "D"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -744,7 +770,7 @@ describe("useSectionsStore", () => {
                 await store.moveSectionDown(101, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["B", "A", "C"],
+                    ["B", "A", "C", "D"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -754,13 +780,28 @@ describe("useSectionsStore", () => {
                 await store.moveSectionDown(101, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["B", "C", "A"],
+                    ["B", "C", "A", "D"],
                 );
                 expect(reorder).toHaveBeenCalledWith(
                     101,
                     stored_section0.id,
                     "after",
                     stored_section2.id,
+                );
+            });
+
+            it("When an error occurred, then it should not reorder the sections and return a Fault", async () => {
+                const fault = Fault.fromMessage("Great Scott!");
+                reorder.mockReturnValue(errAsync(fault));
+
+                const result = await store.moveSectionDown(101, stored_section2);
+                if (result.isOk()) {
+                    throw new Error("Expected an error");
+                }
+
+                expect(result.error).toBe(fault);
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C", "D"],
                 );
             });
         });
@@ -770,7 +811,7 @@ describe("useSectionsStore", () => {
                 await store.moveSectionBefore(101, stored_section1, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "B", "C"],
+                    ["A", "B", "C", "D"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -779,16 +820,21 @@ describe("useSectionsStore", () => {
                 await store.moveSectionBefore(101, stored_section2, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "C", "B"],
+                    ["A", "C", "B", "D"],
                 );
-                expect(reorder).not.toHaveBeenCalled();
+                expect(reorder).toHaveBeenCalledWith(
+                    101,
+                    stored_section2.id,
+                    "before",
+                    stored_section3.id,
+                );
             });
 
             it("should move a section before an artifact section", async () => {
                 await store.moveSectionBefore(101, stored_section2, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["C", "A", "B"],
+                    ["C", "A", "B", "D"],
                 );
                 expect(reorder).toHaveBeenCalledWith(
                     101,
@@ -798,11 +844,11 @@ describe("useSectionsStore", () => {
                 );
             });
 
-            it("A before C should move ABC to BAC", async () => {
+            it("A before C should move ABCD to BACD", async () => {
                 await store.moveSectionBefore(101, stored_section0, stored_section2);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["B", "A", "C"],
+                    ["B", "A", "C", "D"],
                 );
 
                 expect(reorder).toHaveBeenCalledOnce();
@@ -813,14 +859,29 @@ describe("useSectionsStore", () => {
                     stored_section2.id,
                 );
             });
+
+            it("When an error occurred, then it should not reorder the sections and return a Fault", async () => {
+                const fault = Fault.fromMessage("Great Scott!");
+                reorder.mockReturnValue(errAsync(fault));
+
+                const result = await store.moveSectionBefore(101, stored_section0, stored_section2);
+                if (result.isOk()) {
+                    throw new Error("Expected an error");
+                }
+
+                expect(result.error).toBe(fault);
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C", "D"],
+                );
+            });
         });
 
         describe("moveSectionAtTheEnd", () => {
             it("should do nothing if the section is moved at the same place", async () => {
-                await store.moveSectionAtTheEnd(101, stored_section2);
+                await store.moveSectionAtTheEnd(101, stored_section3);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "B", "C"],
+                    ["A", "B", "C", "D"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -829,7 +890,7 @@ describe("useSectionsStore", () => {
                 await store.moveSectionAtTheEnd(101, stored_section1);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["A", "C", "B"],
+                    ["A", "C", "D", "B"],
                 );
                 expect(reorder).not.toHaveBeenCalled();
             });
@@ -838,13 +899,28 @@ describe("useSectionsStore", () => {
                 await store.moveSectionAtTheEnd(101, stored_section0);
 
                 expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
-                    ["B", "C", "A"],
+                    ["B", "C", "D", "A"],
                 );
                 expect(reorder).toHaveBeenCalledWith(
                     101,
                     stored_section0.id,
                     "after",
-                    stored_section2.id,
+                    stored_section3.id,
+                );
+            });
+
+            it("When an error occurred, then it should not reorder the sections and return a Fault", async () => {
+                const fault = Fault.fromMessage("Great Scott!");
+                reorder.mockReturnValue(errAsync(fault));
+
+                const result = await store.moveSectionAtTheEnd(101, stored_section0);
+                if (result.isOk()) {
+                    throw new Error("Expected an error");
+                }
+
+                expect(result.error).toBe(fault);
+                expect(store.sections.value?.map((section) => section.display_title)).toStrictEqual(
+                    ["A", "B", "C", "D"],
                 );
             });
         });

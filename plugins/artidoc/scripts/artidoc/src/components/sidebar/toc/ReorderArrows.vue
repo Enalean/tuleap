@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { Fault } from "@tuleap/fault";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/useSectionsStore";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
@@ -62,6 +63,7 @@ const { moveSectionUp, moveSectionDown } = strictInject(SECTIONS_STORE);
 const emit = defineEmits<{
     (event: "moved-section-up-or-down", section: InternalArtidocSectionId): void;
     (event: "moving-section-up-or-down", section: InternalArtidocSectionId): void;
+    (event: "moved-section-up-or-down-fault", fault: Fault): void;
 }>();
 
 const dispatchMovedSection = (): void => {
@@ -72,28 +74,32 @@ const dispatchMovingSection = (): void => {
     emit("moving-section-up-or-down", props.section);
 };
 
+const dispatchFault = (fault: Fault): void => {
+    emit("moved-section-up-or-down-fault", fault);
+};
+
 function up(event: Event): void {
     dispatchMovingSection();
 
-    moveSectionUp(document_id, props.section).then(() => {
+    moveSectionUp(document_id, props.section).match(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }
 
         dispatchMovedSection();
-    });
+    }, dispatchFault);
 }
 
 function down(event: Event): void {
     dispatchMovingSection();
 
-    moveSectionDown(document_id, props.section).then(() => {
+    moveSectionDown(document_id, props.section).match(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }
 
         dispatchMovedSection();
-    });
+    }, dispatchFault);
 }
 </script>
 

@@ -29,6 +29,8 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
+import { noop } from "@/helpers/noop";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
@@ -50,6 +52,7 @@ describe("TableOfContents", () => {
                             }),
                         ]),
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
+                        [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
                     },
                 },
             });
@@ -90,6 +93,7 @@ describe("TableOfContents", () => {
                             section_2,
                         ]),
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                        [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
                     },
                 },
             });
