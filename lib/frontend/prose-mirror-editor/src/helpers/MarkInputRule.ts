@@ -68,6 +68,11 @@ export function markInputRule(regexp: RegExp, markType: MarkType): InputRule {
     return new InputRule(regexp, (state, match, start, end) => {
         const tr = state.tr;
 
+        const parent = state.selection.$from.parent;
+        if (parent.type.spec.ignore_input_rules) {
+            return null;
+        }
+
         const text_positions = getTextPositions(match, start);
 
         removeMarkdownCharacters(tr, start, end, text_positions.start, text_positions.end);
