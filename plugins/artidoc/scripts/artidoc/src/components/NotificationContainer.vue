@@ -21,7 +21,6 @@
     <div class="notification-container">
         <div class="notifications">
             <notification-message
-                class="notification"
                 v-for="(message, index) in messages"
                 v-bind:key="`notification-message-${index}`"
                 v-bind:notification="message"
