@@ -34,6 +34,7 @@ use Tuleap\Artidoc\Domain\Document\Section\DeleteOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\SaveOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;

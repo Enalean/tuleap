@@ -22,15 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\NeverThrow\Fault;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 /**
  * @psalm-immutable
  */
-final readonly class AlreadyExistingSectionWithSameArtifactFault extends Fault
+final readonly class CreatedSectionWrapper
 {
-    public static function fromThrowable(\Throwable $throwable): Fault
-    {
-        return new self($throwable->getMessage(), $throwable);
+    public function __construct(
+        public SectionIdentifier $section_identifier,
+        public RequiredArtifactInformation $required_info,
+    ) {
     }
 }
