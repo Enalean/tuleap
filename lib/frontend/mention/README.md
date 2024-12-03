@@ -15,8 +15,6 @@ Depends on `jquery`. Provide it as `externals` in webpack configuration:
     //...
 }
 ```
-Also, make sure to include jQuery sources in PHP **before** loading this module.
-
 This lib also provides a CSS file at `dist/style.css`, make sure to include it:
 
 ```scss
@@ -27,10 +25,12 @@ This lib also provides a CSS file at `dist/style.css`, make sure to include it:
 ```typescript
 import { initMentions } from "@tuleap/mention";
 
-const textarea: Element = document.getElementById("some-textarea");
+const textarea: HTMLElement|null = document.getElementById("some-textarea");
 // Enable auto-completion on the element. It only works on <textarea>,
 // <input> or elements with attribute [contenteditable=true]
-initMentions(textarea);
+if (textarea) {
+    initMentions(textarea);
+}
 
 initMentions("#some-textarea"); // Enable auto-completion on a jQuery selector
 ```

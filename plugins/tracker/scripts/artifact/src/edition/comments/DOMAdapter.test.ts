@@ -123,7 +123,6 @@ describe(`DOMAdapter`, () => {
             const textarea = dom_adapter.createTextArea({ id, project_id, comment_body });
             expect(textarea).toBeInstanceOf(HTMLTextAreaElement);
             expect(textarea.id).toBe(id);
-            expect(textarea.classList.contains("user-mention")).toBe(true);
             expect(textarea.getAttribute("data-project-id")).toBe(project_id);
             expect(textarea.getAttribute("data-test")).toBe("edit-comment-textarea");
             expect(textarea.rows).toBe(5);

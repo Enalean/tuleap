@@ -31,10 +31,6 @@ function noop(): void {
     //Do nothing
 }
 
-jest.mock("@tuleap/mention", () => {
-    return { initMentions: noop };
-});
-
 jest.useFakeTimers();
 
 describe(`CommentEditor`, () => {

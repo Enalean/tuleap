@@ -48,7 +48,6 @@ final class RichTextareaConfigurationTest extends TestCase
         self::assertSame(80, $configuration->number_of_columns);
         self::assertSame($comment, $configuration->content);
         self::assertFalse($configuration->is_required);
-        self::assertTrue($configuration->allows_mentions);
     }
 
     public function testItBuildsFromTextField(): void
@@ -72,6 +71,5 @@ final class RichTextareaConfigurationTest extends TestCase
         self::assertSame(200, $configuration->number_of_columns);
         self::assertSame($content, $configuration->content);
         self::assertTrue($configuration->is_required);
-        self::assertFalse($configuration->allows_mentions);
     }
 }

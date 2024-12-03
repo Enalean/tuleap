@@ -81,7 +81,6 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(80, $textarea->cols);
         self::assertSame($comment_body, $textarea->value);
         self::assertFalse($textarea->is_required);
-        self::assertTrue($textarea->allows_mentions);
         self::assertSame('tracker_followup_comment_new-help', $textarea->help_id);
         self::assertFalse($textarea->is_dragndrop_allowed);
         self::assertEqualsCanonicalizing([
@@ -120,7 +119,6 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($number_of_columns, $textarea->cols);
         self::assertSame($text_field_body, $textarea->value);
         self::assertTrue($textarea->is_required);
-        self::assertFalse($textarea->allows_mentions);
         self::assertSame("field_$text_field_id-help", $textarea->help_id);
         self::assertFalse($textarea->is_dragndrop_allowed);
         self::assertEqualsCanonicalizing([

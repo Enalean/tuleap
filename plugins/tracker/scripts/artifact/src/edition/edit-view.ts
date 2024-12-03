@@ -33,7 +33,7 @@ document.addEventListener("readystatechange", () => {
         return;
     }
     const locale = getLocaleWithDefault(document);
-    const creator = new RichTextEditorsCreator(
+    const creator = RichTextEditorsCreator(
         document,
         new UploadImageFormFactory(document, locale),
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "tracker_artifact",
         (locale) => import(`../../po/${getPOFileFromLocale(locale)}`),
     );
-    const editor_creator = new RichTextEditorsCreator(
+    const editor_creator = RichTextEditorsCreator(
         document,
         new UploadImageFormFactory(document, locale),
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),

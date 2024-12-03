@@ -37,7 +37,6 @@ final readonly class RichTextareaConfiguration
         public int $number_of_columns,
         public string $content,
         public bool $is_required,
-        public bool $allows_mentions,
     ) {
     }
 
@@ -56,8 +55,7 @@ final readonly class RichTextareaConfiguration
             8,
             80,
             $comment,
-            false,
-            true
+            false
         );
     }
 
@@ -77,8 +75,7 @@ final readonly class RichTextareaConfiguration
             (int) $field->getProperty('rows'),
             (int) $field->getProperty('cols'),
             $content,
-            $field->isRequired(),
-            false
+            $field->isRequired()
         );
     }
 }

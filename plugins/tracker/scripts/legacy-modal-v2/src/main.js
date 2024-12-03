@@ -69,7 +69,7 @@ tuleap.textarea = tuleap.textarea || {};
             if (document.body.dataset.userLocale) {
                 locale = document.body.dataset.userLocale;
             }
-            const editor_creator = new RichTextEditorsCreator(
+            const editor_creator = RichTextEditorsCreator(
                 document,
                 new UploadImageFormFactory(document, locale),
                 RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
