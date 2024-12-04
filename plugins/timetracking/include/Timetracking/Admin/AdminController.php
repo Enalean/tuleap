@@ -29,6 +29,8 @@ use ProjectHistoryDao;
 use TemplateRendererFactory;
 use Tracker;
 use TrackerManager;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use User_ForgeUserGroupFactory;
 
 class AdminController
@@ -97,9 +99,9 @@ class AdminController
         return new CSRFSynchronizerToken($tracker->getAdministrationUrl());
     }
 
-    public function displayAdminForm(Tracker $tracker)
+    public function displayAdminForm(Tracker $tracker): void
     {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/');
         $presenter = new AdminPresenter(
             $tracker,
             $this->getCSRFSynchronizerToken($tracker),
@@ -107,7 +109,15 @@ class AdminController
             $this->getReadersUGroupPresenters($tracker),
             $this->getWritersUGroupPresenters($tracker)
         );
-
+        $GLOBALS['HTML']->addCssAsset(
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/timetracking-tab-styles/frontend-assets',
+                    '/assets/timetracking/timetracking-tab-styles'
+                ),
+                'themes/style.scss'
+            )
+        );
         $tracker->displayAdminItemHeader(
             $this->tracker_manager,
             'timetracking',
