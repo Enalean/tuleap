@@ -18,13 +18,31 @@
   -
   -->
 <template>
-    <span v-if="is_displayed" v-bind:class="`tlp-alert-${notification.type}`">{{
-        notification.message
-    }}</span>
+    <div
+        v-if="is_displayed"
+        class="closable-notification"
+        v-bind:class="`tlp-alert-${notification.type}`"
+    >
+        <span class="notification-message" data-test="notification-message">{{
+            notification.message
+        }}</span>
+        <button
+            data-test="close-notification-button"
+            class="button-close-notification"
+            type="button"
+            v-on:click="removeNotification()"
+            v-bind:aria-label="$gettext('Close')"
+        >
+            <i class="fa-solid fa-xmark" role="img"></i>
+        </button>
+    </div>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { Notification, UseNotificationsStoreType } from "@/stores/useNotificationsStore";
+
+const { $gettext } = useGettext();
 
 export type NotificationMessageProps = {
     notification: Notification;
@@ -34,8 +52,36 @@ export type NotificationMessageProps = {
 const props = defineProps<NotificationMessageProps>();
 const is_displayed = ref(true);
 
-setTimeout(() => {
+const removeNotification = (): void => {
     is_displayed.value = false;
     props.delete_notification(props.notification);
-}, 5_000);
+};
+
+setTimeout(removeNotification, 5_000);
 </script>
+<style lang="scss" scoped>
+.closable-notification {
+    display: flex;
+    width: 25rem;
+}
+
+.notification-message {
+    flex: 1;
+}
+
+.button-close-notification {
+    height: 0.875rem;
+    margin: 4px 0 0;
+    padding: 0;
+    border: unset;
+    background: unset;
+    color: unset;
+    font-size: 0.875rem;
+    text-align: unset;
+
+    &:hover {
+        opacity: 0.5;
+        cursor: pointer;
+    }
+}
+</style>
