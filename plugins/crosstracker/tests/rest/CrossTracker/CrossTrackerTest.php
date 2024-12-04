@@ -68,6 +68,7 @@ final class CrossTrackerTest extends RestBase
                     'id'      => $this->kanban_tracker_id,
                     'uri'     => 'trackers/' . $this->kanban_tracker_id,
                     'label'   => REST_TestDataBuilder::KANBAN_TRACKER_LABEL,
+                    'color'   => 'inca-silver',
                     'project' => [
                         'id'    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,
@@ -103,6 +104,7 @@ final class CrossTrackerTest extends RestBase
                     'id'    => $this->epic_tracker_id,
                     'uri'   => 'trackers/' . $this->epic_tracker_id,
                     'label' => REST_TestDataBuilder::EPICS_TRACKER_LABEL,
+                    'color' => 'inca-silver',
                     'project' => [
                         'id'    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,

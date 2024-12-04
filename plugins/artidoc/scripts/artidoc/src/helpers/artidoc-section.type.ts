@@ -72,6 +72,7 @@ export interface ArtifactSection extends ArtidocSection {
             id: number;
             uri: string;
             label: string;
+            color: string;
             project: Project;
         };
     };

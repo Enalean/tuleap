@@ -44,6 +44,11 @@ class TrackerReference
     public $label;
 
     /**
+     * @var string Color of the tracker {@type string} {@required false}
+     */
+    public string $color;
+
+    /**
      * @var ProjectReference {@required false}
      */
     public $project;
@@ -53,6 +58,7 @@ class TrackerReference
         $this->id    = $tracker->getId();
         $this->uri   = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
         $this->label = $tracker->getName();
+        $this->color = $tracker->getColor()->getName();
 
         $this->project = $project;
     }

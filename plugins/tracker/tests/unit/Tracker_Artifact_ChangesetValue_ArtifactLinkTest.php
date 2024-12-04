@@ -36,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -254,10 +255,13 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
     {
         $artifact = $this->createStub(Artifact::class);
         $artifact->method('getId')->willReturn($id);
-        $tracker = $this->createStub(Tracker::class);
-        $tracker->method('getId')->willReturn(101);
-        $tracker->method('getName')->willReturn('tracker_name');
-        $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->build())
+            ->withId(101)
+            ->withName('tracker_name')
+            ->build();
+
         $artifact->method('getTracker')->willReturn($tracker);
         $artifact->method('userCanView')->willReturn(true);
 

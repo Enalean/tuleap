@@ -30,6 +30,7 @@ const ArtifactSectionFactory = {
                 id: 0,
                 uri: "trackers/1",
                 label: "Bugs",
+                color: "fiesta-red",
                 project: {
                     id: 101,
                     uri: "projects/101",
@@ -61,6 +62,21 @@ const ArtifactSectionFactory = {
             file_descriptions: [],
         },
     }),
+
+    skeleton: (): ArtifactSection => {
+        const section = ArtifactSectionFactory.create();
+
+        return {
+            ...section,
+            artifact: {
+                ...section.artifact,
+                tracker: {
+                    ...section.artifact.tracker,
+                    color: "",
+                },
+            },
+        };
+    },
 
     override: (overrides: Partial<ArtifactSection>): ArtifactSection => ({
         ...ArtifactSectionFactory.create(),

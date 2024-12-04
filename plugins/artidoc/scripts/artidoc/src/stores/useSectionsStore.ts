@@ -91,9 +91,9 @@ export interface InternalArtidocSectionId {
 
 export function useSectionsStore(): SectionsStore {
     const skeleton_data = [
-        ArtifactSectionFactory.create(),
-        ArtifactSectionFactory.create(),
-        ArtifactSectionFactory.create(),
+        ArtifactSectionFactory.skeleton(),
+        ArtifactSectionFactory.skeleton(),
+        ArtifactSectionFactory.skeleton(),
     ].map(injectInternalId);
 
     const sections: Ref<StoredArtidocSection[] | undefined> = ref(skeleton_data);
