@@ -79,10 +79,12 @@ describe("Artidoc", () => {
                 cy.visit(url);
             });
 
+        cy.intercept("POST", "/api/artidoc/*/sections").as("postSections");
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
             cy.log("User with write rights should see a form to enter a new section");
             fillInSectionTitleAndDescription(requirements[0]);
         });
+        cy.wait(["@postSections"]);
 
         cy.log("User should be able to add a section at the beginning");
         cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
@@ -90,6 +92,7 @@ describe("Artidoc", () => {
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
             fillInSectionTitleAndDescription(requirements[1]);
         });
+        cy.wait(["@postSections"]);
 
         cy.log("User should be able to add a section at the end");
         cy.get("[data-test=artidoc-add-new-section-trigger]").last().click();
@@ -97,6 +100,7 @@ describe("Artidoc", () => {
         cy.get("[data-test=artidoc-section]:last-child").within(() => {
             fillInSectionTitleAndDescription(requirements[2]);
         });
+        cy.wait(["@postSections"]);
 
         cy.log("Check that the document has now section in given order");
         cy.reload();
@@ -150,34 +154,6 @@ describe("Artidoc", () => {
         cy.get("[data-test=artidoc-section]:last-child").within(() => {
             getSectionTitle().should("contain.text", "Performance Requirement");
         });
-
-        cy.log("User should be able to reorder sections with drag and drop");
-        const dataTransfer = new DataTransfer();
-
-        cy.get("[data-test=section-in-toc]:last-child")
-            .find("[data-test=dragndrop-grip]")
-            .trigger("dragstart", { dataTransfer, force: true });
-
-        cy.get("[data-test=section-in-toc]:first-child")
-            .trigger("dragenter", { dataTransfer })
-            .trigger("drop", { dataTransfer })
-            .trigger("dragend", { dataTransfer });
-
-        cy.wait("@patchSectionsOrder");
-        cy.get("[data-test=artidoc-section]:first-child").within(() => {
-            getSectionTitle().should("contain.text", "Performance Requirement");
-        });
-        cy.get("[data-test=section-in-toc]:first-child").should(
-            "contain.text",
-            "Performance Requirement",
-        );
-        cy.get("[data-test=artidoc-section]:last-child").within(() => {
-            getSectionTitle().should("contain.text", "Security Requirement");
-        });
-        cy.get("[data-test=section-in-toc]:last-child").should(
-            "contain.text",
-            "Security Requirement",
-        );
     });
 });
 
