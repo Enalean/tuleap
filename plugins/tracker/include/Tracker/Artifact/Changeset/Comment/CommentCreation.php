@@ -52,7 +52,7 @@ final class CommentCreation
         CreatedFileURLMapping $url_mapping,
     ): self {
         $body = $comment->getBody();
-        if ($comment->getFormat()->isHTML()) {
+        if ($comment->getFormat() === CommentFormatIdentifier::HTML) {
             $substitutor = new FileURLSubstitutor();
             $body        = $substitutor->substituteURLsInHTML($comment->getBody(), $url_mapping);
         }

@@ -52,7 +52,7 @@ final class CommentCreator
                     $comment->getSubmitter()->getId(),
                     $comment->getSubmissionTimestamp(),
                     0,
-                    (string) $comment->getFormat()
+                    $comment->getFormat()->value
                 );
                 if (! $comment_added) {
                     throw new \Tracker_CommentNotStoredException(

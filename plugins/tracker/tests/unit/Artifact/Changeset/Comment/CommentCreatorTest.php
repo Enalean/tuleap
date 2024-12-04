@@ -101,7 +101,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment   = CommentCreation::fromNewComment(
             NewComment::fromParts(
                 str_repeat('a', 70000),
-                CommentFormatIdentifier::buildText(),
+                CommentFormatIdentifier::TEXT,
                 $submitter,
                 self::SUBMISSION_TIMESTAMP,
                 $this->user_groups_that_are_allowed_to_see
@@ -121,7 +121,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment   = CommentCreation::fromNewComment(
             NewComment::fromParts(
                 'metavoltine huggermugger',
-                CommentFormatIdentifier::buildText(),
+                CommentFormatIdentifier::TEXT,
                 $submitter,
                 self::SUBMISSION_TIMESTAMP,
                 $this->user_groups_that_are_allowed_to_see
@@ -135,51 +135,49 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->create($comment);
     }
 
-    public static function commentDataProvider(): array
+    public static function generateComments(): iterable
     {
         $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
-        return [
-            'Text comment'     => [CommentCreation::fromNewComment(
-                NewComment::fromParts(
-                    'metavoltine huggermugger',
-                    CommentFormatIdentifier::buildText(),
-                    $submitter,
-                    self::SUBMISSION_TIMESTAMP,
-                    []
-                ),
-                self::CHANGESET_ID,
-                new CreatedFileURLMapping()
+        yield 'Text comment' => [CommentCreation::fromNewComment(
+            NewComment::fromParts(
+                'metavoltine huggermugger',
+                CommentFormatIdentifier::TEXT,
+                $submitter,
+                self::SUBMISSION_TIMESTAMP,
+                []
             ),
-            ],
-            'HTML comment'     => [CommentCreation::fromNewComment(
-                NewComment::fromParts(
-                    '<p>wane demipomada</p>',
-                    CommentFormatIdentifier::buildHTML(),
-                    $submitter,
-                    self::SUBMISSION_TIMESTAMP,
-                    []
-                ),
-                self::CHANGESET_ID,
-                new CreatedFileURLMapping()
+            self::CHANGESET_ID,
+            new CreatedFileURLMapping()
+        ),
+        ];
+        yield 'HTML comment' => [CommentCreation::fromNewComment(
+            NewComment::fromParts(
+                '<p>wane demipomada</p>',
+                CommentFormatIdentifier::HTML,
+                $submitter,
+                self::SUBMISSION_TIMESTAMP,
+                []
             ),
-            ],
-            'Markdown comment' => [CommentCreation::fromNewComment(
-                NewComment::fromParts(
-                    '*appraising* wheedle',
-                    CommentFormatIdentifier::buildCommonMark(),
-                    $submitter,
-                    self::SUBMISSION_TIMESTAMP,
-                    []
-                ),
-                self::CHANGESET_ID,
-                new CreatedFileURLMapping()
+            self::CHANGESET_ID,
+            new CreatedFileURLMapping()
+        ),
+        ];
+        yield 'Markdown comment' => [CommentCreation::fromNewComment(
+            NewComment::fromParts(
+                '*appraising* wheedle',
+                CommentFormatIdentifier::COMMONMARK,
+                $submitter,
+                self::SUBMISSION_TIMESTAMP,
+                []
             ),
-            ],
+            self::CHANGESET_ID,
+            new CreatedFileURLMapping()
+        ),
         ];
     }
 
     /**
-     * @dataProvider commentDataProvider
+     * @dataProvider generateComments
      */
     public function testItSavesCommentAndExtractsCrossReferences(CommentCreation $comment): void
     {
@@ -191,7 +189,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::SUBMITTER_USER_ID,
                 self::SUBMISSION_TIMESTAMP,
                 0,
-                (string) $comment->getFormat()
+                $comment->getFormat()->value
             )->willReturn(6903);
         $this->reference_manager->expects(self::once())->method('extractCrossRef');
         $this->ugroup_inserter->method('insertUGroupsOnPrivateComment');

@@ -831,11 +831,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @param Codendi_Request $request The data from the user
      */
-    public function validateCommentFormat(Codendi_Request $request, string $comment_format_field_name): string
+    public function validateCommentFormat(Codendi_Request $request, string $comment_format_field_name): CommentFormatIdentifier
     {
         $comment_format = (string) $request->get($comment_format_field_name);
 
-        return Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
+        return CommentFormatIdentifier::fromStringWithDefault($comment_format);
     }
 
     /**
@@ -861,7 +861,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         $changeset->updateComment(
                             $request->get('content'),
                             $current_user,
-                            $comment_format,
+                            $comment_format->value,
                             $_SERVER['REQUEST_TIME']
                         );
                         //We assume that we can only change a comment from a followUp
@@ -1252,7 +1252,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this,
             $fields_data,
             (string) $comment,
-            CommentFormatIdentifier::fromFormatString((string) $comment_format),
+            CommentFormatIdentifier::fromStringWithDefault((string) $comment_format),
             [],
             $submitter,
             (int) $submitted_on,
@@ -1285,7 +1285,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this,
             $fields_data,
             (string) $comment,
-            CommentFormatIdentifier::fromFormatString((string) $comment_format),
+            CommentFormatIdentifier::fromStringWithDefault((string) $comment_format),
             [],
             $submitter,
             (int) $submitted_on,

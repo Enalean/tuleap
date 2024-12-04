@@ -293,9 +293,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $html .= $this->getTimeAgo($current_user);
         $html .= '</div>';
 
-        $user_preferred_format = (string) CommentFormatIdentifier::fromFormatString(
+        $user_preferred_format = CommentFormatIdentifier::fromStringWithDefault(
             (string) $current_user->getPreference(\PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT)
-        );
+        )->value;
 
         // The content
         $html .= '<div class="tracker_artifact_followup_content"'

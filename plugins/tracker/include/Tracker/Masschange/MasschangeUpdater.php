@@ -135,7 +135,7 @@ final readonly class MasschangeUpdater
 
         $not_updated_aids = [];
 
-        $comment_format_identifier =  CommentFormatIdentifier::fromFormatString($comment_format);
+        $comment_format_identifier =  CommentFormatIdentifier::fromStringWithDefault($comment_format);
 
         foreach ($masschange_aids as $aid) {
             $artifact = $this->artifact_factory->getArtifactById($aid);

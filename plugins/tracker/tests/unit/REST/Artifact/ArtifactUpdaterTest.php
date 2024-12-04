@@ -26,6 +26,7 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
@@ -134,7 +135,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 if ($comment->getBody() !== '') {
                     return false;
                 }
-                if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
+                if ($comment->getFormat() !== CommentFormatIdentifier::COMMONMARK) {
                     return false;
                 }
                 return true;
@@ -170,7 +171,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 if ($comment->getBody() !== $comment_body) {
                     return false;
                 }
-                if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
+                if ($comment->getFormat() !== CommentFormatIdentifier::HTML) {
                     return false;
                 }
                 return true;

@@ -68,7 +68,7 @@ class ArtifactUpdater
             $artifact,
             $changeset_values->getFieldsData(),
             $comment_body,
-            CommentFormatIdentifier::fromFormatString($comment_format),
+            CommentFormatIdentifier::fromStringWithDefault($comment_format),
             [],
             $user,
             $submitted_on,

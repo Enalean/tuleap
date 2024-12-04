@@ -94,7 +94,7 @@ final class TextValueValidatorTest extends TestCase
             CommentCreation::fromNewComment(
                 NewComment::fromParts(
                     str_repeat('a', 70000),
-                    CommentFormatIdentifier::buildText(),
+                    CommentFormatIdentifier::TEXT,
                     UserTestBuilder::aUser()->build(),
                     (new \DateTimeImmutable())->getTimestamp(),
                     []
@@ -115,7 +115,7 @@ final class TextValueValidatorTest extends TestCase
             CommentCreation::fromNewComment(
                 NewComment::fromParts(
                     'metavoltine huggermugger',
-                    CommentFormatIdentifier::buildText(),
+                    CommentFormatIdentifier::TEXT,
                     UserTestBuilder::aUser()->build(),
                     (new \DateTimeImmutable())->getTimestamp(),
                     []

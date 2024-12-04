@@ -100,7 +100,7 @@ final class PUTHandler
         }
         return NewComment::fromParts(
             $comment->body,
-            CommentFormatIdentifier::fromFormatString($comment->format),
+            CommentFormatIdentifier::fromStringWithDefault($comment->format),
             $submitter,
             $submission_date->getTimestamp(),
             []

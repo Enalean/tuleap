@@ -95,7 +95,7 @@ class ArtifactLinker
                 $current_artifact,
                 $container->getFieldsData(),
                 $comment,
-                CommentFormatIdentifier::buildCommonMark(),
+                CommentFormatIdentifier::COMMONMARK,
                 [],
                 $current_user,
                 (new \DateTimeImmutable())->getTimestamp(),

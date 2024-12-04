@@ -148,16 +148,15 @@ class Tracker_Artifact_Changeset_Comment
      */
     public function getPurifiedBodyForText(): string
     {
-        return self::getCommentInPlaintext($this->getPurifier(), $this->body, CommentFormatIdentifier::fromFormatString($this->bodyFormat));
+        return self::getCommentInPlaintext($this->getPurifier(), $this->body, CommentFormatIdentifier::fromStringWithDefault($this->bodyFormat));
     }
 
     private static function getCommentInPlaintext(Codendi_HTMLPurifier $purifier, string $content, CommentFormatIdentifier $comment_format): string
     {
-        $identifier = (string) $comment_format;
-        if ($identifier === self::COMMONMARK_COMMENT) {
+        if ($comment_format === CommentFormatIdentifier::COMMONMARK) {
             return CommonMarkInterpreter::build($purifier)->getContentStrippedOfTags($content);
         }
-        return $purifier->purify($content, self::$PURIFIER_LEVEL_IN_TEXT[$identifier]);
+        return $purifier->purify($content, self::$PURIFIER_LEVEL_IN_TEXT[$comment_format->value]);
     }
 
     public function getPurifiedBodyForHTML(): string

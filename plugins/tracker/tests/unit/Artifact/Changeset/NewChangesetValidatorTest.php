@@ -145,7 +145,7 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             [],
             'stuff',
-            CommentFormatIdentifier::buildCommonMark(),
+            CommentFormatIdentifier::COMMONMARK,
             [],
             $this->user,
             123456789,
