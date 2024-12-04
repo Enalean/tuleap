@@ -32,6 +32,8 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
+use Tuleap\Velocity\Semantic\SemanticVelocityDao;
+use Tuleap\Velocity\Semantic\SemanticVelocityDuplicator;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 use Tuleap\Velocity\VelocityChartPresenter;
 use Tuleap\Velocity\VelocityComputation;
@@ -269,5 +271,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         $event->tracker = (new AddVelocityToScrumTemplate())
             ->addVelocityToStructure($event->tracker, $event->id_generator);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS)]
+    public function registerProjectCreationEvent(array &$params): void
+    {
+        $params['duplicators'][] = new SemanticVelocityDuplicator(new SemanticVelocityDao());
     }
 }
