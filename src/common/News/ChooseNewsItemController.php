@@ -104,6 +104,7 @@ class ChooseNewsItemController
     private function displayHeader(): void
     {
         $project = (ProjectManager::instance())->getProject($this->request->get('project_id'));
+        \Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($project, $GLOBALS['Response']);
         news_header(
             \Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_admin_index', 'title'))
                 ->inProject($project, Service::NEWS)

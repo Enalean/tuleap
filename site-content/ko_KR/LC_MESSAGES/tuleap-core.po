@@ -1464,6 +1464,11 @@ msgstr "포럼이 제한되어 있습니다."
 msgid "Forums"
 msgstr "포럼"
 
+msgid ""
+"Forums and News services are deprecated. They will be completely removed in "
+"March 2025."
+msgstr ""
+
 #, php-format
 msgid "Forums for '%1$s'"
 msgstr "'%1$s’에 대한 포럼"

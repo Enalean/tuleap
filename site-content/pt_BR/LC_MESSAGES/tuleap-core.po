@@ -1496,6 +1496,11 @@ msgstr "Fórum é restrito"
 msgid "Forums"
 msgstr "Fóruns"
 
+msgid ""
+"Forums and News services are deprecated. They will be completely removed in "
+"March 2025."
+msgstr ""
+
 #, php-format
 msgid "Forums for '%1$s'"
 msgstr "Fóruns por '%1$s'."

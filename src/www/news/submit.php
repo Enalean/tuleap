@@ -76,6 +76,7 @@ if (user_isloggedin()) {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($group_id);
 
+        \Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($project, $GLOBALS['Response']);
         news_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_index', 'news'))
             ->inProject($project, Service::NEWS)
             ->build());

@@ -30,7 +30,8 @@ $vGroupId->required();
 if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'))) {
     $group_id        = $request->get('group_id');
     $current_project = ProjectManager::instance()->getProject($group_id);
-    $vPostChanges    = new Valid_WhiteList('post_changes', ['y']);
+    \Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($current_project, $GLOBALS['Response']);
+    $vPostChanges = new Valid_WhiteList('post_changes', ['y']);
     $vPostChanges->required();
     if ($request->isPost() && $request->valid($vPostChanges)) {
         /*

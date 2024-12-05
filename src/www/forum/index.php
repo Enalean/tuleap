@@ -43,6 +43,8 @@ $pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 $title   = sprintf(_('Forums for \'%1$s\''), $project->getPublicName());
 
+\Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($project, $GLOBALS['Response']);
+
 forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($title)
     ->inProject($project, Service::FORUM)
     ->withPrinterVersion((int) $pv)

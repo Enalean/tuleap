@@ -54,6 +54,8 @@ if ($request->valid($vMsg)) {
     $forum_id   = $message->getForumId();
     $project    = (ProjectManager::instance())->getProject($group_id);
 
+    \Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($project, $GLOBALS['Response']);
+
     forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($message->getSubject())
         ->inProject($project, Service::FORUM)
         ->withPrinterVersion((int) $pv)

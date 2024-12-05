@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.5\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -1524,6 +1524,13 @@ msgstr "Forum restreint"
 
 msgid "Forums"
 msgstr "Forums"
+
+msgid ""
+"Forums and News services are deprecated. They will be completely removed in "
+"March 2025."
+msgstr ""
+"Les services Forums et News sont dépréciés. Ils seront complétement "
+"supprimés en Mars 2025."
 
 #, php-format
 msgid "Forums for '%1$s'"
