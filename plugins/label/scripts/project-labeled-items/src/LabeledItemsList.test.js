@@ -20,9 +20,9 @@ import { describe, it, beforeEach, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import * as rest_querier from "./rest-querier.js";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { createProjectLabeledItemsLocalVue } from "./local-vue-for-test.js";
 import LabeledItemsList from "./LabeledItemsList.vue";
 import LabeledItem from "./LabeledItem.vue";
+import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
 
 vi.useFakeTimers();
 
@@ -31,8 +31,10 @@ describe("LabeledItemsList", () => {
 
     const getWrapper = async (labels_ids) => {
         const wrapper = shallowMount(LabeledItemsList, {
-            localVue: await createProjectLabeledItemsLocalVue(),
-            propsData: {
+            global: {
+                ...getGlobalTestOptions(),
+            },
+            props: {
                 labelsId: JSON.stringify(labels_ids),
                 projectId: "101",
             },
