@@ -34,6 +34,7 @@ export const artidoc_editor_schema: EditorNodes = {
         },
         parseDOM: [{ tag: "artidoc-section-title" }],
         group: STRUCTURE_BLOCK_GROUP,
+        ignore_input_rules: true,
     },
     artidoc_section_description: {
         content: "block+",
