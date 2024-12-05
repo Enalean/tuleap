@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\REST\v1\PaginatedArtidocSectionRepresentationCollection;
 use Tuleap\Artidoc\REST\v1\TransformRawSectionsToRepresentation;

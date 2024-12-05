@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformationForCreation;
+use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class CollectRequiredSectionInformationForCreationStub implements CollectRequiredSectionInformationForCreation
+final class CollectRequiredSectionInformationStub implements CollectRequiredSectionInformation
 {
     private bool $called = false;
 
@@ -47,7 +47,7 @@ final class CollectRequiredSectionInformationForCreationStub implements CollectR
         return new self(Result::err(Fault::fromMessage('Required information are missing')));
     }
 
-    public function collectRequiredSectionInformationForCreation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
+    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
     {
         $this->called = true;
 

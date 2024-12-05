@@ -20,18 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-
-/**
- * @psalm-immutable
- */
-final readonly class CreatedSectionWrapper
+final readonly class PaginatedRawSections
 {
-    public function __construct(
-        public SectionIdentifier $section_identifier,
-        public RequiredArtifactInformation $required_info,
-    ) {
+    /**
+     * @param list<RawSection> $rows
+     */
+    public function __construct(public int $id, public array $rows, public int $total)
+    {
     }
 }

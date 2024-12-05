@@ -20,6 +20,8 @@
 
 namespace Tuleap\Artidoc\Document;
 
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
+
 interface SearchPaginatedRawSections
 {
     public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections;

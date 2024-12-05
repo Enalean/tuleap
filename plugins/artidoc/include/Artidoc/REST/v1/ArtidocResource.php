@@ -33,7 +33,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
-use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationForCreationCollector;
+use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -54,7 +54,7 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactFault;
-use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformationForCreation;
+use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\SectionCreator;
@@ -369,7 +369,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
 
-        $collector = new RequiredSectionInformationForCreationCollector(
+        $collector = new RequiredSectionInformationCollector(
             $user,
             new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance())
         );
@@ -385,10 +385,10 @@ final class ArtidocResource extends AuthenticatedResource
         return $this->getSectionCreator($user, $collector)
             ->create($id, $section->artifact->id, $before_section_id)
             ->andThen(function (SectionIdentifier $section_identifier) use ($collector, $section) {
-                return $collector->getCollectedRequiredSectionInformationForCreation($section->artifact->id)
-                    ->map(fn(RequiredArtifactInformation $info) => new CreatedSectionWrapper($section_identifier, $info));
+                return $collector->getCollectedRequiredSectionInformation($section->artifact->id)
+                    ->map(fn(RequiredArtifactInformation $info) => new SectionWrapper($section_identifier, $info));
             })
-            ->map(fn (CreatedSectionWrapper $created) => $this->getRepresentationBuilder()->build($created->required_info, $created->section_identifier, $user))
+            ->map(fn (SectionWrapper $created) => $this->getRepresentationBuilder()->build($created->required_info, $created->section_identifier, $user))
             ->match(
                 static function (ArtidocSectionRepresentation $representation) {
                     return $representation;
@@ -533,7 +533,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getSectionCreator(\PFUser $user, CollectRequiredSectionInformationForCreation $collector): SectionCreator
+    private function getSectionCreator(\PFUser $user, CollectRequiredSectionInformation $collector): SectionCreator
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {

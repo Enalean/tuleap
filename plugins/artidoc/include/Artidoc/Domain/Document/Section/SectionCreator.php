@@ -36,7 +36,7 @@ final readonly class SectionCreator
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
         private SaveOneSection $dao,
-        private CollectRequiredSectionInformationForCreation $collect_required_section_information_for_creation,
+        private CollectRequiredSectionInformation $collect_required_section_information_for_creation,
     ) {
     }
 
@@ -48,7 +48,7 @@ final readonly class SectionCreator
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(fn (ArtidocWithContext $artidoc) => $this->collect_required_section_information_for_creation->collectRequiredSectionInformationForCreation($artidoc, $artifact_id))
+            ->andThen(fn (ArtidocWithContext $artidoc) => $this->collect_required_section_information_for_creation->collectRequiredSectionInformation($artidoc, $artifact_id))
             ->andThen(fn () => $this->saveSection($id, $artifact_id, $before_section_id));
     }
 

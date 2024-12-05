@@ -27,10 +27,10 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-interface CollectRequiredSectionInformationForCreation
+interface CollectRequiredSectionInformation
 {
     /**
      * @return Ok<null>|Err<Fault>
      */
-    public function collectRequiredSectionInformationForCreation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err;
+    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err;
 }
