@@ -277,17 +277,25 @@ bash-web: ## Give a bash on web container
 
 .PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
-	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:el9-php82 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
-	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:el9-php82 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
+	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:el9-php82
+	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:el9-php82
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
+	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-aio-dev:el9-php82
+	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/ldap:latest
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
-	cosign verify --key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-aio-dev:el9-php82
-	cosign verify --key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/ldap:latest
 
 .PHONY:docker-pull-verify
 docker-pull-verify:
 	$(DOCKER) pull $(IMAGE_NAME)
 	cosign verify --key $(KEY_PATH) $(IMAGE_NAME)
+
+.PHONY:docker-pull-verify-keyless-gha
+docker-pull-verify-keyless-gha:
+	$(DOCKER) pull $(IMAGE_NAME)
+	cosign verify --output=text \
+		--certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+		--certificate-identity-regexp "https://github\.com/Enalean/docker-.+/\.github/workflows/Build_And_Publish_Docker_Images\.yml@refs/heads/main" \
+		$(IMAGE_NAME)
 
 .PHONY:scan-vuln-deps ## Scan dependencies for known vulnerabilities
 scan-vuln-deps:
