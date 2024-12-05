@@ -18,100 +18,82 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
+use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_MembershipDao;
 use Git_Driver_Gerrit_MembershipManager;
+use Git_Driver_Gerrit_User;
+use Git_Driver_Gerrit_UserAccountManager;
+use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
 use ProjectUGroup;
+use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MembershipManagerNoGerritTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MembershipManagerNoGerritTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    protected $membership_manager;
-    protected $driver;
-    protected $user_finder;
-    protected $user;
-    protected $project_name = 'someProject';
-    protected $project;
-    protected $u_group;
-    protected $git_repository;
-    protected $gerrit_user;
-    protected $gerrit_user_manager;
-    protected $remote_server;
-    protected $project_manager;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group2;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group3;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory_without_gerrit;
+    private Git_Driver_Gerrit_MembershipManager $membership_manager;
+    private Git_Driver_Gerrit&MockObject $driver;
+    private PFUser $user;
+    private ProjectUGroup $u_group;
+    private Git_RemoteServer_GerritServerFactory&MockObject $remote_server_factory_without_gerrit;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->user                = \Mockery::spy(\PFUser::class)->shouldReceive('getLdapId')->andReturns('whatever')->getMock();
-        $this->driver              = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->user_finder         = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
-        $this->remote_server       = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(25)->getMock();
-        $this->gerrit_user         = \Mockery::spy(\Git_Driver_Gerrit_User::class);
-        $this->gerrit_user_manager = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
-        $this->project             = \Mockery::spy(\Project::class);
-        $this->u_group             = \Mockery::spy(\ProjectUGroup::class);
-        $this->u_group2            = \Mockery::spy(\ProjectUGroup::class);
-        $this->u_group3            = \Mockery::spy(\ProjectUGroup::class);
-        $this->git_repository      = \Mockery::spy(\GitRepository::class);
-        $this->project_manager     = \Mockery::spy(\ProjectManager::class);
+        $this->user          = UserTestBuilder::aUser()->withLdapId('whatever')->build();
+        $this->driver        = $this->createMock(Git_Driver_Gerrit::class);
+        $remote_server       = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $gerrit_user         = $this->createMock(Git_Driver_Gerrit_User::class);
+        $gerrit_user_manager = $this->createMock(Git_Driver_Gerrit_UserAccountManager::class);
+        $project             = ProjectTestBuilder::aProject()->withId(456)->withUnixName('some_project')->build();
+        $this->u_group       = ProjectUGroupTestBuilder::aCustomUserGroup(101)->withProject($project)->build();
+        $project_manager     = $this->createMock(ProjectManager::class);
 
-        $this->u_group->shouldReceive('getProject')->andReturns($this->project);
-        $this->u_group2->shouldReceive('getProject')->andReturns($this->project);
-        $this->u_group3->shouldReceive('getProject')->andReturns($this->project);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
+        $remote_server->method('getId')->willReturn(25);
+        $project_manager->method('getChildProjects')->willReturn([]);
 
-        $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
+        $gerrit_user_manager->method('getGerritUser')->with($this->user)->willReturn($gerrit_user);
 
-        $this->gerrit_user_manager->shouldReceive('getGerritUser')->with($this->user)->andReturns($this->gerrit_user);
+        $this->remote_server_factory_without_gerrit = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
 
-        $this->remote_server_factory_without_gerrit = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-
+        $gerrit_driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $gerrit_driver_factory->method('getDriver')->willReturn($this->driver);
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            Mockery::mock(Git_Driver_Gerrit_MembershipDao::class),
-            \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock(),
-            $this->gerrit_user_manager,
+            $this->createMock(Git_Driver_Gerrit_MembershipDao::class),
+            $gerrit_driver_factory,
+            $gerrit_user_manager,
             $this->remote_server_factory_without_gerrit,
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            \Mockery::spy(\UGroupManager::class),
-            $this->project_manager
+            new NullLogger(),
+            $this->createMock(UGroupManager::class),
+            $project_manager
         );
     }
 
     public function testItAsksForAllTheServersOfAProject(): void
     {
-        $this->project->shouldReceive('getId')->andReturns(456);
-        $this->remote_server_factory_without_gerrit->shouldReceive('getServersForUGroup')
-            ->with($this->u_group)
-            ->once()
-            ->andReturns([]);
+        $this->remote_server_factory_without_gerrit->expects(self::once())->method('getServersForUGroup')
+            ->with($this->u_group)->willReturn([]);
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
 
     public function testItDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit(): void
     {
-        $this->remote_server_factory_without_gerrit->shouldReceive('getServersForUGroup')->andReturns([]);
+        $this->remote_server_factory_without_gerrit->method('getServersForUGroup')->willReturn([]);
 
-        $this->driver->shouldReceive('addUserToGroup')->never();
-        $this->driver->shouldReceive('removeUserFromGroup')->never();
+        $this->driver->expects(self::never())->method('addUserToGroup');
+        $this->driver->expects(self::never())->method('removeUserFromGroup');
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
