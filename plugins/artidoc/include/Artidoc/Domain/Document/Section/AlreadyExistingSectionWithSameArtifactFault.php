@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final readonly class UnableToFindSiblingSectionFault extends Fault
+final readonly class AlreadyExistingSectionWithSameArtifactFault extends Fault
 {
     public static function fromThrowable(\Throwable $throwable): Fault
     {

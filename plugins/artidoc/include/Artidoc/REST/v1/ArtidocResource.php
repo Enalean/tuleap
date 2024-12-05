@@ -33,6 +33,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationForCreationCollector;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -52,6 +53,12 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
+use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactFault;
+use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformationForCreation;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\SectionCreator;
+use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionFault;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
@@ -63,6 +70,7 @@ use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -358,8 +366,29 @@ final class ArtidocResource extends AuthenticatedResource
         $this->checkAccess();
 
         $user = UserManager::instance()->getCurrentUser();
-        return $this->getPostHandler($user)
-            ->handle($id, $section, $user)
+
+        $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
+
+        $collector = new RequiredSectionInformationForCreationCollector(
+            $user,
+            new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance())
+        );
+
+        try {
+            $before_section_id = $section->position
+                ? Option::fromValue($identifier_factory->buildFromHexadecimalString($section->position->before))
+                : Option::nothing(SectionIdentifier::class);
+        } catch (InvalidSectionIdentifierStringException) {
+            throw new RestException(400, 'Sibling section id is invalid');
+        }
+
+        return $this->getSectionCreator($user, $collector)
+            ->create($id, $section->artifact->id, $before_section_id)
+            ->andThen(function (SectionIdentifier $section_identifier) use ($collector, $section) {
+                return $collector->getCollectedRequiredSectionInformationForCreation($section->artifact->id)
+                    ->map(fn(RequiredArtifactInformation $info) => new CreatedSectionWrapper($section_identifier, $info));
+            })
+            ->map(fn (CreatedSectionWrapper $created) => $this->getRepresentationBuilder()->build($created->required_info, $created->section_identifier, $user))
             ->match(
                 static function (ArtidocSectionRepresentation $representation) {
                     return $representation;
@@ -504,7 +533,7 @@ final class ArtidocResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getPostHandler(\PFUser $user): POSTSectionHandler
+    private function getSectionCreator(\PFUser $user, CollectRequiredSectionInformationForCreation $collector): SectionCreator
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -522,31 +551,34 @@ final class ArtidocResource extends AuthenticatedResource
             ),
         );
 
+        return new SectionCreator(
+            $retriever,
+            $dao,
+            $collector,
+        );
+    }
+
+    private function getRepresentationBuilder(): SectionRepresentationBuilder
+    {
         $form_element_factory = \Tracker_FormElementFactory::instance();
 
-        return new POSTSectionHandler(
-            $retriever,
-            new SectionRepresentationBuilder(
-                new FileUploadDataProvider(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                \TransitionFactory::instance(),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
+        return new SectionRepresentationBuilder(
+            new FileUploadDataProvider(
+                new FrozenFieldDetector(
+                    new TransitionRetriever(
+                        new StateFactory(
+                            \TransitionFactory::instance(),
+                            new SimpleWorkflowDao()
                         ),
-                        new FrozenFieldsRetriever(
-                            new FrozenFieldsDao(),
-                            $form_element_factory
-                        )
+                        new TransitionExtractor()
                     ),
-                    $form_element_factory
-                )
-            ),
-            $dao,
-            $identifier_factory,
-            new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance()),
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao(),
+                        $form_element_factory,
+                    )
+                ),
+                $form_element_factory,
+            )
         );
     }
 
