@@ -18,125 +18,107 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
 use Exception;
 use ForgeConfig;
+use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_MembershipDao;
 use Git_Driver_Gerrit_MembershipManager;
+use Git_Driver_Gerrit_User;
+use Git_Driver_Gerrit_UserAccountManager;
+use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
 use ProjectUGroup;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MembershipManagerListGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MembershipManagerListGroupsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    protected $user_ldap_id;
-    protected $membership_manager;
-    protected $driver;
-    protected $user_finder;
-    protected $user;
-    protected $project_name = 'someProject';
-    protected $project;
-    protected $u_group;
-    protected $git_repository;
-    protected $gerrit_user;
-    protected $gerrit_user_manager;
-    protected $remote_server;
-    protected $project_manager;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group2;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group3;
+    private Git_Driver_Gerrit_MembershipManager $membership_manager;
+    private ProjectUGroup $u_group;
+    private ProjectUGroup $u_group2;
+    private Git_RemoteServer_GerritServer&MockObject $remote_server;
 
     protected function setUp(): void
     {
-        parent::setUp();
         ForgeConfig::set('codendi_log', vfsStream::setup()->url());
-        $this->user                  = \Mockery::spy(\PFUser::class)->shouldReceive('getLdapId')->andReturns('whatever')->getMock();
-        $this->driver                = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->user_finder           = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
-        $this->remote_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->remote_server         = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(25)->getMock();
-        $this->gerrit_user           = \Mockery::spy(\Git_Driver_Gerrit_User::class);
-        $this->gerrit_user_manager   = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
-        $this->project               = \Mockery::spy(\Project::class);
-        $this->u_group               = \Mockery::spy(\ProjectUGroup::class);
-        $this->u_group2              = \Mockery::spy(\ProjectUGroup::class);
-        $this->u_group3              = \Mockery::spy(\ProjectUGroup::class);
-        $this->git_repository        = \Mockery::spy(\GitRepository::class);
-        $this->project_manager       = \Mockery::spy(\ProjectManager::class);
+        $user                  = UserTestBuilder::aUser()->withLdapId('whatever')->build();
+        $driver                = $this->createMock(Git_Driver_Gerrit::class);
+        $remote_server_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->remote_server   = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $gerrit_user           = $this->createMock(Git_Driver_Gerrit_User::class);
+        $gerrit_user_manager   = $this->createMock(Git_Driver_Gerrit_UserAccountManager::class);
+        $project               = ProjectTestBuilder::aProject()->withUnixName('some_project')->build();
+        $this->u_group         = ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('group_from_ldap')->withProject($project)->build();
+        $this->u_group2        = ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('group_from')->withProject($project)->build();
+        $project_manager       = $this->createMock(ProjectManager::class);
 
-        $this->u_group->shouldReceive('getProject')->andReturns($this->project);
-        $this->u_group2->shouldReceive('getProject')->andReturns($this->project);
-        $this->u_group3->shouldReceive('getProject')->andReturns($this->project);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
+        $this->remote_server->method('getId')->willReturn(25);
+        $project_manager->method('getChildProjects')->willReturn([]);
 
-        $this->remote_server_factory->shouldReceive('getServer')->andReturns($this->remote_server);
-        $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
+        $remote_server_factory->method('getServer')->willReturn($this->remote_server);
 
-        $this->gerrit_user_manager->shouldReceive('getGerritUser')->with($this->user)->andReturns($this->gerrit_user);
+        $gerrit_user_manager->method('getGerritUser')->with($user)->willReturn($gerrit_user);
 
-        $this->membership_manager  = new Git_Driver_Gerrit_MembershipManager(
-            \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class),
-            \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock(),
-            $this->gerrit_user_manager,
-            \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class),
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            \Mockery::spy(\UGroupManager::class),
-            $this->project_manager
+        $gerrit_driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $gerrit_driver_factory->method('getDriver')->willReturn($driver);
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            $this->createMock(Git_Driver_Gerrit_MembershipDao::class),
+            $gerrit_driver_factory,
+            $gerrit_user_manager,
+            $this->createMock(Git_RemoteServer_GerritServerFactory::class),
+            new NullLogger(),
+            $this->createMock(UGroupManager::class),
+            $project_manager
         );
-        $ls_groups_expected_return = [
-            'Administrators'              => '31c2cb467c263d73eb24552a7cc98b7131ac2115',
-            'Anonymous Users'             => 'global:Anonymous-Users',
-            'Non-Interactive Users'       => '872372f18fd97a7d58bf1f93bc3996d758ffb31b',
-            'Project Owners'              => 'global:Project-Owners',
-            'Registered Users'            => 'global:Registered-Users',
-            'someProject/project_members' => '53936c4a9782a73e3d5296380feecf6c8cc1076f',
-            'someProject/project_admins'  => 'ddfaa5d153a40cbf0ae41b73a441dfa97799891b',
-            'someProject/group_from_ldap' => 'ec68131cc1adc6b42753c10adb3e3265493f64f9',
-        ];
-        $this->driver->shouldReceive('getAllGroups')->andReturns($ls_groups_expected_return);
+        $driver->method('getAllGroups')->willReturn([
+            'Administrators'               => '31c2cb467c263d73eb24552a7cc98b7131ac2115',
+            'Anonymous Users'              => 'global:Anonymous-Users',
+            'Non-Interactive Users'        => '872372f18fd97a7d58bf1f93bc3996d758ffb31b',
+            'Project Owners'               => 'global:Project-Owners',
+            'Registered Users'             => 'global:Registered-Users',
+            'some_project/project_members' => '53936c4a9782a73e3d5296380feecf6c8cc1076f',
+            'some_project/project_admins'  => 'ddfaa5d153a40cbf0ae41b73a441dfa97799891b',
+            'some_project/group_from_ldap' => 'ec68131cc1adc6b42753c10adb3e3265493f64f9',
+        ]);
     }
 
     public function testItReturnsTrueWhenGroupExistsOnServer(): void
     {
-        $this->u_group->shouldReceive('getNormalizedName')->andReturns('group_from_ldap');
-
-        $this->assertTrue($this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group));
+        self::assertTrue($this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group));
     }
 
     public function testItReturnsFalseWhenGroupExistsOnServer(): void
     {
-        $this->u_group->shouldReceive('getNormalizedName')->andReturns('group_from');
-
-        $this->assertFalse($this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group));
+        self::assertFalse($this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group2));
     }
 
     public function testItReturnsGroupUUIDWhenGroupExists(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             'ec68131cc1adc6b42753c10adb3e3265493f64f9',
-            $this->membership_manager->getGroupUUIDByNameOnServer($this->remote_server, 'someProject/group_from_ldap')
+            $this->membership_manager->getGroupUUIDByNameOnServer($this->remote_server, 'some_project/group_from_ldap')
         );
     }
 
     public function testItRaisesAnExceptionIfGroupDoesntExist(): void
     {
+        $this->remote_server->method('getBaseUrl');
         $this->expectException(Exception::class);
-        $this->membership_manager->getGroupUUIDByNameOnServer($this->remote_server, 'someProject/group_from');
+        $this->membership_manager->getGroupUUIDByNameOnServer($this->remote_server, 'some_project/group_from');
     }
 }
