@@ -35,7 +35,7 @@ final readonly class SectionCreator
 {
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private SaveOneSection $dao,
+        private SaveOneSection $save_section,
         private CollectRequiredSectionInformation $collect_required_section_information_for_creation,
     ) {
     }
@@ -63,8 +63,8 @@ final readonly class SectionCreator
     ): Ok|Err {
         try {
             $section_id = $before_section_id->match(
-                fn (SectionIdentifier $sibling_section_id) => $this->dao->saveSectionBefore($id, $artifact_id, $sibling_section_id),
-                fn () => $this->dao->saveSectionAtTheEnd($id, $artifact_id),
+                fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($id, $artifact_id, $sibling_section_id),
+                fn () => $this->save_section->saveSectionAtTheEnd($id, $artifact_id),
             );
         } catch (AlreadyExistingSectionWithSameArtifactException $exception) {
             return Result::err(AlreadyExistingSectionWithSameArtifactFault::fromThrowable($exception));

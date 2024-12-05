@@ -32,7 +32,7 @@ use Tuleap\NeverThrow\Result;
 final class SectionDeletor
 {
     public function __construct(
-        private SearchOneSection $dao,
+        private SearchOneSection $search_section,
         private RetrieveArtidocWithContext $retrieve_artidoc,
         private DeleteOneSection $deletor,
     ) {
@@ -43,7 +43,7 @@ final class SectionDeletor
      */
     public function deleteSection(SectionIdentifier $id): Ok|Err
     {
-        return $this->dao->searchSectionById($id)
+        return $this->search_section->searchSectionById($id)
             ->andThen(fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanWrite($raw_section->item_id))
             ->andThen(fn () => $this->delete($id));
     }
