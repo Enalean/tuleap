@@ -256,7 +256,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
 
     public function getJavascriptAssets(): array
     {
-        return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.js')];
+        return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.ts')];
     }
 
     private function getAssets(): IncludeViteAssets

@@ -31,7 +31,7 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    "graph-loader": path.resolve(__dirname, "src/loadGraphs.js"),
+                    "graph-loader": path.resolve(__dirname, "src/loadGraphs.ts"),
                 },
             },
         },

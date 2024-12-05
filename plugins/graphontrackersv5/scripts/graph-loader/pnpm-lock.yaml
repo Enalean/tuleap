@@ -5,12 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
   '@tuleap/gettext':
     specifier: workspace:*
     version: link:../../../../lib/frontend/gettext
-  '@tuleap/tlp-fetch':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-swatch-colors
@@ -44,6 +50,9 @@ dependencies:
   d3-transition:
     specifier: ^3.0.1
     version: 3.0.1(d3-selection@3.0.0)
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
   sprintf-js:
     specifier: ^1.1.2
     version: 1.1.3
@@ -55,8 +64,15 @@ devDependencies:
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin
+  '@types/sprintf-js':
+    specifier: ^1.1.2
+    version: 1.1.4
 
 packages:
+
+  /@types/sprintf-js@1.1.4:
+    resolution: {integrity: sha512-aWK1reDYWxcjgcIIPmQi3u+OQDuYa9b+lr6eIsGWrekJ9vr1NSjr4Eab8oQ1iKuH1ltFHpXGyerAv1a3FMKxzQ==}
+    dev: true
 
   /d3-array@3.2.4:
     resolution: {integrity: sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg==}
@@ -173,6 +189,10 @@ packages:
   /internmap@2.0.3:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
     engines: {node: '>=12'}
+    dev: false
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: false
 
   /sprintf-js@1.1.3:

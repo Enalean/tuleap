@@ -12,8 +12,10 @@
     }
   },
   "dependencies": {
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
     "@tuleap/gettext": "workspace:*",
-    "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "d3-array": "^3.0.1",
     "d3-axis": "^3.0.0",
@@ -25,13 +27,16 @@
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "d3-transition": "^3.0.1",
+    "neverthrow": "^6.0.0",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@tuleap/po-gettext-plugin": "workspace:*"
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "@types/sprintf-js": "^1.1.2"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"
   }
