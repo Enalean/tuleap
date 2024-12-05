@@ -73,21 +73,19 @@
     vertical-align: middle;
 }
 
-/* stylelint-disable selector-no-qualifying-type */
-body.tracker-administration {
+.tracker-administration {
     background: var(--tlp-background-color);
 
     .main {
         #feedback > ul {
             margin: 0 20px 20px;
         }
-
-        .content {
-            padding: 0;
-        }
     }
 }
-/* stylelint-enable */
+
+.tracker-administration .content {
+    padding: 0;
+}
 
 .tracker-administration-content {
     margin: 20px;

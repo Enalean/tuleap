@@ -447,12 +447,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE)]
-    public function trackerEventIncludeCssFile(array $params): void
-    {
-        $params['include_tracker_css_file'] = true;
-    }
-
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
         $event->addConfigClass(FeatureFlagTimetrackingManagementWidget::class);
