@@ -23,24 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\REST\v1;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCannotAddATestIfThereIsNoArtifactLinkField(): void
     {
         $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = $this->createMock(Tracker::class);
         $project  = $this->createMock(\Project::class);
 
         $project->method('getID')->willReturn(101);
         $project->method('getPublicName')->willReturn('project01');
         $project->method('getIconUnicodeCodepoint')->willReturn('');
 
-        $tracker->method('getName')->willReturn('tracker_name');
-        $tracker->method('getProject')->willReturn($project);
-        $tracker->method('getId')->willReturn(1);
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withId(1)
+            ->withProject($project)
+            ->withName('tracker_name')
+            ->build();
 
         $artifact->method('getAnArtifactLinkField')->willReturn(null);
         $artifact->method('getTracker')->willReturn($tracker);
@@ -68,16 +69,17 @@ final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->method('userCanUpdate')->willReturn(false);
 
         $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = $this->createMock(Tracker::class);
         $project  = $this->createMock(\Project::class);
 
         $project->method('getID')->willReturn(101);
         $project->method('getPublicName')->willReturn('project01');
         $project->method('getIconUnicodeCodepoint')->willReturn('');
 
-        $tracker->method('getName')->willReturn('tracker_name');
-        $tracker->method('getProject')->willReturn($project);
-        $tracker->method('getId')->willReturn(1);
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withId(1)
+            ->withProject($project)
+            ->withName('tracker_name')
+            ->build();
 
         $artifact->method('getAnArtifactLinkField')->willReturn($field);
         $artifact->method('getTracker')->willReturn($tracker);
@@ -105,16 +107,17 @@ final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->method('userCanUpdate')->willReturn(true);
 
         $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = $this->createMock(Tracker::class);
         $project  = $this->createMock(\Project::class);
 
         $project->method('getID')->willReturn(101);
         $project->method('getPublicName')->willReturn('project01');
         $project->method('getIconUnicodeCodepoint')->willReturn('');
 
-        $tracker->method('getName')->willReturn('tracker_name');
-        $tracker->method('getProject')->willReturn($project);
-        $tracker->method('getId')->willReturn(1);
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withId(1)
+            ->withProject($project)
+            ->withName('tracker_name')
+            ->build();
 
         $artifact->method('getAnArtifactLinkField')->willReturn($field);
         $artifact->method('getTracker')->willReturn($tracker);

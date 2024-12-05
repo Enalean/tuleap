@@ -94,6 +94,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'id'  => $this->sprints_tracker_id,
                             'uri' => "trackers/$this->sprints_tracker_id",
                             'label' => 'Sprints',
+                            'color' => 'inca-silver',
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
@@ -121,6 +122,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'id'  => $this->user_stories_tracker_id,
                             'uri' => 'trackers/' . $this->user_stories_tracker_id,
                             'label' => 'User Stories',
+                            'color' => 'inca-silver',
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
@@ -134,6 +136,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'id'  => $this->epic_tracker_id,
                             'uri' => 'trackers/' . $this->epic_tracker_id,
                             'label' => 'Epics',
+                            'color' => 'inca-silver',
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
@@ -159,6 +162,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'id'  => $this->epic_tracker_id,
                             'uri' => 'trackers/' . $this->epic_tracker_id,
                             'label' => 'Epics',
+                            'color' => 'inca-silver',
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,

@@ -22,6 +22,7 @@ import type { Tracker, TrackerWithSubmittableSection } from "@/stores/configurat
 const base: Tracker = {
     id: 101,
     label: "Bugs",
+    color: "flamingo-pink",
     title: null,
     description: null,
     file: null,
