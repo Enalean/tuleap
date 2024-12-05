@@ -28,7 +28,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
-use Tuleap\Artidoc\Stubs\Domain\Document\Section\CollectRequiredSectionInformationForCreationStub;
+use Tuleap\Artidoc\Stubs\Domain\Document\Section\CollectRequiredSectionInformationStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Section\SaveOneSectionStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
@@ -53,7 +53,7 @@ final class SectionCreatorTest extends TestCase
     public function testHappyPathAtTheEnd(): void
     {
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
-        $collector = CollectRequiredSectionInformationForCreationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $handler = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
@@ -81,7 +81,7 @@ final class SectionCreatorTest extends TestCase
     public function testHappyPathBeforeSection(): void
     {
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
-        $collector = CollectRequiredSectionInformationForCreationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $handler = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
@@ -109,7 +109,7 @@ final class SectionCreatorTest extends TestCase
     public function testFaultWhenUnableToFindSiblingSection(): void
     {
         $saver     = SaveOneSectionStub::withUnableToFindSiblingSection(self::NEW_SECTION_ID);
-        $collector = CollectRequiredSectionInformationForCreationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $handler = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
@@ -148,7 +148,7 @@ final class SectionCreatorTest extends TestCase
         ?string $before_section_id,
     ): void {
         $saver     = SaveOneSectionStub::withAlreadyExistingSectionWithSameArtifact(self::NEW_SECTION_ID);
-        $collector = CollectRequiredSectionInformationForCreationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $handler = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
@@ -176,7 +176,7 @@ final class SectionCreatorTest extends TestCase
     public function testFaultWhenArtifactDoesNotHaveRequiredInformation(): void
     {
         $saver     = SaveOneSectionStub::withAlreadyExistingSectionWithSameArtifact(self::NEW_SECTION_ID);
-        $collector = CollectRequiredSectionInformationForCreationStub::withoutRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withoutRequiredInformation();
 
         $handler = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
@@ -201,7 +201,7 @@ final class SectionCreatorTest extends TestCase
     public function testFaultWhenDocumentCannotBeRetrieved(): void
     {
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
-        $collector = CollectRequiredSectionInformationForCreationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $handler = new SectionCreator(
             RetrieveArtidocWithContextStub::withoutDocument(),
@@ -222,7 +222,7 @@ final class SectionCreatorTest extends TestCase
     public function testFaultWhenDocumentIsNotWritable(): void
     {
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
-        $collector = CollectRequiredSectionInformationForCreationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $handler = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanRead(

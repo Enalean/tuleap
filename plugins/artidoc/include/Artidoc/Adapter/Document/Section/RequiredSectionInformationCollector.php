@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Adapter\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformationForCreation;
+use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\REST\v1\BuildRequiredArtifactInformation;
 use Tuleap\Artidoc\REST\v1\RequiredArtifactInformation;
 use Tuleap\NeverThrow\Err;
@@ -31,7 +31,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class RequiredSectionInformationForCreationCollector implements CollectRequiredSectionInformationForCreation
+final class RequiredSectionInformationCollector implements CollectRequiredSectionInformation
 {
     /**
      * @var array<int, RequiredArtifactInformation>
@@ -44,7 +44,7 @@ final class RequiredSectionInformationForCreationCollector implements CollectReq
     ) {
     }
 
-    public function collectRequiredSectionInformationForCreation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
+    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
     {
         return $this->required_artifact_information_builder
             ->getRequiredArtifactInformation($artidoc, $artifact_id, $this->current_user)
@@ -58,7 +58,7 @@ final class RequiredSectionInformationForCreationCollector implements CollectReq
     /**
      * @return Ok<RequiredArtifactInformation>|Err<Fault>
      */
-    public function getCollectedRequiredSectionInformationForCreation(int $artifact_id): Ok|Err
+    public function getCollectedRequiredSectionInformation(int $artifact_id): Ok|Err
     {
         return isset($this->collected[$artifact_id])
             ? Result::ok($this->collected[$artifact_id])

@@ -33,6 +33,7 @@ use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifac
 use Tuleap\Artidoc\Domain\Document\Section\DeleteOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\SaveOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;

@@ -20,49 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class GETSectionHandler
+final class SectionRetriever
 {
     public function __construct(
-        private SearchOneSection $dao,
+        private SearchOneSection $search_section,
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private TransformRawSectionsToRepresentation $transformer,
+        private CollectRequiredSectionInformation $collect_required_section_information_for_creation,
     ) {
     }
 
     /**
-     * @return Ok<ArtidocSectionRepresentation>|Err<Fault>
+     * @return Ok<RawSection>|Err<Fault>
      */
-    public function handle(SectionIdentifier $id, \PFUser $user): Ok|Err
+    public function retrieveSection(SectionIdentifier $id): Ok|Err
     {
-        return $this->dao->searchSectionById($id)
+        return $this->search_section->searchSectionById($id)
             ->match(
-                fn (RawSection $row) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($row->item_id)
-                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->transformer->getRepresentation($artidoc, new PaginatedRawSections($row->item_id, [$row], 1), $user))
-                    ->andThen($this->getFirstAndOnlySectionFromCollection(...)),
+                fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($raw_section->item_id)
+                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collect_required_section_information_for_creation->collectRequiredSectionInformation($artidoc, $raw_section->artifact_id))
+                    ->map(static fn() => $raw_section),
                 static fn (Fault $fault) => Result::err($fault),
             );
-    }
-
-    private function getFirstAndOnlySectionFromCollection(
-        PaginatedArtidocSectionRepresentationCollection $collection,
-    ): Ok|Err {
-        if (count($collection->sections) !== 1) {
-            return Result::err(Fault::fromMessage('We should have exactly one matching section'));
-        }
-
-        return Result::ok($collection->sections[0]);
     }
 }

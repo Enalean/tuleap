@@ -40,46 +40,46 @@ final class RequiredSectionInformationForCreationCollectorTest extends TestCase
             ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build(),
         )->build();
 
-        $collector = new RequiredSectionInformationForCreationCollector(
+        $collector = new RequiredSectionInformationCollector(
             UserTestBuilder::buildWithDefaults(),
             BuildRequiredArtifactInformationStub::withRequiredArtifactInformation([
                 self::ARTIFACT_ID => $required_artifact_information,
             ])
         );
 
-        $collected = $collector->getCollectedRequiredSectionInformationForCreation(self::ARTIFACT_ID);
+        $collected = $collector->getCollectedRequiredSectionInformation(self::ARTIFACT_ID);
         self::assertTrue(Result::isErr($collected));
 
-        $result = $collector->collectRequiredSectionInformationForCreation(
+        $result = $collector->collectRequiredSectionInformation(
             new ArtidocWithContext(new ArtidocDocument([])),
             self::ARTIFACT_ID,
         );
 
         self::assertTrue(Result::isOk($result));
 
-        $collected = $collector->getCollectedRequiredSectionInformationForCreation(self::ARTIFACT_ID);
+        $collected = $collector->getCollectedRequiredSectionInformation(self::ARTIFACT_ID);
         self::assertTrue(Result::isOk($collected));
         self::assertSame($required_artifact_information, $collected->value);
     }
 
     public function testItCollectsNothingIfNoRequiredSectionInformationForCreation(): void
     {
-        $collector = new RequiredSectionInformationForCreationCollector(
+        $collector = new RequiredSectionInformationCollector(
             UserTestBuilder::buildWithDefaults(),
             BuildRequiredArtifactInformationStub::withoutRequiredArtifactInformation(),
         );
 
-        $collected = $collector->getCollectedRequiredSectionInformationForCreation(self::ARTIFACT_ID);
+        $collected = $collector->getCollectedRequiredSectionInformation(self::ARTIFACT_ID);
         self::assertTrue(Result::isErr($collected));
 
-        $result = $collector->collectRequiredSectionInformationForCreation(
+        $result = $collector->collectRequiredSectionInformation(
             new ArtidocWithContext(new ArtidocDocument([])),
             self::ARTIFACT_ID,
         );
 
         self::assertTrue(Result::isErr($result));
 
-        $collected = $collector->getCollectedRequiredSectionInformationForCreation(self::ARTIFACT_ID);
+        $collected = $collector->getCollectedRequiredSectionInformation(self::ARTIFACT_ID);
         self::assertTrue(Result::isErr($collected));
     }
 }
