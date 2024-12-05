@@ -1,0 +1,13 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-git-potentially-dangerous-bidirectional-characters",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "devDependencies": {
+    "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*"
+  },
+  "scripts": {
+    "build": "rm -rf ./backend-assets && mkdir ./backend-assets && ./node_modules/.bin/potentially-dangerous-bidirectional-characters > ./backend-assets/potentially-dangerous-bidirectional-characters.json"
+  }
+}

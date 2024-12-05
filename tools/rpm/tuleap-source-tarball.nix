@@ -40,7 +40,6 @@ let
           !src/scripts/*/frontend-assets/
           /src/scripts/tlp-doc/
           /plugins/*/scripts/lib/
-          !plugins/*/backend-assets
           !plugins/*/*/backend-assets
           !plugins/*/frontend-assets
           !plugins/*/scripts/*/frontend-assets
