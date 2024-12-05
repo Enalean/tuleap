@@ -65,13 +65,6 @@ msgid ""
 msgstr ""
 "Il y a déjà une section existante avec le même artéfact dans le document."
 
-msgid ""
-"Unable to set the sections of the document, at least one of the submitted "
-"section does not exist."
-msgstr ""
-"Impossible de mettre à jour les sections du document, l'une des sections "
-"envoyées n'existe pas."
-
 #, php-format
 msgid "Unknown direction \"%s\". Expected one of the following values: %s"
 msgstr ""

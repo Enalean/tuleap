@@ -213,7 +213,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id . '/sections'));
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame(['OPTIONS', 'GET', 'PUT', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertSame(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOptionsSectionsId(): void
@@ -223,26 +223,6 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(['OPTIONS', 'GET', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPUTArtidocSections(int $root_id): void
-    {
-        $artidoc_id   = $this->createArtidoc($root_id, 'Artidoc F3 ' . $this->now)['id'];
-        $section_1_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
-        $section_2_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
-
-        self::assertCount(0, $this->getArtidocSections($artidoc_id));
-
-        $this->setSectionsForArtidoc($artidoc_id, $section_1_id, $section_2_id);
-
-        $document_content = $this->getArtidocSections($artidoc_id);
-
-        self::assertCount(2, $document_content);
-        self::assertSame($section_1_id, $document_content[0]['artifact']['id']);
-        self::assertSame($section_2_id, $document_content[1]['artifact']['id']);
     }
 
     /**
@@ -291,16 +271,18 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
     private function setSectionsForArtidoc(int $artidoc_id, int ...$section_ids): void
     {
-        $put_response = $this->getResponse(
-            $this->request_factory->createRequest('PUT', 'artidoc/' . $artidoc_id . '/sections')->withBody(
-                $this->stream_factory->createStream(json_encode([
-                    'sections' => array_map(static fn($id) => ['artifact' => ['id' => $id]], $section_ids),
-                ], JSON_THROW_ON_ERROR))
-            ),
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-        );
-
-        self::assertSame(200, $put_response->getStatusCode());
+        foreach ($section_ids as $section_id) {
+            $post_response = $this->getResponse(
+                $this->request_factory->createRequest('POST', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+                    $this->stream_factory->createStream(json_encode([
+                        'artifact' => ['id' => $section_id],
+                        'position' => null,
+                    ], JSON_THROW_ON_ERROR))
+                ),
+                DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+            );
+            self::assertSame(200, $post_response->getStatusCode());
+        }
     }
 
     /**

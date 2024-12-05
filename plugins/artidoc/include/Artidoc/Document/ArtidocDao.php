@@ -44,7 +44,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
 {
     public function __construct(private readonly SectionIdentifierFactory $identifier_factory)
     {
@@ -162,31 +162,6 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 $target_id,
                 $source_id
             );
-        });
-    }
-
-    public function save(int $item_id, array $artifact_ids): void
-    {
-        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_ids) {
-            $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $item_id);
-
-            if (count($artifact_ids) > 0) {
-                $rank = 0;
-                $db->insertMany(
-                    'plugin_artidoc_document',
-                    array_map(
-                        function ($artifact_id) use ($item_id, &$rank) {
-                            return [
-                                'id'          => $this->identifier_factory->buildIdentifier()->getBytes(),
-                                'item_id'     => $item_id,
-                                'artifact_id' => $artifact_id,
-                                'rank'        => $rank++,
-                            ];
-                        },
-                        $artifact_ids,
-                    ),
-                );
-            }
         });
     }
 
