@@ -48,8 +48,11 @@ final readonly class SectionCreator
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(fn (ArtidocWithContext $artidoc) => $this->collect_required_section_information_for_creation->collectRequiredSectionInformation($artidoc, $artifact_id))
-            ->andThen(fn () => $this->saveSection($id, $artifact_id, $before_section_id));
+            ->andThen(function (ArtidocWithContext $artidoc) use ($artifact_id, $before_section_id) {
+                return $this->collect_required_section_information_for_creation
+                    ->collectRequiredSectionInformation($artidoc, $artifact_id)
+                    ->andThen(fn () => $this->saveSection($artidoc, $artifact_id, $before_section_id));
+            });
     }
 
     /**
@@ -57,14 +60,14 @@ final readonly class SectionCreator
      * @return Ok<SectionIdentifier>|Err<Fault>
      */
     private function saveSection(
-        int $id,
+        ArtidocWithContext $artidoc,
         int $artifact_id,
         Option $before_section_id,
     ): Ok|Err {
         try {
             $section_id = $before_section_id->match(
-                fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($id, $artifact_id, $sibling_section_id),
-                fn () => $this->save_section->saveSectionAtTheEnd($id, $artifact_id),
+                fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($artidoc, $artifact_id, $sibling_section_id),
+                fn () => $this->save_section->saveSectionAtTheEnd($artidoc, $artifact_id),
             );
         } catch (AlreadyExistingSectionWithSameArtifactException $exception) {
             return Result::err(AlreadyExistingSectionWithSameArtifactFault::fromThrowable($exception));

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 interface SaveOneSection
@@ -27,11 +28,11 @@ interface SaveOneSection
     /**
      * @throws AlreadyExistingSectionWithSameArtifactException
      */
-    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier;
+    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, int $artifact_id): SectionIdentifier;
 
     /**
      * @throws AlreadyExistingSectionWithSameArtifactException
      * @throws UnableToFindSiblingSectionException
      */
-    public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier;
+    public function saveSectionBefore(ArtidocWithContext $artidoc, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier;
 }

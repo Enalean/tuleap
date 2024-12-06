@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Domain\Document\Section;
 
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -79,20 +80,20 @@ final class SaveOneSectionStub implements SaveOneSection
         return $this->saved_before[$id];
     }
 
-    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier
+    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, int $artifact_id): SectionIdentifier
     {
         $this->raiseExceptionIfNeeded();
 
-        $this->saved_end[$item_id] = $artifact_id;
+        $this->saved_end[$artidoc->document->getId()] = $artifact_id;
 
         return $this->identifier_factory->buildFromHexadecimalString($this->id);
     }
 
-    public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
+    public function saveSectionBefore(ArtidocWithContext $artidoc, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
     {
         $this->raiseExceptionIfNeeded();
 
-        $this->saved_before[$item_id] = $artifact_id;
+        $this->saved_before[$artidoc->document->getId()] = $artifact_id;
 
         return $this->identifier_factory->buildFromHexadecimalString($this->id);
     }
