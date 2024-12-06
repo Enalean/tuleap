@@ -107,7 +107,7 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { getProjectId } from "../repository-list-presenter";
 import { postRepository } from "../api/rest-querier";
 import { useMutations } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 

@@ -16,56 +16,64 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
-
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import * as repository_list_presenter from "../../../repository-list-presenter";
 import { PROJECT_KEY } from "../../../constants";
-import type { GitlabDataWithPath, GitlabProject } from "../../../type";
+import type { GitlabProject, GitLabRepository } from "../../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import { jest } from "@jest/globals";
 
 jest.useFakeTimers();
 
-type ListRepositoriesModalExposed = { selected_repository: GitlabProject | null };
-
 describe("ListRepositoriesModal", () => {
-    let store_options: {
-            getters: { getGitlabRepositoriesIntegrated: GitlabDataWithPath[] };
-        } = {
-            getters: {
-                getGitlabRepositoriesIntegrated: [],
-            },
-        },
-        store: Store;
+    let postIntegrationGitlabSpy: jest.Mock;
+    let resetRepositoriesSpy: jest.Mock;
+    let changeRepositoriesSpy: jest.Mock;
 
     beforeEach(() => {
-        store_options = {
-            getters: {
-                getGitlabRepositoriesIntegrated: [],
-            },
-        };
+        postIntegrationGitlabSpy = jest.fn();
+        resetRepositoriesSpy = jest.fn();
+        changeRepositoriesSpy = jest.fn();
     });
 
-    async function instantiateComponent(
+    function instantiateComponent(
         repositories_props_data: GitlabProject[],
-    ): Promise<Wrapper<Vue & ListRepositoriesModalExposed>> {
-        store = createStoreMock(store_options, { gitlab: {} });
+        getter_getGitlabRepositoriesIntegrated: GitLabRepository[] = [],
+    ): VueWrapper<InstanceType<typeof ListRepositoriesModal>> {
+        const store_options = {
+            getters: {
+                getGitlabRepositoriesIntegrated: () => getter_getGitlabRepositoriesIntegrated,
+            },
+            mutations: {
+                resetRepositories: resetRepositoriesSpy,
+            },
+            actions: {
+                changeRepositories: changeRepositoriesSpy,
+            },
+            modules: {
+                gitlab: {
+                    namespaced: true,
+                    actions: {
+                        postIntegrationGitlab: postIntegrationGitlabSpy,
+                    },
+                },
+            },
+        };
+
         return shallowMount(ListRepositoriesModal, {
-            propsData: {
+            props: {
                 gitlab_api_token: "AZERTY123",
                 server_url: "example.com",
                 repositories: repositories_props_data,
             },
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
-        }) as Wrapper<Vue & ListRepositoriesModalExposed>;
+            global: { ...getGlobalTestOptions(store_options) },
+        });
     }
 
-    it("When there are repositories, Then repositories are displayed", async () => {
+    it("When there are repositories, Then repositories are displayed", () => {
         const repositories = [
             {
                 id: 10,
@@ -80,13 +88,13 @@ describe("ListRepositoriesModal", () => {
             } as GitlabProject,
         ];
 
-        const wrapper = await instantiateComponent(repositories);
+        const wrapper = instantiateComponent(repositories);
 
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-10]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-11]").exists()).toBeTruthy();
     });
 
-    it("When no repository is selected, Then integrate button is disabled", async () => {
+    it("When no repository is selected, Then integrate button is disabled", () => {
         const repositories = [
             {
                 id: 10,
@@ -101,19 +109,18 @@ describe("ListRepositoriesModal", () => {
             } as GitlabProject,
         ];
 
-        const wrapper = await instantiateComponent(repositories);
+        const wrapper = instantiateComponent(repositories);
 
-        await wrapper.setData({
-            selected_repository: null,
-        });
+        wrapper.vm.selected_repository = null;
+        jest.useFakeTimers();
 
-        expect(
-            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
-        ).toBeTruthy();
+        expect(wrapper.vm.disabled_button).toBeTruthy();
 
-        await wrapper.setData({
-            selected_repository: { id: 10, path_with_namespace: "My Path / Repository" },
-        });
+        wrapper.vm.selected_repository = {
+            id: 10,
+            path_with_namespace: "My Path / Repository",
+        } as GitlabProject;
+        jest.useFakeTimers();
 
         expect(
             wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
@@ -121,7 +128,7 @@ describe("ListRepositoriesModal", () => {
     });
 
     it("When user clicks on back button, Then event is emitted", async () => {
-        const wrapper = await instantiateComponent([]);
+        const wrapper = instantiateComponent([]);
 
         await wrapper.find("[data-test=gitlab-button-back]").trigger("click");
 
@@ -129,38 +136,37 @@ describe("ListRepositoriesModal", () => {
     });
 
     it("When user submit repository, Then api is queried, repositories are recovered, submit button is disabled, icon changed and success message is displayed", async () => {
-        const wrapper = await instantiateComponent([]);
+        const wrapper = instantiateComponent([]);
 
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve());
+        postIntegrationGitlabSpy.mockReturnValue(Promise.resolve());
         jest.spyOn(repository_list_presenter, "getProjectId").mockReturnValue(101);
 
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain(
             "fa-long-arrow-alt-right",
         );
 
-        await wrapper.setData({
-            selected_repository: { id: 1 },
-            is_loading: false,
-            message_error_rest: "",
-        });
+        wrapper.vm.selected_repository = { id: 1 } as GitlabProject;
+        wrapper.vm.is_loading = false;
+        wrapper.vm.message_error_rest = "";
+        jest.useFakeTimers();
 
-        await wrapper
-            .find("[data-test=select-gitlab-repository-modal-form]")
-            .trigger("submit.prevent");
+        wrapper.find("[data-test=select-gitlab-repository-modal-form]").trigger("submit.prevent");
+        await jest.useFakeTimers();
 
-        expect(
-            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
-        ).toBeTruthy();
+        expect(wrapper.vm.disabled_button).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
-        expect(store.commit).toHaveBeenCalledWith("resetRepositories");
-        expect(store.dispatch).toHaveBeenCalledWith("changeRepositories", PROJECT_KEY);
-        expect(wrapper.vm.$emit("on-success-close-modal", { repository: { id: 1 } })).toBeTruthy();
+        await jest.runOnlyPendingTimersAsync();
+        expect(resetRepositoriesSpy).toHaveBeenCalled();
+        expect(changeRepositoriesSpy).toHaveBeenCalledWith(expect.any(Object), PROJECT_KEY);
+        expect(wrapper.emitted()["on-success-close-modal"]).toStrictEqual([
+            [{ repository: { id: 1 } }],
+        ]);
     });
 
     it("When error throw from API, Then error is displayed and button is disabled", async () => {
-        const wrapper = await instantiateComponent([]);
+        const wrapper = instantiateComponent([]);
 
-        jest.spyOn(store, "dispatch").mockReturnValue(
+        postIntegrationGitlabSpy.mockReturnValue(
             Promise.reject(
                 new FetchWrapperError("Not found", {
                     json(): Promise<{ error: { code: number; message: string } }> {
@@ -175,11 +181,10 @@ describe("ListRepositoriesModal", () => {
             ),
         );
 
-        wrapper.setData({
-            selected_repository: { id: 1 },
-            is_loading: false,
-            message_error_rest: "",
-        });
+        wrapper.vm.selected_repository = { id: 1 } as GitlabProject;
+        wrapper.vm.is_loading = false;
+        wrapper.vm.message_error_rest = "";
+        jest.useFakeTimers();
 
         wrapper.find("[data-test=select-gitlab-repository-modal-form]").trigger("submit.prevent");
         await jest.runOnlyPendingTimersAsync();
@@ -188,13 +193,11 @@ describe("ListRepositoriesModal", () => {
             "404: Error during post",
         );
 
-        expect(
-            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes("disabled"),
-        ).toBeTruthy();
+        expect(wrapper.vm.disabled_button).toBeTruthy();
     });
 
-    it("When repository is already integrated, Then button is disabled", async () => {
-        store_options.getters.getGitlabRepositoriesIntegrated = [
+    it("When repository is already integrated, Then button is disabled", () => {
+        const getters_getGitlabRepositoriesIntegrated = [
             {
                 gitlab_data: {
                     gitlab_repository_id: 1,
@@ -202,7 +205,7 @@ describe("ListRepositoriesModal", () => {
                     is_webhook_configured: true,
                 },
                 normalized_path: "My Path / Repository",
-            },
+            } as unknown as GitLabRepository,
         ];
 
         const repositories = [
@@ -221,19 +224,16 @@ describe("ListRepositoriesModal", () => {
             } as GitlabProject,
         ];
 
-        const wrapper = await instantiateComponent(repositories);
+        const wrapper = instantiateComponent(repositories, getters_getGitlabRepositoriesIntegrated);
 
-        expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toEqual([
-            "gitlab-select-repository",
-            "gitlab-select-repository-disabled",
-        ]);
-        expect(
-            wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled,
-        ).toBeTruthy();
-        expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([
-            "gitlab-select-repository",
-        ]);
-        expect(wrapper.find("[data-test=gitlab-repositories-tooltip-1]").classes()).toEqual([
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toStrictEqual(
+            ["gitlab-select-repository-disabled", "gitlab-select-repository"],
+        );
+        expect(wrapper.vm.disabled_button).toBeTruthy();
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toStrictEqual(
+            ["gitlab-select-repository"],
+        );
+        expect(wrapper.find("[data-test=gitlab-repositories-tooltip-1]").classes()).toStrictEqual([
             "gitlab-tooltip-name",
             "tlp-tooltip",
             "tlp-tooltip-top",
@@ -245,8 +245,8 @@ describe("ListRepositoriesModal", () => {
         ).toBe("This repository is already integrated.");
     });
 
-    it("When repository with same namepath and another instance is already integrated, Then button is disabled", async () => {
-        store_options.getters.getGitlabRepositoriesIntegrated = [
+    it("When repository with same namepath and another instance is already integrated, Then button is disabled", () => {
+        const getters_getGitlabRepositoriesIntegrated = [
             {
                 gitlab_data: {
                     gitlab_repository_id: 152,
@@ -254,7 +254,7 @@ describe("ListRepositoriesModal", () => {
                     is_webhook_configured: true,
                 },
                 normalized_path: "my-path/repository",
-            },
+            } as unknown as GitLabRepository,
         ];
 
         const repositories = [
@@ -273,19 +273,16 @@ describe("ListRepositoriesModal", () => {
             } as GitlabProject,
         ];
 
-        const wrapper = await instantiateComponent(repositories);
+        const wrapper = instantiateComponent(repositories, getters_getGitlabRepositoriesIntegrated);
 
-        expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toEqual([
-            "gitlab-select-repository",
-            "gitlab-select-repository-disabled",
-        ]);
-        expect(
-            wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled,
-        ).toBeTruthy();
-        expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([
-            "gitlab-select-repository",
-        ]);
-        expect(wrapper.find("[data-test=gitlab-repositories-tooltip-1]").classes()).toEqual([
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toStrictEqual(
+            ["gitlab-select-repository-disabled", "gitlab-select-repository"],
+        );
+        expect(wrapper.vm.disabled_button).toBeTruthy();
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toStrictEqual(
+            ["gitlab-select-repository"],
+        );
+        expect(wrapper.find("[data-test=gitlab-repositories-tooltip-1]").classes()).toStrictEqual([
             "gitlab-tooltip-name",
             "tlp-tooltip",
             "tlp-tooltip-top",
@@ -314,7 +311,7 @@ describe("ListRepositoriesModal", () => {
             } as GitlabProject,
         ];
 
-        const wrapper = await instantiateComponent(repositories);
+        const wrapper = instantiateComponent(repositories);
 
         await wrapper.find("[data-test=gitlab-avatar-1]").trigger("click");
 

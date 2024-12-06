@@ -131,7 +131,7 @@ import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-
 import { getRepositoryListUrl } from "../breadcrumb-presenter";
 import type { FormattedGitLabRepository, Repository } from "../type";
 import { useGetters } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const gettext_provider = useGettext();
 const DEFAULT_DESCRIPTION = "-- Default description --";

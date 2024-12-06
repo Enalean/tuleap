@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ListFilter displays a filter 1`] = `<input autocomplete="off" placeholder="Repository name" type="search" size="30" class="tlp-search">`;
+exports[`ListFilter displays a filter 1`] = `<input class="tlp-search" autocomplete="off" placeholder="Repository name" type="search" size="30">`;

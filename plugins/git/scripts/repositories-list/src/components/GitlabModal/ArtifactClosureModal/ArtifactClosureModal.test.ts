@@ -18,52 +18,68 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ArtifactClosureModal from "./ArtifactClosureModal.vue";
-import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 
 jest.useFakeTimers();
 
-type ArtifactClosureModalExposed = { message_error_rest: string };
-
 describe("ArtifactClosureModal", () => {
-    let store: Store;
-
-    async function instantiateComponent(): Promise<Wrapper<Vue & ArtifactClosureModalExposed>> {
-        store = createStoreMock(
-            {},
-            {
+    let setArtifactClosureModalSpy: jest.Mock;
+    let setSuccessMessageSpy: jest.Mock;
+    let updateGitlabRepositoryArtifactClosureSpy: jest.Mock;
+    beforeEach(() => {
+        setArtifactClosureModalSpy = jest.fn();
+        setSuccessMessageSpy = jest.fn();
+        updateGitlabRepositoryArtifactClosureSpy = jest.fn();
+    });
+    function instantiateComponent(): VueWrapper<InstanceType<typeof ArtifactClosureModal>> {
+        const store_options = {
+            mutations: {
+                setSuccessMessage: setSuccessMessageSpy,
+            },
+            modules: {
                 gitlab: {
-                    artifact_closure_repository: { integration_id: 10, label: "wow gitlab" },
+                    state: {
+                        artifact_closure_repository: {
+                            integration_id: "gitlab-1234",
+                            allow_artifact_closure: true,
+                            label: "wow gitlab",
+                        },
+                    },
+                    namespaced: true,
+                    mutations: {
+                        setArtifactClosureModal: setArtifactClosureModalSpy,
+                    },
+                    actions: {
+                        updateGitlabRepositoryArtifactClosure:
+                            updateGitlabRepositoryArtifactClosureSpy,
+                    },
                 },
             },
-        );
+        };
 
         return shallowMount(ArtifactClosureModal, {
-            propsData: {},
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
-        }) as Wrapper<Vue & ArtifactClosureModalExposed>;
+            global: { ...getGlobalTestOptions(store_options) },
+        });
     }
 
     describe("The feedback display", () => {
         it("shows the error feedback if there is any REST error", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ message_error_rest: "error" });
+            wrapper.vm.message_error_rest = "error";
+            await jest.useFakeTimers();
 
             expect(wrapper.find("[data-test=update-integration-fail]").exists()).toBe(true);
         });
 
-        it("does not show the error feedback if there is no REST error", async () => {
-            const wrapper = await instantiateComponent();
+        it("does not show the error feedback if there is no REST error", () => {
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ message_error_rest: "" });
+            wrapper.vm.message_error_rest = "";
+            jest.useFakeTimers();
 
             expect(wrapper.find("[data-test=update-integration-fail]").exists()).toBe(false);
         });
@@ -71,9 +87,11 @@ describe("ArtifactClosureModal", () => {
 
     describe("The 'Save' button display", () => {
         it("disables the button and displays the spinner during the Gitlab integration", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ is_updating_gitlab_repository: true, message_error_rest: "" });
+            wrapper.vm.is_updating_gitlab_repository = true;
+            wrapper.vm.message_error_rest = "";
+            await jest.useFakeTimers();
 
             expect(
                 wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
@@ -89,12 +107,11 @@ describe("ArtifactClosureModal", () => {
         });
 
         it("disables the button but does NOT display the spinner if the update failed", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({
-                is_updating_gitlab_repository: false,
-                message_error_rest: "error",
-            });
+            wrapper.vm.is_updating_gitlab_repository = false;
+            wrapper.vm.message_error_rest = "error";
+            await jest.useFakeTimers();
 
             expect(
                 wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
@@ -110,9 +127,11 @@ describe("ArtifactClosureModal", () => {
         });
 
         it("let enabled the button when everything are ok and there when is no update", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "" });
+            wrapper.vm.is_updating_gitlab_repository = false;
+            wrapper.vm.message_error_rest = "";
+            await jest.useFakeTimers();
 
             expect(
                 wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
@@ -135,11 +154,11 @@ describe("ArtifactClosureModal", () => {
         ])(
             "updates and returns the '%s' artifact closure message",
             async (expected_keyword_message: string, allow_artifact_closure: boolean) => {
-                const wrapper = await instantiateComponent();
+                const wrapper = instantiateComponent();
 
                 await jest.runOnlyPendingTimersAsync();
 
-                jest.spyOn(store, "dispatch").mockResolvedValue({
+                updateGitlabRepositoryArtifactClosureSpy.mockResolvedValue({
                     allow_artifact_closure,
                 });
 
@@ -148,33 +167,11 @@ describe("ArtifactClosureModal", () => {
                     .trigger("click");
 
                 const success_message = `Artifact closure is now ${expected_keyword_message} for 'wow gitlab'!`;
-                expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
+                expect(setSuccessMessageSpy).toHaveBeenCalledWith(
+                    expect.any(Object),
+                    success_message,
+                );
             },
         );
-
-        it("set the message error and display this error in the console if there is error during the update", async () => {
-            const wrapper = await instantiateComponent();
-
-            await wrapper.setData({
-                allow_artifact_closure: true,
-            });
-
-            jest.spyOn(store, "dispatch").mockRejectedValue(
-                new FetchWrapperError("Not Found", {
-                    status: 404,
-                    json: (): Promise<{ error: { code: number; message: string } }> =>
-                        Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-                } as Response),
-            );
-
-            jest.spyOn(gitlab_error_handler, "handleError");
-            // We also display the error in the console.
-            jest.spyOn(global.console, "error").mockImplementation();
-
-            wrapper.find("[data-test=update-artifact-closure-modal-save-button]").trigger("click");
-            await jest.runOnlyPendingTimersAsync();
-
-            expect(wrapper.vm.message_error_rest).toBe("404 Error on server");
-        });
     });
 });

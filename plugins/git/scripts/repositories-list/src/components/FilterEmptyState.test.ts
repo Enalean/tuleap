@@ -18,97 +18,89 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FilterEmptyState from "./FilterEmptyState.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
-
-interface StoreOption {
-    getters?: {
-        isThereAResultInCurrentFilteredList: boolean;
-        isCurrentRepositoryListEmpty: boolean;
-        isInitialLoadingDoneWithoutError: boolean;
-        isFiltering: boolean;
-    };
-}
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import type { StoreOptions } from "vuex";
+import type { State } from "../type";
 
 describe("FilterEmptyState", () => {
-    async function instantiateComponent(store_options: StoreOption): Promise<Wrapper<Vue>> {
-        const store = createStoreMock(store_options);
+    function instantiateComponent(
+        store_options: StoreOptions<State>,
+    ): VueWrapper<InstanceType<typeof FilterEmptyState>> {
         return shallowMount(FilterEmptyState, {
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions(store_options) },
         });
     }
 
-    it("does not display empty state when we are not filtering", async () => {
+    it("does not display empty state when we are not filtering", () => {
         const store_options = {
             getters: {
-                isThereAResultInCurrentFilteredList: false,
-                isCurrentRepositoryListEmpty: false,
-                isInitialLoadingDoneWithoutError: false,
-                isFiltering: false,
+                isThereAResultInCurrentFilteredList: (): boolean => false,
+                isCurrentRepositoryListEmpty: (): boolean => false,
+                isInitialLoadingDoneWithoutError: (): boolean => false,
+                isFiltering: (): boolean => false,
             },
         };
 
-        const wrapper = await instantiateComponent(store_options);
+        const wrapper = instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does not display empty state when initial load is ko", async () => {
+    it("does not display empty state when initial load is ko", () => {
         const store_options = {
             getters: {
-                isThereAResultInCurrentFilteredList: false,
-                isCurrentRepositoryListEmpty: false,
-                isInitialLoadingDoneWithoutError: false,
-                isFiltering: true,
+                isThereAResultInCurrentFilteredList: (): boolean => false,
+                isCurrentRepositoryListEmpty: (): boolean => false,
+                isInitialLoadingDoneWithoutError: (): boolean => false,
+                isFiltering: (): boolean => true,
             },
         };
 
-        const wrapper = await instantiateComponent(store_options);
+        const wrapper = instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does not display empty state when current repository list is empty", async () => {
+    it("does not display empty state when current repository list is empty", () => {
         const store_options = {
             getters: {
-                isThereAResultInCurrentFilteredList: false,
-                isCurrentRepositoryListEmpty: true,
-                isInitialLoadingDoneWithoutError: true,
-                isFiltering: true,
+                isThereAResultInCurrentFilteredList: (): boolean => false,
+                isCurrentRepositoryListEmpty: (): boolean => true,
+                isInitialLoadingDoneWithoutError: (): boolean => true,
+                isFiltering: (): boolean => true,
             },
         };
 
-        const wrapper = await instantiateComponent(store_options);
+        const wrapper = instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does not display empty state when there are no results in list", async () => {
+    it("does not display empty state when there are no results in list", () => {
         const store_options = {
             getters: {
-                isThereAResultInCurrentFilteredList: false,
-                isCurrentRepositoryListEmpty: true,
-                isInitialLoadingDoneWithoutError: true,
-                isFiltering: true,
+                isThereAResultInCurrentFilteredList: (): boolean => false,
+                isCurrentRepositoryListEmpty: (): boolean => true,
+                isInitialLoadingDoneWithoutError: (): boolean => true,
+                isFiltering: (): boolean => true,
             },
         };
 
-        const wrapper = await instantiateComponent(store_options);
+        const wrapper = instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does display empty state when there are results in list", async () => {
+    it("does display empty state when there are results in list", () => {
         const store_options = {
             getters: {
-                isThereAResultInCurrentFilteredList: true,
-                isCurrentRepositoryListEmpty: false,
-                isInitialLoadingDoneWithoutError: true,
-                isFiltering: true,
+                isThereAResultInCurrentFilteredList: (): boolean => true,
+                isCurrentRepositoryListEmpty: (): boolean => false,
+                isInitialLoadingDoneWithoutError: (): boolean => true,
+                isFiltering: (): boolean => true,
             },
         };
 
-        const wrapper = await instantiateComponent(store_options);
+        const wrapper = instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 });

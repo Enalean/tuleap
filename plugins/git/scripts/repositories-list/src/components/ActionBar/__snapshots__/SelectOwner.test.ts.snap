@@ -1,19 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SelectOwner displays a dropdown with user forks 1`] = `
-<div class="git-repository-actions-select-owners"><label for="git-repository-select-owner" class="tlp-label">
-    Forks:
-  </label> <select id="git-repository-select-owner" class="tlp-select tlp-select-adjusted">
-    <option value="project">
-      Project repositories
-    </option>
+<div class="git-repository-actions-select-owners"><label class="tlp-label" for="git-repository-select-owner">Forks:</label><select id="git-repository-select-owner" class="tlp-select tlp-select-adjusted">
+    <option value="project">Project repositories</option>
     <optgroup label="Users forks">
-      <option value="1">
-        Fork A
-      </option>
-      <option value="2">
-        Fork B
-      </option>
+      <option value="1">Fork A</option>
+      <option value="2">Fork B</option>
     </optgroup>
   </select></div>
 `;

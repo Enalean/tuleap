@@ -79,8 +79,8 @@ import {
     getProjectIcon,
 } from "../breadcrumb-presenter";
 import { getUserIsAdmin } from "../repository-list-presenter";
-import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
-import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import { BreadcrumbPrivacy } from "@tuleap/vue3-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 function repository_list_url(): string {

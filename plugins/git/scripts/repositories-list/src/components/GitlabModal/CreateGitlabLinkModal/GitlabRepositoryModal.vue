@@ -63,7 +63,7 @@ import { computed, onMounted, ref } from "vue";
 import { useMutations, useNamespacedMutations } from "vuex-composition-helpers";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { GitLabCredentialsWithProjects, GitlabProject } from "../../../type";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
@@ -141,4 +141,6 @@ function reset(): void {
     gitlab_api_token.value = "";
     gitlab_server_url.value = "";
 }
+
+defineExpose({ gitlab_projects, back_button_clicked, listRepositories, credentialsForm });
 </script>

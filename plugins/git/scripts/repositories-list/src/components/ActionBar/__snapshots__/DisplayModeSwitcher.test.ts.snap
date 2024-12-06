@@ -14,7 +14,6 @@ exports[`DisplayModeSwitcher displays folders sorted by date 1`] = `
       type="radio"
       value="last_update"
     />
-     
     <label
       class="tlp-button-primary tlp-button-outline"
       data-test="git-repository-list-switch-last-update"
@@ -27,14 +26,12 @@ exports[`DisplayModeSwitcher displays folders sorted by date 1`] = `
         <i
           class="fas fa-long-arrow-alt-down"
         />
-         
         <i
           class="fas fa-calendar-alt"
         />
       </span>
     </label>
   </div>
-   
   <div
     class="tlp-button-bar-item"
   >
@@ -45,7 +42,6 @@ exports[`DisplayModeSwitcher displays folders sorted by date 1`] = `
       type="radio"
       value="path"
     />
-     
     <label
       class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
       data-test="git-repository-list-switch-path"
@@ -74,7 +70,6 @@ exports[`DisplayModeSwitcher displays folders sorted by path 1`] = `
       type="radio"
       value="last_update"
     />
-     
     <label
       class="tlp-button-primary tlp-button-outline"
       data-test="git-repository-list-switch-last-update"
@@ -87,14 +82,12 @@ exports[`DisplayModeSwitcher displays folders sorted by path 1`] = `
         <i
           class="fas fa-long-arrow-alt-down"
         />
-         
         <i
           class="fas fa-calendar-alt"
         />
       </span>
     </label>
   </div>
-   
   <div
     class="tlp-button-bar-item"
   >
@@ -105,7 +98,6 @@ exports[`DisplayModeSwitcher displays folders sorted by path 1`] = `
       type="radio"
       value="path"
     />
-     
     <label
       class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
       data-test="git-repository-list-switch-path"

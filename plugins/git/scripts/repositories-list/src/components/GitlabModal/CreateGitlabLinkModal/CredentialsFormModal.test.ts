@@ -17,75 +17,72 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
-import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
-
-type CredentialsFormModalExposed = { empty_message: string };
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import { jest } from "@jest/globals";
 
 describe("CredentialsFormModal", () => {
-    let store_options = {},
-        store: Store;
+    let store_options = {};
+    let getGitlabProjectListSpy: jest.Mock;
 
     beforeEach(() => {
+        getGitlabProjectListSpy = jest.fn();
         store_options = {
             state: {},
             getters: {},
+            modules: {
+                gitlab: {
+                    namespaced: true,
+                    actions: {
+                        getGitlabProjectList: getGitlabProjectListSpy,
+                    },
+                },
+            },
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<Vue & CredentialsFormModalExposed>> {
-        store = createStoreMock(store_options, { gitlab: {} });
-
+    function instantiateComponent(): VueWrapper<InstanceType<typeof CredentialsFormModal>> {
         return shallowMount(CredentialsFormModal, {
-            propsData: {
+            props: {
                 gitlab_api_token: "",
                 server_url: "",
             },
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
-        }) as Wrapper<Vue & CredentialsFormModalExposed>;
+            global: { ...getGlobalTestOptions(store_options) },
+        });
     }
 
     it("When the user clicked on the button, Then the submit button is disabled and icon changed and api is called", async () => {
-        const wrapper = await instantiateComponent();
+        const wrapper = instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain(
             "fa-long-arrow-alt-right",
         );
 
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token: "AFREZF546",
-        });
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "https://example.com";
+        wrapper.vm.gitlab_token = "AFREZF546";
 
-        await wrapper
-            .find("[data-test=fetch-gitlab-repository-modal-form]")
-            .trigger("submit.prevent");
+        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
+        await jest.useFakeTimers();
 
-        expect(
-            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled,
-        ).toBeTruthy();
+        expect(wrapper.vm.disabled_button).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
 
-        expect(store.dispatch).toHaveBeenCalledWith("gitlab/getGitlabProjectList", {
+        expect(getGitlabProjectListSpy).toHaveBeenCalledWith(expect.any(Object), {
             server_url: "https://example.com",
             token: "AFREZF546",
         });
     });
 
     it("When there is an error message, Then it's displayed", async () => {
-        const wrapper = await instantiateComponent();
+        const wrapper = instantiateComponent();
 
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token: "AFREZF546",
-            error_message: "Error message",
-        });
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "https://example.com";
+        wrapper.vm.gitlab_token = "AFREZF546";
+        wrapper.vm.error_message = "Error message";
+        await jest.useFakeTimers();
 
         expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
             "Error message",
@@ -93,15 +90,14 @@ describe("CredentialsFormModal", () => {
     });
 
     it("When repositories have been retrieved, Then event is emitted with these repositories", async () => {
-        const wrapper = await instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
+        const wrapper = instantiateComponent();
+        getGitlabProjectListSpy.mockReturnValue(Promise.resolve([{ id: 10 }]));
 
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token: "AFREZF546",
-            gitlab_projects: null,
-        });
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "https://example.com";
+        wrapper.vm.gitlab_token = "AFREZF546";
+        wrapper.vm.gitlab_projects = null;
+        jest.useFakeTimers();
 
         await wrapper
             .find("[data-test=fetch-gitlab-repository-modal-form]")
@@ -112,7 +108,7 @@ describe("CredentialsFormModal", () => {
             throw new Error("Should have emitted on-get-gitlab-repositories");
         }
 
-        expect(on_get_gitlab_projects[0]).toEqual([
+        expect(on_get_gitlab_projects[0]).toStrictEqual([
             {
                 projects: [{ id: 10 }],
                 server_url: "https://example.com",
@@ -121,28 +117,25 @@ describe("CredentialsFormModal", () => {
         ]);
     });
 
-    it("When there are no token and server url, Then submit button is disabled", async () => {
-        const wrapper = await instantiateComponent();
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "",
-            gitlab_token: "",
-        });
-        expect(
-            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled,
-        ).toBeTruthy();
+    it("When there are no token and server url, Then submit button is disabled", () => {
+        const wrapper = instantiateComponent();
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "";
+        wrapper.vm.gitlab_token = "";
+        jest.useFakeTimers();
+
+        expect(wrapper.vm.disabled_button).toBeTruthy();
     });
 
     it("When there aren't any repositories in Gitlab, Then empty message is displayed", async () => {
-        const wrapper = await instantiateComponent();
+        const wrapper = instantiateComponent();
 
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "",
-            gitlab_token: "",
-            gitlab_projects: [],
-            empty_message: "No repository is available with your GitLab account",
-        });
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "";
+        wrapper.vm.gitlab_token = "";
+        wrapper.vm.gitlab_projects = [];
+        wrapper.vm.empty_message = "No repository is available with your GitLab account";
+        await jest.useFakeTimers();
 
         expect(wrapper.find("[data-test=gitlab-empty-repositories]").text()).toBe(
             "No repository is available with your GitLab account",
@@ -150,15 +143,14 @@ describe("CredentialsFormModal", () => {
     });
 
     it("When user submit but credentials are not goods, Then error message is displayed", async () => {
-        const wrapper = await instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
+        const wrapper = instantiateComponent();
+        getGitlabProjectListSpy.mockReturnValue(Promise.resolve([{ id: 10 }]));
 
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token: "",
-            gitlab_projects: null,
-        });
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "https://example.com";
+        wrapper.vm.gitlab_token = "";
+        wrapper.vm.gitlab_projects = null;
+        jest.useFakeTimers();
 
         await wrapper
             .find("[data-test=fetch-gitlab-repository-modal-form]")
@@ -170,15 +162,14 @@ describe("CredentialsFormModal", () => {
     });
 
     it("When user submit but server_url is not valid, Then error message is displayed", async () => {
-        const wrapper = await instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
+        const wrapper = instantiateComponent();
+        getGitlabProjectListSpy.mockReturnValue(Promise.resolve([{ id: 10 }]));
 
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "htt://example.com",
-            gitlab_token: "Azer789",
-            gitlab_projects: null,
-        });
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "htt://example.com";
+        wrapper.vm.gitlab_token = "Azer789";
+        wrapper.vm.gitlab_projects = null;
+        jest.useFakeTimers();
 
         await wrapper
             .find("[data-test=fetch-gitlab-repository-modal-form]")
@@ -190,16 +181,15 @@ describe("CredentialsFormModal", () => {
     });
 
     it("When api returns empty array, Then error message is displayed", async () => {
-        const wrapper = await instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve(null));
+        const wrapper = instantiateComponent();
+        getGitlabProjectListSpy.mockReturnValue(Promise.resolve(null));
 
-        await wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token: "AFREZF546",
-            gitlab_projects: null,
-            empty_message: "",
-        });
+        wrapper.vm.is_loading = false;
+        wrapper.vm.gitlab_server = "https://example.com";
+        wrapper.vm.gitlab_token = "AFREZF546";
+        wrapper.vm.gitlab_projects = null;
+        wrapper.vm.empty_message = "";
+        jest.useFakeTimers();
 
         await wrapper
             .find("[data-test=fetch-gitlab-repository-modal-form]")

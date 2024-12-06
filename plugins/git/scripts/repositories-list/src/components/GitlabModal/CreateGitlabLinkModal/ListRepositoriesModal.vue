@@ -180,7 +180,7 @@ import { computed, ref } from "vue";
 import type { FormattedGitLabRepository, GitlabProject, Repository } from "../../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { useActions, useMutations, useNamespacedActions, useStore } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { postIntegrationGitlab } = useNamespacedActions("gitlab", ["postIntegrationGitlab"]);
 const { resetRepositories } = useMutations(["resetRepositories"]);
@@ -312,5 +312,8 @@ const selectRepository = (repository: GitlabProject): void => {
 defineExpose({
     reset,
     selected_repository,
+    is_loading,
+    message_error_rest,
+    disabled_button,
 });
 </script>

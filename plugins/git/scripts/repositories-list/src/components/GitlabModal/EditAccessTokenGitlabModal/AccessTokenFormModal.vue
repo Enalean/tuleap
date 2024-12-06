@@ -100,7 +100,7 @@ import { credentialsAreEmpty } from "../../../gitlab/gitlab-credentials-helper";
 import { computed, ref } from "vue";
 import type { Repository } from "../../../type";
 import { useNamespacedActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const gettext_provider = useGettext();
 
@@ -195,5 +195,5 @@ const addGitlabToken = async (event: Event): Promise<void> => {
     }
 };
 
-defineExpose({ gitlab_new_token, error_message });
+defineExpose({ gitlab_new_token, error_message, disabled_button });
 </script>

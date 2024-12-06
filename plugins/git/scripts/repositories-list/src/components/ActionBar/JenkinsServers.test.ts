@@ -20,15 +20,15 @@
 
 import { shallowMount } from "@vue/test-utils";
 import JenkinsServer from "./JenkinsServers.vue";
-import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 
 jest.mock("@tuleap/tlp-popovers"); // ResizeObserver is not defined
 
 describe("JenkinsServer", () => {
-    it("displays the badge and a basic popover", async () => {
+    it("displays the badge and a basic popover", () => {
         const wrapper = shallowMount(JenkinsServer, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 servers: [{ id: 1, url: "https://example.com" }],
             },
         });

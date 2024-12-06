@@ -1,20 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DropdownActionButton displays a dropdown for empty state 1`] = `
-<div class="tlp-dropdown"><button type="button" class="tlp-button-primary">
-    New repository
-    <i aria-hidden="true" class="fas fa-caret-down tlp-button-icon-right"></i></button>
-  <div role="menu" class="tlp-dropdown-menu"><button type="button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i> <span class="git-add-action-button">Create a repository</span></button>
+<div class="tlp-dropdown"><button class="tlp-button-primary" type="button">New repository <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i></button>
+  <div class="tlp-dropdown-menu" role="menu"><button type="button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i><span class="git-add-action-button">Create a repository</span></button>
     <add-gitlab-repository-action-button-stub></add-gitlab-repository-action-button-stub>
   </div>
 </div>
 `;
 
 exports[`DropdownActionButton displays a dropdown for repository list 1`] = `
-<div class="tlp-dropdown git-repository-list-create-repository-button"><button type="button" class="tlp-button-primary">
-    New repository
-    <i aria-hidden="true" class="fas fa-caret-down tlp-button-icon-right"></i></button>
-  <div role="menu" class="tlp-dropdown-menu"><button type="button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i> <span class="git-add-action-button">Create a repository</span></button>
+<div class="tlp-dropdown git-repository-list-create-repository-button"><button class="tlp-button-primary" type="button">New repository <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i></button>
+  <div class="tlp-dropdown-menu" role="menu"><button type="button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i><span class="git-add-action-button">Create a repository</span></button>
     <add-gitlab-repository-action-button-stub></add-gitlab-repository-action-button-stub>
   </div>
 </div>

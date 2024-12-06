@@ -98,7 +98,7 @@ import {
     useNamespacedMutations,
     useNamespacedState,
 } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const gettext_provider = useGettext();
 const { updateGitlabRepositoryArtifactClosure } = useNamespacedActions("gitlab", [
@@ -180,5 +180,5 @@ const updateArtifactClosureValue = async (event: Event): Promise<void> => {
     }
 };
 
-defineExpose({ message_error_rest });
+defineExpose({ message_error_rest, is_updating_gitlab_repository, allow_artifact_closure });
 </script>

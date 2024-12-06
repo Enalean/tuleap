@@ -17,44 +17,37 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import type { StoreOptions } from "vuex";
 import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";
 import type { State } from "../type";
-import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
-
-interface StoreOption {
-    state: State;
-    getters?: {
-        isGitlabUsed?: boolean;
-    };
-}
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 
 describe("AddGitlabRepositoryActionButton", () => {
-    async function instantiateComponent(store_option: StoreOption): Promise<Wrapper<Vue>> {
-        const store = createStoreMock(store_option);
+    function instantiateComponent(
+        store_options: StoreOptions<State>,
+    ): VueWrapper<InstanceType<typeof AddGitlabRepositoryActionButton>> {
         return shallowMount(AddGitlabRepositoryActionButton, {
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions(store_options) },
         });
     }
 
-    it("When there is no used externals services, Then there is no option GitLab", async () => {
-        const wrapper = await instantiateComponent({
+    it("When there is no used externals services, Then there is no option GitLab", () => {
+        const wrapper = instantiateComponent({
             state: {} as State,
             getters: {
-                isGitlabUsed: false,
+                isGitlabUsed: () => false,
             },
         });
         expect(wrapper.find("[data-test=gitlab-project-button]").exists()).toBeFalsy();
     });
 
-    it("When GitLab is an external service, Then the action is displayed", async () => {
-        const wrapper = await instantiateComponent({
+    it("When GitLab is an external service, Then the action is displayed", () => {
+        const wrapper = instantiateComponent({
             state: {} as State,
             getters: {
-                isGitlabUsed: true,
+                isGitlabUsed: () => true,
             },
         });
         expect(wrapper.find("[data-test=gitlab-project-button]").exists()).toBeTruthy();
