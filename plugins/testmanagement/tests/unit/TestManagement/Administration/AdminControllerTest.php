@@ -20,38 +20,27 @@
 
 namespace Tuleap\TestManagement\Administration;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\Event\GetMilestone;
 use Tuleap\TestManagement\MissingArtifactLinkException;
 use Tuleap\TestManagement\TrackerDefinitionNotValidException;
 use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Valid_UInt;
 
-class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /** @var Project */
-    private $project;
-    /** @var AdminController */
-    private $admin_controller;
-    /** @var \Codendi_Request */
-    private $request;
-    /** @var Config */
-    private $config;
-    /** @var \EventManager */
-    private $event_manager;
-    /** @var \CSRFSynchronizerToken */
-    private $csrf_token;
-    /** @var FieldUsageDetector */
-    private $field_usage_detector;
-    /** @var TrackerChecker */
-    private $tracker_checker;
+    private Project $project;
+    private AdminController $admin_controller;
+    private Config&MockObject $config;
+    private \CSRFSynchronizerToken&MockObject $csrf_token;
+    private FieldUsageDetector&MockObject $field_usage_detector;
+    private TrackerChecker&MockObject $tracker_checker;
 
     public const PROJECT_ID                     = 104;
     public const ORIGINAL_CAMPAIGN_TRACKER_ID   = 531;
@@ -62,213 +51,177 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public const NEW_DEFINITION_TRACKER_ID      = 536;
     public const NEW_EXECUTION_TRACKER_ID       = 537;
     public const NEW_ISSUE_TRACKER_ID           = 538;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AdminTrackersRetriever
-     */
-    private $tracker_retriever;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->config               = Mockery::mock(Config::class);
-        $this->field_usage_detector = Mockery::mock(FieldUsageDetector::class);
+        $this->config               = $this->createMock(Config::class);
+        $this->field_usage_detector = $this->createMock(FieldUsageDetector::class);
 
-        $this->setUpRequest();
+        $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $this->event_manager = Mockery::mock(\EventManager::class);
-        $get_milestone_event = Mockery::mock(GetMilestone::class);
-        $this->event_manager->shouldReceive('processEvent', $get_milestone_event);
+        $this->csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
 
-        $this->csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
+        $this->tracker_checker = $this->createMock(TrackerChecker::class);
+    }
 
-        $this->tracker_checker   = Mockery::mock(TrackerChecker::class);
-        $this->tracker_retriever = Mockery::mock(AdminTrackersRetriever::class);
+    private function getAdminController(\Codendi_Request $request): AdminController
+    {
+        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager->method('processEvent');
 
-        $this->admin_controller = new AdminController(
-            $this->request,
+        return new AdminController(
+            $request,
             $this->config,
-            $this->event_manager,
+            $event_manager,
             $this->csrf_token,
             $this->field_usage_detector,
             $this->tracker_checker,
             new Valid_UInt(),
-            $this->tracker_retriever
+            $this->createMock(AdminTrackersRetriever::class)
         );
     }
 
-    private function setUpRequest()
+    public function testUpdateWithoutChange(): void
     {
-        $this->request = Mockery::mock(\Codendi_Request::class);
-        $this->project = Mockery::mock(\Project::class);
-        $this->project->shouldReceive('getID')->andReturn(self::PROJECT_ID);
-        $current_user = Mockery::mock(\PFUser::class);
-        $this->request->shouldReceive(
-            [
-                'getProject'     => $this->project,
-                'getCurrentUser' => $current_user,
-            ]
+        $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
+            ->withParams([
+                'milestone_id'               => 0,
+                'campaign_tracker_id'        => self::NEW_CAMPAIGN_TRACKER_ID,
+                'test_definition_tracker_id' => self::NEW_DEFINITION_TRACKER_ID,
+                'test_execution_tracker_id'  => self::NEW_EXECUTION_TRACKER_ID,
+                'issue_tracker_id'           => self::NEW_ISSUE_TRACKER_ID,
+            ])->build();
+
+        $this->config->method('getCampaignTrackerId')->willReturn(self::ORIGINAL_CAMPAIGN_TRACKER_ID);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(self::ORIGINAL_DEFINITION_TRACKER_ID);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(self::ORIGINAL_EXECUTION_TRACKER_ID);
+        $this->config->method('getIssueTrackerId')->willReturn(self::ORIGINAL_ISSUE_TRACKER_ID);
+
+        $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
+
+        $this->csrf_token->method('check');
+        $this->config->method('setProjectConfiguration')->with(
+            $this->project,
+            self::NEW_CAMPAIGN_TRACKER_ID,
+            self::NEW_DEFINITION_TRACKER_ID,
+            self::NEW_EXECUTION_TRACKER_ID,
+            self::NEW_ISSUE_TRACKER_ID,
         );
-        $this->request->shouldReceive('getValidated')->withArgs(
-            ['milestone_id', Mockery::any(), Mockery::any()]
-        )->andReturn(0);
+
+        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+
+        $this->tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $this->tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
+
+        $this->getAdminController($request)->update();
     }
 
-    public function testUpdateWithoutChange()
+    public function testUpdateWhenDefinitionTrackerCantBeEdited(): void
     {
-        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(
-            self::NEW_CAMPAIGN_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(
-            self::NEW_DEFINITION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
-            self::NEW_EXECUTION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::NEW_ISSUE_TRACKER_ID);
+        $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
+            ->withParams([
+                'milestone_id'               => 0,
+                'campaign_tracker_id'        => self::NEW_CAMPAIGN_TRACKER_ID,
+                // No test_definition_tracker_id is provided
+                'test_execution_tracker_id'  => self::NEW_EXECUTION_TRACKER_ID,
+                'issue_tracker_id'           => self::NEW_ISSUE_TRACKER_ID,
+            ])->build();
 
-        $this->config->shouldReceive(
-            [
-                'getCampaignTrackerId'       => self::ORIGINAL_CAMPAIGN_TRACKER_ID,
-                'getTestDefinitionTrackerId' => self::ORIGINAL_DEFINITION_TRACKER_ID,
-                'getTestExecutionTrackerId'  => self::ORIGINAL_EXECUTION_TRACKER_ID,
-                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID,
-            ]
-        );
+        $this->config->method('getCampaignTrackerId')->willReturn(self::ORIGINAL_CAMPAIGN_TRACKER_ID);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(self::ORIGINAL_DEFINITION_TRACKER_ID);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(self::ORIGINAL_EXECUTION_TRACKER_ID);
+        $this->config->method('getIssueTrackerId')->willReturn(self::ORIGINAL_ISSUE_TRACKER_ID);
 
-        $this->field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
+        $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(true);
 
-        $this->csrf_token->shouldReceive('check');
-        $this->config->shouldReceive('setProjectConfiguration')->withArgs(
-            [
-                $this->project,
-                self::NEW_CAMPAIGN_TRACKER_ID,
-                self::NEW_DEFINITION_TRACKER_ID,
-                self::NEW_EXECUTION_TRACKER_ID,
-                self::NEW_ISSUE_TRACKER_ID,
-            ]
+        $this->csrf_token->method('check');
+        $this->config->method('setProjectConfiguration')->with(
+            $this->project,
+            self::NEW_CAMPAIGN_TRACKER_ID,
+            self::ORIGINAL_DEFINITION_TRACKER_ID,
+            self::NEW_EXECUTION_TRACKER_ID,
+            self::NEW_ISSUE_TRACKER_ID,
         );
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $this->tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->once();
-
-        $this->admin_controller->update();
+        $this->getAdminController($request)->update();
     }
 
-    public function testUpdateWhenDefinitionTrackerCantBeEdited()
+    public function testUpdateNotDoneWhenATrackerIdIsNotSetAtInitialConfiguration(): void
     {
-        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(
-            self::NEW_CAMPAIGN_TRACKER_ID
-        );
-        // No test_definition_tracker_id is provided
-        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
-            self::NEW_EXECUTION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::NEW_ISSUE_TRACKER_ID);
+        $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
+            ->withParams([
+                'milestone_id'               => 0,
+                'campaign_tracker_id'        => self::NEW_CAMPAIGN_TRACKER_ID,
+                'test_definition_tracker_id' => 999,
+                'test_execution_tracker_id'  => self::NEW_EXECUTION_TRACKER_ID,
+                'issue_tracker_id'           => self::NEW_ISSUE_TRACKER_ID,
+            ])->build();
 
-        $this->config->shouldReceive(
-            [
-                'getCampaignTrackerId'       => self::ORIGINAL_CAMPAIGN_TRACKER_ID,
-                'getTestDefinitionTrackerId' => self::ORIGINAL_DEFINITION_TRACKER_ID,
-                'getTestExecutionTrackerId'  => self::ORIGINAL_EXECUTION_TRACKER_ID,
-                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID,
-            ]
-        );
+        $this->config->method('getCampaignTrackerId')->willReturn(false);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(false);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(false);
+        $this->config->method('getIssueTrackerId')->willReturn(false);
 
-        $this->field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(true);
+        $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
-        $this->csrf_token->shouldReceive('check');
-        $this->config->shouldReceive('setProjectConfiguration')->withArgs(
-            [
-                $this->project,
-                self::NEW_CAMPAIGN_TRACKER_ID,
-                self::ORIGINAL_DEFINITION_TRACKER_ID,
-                self::NEW_EXECUTION_TRACKER_ID,
-                self::NEW_ISSUE_TRACKER_ID,
-            ]
-        );
+        $this->csrf_token->method('check');
+        $this->config->expects(self::never())->method('setProjectConfiguration');
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed');
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed');
+        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
-        $this->admin_controller->update();
-    }
-
-    public function testUpdateNotDoneWhenATrackerIdIsNotSetAtInitialConfiguration()
-    {
-        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(
-            self::NEW_CAMPAIGN_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(999);
-        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
-            self::NEW_EXECUTION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::NEW_ISSUE_TRACKER_ID);
-
-        $this->config->shouldReceive(
-            [
-                'getCampaignTrackerId'       => false,
-                'getTestDefinitionTrackerId' => false,
-                'getTestExecutionTrackerId'  => false,
-                'getIssueTrackerId'          => false,
-            ]
-        );
-
-        $this->field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
-
-        $this->csrf_token->shouldReceive('check');
-        $this->config->shouldReceive('setProjectConfiguration')->never();
-
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
-
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')
+        $this->tracker_checker->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($this->project, 999)
-            ->andThrow(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
+            ->willThrowException(new TrackerHasAtLeastOneFrozenFieldsPostActionException());
 
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
-            ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
-            ->once();
+        $this->tracker_checker
+            ->expects(self::once())
+            ->method('checkSubmittedExecutionTrackerCanBeUsed')
+            ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
-        $this->admin_controller->update();
+        $this->getAdminController($request)->update();
     }
 
-    public function testUpdateNotDoneWhenDefinitionTrackerHasNoStepDefinitionField()
+    public function testUpdateNotDoneWhenDefinitionTrackerHasNoStepDefinitionField(): void
     {
-        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(
-            self::NEW_CAMPAIGN_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(999);
-        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
-            self::NEW_EXECUTION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::NEW_ISSUE_TRACKER_ID);
+        $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
+            ->withParams([
+                'milestone_id'               => 0,
+                'campaign_tracker_id'        => self::NEW_CAMPAIGN_TRACKER_ID,
+                'test_definition_tracker_id' => 999,
+                'test_execution_tracker_id'  => self::NEW_EXECUTION_TRACKER_ID,
+                'issue_tracker_id'           => self::NEW_ISSUE_TRACKER_ID,
+            ])->build();
 
-        $this->config->shouldReceive(
-            [
-                'getCampaignTrackerId'       => false,
-                'getTestDefinitionTrackerId' => false,
-                'getTestExecutionTrackerId'  => false,
-                'getIssueTrackerId'          => false,
-            ]
-        );
+        $this->config->method('getCampaignTrackerId')->willReturn(false);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(false);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(false);
+        $this->config->method('getIssueTrackerId')->willReturn(false);
 
-        $this->field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
+        $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
-        $this->csrf_token->shouldReceive('check');
-        $this->config->shouldReceive('setProjectConfiguration')->never();
+        $this->csrf_token->method('check');
+        $this->config->expects(self::never())->method('setProjectConfiguration');
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')
+        $this->tracker_checker->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($this->project, 999)
-            ->andThrow(TrackerDefinitionNotValidException::class);
+            ->willThrowException(new TrackerDefinitionNotValidException());
 
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
-            ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
-            ->once();
+        $this->tracker_checker
+            ->expects(self::once())
+            ->method('checkSubmittedExecutionTrackerCanBeUsed')
+            ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
         $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
             function (string $level, string $message): void {
@@ -279,45 +232,41 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $this->admin_controller->update();
+        $this->getAdminController($request)->update();
     }
 
-    public function testUpdateNotDoneWhenExecutionTrackerHasNoStepExecutionField()
+    public function testUpdateNotDoneWhenExecutionTrackerHasNoStepExecutionField(): void
     {
-        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(
-            self::NEW_CAMPAIGN_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(
-            self::NEW_DEFINITION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
-            self::NEW_EXECUTION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::NEW_ISSUE_TRACKER_ID);
+        $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
+            ->withParams([
+                'milestone_id'               => 0,
+                'campaign_tracker_id'        => self::NEW_CAMPAIGN_TRACKER_ID,
+                'test_definition_tracker_id' => self::NEW_DEFINITION_TRACKER_ID,
+                'test_execution_tracker_id'  => self::NEW_EXECUTION_TRACKER_ID,
+                'issue_tracker_id'           => self::NEW_ISSUE_TRACKER_ID,
+            ])->build();
 
-        $this->config->shouldReceive(
-            [
-                'getCampaignTrackerId'       => false,
-                'getTestDefinitionTrackerId' => false,
-                'getTestExecutionTrackerId'  => false,
-                'getIssueTrackerId'          => false,
-            ]
-        );
+        $this->config->method('getCampaignTrackerId')->willReturn(false);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(false);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(false);
+        $this->config->method('getIssueTrackerId')->willReturn(false);
 
-        $this->field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
+        $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
-        $this->csrf_token->shouldReceive('check');
-        $this->config->shouldReceive('setProjectConfiguration')->never();
+        $this->csrf_token->method('check');
+        $this->config->expects(self::never())->method('setProjectConfiguration');
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')
-            ->with($this->project, self::NEW_DEFINITION_TRACKER_ID)
-            ->once();
+        $this->tracker_checker
+            ->expects(self::once())
+            ->method('checkSubmittedDefinitionTrackerCanBeUsed')
+            ->with($this->project, self::NEW_DEFINITION_TRACKER_ID);
 
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
+        $this->tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
-            ->andThrow(TrackerExecutionNotValidException::class);
+            ->willThrowException(new TrackerExecutionNotValidException());
 
         $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
             function (string $level, string $message): void {
@@ -328,49 +277,49 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $this->admin_controller->update();
+        $this->getAdminController($request)->update();
     }
 
-    public function testUpdateNotDoneWhenATrackerHasNoArtifactLink()
+    public function testUpdateNotDoneWhenATrackerHasNoArtifactLink(): void
     {
-        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(
-            self::NEW_CAMPAIGN_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(
-            self::NEW_DEFINITION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
-            self::NEW_EXECUTION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::NEW_ISSUE_TRACKER_ID);
+        $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
+            ->withParams([
+                'milestone_id'               => 0,
+                'campaign_tracker_id'        => self::NEW_CAMPAIGN_TRACKER_ID,
+                'test_definition_tracker_id' => self::NEW_DEFINITION_TRACKER_ID,
+                'test_execution_tracker_id'  => self::NEW_EXECUTION_TRACKER_ID,
+                'issue_tracker_id'           => self::NEW_ISSUE_TRACKER_ID,
+            ])->build();
 
-        $this->config->shouldReceive(
-            [
-                'getCampaignTrackerId'       => false,
-                'getTestDefinitionTrackerId' => false,
-                'getTestExecutionTrackerId'  => false,
-                'getIssueTrackerId'          => false,
-            ]
-        );
+        $this->config->method('getCampaignTrackerId')->willReturn(false);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(false);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(false);
+        $this->config->method('getIssueTrackerId')->willReturn(false);
 
-        $this->field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
+        $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
-        $this->csrf_token->shouldReceive('check');
-        $this->config->shouldReceive('setProjectConfiguration')->never();
+        $this->csrf_token->method('check');
+        $this->config->expects(self::never())->method('setProjectConfiguration');
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
-            ->andThrow(MissingArtifactLinkException::class)
-            ->once();
+        $this->tracker_checker
+            ->expects(self::exactly(2))
+            ->method('checkSubmittedTrackerCanBeUsed')
+            ->willReturnCallback(function (Project $project, int $submitted_id): void {
+                if ($submitted_id === self::NEW_CAMPAIGN_TRACKER_ID) {
+                    throw new MissingArtifactLinkException();
+                }
+            });
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->once();
+        $this->tracker_checker
+            ->expects(self::once())
+            ->method('checkSubmittedDefinitionTrackerCanBeUsed')
+            ->with($this->project, self::NEW_DEFINITION_TRACKER_ID);
 
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')
-            ->with($this->project, self::NEW_DEFINITION_TRACKER_ID)
-            ->once();
-
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
-            ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
-            ->once();
+        $this->tracker_checker
+            ->expects(self::once())
+            ->method('checkSubmittedExecutionTrackerCanBeUsed')
+            ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
         $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
             function (string $level, string $message): void {
@@ -381,47 +330,42 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $this->admin_controller->update();
+        $this->getAdminController($request)->update();
     }
 
-    public function testUpdateReturnWrongIdFeedbackIfTrackerIdIsInvalid()
+    public function testUpdateReturnWrongIdFeedbackIfTrackerIdIsInvalid(): void
     {
-        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn('oui');
-        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(
-            self::NEW_DEFINITION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
-            self::NEW_EXECUTION_TRACKER_ID
-        );
-        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::NEW_ISSUE_TRACKER_ID);
+        $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
+            ->withParams([
+                'milestone_id'               => 0,
+                'campaign_tracker_id'        => 'oui',
+                'test_definition_tracker_id' => self::NEW_DEFINITION_TRACKER_ID,
+                'test_execution_tracker_id'  => self::NEW_EXECUTION_TRACKER_ID,
+                'issue_tracker_id'           => self::NEW_ISSUE_TRACKER_ID,
+            ])->build();
 
-        $this->config->shouldReceive(
-            [
-                'getCampaignTrackerId'       => self::ORIGINAL_CAMPAIGN_TRACKER_ID,
-                'getTestDefinitionTrackerId' => self::ORIGINAL_DEFINITION_TRACKER_ID,
-                'getTestExecutionTrackerId'  => self::ORIGINAL_EXECUTION_TRACKER_ID,
-                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID,
-            ]
-        );
+        $this->config->method('getCampaignTrackerId')->willReturn(self::ORIGINAL_CAMPAIGN_TRACKER_ID);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(self::ORIGINAL_DEFINITION_TRACKER_ID);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(self::ORIGINAL_EXECUTION_TRACKER_ID);
+        $this->config->method('getIssueTrackerId')->willReturn(self::ORIGINAL_ISSUE_TRACKER_ID);
 
-        $this->field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
+        $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
-        $this->csrf_token->shouldReceive('check');
-        $this->config->shouldReceive('setProjectConfiguration')->withArgs(
-            [
-                $this->project,
-                self::ORIGINAL_CAMPAIGN_TRACKER_ID,
-                self::NEW_DEFINITION_TRACKER_ID,
-                self::NEW_EXECUTION_TRACKER_ID,
-                self::NEW_ISSUE_TRACKER_ID,
-            ]
+        $this->csrf_token->method('check');
+        $this->config->method('setProjectConfiguration')->with(
+            $this->project,
+            self::ORIGINAL_CAMPAIGN_TRACKER_ID,
+            self::NEW_DEFINITION_TRACKER_ID,
+            self::NEW_EXECUTION_TRACKER_ID,
+            self::NEW_ISSUE_TRACKER_ID,
         );
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(1);
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->once();
+        $this->tracker_checker->expects(self::once())->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $this->tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
-        $this->admin_controller->update();
+        $this->getAdminController($request)->update();
         $GLOBALS['Response']->method('addFeedback')->with(
             'warning',
             'The tracker id oui is not a valid id'
