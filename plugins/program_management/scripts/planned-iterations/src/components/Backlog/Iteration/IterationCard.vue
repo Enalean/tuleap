@@ -71,7 +71,7 @@
                     class="fas fa-pencil-alt planned-iteration-info-link-icon"
                     aria-hidden="true"
                 ></i>
-                <span v-translate>Edit</span>
+                {{ $gettext("Edit") }}
             </a>
         </div>
         <section

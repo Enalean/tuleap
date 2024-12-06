@@ -36,7 +36,7 @@
                 class="breadcrumb-item"
                 v-bind:class="{ 'breadcrumb-switchable': is_program_admin }"
             >
-                <a v-bind:href="plugin_url" class="breadcrumb-link" v-translate>Program</a>
+                <a v-bind:href="plugin_url" class="breadcrumb-link">{{ $gettext("Program") }}</a>
                 <div
                     class="breadcrumb-switch-menu-container"
                     v-if="is_program_admin"
@@ -50,7 +50,7 @@
                                 v-bind:title="$gettext('Administration')"
                             >
                                 <i class="fa fa-cog fa-fw"></i>
-                                <span v-translate>Administration</span>
+                                {{ $gettext("Administration") }}
                             </a>
                         </span>
                     </nav>

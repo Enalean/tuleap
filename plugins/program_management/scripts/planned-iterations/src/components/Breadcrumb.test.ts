@@ -53,14 +53,17 @@ describe("Breadcrumb", () => {
 
     it("When user is not program admin, Then breadcrumb does not contain administration link", async () => {
         const wrapper = await getWrapper(false);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).not.toContain(
+            "breadcrumb-switchable",
+        );
+        expect(wrapper.find("[data-test=breadcrumb-item-administration").exists()).toBe(false);
     });
 
     it("When user is program admin, Then administration link is displayed", async () => {
         const wrapper = await getWrapper(true);
-        expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).toContainEqual(
+        expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).toContain(
             "breadcrumb-switchable",
         );
-        expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBe(true);
     });
 });

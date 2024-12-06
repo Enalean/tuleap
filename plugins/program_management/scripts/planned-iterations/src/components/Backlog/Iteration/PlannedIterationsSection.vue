@@ -34,12 +34,11 @@
                     data-test="planned-iterations-add-iteration-button"
                 >
                     <i aria-hidden="true" class="fas fa-plus tlp-button-icon"></i>
-                    <span
-                        data-test="button-add-iteration-label"
-                        v-translate="{ iteration_sub_label: iterations_labels.sub_label }"
-                    >
-                        New %{ iteration_sub_label }
-                    </span>
+                    {{
+                        $gettextInterpolate($gettext("New %{ iteration_sub_label }"), {
+                            iteration_sub_label: iterations_labels.sub_label,
+                        })
+                    }}
                 </button>
             </div>
         </form>
