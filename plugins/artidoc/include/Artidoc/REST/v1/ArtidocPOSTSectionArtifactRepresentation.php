@@ -20,38 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Document;
+namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Document\SaveSections;
-
-final class SaveSectionsStub implements SaveSections
+/**
+ * @psalm-immutable
+ */
+final class ArtidocPOSTSectionArtifactRepresentation
 {
-    /**
-     * @var array<int, int[]>
-     */
-    private array $saved = [];
+    public int $id;
 
-    private function __construct()
+    public function __construct(int $id)
     {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    public function save(int $item_id, array $artifact_ids): void
-    {
-        $this->saved[$item_id] = $artifact_ids;
-    }
-
-    public function isSaved(int $id): bool
-    {
-        return isset($this->saved[$id]);
-    }
-
-    public function getSavedForId(int $id): array
-    {
-        return $this->saved[$id];
+        $this->id = $id;
     }
 }

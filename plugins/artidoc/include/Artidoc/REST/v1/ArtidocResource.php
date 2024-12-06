@@ -161,7 +161,7 @@ final class ArtidocResource extends AuthenticatedResource
      */
     public function optionsSections(int $id): void
     {
-        Header::allowOptionsGetPutPostPatch();
+        Header::allowOptionsGetPostPatch();
     }
 
     /**
@@ -197,57 +197,6 @@ final class ArtidocResource extends AuthenticatedResource
                     Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw new RestException(404);
                 },
-            );
-    }
-
-    /**
-     * Set sections
-     *
-     * Set sections of an artidoc document.
-     *
-     * <p>The sections will be saved in the given order.</p>
-     *
-     * <p>Note: do not use this route to reorder sections since it will change the section ids.</p>
-     *
-     * <p>Example payload:</p>
-     * <pre>
-     * [<br>
-     * &nbsp;&nbsp;{ "artifact": { "id": 123 } },<br>
-     * &nbsp;&nbsp;{ "artifact": { "id": 426 } },<br>
-     * ]
-     * </pre>
-     *
-     * @url    PUT {id}/sections
-     * @access hybrid
-     * @hide
-     *
-     * @param int $id Id of the document
-     * @param array $sections {@from body} {@type \Tuleap\Artidoc\REST\v1\ArtidocPUTSectionRepresentation}
-     *
-     * @status 200
-     * @throws RestException
-     */
-    public function putSections(int $id, array $sections): void
-    {
-        $this->checkAccess();
-
-        $user = UserManager::instance()->getCurrentUser();
-        $this->getPutHandler($user)
-            ->handle($id, $sections, $user)
-            ->match(
-                static function () {
-                    // nothing to do
-                },
-                function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
-                    if ($fault instanceof UserCannotReadSectionFault) {
-                        throw new I18NRestException(
-                            403,
-                            dgettext('tuleap-artidoc', 'Unable to set the sections of the document, at least one of the submitted section does not exist.')
-                        );
-                    }
-                    throw new RestException(404);
-                }
             );
     }
 
@@ -501,34 +450,6 @@ final class ArtidocResource extends AuthenticatedResource
         $transformer = $this->getRepresentationTransformer();
 
         return new PaginatedArtidocSectionRepresentationCollectionBuilder($retriever, $dao, $transformer);
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function getPutHandler(\PFUser $user): PUTSectionsHandler
-    {
-        $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
-        if (! $plugin) {
-            throw new RestException(404);
-        }
-
-        $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
-        $retriever          = new ArtidocWithContextRetriever(
-            new ArtidocRetriever($dao, new Docman_ItemFactory()),
-            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
-            new ArtidocWithContextDecorator(
-                \ProjectManager::instance(),
-                new DocumentServiceFromAllowedProjectRetriever($plugin),
-            ),
-        );
-
-        return new PUTSectionsHandler(
-            $retriever,
-            new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance()),
-            $dao,
-        );
     }
 
     /**

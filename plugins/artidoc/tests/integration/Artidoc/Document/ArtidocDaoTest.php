@@ -106,12 +106,22 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         );
     }
 
+    private function createArtidocSections(ArtidocDao $dao, int $item_id, array $artifact_ids): void
+    {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $item_id);
+
+        foreach ($artifact_ids as $artifact_id) {
+            $dao->saveSectionAtTheEnd($item_id, $artifact_id);
+        }
+    }
+
     public function testCloneItem(): void
     {
         $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
-        $dao->save(101, [1001]);
-        $dao->save(102, [2001, 1001]);
+        $this->createArtidocSections($dao, 101, [1001]);
+        $this->createArtidocSections($dao, 102, [2001, 1001]);
         $dao->saveTracker(102, 10001);
 
         $this->assertSectionsMatchArtifactIdsForDocument($dao, 103, []);
@@ -129,7 +139,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     {
         $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
-        $dao->save(101, []);
+        $this->createArtidocSections($dao, 101, []);
         $dao->saveTracker(101, 10001);
 
 
@@ -145,16 +155,16 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     {
         $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
-        $dao->save(101, [1001, 1002, 1003]);
+        $this->createArtidocSections($dao, 101, [1001, 1002, 1003]);
 
         $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, [1001, 1002, 1003]);
 
-        $dao->save(102, [1001, 1003]);
+        $this->createArtidocSections($dao, 102, [1001, 1003]);
 
         $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, [1001, 1002, 1003]);
         $this->assertSectionsMatchArtifactIdsForDocument($dao, 102, [1001, 1003]);
 
-        $dao->save(101, []);
+        $this->createArtidocSections($dao, 101, []);
 
         $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, []);
         $this->assertSectionsMatchArtifactIdsForDocument($dao, 102, [1001, 1003]);
@@ -165,7 +175,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
-        $dao->save(101, [1001, 1002, 1003]);
+        $this->createArtidocSections($dao, 101, [1001, 1002, 1003]);
         $rows = $dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->rows;
 
         foreach ($rows as $row) {
@@ -183,7 +193,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         }
 
         $first_section_id = $rows[0]->id;
-        $dao->save(101, []);
+        $this->createArtidocSections($dao, 101, []);
         self::assertTrue(Result::isErr($dao->searchSectionById($first_section_id)));
     }
 
@@ -287,7 +297,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         ];
 
         // remove section linked to artifact #1002
-        $dao->save(101, [1001, 1003]);
+        $this->createArtidocSections($dao, 101, [1001, 1003]);
 
         $this->expectException(UnableToFindSiblingSectionException::class);
         $dao->saveSectionBefore($item_1, 1004, $uuid_2);
@@ -297,9 +307,9 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     {
         $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
-        $dao->save(101, [1001, 1002, 1003]);
-        $dao->save(102, [1002, 1003, 1004]);
-        $dao->save(103, [1003]);
+        $this->createArtidocSections($dao, 101, [1001, 1002, 1003]);
+        $this->createArtidocSections($dao, 102, [1002, 1003, 1004]);
+        $this->createArtidocSections($dao, 103, [1003]);
 
         $dao->deleteSectionsByArtifactId(1003);
         $dao->deleteSectionsByArtifactId(1005);

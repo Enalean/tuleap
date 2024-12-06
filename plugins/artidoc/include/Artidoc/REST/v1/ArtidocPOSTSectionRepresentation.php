@@ -27,7 +27,7 @@ namespace Tuleap\Artidoc\REST\v1;
  */
 final class ArtidocPOSTSectionRepresentation
 {
-    public ArtidocPUTAndPOSTSectionArtifactRepresentation $artifact;
+    public ArtidocPOSTSectionArtifactRepresentation $artifact;
 
     /**
      * @var \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionPositionBeforeRepresentation | null The position {@type \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionPositionBeforeRepresentation} {@required false}
@@ -35,7 +35,7 @@ final class ArtidocPOSTSectionRepresentation
     public mixed $position;
 
     public function __construct(
-        ArtidocPUTAndPOSTSectionArtifactRepresentation $artifact,
+        ArtidocPOSTSectionArtifactRepresentation $artifact,
         ?ArtidocPOSTSectionPositionBeforeRepresentation $position,
     ) {
         $this->artifact = $artifact;
