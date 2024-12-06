@@ -219,6 +219,7 @@ final class ArtidocResource extends AuthenticatedResource
      *
      * @url    PUT {id}/sections
      * @access hybrid
+     * @hide
      *
      * @param int $id Id of the document
      * @param array $sections {@from body} {@type \Tuleap\Artidoc\REST\v1\ArtidocPUTSectionRepresentation}
