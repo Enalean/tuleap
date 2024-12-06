@@ -19,7 +19,9 @@
 
 <template>
     <div class="unplanned-iterations">
-        <h2 class="planned-iterations-section-title" v-translate>To be planned by the Teams</h2>
+        <h2 class="planned-iterations-section-title">
+            {{ $gettext("To be planned by the Teams") }}
+        </h2>
 
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
         <div
@@ -35,7 +37,9 @@
             class="empty-state-page"
             data-test="no-unplanned-elements-empty-state"
         >
-            <p class="empty-state-text" v-translate>There is no unplanned element</p>
+            <p class="empty-state-text">
+                {{ $gettext("There is no unplanned element") }}
+            </p>
         </div>
 
         <user-story-card

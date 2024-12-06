@@ -99,7 +99,9 @@ describe("PlannedIterationsSection", () => {
 
             await jest.runOnlyPendingTimersAsync();
 
-            expect(wrapper.find("[data-test=button-add-iteration-label]").text()).toBe("New g-pig");
+            expect(
+                wrapper.find("[data-test=planned-iterations-add-iteration-button]").text(),
+            ).toContain("g-pig");
         });
     });
 
