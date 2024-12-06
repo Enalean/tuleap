@@ -41,10 +41,10 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     ) {
     }
 
-    public function getRepresentation(ArtidocWithContext $artidoc, PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
+    public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
     {
         return $this->instantiateArtifacts($raw_sections, $user)
-            ->andThen(fn (array $artifacts) => $this->instantiateSections($artidoc, $artifacts, $user))
+            ->andThen(fn (array $artifacts) => $this->instantiateSections($raw_sections->artidoc, $artifacts, $user))
             ->map(
                 /**
                  * @param list<ArtidocSectionRepresentation> $sections
@@ -74,7 +74,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
         foreach ($this->artifact_dao->searchByIds($artifact_ids) as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
             if (! $artifact->userCanView($user)) {
-                return Result::err(Fault::fromMessage('User cannot read one of the artifact of artidoc #' . $raw_sections->id));
+                return Result::err(Fault::fromMessage('User cannot read one of the artifact of artidoc #' . $raw_sections->artidoc->document->getId()));
             }
 
             $id = $artifact->getId();

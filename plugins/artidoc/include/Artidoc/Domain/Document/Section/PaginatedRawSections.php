@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+
 final readonly class PaginatedRawSections
 {
     /**
      * @param list<RawSection> $rows
      */
-    public function __construct(public int $id, public array $rows, public int $total)
+    public function __construct(public ArtidocWithContext $artidoc, public array $rows, public int $total)
     {
     }
 }

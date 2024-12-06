@@ -20,6 +20,7 @@
 
 namespace Tuleap\Artidoc\Domain\Document\Order;
 
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -29,5 +30,5 @@ interface ReorderSections
     /**
      * @return Ok<null>|Err<Fault>
      */
-    public function reorder(int $item_id, SectionOrder $order): Ok|Err;
+    public function reorder(ArtidocWithContext $artidoc, SectionOrder $order): Ok|Err;
 }

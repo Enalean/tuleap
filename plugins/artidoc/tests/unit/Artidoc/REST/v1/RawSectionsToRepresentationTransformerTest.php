@@ -222,9 +222,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                     RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
@@ -311,9 +310,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                 ],
@@ -381,9 +379,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                 ],
@@ -486,9 +483,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                     RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
@@ -579,9 +575,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                     RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
@@ -653,9 +648,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                     RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
@@ -735,9 +729,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                     RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
@@ -817,9 +810,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                     RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
@@ -883,9 +875,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
                     RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                     RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
@@ -919,9 +910,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
-            new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
             new PaginatedRawSections(
-                101,
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [],
                 10,
             ),

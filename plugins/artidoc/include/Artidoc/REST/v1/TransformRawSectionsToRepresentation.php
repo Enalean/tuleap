@@ -21,7 +21,6 @@
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -31,5 +30,5 @@ interface TransformRawSectionsToRepresentation
     /**
      * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
      */
-    public function getRepresentation(ArtidocWithContext $artidoc, PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err;
+    public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err;
 }
