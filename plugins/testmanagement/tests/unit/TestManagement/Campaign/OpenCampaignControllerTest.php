@@ -23,38 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Campaign;
 
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
-class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var OpenCampaignController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CampaignRetriever
-     */
-    private $campaign_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusUpdater
-     */
-    private $status_updater;
+    private OpenCampaignController $controller;
+    private CampaignRetriever&MockObject $campaign_retriever;
+    private StatusUpdater&MockObject $status_updater;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->campaign_retriever = Mockery::mock(CampaignRetriever::class);
-        $this->status_updater     = Mockery::mock(StatusUpdater::class);
+        $this->campaign_retriever = $this->createMock(CampaignRetriever::class);
+        $this->status_updater     = $this->createMock(StatusUpdater::class);
 
         $this->controller = new OpenCampaignController(
             $this->campaign_retriever,
@@ -71,37 +59,37 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAsksToOpenTheCampaign(): void
     {
-        $user    = Mockery::mock(PFUser::class);
+        $user    = $this->createMock(PFUser::class);
         $request = new HTTPRequest();
         $request->setCurrentUser($user);
 
-        $layout    = Mockery::mock(BaseLayout::class);
+        $layout    = $this->createMock(BaseLayout::class);
         $variables = [
             'campaign_id' => '3',
         ];
 
         $project          = new \Project(['group_id' => 101]);
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getProject')->andReturn($project);
+        $tracker_campaign = $this->createMock(Tracker::class);
+        $tracker_campaign->method('getProject')->willReturn($project);
 
-        $artifact_campaign = Mockery::mock(Artifact::class);
-        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+        $artifact_campaign = $this->createMock(Artifact::class);
+        $artifact_campaign->method('getTracker')->willReturn($tracker_campaign);
 
         $campaign = new Campaign(
             $artifact_campaign,
             'Campaign 01',
             new NoJobConfiguration()
         );
-        $this->campaign_retriever->shouldReceive('getById')
-            ->once()
+        $this->campaign_retriever
+            ->expects(self::once())
+            ->method('getById')
             ->with(3)
-            ->andReturn($campaign);
+            ->willReturn($campaign);
 
-        $this->status_updater->shouldReceive('openCampaign')
-            ->once();
+        $this->status_updater->expects(self::once())->method('openCampaign');
 
-        $layout->shouldReceive('addFeedback')->once();
-        $layout->shouldReceive('redirect')->once();
+        $layout->expects(self::once())->method('addFeedback');
+        $layout->expects(self::once())->method('redirect');
 
         $this->controller->process(
             $request,
@@ -112,36 +100,37 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDisplayErrorFeedbackIfNoPossibleValueToOpenTheCampaign(): void
     {
-        $user    = Mockery::mock(PFUser::class);
+        $user    = $this->createMock(PFUser::class);
         $request = new HTTPRequest();
         $request->setCurrentUser($user);
 
-        $layout    = Mockery::mock(BaseLayout::class);
+        $layout    = $this->createMock(BaseLayout::class);
         $variables = [
             'campaign_id' => '3',
         ];
 
         $project          = new \Project(['group_id' => 101]);
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getProject')->andReturn($project);
+        $tracker_campaign = $this->createMock(Tracker::class);
+        $tracker_campaign->method('getProject')->willReturn($project);
 
-        $artifact_campaign = Mockery::mock(Artifact::class);
-        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+        $artifact_campaign = $this->createMock(Artifact::class);
+        $artifact_campaign->method('getTracker')->willReturn($tracker_campaign);
 
         $campaign = new Campaign(
             $artifact_campaign,
             'Campaign 01',
             new NoJobConfiguration()
         );
-        $this->campaign_retriever->shouldReceive('getById')
-            ->once()
+        $this->campaign_retriever
+            ->expects(self::once())
+            ->method('getById')
             ->with(3)
-            ->andReturn($campaign);
+            ->willReturn($campaign);
 
-        $this->status_updater->shouldReceive('openCampaign')->andThrow(NoPossibleValueException::class);
+        $this->status_updater->method('openCampaign')->willThrowException(new NoPossibleValueException());
 
-        $layout->shouldReceive('addFeedback')->once()->withArgs(['error', 'The campaign cannot be open : No possible value found regarding your configuration. Please check your transition and field dependencies.']);
-        $layout->shouldReceive('redirect')->once();
+        $layout->expects(self::once())->method('addFeedback')->with('error', 'The campaign cannot be open : No possible value found regarding your configuration. Please check your transition and field dependencies.');
+        $layout->expects(self::once())->method('redirect');
 
         $this->controller->process(
             $request,
@@ -152,25 +141,26 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfCampaignNotFound(): void
     {
-        $user    = Mockery::mock(PFUser::class);
+        $user    = $this->createMock(PFUser::class);
         $request = new HTTPRequest();
         $request->setCurrentUser($user);
 
-        $layout    = Mockery::mock(BaseLayout::class);
+        $layout    = $this->createMock(BaseLayout::class);
         $variables = [
             'campaign_id' => '3',
         ];
 
-        $this->campaign_retriever->shouldReceive('getById')
-            ->once()
+        $this->campaign_retriever
+            ->expects(self::once())
+            ->method('getById')
             ->with(3)
-            ->andThrow(
+            ->willThrowException(
                 new ArtifactNotFoundException()
             );
 
-        $this->status_updater->shouldNotReceive('openCampaign');
-        $layout->shouldNotReceive('addFeedback');
-        $layout->shouldNotReceive('redirect');
+        $this->status_updater->expects(self::never())->method('openCampaign');
+        $layout->expects(self::never())->method('addFeedback');
+        $layout->expects(self::never())->method('redirect');
 
         $this->expectException(NotFoundException::class);
 
