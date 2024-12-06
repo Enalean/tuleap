@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\Direction;
 use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
@@ -37,6 +38,7 @@ use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\SaveOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
+use Tuleap\Artidoc\Domain\Document\Section\SearchPaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\NeverThrow\Err;
@@ -88,9 +90,11 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         return Result::ok(RawSection::fromRow($row));
     }
 
-    public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections
+    public function searchPaginatedRawSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRawSections
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $limit, $offset) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $limit, $offset) {
+            $item_id = $artidoc->document->getId();
+
             $rows = $db->run(
                 <<<EOS
                 SELECT id, artifact_id, item_id, `rank`
@@ -107,12 +111,12 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
             $total = $db->cell('SELECT COUNT(*) FROM plugin_artidoc_document WHERE item_id = ?', $item_id);
 
             return new PaginatedRawSections(
-                $item_id,
+                $artidoc,
                 array_values(
                     array_map(
-                        /**
-                         * @param array{ id: string, item_id: int, artifact_id: int, rank: int } $row
-                         */
+                    /**
+                     * @param array{ id: string, item_id: int, artifact_id: int, rank: int } $row
+                     */
                         function (array $row): RawSection {
                             $row['id'] = $this->identifier_factory->buildFromBytesData($row['id']);
 
@@ -281,16 +285,16 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         );
     }
 
-    public function reorder(int $item_id, SectionOrder $order): Ok|Err
+    public function reorder(ArtidocWithContext $artidoc, SectionOrder $order): Ok|Err
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $order): Ok|Err {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $order): Ok|Err {
             $current_order = array_values($db->col(
                 'SELECT id
                 FROM plugin_artidoc_document
                 WHERE item_id = ?
                 ORDER BY `rank`',
                 0,
-                $item_id,
+                $artidoc->document->getId(),
             ));
 
             $index_to_move = array_search($order->identifier->getBytes(), $current_order, true);
@@ -331,7 +335,7 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 SET `rank` = CASE $when ELSE `rank` END
                 WHERE item_id = ?
                 EOS;
-            $db->safeQuery($sql, [...$values, $item_id]);
+            $db->safeQuery($sql, [...$values, $artidoc->document->getId()]);
 
             return Result::ok(null);
         });

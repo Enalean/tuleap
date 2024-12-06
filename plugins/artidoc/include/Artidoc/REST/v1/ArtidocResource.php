@@ -57,6 +57,8 @@ use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifac
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSectionsRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\SectionCreator;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionFault;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
@@ -186,8 +188,10 @@ final class ArtidocResource extends AuthenticatedResource
         $this->checkAccess();
 
         $user = UserManager::instance()->getCurrentUser();
-        return $this->getBuilder($user)
-            ->build($id, $limit, $offset, $user)
+
+        return $this->getPaginatedRawSectionsRetriever($user)
+            ->retrievePaginatedRawSections($id, $limit, $offset)
+            ->andThen(fn (PaginatedRawSections $raw_sections) => $this->getRepresentationTransformer()->getRepresentation($raw_sections, $user))
             ->match(
                 function (PaginatedArtidocSectionRepresentationCollection $collection) use ($limit, $offset) {
                     Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
@@ -430,7 +434,7 @@ final class ArtidocResource extends AuthenticatedResource
             );
     }
 
-    private function getBuilder(\PFUser $user): PaginatedArtidocSectionRepresentationCollectionBuilder
+    private function getPaginatedRawSectionsRetriever(\PFUser $user): PaginatedRawSectionsRetriever
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -447,9 +451,7 @@ final class ArtidocResource extends AuthenticatedResource
             ),
         );
 
-        $transformer = $this->getRepresentationTransformer();
-
-        return new PaginatedArtidocSectionRepresentationCollectionBuilder($retriever, $dao, $transformer);
+        return new PaginatedRawSectionsRetriever($retriever, $dao);
     }
 
     /**

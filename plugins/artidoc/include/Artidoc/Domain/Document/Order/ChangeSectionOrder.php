@@ -43,6 +43,6 @@ final readonly class ChangeSectionOrder
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(fn (ArtidocWithContext $artidoc) => $this->reorder_sections->reorder($id, $order));
+            ->andThen(fn (ArtidocWithContext $artidoc) => $this->reorder_sections->reorder($artidoc, $order));
     }
 }

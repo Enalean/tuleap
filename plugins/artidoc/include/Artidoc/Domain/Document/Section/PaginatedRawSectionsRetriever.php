@@ -20,39 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
-use Tuleap\Artidoc\Document\SearchPaginatedRawSections;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-final readonly class PaginatedArtidocSectionRepresentationCollectionBuilder
+final readonly class PaginatedRawSectionsRetriever
 {
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private SearchPaginatedRawSections $dao,
-        private TransformRawSectionsToRepresentation $transformer,
+        private SearchPaginatedRawSections $search,
     ) {
     }
 
     /**
-     * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
+     * @return Ok<PaginatedRawSections>|Err<Fault>
      */
-    public function build(int $id, int $limit, int $offset, \PFUser $user): Ok|Err
+    public function retrievePaginatedRawSections(int $id, int $limit, int $offset): Ok|Err
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanRead($id)
-            ->andThen(function (ArtidocWithContext $artidoc) use ($limit, $offset, $user) {
-                $raw_sections = $this->dao->searchPaginatedRawSectionsByItemId(
-                    $artidoc->document->getId(),
-                    $limit,
-                    $offset,
-                );
-
-                return $this->transformer->getRepresentation($artidoc, $raw_sections, $user);
-            });
+            ->map(fn (ArtidocWithContext $artidoc) => $this->search->searchPaginatedRawSections(
+                $artidoc,
+                $limit,
+                $offset,
+            ));
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Domain\Document\Order;
 
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\NeverThrow\Err;
@@ -52,7 +53,7 @@ final class ReorderSectionsStub implements ReorderSections
         return new self(null);
     }
 
-    public function reorder(int $item_id, SectionOrder $order): Ok|Err
+    public function reorder(ArtidocWithContext $artidoc, SectionOrder $order): Ok|Err
     {
         $this->called = true;
 
