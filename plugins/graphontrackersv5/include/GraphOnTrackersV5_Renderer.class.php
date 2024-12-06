@@ -132,7 +132,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     {
         $layout->addJavascriptAsset(new JavascriptViteAsset(
             $this->plugin->getAssets(),
-            'src/loadGraphs.js',
+            'src/loadGraphs.ts',
         ));
     }
 
@@ -469,7 +469,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
     public function getJavascriptAssets(): array
     {
-        return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.js')];
+        return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.ts')];
     }
 
     private function getAssets(): IncludeViteAssets
