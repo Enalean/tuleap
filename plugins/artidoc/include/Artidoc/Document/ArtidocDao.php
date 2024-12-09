@@ -193,9 +193,11 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         );
     }
 
-    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier
+    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, int $artifact_id): SectionIdentifier
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_id) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $artifact_id) {
+            $item_id = $artidoc->document->getId();
+
             $rank = $this->getDB()->cell(
                 'SELECT max(`rank`) + 1 FROM plugin_artidoc_document WHERE item_id = ?',
                 $item_id,
@@ -205,9 +207,11 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         });
     }
 
-    public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
+    public function saveSectionBefore(ArtidocWithContext $artidoc, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_id, $sibling_section_id) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $artifact_id, $sibling_section_id) {
+            $item_id = $artidoc->document->getId();
+
             $rank = $this->getDB()->cell(
                 'SELECT `rank` FROM plugin_artidoc_document WHERE id = ? AND item_id = ?',
                 $sibling_section_id->getBytes(),
