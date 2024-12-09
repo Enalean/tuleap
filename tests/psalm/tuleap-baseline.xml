@@ -33093,7 +33093,7 @@
       <code><![CDATA[sendGetArtifactsAllowHeaders]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/REST/CompleteTrackerRepresentation.class.php">
+  <file src="plugins/tracker/include/REST/CompleteTrackerRepresentation.php">
     <ImpureMethodCall>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getItemName]]></code>
