@@ -24,27 +24,6 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 final class CommentFormatIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItBuildsTextFormat(): void
-    {
-        $format = CommentFormatIdentifier::buildText();
-        self::assertFalse($format->isHTML());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, (string) $format);
-    }
-
-    public function testItBuildsHTMLFormat(): void
-    {
-        $format = CommentFormatIdentifier::buildHTML();
-        self::assertTrue($format->isHTML());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::HTML_COMMENT, (string) $format);
-    }
-
-    public function testItBuildsCommonMarkFormat(): void
-    {
-        $format = CommentFormatIdentifier::buildCommonMark();
-        self::assertFalse($format->isHTML());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT, (string) $format);
-    }
-
     public static function generateFormats(): iterable
     {
         yield [\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT];
@@ -57,14 +36,13 @@ final class CommentFormatIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItBuildsFromFormatString(string $format_string): void
     {
-        $format = CommentFormatIdentifier::fromFormatString($format_string);
-        self::assertSame($format_string, (string) $format);
+        $format = CommentFormatIdentifier::fromStringWithDefault($format_string);
+        self::assertSame($format_string, $format->value);
     }
 
     public function testItDefaultsInvalidFormatToCommonMark(): void
     {
-        $format = CommentFormatIdentifier::fromFormatString('Invalid');
-        self::assertFalse($format->isHTML());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT, (string) $format);
+        $format = CommentFormatIdentifier::fromStringWithDefault('Invalid');
+        self::assertSame(CommentFormatIdentifier::COMMONMARK, $format);
     }
 }

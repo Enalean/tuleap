@@ -61,7 +61,7 @@ final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $new_comment = NewComment::fromParts(
             self::COMMENT_BODY,
-            CommentFormatIdentifier::buildCommonMark(),
+            CommentFormatIdentifier::COMMONMARK,
             UserTestBuilder::aUser()->withId(self::USER_ID)->build(),
             self::SUBMISSION_TIMESTAMP,
             []
@@ -78,8 +78,8 @@ final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertTrue(Result::isOk($result));
         $changeset = $result->value;
         self::assertSame(self::NEW_CHANGESET_ID, $changeset->id);
-        self::assertSame(self::SUBMISSION_TIMESTAMP, $changeset->submitted_on);
-        self::assertSame(self::USER_ID, $changeset->submitted_by);
+        self::assertSame(self::SUBMISSION_TIMESTAMP, (int) $changeset->getSubmittedOn());
+        self::assertSame(self::USER_ID, (int) $changeset->getSubmittedBy());
     }
 
     public function testItReturnsErrWhenThereIsAnIssueDuringChangesetCreation(): void

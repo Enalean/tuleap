@@ -34,7 +34,6 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -55,7 +54,6 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private Artifact $artifact;
     private \Workflow&MockObject $workflow;
     private array $fields_data;
-    private ParentLinkAction&MockObject $parent_link_action;
     private TrackerPrivateCommentUGroupPermissionInserter&MockObject $ugroup_private_comment_inserter;
     private \Tracker_Artifact_Changeset_CommentDao&MockObject $comment_dao;
     private SaveArtifactStub $artifact_saver;
@@ -91,9 +89,8 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->comment_dao = $this->createMock(\Tracker_Artifact_Changeset_CommentDao::class);
 
-        $this->parent_link_action = $this->createMock(ParentLinkAction::class);
-        $this->changeset_saver    = $this->createMock(ArtifactChangesetSaver::class);
-        $this->artifact_saver     = SaveArtifactStub::withSuccess();
+        $this->changeset_saver = $this->createMock(ArtifactChangesetSaver::class);
+        $this->artifact_saver  = SaveArtifactStub::withSuccess();
 
         $this->ugroup_private_comment_inserter = $this->createMock(TrackerPrivateCommentUGroupPermissionInserter::class);
 
@@ -107,7 +104,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact,
             $this->fields_data,
             '',
-            CommentFormatIdentifier::buildText(),
+            CommentFormatIdentifier::TEXT,
             $this->ugroups_array,
             $submitter,
             self::SUBMISSION_TIMESTAMP,

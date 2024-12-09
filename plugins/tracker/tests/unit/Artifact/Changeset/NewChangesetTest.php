@@ -46,7 +46,7 @@ final class NewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromFieldsDataArray(): void
     {
         $comment_body                    = 'nonpersecution rotundiform';
-        $comment_format                  = CommentFormatIdentifier::buildCommonMark();
+        $comment_format                  = CommentFormatIdentifier::COMMONMARK;
         $ugroups_that_are_allowed_to_see = [
             ProjectUGroupTestBuilder::aCustomUserGroup(116)->build(),
             ProjectUGroupTestBuilder::aCustomUserGroup(130)->build(),
@@ -90,10 +90,7 @@ final class NewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::SUBMISSION_TIMESTAMP, $changeset->getSubmissionTimestamp());
         self::assertTrue($changeset->getUrlMapping()->isEmpty());
         $comment = $changeset->getComment();
-        self::assertSame(
-            \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-            (string) $comment->getFormat()
-        );
+        self::assertSame(CommentFormatIdentifier::COMMONMARK, $comment->getFormat());
         self::assertEmpty($comment->getBody());
         self::assertSame($this->submitter, $comment->getSubmitter());
         self::assertSame(self::SUBMISSION_TIMESTAMP, $comment->getSubmissionTimestamp());

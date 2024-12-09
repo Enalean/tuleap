@@ -24,41 +24,20 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 /**
  * I identify changeset comments' format.
- * @psalm-immutable
  */
-final readonly class CommentFormatIdentifier implements \Stringable
+enum CommentFormatIdentifier: string
 {
-    private function __construct(private string $format)
-    {
-    }
+    case TEXT       = \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+    case HTML       = \Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
+    case COMMONMARK = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
 
-    public static function buildText(): self
+    public static function fromStringWithDefault(string $format): self
     {
-        return new self(\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT);
-    }
-
-    public static function buildHTML(): self
-    {
-        return new self(\Tracker_Artifact_Changeset_Comment::HTML_COMMENT);
-    }
-
-    public static function buildCommonMark(): self
-    {
-        return new self(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT);
-    }
-
-    public static function fromFormatString(string $format): self
-    {
-        return new self(\Tracker_Artifact_Changeset_Comment::checkCommentFormat($format));
-    }
-
-    public function __toString(): string
-    {
-        return $this->format;
-    }
-
-    public function isHTML(): bool
-    {
-        return $this->format === \Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
+        return match ($format) {
+            self::TEXT->value => self::TEXT,
+            self::HTML->value => self::HTML,
+            self::COMMONMARK->value => self::COMMONMARK,
+            default => self::COMMONMARK,
+        };
     }
 }

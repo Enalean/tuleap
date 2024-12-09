@@ -21,6 +21,7 @@
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
@@ -445,7 +446,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 if ($comment->getBody() !== 'Some text') {
                     return false;
                 }
-                if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+                if ($comment->getFormat() !== CommentFormatIdentifier::TEXT) {
                     return false;
                 }
                 return true;
@@ -561,7 +562,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                     if ($comment->getBody() !== 'Some text') {
                         return false;
                     }
-                    if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+                    if ($comment->getFormat() !== CommentFormatIdentifier::TEXT) {
                         return false;
                     }
                     if ($comment->getUserGroupsThatAreAllowedToSee() !== [$my_group, $my_other_group]) {

@@ -47,7 +47,7 @@ final class CommentCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             ProjectUGroupTestBuilder::aCustomUserGroup(261)->build(),
         ];
 
-        $this->format = CommentFormatIdentifier::buildCommonMark();
+        $this->format = CommentFormatIdentifier::COMMONMARK;
     }
 
     private function create(): CommentCreation
@@ -80,7 +80,7 @@ final class CommentCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping->add('/replace-me.png', '/replaced.png');
         $comment          = NewComment::fromParts(
             $body,
-            CommentFormatIdentifier::buildHTML(),
+            CommentFormatIdentifier::HTML,
             $this->submitter,
             self::SUBMISSION_TIMESTAMP,
             $this->ugroups_that_are_allowed_to_see

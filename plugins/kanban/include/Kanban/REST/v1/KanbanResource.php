@@ -50,7 +50,6 @@ use PFUser;
 use ReferenceManager;
 use Tracker;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
-use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
 use Tracker_Artifact_PriorityDao;
@@ -1621,7 +1620,7 @@ final class KanbanResource extends AuthenticatedResource
                 $artifact,
                 $fields_data,
                 '',
-                CommentFormatIdentifier::fromFormatString(Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT),
+                CommentFormatIdentifier::COMMONMARK,
                 [],
                 $user,
                 $submission_timestamp,

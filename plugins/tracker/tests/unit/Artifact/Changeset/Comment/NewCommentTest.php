@@ -44,7 +44,7 @@ final class NewCommentTest extends \Tuleap\Test\PHPUnit\TestCase
             ProjectUGroupTestBuilder::aCustomUserGroup(241)->build(),
         ];
 
-        $this->format = CommentFormatIdentifier::buildText();
+        $this->format = CommentFormatIdentifier::TEXT;
     }
 
     private function create(string $body): NewComment
@@ -79,7 +79,7 @@ final class NewCommentTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $comment = NewComment::buildEmpty($this->submitter, self::SUBMISSION_TIMESTAMP);
         self::assertEmpty($comment->getBody());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT, (string) $comment->getFormat());
+        self::assertSame(CommentFormatIdentifier::COMMONMARK, $comment->getFormat());
         self::assertSame($this->submitter, $comment->getSubmitter());
         self::assertSame(self::SUBMISSION_TIMESTAMP, $comment->getSubmissionTimestamp());
         self::assertCount(0, $comment->getUserGroupsThatAreAllowedToSee());

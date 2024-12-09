@@ -52,7 +52,7 @@ class ChangesetCommentIndexer
             $changeset->getArtifact(),
             (string) $changeset_id,
             $row['body'],
-            CommentFormatIdentifier::fromFormatString($row['body_format'])
+            CommentFormatIdentifier::fromStringWithDefault($row['body_format'])
         );
     }
 
@@ -69,7 +69,7 @@ class ChangesetCommentIndexer
     private function indexComment(Artifact $artifact, string $changeset_id, string $comment_body, CommentFormatIdentifier $comment_format): void
     {
         $tracker                   = $artifact->getTracker();
-        $comment_format_identifier = (string) $comment_format;
+        $comment_format_identifier = $comment_format->value;
         $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(
                 self::INDEX_TYPE_CHANGESET_COMMENT,

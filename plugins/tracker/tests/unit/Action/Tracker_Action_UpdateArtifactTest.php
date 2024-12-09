@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
@@ -195,6 +196,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $task = Mockery::spy(Artifact::class);
         $task->shouldReceive('getId')->andReturn($this->artifact_id);
         $task->shouldReceive('getTracker')->andReturn($tracker);
+        $task->shouldReceive('validateCommentFormat')->andReturn(CommentFormatIdentifier::COMMONMARK);
         $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
 
         $action = new Tracker_Action_UpdateArtifact(

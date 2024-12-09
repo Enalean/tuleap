@@ -100,7 +100,7 @@ final class ArtifactCloser
                     $artifact,
                     $fields_data,
                     $closing_comment_body->getBody(),
-                    CommentFormatIdentifier::buildCommonMark(),
+                    CommentFormatIdentifier::COMMONMARK,
                     [],
                     $tracker_workflow_user,
                     (new \DateTimeImmutable())->getTimestamp(),
@@ -150,7 +150,7 @@ final class ArtifactCloser
     ): Err|Ok {
         $no_semantic_comment = NewComment::fromParts(
             $comment_body->getBody(),
-            CommentFormatIdentifier::buildCommonMark(),
+            CommentFormatIdentifier::COMMONMARK,
             $tracker_workflow_user,
             (new \DateTimeImmutable())->getTimestamp(),
             []

@@ -61,7 +61,7 @@ final class NewComment
     {
         return new self(
             '',
-            CommentFormatIdentifier::buildCommonMark(),
+            CommentFormatIdentifier::COMMONMARK,
             $submitter,
             $submission_timestamp,
             []
