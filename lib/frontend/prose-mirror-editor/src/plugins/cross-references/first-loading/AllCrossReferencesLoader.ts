@@ -33,7 +33,11 @@ export const AllCrossReferencesLoader = (
         const schema = state.schema;
 
         state.doc.nodesBetween(0, state.doc.content.size, (node, position) => {
-            if (node.type !== schema.nodes.text || node.text === undefined) {
+            if (
+                node.type !== schema.nodes.text ||
+                node.text === undefined ||
+                state.schema.marks.link.isInSet(node.marks)
+            ) {
                 return;
             }
 

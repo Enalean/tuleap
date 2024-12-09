@@ -19,10 +19,12 @@
 
 import { Plugin, PluginKey } from "prosemirror-state";
 import type { Mark, MarkType } from "prosemirror-model";
+import type { EditorNode } from "../../types/internal-types";
 
 export type MarkAfterEnterKeyBuilder = {
     type: MarkType;
     buildFromText: (text: string) => Mark;
+    canInsert: (text_node: EditorNode) => boolean;
 };
 
 export type RegexpToMarkMapEntry = [RegExp, MarkAfterEnterKeyBuilder];
@@ -53,13 +55,19 @@ export const initAddMarkAfterEnterPlugin = (
 
                     const node_text = node_before_cursor.text;
 
-                    for (const [regexp, { type, buildFromText }] of regexp_to_mark_map.entries()) {
+                    for (const [
+                        regexp,
+                        { type, canInsert, buildFromText },
+                    ] of regexp_to_mark_map.entries()) {
                         const match = regexp.exec(node_text);
                         if (!match || !match[0]) {
                             continue;
                         }
 
-                        if (type.isInSet(node_before_cursor.marks)) {
+                        if (
+                            type.isInSet(node_before_cursor.marks) ||
+                            !canInsert(node_before_cursor)
+                        ) {
                             continue;
                         }
 

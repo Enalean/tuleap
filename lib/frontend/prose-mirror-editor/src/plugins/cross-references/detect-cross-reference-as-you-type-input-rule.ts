@@ -22,16 +22,24 @@ import { InputRule } from "prosemirror-inputrules";
 import { match_newly_typed_reference_regexp } from "./regexps";
 
 export const DetectCrossReferenceAsYouTypeInputRule = (project_id: number): InputRule =>
-    new InputRule(match_newly_typed_reference_regexp, (state, match, from, to): Transaction => {
-        const text = match[0].trim();
-        const transaction = state.tr;
+    new InputRule(
+        match_newly_typed_reference_regexp,
+        (state, match, from, to): Transaction | null => {
+            const text_node_at_pos = state.doc.nodeAt(from);
+            if (text_node_at_pos && state.schema.marks.link.isInSet(text_node_at_pos.marks)) {
+                return null;
+            }
 
-        transaction.addMark(
-            from,
-            to,
-            state.schema.marks.async_cross_reference.create({ text, project_id }),
-        );
-        transaction.insertText(" ", to);
+            const text = match[0].trim();
+            const transaction = state.tr;
 
-        return transaction;
-    });
+            transaction.addMark(
+                from,
+                to,
+                state.schema.marks.async_cross_reference.create({ text, project_id }),
+            );
+            transaction.insertText(" ", to);
+
+            return transaction;
+        },
+    );

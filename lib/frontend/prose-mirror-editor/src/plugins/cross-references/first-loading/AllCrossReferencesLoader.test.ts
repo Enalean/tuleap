@@ -26,7 +26,7 @@ import { createLocalDocument } from "../../../helpers";
 import { AllCrossReferencesLoader } from "./AllCrossReferencesLoader";
 
 describe("AllCrossReferencesLoader", () => {
-    it("Should detect all the cross references inside the document and insert async_cross_reference Marks", () => {
+    it("Should detect all the cross references inside the document and insert async_cross_reference Marks where there is no link mark already", () => {
         const doc = createLocalDocument();
         const content = doc.createElement("div");
 
@@ -50,6 +50,7 @@ describe("AllCrossReferencesLoader", () => {
                 </li>
             </ol>
             <blockquote><p>This quote has doc #123 in it</p></blockquote>
+            <p>A linkified cross-reference to <a href="https://example.com">art #123</a>.</p>
         `,
         );
 
@@ -80,6 +81,7 @@ describe("AllCrossReferencesLoader", () => {
           <blockquote>
             <p>This quote has <async-cross-reference>doc #123</async-cross-reference> in it</p>
           </blockquote>
+          <p>A linkified cross-reference to <a href="https://example.com">art #123</a>.</p>
         `);
     });
 });
