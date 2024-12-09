@@ -19,7 +19,7 @@
 -->
 
 <template>
-    <div v-if="is_section_editable" class="section-footer section-footer-with-background">
+    <div v-if="is_section_editable" class="section-footer">
         <not-found-error v-if="is_not_found" />
         <generic-error
             v-else-if="is_in_error"
@@ -64,9 +64,5 @@ const { is_section_editable } = props.editor.editor_state;
     width: calc(100% + 2 * var(--tlp-shadow-focus-width));
     margin: 0 0 0 calc(-1 * var(--tlp-shadow-focus-width));
     padding: var(--tlp-medium-spacing) 0;
-
-    &-with-background {
-        background: var(--tuleap-artidoc-section-background);
-    }
 }
 </style>
