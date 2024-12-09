@@ -29,6 +29,7 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
+import * as mentions from "@tuleap/mention";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock @tuleap/mention because it needs jquery in tests
@@ -59,7 +60,7 @@ describe(`RichTextEditorsCreator`, () => {
                 }
             },
         } as RichTextEditorFactory;
-        creator = new RichTextEditorsCreator(doc, image_upload_factory, editor_factory);
+        creator = RichTextEditorsCreator(doc, image_upload_factory, editor_factory);
     });
 
     describe(`createNewCommentEditor()`, () => {
@@ -79,12 +80,14 @@ describe(`RichTextEditorsCreator`, () => {
                 doc.body.append(textarea);
             });
 
-            it(`enables image upload and creates a rich text editor on it`, () => {
+            it(`enables image upload, enables mentions and creates a rich text editor on it`, () => {
                 const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
                 const createHelpBlock = vi.spyOn(image_upload_factory, "createHelpBlock");
+                const initMentions = vi.spyOn(mentions, "initMentions");
 
                 creator.createNewCommentEditor();
 
+                expect(initMentions).toHaveBeenCalled();
                 expect(createHelpBlock).toHaveBeenCalled();
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const options = createRichTextEditor.mock.calls[0][1];
@@ -115,14 +118,15 @@ describe(`RichTextEditorsCreator`, () => {
     describe(`createEditCommentEditor()`, () => {
         const CHANGESET_ID = "1";
 
-        describe(`when there is an "edit comment" textarea in the document`, () => {
+        describe(`given an "edit comment" textarea`, () => {
             let textarea: HTMLTextAreaElement;
             beforeEach(() => {
                 textarea = doc.createElement("textarea");
                 doc.body.append(textarea);
             });
 
-            it(`disables image upload and creates a rich text editor on it, and returns the editor`, () => {
+            it(`disables image upload, enables mentions, and creates a rich text editor on the textarea
+                and returns the editor`, () => {
                 const fake_editor = {
                     init(new_format) {
                         if (new_format) {
@@ -134,10 +138,12 @@ describe(`RichTextEditorsCreator`, () => {
                     .spyOn(editor_factory, "createRichTextEditor")
                     .mockReturnValue(fake_editor);
                 const createHelpBlock = vi.spyOn(image_upload_factory, "createHelpBlock");
+                const initMentions = vi.spyOn(mentions, "initMentions");
 
                 const result = creator.createEditCommentEditor(textarea, CHANGESET_ID, "html");
 
                 expect(result).toBe(fake_editor);
+                expect(initMentions).toHaveBeenCalled();
                 expect(createHelpBlock).not.toHaveBeenCalled();
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const options = createRichTextEditor.mock.calls[0][1];

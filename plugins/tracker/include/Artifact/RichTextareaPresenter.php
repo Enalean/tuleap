@@ -42,7 +42,6 @@ final readonly class RichTextareaPresenter
     public bool $is_dragndrop_allowed;
     public string $help_id;
     public int $maxlength;
-    public bool $allows_mentions;
 
     /**
      * @param list<array{name: string, value: string}> $data_attributes
@@ -58,7 +57,6 @@ final readonly class RichTextareaPresenter
         $this->cols                 = $configuration->number_of_columns;
         $this->value                = $configuration->content;
         $this->is_required          = $configuration->is_required;
-        $this->allows_mentions      = $configuration->allows_mentions;
         $this->help_id              = $configuration->id . '-help';
         $this->is_dragndrop_allowed = $is_image_upload_allowed;
 

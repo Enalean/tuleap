@@ -27,55 +27,66 @@ import type {
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { initMentionsOnEditorDataReady } from "./init-mentions";
+import { initMentions } from "@tuleap/mention";
 
-const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
-const NEW_FOLLOWUP_ID_SUFFIX = "new";
+const NEW_COMMENT_TEXTAREA_ID = "tracker_followup_comment_new";
+const NEW_COMMENT_ID_SUFFIX = "new";
 const TEXT_FIELDS_SELECTOR = ".tracker_artifact_field textarea";
 
-export class RichTextEditorsCreator {
-    constructor(
-        private readonly doc: Document,
-        private readonly image_upload_factory: UploadImageFormFactory,
-        private readonly editor_factory: RichTextEditorFactory,
-    ) {}
+export interface RichTextEditorsCreator {
+    createNewCommentEditor(): void;
+    createEditCommentEditor(
+        textarea: HTMLTextAreaElement,
+        changeset_id: string,
+        format: TextFieldFormat,
+    ): TextEditorInterface;
+    /**
+     * @throws
+     */
+    createTextFieldEditors(): void;
+}
 
-    public createNewCommentEditor(): void {
-        const new_comment_textarea = this.doc.getElementById(NEW_FOLLOWUP_TEXTAREA_ID);
+export const RichTextEditorsCreator = (
+    doc: Document,
+    image_upload_factory: UploadImageFormFactory,
+    editor_factory: RichTextEditorFactory,
+): RichTextEditorsCreator => {
+    function createNewCommentEditor(): void {
+        const new_comment_textarea = doc.getElementById(NEW_COMMENT_TEXTAREA_ID);
         if (!(new_comment_textarea instanceof HTMLTextAreaElement)) {
             // When copying artifacts or browsing as anonymous, there is no "new follow-up" textarea
             return;
         }
-        const help_block = this.image_upload_factory.createHelpBlock(new_comment_textarea);
+        initMentions(new_comment_textarea);
+        const help_block = image_upload_factory.createHelpBlock(new_comment_textarea);
         const options: RichTextEditorOptions = {
-            format_selectbox_id: NEW_FOLLOWUP_ID_SUFFIX,
+            format_selectbox_id: NEW_COMMENT_ID_SUFFIX,
             getAdditionalOptions: getUploadImageOptions,
             onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
             onEditorInit: (ckeditor, textarea) =>
-                this.image_upload_factory.initiateImageUpload(ckeditor, textarea),
+                image_upload_factory.initiateImageUpload(ckeditor, textarea),
             onEditorDataReady: initMentionsOnEditorDataReady,
         };
-        this.editor_factory.createRichTextEditor(new_comment_textarea, options);
+        editor_factory.createRichTextEditor(new_comment_textarea, options);
     }
 
-    public createEditCommentEditor(
+    function createEditCommentEditor(
         textarea: HTMLTextAreaElement,
         changeset_id: string,
         format: TextFieldFormat,
     ): TextEditorInterface {
+        initMentions(textarea);
         const options: RichTextEditorOptions = {
             format_selectbox_id: changeset_id,
             format_selectbox_value: format,
-            onEditorInit: (ckeditor) => this.image_upload_factory.forbidImageUpload(ckeditor),
+            onEditorInit: (ckeditor) => image_upload_factory.forbidImageUpload(ckeditor),
             onEditorDataReady: initMentionsOnEditorDataReady,
         };
-        return this.editor_factory.createRichTextEditor(textarea, options);
+        return editor_factory.createRichTextEditor(textarea, options);
     }
 
-    /**
-     * @throws
-     */
-    public createTextFieldEditors(): void {
-        const text_field_textareas = this.doc.querySelectorAll(TEXT_FIELDS_SELECTOR);
+    function createTextFieldEditors(): void {
+        const text_field_textareas = doc.querySelectorAll(TEXT_FIELDS_SELECTOR);
         const observer = new IntersectionObserver(
             (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
                 for (const entry of entries) {
@@ -83,7 +94,7 @@ export class RichTextEditorsCreator {
                         return;
                     }
                     observer.unobserve(entry.target);
-                    this.createTextFieldEditor(entry.target);
+                    createTextFieldEditor(entry.target);
                 }
             },
         );
@@ -92,7 +103,7 @@ export class RichTextEditorsCreator {
         }
     }
 
-    private createTextFieldEditor(text_field_textarea: Element): void {
+    function createTextFieldEditor(text_field_textarea: Element): void {
         if (!(text_field_textarea instanceof HTMLTextAreaElement)) {
             return;
         }
@@ -105,9 +116,9 @@ export class RichTextEditorsCreator {
         }
         const field_id = match[1];
         const format_name = `artifact[${field_id}][format]`;
-        const format_value = this.getTextFieldFormatOrDefault(field_id);
+        const format_value = getTextFieldFormatOrDefault(field_id);
 
-        const help_block = this.image_upload_factory.createHelpBlock(text_field_textarea);
+        const help_block = image_upload_factory.createHelpBlock(text_field_textarea);
         const options: RichTextEditorOptions = {
             format_selectbox_id: text_field_textarea.id,
             format_selectbox_name: format_name,
@@ -115,14 +126,14 @@ export class RichTextEditorsCreator {
             getAdditionalOptions: getUploadImageOptions,
             onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
             onEditorInit: (ckeditor, textarea) => {
-                this.image_upload_factory.initiateImageUpload(ckeditor, textarea);
+                image_upload_factory.initiateImageUpload(ckeditor, textarea);
             },
         };
-        this.editor_factory.createRichTextEditor(text_field_textarea, options);
+        editor_factory.createRichTextEditor(text_field_textarea, options);
     }
 
-    private getTextFieldFormatOrDefault(field_id: string): TextFieldFormat {
-        const format_hidden_input = this.doc.getElementById(`artifact[${field_id}]_body_format`);
+    function getTextFieldFormatOrDefault(field_id: string): TextFieldFormat {
+        const format_hidden_input = doc.getElementById(`artifact[${field_id}]_body_format`);
         if (format_hidden_input instanceof HTMLInputElement) {
             const format = format_hidden_input.value;
             if (isValidTextFormat(format)) {
@@ -131,4 +142,10 @@ export class RichTextEditorsCreator {
         }
         return TEXT_FORMAT_COMMONMARK;
     }
-}
+
+    return {
+        createNewCommentEditor,
+        createEditCommentEditor,
+        createTextFieldEditors,
+    };
+};

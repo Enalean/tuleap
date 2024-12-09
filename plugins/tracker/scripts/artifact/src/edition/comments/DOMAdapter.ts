@@ -128,7 +128,6 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
         createTextArea(presenter): HTMLTextAreaElement {
             const textarea = doc.createElement("textarea");
             textarea.id = presenter.id;
-            textarea.classList.add("user-mention");
             textarea.setAttribute("data-project-id", presenter.project_id);
             textarea.setAttribute("data-test", "edit-comment-textarea");
             textarea.rows = computeNumberOfRowsShown(presenter.comment_body);

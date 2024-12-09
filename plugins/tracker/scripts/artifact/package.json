@@ -9,7 +9,6 @@
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
-    "@tuleap/mention": "workspace:^",
     "@tuleap/option": "workspace:^",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
