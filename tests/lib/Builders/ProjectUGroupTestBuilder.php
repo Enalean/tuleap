@@ -149,6 +149,7 @@ final class ProjectUGroupTestBuilder
         $ugroup->setMembers(...$this->users);
         if ($this->project !== null) {
             $ugroup->setProject($this->project);
+            $ugroup->setProjectId((int) $this->project->getID());
         }
         $ugroup->setSourceGroup($this->source_group);
 
