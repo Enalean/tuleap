@@ -35,10 +35,12 @@ export interface AttachmentFile {
 }
 
 export function useAttachmentFile(field_id: Ref<number>): AttachmentFile {
+    const not_saved_yet_description_attachments: Ref<PendingAttachment[]> = ref([]);
+
     if (field_id.value === 0) {
         return {
             upload_url: "",
-            getWaitingListAttachments: () => ref([]),
+            getWaitingListAttachments: () => ref(not_saved_yet_description_attachments),
             setWaitingListAttachments: noop,
             addAttachmentToWaitingList: noop,
             mergeArtifactAttachments,
@@ -46,7 +48,6 @@ export function useAttachmentFile(field_id: Ref<number>): AttachmentFile {
     }
 
     const upload_url = `/api/v1/tracker_fields/${field_id.value}/files`;
-    const not_saved_yet_description_attachments: Ref<PendingAttachment[]> = ref([]);
 
     function addAttachmentToWaitingList(new_pending_attachment: PendingAttachment): void {
         not_saved_yet_description_attachments.value.push({
