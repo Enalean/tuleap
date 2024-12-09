@@ -161,3 +161,7 @@ export const getConfirmClosingModal = (): string =>
     gettextCatalog.getString("Changes you made may not be saved. Close the modal?");
 export const getPleaseSelectAListItem = (): string =>
     gettextCatalog.getString("Please select an item in the list");
+export const getAtMentionInfo = (): string =>
+    gettextCatalog.getString(
+        "When you use @ to mention someone, they will get an email notification.",
+    );
