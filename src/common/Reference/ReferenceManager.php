@@ -666,9 +666,9 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
 
     /**
      * insert html links in text
-     * @param $html the string which may contain invalid
+     * @param $html string the string which may contain invalid
      */
-    public function insertReferences(&$html, $group_id)
+    public function insertReferences(string &$html, $group_id)
     {
         $this->tmpGroupIdForCallbackFunction = $group_id;
 
@@ -711,8 +711,10 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         $char_before     = $match['1'];
         $username        = $match['2'];
 
-        if (UserManager::instance()->getUserByUserName($username)) {
-            return $char_before . '<a href="/users/' . $username . '" class="direct-link-to-user">@' . $username . '</a>';
+        $user = UserManager::instance()->getUserByUserName($username);
+        if ($user) {
+            $link = UserHelper::instance()->getAbsoluteUserURL($user);
+            return $char_before . '<a href="' . $link . '" class="direct-link-to-user">@' . $username . '</a>';
         }
 
         return $original_string;
