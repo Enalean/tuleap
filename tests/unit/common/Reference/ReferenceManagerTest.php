@@ -22,13 +22,16 @@
 namespace Tuleap\Reference;
 
 use EventManager;
+use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use ReferenceDao;
 use ReferenceManager;
 use TestHelper;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -37,6 +40,7 @@ use UserManager;
 final class ReferenceManagerTest extends TestCase
 {
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     private ReferenceManager&MockObject $rm;
     private UserManager&MockObject $user_manager;
@@ -53,6 +57,7 @@ final class ReferenceManagerTest extends TestCase
         ProjectManager::setInstance($this->project_manager);
         $this->user_manager = $this->createMock(UserManager::class);
         UserManager::setInstance($this->user_manager);
+        $this->user_manager->method('getCurrentUser');
 
         $this->rm = $this->getMockBuilder(ReferenceManager::class)
             ->setConstructorArgs([])
@@ -63,6 +68,7 @@ final class ReferenceManagerTest extends TestCase
                 'getGroupIdFromArtifactId',
             ])
             ->getMock();
+        ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'example.com');
     }
 
     protected function tearDown(): void
@@ -258,14 +264,14 @@ final class ReferenceManagerTest extends TestCase
         $html = 'myref #123';
         $this->rm->insertReferences($html, 102);
         self::assertEquals(
-            '<a href="https:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>',
+            '<a href="https://example.com/goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>',
             $html
         );
 
         $html = 'Text &#x27;myref #123&#x27; end text';
         $this->rm->insertReferences($html, 102);
         self::assertEquals(
-            'Text &#x27;<a href="https:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>&#x27; end text',
+            'Text &#x27;<a href="https://example.com/goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>&#x27; end text',
             $html
         );
     }
@@ -292,11 +298,11 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForMentionAtTheBeginningOfTheString(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('username')->willReturn(UserTestBuilder::buildWithDefaults());
+        $this->user_manager->method('getUserByUserName')->with('username')->willReturn(UserTestBuilder::aUser()->withUserName('username')->build());
 
         $html = '@username';
         $this->rm->insertReferences($html, 0);
-        self::assertEquals('<a href="/users/username" class="direct-link-to-user">@username</a>', $html);
+        self::assertEquals('<a href="https://example.com/users/username" class="direct-link-to-user">@username</a>', $html);
     }
 
     public function testItDoesNotInsertsLinkForUserThatDoNotExist(): void
@@ -310,38 +316,38 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForMentionAtTheMiddleOfTheString(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('username')->willReturn(UserTestBuilder::buildWithDefaults());
+        $this->user_manager->method('getUserByUserName')->with('username')->willReturn(UserTestBuilder::aUser()->withUserName('username')->build());
 
         $html = '/cc @username';
         $this->rm->insertReferences($html, 0);
-        self::assertEquals('/cc <a href="/users/username" class="direct-link-to-user">@username</a>', $html);
+        self::assertEquals('/cc <a href="https://example.com/users/username" class="direct-link-to-user">@username</a>', $html);
     }
 
     public function testItInsertsLinkForMentionWhenPointAtTheMiddle(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('user.name')->willReturn(UserTestBuilder::buildWithDefaults());
+        $this->user_manager->method('getUserByUserName')->with('user.name')->willReturn(UserTestBuilder::aUser()->withUserName('user.name')->build());
 
         $html = '/cc @user.name';
         $this->rm->insertReferences($html, 0);
-        self::assertEquals('/cc <a href="/users/user.name" class="direct-link-to-user">@user.name</a>', $html);
+        self::assertEquals('/cc <a href="https://example.com/users/user.name" class="direct-link-to-user">@user.name</a>', $html);
     }
 
     public function testItInsertsLinkForMentionWhenHyphenAtTheMiddle(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('user-name')->willReturn(UserTestBuilder::buildWithDefaults());
+        $this->user_manager->method('getUserByUserName')->with('user-name')->willReturn(UserTestBuilder::aUser()->withUserName('user-name')->build());
 
         $html = '/cc @user-name';
         $this->rm->insertReferences($html, 0);
-        self::assertEquals('/cc <a href="/users/user-name" class="direct-link-to-user">@user-name</a>', $html);
+        self::assertEquals('/cc <a href="https://example.com/users/user-name" class="direct-link-to-user">@user-name</a>', $html);
     }
 
     public function testItInsertsLinkForMentionWhenUnderscoreAtTheMiddle(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('user_name')->willReturn(UserTestBuilder::buildWithDefaults());
+        $this->user_manager->method('getUserByUserName')->with('user_name')->willReturn(UserTestBuilder::aUser()->withUserName('user_name')->build());
 
         $html = '/cc @user_name';
         $this->rm->insertReferences($html, 0);
-        self::assertEquals('/cc <a href="/users/user_name" class="direct-link-to-user">@user_name</a>', $html);
+        self::assertEquals('/cc <a href="https://example.com/users/user_name" class="direct-link-to-user">@user_name</a>', $html);
     }
 
     public function testItDoesNotInsertsLinkIfInvalidCharacterAtBeginning(): void
