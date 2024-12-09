@@ -130,6 +130,7 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
         $this->tracker->method('getUri')->willReturn('');
         $this->tracker->method('getDescription')->willReturn('');
         $this->tracker->method('getItemName')->willReturn('tracker01');
+        $this->tracker->method('isNotificationStopped')->willReturn(false);
 
         $tracker_representation = CompleteTrackerRepresentation::build(
             $this->tracker,

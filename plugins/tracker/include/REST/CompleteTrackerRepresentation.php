@@ -24,6 +24,7 @@ use Tuleap\REST\JsonCast;
 use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentation;
+use Tuleap\Tracker\REST\Tracker\TrackerNotificationRepresentation;
 
 /**
  * @psalm-immutable
@@ -118,6 +119,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         array $tracker_fields,
         array $structure,
         array $semantics,
+        public readonly TrackerNotificationRepresentation $notifications,
         ?WorkflowRepresentation $workflow = null,
         ?PermissionsRepresentation $permissions = null,
     ) {
@@ -157,6 +159,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
             $tracker_fields,
             $structure,
             $semantics,
+            TrackerNotificationRepresentation::buildFromTracker($tracker),
             $workflow,
             $permissions,
         );
