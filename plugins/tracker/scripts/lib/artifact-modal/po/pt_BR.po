@@ -264,6 +264,9 @@ msgstr ""
 msgid "View details"
 msgstr ""
 
+msgid "When you use @ to mention someone, they will get an email notification."
+msgstr ""
+
 msgid "You are not allowed to paste images here"
 msgstr "Você não está autorizado a colar imagens aqui"
 

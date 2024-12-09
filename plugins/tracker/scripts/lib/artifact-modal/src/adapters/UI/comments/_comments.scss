@@ -51,10 +51,12 @@
 }
 
 .artifact-modal-followups-add-form {
+    display: flex;
     flex: 0 0 auto;
+    flex-direction: column;
     order: 3;
-    width: 100%;
     margin: var(--tlp-x-large-spacing) 0 0;
+    gap: var(--tlp-medium-spacing);
 
     &.invert-order {
         order: 1;

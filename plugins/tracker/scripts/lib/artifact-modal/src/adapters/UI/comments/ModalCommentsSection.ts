@@ -20,6 +20,7 @@
 import type { UpdateFunction } from "hybrids";
 import { define, dispatch, html } from "hybrids";
 import {
+    getAtMentionInfo,
     getChangesetsCommentMessage,
     getCommentsSectionTitle,
     getEmptyCommentsMessage,
@@ -49,13 +50,17 @@ const getNewCommentTemplate = (
     if (!host.presenter.preferences.is_allowed_to_add_comment) {
         return html``;
     }
-    return html`<tuleap-artifact-modal-followup-editor
+    return html`<div
         class="${getNewCommentClasses(host.presenter.preferences.is_comment_order_inverted)}"
-        format="${host.presenter.preferences.text_format}"
-        controller="${host.formattedTextController}"
-        onvalue-changed="${onValueChanged}"
-        data-test="add-comment-form"
-    ></tuleap-artifact-modal-followup-editor>`;
+    >
+        <tuleap-artifact-modal-followup-editor
+            format="${host.presenter.preferences.text_format}"
+            controller="${host.formattedTextController}"
+            onvalue-changed="${onValueChanged}"
+            data-test="add-comment-form"
+        ></tuleap-artifact-modal-followup-editor>
+        <div class="tlp-alert-info">${getAtMentionInfo()}</div>
+    </div>`;
 };
 
 export const getSectionClasses = (is_comment_order_inverted: boolean): MapOfClasses => ({
