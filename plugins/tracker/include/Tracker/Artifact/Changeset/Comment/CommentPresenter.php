@@ -81,7 +81,7 @@ final class CommentPresenter
         $this->user_link     = $user_helper->getLinkOnUserFromUserId((int) $comment->submitted_by);
         $this->relative_date = DateHelper::relativeDateInlineContext((int) $comment->submitted_on, $current_user);
 
-        if ($this->format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
+        if ($this->format === CommentFormatIdentifier::COMMONMARK->value) {
             $this->is_commonmark     = true;
             $this->commonmark_source = $comment->body;
         }

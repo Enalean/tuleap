@@ -20,6 +20,7 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -178,7 +179,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
             $body,
             $user,
             true,
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+            CommentFormatIdentifier::TEXT
         );
     }
 

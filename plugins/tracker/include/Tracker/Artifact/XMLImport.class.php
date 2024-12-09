@@ -493,7 +493,7 @@ class Tracker_Artifact_XMLImport
         TrackerImportConfig $tracker_xml_import_config,
     ): void {
         $initial_comment_body        = '';
-        $initial_comment_format      = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
+        $initial_comment_format      = CommentFormatIdentifier::COMMONMARK->value;
         $ugroups_for_private_comment = [];
 
         if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {

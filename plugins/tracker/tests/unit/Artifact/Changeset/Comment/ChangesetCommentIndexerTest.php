@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_Changeset_Comment;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueueEventBased;
@@ -64,7 +63,7 @@ final class ChangesetCommentIndexerTest extends TestCase
 
         $changeset = $this->createStub(Tracker_Artifact_Changeset::class);
         $changeset->method('getId')->willReturn('888');
-        $changeset_comment_dao->method('searchLastVersion')->willReturn(\TestHelper::arrayToDar(['body' => 'Some comment', 'body_format' => Tracker_Artifact_Changeset_Comment::TEXT_COMMENT]));
+        $changeset_comment_dao->method('searchLastVersion')->willReturn(\TestHelper::arrayToDar(['body' => 'Some comment', 'body_format' => CommentFormatIdentifier::TEXT->value]));
         $changeset->method('getArtifact')->willReturn($artifact);
 
         $changeset_comment_indexer->indexChangesetCommentFromChangeset($changeset);

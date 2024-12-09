@@ -79,7 +79,7 @@ class Tracker_Action_UpdateArtifact
                 $email         = ($request_email !== false) ? $request_email : null;
                 $current_user->setEmail($email);
             }
-            $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, true, $comment_format->value);
+            $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, true, $comment_format);
 
             $art_link = $this->artifact->fetchDirectLinkToArtifact();
             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Successfully Updated (%1$s)'), $art_link), CODENDI_PURIFIER_LIGHT);

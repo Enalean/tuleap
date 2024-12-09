@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
@@ -98,7 +99,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
         $send_notification = true;
 
         $this->parent->shouldReceive('createNewChangeset')
-            ->with($fields_data, Mockery::any(), Mockery::type(Tracker_Workflow_WorkflowUser::class), $send_notification, Tracker_Artifact_Changeset_Comment::HTML_COMMENT)
+            ->with($fields_data, Mockery::any(), Mockery::type(Tracker_Workflow_WorkflowUser::class), $send_notification, CommentFormatIdentifier::HTML)
             ->once();
 
         $this->rules_processor->process($this->artifact, $this->rule);

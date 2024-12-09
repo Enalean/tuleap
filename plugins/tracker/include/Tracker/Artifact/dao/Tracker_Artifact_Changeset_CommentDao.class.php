@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+
 class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject
 {
     public function __construct()
@@ -96,7 +98,7 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject
      */
     protected function extractStrippedBody($body, $body_format)
     {
-        if ($body_format === Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
+        if ($body_format === CommentFormatIdentifier::HTML->value) {
             return Codendi_HTMLPurifier::instance()->purify($body, CODENDI_PURIFIER_STRIP_HTML);
         }
 

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 use Project;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
 
@@ -48,8 +49,8 @@ class CommentRepresentationBuilder
     {
         $format = $comment->bodyFormat;
         if (
-            $format === \Tracker_Artifact_Changeset_Comment::HTML_COMMENT
-            || $format === \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+            $format === CommentFormatIdentifier::HTML->value
+            || $format === CommentFormatIdentifier::TEXT->value
         ) {
             return new HTMLOrTextCommentRepresentation(
                 $comment->body,
@@ -58,7 +59,7 @@ class CommentRepresentationBuilder
                 $this->buildMinimalUserGroupRepresentation($comment->changeset->getArtifact()->getTracker()->getProject(), $ugroups)
             );
         }
-        if ($format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
+        if ($format === CommentFormatIdentifier::COMMONMARK->value) {
             $interpreted = $this->interpreter->getInterpretedContentWithReferences(
                 $comment->body,
                 (int) $comment->changeset->getArtifact()->getTracker()->getGroupId()

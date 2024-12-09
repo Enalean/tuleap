@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset_Comment;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 
 final class ChangesetCommentTestBuilder
 {
@@ -51,7 +52,7 @@ final class ChangesetCommentTestBuilder
             101,
             1636896700,
             $this->body,
-            Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
+            CommentFormatIdentifier::COMMONMARK->value,
             1,
             null
         );
