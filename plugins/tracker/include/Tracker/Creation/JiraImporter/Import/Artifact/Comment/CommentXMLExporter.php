@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use SimpleXMLElement;
-use Tracker_Artifact_Changeset_Comment;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use XML_SimpleXMLCDATAFactory;
 
@@ -79,7 +79,7 @@ class CommentXMLExporter
             $comment_node,
             'body',
             $this->comment_xml_value_enhancer->getEnhancedValueWithCommentWriterInformation($comment_snapshot, $snapshot->getUser()),
-            ['format' => Tracker_Artifact_Changeset_Comment::HTML_COMMENT]
+            ['format' => CommentFormatIdentifier::HTML->value]
         );
     }
 }

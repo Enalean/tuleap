@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -372,7 +373,7 @@ XML;
         $this->xml_importer->shouldReceive('importBareArtifact')->andReturn($this->a_mocked_artifact);
 
         $this->a_mocked_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')
-            ->withArgs([[], Mockery::any(), $this->user, true, Tracker_Artifact_Changeset_Comment::TEXT_COMMENT])
+            ->withArgs([[], Mockery::any(), $this->user, true, CommentFormatIdentifier::TEXT])
             ->once();
 
         $this->event_manager->expects(self::once())->method('dispatch');

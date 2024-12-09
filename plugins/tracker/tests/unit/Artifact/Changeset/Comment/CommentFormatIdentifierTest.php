@@ -26,9 +26,9 @@ final class CommentFormatIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public static function generateFormats(): iterable
     {
-        yield [\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT];
-        yield [\Tracker_Artifact_Changeset_Comment::HTML_COMMENT];
-        yield [\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT];
+        yield ['text'];
+        yield ['html'];
+        yield ['commonmark'];
     }
 
     /**

@@ -20,6 +20,7 @@
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -255,7 +256,7 @@ class Tracker_Action_CopyArtifact
         Artifact $artifact,
         PFUser $user,
         Tracker_Artifact_Changeset $from_changeset,
-    ) {
+    ): void {
         $original_artifact = $from_changeset->getArtifact();
         $comment           = $this->logger->getAllLogs();
         $comment[]         = sprintf(dgettext('tuleap-tracker', 'Copy of %1$s #%2$s is finished.'), $original_artifact->getTracker()->getItemName(), $original_artifact->getId());
@@ -264,7 +265,7 @@ class Tracker_Action_CopyArtifact
             implode("\n", $comment),
             $user,
             true,
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+            CommentFormatIdentifier::TEXT
         );
     }
 

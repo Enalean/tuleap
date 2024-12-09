@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset_Comment;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 
 final class ChangesetTestBuilder
 {
@@ -90,7 +91,7 @@ final class ChangesetTestBuilder
                 (int) $changeset->getSubmittedBy(),
                 (int) $changeset->getSubmittedOn(),
                 $this->text_comment,
-                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+                CommentFormatIdentifier::TEXT->value,
                 -1,
                 null
             );

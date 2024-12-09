@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use Codendi_HTMLPurifier;
 use SimpleXMLElement;
-use Tracker_Artifact_Changeset_Comment;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 use Tuleap\User\RetrieveUserById;
@@ -116,7 +116,7 @@ final class FieldChangeArtifactLinksUpdater implements UpdateArtifactLinkXML
                 $comment_node,
                 'body',
                 implode('<br />', $comment),
-                ['format' => Tracker_Artifact_Changeset_Comment::HTML_COMMENT]
+                ['format' => CommentFormatIdentifier::HTML->value]
             );
         }
     }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+
 class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_Comment
 {
     public function __construct(Tracker_Artifact_Changeset $changeset)
@@ -30,7 +32,7 @@ class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_
             (int) $changeset->getSubmittedBy(),
             (int) $changeset->getSubmittedOn(),
             '',
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+            CommentFormatIdentifier::TEXT->value,
             -1,
             null
         );

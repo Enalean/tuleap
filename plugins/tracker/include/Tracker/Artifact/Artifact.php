@@ -45,7 +45,6 @@ use Tracker;
 use Tracker_Action_UpdateArtifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
-use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_FieldsValidator;
 use Tracker_Artifact_Changeset_IncomingMailGoldenRetriever;
@@ -1232,7 +1231,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @param string $comment The comment (follow-up) associated with the artifact update
      * @param PFUser $submitter The user who is doing the update
      * @param bool $send_notification true if a notification must be sent, false otherwise
-     * @param string $comment_format The comment (follow-up) type ("text" | "html" | "commonmark")
      *
      * @return Tracker_Artifact_Changeset|null
      * @throws Tracker_NoChangeException In the validation
@@ -1244,7 +1242,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $comment,
         PFUser $submitter,
         $send_notification = true,
-        $comment_format = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
+        CommentFormatIdentifier $comment_format = CommentFormatIdentifier::COMMONMARK,
     ) {
         $submitted_on  = $_SERVER['REQUEST_TIME'];
         $validator     = $this->getFieldValidator();
@@ -1252,7 +1250,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this,
             $fields_data,
             (string) $comment,
-            CommentFormatIdentifier::fromStringWithDefault((string) $comment_format),
+            $comment_format,
             [],
             $submitter,
             (int) $submitted_on,
@@ -1274,7 +1272,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $comment,
         PFUser $submitter,
         $send_notification,
-        $comment_format,
+        CommentFormatIdentifier $comment_format,
     ): ?Tracker_Artifact_Changeset {
         $submitted_on  = $_SERVER['REQUEST_TIME'];
         $validator     = new NewChangesetFieldsWithoutRequiredValidationValidator(
@@ -1285,7 +1283,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this,
             $fields_data,
             (string) $comment,
-            CommentFormatIdentifier::fromStringWithDefault((string) $comment_format),
+            $comment_format,
             [],
             $submitter,
             (int) $submitted_on,

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
@@ -110,7 +111,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
                 $comment,
                 $this->workflow_user,
                 true,
-                Tracker_Artifact_Changeset_Comment::HTML_COMMENT
+                CommentFormatIdentifier::HTML
             );
             $this->logger->debug('Parent successfully updated.');
         } catch (Tracker_Exception $e) {

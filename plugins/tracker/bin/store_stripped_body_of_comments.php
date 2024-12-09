@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $logger   = new Log_ConsoleLogger();
@@ -36,7 +38,7 @@ $logger->info("Found $nb comments to store");
 $values = [];
 $i      = 1;
 foreach ($dao->retrieve($sql) as $row) {
-    if ($row['body_format'] === Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
+    if ($row['body_format'] === CommentFormatIdentifier::HTML->value) {
         $stripped_body = $purifier->purify($row['body'], CODENDI_PURIFIER_STRIP_HTML);
     } else {
         $stripped_body = $row['body'];

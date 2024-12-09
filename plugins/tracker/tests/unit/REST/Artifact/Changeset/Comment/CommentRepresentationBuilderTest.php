@@ -27,6 +27,7 @@ use ProjectUGroup;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
 
@@ -52,7 +53,7 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItBuildsTextCommentRepresentation(): void
     {
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('A text comment', \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT),
+            $this->buildComment('A text comment', CommentFormatIdentifier::TEXT->value),
             new UserIsNotAllowedToSeeUGroups()
         );
         self::assertSame('text', $representation->format);
@@ -64,7 +65,7 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItBuildsTextCommentRepresentationWithPrivateUgroups(): void
     {
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('A text comment', \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT),
+            $this->buildComment('A text comment', CommentFormatIdentifier::TEXT->value),
             [$this->buildProjectUGroup()]
         );
         self::assertSame('text', $representation->format);
@@ -77,7 +78,7 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItBuildsHTMLCommentRepresentation(): void
     {
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('<p>An HTML comment</p>', \Tracker_Artifact_Changeset_Comment::HTML_COMMENT),
+            $this->buildComment('<p>An HTML comment</p>', CommentFormatIdentifier::HTML->value),
             new UserIsNotAllowedToSeeUGroups()
         );
         self::assertSame('html', $representation->format);
@@ -89,7 +90,7 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItBuildsHTMLCommentRepresentationWithPrivateComment(): void
     {
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('<p>An HTML comment</p>', \Tracker_Artifact_Changeset_Comment::HTML_COMMENT),
+            $this->buildComment('<p>An HTML comment</p>', CommentFormatIdentifier::HTML->value),
             [$this->buildProjectUGroup()]
         );
         self::assertSame('html', $representation->format);
@@ -105,7 +106,7 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             ->andReturn('<p>A <strong>CommonMark</strong> comment');
 
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('A **CommonMark** comment', \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT),
+            $this->buildComment('A **CommonMark** comment', CommentFormatIdentifier::COMMONMARK->value),
             new UserIsNotAllowedToSeeUGroups()
         );
         self::assertSame('html', $representation->format);
@@ -120,7 +121,7 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             ->andReturn('<p>A <strong>CommonMark</strong> comment');
 
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('A **CommonMark** comment', \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT),
+            $this->buildComment('A **CommonMark** comment', CommentFormatIdentifier::COMMONMARK->value),
             [$this->buildProjectUGroup()]
         );
         self::assertSame('html', $representation->format);

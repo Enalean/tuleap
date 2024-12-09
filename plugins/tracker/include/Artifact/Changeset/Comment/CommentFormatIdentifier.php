@@ -27,9 +27,9 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
  */
 enum CommentFormatIdentifier: string
 {
-    case TEXT       = \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
-    case HTML       = \Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
-    case COMMONMARK = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
+    case TEXT       = 'text';
+    case HTML       = 'html';
+    case COMMONMARK = 'commonmark';
 
     public static function fromStringWithDefault(string $format): self
     {

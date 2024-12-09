@@ -138,7 +138,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
                 $request->get('artifact_followup_comment'),
                 $current_user,
                 true,
-                $comment_format->value
+                $comment_format
             );
         } catch (Tracker_NoChangeException $e) {
         } catch (NoPossibleValueException | Tracker_Exception $e) {
