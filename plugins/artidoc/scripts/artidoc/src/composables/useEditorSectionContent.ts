@@ -26,6 +26,7 @@ export type EditorSectionContent = {
     inputSectionContent(new_title: string, new_description: string): void;
     editable_title: Ref<string>;
     editable_description: Ref<string>;
+    is_there_any_change: Ref<boolean>;
     getReadonlyDescription: () => string;
     resetContent: () => void;
 };
@@ -39,13 +40,14 @@ export function useEditorSectionContent(
     );
     const original_title = computed(() => section.value.display_title);
     const editable_title = ref(original_title.value);
+    const is_there_any_change = ref(false);
     const editable_description = ref(original_description.value);
     const readonly_description = computed(() => section.value.description.post_processed_value);
 
     const inputSectionContent = (new_title: string, new_description: string): void => {
-        const is_there_any_change =
+        is_there_any_change.value =
             new_title !== original_title.value || new_description !== original_description.value;
-        if (is_there_any_change) {
+        if (is_there_any_change.value) {
             callbacks.showActionsButtons();
         } else {
             callbacks.hideActionsButtons();
@@ -62,6 +64,7 @@ export function useEditorSectionContent(
     return {
         editable_title,
         editable_description,
+        is_there_any_change,
         getReadonlyDescription: () => readonly_description.value,
         inputSectionContent,
         resetContent,

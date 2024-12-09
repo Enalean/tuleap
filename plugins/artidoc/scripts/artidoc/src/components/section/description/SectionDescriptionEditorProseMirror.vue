@@ -47,6 +47,7 @@ const props = defineProps<{
     editable_description: string;
     upload_url: string;
     input_section_content: EditorSectionContent["inputSectionContent"];
+    is_there_any_change: boolean;
     upload_file: UseUploadFileType;
     project_id: number;
 }>();
@@ -76,14 +77,7 @@ watch(
     () => {
         if (!props.is_edit_mode) {
             resetProgressCallback();
-            if (
-                editorView.value &&
-                useEditorInstance &&
-                area_editor.value &&
-                String(
-                    area_editor.value.querySelector("artidoc-section-description")?.innerHTML,
-                ) !== props.editable_description
-            ) {
+            if (editorView.value && useEditorInstance && props.is_there_any_change) {
                 const artidoc_section = renderArtidocSectionNode(
                     props.title,
                     props.editable_description,

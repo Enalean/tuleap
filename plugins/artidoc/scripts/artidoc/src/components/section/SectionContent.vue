@@ -54,6 +54,7 @@
                 v-bind:project_id="getProjectId()"
                 v-bind:title="editable_title"
                 v-bind:input_section_content="inputSectionContent"
+                v-bind:is_there_any_change="is_there_any_change"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
@@ -115,8 +116,13 @@ const {
 } = editor.editor_state;
 const { is_in_error, is_outdated } = editor.editor_error;
 
-const { inputSectionContent, editable_title, editable_description, getReadonlyDescription } =
-    editor.editor_section_content;
+const {
+    inputSectionContent,
+    is_there_any_change,
+    editable_title,
+    editable_description,
+    getReadonlyDescription,
+} = editor.editor_section_content;
 
 function getProjectId(): number {
     if (isArtifactSection(props.section)) {

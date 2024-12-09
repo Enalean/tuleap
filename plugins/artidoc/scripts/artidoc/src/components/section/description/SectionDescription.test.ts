@@ -66,6 +66,7 @@ describe("SectionDescription", () => {
                 input_section_content: noop,
                 is_image_upload_allowed: true,
                 upload_file: UploadFileStub.uploadNotInProgress(),
+                is_there_any_change: false,
                 project_id: 101,
             },
         });

@@ -53,6 +53,7 @@ export const SectionEditorStub = {
             editable_description: ref(""),
             getReadonlyDescription: () => "",
             resetContent: noop,
+            is_there_any_change: ref(false),
         },
     }),
 

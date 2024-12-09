@@ -33,6 +33,7 @@
             v-bind:project_id="project_id"
             v-bind:title="title"
             v-bind:input_section_content="input_section_content"
+            v-bind:is_there_any_change="is_there_any_change"
             data-test="editor"
         />
     </template>
@@ -66,6 +67,7 @@ const props = withDefaults(
         upload_file: UseUploadFileType;
         project_id: number;
         input_section_content: EditorSectionContent["inputSectionContent"];
+        is_there_any_change: boolean;
     }>(),
     {
         is_print_mode: false,
