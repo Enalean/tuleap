@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
@@ -292,13 +293,20 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $html .= $this->getTimeAgo($current_user);
         $html .= '</div>';
 
-        $data_has_notifications = $tracker->isNotificationStopped() ? 'data-notifications-disabled' : '';
+        $user_preferred_format = (string) CommentFormatIdentifier::fromFormatString(
+            (string) $current_user->getPreference(\PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT)
+        );
 
         // The content
-        $html .= '<div class="tracker_artifact_followup_content" data-follow-up-content data-changeset-id="' . $purifier->purify($this->getId()) . '" data-project-id="' . $purifier->purify($project_id) . '" ' . $data_has_notifications . '>';
+        $html .= '<div class="tracker_artifact_followup_content"'
+              . ' data-follow-up-content'
+              . ' data-changeset-id="' . $purifier->purify($this->getId()) . '"'
+              . ' data-project-id="' . $purifier->purify($project_id) . '"'
+              . ($tracker->isNotificationStopped() ? ' data-notifications-disabled' : '')
+              . ' data-user-preferred-format="' . $purifier->purify($user_preferred_format) . '"'
+              .  '>';
         $html .= $follow_up_content;
         $html .= '</div>';
-
         $html .= '<div style="clear:both;"></div>';
         return $html;
     }

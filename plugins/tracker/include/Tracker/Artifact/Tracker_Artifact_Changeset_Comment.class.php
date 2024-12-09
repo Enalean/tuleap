@@ -47,7 +47,7 @@ class Tracker_Artifact_Changeset_Comment
     /**
     * @const Changeset available comment formats
     */
-    private static $available_comment_formats = [
+    private static array $available_comment_formats = [
         self::TEXT_COMMENT,
         self::HTML_COMMENT,
         self::COMMONMARK_COMMENT,
@@ -320,17 +320,12 @@ class Tracker_Artifact_Changeset_Comment
     }
 
     /**
-     * Check the comment format, to ensure it is in
-     * a known one.
-     *
-     * @param string $comment_format the format of the comment
-     *
-     * @return string $comment_format
+     * Returns $comment_format if it is valid, otherwise returns 'commonmark'
      */
-    public static function checkCommentFormat($comment_format)
+    public static function checkCommentFormat(string $comment_format): string
     {
-        if (! in_array($comment_format, self::$available_comment_formats, $strict = true)) {
-            $comment_format = self::COMMONMARK_COMMENT;
+        if (! in_array($comment_format, self::$available_comment_formats, true)) {
+            return self::COMMONMARK_COMMENT;
         }
 
         return $comment_format;

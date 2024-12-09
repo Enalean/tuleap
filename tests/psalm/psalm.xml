@@ -702,7 +702,6 @@
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/Comment/ChangesetCommentIndexerTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/Comment/CommentCreationTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/Comment/CommentCreatorTest.php"/>
-            <file name="plugins/tracker/tests/unit/Artifact/Changeset/Comment/CommentFormatIdentifierTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/Comment/CommentPresenterBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/Comment/CommentPresenterTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Changeset/Comment/NewCommentTest.php"/>

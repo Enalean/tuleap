@@ -43,6 +43,7 @@ export type InitDataFromBackend = {
     readonly changeset_id: string;
     readonly project_id: string;
     readonly are_notifications_enabled: boolean;
+    readonly user_preferred_format: TextFieldFormat;
     readonly follow_up_content: HTMLElement;
     readonly read_only_comment: HTMLElement;
 };
@@ -57,7 +58,10 @@ export type DOMAdapter = {
     findEditCommentButtons(): ReadonlyArray<HTMLElement>;
     readInitDataFromBackend(edit_button: HTMLElement): Option<InitDataFromBackend>;
     createTextArea(presenter: TextAreaPresenter): HTMLTextAreaElement;
-    readCommentFormatOrDefault(changeset_id: string): TextFieldFormat;
+    readCommentFormatOrDefault(
+        changeset_id: string,
+        default_format: TextFieldFormat,
+    ): TextFieldFormat;
     readCommentBodyOrDefault(follow_up_content: HTMLElement, format: TextFieldFormat): string;
     hide(element: HTMLElement): void;
     show(element: HTMLElement): void;
@@ -68,6 +72,11 @@ const computeNumberOfRowsShown = (comment_body: string): number => {
     const nb_rows_content = comment_body.split("\n").length;
     return Math.max(5, nb_rows_content);
 };
+
+function readUserPreferredFormat(element: HTMLElement): TextFieldFormat {
+    const format = getDatasetItemOrThrow(element, "data-user-preferred-format");
+    return isValidTextFormat(format) ? format : TEXT_FORMAT_COMMONMARK;
+}
 
 export const DOMAdapter = (doc: Document): DOMAdapter => {
     return {
@@ -99,6 +108,7 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
             const are_notifications_enabled = !follow_up_content.hasAttribute(
                 "data-notifications-disabled",
             );
+            const user_preferred_format = readUserPreferredFormat(follow_up_content);
             const read_only_comment = follow_up_content.querySelector(READ_ONLY_COMMENT_SELECTOR);
             if (!(read_only_comment instanceof HTMLElement)) {
                 return Option.nothing();
@@ -108,6 +118,7 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
                 changeset_id,
                 project_id,
                 are_notifications_enabled,
+                user_preferred_format,
                 follow_up_content,
                 read_only_comment,
             };
@@ -125,7 +136,7 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
             return textarea;
         },
 
-        readCommentFormatOrDefault(input_id): TextFieldFormat {
+        readCommentFormatOrDefault(input_id, default_format): TextFieldFormat {
             const format_input = doc.getElementById(input_id);
             if (
                 !(
@@ -134,7 +145,7 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
                 )
             ) {
                 // There is no hidden input if I'm editing a follow-up without comment
-                return TEXT_FORMAT_COMMONMARK;
+                return default_format;
             }
             return isValidTextFormat(format_input.value)
                 ? format_input.value

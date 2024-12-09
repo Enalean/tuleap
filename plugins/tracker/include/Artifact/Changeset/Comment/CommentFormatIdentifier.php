@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
  * I identify changeset comments' format.
  * @psalm-immutable
  */
-final class CommentFormatIdentifier
+final readonly class CommentFormatIdentifier implements \Stringable
 {
     private function __construct(private string $format)
     {

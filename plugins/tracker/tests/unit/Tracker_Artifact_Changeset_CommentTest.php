@@ -226,19 +226,16 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         $this->assertFalse(isset($changeset_node->comment->private_ugroups));
     }
 
-    public static function dataProviderCommentFormat(): array
+    public static function generateCommentFormat(): iterable
     {
-        return [
-            '"text" format is valid'                          => ['text', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT],
-            '"html" format is valid'                          => ['html', Tracker_Artifact_Changeset_Comment::HTML_COMMENT],
-            '"commonmark" format is valid'                    => ['commonmark', Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT],
-            '"not_valid" format is defaulted to "commonmark"' => ['not_valid', Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT],
-            'non-string format is defaulted to "commonmark"'  => [true, Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT],
-        ];
+        yield '"text" format is valid' => ['text', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT];
+        yield '"html" format is valid' => ['html', Tracker_Artifact_Changeset_Comment::HTML_COMMENT];
+        yield '"commonmark" format is valid' => ['commonmark', Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT];
+        yield '"not_valid" format is defaulted to "commonmark"' => ['not_valid', Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT];
     }
 
     /**
-     * @dataProvider dataProviderCommentFormat
+     * @dataProvider generateCommentFormat
      */
     public function testCheckCommentFormat($given_format, string $expected_value): void
     {

@@ -830,12 +830,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * Returns HTML code to display the artifact history
      *
      * @param Codendi_Request $request The data from the user
-     *
-     * @return String The valid followup comment format
      */
-    public function validateCommentFormat($request, $comment_format_field_name)
+    public function validateCommentFormat(Codendi_Request $request, string $comment_format_field_name): string
     {
-        $comment_format = $request->get($comment_format_field_name);
+        $comment_format = (string) $request->get($comment_format_field_name);
 
         return Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
     }
