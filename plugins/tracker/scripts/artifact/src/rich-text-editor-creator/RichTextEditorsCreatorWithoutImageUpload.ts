@@ -19,6 +19,7 @@
  */
 
 import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import { initMentions } from "@tuleap/mention";
 
 export class RichTextEditorsCreatorWithoutImageUpload {
     constructor(
@@ -34,8 +35,17 @@ export class RichTextEditorsCreatorWithoutImageUpload {
 
         const options = {
             format_selectbox_id: "mass_change",
+            onEditorDataReady: (ckeditor: CKEDITOR.editor): void => {
+                if (!ckeditor.document) {
+                    return;
+                }
+                const ckeditor_document = ckeditor.document.getBody().$;
+                ckeditor_document.contentEditable = "true";
+                initMentions(ckeditor_document);
+            },
         };
 
+        initMentions(follow_up_textarea);
         this.editor_factory.createRichTextEditor(follow_up_textarea, options);
     }
 }

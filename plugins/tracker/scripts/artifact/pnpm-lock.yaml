@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../../lib/frontend/list-picker
+  '@tuleap/mention':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/mention
   '@tuleap/option':
     specifier: workspace:^
     version: link:../../../../lib/frontend/option
@@ -46,6 +49,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@types/ckeditor':
+    specifier: 4.9.10
+    version: 4.9.10
   '@types/dompurify':
     specifier: ^3.0.5
     version: 3.0.5
@@ -54,6 +60,10 @@ devDependencies:
     version: 3.5.5
 
 packages:
+
+  /@types/ckeditor@4.9.10:
+    resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
+    dev: true
 
   /@types/dompurify@3.0.5:
     resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
