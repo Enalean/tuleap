@@ -1540,7 +1540,8 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     }
 }
 
-.masschange-tracker-artifact {
+.masschange-tracker-artifact,
+.masschange-followup-comment {
     width: 100%;
     max-width: 960px;
 }

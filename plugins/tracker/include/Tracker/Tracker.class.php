@@ -1599,7 +1599,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $masschange_aids,
                 $this->fetchFormElementsMasschange(),
                 $this->displayRulesAsJavascript(),
-                $event->getExternalActions()
+                $event->getExternalActions(),
+                ! $this->isNotificationStopped(),
             )
         );
 
