@@ -20,6 +20,12 @@
 
 import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreatorWithoutImageUpload } from "./RichTextEditorsCreatorWithoutImageUpload";
+import * as mentions from "@tuleap/mention";
+
+// Mock @tuleap/mention because it needs jquery in tests
+jest.mock("@tuleap/mention", () => {
+    return { initMentions: jest.fn() };
+});
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
@@ -49,6 +55,7 @@ describe(`RichTextEditorsCreatorWithoutImageUpload`, () => {
             );
             creator.createTextFieldEditorForMassChange();
             expect(editor_factory.createRichTextEditor).toHaveBeenCalled();
+            expect(mentions.initMentions).toHaveBeenCalled();
         });
     });
 });
