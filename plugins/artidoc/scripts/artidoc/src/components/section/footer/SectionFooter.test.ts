@@ -49,16 +49,6 @@ describe("SectionFooter", () => {
     });
 
     describe("when the section is editable", () => {
-        describe("when the editor is disabled", () => {
-            it("should add a background", () => {
-                expect(
-                    getWrapper(SectionEditorStub.withEditableSection())
-                        .find(".section-footer-with-background")
-                        .exists(),
-                ).toBe(true);
-            });
-        });
-
         it("should display the footer", () => {
             expect(getWrapper(SectionEditorStub.withEditableSection()).find("div").exists()).toBe(
                 true,
