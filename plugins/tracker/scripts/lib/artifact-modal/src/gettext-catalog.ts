@@ -165,3 +165,7 @@ export const getAtMentionInfo = (): string =>
     gettextCatalog.getString(
         "When you use @ to mention someone, they will get an email notification.",
     );
+export const getAtMentionWarning = (): string =>
+    gettextCatalog.getString(
+        "This tracker's notifications are disabled, when you use @ to mention someone, no email will be sent.",
+    );

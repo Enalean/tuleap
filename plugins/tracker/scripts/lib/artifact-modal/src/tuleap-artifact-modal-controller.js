@@ -156,19 +156,22 @@ function ArtifactModalController(
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(event_dispatcher),
-        comments_controller: CommentsController(
-            api_client,
-            event_dispatcher,
-            current_artifact_option.unwrapOr(null), // It is not built in creation mode
-            {
-                locale: modal_model.user_locale,
-                date_time_format: modal_model.user_date_time_format,
-                relative_dates_display: modal_model.relative_dates_display,
-                is_comment_order_inverted: modal_model.invert_followups_comments_order,
-                is_allowed_to_add_comment: isNotAnonymousUser(),
-                text_format: modal_model.text_fields_format,
-            },
-        ),
+        getCommentsController: () => {
+            return CommentsController(
+                api_client,
+                event_dispatcher,
+                current_artifact_option.unwrapOr(null), // It is not built in creation mode
+                {
+                    locale: modal_model.user_locale,
+                    date_time_format: modal_model.user_date_time_format,
+                    relative_dates_display: modal_model.relative_dates_display,
+                    is_comment_order_inverted: modal_model.invert_followups_comments_order,
+                    is_allowed_to_add_comment: isNotAnonymousUser(),
+                    are_mentions_effective: modal_model.are_mentions_effective,
+                    text_format: modal_model.text_fields_format,
+                },
+            );
+        },
         getLinkFieldController: (field) => {
             return LinkFieldController(
                 LinksRetriever(
@@ -324,13 +327,7 @@ function ArtifactModalController(
     }
 
     function getTitle() {
-        if (modal_model.title === null) {
-            return "";
-        }
-
-        const is_title_a_text_field = typeof modal_model.title.content !== "undefined";
-
-        return is_title_a_text_field ? modal_model.title.content : modal_model.title;
+        return modal_model.title ?? "";
     }
 
     function isNotAnonymousUser() {

@@ -41,13 +41,15 @@ interface ParentTracker {
     readonly id: number;
 }
 
-interface TrackerStructure {
+export interface TrackerStructure {
+    readonly id: number;
     readonly item_name: string;
     readonly color_name: ColorName;
     readonly project: TrackerProject;
     readonly parent: ParentTracker | null;
     readonly workflow: Workflow;
     readonly fields: ReadonlyArray<unknown>;
+    readonly are_mentions_effective: boolean;
 }
 
 export type ETagValue = string | null;
@@ -55,8 +57,7 @@ export type LastModifiedTimestamp = string | null;
 
 export interface CurrentArtifactWithTrackerStructure {
     readonly id: number;
-    readonly title: string | { readonly content: string };
-    readonly tracker_id: number;
+    readonly title: string | null;
     readonly tracker: TrackerStructure;
     readonly values: ReadonlyArray<unknown>;
     readonly etag: ETagValue;

@@ -21,6 +21,7 @@ import type { UpdateFunction } from "hybrids";
 import { define, dispatch, html } from "hybrids";
 import {
     getAtMentionInfo,
+    getAtMentionWarning,
     getChangesetsCommentMessage,
     getCommentsSectionTitle,
     getEmptyCommentsMessage,
@@ -59,7 +60,9 @@ const getNewCommentTemplate = (
             onvalue-changed="${onValueChanged}"
             data-test="add-comment-form"
         ></tuleap-artifact-modal-followup-editor>
-        <div class="tlp-alert-info">${getAtMentionInfo()}</div>
+        ${host.presenter.preferences.are_mentions_effective
+            ? html`<p class="tlp-text-info">${getAtMentionInfo()}</p>`
+            : html`<p class="tlp-text-warning">${getAtMentionWarning()}</p>`}
     </div>`;
 };
 

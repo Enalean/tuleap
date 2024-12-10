@@ -27,5 +27,6 @@ export type CommentUserPreferences = {
     readonly locale: LocaleString;
     readonly relative_dates_display: RelativeDatesDisplayPreference;
     readonly is_allowed_to_add_comment: boolean;
+    readonly are_mentions_effective: boolean;
     readonly text_format: TextFieldFormat;
 };

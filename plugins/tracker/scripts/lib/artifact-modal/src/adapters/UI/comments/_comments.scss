@@ -56,7 +56,6 @@
     flex-direction: column;
     order: 3;
     margin: var(--tlp-x-large-spacing) 0 0;
-    gap: var(--tlp-medium-spacing);
 
     &.invert-order {
         order: 1;
