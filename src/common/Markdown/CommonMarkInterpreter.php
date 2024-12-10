@@ -41,7 +41,11 @@ final class CommonMarkInterpreter implements ContentInterpretor
 
     public static function build(Codendi_HTMLPurifier $html_purifier, ExtensionInterface ...$extensions): self
     {
-        $environment = new Environment(['max_nesting_level' => 10]);
+        $environment = new Environment([
+            'max_nesting_level' => 10,
+            'max_delimiters_per_line' => 500, // Used to prevent a DoS, see https://github.com/thephpleague/commonmark/security/advisories/GHSA-c2pc-g5qf-rfrf
+
+        ]);
         $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension(new AutolinkExtension());
         $environment->addExtension(new TableTLPExtension());
