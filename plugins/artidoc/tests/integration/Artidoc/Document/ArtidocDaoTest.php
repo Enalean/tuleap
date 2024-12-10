@@ -23,12 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DBFactory;
@@ -50,144 +56,212 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSearchPaginatedRawSectionsById(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $identifier_factory = $this->getSectionIdentifierFactory();
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
+
+        $introduction_id = $this->getFreetextIdentifierFactory()->buildIdentifier()->getBytes();
+        $db->insert(
+            'plugin_artidoc_section_freetext',
+            [
+                'id'          => $introduction_id,
+                'title'       => 'Introduction',
+                'description' => 'Lorem ipsum',
+            ]
+        );
+        $requirements_id = $this->getFreetextIdentifierFactory()->buildIdentifier()->getBytes();
+        $db->insert(
+            'plugin_artidoc_section_freetext',
+            [
+                'id'          => $requirements_id,
+                'title'       => 'Requirements',
+                'description' => '',
+            ]
+        );
+
         $db->insertMany('plugin_artidoc_document', [
             [
                 'id'          => $identifier_factory->buildIdentifier()->getBytes(),
                 'item_id'     => $this->artidoc_101->document->getId(),
                 'artifact_id' => 1001,
+                'freetext_id' => null,
                 'rank'        => 1,
             ],
             [
                 'id'          => $identifier_factory->buildIdentifier()->getBytes(),
                 'item_id'     => $this->artidoc_102->document->getId(),
-                'artifact_id' => 1001,
+                'artifact_id' => null,
+                'freetext_id' => $introduction_id,
+                'rank'        => 1,
+            ],
+            [
+                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
+                'item_id'     => $this->artidoc_102->document->getId(),
+                'artifact_id' => null,
+                'freetext_id' => $requirements_id,
                 'rank'        => 2,
             ],
             [
                 'id'          => $identifier_factory->buildIdentifier()->getBytes(),
                 'item_id'     => $this->artidoc_102->document->getId(),
+                'artifact_id' => 1001,
+                'freetext_id' => null,
+                'rank'        => 4,
+            ],
+            [
+                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
+                'item_id'     => $this->artidoc_102->document->getId(),
                 'artifact_id' => 2001,
-                'rank'        => 1,
+                'freetext_id' => null,
+                'rank'        => 3,
             ],
             [
                 'id'          => $identifier_factory->buildIdentifier()->getBytes(),
                 'item_id'     => $this->artidoc_101->document->getId(),
                 'artifact_id' => 1003,
+                'freetext_id' => null,
                 'rank'        => 3,
             ],
             [
                 'id'          => $identifier_factory->buildIdentifier()->getBytes(),
                 'item_id'     => $this->artidoc_101->document->getId(),
                 'artifact_id' => 1002,
+                'freetext_id' => null,
                 'rank'        => 2,
             ],
             [
                 'id'          => $identifier_factory->buildIdentifier()->getBytes(),
                 'item_id'     => $this->artidoc_101->document->getId(),
                 'artifact_id' => 1004,
+                'freetext_id' => null,
                 'rank'        => 4,
             ],
         ]);
 
-        $dao = new ArtidocDao($identifier_factory);
+        $dao = new ArtidocDao($identifier_factory, $this->getFreetextIdentifierFactory());
 
         self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->total);
         self::assertSame(
             [1001, 1002, 1003, 1004],
-            array_column($dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows, 'artifact_id'),
+            array_map(
+                static fn (RawSection $raw_section) => $raw_section->content->artifact_id->unwrapOr(null),
+                $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows,
+            ),
         );
 
         self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->total);
         self::assertSame(
             [1002, 1003],
-            array_column($dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->rows, 'artifact_id'),
+            array_map(
+                static fn (RawSection $raw_section) => $raw_section->content->artifact_id->unwrapOr(null),
+                $dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->rows,
+            ),
         );
 
-        self::assertSame(2, $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->total);
-        self::assertSame(
-            [2001, 1001],
-            array_column($dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->rows, 'artifact_id'),
+        $sections_in_artidoc_102 = $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0);
+        self::assertSame(4, $sections_in_artidoc_102->total);
+        self::assertTrue($sections_in_artidoc_102->rows[0]->content->freetext->isValue());
+        $sections_in_artidoc_102->rows[0]->content->freetext->apply(
+            static fn (RawSectionContentFreetext $freetext) => self::assertSame('Introduction', $freetext->content->title),
         );
+        self::assertTrue($sections_in_artidoc_102->rows[1]->content->freetext->isValue());
+        $sections_in_artidoc_102->rows[1]->content->freetext->apply(
+            static fn (RawSectionContentFreetext $freetext) => self::assertSame('Requirements', $freetext->content->title),
+        );
+        self::assertSame(2001, $sections_in_artidoc_102->rows[2]->content->artifact_id->unwrapOr(null));
+        self::assertSame(1001, $sections_in_artidoc_102->rows[3]->content->artifact_id->unwrapOr(null));
 
         self::assertSame(0, $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->total);
         self::assertSame(
             [],
-            array_column($dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->rows, 'artifact_id'),
+            array_map(
+                static fn (RawSection $raw_section) => $raw_section->content->artifact_id->unwrapOr(null),
+                $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->rows,
+            ),
         );
     }
 
-    private function createArtidocSections(ArtidocDao $dao, ArtidocWithContext $artidoc, array $artifact_ids): void
+    private function createArtidocSections(ArtidocDao $dao, ArtidocWithContext $artidoc, array $content): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $artidoc->document->getId());
 
-        foreach ($artifact_ids as $artifact_id) {
-            $dao->saveSectionAtTheEnd($artidoc, $artifact_id);
+        foreach ($content as $content_to_insert) {
+            $dao->saveSectionAtTheEnd($artidoc, $content_to_insert);
         }
+    }
+
+    private function getArtifactIdsToInsert(int ...$artifact_ids): array
+    {
+        return array_map(
+            static fn ($id) => ContentToInsert::fromArtifactId($id),
+            $artifact_ids,
+        );
     }
 
     public function testCloneItem(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
-        $this->createArtidocSections($dao, $this->artidoc_101, [1001]);
-        $this->createArtidocSections($dao, $this->artidoc_102, [2001, 1001]);
+        $db  = DBFactory::getMainTuleapDBConnection()->getDB();
+        $dao = $this->getDao();
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001));
+        $this->createArtidocSections($dao, $this->artidoc_102, [
+            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum')),
+            ContentToInsert::fromFreetext(new FreetextContent('Requirements', '')),
+            ContentToInsert::fromArtifactId(2001),
+            ContentToInsert::fromArtifactId(1001),
+        ]);
         $dao->saveTracker($this->artidoc_102->document->getId(), 10001);
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_103, []);
+        $this->assertSectionsForDocument($dao, $this->artidoc_103, []);
+        self::assertSame(2, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
 
         $dao->cloneItem($this->artidoc_102->document->getId(), $this->artidoc_103->document->getId());
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [2001, 1001]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_103, [2001, 1001]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, ['Introduction', 'Requirements', 2001, 1001]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_103, ['Introduction', 'Requirements', 2001, 1001]);
+        self::assertSame(4, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
 
         self::assertSame(10001, $dao->getTracker($this->artidoc_103->document->getId()));
     }
 
     public function testCloneItemForEmptyDocument(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
-        $this->createArtidocSections($dao, $this->artidoc_101, []);
+        $dao = $this->getDao();
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert());
         $dao->saveTracker($this->artidoc_101->document->getId(), 10001);
 
         $dao->cloneItem($this->artidoc_101->document->getId(), $this->artidoc_103->document->getId());
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, []);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_103, []);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, []);
+        $this->assertSectionsForDocument($dao, $this->artidoc_103, []);
 
         self::assertSame(10001, $dao->getTracker($this->artidoc_103->document->getId()));
     }
 
     public function testSave(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
-        $this->createArtidocSections($dao, $this->artidoc_101, [1001, 1002, 1003]);
+        $dao = $this->getDao();
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002, 1003]);
 
-        $this->createArtidocSections($dao, $this->artidoc_102, [1001, 1003]);
+        $this->createArtidocSections($dao, $this->artidoc_102, $this->getArtifactIdsToInsert(1001, 1003));
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001, 1002, 1003]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1001, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1003]);
 
-        $this->createArtidocSections($dao, $this->artidoc_101, []);
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert());
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, []);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1001, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, []);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1003]);
     }
 
     public function testSearchSectionById(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
-        $this->createArtidocSections($dao, $this->artidoc_101, [1001, 1002, 1003]);
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
         $rows = $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows;
 
         foreach ($rows as $row) {
@@ -195,7 +269,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
                 function (RawSection $section) use ($row) {
                     self::assertNotNull($section);
                     self::assertSame($row->id->toString(), $section->id->toString());
-                    self::assertSame($row->artifact_id, $section->artifact_id);
+                    self::assertSame($row->content->artifact_id->unwrapOr(null), $section->content->artifact_id->unwrapOr(null));
                     self::assertSame(101, $section->item_id);
                 },
                 function () {
@@ -205,14 +279,13 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         }
 
         $first_section_id = $rows[0]->id;
-        $this->createArtidocSections($dao, $this->artidoc_101, []);
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert());
         self::assertTrue(Result::isErr($dao->searchSectionById($first_section_id)));
     }
 
     public function testSaveTracker(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
         self::assertNull($dao->getTracker($this->artidoc_101->document->getId()));
 
@@ -225,125 +298,215 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
     public function testSaveSectionAtTheEnd(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
-        $dao->saveSectionAtTheEnd($this->artidoc_101, 1001);
-        $dao->saveSectionAtTheEnd($this->artidoc_101, 1002);
-        $dao->saveSectionAtTheEnd($this->artidoc_102, 1003);
-        $dao->saveSectionAtTheEnd($this->artidoc_101, 1004);
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1001),
+        );
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1002),
+        );
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_102,
+            ContentToInsert::fromArtifactId(1003),
+        );
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1004),
+        );
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001, 1002, 1004]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002, 1004]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1003]);
     }
 
     public function testSaveAlreadyExistingSectionAtTheEnd(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
-        $dao->saveSectionAtTheEnd($this->artidoc_101, 1001);
-        $dao->saveSectionAtTheEnd($this->artidoc_101, 1002);
-        $dao->saveSectionAtTheEnd($this->artidoc_102, 1003);
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1001),
+        );
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1002),
+        );
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_102,
+            ContentToInsert::fromArtifactId(1003),
+        );
 
         $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
-        $dao->saveSectionAtTheEnd($this->artidoc_101, 1001);
+        $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1001),
+        );
     }
 
     public function testSaveSectionBefore(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
         [$uuid_1, $uuid_2, $uuid_3] = [
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1001),
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1002),
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1003),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1001),
+            ),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1002),
+            ),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1003),
+            ),
         ];
 
-        $dao->saveSectionBefore($this->artidoc_101, 1004, $uuid_1);
-        $dao->saveSectionBefore($this->artidoc_101, 1005, $uuid_2);
-        $dao->saveSectionBefore($this->artidoc_101, 1006, $uuid_3);
+        $dao->saveSectionBefore(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1004),
+            $uuid_1,
+        );
+        $dao->saveSectionBefore(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1005),
+            $uuid_2,
+        );
+        $dao->saveSectionBefore(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1006),
+            $uuid_3,
+        );
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1004, 1001, 1005, 1002, 1006, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1004, 1001, 1005, 1002, 1006, 1003]);
     }
 
-    public function testSaveAlreadyExistingSectionBefore(): void
+    public function testSaveAlreadyExistingArtifactSectionBefore(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
         [$uuid_1] = [
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1001),
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1002),
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1003),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1001),
+            ),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1002),
+            ),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1003),
+            ),
         ];
 
         $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
-        $dao->saveSectionBefore($this->artidoc_101, 1003, $uuid_1);
+        $dao->saveSectionBefore(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1003),
+            $uuid_1,
+        );
     }
 
     public function testSaveSectionBeforeUnknownSectionWillRaiseAnException(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
         [, $uuid_2] = [
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1001),
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1002),
-            $dao->saveSectionAtTheEnd($this->artidoc_101, 1003),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1001),
+            ),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1002),
+            ),
+            $dao->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1003),
+            ),
         ];
 
         // remove section linked to artifact #1002
-        $this->createArtidocSections($dao, $this->artidoc_101, [1001, 1003]);
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1003));
 
         $this->expectException(UnableToFindSiblingSectionException::class);
-        $dao->saveSectionBefore($this->artidoc_101, 1004, $uuid_2);
+        $dao->saveSectionBefore(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1004),
+            $uuid_2,
+        );
     }
 
     public function testDeleteSectionsByArtifactId(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
-        $this->createArtidocSections($dao, $this->artidoc_101, [1001, 1002, 1003]);
-        $this->createArtidocSections($dao, $this->artidoc_102, [1002, 1003, 1004]);
-        $this->createArtidocSections($dao, $this->artidoc_103, [1003]);
+        $dao = $this->getDao();
+        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
+        $this->createArtidocSections($dao, $this->artidoc_102, $this->getArtifactIdsToInsert(1002, 1003, 1004));
+        $this->createArtidocSections($dao, $this->artidoc_103, $this->getArtifactIdsToInsert(1003));
 
         $dao->deleteSectionsByArtifactId(1003);
         $dao->deleteSectionsByArtifactId(1005);
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001, 1002]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1002, 1004]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_103, []);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1002, 1004]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_103, []);
     }
 
     public function testDeleteSectionsById(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
-        $uuid_1 = $dao->saveSectionAtTheEnd($this->artidoc_101, 1001);
-        $uuid_2 = $dao->saveSectionAtTheEnd($this->artidoc_101, 1002);
-        $uuid_3 = $dao->saveSectionAtTheEnd($this->artidoc_101, 1003);
+        $uuid_1 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1001),
+        );
+        $uuid_2 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1002),
+        );
+        $uuid_3 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1003),
+        );
 
         $dao->deleteSectionById($uuid_2);
 
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1003]);
     }
 
     public function testReorderSections(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
-        $uuid_1 = $dao->saveSectionAtTheEnd($this->artidoc_101, 1001);
-        $uuid_2 = $dao->saveSectionAtTheEnd($this->artidoc_101, 1002);
-        $uuid_3 = $dao->saveSectionAtTheEnd($this->artidoc_101, 1003);
-        $uuid_4 = $dao->saveSectionAtTheEnd($this->artidoc_102, 1001);
-        $uuid_5 = $dao->saveSectionAtTheEnd($this->artidoc_102, 1002);
-        $uuid_6 = $dao->saveSectionAtTheEnd($this->artidoc_102, 1003);
+        $uuid_1 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1001),
+        );
+        $uuid_2 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1002),
+        );
+        $uuid_3 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1003),
+        );
+        $uuid_4 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_102,
+            ContentToInsert::fromArtifactId(1001),
+        );
+        $uuid_5 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_102,
+            ContentToInsert::fromArtifactId(1002),
+        );
+        $uuid_6 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_102,
+            ContentToInsert::fromArtifactId(1003),
+        );
 
-        $order_builder = new SectionOrderBuilder($identifier_factory);
+        $order_builder = new SectionOrderBuilder($this->getSectionIdentifierFactory());
 
         // "before", at the beginning
         $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
@@ -353,8 +516,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1002, 1001, 1003]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1002, 1001, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
 
         // "before", in the middle
         $order = $order_builder->build([$uuid_3->toString()], 'before', $uuid_1->toString());
@@ -364,8 +527,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1002, 1003, 1001]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1002, 1003, 1001]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
 
         // "after", at the end
         $order = $order_builder->build([$uuid_2->toString()], 'after', $uuid_1->toString());
@@ -375,8 +538,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1003, 1001, 1002]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1003, 1001, 1002]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
 
         // "after", in the middle
         $order = $order_builder->build([$uuid_3->toString()], 'after', $uuid_1->toString());
@@ -386,19 +549,24 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001, 1003, 1002]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1003, 1002]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
     }
 
     public function testExceptionWhenReorderSectionsOutsideOfDocument(): void
     {
-        $identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $dao = $this->getDao();
 
-        $uuid_1 = $dao->saveSectionAtTheEnd($this->artidoc_101, 1001);
-        $uuid_2 = $dao->saveSectionAtTheEnd($this->artidoc_102, 1002);
+        $uuid_1 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_101,
+            ContentToInsert::fromArtifactId(1001),
+        );
+        $uuid_2 = $dao->saveSectionAtTheEnd(
+            $this->artidoc_102,
+            ContentToInsert::fromArtifactId(1002),
+        );
 
-        $order_builder = new SectionOrderBuilder($identifier_factory);
+        $order_builder = new SectionOrderBuilder($this->getSectionIdentifierFactory());
 
         $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
@@ -408,8 +576,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         );
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(UnknownSectionToMoveFault::class, $result->error);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1002]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1002]);
 
         $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
@@ -419,21 +587,51 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         );
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(UnableToReorderSectionOutsideOfDocumentFault::class, $result->error);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_101, [1001]);
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $this->artidoc_102, [1002]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001]);
+        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1002]);
     }
 
     /**
-     * @param list<int> $artifact_ids
+     * @param list<int|string> $content
      */
-    private function assertSectionsMatchArtifactIdsForDocument(
+    private function assertSectionsForDocument(
         ArtidocDao $dao,
         ArtidocWithContext $artidoc,
-        array $artifact_ids,
+        array $content,
     ): void {
         $paginated_raw_sections = $dao->searchPaginatedRawSections($artidoc, 50, 0);
 
-        self::assertSame(count($artifact_ids), $paginated_raw_sections->total);
-        self::assertSame($artifact_ids, array_column($paginated_raw_sections->rows, 'artifact_id'));
+        self::assertSame(count($content), $paginated_raw_sections->total);
+        self::assertSame($content, array_map(
+            static fn (RawSection $raw_section) => $raw_section->content->artifact_id->match(
+                static fn (int $artifact_id) => $artifact_id,
+                static fn () => $raw_section->content->freetext->match(
+                    static fn (RawSectionContentFreetext $freetext) => $freetext->content->title,
+                    static fn () => throw new \LogicException('Section is neither an artifact nor a freetext, this is not expected'),
+                ),
+            ),
+            $paginated_raw_sections->rows,
+        ));
+    }
+
+    private function getDao(): ArtidocDao
+    {
+        return new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
+    }
+
+    /**
+     * @return UUIDSectionIdentifierFactory
+     */
+    private function getSectionIdentifierFactory(): SectionIdentifierFactory
+    {
+        return new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+    }
+
+    /**
+     * @return UUIDFreetextIdentifierFactory
+     */
+    private function getFreetextIdentifierFactory(): FreetextIdentifierFactory
+    {
+        return new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
     }
 }

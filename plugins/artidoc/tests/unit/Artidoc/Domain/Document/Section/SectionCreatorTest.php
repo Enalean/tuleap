@@ -55,7 +55,7 @@ final class SectionCreatorTest extends TestCase
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
-        $handler = new SectionCreator(
+        $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
@@ -65,7 +65,7 @@ final class SectionCreatorTest extends TestCase
             $collector,
         );
 
-        $result = $handler->create(
+        $result = $creator->create(
             1,
             101,
             Option::nothing(SectionIdentifier::class),
@@ -74,7 +74,7 @@ final class SectionCreatorTest extends TestCase
         self::assertTrue(Result::isOk($result));
         self::assertTrue($saver->isSaved(1));
         self::assertTrue($collector->isCalled());
-        self::assertSame(101, $saver->getSavedEndForId(1));
+        self::assertSame(101, $saver->getSavedEndForId(1)->artifact_id->unwrapOr(null));
         self::assertSame(self::NEW_SECTION_ID, $result->value->toString());
     }
 
@@ -83,7 +83,7 @@ final class SectionCreatorTest extends TestCase
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
-        $handler = new SectionCreator(
+        $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
@@ -93,7 +93,7 @@ final class SectionCreatorTest extends TestCase
             $collector,
         );
 
-        $result = $handler->create(
+        $result = $creator->create(
             1,
             101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
@@ -102,7 +102,7 @@ final class SectionCreatorTest extends TestCase
         self::assertTrue(Result::isOk($result));
         self::assertTrue($saver->isSaved(1));
         self::assertTrue($collector->isCalled());
-        self::assertSame(101, $saver->getSavedBeforeForId(1));
+        self::assertSame(101, $saver->getSavedBeforeForId(1)->artifact_id->unwrapOr(null));
         self::assertSame(self::NEW_SECTION_ID, $result->value->toString());
     }
 
@@ -111,7 +111,7 @@ final class SectionCreatorTest extends TestCase
         $saver     = SaveOneSectionStub::withUnableToFindSiblingSection(self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
-        $handler = new SectionCreator(
+        $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
@@ -121,7 +121,7 @@ final class SectionCreatorTest extends TestCase
             $collector,
         );
 
-        $result = $handler->create(
+        $result = $creator->create(
             1,
             101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
@@ -150,7 +150,7 @@ final class SectionCreatorTest extends TestCase
         $saver     = SaveOneSectionStub::withAlreadyExistingSectionWithSameArtifact(self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
-        $handler = new SectionCreator(
+        $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
@@ -160,7 +160,7 @@ final class SectionCreatorTest extends TestCase
             $collector,
         );
 
-        $result = $handler->create(
+        $result = $creator->create(
             1,
             $artifact_id,
             $before_section_id === null
@@ -178,7 +178,7 @@ final class SectionCreatorTest extends TestCase
         $saver     = SaveOneSectionStub::withAlreadyExistingSectionWithSameArtifact(self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withoutRequiredInformation();
 
-        $handler = new SectionCreator(
+        $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
@@ -188,7 +188,7 @@ final class SectionCreatorTest extends TestCase
             $collector,
         );
 
-        $result = $handler->create(
+        $result = $creator->create(
             1,
             101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
@@ -203,13 +203,13 @@ final class SectionCreatorTest extends TestCase
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
-        $handler = new SectionCreator(
+        $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withoutDocument(),
             $saver,
             $collector,
         );
 
-        $result = $handler->create(
+        $result = $creator->create(
             1,
             101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
@@ -224,7 +224,7 @@ final class SectionCreatorTest extends TestCase
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
-        $handler = new SectionCreator(
+        $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
@@ -234,7 +234,7 @@ final class SectionCreatorTest extends TestCase
             $collector,
         );
 
-        $result = $handler->create(
+        $result = $creator->create(
             1,
             101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),

@@ -47,7 +47,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
             ->andThen(fn (array $artifacts) => $this->instantiateSections($raw_sections->artidoc, $artifacts, $user))
             ->map(
                 /**
-                 * @param list<ArtidocSectionRepresentation> $sections
+                 * @param list<ArtifactSectionRepresentation> $sections
                  */
                 static fn (array $sections) => new PaginatedArtidocSectionRepresentationCollection($sections, $raw_sections->total)
             );
@@ -61,8 +61,10 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
         $identifiers  = [];
         $artifact_ids = [];
         foreach ($raw_sections->rows as $row) {
-            $artifact_ids[]                 = $row->artifact_id;
-            $identifiers[$row->artifact_id] = $row->id;
+            $row->content->artifact_id->apply(static function ($artifact_id) use ($row, &$identifiers, &$artifact_ids) {
+                $artifact_ids[]            = $artifact_id;
+                $identifiers[$artifact_id] = $row->id;
+            });
         }
         if (count($artifact_ids) === 0) {
             return Result::ok([]);
@@ -92,7 +94,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
 
     /**
      * @param list<array{artifact: Artifact, section_identifier: SectionIdentifier}> $artifacts
-     * @return Ok<list<ArtidocSectionRepresentation>>|Err<Fault>
+     * @return Ok<list<ArtifactSectionRepresentation>>|Err<Fault>
      */
     private function instantiateSections(ArtidocWithContext $artidoc, array $artifacts, \PFUser $user): Ok|Err
     {

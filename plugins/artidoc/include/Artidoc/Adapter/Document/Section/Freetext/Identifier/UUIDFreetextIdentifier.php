@@ -20,14 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier;
 
-final readonly class PaginatedArtidocSectionRepresentationCollection
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
+use Tuleap\DB\UUID;
+
+final readonly class UUIDFreetextIdentifier implements FreetextIdentifier
 {
-    /**
-     * @param list<ArtifactSectionRepresentation> $sections
-     */
-    public function __construct(public array $sections, public int $total)
+    private function __construct(private UUID $uuid)
     {
+    }
+
+    /**
+     * @psalm-internal Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier
+     */
+    public static function fromUUID(UUID $uuid): self
+    {
+        return new self($uuid);
+    }
+
+    public function getBytes(): string
+    {
+        return $this->uuid->getBytes();
+    }
+
+    public function toString(): string
+    {
+        return $this->uuid->toString();
     }
 }

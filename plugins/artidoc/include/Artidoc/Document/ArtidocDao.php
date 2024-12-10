@@ -31,7 +31,10 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
+use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\DeleteOneSection;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
@@ -48,8 +51,10 @@ use Tuleap\NeverThrow\Result;
 
 final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
 {
-    public function __construct(private readonly SectionIdentifierFactory $identifier_factory)
-    {
+    public function __construct(
+        private readonly SectionIdentifierFactory $section_identifier_factory,
+        private readonly FreetextIdentifierFactory $freetext_identifier_factory,
+    ) {
         parent::__construct();
     }
 
@@ -74,9 +79,17 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
     {
         $row = $this->getDB()->row(
             <<<EOS
-            SELECT *
-            FROM plugin_artidoc_document
-            WHERE id = ?
+            SELECT section.id,
+                   section.item_id,
+                   section.artifact_id,
+                   freetext.id AS freetext_id,
+                   freetext.title AS freetext_title,
+                   freetext.description AS freetext_description,
+                   section.`rank`
+            FROM plugin_artidoc_document AS section
+                LEFT JOIN plugin_artidoc_section_freetext AS freetext
+                    ON (section.freetext_id = freetext.id)
+            WHERE section.id = ?
             EOS,
             $section_id->getBytes(),
         );
@@ -87,7 +100,28 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
 
         $row['id'] = $section_id;
 
-        return Result::ok(RawSection::fromRow($row));
+        return Result::ok($this->instantiateRawSection($row));
+    }
+
+    /**
+     * @param array{ id: SectionIdentifier, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int } $row
+     */
+    private function instantiateRawSection(array $row): RawSection
+    {
+        if ($row['artifact_id'] !== null) {
+            return RawSection::fromArtifact($row);
+        }
+
+        if ($row['freetext_id'] !== null) {
+            $row['freetext_id'] = $this->freetext_identifier_factory->buildFromBytesData((string) $row['freetext_id']);
+
+            $row['freetext_title']       = (string) $row['freetext_title'];
+            $row['freetext_description'] = (string) $row['freetext_description'];
+
+            return RawSection::fromFreetext($row);
+        }
+
+        throw new \LogicException('Section is neither an artifact nor a freetext, this is not expected');
     }
 
     public function searchPaginatedRawSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRawSections
@@ -97,10 +131,18 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
 
             $rows = $db->run(
                 <<<EOS
-                SELECT id, artifact_id, item_id, `rank`
-                FROM plugin_artidoc_document
-                WHERE item_id = ?
-                ORDER BY `rank`
+                SELECT section.id,
+                   section.item_id,
+                   section.artifact_id,
+                   freetext.id AS freetext_id,
+                   freetext.title AS freetext_title,
+                   freetext.description AS freetext_description,
+                   section.`rank`
+                FROM plugin_artidoc_document AS section
+                LEFT JOIN plugin_artidoc_section_freetext AS freetext
+                    ON (section.freetext_id = freetext.id)
+                WHERE section.item_id = ?
+                ORDER BY section.`rank`
                 LIMIT ? OFFSET ?
                 EOS,
                 $item_id,
@@ -114,13 +156,13 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 $artidoc,
                 array_values(
                     array_map(
-                    /**
-                     * @param array{ id: string, item_id: int, artifact_id: int, rank: int } $row
-                     */
+                        /**
+                         * @param array{ id: string, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int } $row
+                         */
                         function (array $row): RawSection {
-                            $row['id'] = $this->identifier_factory->buildFromBytesData($row['id']);
+                            $row['id'] = $this->section_identifier_factory->buildFromBytesData($row['id']);
 
-                            return RawSection::fromRow($row);
+                            return $this->instantiateRawSection($row);
                         },
                         $rows,
                     ),
@@ -134,27 +176,49 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
     {
         $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($source_id, $target_id) {
             $rows = $db->run(
-                'SELECT artifact_id, `rank`
+                'SELECT artifact_id, freetext_id, `rank`
                 FROM plugin_artidoc_document
                 WHERE item_id = ?',
                 $source_id
             );
 
-            if (count($rows) !== 0) {
-                $db->insertMany(
-                    'plugin_artidoc_document',
-                    array_map(
-                        function (array $row) use ($target_id) {
-                            return [
-                                'id' => $this->identifier_factory->buildIdentifier()->getBytes(),
-                                'item_id' => $target_id,
-                                'artifact_id' => $row['artifact_id'],
-                                'rank' => $row['rank'],
-                            ];
-                        },
-                        $rows,
-                    )
-                );
+            foreach ($rows as $row) {
+                if ($row['artifact_id'] !== null) {
+                    $db->insert(
+                        'plugin_artidoc_document',
+                        [
+                            'id'          => $this->section_identifier_factory->buildIdentifier()->getBytes(),
+                            'item_id'     => $target_id,
+                            'artifact_id' => $row['artifact_id'],
+                            'freetext_id' => null,
+                            'rank'        => $row['rank'],
+                        ]
+                    );
+                } elseif ($row['freetext_id'] !== null) {
+                    $freetext    = $db->row(
+                        'SELECT title, description FROM plugin_artidoc_section_freetext WHERE id = ?',
+                        $row['freetext_id']
+                    );
+                    $freetext_id = $this->freetext_identifier_factory->buildIdentifier()->getBytes();
+                    $db->insert(
+                        'plugin_artidoc_section_freetext',
+                        [
+                            'id'          => $freetext_id,
+                            'title'       => $freetext['title'],
+                            'description' => $freetext['description'],
+                        ]
+                    );
+                    $db->insert(
+                        'plugin_artidoc_document',
+                        [
+                            'id'          => $this->section_identifier_factory->buildIdentifier()->getBytes(),
+                            'item_id'     => $target_id,
+                            'artifact_id' => null,
+                            'freetext_id' => $freetext_id,
+                            'rank'        => $row['rank'],
+                        ]
+                    );
+                }
             }
 
             $db->run('DELETE FROM plugin_artidoc_document_tracker WHERE item_id = ?', $target_id);
@@ -193,9 +257,9 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         );
     }
 
-    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, int $artifact_id): SectionIdentifier
+    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): SectionIdentifier
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $artifact_id) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $content) {
             $item_id = $artidoc->document->getId();
 
             $rank = $this->getDB()->cell(
@@ -203,13 +267,13 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 $item_id,
             ) ?: 0;
 
-            return $this->insertSection($db, $item_id, $artifact_id, $rank);
+            return $this->insertSection($db, $item_id, $content, $rank);
         });
     }
 
-    public function saveSectionBefore(ArtidocWithContext $artidoc, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
+    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): SectionIdentifier
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $artifact_id, $sibling_section_id) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $content, $sibling_section_id) {
             $item_id = $artidoc->document->getId();
 
             $rank = $this->getDB()->cell(
@@ -232,14 +296,14 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 $rank,
             );
 
-            return $this->insertSection($db, $item_id, $artifact_id, $rank);
+            return $this->insertSection($db, $item_id, $content, $rank);
         });
     }
 
     /**
      * @throws AlreadyExistingSectionWithSameArtifactException
      */
-    private function insertSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): SectionIdentifier
+    private function insertArtifactSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): SectionIdentifier
     {
         if (
             $db->cell(
@@ -255,14 +319,57 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
             throw new AlreadyExistingSectionWithSameArtifactException();
         }
 
-        $id = $this->identifier_factory->buildIdentifier();
+        $id = $this->section_identifier_factory->buildIdentifier();
         $db->insert(
             'plugin_artidoc_document',
             [
-                'id'          => $id->getBytes(),
-                'item_id'     => $item_id,
+                'id' => $id->getBytes(),
+                'item_id' => $item_id,
                 'artifact_id' => $artifact_id,
-                'rank'        => $rank,
+                'freetext_id' => null,
+                'rank' => $rank,
+            ],
+        );
+
+        return $id;
+    }
+
+    /**
+     * @throws AlreadyExistingSectionWithSameArtifactException
+     */
+    private function insertSection(EasyDB $db, int $item_id, ContentToInsert $content, int $rank): SectionIdentifier
+    {
+        return $content->artifact_id
+            ->match(
+                fn (int $artifact_id) => $this->insertArtifactSection($db, $item_id, $artifact_id, $rank),
+                fn () => $content->freetext->match(
+                    fn (FreetextContent $content) => $this->insertFreetextSection($db, $item_id, $content, $rank),
+                    static fn () => throw new \LogicException('Section is neither an artifact nor a freetext, this is not expected'),
+                ),
+            );
+    }
+
+    private function insertFreetextSection(EasyDB $db, int $item_id, FreetextContent $content, int $rank): SectionIdentifier
+    {
+        $freetext_id = $this->freetext_identifier_factory->buildIdentifier()->getBytes();
+        $db->insert(
+            'plugin_artidoc_section_freetext',
+            [
+                'id'          => $freetext_id,
+                'title'       => $content->title,
+                'description' => $content->description,
+            ]
+        );
+
+        $id = $this->section_identifier_factory->buildIdentifier();
+        $db->insert(
+            'plugin_artidoc_document',
+            [
+                'id' => $id->getBytes(),
+                'item_id' => $item_id,
+                'artifact_id' => null,
+                'freetext_id' => $freetext_id,
+                'rank' => $rank,
             ],
         );
 

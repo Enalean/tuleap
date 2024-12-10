@@ -62,7 +62,7 @@ final class SectionRetrieverTest extends TestCase
 
         $result = $builder->retrieveSection($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
         self::assertTrue(Result::isOk($result));
-        self::assertSame(self::ARTIFACT_ID, $result->value->artifact_id);
+        self::assertSame(self::ARTIFACT_ID, $result->value->content->artifact_id->unwrapOr(null));
         self::assertTrue($collector->isCalled());
     }
 
@@ -117,7 +117,7 @@ final class SectionRetrieverTest extends TestCase
 
     private function getMatchingRawSection(): RawSection
     {
-        return RawSection::fromRow([
+        return RawSection::fromArtifact([
             'id' => SectionIdentifierStub::create(),
             'item_id' => self::ITEM_ID,
             'artifact_id' => self::ARTIFACT_ID,

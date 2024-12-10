@@ -35,7 +35,7 @@ final class SectionRetriever
     public function __construct(
         private SearchOneSection $search_section,
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private CollectRequiredSectionInformation $collect_required_section_information_for_creation,
+        private CollectRequiredSectionInformation $collect_required_section_information,
     ) {
     }
 
@@ -47,9 +47,17 @@ final class SectionRetriever
         return $this->search_section->searchSectionById($id)
             ->match(
                 fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($raw_section->item_id)
-                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collect_required_section_information_for_creation->collectRequiredSectionInformation($artidoc, $raw_section->artifact_id))
+                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collectRequiredSectionInformation($artidoc, $raw_section))
                     ->map(static fn() => $raw_section),
                 static fn (Fault $fault) => Result::err($fault),
             );
+    }
+
+    private function collectRequiredSectionInformation(ArtidocWithContext $artidoc, RawSection $raw_section): Ok|Err
+    {
+        return $raw_section->content->artifact_id->match(
+            fn (int $artifact_id) => $this->collect_required_section_information->collectRequiredSectionInformation($artidoc, $artifact_id),
+            static fn () => Result::err('Unable to retrieve freetext section for now'),
+        );
     }
 }

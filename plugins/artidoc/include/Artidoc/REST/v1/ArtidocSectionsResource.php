@@ -27,12 +27,14 @@ use Luracast\Restler\RestException;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
+use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\SectionRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
@@ -40,6 +42,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\SectionDeletor;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Result;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\RESTLogger;
@@ -76,7 +79,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      * @status 200
      * @throws RestException 404
      */
-    public function get(string $id): ArtidocSectionRepresentation
+    public function get(string $id): ArtifactSectionRepresentation
     {
         $this->checkAccess();
 
@@ -95,13 +98,14 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         return $this->getSectionRetriever($user, $collector)
             ->retrieveSection($section_id)
-            ->andThen(function (RawSection $section) use ($collector) {
-                return $collector->getCollectedRequiredSectionInformation($section->artifact_id)
-                    ->map(fn(RequiredArtifactInformation $info) => new SectionWrapper($section->id, $info));
-            })
-            ->map(fn (SectionWrapper $wrapper) => $this->getRepresentationBuilder()->build($wrapper->required_info, $wrapper->section_identifier, $user))
-            ->match(
-                function (ArtidocSectionRepresentation $representation) {
+            ->andThen(fn(RawSection $section) => $section->content->artifact_id->match(
+                fn (int $artifact_id) =>
+                    $collector->getCollectedRequiredSectionInformation($artifact_id)
+                        ->map(fn(RequiredArtifactInformation $info) => new SectionWrapper($section->id, $info))
+                        ->map(fn (SectionWrapper $wrapper) => $this->getRepresentationBuilder()->build($wrapper->required_info, $wrapper->section_identifier, $user)),
+                static fn () => Result::err(Fault::fromMessage('Unable to retrieve freetext section for now')),
+            ))->match(
+                function (ArtifactSectionRepresentation $representation) {
                     return $representation;
                 },
                 function (Fault $fault) {
@@ -154,7 +158,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao($this->getSectionIdentifierFactory());
+        $dao       = new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $retriever = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
@@ -174,7 +178,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao($this->getSectionIdentifierFactory());
+        $dao       = new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $retriever = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
@@ -190,6 +194,11 @@ final class ArtidocSectionsResource extends AuthenticatedResource
     private function getSectionIdentifierFactory(): SectionIdentifierFactory
     {
         return new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
+    }
+
+    private function getFreetextIdentifierFactory(): FreetextIdentifierFactory
+    {
+        return new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
     private function getRepresentationBuilder(): SectionRepresentationBuilder

@@ -20,14 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-final readonly class PaginatedArtidocSectionRepresentationCollection
+final class AlreadyExistingSectionWithSameFreetextException extends \Exception
 {
-    /**
-     * @param list<ArtifactSectionRepresentation> $sections
-     */
-    public function __construct(public array $sections, public int $total)
-    {
-    }
 }

@@ -20,14 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section\Freetext;
 
-final readonly class PaginatedArtidocSectionRepresentationCollection
+/**
+ * @psalm-immutable
+ */
+final readonly class FreetextContent
 {
-    /**
-     * @param list<ArtifactSectionRepresentation> $sections
-     */
-    public function __construct(public array $sections, public int $total)
-    {
+    public function __construct(
+        public string $title,
+        public string $description,
+    ) {
     }
 }

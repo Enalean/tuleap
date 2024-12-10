@@ -28,5 +28,5 @@ interface BuildSectionRepresentation
         RequiredArtifactInformation $artifact_information,
         SectionIdentifier $section_identifier,
         \PFUser $user,
-    ): ArtidocSectionRepresentation;
+    ): ArtifactSectionRepresentation;
 }

@@ -32,6 +32,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
+use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Document\ArtidocDao;
@@ -178,7 +179,7 @@ final class ArtidocResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return ArtidocSectionRepresentation[]
+     * @return ArtifactSectionRepresentation[]
      *
      * @status 200
      * @throws RestException
@@ -315,7 +316,7 @@ final class ArtidocResource extends AuthenticatedResource
      * @status 200
      * @throws RestException
      */
-    public function postSection(int $id, ArtidocPOSTSectionRepresentation $section): ArtidocSectionRepresentation
+    public function postSection(int $id, ArtidocPOSTSectionRepresentation $section): ArtifactSectionRepresentation
     {
         $this->checkAccess();
 
@@ -344,7 +345,7 @@ final class ArtidocResource extends AuthenticatedResource
             })
             ->map(fn (SectionWrapper $created) => $this->getRepresentationBuilder()->build($created->required_info, $created->section_identifier, $user))
             ->match(
-                static function (ArtidocSectionRepresentation $representation) {
+                static function (ArtifactSectionRepresentation $representation) {
                     return $representation;
                 },
                 static function (Fault $fault) {
@@ -441,8 +442,9 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
-        $retriever = new ArtidocWithContextRetriever(
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        $dao          = new ArtidocDao(new UUIDSectionIdentifierFactory($uuid_factory), new UUIDFreetextIdentifierFactory($uuid_factory));
+        $retriever    = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
@@ -464,8 +466,9 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $uuid_factory       = new DatabaseUUIDV7Factory();
+        $identifier_factory = new UUIDSectionIdentifierFactory($uuid_factory);
+        $dao                = new ArtidocDao($identifier_factory, new UUIDFreetextIdentifierFactory($uuid_factory));
         $retriever          = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
@@ -516,8 +519,9 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
-        $dao                = new ArtidocDao($identifier_factory);
+        $uuid_factory       = new DatabaseUUIDV7Factory();
+        $identifier_factory = new UUIDSectionIdentifierFactory($uuid_factory);
+        $dao                = new ArtidocDao($identifier_factory, new UUIDFreetextIdentifierFactory($uuid_factory));
         $retriever          = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
@@ -543,8 +547,9 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()));
-        $retriever = new ArtidocWithContextRetriever(
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        $dao          = new ArtidocDao(new UUIDSectionIdentifierFactory($uuid_factory), new UUIDFreetextIdentifierFactory($uuid_factory));
+        $retriever    = new ArtidocWithContextRetriever(
             new ArtidocRetriever($dao, new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
