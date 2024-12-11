@@ -79,13 +79,18 @@ final class ListStaticBindBuilder
 
     public function build(): Tracker_FormElement_Field_List_Bind_Static
     {
-        $bind = new Tracker_FormElement_Field_List_Bind_Static(
+        $bind = new class (
             $this->field,
             false,
             $this->bind_values,
             [],
             $this->decorators,
-        );
+        ) extends Tracker_FormElement_Field_List_Bind_Static {
+            public function getQuerySelect(): string
+            {
+                return 'Static_Bind' . $this->field->getId();
+            }
+        };
         $this->field->setBind($bind);
 
         return $bind;

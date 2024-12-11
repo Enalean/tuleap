@@ -21,9 +21,12 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
+
+use GraphOnTrackersV5_Engine_Burndown;
 use Tuleap\GlobalLanguageMock;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class GraphOnTrackersV5_Engine_BurndownTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

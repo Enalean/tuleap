@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -7528,7 +7528,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$key]]></code>
       <code><![CDATA[$label]]></code>
       <code><![CDATA[$label]]></code>
       <code><![CDATA[$metadata]]></code>
@@ -21536,8 +21535,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$params]]></code>
@@ -21580,6 +21577,12 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/graphontrackersv5/tests/unit/DataTransformation/GraphOnTrackersV5ChartBarDataBuilderTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$engine->data]]></code>
+      <code><![CDATA[$engine->data]]></code>
+    </MissingPropertyType>
   </file>
   <file src="plugins/hudson/include/HudsonBuild.class.php">
     <MissingPropertyType>
@@ -32250,7 +32253,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[disableTimetracking]]></code>
-      <code><![CDATA[displayAdminForm]]></code>
       <code><![CDATA[editTimetrackingAdminSettings]]></code>
       <code><![CDATA[enableTimetracking]]></code>
       <code><![CDATA[isTimetrackingAlreadyEnabled]]></code>
@@ -33797,7 +33799,6 @@
       <code><![CDATA[$message]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[addSummaryCommentChangeset]]></code>
       <code><![CDATA[getXMLRootNode]]></code>
       <code><![CDATA[importChangesets]]></code>
       <code><![CDATA[logsErrorAndRedirectToTracker]]></code>
@@ -33989,10 +33990,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/ArtifactCopyButtonPresenterBuilder.php">
-    <MissingReturnType>
-      <code><![CDATA[getCopyArtifactButton]]></code>
-      <code><![CDATA[isAlreadyCopyingArtifact]]></code>
-    </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyNullArgument>
@@ -34073,8 +34070,6 @@
     </LessSpecificReturnStatement>
     <MissingParamType>
       <code><![CDATA[$comment]]></code>
-      <code><![CDATA[$comment_format]]></code>
-      <code><![CDATA[$comment_format_field_name]]></code>
       <code><![CDATA[$fields_data]]></code>
       <code><![CDATA[$format]]></code>
       <code><![CDATA[$hierarchy]]></code>
@@ -34167,7 +34162,6 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(bool) $send_notification]]></code>
       <code><![CDATA[(string) $comment]]></code>
-      <code><![CDATA[(string) $comment_format]]></code>
     </RedundantCastGivenDocblockType>
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[$this->parent_without_permission_checking !== self::NO_PARENT && ! isset($this->parent_without_permission_checking)]]></code>
@@ -35634,7 +35628,6 @@
       <code><![CDATA[$level]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$available_comment_formats]]></code>
       <code><![CDATA[$canned_response_id]]></code>
       <code><![CDATA[$comment_type_id]]></code>
     </MissingPropertyType>
@@ -39288,7 +39281,6 @@
     <MissingPropertyType>
       <code><![CDATA[$cache_permissions]]></code>
       <code><![CDATA[$cache_specific_properties]]></code>
-      <code><![CDATA[$default_properties]]></code>
       <code><![CDATA[$this->getTracker()->id]]></code>
       <code><![CDATA[$user_can_read]]></code>
     </MissingPropertyType>
@@ -39784,7 +39776,6 @@
       <code><![CDATA[$artifact->id]]></code>
       <code><![CDATA[$artifact->id]]></code>
       <code><![CDATA[$artifact->id]]></code>
-      <code><![CDATA[$default_properties]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
@@ -39991,11 +39982,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-      <code><![CDATA[$this->default_properties]]></code>
-      <code><![CDATA[$this->default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[buildFieldForSubmission]]></code>
@@ -40056,9 +40042,6 @@
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$report]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[fetchArtifactForOverlay]]></code>
@@ -40109,7 +40092,6 @@
       <code><![CDATA[$criteria->id]]></code>
       <code><![CDATA[$criteria->report]]></code>
       <code><![CDATA[$criteria->report]]></code>
-      <code><![CDATA[$default_properties]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_nbDigits]]></code>
@@ -40321,9 +40303,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
@@ -40349,9 +40328,6 @@
     <MissingParamType>
       <code><![CDATA[$submitted_values]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
@@ -41069,9 +41045,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[arrayIsEmpty]]></code>
@@ -41095,7 +41068,6 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
       <code><![CDATA[$pattern]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -41140,7 +41112,6 @@
       <code><![CDATA[$cache_openvalues]]></code>
       <code><![CDATA[$criteria->id]]></code>
       <code><![CDATA[$criteria->report]]></code>
-      <code><![CDATA[$default_properties]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
@@ -41241,7 +41212,6 @@
       <code><![CDATA[$criteria->id]]></code>
       <code><![CDATA[$criteria->report]]></code>
       <code><![CDATA[$criteria->report]]></code>
-      <code><![CDATA[$default_properties]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
@@ -41343,9 +41313,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[getRestFieldData]]></code>
@@ -41373,9 +41340,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
@@ -41395,9 +41359,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[int]]></code>
     </InvalidNullableReturnType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
@@ -41434,9 +41395,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[doesValueUseTheByFieldOutput]]></code>
@@ -41532,7 +41490,6 @@
       <code><![CDATA[$tracker]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$default_properties]]></code>
       <code><![CDATA[$static_rich_text]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -41946,11 +41903,6 @@
     <MissingReturnType>
       <code><![CDATA[inheritFromLegacy]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Masschange/MasschangeUpdater.class.php">
-    <DeprecatedMethod>
-      <code><![CDATA[createNewChangeset]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/MasschangeDataValueExtractor.class.php">
     <MissingParamType>
@@ -56314,11 +56266,6 @@
       <code><![CDATA[getFieldValue]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Project/Admin/GetProjectHistoryEntryValue.php">
-    <MissingReturnType>
-      <code><![CDATA[setValue]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Project/Admin/MembershipDelegationDao.php">
     <DeprecatedMethod>
       <code><![CDATA[affectedRows]]></code>
@@ -57448,18 +57395,10 @@
     </MissingTemplateParam>
   </file>
   <file src="src/common/Project/Admin/Reference/ReferenceAdministrationViews.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_query('SELECT * FROM service WHERE group_id=100 ORDER BY `rank`')]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($serv_short_name, $serv_label, 'service_short_name', $ref->getServiceShortName())]]></code>
-    </DeprecatedFunction>
     <MissingParamType>
       <code><![CDATA[$controler]]></code>
       <code><![CDATA[$view]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[edit]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/common/Project/Admin/RestrictedUsersProjectCounter.php">
     <PossiblyInvalidArgument>
@@ -60035,7 +59974,6 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$html]]></code>
       <code><![CDATA[$html]]></code>
       <code><![CDATA[$html]]></code>
       <code><![CDATA[$html]]></code>
