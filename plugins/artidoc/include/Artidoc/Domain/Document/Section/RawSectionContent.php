@@ -25,11 +25,12 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
-/**
- * @psalm-immutable
- */
 final readonly class RawSectionContent
 {
     /**
@@ -37,8 +38,8 @@ final readonly class RawSectionContent
      * @param Option<RawSectionContentFreetext> $freetext
      */
     private function __construct(
-        public Option $artifact_id,
-        public Option $freetext,
+        private Option $artifact_id,
+        private Option $freetext,
     ) {
     }
 
@@ -59,6 +60,24 @@ final readonly class RawSectionContent
                     $id,
                     new FreetextContent($title, $description),
                 ),
+            ),
+        );
+    }
+
+    /**
+     * @template TArtifactReturn
+     * @template TFreetextReturn
+     * @psalm-param callable(int): (Ok<TArtifactReturn>|Err<Fault>) $artifact_callback
+     * @psalm-param callable(RawSectionContentFreetext): (Ok<TFreetextReturn>|Err<Fault>)    $freetext_callback
+     * @return Ok<TArtifactReturn>|Ok<TFreetextReturn>|Err<Fault>
+     */
+    public function apply(callable $artifact_callback, callable $freetext_callback): Ok|Err
+    {
+        return $this->artifact_id->match(
+            fn ($artifact_id) => $artifact_callback($artifact_id),
+            fn () => $this->freetext->match(
+                fn ($freetext) => $freetext_callback($freetext),
+                fn () => Result::err(UnknownSectionContentFault::build())
             ),
         );
     }

@@ -36,7 +36,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     public function __construct(
         private \Tracker_ArtifactDao $artifact_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
-        private SectionRepresentationBuilder $section_representation_builder,
+        private ArtifactSectionRepresentationBuilder $section_representation_builder,
         private RequiredArtifactInformationBuilder $required_artifact_information_builder,
     ) {
     }
@@ -61,10 +61,15 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
         $identifiers  = [];
         $artifact_ids = [];
         foreach ($raw_sections->rows as $row) {
-            $row->content->artifact_id->apply(static function ($artifact_id) use ($row, &$identifiers, &$artifact_ids) {
-                $artifact_ids[]            = $artifact_id;
-                $identifiers[$artifact_id] = $row->id;
-            });
+            $row->content->apply(
+                static function ($artifact_id) use ($row, &$identifiers, &$artifact_ids) {
+                    $artifact_ids[]            = $artifact_id;
+                    $identifiers[$artifact_id] = $row->id;
+
+                    return Result::ok(null);
+                },
+                static fn () => Result::ok(null),
+            );
         }
         if (count($artifact_ids) === 0) {
             return Result::ok([]);

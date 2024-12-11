@@ -42,7 +42,6 @@ use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\SectionDeletor;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Result;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\RESTLogger;
@@ -79,7 +78,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      * @status 200
      * @throws RestException 404
      */
-    public function get(string $id): ArtifactSectionRepresentation
+    public function get(string $id): SectionRepresentation
     {
         $this->checkAccess();
 
@@ -98,21 +97,14 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         return $this->getSectionRetriever($user, $collector)
             ->retrieveSection($section_id)
-            ->andThen(fn(RawSection $section) => $section->content->artifact_id->match(
-                fn (int $artifact_id) =>
-                    $collector->getCollectedRequiredSectionInformation($artifact_id)
-                        ->map(fn(RequiredArtifactInformation $info) => new SectionWrapper($section->id, $info))
-                        ->map(fn (SectionWrapper $wrapper) => $this->getRepresentationBuilder()->build($wrapper->required_info, $wrapper->section_identifier, $user)),
-                static fn () => Result::err(Fault::fromMessage('Unable to retrieve freetext section for now')),
-            ))->match(
-                function (ArtifactSectionRepresentation $representation) {
-                    return $representation;
-                },
-                function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
-                    throw new RestException(404);
-                },
-            );
+            ->andThen(fn(RawSection $section) =>
+                $this->getSectionRepresentationBuilder()->getSectionRepresentation($section, $collector, $user))->match(
+                    fn(SectionRepresentation $representation) => $representation,
+                    function (Fault $fault) {
+                        Fault::writeToLogger($fault, RESTLogger::getLogger());
+                        throw new RestException(404);
+                    },
+                );
     }
 
     /**
@@ -201,11 +193,16 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         return new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
-    private function getRepresentationBuilder(): SectionRepresentationBuilder
+    private function getSectionRepresentationBuilder(): SectionRepresentationBuilder
+    {
+        return new SectionRepresentationBuilder($this->getArtifactSectionRepresentationBuilder());
+    }
+
+    private function getArtifactSectionRepresentationBuilder(): ArtifactSectionRepresentationBuilder
     {
         $form_element_factory = \Tracker_FormElementFactory::instance();
 
-        return new SectionRepresentationBuilder(
+        return new ArtifactSectionRepresentationBuilder(
             new FileUploadDataProvider(
                 new FrozenFieldDetector(
                     new TransitionRetriever(

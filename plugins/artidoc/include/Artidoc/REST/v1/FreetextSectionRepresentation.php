@@ -22,26 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 /**
  * @psalm-immutable
  */
-final readonly class ArtifactSectionRepresentation implements SectionRepresentation
+final readonly class FreetextSectionRepresentation implements SectionRepresentation
 {
-    /**
-     * @psalm-param ArtifactFieldValueFullRepresentation|ArtifactTextFieldValueRepresentation $title
-     */
-    public function __construct(
+    private function __construct(
         public string $id,
-        public ArtifactReference $artifact,
-        public mixed $title,
-        public ArtifactTextFieldValueRepresentation $description,
-        public bool $can_user_edit_section,
-        public ?ArtifactFieldValueFileFullRepresentation $attachments,
+        public string $title,
+        public string $description,
     ) {
+    }
+
+    public static function fromRawSectionContentFreetext(
+        SectionIdentifier $section_identifier,
+        RawSectionContentFreetext $freetext,
+    ): self {
+        return new self(
+            $section_identifier->toString(),
+            $freetext->content->title,
+            $freetext->content->description,
+        );
     }
 }
