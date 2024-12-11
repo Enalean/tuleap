@@ -15,6 +15,9 @@ msgstr ""
 msgid "Add existing section"
 msgstr "Ajouter une section existante"
 
+msgid "Add new %{tracker_label}"
+msgstr "Créer un(e) %{tracker_label}"
+
 msgid "Add new section"
 msgstr "Créer une nouvelle section"
 

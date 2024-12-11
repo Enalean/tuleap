@@ -40,7 +40,7 @@
                 v-on:click="addNewSection"
                 data-test="add-new-section"
             >
-                {{ add_new_section_label }}
+                {{ add_new_requirement_label }}
             </button>
             <button
                 type="button"
@@ -74,9 +74,14 @@ const props = defineProps<{
 
 const configuration_store = strictInject(CONFIGURATION_STORE);
 
-const { $gettext } = useGettext();
+const { $gettext, interpolate } = useGettext();
 
 const add_new_section_label = $gettext("Add new section");
+const add_new_requirement_label = configuration_store.selected_tracker.value
+    ? interpolate($gettext("Add new %{tracker_label}"), {
+          tracker_label: configuration_store.selected_tracker.value.item_name,
+      })
+    : add_new_section_label;
 const add_existing_section_label = $gettext("Add existing section");
 
 const configuration_bus = strictInject(OPEN_CONFIGURATION_MODAL_BUS);
