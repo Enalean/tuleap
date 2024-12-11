@@ -21,3 +21,7 @@ import type { Identifier } from "./Identifier";
 
 // I identify the artifact currently under edition
 export type CurrentArtifactIdentifier = Identifier<"CurrentArtifactIdentifier">;
+
+export const CurrentArtifactIdentifier = {
+    fromId: (id: number): CurrentArtifactIdentifier => ({ id, _type: "CurrentArtifactIdentifier" }),
+};

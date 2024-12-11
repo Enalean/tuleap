@@ -20,7 +20,8 @@
 import artifact_modal_module from "./tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
-
+import { fr_FR_DATE_TIME_FORMAT, fr_FR_LOCALE } from "@tuleap/core-constants";
+import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import * as modal_creation_mode_state from "./modal-creation-mode-state.ts";
 import * as rest_service from "./rest/rest-service";
 import * as form_tree_builder from "./model/form-tree-builder.js";
@@ -28,9 +29,10 @@ import * as workflow_field_values_filter from "./model/workflow-field-values-fil
 import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 import * as field_values_formatter from "./model/field-values-formatter.js";
 import * as tracker_transformer from "./model/tracker-transformer.js";
+import { RetrieveCurrentArtifactWithTrackerStructureStub } from "../tests/stubs/RetrieveCurrentArtifactWithTrackerStructureStub";
 
-const USER_LOCALE = "fr_FR";
-const USER_DATE_TIME_FORMAT = "d/m/Y H:i";
+const USER_LOCALE = fr_FR_LOCALE;
+const USER_DATE_TIME_FORMAT = fr_FR_DATE_TIME_FORMAT;
 
 describe("NewTuleapArtifactModalService", () => {
     let NewTuleapArtifactModalService,
@@ -41,12 +43,11 @@ describe("NewTuleapArtifactModalService", () => {
         isInCreationMode,
         getTracker,
         getUserPreference,
-        getArtifactWithCompleteTrackerStructure,
         tracker,
         wrapPromise,
         getSelectedValues;
 
-    const user_id = 103;
+    const USER_ID = 103;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module);
@@ -63,17 +64,14 @@ describe("NewTuleapArtifactModalService", () => {
                 return tracker;
             },
         );
+
         jest.spyOn(tracker_transformer, "transform").mockImplementation((tracker) => {
-            return tracker;
+            return { ...tracker, ordered_fields: [] };
         });
         setCreationMode = jest.spyOn(modal_creation_mode_state, "setCreationMode");
         isInCreationMode = jest.spyOn(modal_creation_mode_state, "isInCreationMode");
         getTracker = jest.spyOn(rest_service, "getTracker");
         getUserPreference = jest.spyOn(rest_service, "getUserPreference");
-        getArtifactWithCompleteTrackerStructure = jest.spyOn(
-            rest_service,
-            "getArtifactWithCompleteTrackerStructure",
-        );
         buildFormTree = jest.spyOn(form_tree_builder, "buildFormTree").mockReturnValue({});
         enforceWorkflowTransitions = jest.spyOn(
             workflow_field_values_filter,
@@ -95,18 +93,14 @@ describe("NewTuleapArtifactModalService", () => {
     });
 
     describe("initCreationModalModel() -", () => {
-        let tracker_id, parent_artifact_id;
-
-        beforeEach(() => {
-            tracker_id = 28;
-            parent_artifact_id = 581;
-        });
+        const TRACKER_ID = 28,
+            PARENT_ARTIFACT_ID = 581;
 
         it(`Given a tracker id and a parent artifact id,
             then the tracker's structure will be retrieved
             and a promise will be resolved with the modal's model object`, async () => {
             tracker = {
-                id: tracker_id,
+                id: TRACKER_ID,
                 color_name: "importer",
                 item_name: "preinvest",
                 parent: null,
@@ -115,29 +109,30 @@ describe("NewTuleapArtifactModalService", () => {
             getTracker.mockReturnValue($q.when(tracker));
 
             const promise = NewTuleapArtifactModalService.initCreationModalModel(
-                user_id,
-                tracker_id,
-                parent_artifact_id,
+                USER_ID,
+                TRACKER_ID,
+                PARENT_ARTIFACT_ID,
                 false,
             );
 
             await expect(wrapPromise(promise)).resolves.toBeDefined();
-            expect(getTracker).toHaveBeenCalledWith(tracker_id);
-            expect(getSelectedValues).toHaveBeenCalledWith({}, tracker);
+            expect(getTracker).toHaveBeenCalledWith(TRACKER_ID);
             expect(tracker_transformer.transform).toHaveBeenCalledWith(tracker, true);
-            expect(buildFormTree).toHaveBeenCalledWith(tracker);
+            const transformed_tracker = tracker_transformer.transform.mock.results[0].value;
+            expect(getSelectedValues).toHaveBeenCalledWith({}, transformed_tracker);
+            expect(buildFormTree).toHaveBeenCalledWith(transformed_tracker);
             const model = promise.$$state.value;
             expect(setCreationMode).toHaveBeenCalledWith(true);
-            expect(model.tracker_id).toBe(tracker_id);
-            expect(model.parent_artifact_id).toBe(parent_artifact_id);
-            expect(model.tracker).toBe(tracker);
+            expect(model.tracker_id).toBe(TRACKER_ID);
+            expect(model.parent_artifact_id).toBe(PARENT_ARTIFACT_ID);
+            expect(model.tracker).toBe(transformed_tracker);
             expect(model.title).toBe("preinvest");
             expect(model.color).toBe("importer");
             expect(model.values).toBeDefined();
             expect(model.ordered_fields).toBeDefined();
             expect(model.parent_artifacts).toBeUndefined();
-            expect(model.artifact_id).toBeUndefined();
-            expect(model.user_id).toBe(103);
+            expect(model.current_artifact_identifier).toBeUndefined();
+            expect(model.user_id).toBe(USER_ID);
             expect(model.user_locale).toBe(USER_LOCALE);
             expect(model.user_date_time_format).toBe(USER_DATE_TIME_FORMAT);
         });
@@ -147,8 +142,8 @@ describe("NewTuleapArtifactModalService", () => {
 
             const promise = wrapPromise(
                 NewTuleapArtifactModalService.initCreationModalModel(
-                    tracker_id,
-                    parent_artifact_id,
+                    TRACKER_ID,
+                    PARENT_ARTIFACT_ID,
                 ),
             );
 
@@ -162,34 +157,32 @@ describe("NewTuleapArtifactModalService", () => {
         });
 
         describe("apply transitions -", () => {
+            const WORKFLOW_FIELD_ID = 189;
             beforeEach(() => {
                 isInCreationMode.mockReturnValue(true);
             });
 
-            it("Given a tracker that had workflow transitions, when I create the modal's creation model, then the transitions will be enforced", async () => {
+            it(`Given a tracker that had workflow transitions,
+                when I create the modal's creation model,
+                then the transitions will be enforced`, async () => {
                 const workflow_field = {
-                    field_id: 189,
+                    field_id: WORKFLOW_FIELD_ID,
                     values: [],
                 };
                 const workflow = {
                     is_used: "1",
-                    field_id: 189,
-                    transitions: [
-                        {
-                            from_id: null,
-                            to_id: 511,
-                        },
-                    ],
+                    field_id: WORKFLOW_FIELD_ID,
+                    transitions: [{ from_id: null, to_id: 511 }],
                 };
                 tracker = {
-                    id: tracker_id,
+                    id: TRACKER_ID,
                     fields: [workflow_field],
                     workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
 
                 const promise = wrapPromise(
-                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id),
+                    NewTuleapArtifactModalService.initCreationModalModel(TRACKER_ID),
                 );
 
                 await expect(promise).resolves.toBeDefined();
@@ -200,53 +193,53 @@ describe("NewTuleapArtifactModalService", () => {
                 );
             });
 
-            it("Given a tracker that had workflow transitions but were not used, then the transitions won't be enforced", async () => {
+            it(`Given a tracker that had workflow transitions but were not used,
+                then the transitions won't be enforced`, async () => {
                 const workflow_field = {
-                    field_id: tracker_id,
+                    field_id: WORKFLOW_FIELD_ID,
+                    values: [],
                 };
                 const workflow = {
                     is_used: "0",
-                    field_id: 189,
-                    transitions: [
-                        {
-                            from_id: 326,
-                            to_id: 723,
-                        },
-                    ],
+                    field_id: WORKFLOW_FIELD_ID,
+                    transitions: [{ from_id: 326, to_id: 723 }],
                 };
                 tracker = {
-                    id: tracker_id,
+                    id: TRACKER_ID,
                     fields: [workflow_field],
                     workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
 
                 const promise = wrapPromise(
-                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id),
+                    NewTuleapArtifactModalService.initCreationModalModel(TRACKER_ID),
                 );
 
                 await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
             });
 
-            it("Given a tracker that didn't have workflow transitions, when I create the modal's creation model, then the transitions won't be enforced", async () => {
+            it(`Given a tracker that didn't have workflow transitions,
+                when I create the modal's creation model,
+                then the transitions won't be enforced`, async () => {
                 const workflow_field = {
-                    field_id: tracker_id,
+                    field_id: 157,
+                    values: [],
                 };
                 const workflow = {
                     is_used: "1",
-                    field_id: 189,
+                    field_id: WORKFLOW_FIELD_ID,
                     transitions: [],
                 };
                 tracker = {
-                    id: tracker_id,
+                    id: TRACKER_ID,
                     fields: [workflow_field],
                     workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
 
                 const promise = wrapPromise(
-                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id),
+                    NewTuleapArtifactModalService.initCreationModalModel(TRACKER_ID),
                 );
 
                 await expect(promise).resolves.toBeDefined();
@@ -256,7 +249,9 @@ describe("NewTuleapArtifactModalService", () => {
     });
 
     describe("initEditionModalModel() -", () => {
-        let user_id, tracker_id, artifact_id;
+        const TRACKER_ID = 93,
+            ARTIFACT_ID = 250;
+        let artifact_retriever;
 
         beforeEach(() => {
             getSelectedValues.mockReturnValue({
@@ -266,7 +261,7 @@ describe("NewTuleapArtifactModalService", () => {
             });
 
             const comment_order_preference = {
-                key: "tracker_comment_invertorder_93",
+                key: `tracker_comment_invertorder_${TRACKER_ID}`,
                 value: "1",
             };
 
@@ -275,46 +270,48 @@ describe("NewTuleapArtifactModalService", () => {
                 value: "html",
             };
 
-            user_id = 102;
-            tracker_id = 93;
-            artifact_id = 250;
             getUserPreference.mockImplementation((user_id, preference_key) => {
                 if (preference_key.includes("tracker_comment_invertorder_")) {
-                    return $q.when(comment_order_preference);
+                    return Promise.resolve(comment_order_preference);
                 } else if (preference_key === "user_edition_default_format") {
-                    return $q.when(text_format_preference);
+                    return Promise.resolve(text_format_preference);
                 } else if (preference_key === "relative_dates_display") {
-                    return $q.when({
+                    return Promise.resolve({
                         key: "relative_dates_display",
                         value: false,
                     });
                 }
+                throw Error("Did not expect this preference key");
             });
         });
 
+        const initModel = () =>
+            NewTuleapArtifactModalService.initEditionModalModel(
+                USER_ID,
+                TRACKER_ID,
+                ARTIFACT_ID,
+                artifact_retriever,
+            );
+
         describe("Create modal edition model", () => {
-            let artifact;
+            const LAST_MODIFIED = "1629097552";
             beforeEach(() => {
                 tracker = {
-                    id: tracker_id,
-                    color_name: "slackerism",
+                    id: TRACKER_ID,
+                    color_name: "deep-blue",
                     label: "unstainableness",
                     parent: null,
                     fields: [],
                 };
-                artifact = {
+                const artifact = {
                     title: "onomatomania",
                     tracker,
-                    values: [
-                        {
-                            field_id: 487,
-                            value: "unwadded",
-                        },
-                    ],
-                    Etag: "etag",
-                    "Last-Modified": 1629097552,
+                    values: [{ field_id: 487, value: "unwadded" }],
+                    etag: LAST_MODIFIED,
+                    last_modified: LAST_MODIFIED,
                 };
-                getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
+                artifact_retriever =
+                    RetrieveCurrentArtifactWithTrackerStructureStub.withArtifact(artifact);
             });
 
             it(`Given a user id, tracker id and an artifact id,
@@ -322,45 +319,41 @@ describe("NewTuleapArtifactModalService", () => {
                 Then the artifact's field values will be retrieved,
                     the tracker's structure will be retrieved
                     and a promise will be resolved with the modal's model object`, async () => {
-                const promise = NewTuleapArtifactModalService.initEditionModalModel(
-                    user_id,
-                    tracker_id,
-                    artifact_id,
-                    false,
-                );
+                const model = await initModel();
 
-                await expect(wrapPromise(promise)).resolves.toBeDefined();
-                expect(getArtifactWithCompleteTrackerStructure).toHaveBeenCalledWith(artifact_id);
                 expect(getUserPreference).toHaveBeenCalledWith(
-                    user_id,
+                    USER_ID,
                     "tracker_comment_invertorder_93",
                 );
-                expect(getUserPreference).toHaveBeenCalledWith(user_id, "relative_dates_display");
+                expect(getUserPreference).toHaveBeenCalledWith(USER_ID, "relative_dates_display");
                 expect(getUserPreference).toHaveBeenCalledWith(
-                    user_id,
+                    USER_ID,
                     "user_edition_default_format",
                 );
 
-                expect(getSelectedValues).toHaveBeenCalledWith(expect.any(Object), tracker);
                 expect(tracker_transformer.transform).toHaveBeenCalledWith(tracker, false);
+                const transformed_tracker = tracker_transformer.transform.mock.results[0].value;
                 expect(tracker_transformer.addFieldValuesToTracker).toHaveBeenCalledWith(
                     expect.any(Object),
-                    tracker,
+                    transformed_tracker,
                 );
-                expect(buildFormTree).toHaveBeenCalledWith(tracker);
-                var model = promise.$$state.value;
+                expect(getSelectedValues).toHaveBeenCalledWith(
+                    expect.any(Object),
+                    transformed_tracker,
+                );
+                expect(buildFormTree).toHaveBeenCalledWith(transformed_tracker);
                 expect(model.invert_followups_comments_order).toBe(false);
                 expect(model.text_fields_format).toBe("html");
-                expect(model.tracker_id).toEqual(tracker_id);
-                expect(model.artifact_id).toEqual(artifact_id);
-                expect(model.color).toBe("slackerism");
-                expect(model.tracker).toEqual(tracker);
+                expect(model.tracker_id).toBe(TRACKER_ID);
+                expect(model.current_artifact_identifier.id).toBe(ARTIFACT_ID);
+                expect(model.color).toBe("deep-blue");
+                expect(model.tracker).toBe(transformed_tracker);
                 expect(model.values).toBeDefined();
                 expect(model.ordered_fields).toBeDefined();
                 expect(setCreationMode).toHaveBeenCalledWith(false);
                 expect(model.title).toBe("onomatomania");
-                expect(model.etag).toBe("etag");
-                expect(model.last_modified).toBe(1629097552);
+                expect(model.etag).toBe(LAST_MODIFIED);
+                expect(model.last_modified).toBe(LAST_MODIFIED);
                 expect(model.user_locale).toBe(USER_LOCALE);
                 expect(model.user_date_time_format).toBe(USER_DATE_TIME_FORMAT);
             });
@@ -369,97 +362,81 @@ describe("NewTuleapArtifactModalService", () => {
                 when I create the modal's edition model,
                 then the default text_field format will be "commonmark" by default`, async () => {
                 const comment_order_preference = {
-                    key: "tracker_comment_invertorder_93",
+                    key: `tracker_comment_invertorder_${TRACKER_ID}`,
                     value: "1",
                 };
 
                 getUserPreference.mockImplementation((user_id, preference_key) => {
                     if (preference_key.includes("tracker_comment_invertorder_")) {
-                        return $q.when(comment_order_preference);
+                        return Promise.resolve(comment_order_preference);
                     } else if (preference_key === "user_edition_default_format") {
-                        return $q.when({
+                        return Promise.resolve({
                             key: "user_edition_default_format",
                             value: false,
                         });
                     } else if (preference_key === "relative_dates_display") {
-                        return $q.when({
+                        return Promise.resolve({
                             key: "relative_dates_display",
                             value: false,
                         });
                     }
+                    throw Error("Did not expect this preference key");
                 });
 
-                const promise = NewTuleapArtifactModalService.initEditionModalModel(
-                    user_id,
-                    tracker_id,
-                    artifact_id,
-                );
+                const model = await initModel();
 
-                await expect(wrapPromise(promise)).resolves.toBeDefined();
-                const model = promise.$$state.value;
-
-                expect(model.text_fields_format).toBe("commonmark");
+                expect(model.text_fields_format).toBe(TEXT_FORMAT_COMMONMARK);
             });
         });
 
         describe("apply transitions -", () => {
-            let workflow_field, artifact;
+            const WORKFLOW_FIELD_ID = 189;
+            let workflow_field;
 
             beforeEach(() => {
                 workflow_field = {
-                    field_id: 189,
+                    field_id: WORKFLOW_FIELD_ID,
                     values: [],
                 };
             });
 
-            it("Given a tracker that had workflow transitions, when I create the modal's edition model, then the transitions will be enforced", async () => {
-                var workflow = {
+            it(`Given a tracker that had workflow transitions,
+                when I create the modal's edition model,
+                then the transitions will be enforced`, async () => {
+                const BIND_VALUE_ID = 757;
+                const workflow = {
                     is_used: "1",
-                    field_id: 189,
-                    transitions: [
-                        {
-                            from_id: 757,
-                            to_id: 511,
-                        },
-                    ],
+                    field_id: WORKFLOW_FIELD_ID,
+                    transitions: [{ from_id: BIND_VALUE_ID, to_id: 511 }],
                 };
-                tracker = {
-                    id: tracker_id,
+                const tracker = {
+                    id: TRACKER_ID,
                     fields: [workflow_field],
                     workflow: workflow,
                 };
-                artifact = {
+                const artifact = {
                     title: "onomatomania",
                     tracker,
-                    values: [
-                        {
-                            field_id: 189,
-                            bind_value_ids: [757],
-                        },
-                    ],
+                    values: [{ field_id: WORKFLOW_FIELD_ID, bind_value_ids: [BIND_VALUE_ID] }],
                 };
-                getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
+                artifact_retriever =
+                    RetrieveCurrentArtifactWithTrackerStructureStub.withArtifact(artifact);
 
-                var promise = wrapPromise(
-                    NewTuleapArtifactModalService.initEditionModalModel(
-                        user_id,
-                        tracker_id,
-                        artifact_id,
-                    ),
-                );
+                await initModel();
 
-                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
-                    757,
+                    BIND_VALUE_ID,
                     workflow_field,
                     workflow,
                 );
             });
 
-            it("Given a tracker that had workflow transitions but were not used, when I create the modal's edition model, then the transitions won't be enforced", async () => {
-                var workflow = {
+            it(`Given a tracker that had workflow transitions but were not used,
+                when I create the modal's edition model,
+                then the transitions won't be enforced`, async () => {
+                const workflow = {
                     is_used: "0",
-                    field_id: 189,
+                    field_id: WORKFLOW_FIELD_ID,
                     transitions: [
                         {
                             from_id: 757,
@@ -467,68 +444,47 @@ describe("NewTuleapArtifactModalService", () => {
                         },
                     ],
                 };
-                tracker = {
-                    id: tracker_id,
+                const tracker = {
+                    id: TRACKER_ID,
                     fields: [workflow_field],
                     workflow: workflow,
                 };
-                artifact = {
+                const artifact = {
                     title: "onomatomania",
                     tracker,
-                    values: [
-                        {
-                            field_id: 487,
-                            value: "unwadded",
-                        },
-                    ],
+                    values: [{ field_id: 487, value: "unwadded" }],
                 };
+                artifact_retriever =
+                    RetrieveCurrentArtifactWithTrackerStructureStub.withArtifact(artifact);
 
-                getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
+                await initModel();
 
-                var promise = wrapPromise(
-                    NewTuleapArtifactModalService.initEditionModalModel(
-                        user_id,
-                        tracker_id,
-                        artifact_id,
-                    ),
-                );
-
-                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
             });
 
-            it("Given a tracker that had workflow transitions on a field with missing values, when I create the modal's edition model, it does not crash and enforce the transition like in the creation", async () => {
+            it(`Given a tracker that had workflow transitions on a field with missing values,
+                when I create the modal's edition model,
+                it does not crash and enforce the transition like in the creation`, async () => {
                 const workflow = {
                     is_used: "1",
-                    field_id: 189,
-                    transitions: [
-                        {
-                            from_id: 757,
-                            to_id: 511,
-                        },
-                    ],
+                    field_id: WORKFLOW_FIELD_ID,
+                    transitions: [{ from_id: 757, to_id: 511 }],
                 };
-                tracker = {
-                    id: tracker_id,
+                const tracker = {
+                    id: TRACKER_ID,
                     fields: [workflow_field],
                     workflow: workflow,
                 };
-                artifact = {
+                const artifact = {
                     title: "onomatomania",
                     tracker,
                     values: [],
                 };
-                getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
+                artifact_retriever =
+                    RetrieveCurrentArtifactWithTrackerStructureStub.withArtifact(artifact);
 
-                const promise = wrapPromise(
-                    NewTuleapArtifactModalService.initEditionModalModel(
-                        user_id,
-                        tracker_id,
-                        artifact_id,
-                    ),
-                );
+                await initModel();
 
-                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
                     null,
                     workflow_field,

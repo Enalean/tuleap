@@ -20,8 +20,8 @@
 import { FieldDependenciesValuesHelper } from "./FieldDependenciesValuesHelper";
 import { EventDispatcher } from "../../EventDispatcher";
 import { DidChangeListFieldValue } from "./DidChangeListFieldValue";
-import type { FieldDependenciesRule } from "./FieldDependenciesValuesHelper";
 import type { DidChangeAllowedValues } from "./DidChangeAllowedValues";
+import type { FieldDependenciesRule } from "../../initialization/CurrentArtifactWithTrackerStructure";
 
 const source_field_id = 1050;
 const target_1_field_id = 1051;

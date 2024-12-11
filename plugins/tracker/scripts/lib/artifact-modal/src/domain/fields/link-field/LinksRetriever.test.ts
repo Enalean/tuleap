@@ -24,8 +24,7 @@ import { LinksRetriever } from "./LinksRetriever";
 import { RetrieveLinkTypesStub } from "../../../../tests/stubs/RetrieveLinkTypesStub";
 import { RetrieveLinkedArtifactsByTypeStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
 import type { LinkedArtifact } from "./LinkedArtifact";
-import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
-import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
+import { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import { AddLinkedArtifactCollectionStub } from "../../../../tests/stubs/AddLinkedArtifactCollectionStub";
@@ -46,7 +45,7 @@ describe(`LinksRetriever`, () => {
         links_adder: AddLinkedArtifactCollectionStub;
 
     beforeEach(() => {
-        current_artifact_option = Option.fromValue(CurrentArtifactIdentifierStub.withId(64));
+        current_artifact_option = Option.fromValue(CurrentArtifactIdentifier.fromId(64));
 
         const child_type = LinkTypeStub.buildChildLinkType();
         const parent_type = LinkTypeStub.buildParentLinkType();

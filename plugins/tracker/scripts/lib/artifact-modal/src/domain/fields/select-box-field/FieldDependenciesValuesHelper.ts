@@ -19,14 +19,7 @@
 
 import type { EventDispatcher } from "../../EventDispatcher";
 import { DidChangeAllowedValues } from "./DidChangeAllowedValues";
-import type { BindValueId } from "./BindValueId";
-
-export type FieldDependenciesRule = {
-    readonly source_field_id: number;
-    readonly source_value_id: BindValueId;
-    readonly target_field_id: number;
-    readonly target_value_id: BindValueId;
-};
+import type { FieldDependenciesRule } from "../../initialization/CurrentArtifactWithTrackerStructure";
 
 export const FieldDependenciesValuesHelper = (
     event_dispatcher: EventDispatcher,
