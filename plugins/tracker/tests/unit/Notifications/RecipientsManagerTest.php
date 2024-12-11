@@ -19,10 +19,12 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Notifications;
 
-use Mockery;
-use PFUser;
+use LogicException;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -37,6 +39,7 @@ use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetCommentTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use UserManager;
 
 /**
@@ -44,88 +47,50 @@ use UserManager;
  */
 final class RecipientsManagerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserNotificationOnlyStatusChangeDAO
-     */
-    private $user_status_change_only_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserNotificationSettingsRetriever
-     */
-    private $notification_settings_retriever;
-    /**
-     * @var RecipientsManager
-     */
-    private $recipients_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnsubscribersNotificationDAO
-     */
-    private $unsubscribers_notification_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserNotificationSettings
-     */
-    private $user_notification_settings;
+    private UserNotificationOnlyStatusChangeDAO&MockObject $user_status_change_only_dao;
+    private RecipientsManager $recipients_manager;
+    private UserManager&MockObject $user_manager;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
+    private UnsubscribersNotificationDAO&MockObject $unsubscribers_notification_dao;
+    private UserNotificationSettings&MockObject $user_notification_settings;
 
     protected function setUp(): void
     {
-        $this->user_manager                    = Mockery::mock(UserManager::class);
-        $this->formelement_factory             = Mockery::spy(Tracker_FormElementFactory::class);
-        $this->unsubscribers_notification_dao  = Mockery::mock(UnsubscribersNotificationDAO::class);
-        $this->notification_settings_retriever = Mockery::spy(UserNotificationSettingsRetriever::class);
-        $this->user_status_change_only_dao     = Mockery::spy(UserNotificationOnlyStatusChangeDAO::class);
-        $this->recipients_manager              = new RecipientsManager(
+        $this->user_manager                   = $this->createMock(UserManager::class);
+        $this->formelement_factory            = $this->createMock(Tracker_FormElementFactory::class);
+        $this->unsubscribers_notification_dao = $this->createMock(UnsubscribersNotificationDAO::class);
+        $notification_settings_retriever      = $this->createMock(UserNotificationSettingsRetriever::class);
+        $this->user_status_change_only_dao    = $this->createMock(UserNotificationOnlyStatusChangeDAO::class);
+        $this->recipients_manager             = new RecipientsManager(
             $this->formelement_factory,
             $this->user_manager,
             $this->unsubscribers_notification_dao,
-            $this->notification_settings_retriever,
+            $notification_settings_retriever,
             $this->user_status_change_only_dao,
             new MentionedUserInCommentRetriever($this->user_manager)
         );
 
-        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient1')->andReturns(
-            new PFUser([
-                'language_id' => 'en',
-                'user_id' => 101,
-            ])
-        );
-        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient2')->andReturns(
-            new PFUser([
-                'language_id' => 'en',
-                'user_id' => 102,
-            ])
-        );
-        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient3')->andReturns(
-            new PFUser([
-                'language_id' => 'en',
-                'user_id' => 103,
-            ])
-        );
+        $this->user_manager->method('getUserByUserName')->willReturnCallback(static fn(string $username) => match ($username) {
+            'recipient1' => UserTestBuilder::buildWithId(101),
+            'recipient2' => UserTestBuilder::buildWithId(102),
+            'recipient3' => UserTestBuilder::buildWithId(103),
+            default      => throw new LogicException("Should not be called with '$username'"),
+        });
 
-        $this->user_notification_settings = Mockery::mock(UserNotificationSettings::class);
-        $this->notification_settings_retriever->shouldReceive('getUserNotificationSettings')->andReturns($this->user_notification_settings);
+        $this->user_notification_settings = $this->createMock(UserNotificationSettings::class);
+        $notification_settings_retriever->method('getUserNotificationSettings')->willReturn($this->user_notification_settings);
     }
 
     public function testItReturnsRecipientsFromField(): void
     {
-        $field = $this->getSelectBox();
-        $field->shouldReceive('isNotificationsSupported')->andReturns(true);
-        $field->shouldReceive('hasNotifications')->andReturns(true);
-        $field->shouldReceive('getRecipients')->andReturns(['recipient1']);
-        $field->shouldReceive('userCanRead')->andReturns(true);
-        $this->formelement_factory->shouldReceive('getFieldById')->with(1)->andReturns($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field->method('isNotificationsSupported')->willReturn(true);
+        $field->method('hasNotifications')->willReturn(true);
+        $field->method('getRecipients')->willReturn(['recipient1']);
+        $field->method('userCanRead')->willReturn(true);
+        $this->formelement_factory->method('getFieldById')->with(1)->willReturn($field);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
@@ -133,13 +98,14 @@ final class RecipientsManagerTest extends TestCase
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient1' => true],
@@ -149,10 +115,9 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItReturnsRecipientsFromCommentators(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             ['recipient2'],
             [],
             'On going',
@@ -160,13 +125,14 @@ final class RecipientsManagerTest extends TestCase
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient2' => true],
@@ -176,30 +142,29 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItReturnsRecipientsFromTrackerConfig(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'Review',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient3' => true],
@@ -209,10 +174,9 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItCleansUserFromRecipientsWhenTheyCannotReadTheArtifact(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             ['recipient2'],
             [],
             'On going',
@@ -220,14 +184,14 @@ final class RecipientsManagerTest extends TestCase
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             true,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
-        $changeset->shouldReceive('hasChanged')->andReturn(true);
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(false);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(false);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             [],
@@ -237,10 +201,9 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField(): void
     {
-        $this->mockADateField(false, false);
+        $this->mockADateField(false);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             ['recipient2'],
             [],
             'On going',
@@ -248,14 +211,14 @@ final class RecipientsManagerTest extends TestCase
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             true,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
-        $changeset->shouldReceive('hasChanged')->andReturn(true);
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             [],
@@ -265,35 +228,34 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItCleansUserFromRecipientsWhenUserHasUnsubscribedFromArtifact(): void
     {
-        $field = $this->getSelectBox();
-        $field->shouldReceive('isNotificationsSupported')->andReturns(true);
-        $field->shouldReceive('hasNotifications')->andReturns(true);
-        $field->shouldReceive('getRecipients')->andReturns(['recipient1']);
-        $field->shouldReceive('userCanRead')->andReturns(true);
-        $this->formelement_factory->shouldReceive('getFieldById')->with(1)->andReturns($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field->method('isNotificationsSupported')->willReturn(true);
+        $field->method('hasNotifications')->willReturn(true);
+        $field->method('getRecipients')->willReturn(['recipient1']);
+        $field->method('userCanRead')->willReturn(true);
+        $this->formelement_factory->method('getFieldById')->with(1)->willReturn($field);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             ['recipient2'],
             [102],
             'On going',
             'Review',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient1' => true, 'recipient3' => true],
@@ -303,29 +265,28 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItDoesNotFilterWhenTrackerIsNotInModeStatusUpdateOnly(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'Review',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
         $artifact  = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient3' => true],
@@ -335,30 +296,29 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItDoesNotFilerWhenStatusChangedAndTrackerIsInStatusChangeOnlyMode(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'Review',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient3' => true],
@@ -368,20 +328,18 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItDoesNotFilterAtArtifactCreation(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             ['recipient3'],
             [],
             '',
             '',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => [],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => [],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
@@ -389,9 +347,10 @@ final class RecipientsManagerTest extends TestCase
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnEveryChangeMode')->willReturn(false);
 
         self::assertSame(
             ['recipient3' => true],
@@ -401,31 +360,31 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItDoesNotFilterUsersWhoAreInGlobalNotificationWithNotificationInEveryStatusChangeChecked(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'On going',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnEveryChangeMode')->willReturn(true);
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
+        $this->user_status_change_only_dao->method('doesUserIdHaveSubscribeOnlyForStatusChangeNotification');
 
         self::assertSame(
             ['recipient3' => true],
@@ -435,31 +394,31 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItDoesNotFilterUsersWhoAreInInvolvedNotificationWithNotificationInEveryStatusChangeChecked(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'On going',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNoGlobalNotificationMode')->andReturnTrue();
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNoGlobalNotificationMode')->willReturn(true);
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
+        $this->user_status_change_only_dao->method('doesUserIdHaveSubscribeOnlyForStatusChangeNotification');
 
         self::assertSame(
             ['recipient3' => true],
@@ -469,39 +428,41 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItFilterUsersWhoAreInGlobalNotification(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
-        $changeset = Mockery::spy(Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getValues')->andReturns([
-            1 => Mockery::spy(
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getValues')->willReturn([
+            1 => $this->createMock(
                 Tracker_Artifact_ChangesetValue_List::class
-            )->shouldReceive('hasChanged')->andReturns(true),
+            )->method('hasChanged')->willReturn(true),
         ]);
+        $changeset->method('forceFetchAllValues');
+        $changeset->method('getId');
 
-        $artifact           = Mockery::spy(Artifact::class)->shouldReceive('getCommentators')->andReturns(['recipient3'])->getMock();
-        $previous_changeset = Mockery::spy(Tracker_Artifact_Changeset::class);
-        $artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
-        $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->andReturns([]);
-        $changeset->shouldReceive('getArtifact')->andReturns($artifact);
-        $artifact->shouldReceive('getStatusForChangeset')->andReturns('On going');
-        $artifact->shouldReceive('getStatus')->andReturns('On going');
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getCommentators')->willReturn(['recipient3']);
+        $previous_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $artifact->method('getPreviousChangeset')->willReturn($previous_changeset);
+        $this->unsubscribers_notification_dao->method('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->willReturn([]);
+        $changeset->method('getArtifact')->willReturn($artifact);
+        $artifact->method('getStatusForChangeset')->willReturn('On going');
+        $artifact->method('getStatus')->willReturn('On going');
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns(888);
-        $tracker->shouldReceive('getRecipients')->andReturns([
-            [
-                'on_updates'        => true,
-                'check_permissions' => true,
-                'recipients'        => [],
-            ],
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(888);
+        $tracker->method('getRecipients')->willReturn([[
+            'on_updates'        => true,
+            'check_permissions' => true,
+            'recipients'        => [],
+        ],
         ]);
-        $tracker->shouldReceive('getNotificationsLevel')->andReturns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
-        $changeset->shouldReceive('getTracker')->andReturns($tracker);
+        $tracker->method('getNotificationsLevel')->willReturn(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
+        $changeset->method('getTracker')->willReturn($tracker);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnFalse();
-        $this->user_notification_settings->shouldReceive('isInNoGlobalNotificationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnEveryChangeMode')->willReturn(false);
+        $this->user_notification_settings->method('isInNoGlobalNotificationMode')->willReturn(false);
 
-        $changeset->shouldReceive('getComment')->andReturns(
+        $changeset->method('getComment')->willReturn(
             ChangesetCommentTestBuilder::aComment()->build()
         );
 
@@ -513,31 +474,31 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItDoesNotFilterIfNoStatusChangeAndTrackerIsInStatusChangeOnlyAndUserSubscribeAllNotifications(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'On going',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnEveryChangeMode')->willReturn(true);
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
+        $this->user_status_change_only_dao->method('doesUserIdHaveSubscribeOnlyForStatusChangeNotification');
 
         self::assertSame(
             ['recipient3' => true],
@@ -547,33 +508,33 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItFilterUsersWhoOnlyWantSeeStatusChangeWhenStatusIsNotUpdated(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'On going',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient2', 'recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient2', 'recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(true);
-        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
+        $this->user_status_change_only_dao->method('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')
+            ->with(self::anything(), 36)
+            ->willReturnCallback(static fn(int $user_id, int $tracker_id) => $user_id === 102);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient3' => true],
@@ -583,33 +544,32 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItDoesNotFilterWhenStatusIsUpdated(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'Review',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient2', 'recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient2', 'recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(true);
-        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
+        $this->user_status_change_only_dao->method('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->willReturn(true);
+        $this->user_status_change_only_dao->method('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->willReturn(false);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
 
         self::assertSame(
             ['recipient2' => true, 'recipient3' => true],
@@ -619,33 +579,33 @@ final class RecipientsManagerTest extends TestCase
 
     public function testItFiltersUsersWhoOnlyWantSeeNewArtifactsWhenArtifactIsUpdatedAndUserIsInvolved(): void
     {
-        $this->mockADateField(false, true);
+        $this->mockADateField(true);
 
         $changeset = $this->getAMockedChangeset(
-            true,
             [],
             [],
             'On going',
             'On going',
-            [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => ['recipient2', 'recipient3'],
-                ],
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient2', 'recipient3'],
+            ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            Mockery::spy(Tracker_Artifact_Changeset::class)
+            ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
         $artifact = $changeset->getArtifact();
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(false);
-        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
+        $this->user_status_change_only_dao->method('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')
+            ->with(self::anything(), 36)
+            ->willReturn(false);
 
-        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturn(true, false);
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(true, false);
 
         self::assertSame(
             ['recipient3' => true],
@@ -653,102 +613,85 @@ final class RecipientsManagerTest extends TestCase
         );
     }
 
-    private function mockADateField($is_notification_supported, $user_can_read)
+    private function mockADateField(bool $user_can_read): void
     {
-        $field = Mockery::spy(Tracker_FormElement_Field_Date::class);
-        $field->shouldReceive('isNotificationsSupported')->andReturns($is_notification_supported);
-        $field->shouldReceive('userCanRead')->andReturns($user_can_read);
-        $this->formelement_factory->shouldReceive('getFieldById')->with(1)->andReturns($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field->method('isNotificationsSupported')->willReturn(false);
+        $field->method('userCanRead')->willReturn($user_can_read);
+        $this->formelement_factory->method('getFieldById')->with(1)->willReturn($field);
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
     private function getAMockedChangeset(
-        $has_changed,
         array $artifact_commentators,
         array $notifications_unsubscribers,
-        $previeous_changeset_status,
-        $artifact_status,
+        ?string $previeous_changeset_status,
+        string $artifact_status,
         array $tracker_recipients,
-        $tracker_notification_level,
-        $has_empty_body,
-        $previous_changeset,
-    ) {
-        $changeset       = Mockery::spy(Tracker_Artifact_Changeset::class);
-        $changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue_List::class);
-        $changeset_value->shouldReceive('hasChanged')->andReturns($has_changed);
-        $changeset->shouldReceive('getValues')->andReturns([1 => $changeset_value]);
+        int $tracker_notification_level,
+        bool $has_empty_body,
+        ?Tracker_Artifact_Changeset $previous_changeset,
+    ): Tracker_Artifact_Changeset&MockObject {
+        $changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $changeset_value->method('hasChanged')->willReturn(true);
+        $changeset_value->method('getField');
+        $changeset->method('getValues')->willReturn([1 => $changeset_value]);
+        $changeset->method('getId')->willReturn(1);
 
-        $artifact = Mockery::spy(Artifact::class)->shouldReceive('getCommentators')->andReturns(
-            $artifact_commentators
-        )->getMock();
-        $artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
-        $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->andReturns($notifications_unsubscribers);
-        $changeset->shouldReceive('getArtifact')->andReturns($artifact);
-        $artifact->shouldReceive('getStatusForChangeset')->andReturns($previeous_changeset_status);
-        $artifact->shouldReceive('getStatus')->andReturns($artifact_status);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getCommentators')->willReturn($artifact_commentators);
+        $artifact->method('getPreviousChangeset')->willReturn($previous_changeset);
+        $this->unsubscribers_notification_dao->method('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->willReturn($notifications_unsubscribers);
+        $changeset->method('getArtifact')->willReturn($artifact);
+        $artifact->method('getStatusForChangeset')->willReturn($previeous_changeset_status);
+        $artifact->method('getStatus')->willReturn($artifact_status);
+        $artifact->method('getId')->willReturn(125);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns(36);
-        $tracker->shouldReceive('getRecipients')->andReturns($tracker_recipients);
-        $tracker->shouldReceive('getNotificationsLevel')->andReturns($tracker_notification_level);
-        $changeset->shouldReceive('getTracker')->andReturns($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(36);
+        $tracker->method('getRecipients')->willReturn($tracker_recipients);
+        $tracker->method('getNotificationsLevel')->willReturn($tracker_notification_level);
+        $changeset->method('getTracker')->willReturn($tracker);
 
         $comment_changeset = ChangesetCommentTestBuilder::aComment()->withCommentBody(
             $has_empty_body ? '' : 'some text'
         )->build();
-        $changeset->shouldReceive('getComment')->andReturns($comment_changeset);
+        $changeset->method('getComment')->willReturn($comment_changeset);
 
-        $changeset->shouldReceive('getSubmitter')->andReturn(UserTestBuilder::aRandomActiveUser()->build());
+        $changeset->method('getSubmitter')->willReturn(UserTestBuilder::aRandomActiveUser()->build());
+        $changeset->method('forceFetchAllValues');
 
         return $changeset;
     }
 
     public function testItBuildsAListOfUserIdsFromTheirTrackerNotificationsSettings(): void
     {
-        $user_recipients_from_tracker = [
-            [
-                'recipients'        =>
-                    [
-                        'noctali@example.com',
-                        'aquali@example.com',
-                    ],
-                'on_updates'        => false,
-                'check_permissions' => true,
-            ],
+        $user_recipients_from_tracker = [[
+            'recipients'        =>
+                [
+                    'noctali@example.com',
+                    'aquali@example.com',
+                ],
+            'on_updates'        => false,
+            'check_permissions' => true,
+        ],
         ];
 
-        $tracker = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns(888);
-        $tracker->shouldReceive('getRecipients')->andReturns($user_recipients_from_tracker);
-        $this->user_manager->shouldReceive('getUserByEmail')->with('noctali@example.com')->andReturns(
-            new PFUser([
-                'language_id' => 'en',
-                'user_id' => 101,
-            ])
-        );
-        $this->user_manager->shouldReceive('getUserByEmail')->with('aquali@example.com')->andReturns(
-            new PFUser([
-                'language_id' => 'en',
-                'user_id' => 102,
-            ])
-        );
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(888);
+        $tracker->method('getRecipients')->willReturn($user_recipients_from_tracker);
+        $this->user_manager->method('getUserByEmail')->willReturnCallback(static fn(string $email) => match ($email) {
+            'noctali@example.com' => UserTestBuilder::buildWithId(101),
+            'aquali@example.com'  => UserTestBuilder::buildWithId(102),
+            default               => throw new LogicException("Should not be called with '$email'"),
+        });
 
-        $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerID')->andReturns([103, 104]);
+        $this->unsubscribers_notification_dao->method('searchUserIDHavingUnsubcribedFromNotificationByTrackerID')->willReturn([103, 104]);
 
-        $this->user_status_change_only_dao->shouldReceive('searchUserIdsHavingSubscribedForTrackerStatusChangedOnly')->andReturns([105, 106]);
+        $this->user_status_change_only_dao->method('searchUserIdsHavingSubscribedForTrackerStatusChangedOnly')->willReturn([105, 106]);
 
         $all_user_ids = [101, 102, 103, 104, 105, 106];
 
         self::assertSame($all_user_ids, $this->recipients_manager->getAllRecipientsWhoHaveCustomSettingsForATracker($tracker));
-    }
-
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private function getSelectBox()
-    {
-        return Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
     }
 }
