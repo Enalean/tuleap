@@ -19,12 +19,12 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { CreateLinkableArtifact } from "../../../../domain/fields/link-field/creation/CreateLinkableArtifact";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
-import type { RetrieveTrackerWithTitleSemantic } from "../../RetrieveTrackerWithTitleSemantic";
-import type { CreateArtifact } from "../../../../domain/submit/CreateArtifact";
-import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field/RetrieveMatchingArtifact";
-import { LinkableNumber } from "../../../../domain/fields/link-field/LinkableNumber";
+import type { CreateLinkableArtifact } from "../../../../../domain/fields/link-field/creation/CreateLinkableArtifact";
+import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
+import type { RetrieveTrackerWithTitleSemantic } from "./RetrieveTrackerWithTitleSemantic";
+import type { CreateArtifact } from "../../../../../domain/submit/CreateArtifact";
+import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link-field/RetrieveMatchingArtifact";
+import { LinkableNumber } from "../../../../../domain/fields/link-field/LinkableNumber";
 
 export const LinkableArtifactCreator = (
     tracker_retriever: RetrieveTrackerWithTitleSemantic,

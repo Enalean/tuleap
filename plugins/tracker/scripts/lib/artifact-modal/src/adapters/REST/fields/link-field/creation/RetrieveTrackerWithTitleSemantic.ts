@@ -19,8 +19,8 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { TrackerIdentifier } from "../../domain/TrackerIdentifier";
-import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTitleSemantic";
+import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import type { TrackerWithTitleSemantic } from "./TrackerWithTitleSemantic";
 
 export type RetrieveTrackerWithTitleSemantic = {
     getTrackerWithTitleSemantic(

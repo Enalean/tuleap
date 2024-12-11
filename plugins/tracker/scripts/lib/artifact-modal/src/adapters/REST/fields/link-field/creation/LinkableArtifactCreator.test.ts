@@ -20,16 +20,16 @@
 import { okAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
+import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { LinkableArtifactCreator } from "./LinkableArtifactCreator";
-import type { RetrieveTrackerWithTitleSemantic } from "../../RetrieveTrackerWithTitleSemantic";
-import { RetrieveTrackerWithTitleSemanticStub } from "../../../../../tests/stubs/RetrieveTrackerWithTitleSemanticStub";
-import { TrackerIdentifierStub } from "../../../../../tests/stubs/TrackerIdentifierStub";
-import type { CreateArtifact } from "../../../../domain/submit/CreateArtifact";
-import { CreateArtifactStub } from "../../../../../tests/stubs/CreateArtifactStub";
-import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field/RetrieveMatchingArtifact";
-import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
-import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import type { RetrieveTrackerWithTitleSemantic } from "./RetrieveTrackerWithTitleSemantic";
+import { RetrieveTrackerWithTitleSemanticStub } from "../../../../../../tests/stubs/RetrieveTrackerWithTitleSemanticStub";
+import { TrackerIdentifierStub } from "../../../../../../tests/stubs/TrackerIdentifierStub";
+import type { CreateArtifact } from "../../../../../domain/submit/CreateArtifact";
+import { CreateArtifactStub } from "../../../../../../tests/stubs/CreateArtifactStub";
+import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link-field/RetrieveMatchingArtifact";
+import { RetrieveMatchingArtifactStub } from "../../../../../../tests/stubs/RetrieveMatchingArtifactStub";
+import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 
 describe(`LinkableArtifactCreator`, () => {
     const TRACKER_ID = 201,
