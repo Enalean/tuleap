@@ -68,9 +68,11 @@ import { WillNotifyFault } from "./domain/WillNotifyFault";
 import { WillDisableSubmit } from "./domain/submit/WillDisableSubmit";
 import { WillEnableSubmit } from "./domain/submit/WillEnableSubmit";
 import { ProjectsCache } from "./adapters/Memory/fields/link-field/ProjectsCache";
-import { LinkableArtifactCreator } from "./adapters/REST/fields/link-field/LinkableArtifactCreator";
+import { LinkableArtifactCreator } from "./adapters/REST/fields/link-field/creation/LinkableArtifactCreator";
 import { StaticOpenListFieldController } from "./adapters/UI/fields/open-list-field/static/StaticOpenListFieldController";
 import { UserGroupOpenListFieldController } from "./adapters/UI/fields/open-list-field/user-groups/UserGroupOpenListFieldController";
+import { LinkFieldAPIClient } from "./adapters/REST/fields/link-field/LinkFieldAPIClient";
+import { ArtifactCreationAPIClient } from "./adapters/REST/fields/link-field/creation/ArtifactCreationAPIClient";
 
 export default ArtifactModalController;
 
@@ -108,11 +110,13 @@ function ArtifactModalController(
     const current_project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(
         modal_model.tracker,
     );
-    const api_client = TuleapAPIClient(current_artifact_option, current_project_identifier);
+    const api_client = TuleapAPIClient(current_project_identifier);
+    const link_field_api_client = LinkFieldAPIClient(current_artifact_option);
+    const artifact_creation_api_client = ArtifactCreationAPIClient();
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
-    const possible_parents_cache = PossibleParentsCache(api_client);
+    const possible_parents_cache = PossibleParentsCache(link_field_api_client);
     const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
     const parent_artifact_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
         modal_model.parent_artifact_id,
@@ -121,7 +125,7 @@ function ArtifactModalController(
         modal_model.tracker_id,
     );
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
-    const user_history_cache = UserHistoryCache(api_client);
+    const user_history_cache = UserHistoryCache(link_field_api_client);
 
     const user_locale = document.body.dataset.userLocale ?? en_US_LOCALE;
 
@@ -172,7 +176,12 @@ function ArtifactModalController(
         ),
         getLinkFieldController: (field) => {
             return LinkFieldController(
-                LinksRetriever(api_client, api_client, links_store, current_artifact_option),
+                LinksRetriever(
+                    link_field_api_client,
+                    link_field_api_client,
+                    links_store,
+                    current_artifact_option,
+                ),
                 links_store,
                 links_store,
                 links_marked_for_removal_store,
@@ -199,10 +208,10 @@ function ArtifactModalController(
         },
         getLinkFieldAutoCompleter: () => {
             return ArtifactLinkSelectorAutoCompleter(
-                api_client,
+                link_field_api_client,
                 already_linked_verifier,
                 user_history_cache,
-                api_client,
+                link_field_api_client,
                 event_dispatcher,
                 current_artifact_option,
                 UserIdentifierProxy.fromUserId(modal_model.user_id),
@@ -211,9 +220,13 @@ function ArtifactModalController(
         getArtifactCreatorController() {
             return ArtifactCreatorController(
                 event_dispatcher,
-                ProjectsCache(api_client),
-                api_client,
-                LinkableArtifactCreator(api_client, api_client, api_client),
+                ProjectsCache(artifact_creation_api_client),
+                artifact_creation_api_client,
+                LinkableArtifactCreator(
+                    artifact_creation_api_client,
+                    api_client,
+                    link_field_api_client,
+                ),
                 current_project_identifier,
                 current_tracker_identifier,
                 user_locale,

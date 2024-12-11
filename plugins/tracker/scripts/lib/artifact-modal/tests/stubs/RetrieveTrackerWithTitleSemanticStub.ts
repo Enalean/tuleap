@@ -19,8 +19,8 @@
 
 import { errAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { TrackerWithTitleSemantic } from "../../src/adapters/REST/fields/link-field/TrackerWithTitleSemantic";
-import type { RetrieveTrackerWithTitleSemantic } from "../../src/adapters/REST/RetrieveTrackerWithTitleSemantic";
+import type { TrackerWithTitleSemantic } from "../../src/adapters/REST/fields/link-field/creation/TrackerWithTitleSemantic";
+import type { RetrieveTrackerWithTitleSemantic } from "../../src/adapters/REST/fields/link-field/creation/RetrieveTrackerWithTitleSemantic";
 
 export const RetrieveTrackerWithTitleSemanticStub = {
     withTracker: (tracker: TrackerWithTitleSemantic): RetrieveTrackerWithTitleSemantic => ({
