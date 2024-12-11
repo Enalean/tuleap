@@ -134,7 +134,7 @@ CREATE TABLE tracker_field(
     notifications TINYINT(1) NULL,
     original_field_id INT( 11 ) UNSIGNED NOT NULL DEFAULT '0',
     INDEX idx_fk_old_id( old_id ),
-    INDEX idx_fk_tracker_id( tracker_id ),
+    INDEX idx_tracker_usage_type(tracker_id, formElement_type, use_it),
     INDEX idx_fk_parent_id( parent_id ),
     INDEX idx_original_field_id(original_field_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
