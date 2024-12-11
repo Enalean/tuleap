@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Campaign;
 
 use CSRFSynchronizerToken;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
@@ -33,24 +32,14 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
-class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var StatusUpdater
-     */
-    private $updater;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusValueRetriever
-     */
-    private $status_value_retriever;
+    private StatusUpdater $updater;
+    private StatusValueRetriever&MockObject $status_value_retriever;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->status_value_retriever = Mockery::mock(StatusValueRetriever::class);
+        $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);
 
         $this->updater = new StatusUpdater($this->status_value_retriever);
     }
@@ -58,23 +47,26 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItOpensACampaign(): void
     {
         $user       = UserTestBuilder::anActiveUser()->build();
-        $csrf_token = Mockery::mock(CSRFSynchronizerToken::class);
+        $csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
-        $status_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $status_field->shouldReceive('getId')
-            ->once()
-            ->andReturn(156);
-        $status_field->shouldReceive('getFieldData')
-            ->once()
-            ->andReturn(1);
+        $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field
+            ->expects(self::once())
+            ->method('getId')
+            ->willReturn(156);
+        $status_field
+            ->expects(self::once())
+            ->method('getFieldData')
+            ->willReturn(1);
 
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getStatusField')
-            ->once()
-            ->andReturn($status_field);
+        $tracker_campaign = $this->createMock(Tracker::class);
+        $tracker_campaign
+            ->expects(self::once())
+            ->method('getStatusField')
+            ->willReturn($status_field);
 
-        $artifact_campaign = Mockery::mock(Artifact::class);
-        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+        $artifact_campaign = $this->createMock(Artifact::class);
+        $artifact_campaign->method('getTracker')->willReturn($tracker_campaign);
 
         $campaign = new Campaign(
             $artifact_campaign,
@@ -82,16 +74,18 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
 
-        $csrf_token->shouldReceive('check')->once();
+        $csrf_token->expects(self::once())->method('check');
 
-        $this->status_value_retriever->shouldReceive('getFirstOpenValueUserCanRead')
-            ->once()
-            ->andReturn(
+        $this->status_value_retriever
+            ->expects(self::once())
+            ->method('getFirstOpenValueUserCanRead')
+            ->willReturn(
                 new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'open', '', 1, false)
             );
 
-        $artifact_campaign->shouldReceive('createNewChangeset')
-            ->once()
+        $artifact_campaign
+            ->expects(self::once())
+            ->method('createNewChangeset')
             ->with(
                 [156 => 1],
                 '',
@@ -108,23 +102,26 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItClosesACampaign(): void
     {
         $user       = UserTestBuilder::anActiveUser()->build();
-        $csrf_token = Mockery::mock(CSRFSynchronizerToken::class);
+        $csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
-        $status_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $status_field->shouldReceive('getId')
-            ->once()
-            ->andReturn(156);
-        $status_field->shouldReceive('getFieldData')
-            ->once()
-            ->andReturn(2);
+        $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field
+            ->expects(self::once())
+            ->method('getId')
+            ->willReturn(156);
+        $status_field
+            ->expects(self::once())
+            ->method('getFieldData')
+            ->willReturn(2);
 
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getStatusField')
-            ->once()
-            ->andReturn($status_field);
+        $tracker_campaign = $this->createMock(Tracker::class);
+        $tracker_campaign
+            ->expects(self::once())
+            ->method('getStatusField')
+            ->willReturn($status_field);
 
-        $artifact_campaign = Mockery::mock(Artifact::class);
-        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+        $artifact_campaign = $this->createMock(Artifact::class);
+        $artifact_campaign->method('getTracker')->willReturn($tracker_campaign);
 
         $campaign = new Campaign(
             $artifact_campaign,
@@ -132,16 +129,18 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
 
-        $csrf_token->shouldReceive('check')->once();
+        $csrf_token->expects(self::once())->method('check');
 
-        $this->status_value_retriever->shouldReceive('getFirstClosedValueUserCanRead')
-            ->once()
-            ->andReturn(
+        $this->status_value_retriever
+            ->expects(self::once())
+            ->method('getFirstClosedValueUserCanRead')
+            ->willReturn(
                 new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'closed', '', 2, false)
             );
 
-        $artifact_campaign->shouldReceive('createNewChangeset')
-            ->once()
+        $artifact_campaign
+            ->expects(self::once())
+            ->method('createNewChangeset')
             ->with(
                 [156 => 2],
                 '',
@@ -158,15 +157,16 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfStatusSemanticNotDefined(): void
     {
         $user       = UserTestBuilder::anActiveUser()->build();
-        $csrf_token = Mockery::mock(CSRFSynchronizerToken::class);
+        $csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getStatusField')
-            ->once()
-            ->andReturnNull();
+        $tracker_campaign = $this->createMock(Tracker::class);
+        $tracker_campaign
+            ->expects(self::once())
+            ->method('getStatusField')
+            ->willReturn(null);
 
-        $artifact_campaign = Mockery::mock(Artifact::class);
-        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+        $artifact_campaign = $this->createMock(Artifact::class);
+        $artifact_campaign->method('getTracker')->willReturn($tracker_campaign);
 
         $campaign = new Campaign(
             $artifact_campaign,
@@ -174,7 +174,7 @@ class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
 
-        $csrf_token->shouldReceive('check');
+        $csrf_token->method('check');
 
         $this->expectException(SemanticStatusNotDefinedException::class);
 

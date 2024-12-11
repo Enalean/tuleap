@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Campaign;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
@@ -38,8 +36,6 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private CloseCampaignController $controller;
     private CampaignRetriever&MockObject $campaign_retriever;
     private StatusUpdater&MockObject $status_updater;
@@ -68,7 +64,7 @@ final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = HTTPRequestBuilder::get()->build();
 
-        $layout    = Mockery::mock(BaseLayout::class);
+        $layout    = $this->createMock(BaseLayout::class);
         $variables = [
             'campaign_id' => '3',
         ];
@@ -93,8 +89,8 @@ final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('closeCampaign');
 
-        $layout->shouldReceive('addFeedback')->once();
-        $layout->shouldReceive('redirect')->once();
+        $layout->expects(self::once())->method('addFeedback');
+        $layout->expects(self::once())->method('redirect');
 
         $this->controller->process(
             $request,

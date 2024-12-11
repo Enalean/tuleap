@@ -22,77 +22,60 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Campaign;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const CAMPAIGN_ID     = 683;
     private const USER_UGROUP_IDS = ['123', 4];
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private $campaign;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
-     */
-    private $campaign_tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Config
-     */
-    private $testmanagement_config;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private Artifact&MockObject $campaign;
+    private \Tracker&MockObject $campaign_tracker;
+    private \PFUser&MockObject $user;
+    private Config&MockObject $testmanagement_config;
+    private TrackerFactory&MockObject $tracker_factory;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
 
     protected function setUp(): void
     {
-        $this->campaign = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->campaign->shouldReceive('getId')->andReturn((string) self::CAMPAIGN_ID);
-        $this->campaign_tracker = \Mockery::mock(\Tracker::class);
-        $this->campaign->shouldReceive('getTracker')->andReturn($this->campaign_tracker);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
-        $this->campaign_tracker->shouldReceive('getProject')->andReturn($project);
-        $this->user = \Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('getUgroups')->andReturn(self::USER_UGROUP_IDS);
-        $this->testmanagement_config = \Mockery::mock(Config::class);
-        $this->tracker_factory       = \Mockery::mock(TrackerFactory::class);
-        $this->form_element_factory  = \Mockery::mock(Tracker_FormElementFactory::class);
+        $this->campaign = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->campaign->method('getId')->willReturn((string) self::CAMPAIGN_ID);
+        $this->campaign_tracker = $this->createMock(\Tracker::class);
+        $this->campaign->method('getTracker')->willReturn($this->campaign_tracker);
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn('102');
+        $this->campaign_tracker->method('getProject')->willReturn($project);
+        $this->user = $this->createMock(\PFUser::class);
+        $this->user->method('getUgroups')->willReturn(self::USER_UGROUP_IDS);
+        $this->testmanagement_config = $this->createMock(Config::class);
+        $this->tracker_factory       = $this->createMock(TrackerFactory::class);
+        $this->form_element_factory  = $this->createMock(Tracker_FormElementFactory::class);
     }
 
     public function testBuildsFromCampaignWhenUsersHaveEnoughRights(): void
     {
-        $this->campaign->shouldReceive('userCanView')->andReturn(true);
-        $this->testmanagement_config->shouldReceive('getTestExecutionTrackerId')->andReturn(11);
+        $this->campaign->method('userCanView')->willReturn(true);
+        $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(11)->andReturn($test_exec_tracker);
-        $status_field    = \Mockery::mock(Tracker_FormElement_Field_List::class);
+        $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
+        $status_field    = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field_id = 4444;
-        $status_field->shouldReceive('getId')->andReturn($status_field_id);
-        $status_field->shouldReceive('userCanRead')->andReturn(true);
-        $test_exec_tracker->shouldReceive('getStatusField')->andReturn($status_field);
+        $status_field->method('getId')->willReturn($status_field_id);
+        $status_field->method('userCanRead')->willReturn(true);
+        $test_exec_tracker->method('getStatusField')->willReturn($status_field);
         $campaign_art_link_field_id = 852;
-        $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
+
+        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link->method('getId')->willReturn($campaign_art_link_field_id);
+
+        $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($this->user, $this->campaign_tracker)
-            ->andReturn(
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->shouldReceive('getId')->andReturn($campaign_art_link_field_id)->getMock()
-            );
+            ->willReturn($link);
 
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $this->campaign,
@@ -109,7 +92,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
 
     public function testUsersCannotAccessTheInformationWhenTheyCannotViewTheCampaign(): void
     {
-        $this->campaign->shouldReceive('userCanView')->andReturn(false);
+        $this->campaign->method('userCanView')->willReturn(false);
 
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $this->campaign,
@@ -124,10 +107,10 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
 
     public function testUsersCannotAccessTheInformationWhenTheyCannotSeeTheArtLinkFieldOfCampaigns(): void
     {
-        $this->campaign->shouldReceive('userCanView')->andReturn(true);
-        $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
+        $this->campaign->method('userCanView')->willReturn(true);
+        $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($this->user, $this->campaign_tracker)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $this->campaign,
@@ -142,19 +125,21 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
 
     public function testUsersCannotAccessTheInformationWhenTheyCannotSeeTheTestExecStatusField(): void
     {
-        $this->campaign->shouldReceive('userCanView')->andReturn(true);
-        $this->testmanagement_config->shouldReceive('getTestExecutionTrackerId')->andReturn(11);
+        $this->campaign->method('userCanView')->willReturn(true);
+        $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(11)->andReturn($test_exec_tracker);
-        $status_field = \Mockery::mock(Tracker_FormElement_Field_List::class);
-        $status_field->shouldReceive('getId')->andReturn(4444);
-        $status_field->shouldReceive('userCanRead')->andReturn(false);
-        $test_exec_tracker->shouldReceive('getStatusField')->andReturn($status_field);
-        $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
+        $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
+        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field->method('getId')->willReturn(4444);
+        $status_field->method('userCanRead')->willReturn(false);
+        $test_exec_tracker->method('getStatusField')->willReturn($status_field);
+
+        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link->method('getId')->willReturn(852);
+
+        $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($this->user, $this->campaign_tracker)
-            ->andReturn(
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->shouldReceive('getId')->andReturn(852)->getMock()
-            );
+            ->willReturn($link);
 
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $this->campaign,
@@ -169,16 +154,18 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
 
     public function testUsersCannotAccessTheInformationWhenTheTestExecStatusFieldDoesNotExist(): void
     {
-        $this->campaign->shouldReceive('userCanView')->andReturn(true);
-        $this->testmanagement_config->shouldReceive('getTestExecutionTrackerId')->andReturn(11);
+        $this->campaign->method('userCanView')->willReturn(true);
+        $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(11)->andReturn($test_exec_tracker);
-        $test_exec_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
+        $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
+        $test_exec_tracker->method('getStatusField')->willReturn(null);
+
+        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link->method('getId')->willReturn(852);
+
+        $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($this->user, $this->campaign_tracker)
-            ->andReturn(
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->shouldReceive('getId')->andReturn(852)->getMock()
-            );
+            ->willReturn($link);
 
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $this->campaign,
@@ -193,15 +180,17 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
 
     public function testUsersCannotAccessTheInformationWhenTheyCannotViewTheTestExecTracker(): void
     {
-        $this->campaign->shouldReceive('userCanView')->andReturn(true);
-        $this->testmanagement_config->shouldReceive('getTestExecutionTrackerId')->andReturn(11);
+        $this->campaign->method('userCanView')->willReturn(true);
+        $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(false);
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(11)->andReturn($test_exec_tracker);
-        $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
+        $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
+
+        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link->method('getId')->willReturn(852);
+
+        $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($this->user, $this->campaign_tracker)
-            ->andReturn(
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->shouldReceive('getId')->andReturn(852)->getMock()
-            );
+            ->willReturn($link);
 
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $this->campaign,
@@ -216,13 +205,15 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
 
     public function testUsersCannotAccessTheInformationWhenTheTTMDoesNotHaveATestExecTracker(): void
     {
-        $this->campaign->shouldReceive('userCanView')->andReturn(true);
-        $this->testmanagement_config->shouldReceive('getTestExecutionTrackerId')->andReturn(false);
-        $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
+        $this->campaign->method('userCanView')->willReturn(true);
+        $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(false);
+
+        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link->method('getId')->willReturn(852);
+
+        $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($this->user, $this->campaign_tracker)
-            ->andReturn(
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->shouldReceive('getId')->andReturn(852)->getMock()
-            );
+            ->willReturn($link);
 
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $this->campaign,
@@ -235,13 +226,10 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $this->assertNull($information);
     }
 
-    /**
-     * @return \Tracker&\Mockery\MockInterface
-     */
-    private function buildTracker(bool $can_user_view_it): \Tracker
+    private function buildTracker(bool $can_user_view_it): \Tracker&MockObject
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('userCanView')->andReturn($can_user_view_it);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('userCanView')->willReturn($can_user_view_it);
 
         return $tracker;
     }
