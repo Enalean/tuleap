@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation;
 
+use Closure;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\SendMail;
 
@@ -29,17 +30,25 @@ final class SendMailStub implements SendMail
 {
     private int $call_counter = 0;
 
-    private function __construct()
+    private function __construct(private readonly ?Closure $callback)
     {
     }
 
     public static function build(): self
     {
-        return new self();
+        return new self(null);
+    }
+
+    public static function withAssertionHelperCallback(Closure $callback): self
+    {
+        return new self($callback);
     }
 
     public function send(Tracker_Artifact_Changeset $changeset, array $recipients, array $headers, string $from, string $subject, string $htmlBody, string $txtBody, ?string $message_id, array $attachments): void
     {
+        if ($this->callback !== null) {
+            ($this->callback)($recipients);
+        }
         $this->call_counter++;
     }
 

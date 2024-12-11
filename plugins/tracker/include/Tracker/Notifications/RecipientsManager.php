@@ -25,7 +25,6 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetector;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetectorImpl;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatAreTechnicalUsers;
@@ -52,7 +51,6 @@ class RecipientsManager
         private UnsubscribersNotificationDAO $unsubscribers_notification_dao,
         private UserNotificationSettingsRetriever $notification_settings_retriever,
         private UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
-        private readonly MentionedUserInCommentRetriever $mentioned_user_in_comment_retriever,
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
@@ -83,13 +81,7 @@ class RecipientsManager
             }
         }
 
-        // 2 Get from mentioned users in comment
-        $mentioned_users     = $this->mentioned_user_in_comment_retriever->getMentionedUsers($changeset)->users;
-        $mentioned_usernames = array_map(static fn(PFUser $user) => $user->getUsername(), $mentioned_users);
-
-        $recipients = array_merge($recipients, $mentioned_usernames);
-
-        // 3 Get from the commentators
+        // 2 Get from the commentators
         $recipients = array_merge($recipients, $changeset->getArtifact()->getCommentators());
         $recipients = array_values(array_unique($recipients));
 
@@ -105,7 +97,7 @@ class RecipientsManager
 
         $this->removeRecipientsWhenTrackerIsInOnlyStatusUpdateMode($changeset, $tablo);
 
-        // 4 Get from the global notif
+        // 3 Get from the global notif
         foreach ($changeset->getTracker()->getRecipients() as $r) {
             if ($r['on_updates'] == 1 || ! $is_update) {
                 foreach ($r['recipients'] as $recipient) {
@@ -128,6 +120,20 @@ class RecipientsManager
                 break;
             }
             $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
+        }
+        return array_map(static fn (Recipient $recipient) => $recipient->check_permissions, $tablo);
+    }
+
+    /**
+     * @param list<PFUser> $mentioned_users
+     *
+     * @psalm-return array<string, bool> Structure is [$recipient => $checkPermissions] where $recipient is a username or an email and $checkPermissions is bool.
+     */
+    public function getRecipientFromComment(array $mentioned_users): array
+    {
+        $tablo = [];
+        foreach ($mentioned_users as $user) {
+            $tablo[$user->getUserName()] = Recipient::fromUser($user);
         }
 
         return array_map(static fn (Recipient $recipient) => $recipient->check_permissions, $tablo);

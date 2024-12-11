@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ConfigNotificationAssignedTo;
 use ForgeConfig;
+use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
@@ -48,7 +49,7 @@ final class EmailNotificationTask implements PostCreationTask
         private readonly RecipientsManager $recipients_manager,
         private readonly Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory,
         private readonly MailGatewayConfig $mail_gateway_config,
-        private readonly MailSender $mail_sender,
+        private readonly SendMail $mail_sender,
         private readonly ConfigNotificationAssignedTo $config_notification_assigned_to,
         private readonly ConfigNotificationEmailCustomSender $config_notification_custom_sender,
         private readonly ProvideEmailNotificationAttachment $attachment_provider,
@@ -58,47 +59,64 @@ final class EmailNotificationTask implements PostCreationTask
     public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
         $tracker = $changeset->getTracker();
-        if ($tracker->isNotificationStopped() || ! $configuration->send_notifications) {
+        if ($tracker->isNotificationStopped()) {
             return;
         }
+
         $logger = new \WrapperLogger($this->logger, sprintf('%d, %d', $changeset->getArtifact()->getId(), $changeset->getId()));
         $logger->debug('Start mail notification');
 
+        $recipients = [];
         // 0. Is update
         $is_update = ! $changeset->getArtifact()->isFirstChangeset($changeset);
 
-        // 1. Get the recipients list
-        $recipients = $this->recipients_manager->getRecipients($changeset, $is_update, $logger);
-        if (empty($recipients)) {
-            $logger->debug('No recipients found');
-            $logger->debug('End mail notification');
-            return;
+        if ($configuration->mentioned_users !== []) {
+            $recipients = $this->recipients_manager->getRecipientFromComment(
+                $configuration->mentioned_users,
+            );
+        }
+
+        if ($configuration->send_notifications) {
+            // 1. Get the recipients list
+            $recipients = array_merge(
+                $recipients,
+                $this->recipients_manager->getRecipients($changeset, $is_update, $logger)
+            );
+            if (empty($recipients)) {
+                $logger->debug('No recipients found');
+                $logger->debug('End mail notification');
+                return;
+            }
         }
         $logger->debug('Recipient list: ' . implode(', ', array_keys($recipients)));
+        if ($recipients !== []) {
+            // 2. Compute the body of the message + headers
+            $messages = [];
+            if (
+                $this->mail_gateway_config->isTokenBasedEmailgatewayEnabled() || $this->isNotificationAssignedToEnabled(
+                    $tracker
+                )
+            ) {
+                $messages = $this->buildAMessagePerRecipient($changeset, $recipients, $is_update, $logger);
+            } else {
+                $messages = $this->buildOneMessageForMultipleRecipients($changeset, $recipients, $is_update, $logger);
+            }
 
-        // 2. Compute the body of the message + headers
-        $messages = [];
-
-        if ($this->mail_gateway_config->isTokenBasedEmailgatewayEnabled() || $this->isNotificationAssignedToEnabled($tracker)) {
-            $messages = $this->buildAMessagePerRecipient($changeset, $recipients, $is_update, $logger);
-        } else {
-            $messages = $this->buildOneMessageForMultipleRecipients($changeset, $recipients, $is_update, $logger);
-        }
-
-        // 3. Send the notification
-        foreach ($messages as $message) {
-            $logger->debug('Notify ' . implode(', ', $message['recipients']));
-            $this->mail_sender->send(
-                $changeset,
-                $message['recipients'],
-                $message['headers'],
-                $message['from'],
-                $message['subject'],
-                $message['htmlBody'],
-                $message['txtBody'],
-                $message['message-id'],
-                $message['attachments'],
-            );
+            // 3. Send the notification
+            foreach ($messages as $message) {
+                $logger->debug('Notify ' . implode(', ', $message['recipients']));
+                $this->mail_sender->send(
+                    $changeset,
+                    $message['recipients'],
+                    $message['headers'],
+                    $message['from'],
+                    $message['subject'],
+                    $message['htmlBody'],
+                    $message['txtBody'],
+                    $message['message-id'],
+                    $message['attachments'],
+                );
+            }
         }
         $logger->debug('End mail notification');
     }
@@ -177,8 +195,12 @@ final class EmailNotificationTask implements PostCreationTask
         return $messages;
     }
 
-    private function getMessageAttachments(Tracker_Artifact_Changeset $changeset, \PFUser $recipient, LoggerInterface $logger, bool $check_perms): array
-    {
+    private function getMessageAttachments(
+        Tracker_Artifact_Changeset $changeset,
+        PFUser $recipient,
+        LoggerInterface $logger,
+        bool $check_perms,
+    ): array {
         return $this->attachment_provider->getAttachments($changeset, $recipient, $logger, $check_perms);
     }
 
@@ -268,7 +290,7 @@ final class EmailNotificationTask implements PostCreationTask
         return $fields;
     }
 
-    private function getMessageId(\PFUser $user, Tracker_Artifact_Changeset $changeset)
+    private function getMessageId(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $recipient = $this->recipient_factory->getFromUserAndChangeset($user, $changeset);
         return $recipient->getEmail();
@@ -291,10 +313,9 @@ final class EmailNotificationTask implements PostCreationTask
         }
     }
 
-    private function getMessageContent(Tracker_Artifact_Changeset $changeset, \PFUser $user, $is_update, $check_perms)
+    private function getMessageContent(Tracker_Artifact_Changeset $changeset, PFUser $user, $is_update, $check_perms)
     {
         $message = [];
-
         (new TimezoneSwitcher())->setTimezoneForSpecificUserExecutionContext(
             $changeset->getSubmitter(),
             function () use ($changeset, $user, $is_update, $check_perms, &$message) {
@@ -466,7 +487,7 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return string
      */
-    private function getTextAssignedToFilter(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient)
+    private function getTextAssignedToFilter(\Tuleap\Tracker\Artifact\Artifact $artifact, PFUser $recipient)
     {
         $filter = '';
 
@@ -486,7 +507,7 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return string
      */
-    private function getHTMLAssignedToFilter(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient)
+    private function getHTMLAssignedToFilter(\Tuleap\Tracker\Artifact\Artifact $artifact, PFUser $recipient)
     {
         $filter = '';
 
@@ -507,7 +528,7 @@ final class EmailNotificationTask implements PostCreationTask
      *
      * @return string
      */
-    private function getSubject(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient, $ignore_perms = false)
+    private function getSubject(\Tuleap\Tracker\Artifact\Artifact $artifact, PFUser $recipient, $ignore_perms = false)
     {
         $subject  = '[' . $artifact->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ';
         $subject .= $this->getSubjectAssignedTo($artifact, $recipient);
@@ -518,7 +539,7 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return string
      */
-    private function getSubjectAssignedTo(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient)
+    private function getSubjectAssignedTo(\Tuleap\Tracker\Artifact\Artifact $artifact, PFUser $recipient)
     {
         if ($this->isNotificationAssignedToEnabled($artifact->getTracker())) {
             $assigned_to_users = $artifact->getAssignedTo($recipient);
