@@ -23,7 +23,7 @@ use Tuleap\Tracker\FormElement\Field\StaticField\RichText\RichTextFieldDao;
 
 class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField
 {
-    public $default_properties = [
+    public array $default_properties = [
         'static_value' => [
             'value' => '',
             'type'  => 'rich_text',

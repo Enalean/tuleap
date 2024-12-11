@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
 {
-    public $default_properties = [];
+    public array $default_properties = [];
 
     /**
      * Dynamic value does not really get deleted

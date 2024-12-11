@@ -36,7 +36,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public const FIELD_VALUE_IS_AUTOCOMPUTED               = 'is_autocomputed';
     public const FIELD_VALUE_MANUAL                        = 'manual_value';
 
-    public $default_properties = [
+    public array $default_properties = [
         'target_field_name' => [
             'value' => null,
             'type'  => 'string',

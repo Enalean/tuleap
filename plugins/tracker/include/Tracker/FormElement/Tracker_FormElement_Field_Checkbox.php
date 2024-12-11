@@ -26,6 +26,8 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
 {
     private const NOT_INDICATED_VALUE = '0';
 
+    public array $default_properties = [];
+
     protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
         return '';

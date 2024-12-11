@@ -42,7 +42,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public const IS_USED_BY_DEFAULT  = false;
     public const PERMISSION_TYPE     = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
 
-    public $default_properties = [];
+    public array $default_properties = [];
 
 
     /**

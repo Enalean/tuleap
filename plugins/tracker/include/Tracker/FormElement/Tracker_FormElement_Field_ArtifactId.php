@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
 {
-    public $default_properties = [];
+    public array $default_properties = [];
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {

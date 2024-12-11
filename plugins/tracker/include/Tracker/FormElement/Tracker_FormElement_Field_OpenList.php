@@ -40,7 +40,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public const OPEN_PREFIX      = 'o';
     public const NEW_VALUE_PREFIX = '!';
 
-    public $default_properties = [
+    public array $default_properties = [
         'hint' => [
             'value' => 'Type in a search term',
             'type'  => 'string',

@@ -513,7 +513,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     abstract public function fetchAdmin(Tracker $tracker);
 
-    public $default_properties = [];
+    public array $default_properties = [];
     protected $cache_specific_properties;
 
     /**
