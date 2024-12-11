@@ -19,4 +19,4 @@ Add a new entry in the Map built in [build-regexp-to-mark-builder-map](./build-r
 
 An entry requires two things:
 1. A `RegExp` to match the text parts on which to add the target Mark
-2. A `MarkAfterEnterKeyBuilder` to be able to create the target mark on the text parts matching the RegExp.
+2. A `MarkAfterEnterKeyBuilder` to be able to create the target mark on the text parts matching the RegExp if allowed.

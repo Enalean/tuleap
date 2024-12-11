@@ -27,19 +27,26 @@ const getAutomagicLinksAfterEnterKeyBuilder = (link: MarkType): RegexpToMarkMapE
     {
         type: link,
         buildFromText: (text: string): Mark => link.create({ href: text }),
+        canInsert: () => true,
     },
 ];
 
 const getCrossReferenceAfterEnterKeyBuilder = (
-    async_cross_reference: MarkType,
+    schema: Schema,
     project_id: number,
-): RegexpToMarkMapEntry => [
-    match_single_reference_regexp,
-    {
-        type: async_cross_reference,
-        buildFromText: (text: string): Mark => async_cross_reference.create({ text, project_id }),
-    },
-];
+): RegexpToMarkMapEntry => {
+    const { async_cross_reference, link } = schema.marks;
+
+    return [
+        match_single_reference_regexp,
+        {
+            type: async_cross_reference,
+            buildFromText: (text: string): Mark =>
+                async_cross_reference.create({ text, project_id }),
+            canInsert: (node) => !link.isInSet(node.marks),
+        },
+    ];
+};
 
 export const buildAddMarkAfterEnterPluginMap = (
     schema: Schema,
@@ -47,5 +54,5 @@ export const buildAddMarkAfterEnterPluginMap = (
 ): Map<RegExp, MarkAfterEnterKeyBuilder> =>
     new Map([
         getAutomagicLinksAfterEnterKeyBuilder(schema.marks.link),
-        getCrossReferenceAfterEnterKeyBuilder(schema.marks.async_cross_reference, project_id),
+        getCrossReferenceAfterEnterKeyBuilder(schema, project_id),
     ]);
