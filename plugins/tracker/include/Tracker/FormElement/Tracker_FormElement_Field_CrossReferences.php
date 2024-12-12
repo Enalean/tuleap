@@ -54,7 +54,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public const REST_REF_DIRECTION_OUT  = 'out';
     public const REST_REF_DIRECTION_BOTH = 'both';
 
-    public $default_properties = [];
+    public array $default_properties = [];
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {

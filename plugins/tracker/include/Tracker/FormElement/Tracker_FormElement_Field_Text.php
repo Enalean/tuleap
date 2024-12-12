@@ -43,7 +43,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 {
-    public $default_properties = [
+    public array $default_properties = [
         'rows'      => [
             'value' => 10,
             'type'  => 'string',

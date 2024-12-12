@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\FieldContentIndexer;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
 {
-    public $default_properties = [
+    public array $default_properties = [
         'maxchars'      => [
             'value' => 0,
             'type'  => 'string',
