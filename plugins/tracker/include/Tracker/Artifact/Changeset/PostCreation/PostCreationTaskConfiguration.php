@@ -26,7 +26,10 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
  */
 final readonly class PostCreationTaskConfiguration
 {
-    public function __construct(public bool $send_notifications)
+    /**
+     * @param list<\PFUser> $mentioned_users
+     */
+    public function __construct(public bool $send_notifications, public array $mentioned_users)
     {
     }
 }

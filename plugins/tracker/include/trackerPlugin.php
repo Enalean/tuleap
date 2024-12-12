@@ -2456,7 +2456,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new InvolvedNotificationDao()
                 ),
                 new UserNotificationOnlyStatusChangeDAO(),
-                new MentionedUserInCommentRetriever($this->getUserManager())
             ),
             new UserNotificationSettingsDAO()
         );

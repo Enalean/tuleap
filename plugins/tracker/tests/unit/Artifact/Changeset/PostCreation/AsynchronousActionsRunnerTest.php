@@ -21,13 +21,16 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\NullLogger;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
@@ -35,11 +38,17 @@ class AsynchronousActionsRunnerTest extends TestCase
 {
     private MockObject&ActionsRunner $actions_runner;
     private RetrieveArtifact $artifact_factory;
+    private RetrieveUserByIdStub $user_manager;
+    private PFUser $existing_user;
 
     protected function setUp(): void
     {
         $this->actions_runner   = $this->createMock(ActionsRunner::class);
-        $this->artifact_factory = RetrieveArtifactStub::withNoArtifact();
+        $this->artifact_factory = RetrieveArtifactStub::withArtifacts(
+            ArtifactTestBuilder::anArtifact(10)->build()
+        );
+        $this->existing_user    = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager     = RetrieveUserByIdStub::withUser($this->existing_user);
     }
 
     public function testActionsAreProcessed(): void
@@ -49,28 +58,30 @@ class AsynchronousActionsRunnerTest extends TestCase
         $artifact->expects($this->once())->method('getChangeset')->willReturn($changeset);
         $this->artifact_factory = RetrieveArtifactStub::withArtifacts($artifact);
 
-        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
+        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory, $this->user_manager);
+        $logger               = new TestLogger();
 
         $worker_event = new WorkerEvent(
-            new NullLogger(),
+            $logger,
             new WorkerEventContent(
                 'Event name',
-                ['artifact_id' => 1, 'changeset_id' => 15, 'send_notifications' => true]
+                ['artifact_id' => 1, 'changeset_id' => 15, 'send_notifications' => true, 'mentioned_user_ids' => [102, 115]]
             )
         );
 
-        $configuration = new PostCreationTaskConfiguration(true);
+        $configuration = new PostCreationTaskConfiguration(true, [$this->existing_user]);
         $this->actions_runner->expects(self::once())->method('processAsyncPostCreationActions')->with(
             $changeset,
             $configuration
         );
 
         $async_actions_runner->process($worker_event);
+        self::assertTrue($logger->hasWarningRecords());
     }
 
     public function testNotWellFormedPayloadAreHandled(): void
     {
-        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
+        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory, $this->user_manager);
 
         $logger       = new TestLogger();
         $worker_event = new WorkerEvent($logger, new WorkerEventContent('Event name', []));
@@ -84,12 +95,12 @@ class AsynchronousActionsRunnerTest extends TestCase
 
     public function testActionsAreNotProcessedWhenArtifactIsNotFound(): void
     {
-        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
+        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, RetrieveArtifactStub::withNoArtifact(), $this->user_manager);
 
         $logger       = new TestLogger();
         $worker_event = new WorkerEvent(
             $logger,
-            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
+            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true, 'mentioned_user_ids' => []])
         );
 
         $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
@@ -105,12 +116,12 @@ class AsynchronousActionsRunnerTest extends TestCase
         $artifact->method('getChangeset')->willReturn(null);
         $this->artifact_factory = RetrieveArtifactStub::withArtifacts($artifact);
 
-        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory);
+        $async_actions_runner = new AsynchronousActionsRunner($this->actions_runner, $this->artifact_factory, $this->user_manager);
 
         $logger       = new TestLogger();
         $worker_event = new WorkerEvent(
             $logger,
-            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true])
+            new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true, 'mentioned_user_ids' => []])
         );
 
         $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
