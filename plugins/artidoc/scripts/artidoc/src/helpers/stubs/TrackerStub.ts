@@ -23,6 +23,7 @@ const base: Tracker = {
     id: 101,
     label: "Bugs",
     color: "flamingo-pink",
+    item_name: "bugs",
     title: null,
     description: null,
     file: null,
