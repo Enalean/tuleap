@@ -2578,21 +2578,6 @@
       <code><![CDATA[getWellFormattedArchivePath]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/artidoc/include/Artidoc/Document/ArtidocDao.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[array_map(
-                        function (array $row) use ($target_id) {
-                            return [
-                                'id' => $this->identifier_factory->buildIdentifier()->getBytes(),
-                                'item_id' => $target_id,
-                                'artifact_id' => $row['artifact_id'],
-                                'rank' => $row['rank'],
-                            ];
-                        },
-                        $rows,
-                    )]]></code>
-    </ArgumentTypeCoercion>
-  </file>
   <file src="plugins/baseline/include/Adapter/Administration/AdminPermissionsPresenterBuilder.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getUserGroupsPresenter($administrators_ugroup_id, $project)]]></code>
@@ -20199,6 +20184,63 @@
       <code><![CDATA[visitPieChart]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/graphontrackersv5/include/Common/HTML_Element_Selectbox_TrackerFields_DatesV5.php">
+    <MissingParamType>
+      <code><![CDATA[$desc]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$onchange]]></code>
+      <code><![CDATA[$tracker]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$with_none]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/graphontrackersv5/include/Common/HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5.php">
+    <MissingParamType>
+      <code><![CDATA[$desc]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$onchange]]></code>
+      <code><![CDATA[$tracker]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$with_none]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/graphontrackersv5/include/Common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.php">
+    <MissingParamType>
+      <code><![CDATA[$desc]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$onchange]]></code>
+      <code><![CDATA[$tracker]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$with_none]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/graphontrackersv5/include/Common/HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5.php">
+    <MissingParamType>
+      <code><![CDATA[$desc]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$onchange]]></code>
+      <code><![CDATA[$tracker]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$with_none]]></code>
+      <code><![CDATA[$with_user]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/graphontrackersv5/include/Common/HTML_Element_Selectbox_TrackerFields_SelectboxesV5.php">
+    <MissingParamType>
+      <code><![CDATA[$desc]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$onchange]]></code>
+      <code><![CDATA[$tracker]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$with_none]]></code>
+      <code><![CDATA[$with_user]]></code>
+    </MissingParamType>
+  </file>
   <file src="plugins/graphontrackersv5/include/GraphActionsPresenter.class.php">
     <MissingParamType>
       <code><![CDATA[$can_be_updated]]></code>
@@ -20359,63 +20401,6 @@
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/graphontrackersv5/include/common/HTML_Element_Selectbox_TrackerFields_DatesV5.class.php">
-    <MissingParamType>
-      <code><![CDATA[$desc]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$onchange]]></code>
-      <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$with_none]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/graphontrackersv5/include/common/HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5.class.php">
-    <MissingParamType>
-      <code><![CDATA[$desc]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$onchange]]></code>
-      <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$with_none]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/graphontrackersv5/include/common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php">
-    <MissingParamType>
-      <code><![CDATA[$desc]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$onchange]]></code>
-      <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$with_none]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/graphontrackersv5/include/common/HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5.class.php">
-    <MissingParamType>
-      <code><![CDATA[$desc]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$onchange]]></code>
-      <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$with_none]]></code>
-      <code><![CDATA[$with_user]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/graphontrackersv5/include/common/HTML_Element_Selectbox_TrackerFields_SelectboxesV5.class.php">
-    <MissingParamType>
-      <code><![CDATA[$desc]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$onchange]]></code>
-      <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$with_none]]></code>
-      <code><![CDATA[$with_user]]></code>
-    </MissingParamType>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart.class.php">
     <DeprecatedMethod>

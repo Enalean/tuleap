@@ -21,6 +21,7 @@
  */
 
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
+use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesV5;
 
 class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
 {

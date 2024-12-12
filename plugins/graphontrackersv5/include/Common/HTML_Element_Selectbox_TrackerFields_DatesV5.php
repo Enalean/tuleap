@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -20,10 +20,18 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\GraphOnTrackersV5\Common;
+
+use HTML_Element_Option;
+use HTML_Element_Selectbox;
+use Tracker_FormElementFactory;
+
 /**
  * Define an html selectbox field for date fields provided by the tracker
  */
-class HTML_Element_Selectbox_TrackerFields_DatesV5 extends HTML_Element_Selectbox
+final class HTML_Element_Selectbox_TrackerFields_DatesV5 extends HTML_Element_Selectbox
 {
     public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = '', $desc = '')
     {
