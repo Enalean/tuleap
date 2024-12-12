@@ -2532,6 +2532,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Your link is not anymore valid: accessing the history via the old interface "
+"is not supported."
+msgstr ""
+
+msgid ""
 "Your message is not valid, you can not send the default message or an empty "
 "one."
 msgstr ""

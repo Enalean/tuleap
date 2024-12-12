@@ -2931,6 +2931,13 @@ msgstr ""
 "interface n'est pas supporté."
 
 msgid ""
+"Your link is not anymore valid: accessing the history via the old interface "
+"is not supported."
+msgstr ""
+"Votre lien n'est plus valide : accéder à l'historique via l'ancienne "
+"interface n'est pas supporté."
+
+msgid ""
 "Your message is not valid, you can not send the default message or an empty "
 "one."
 msgstr ""
