@@ -12,9 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-msgid "Add existing section"
-msgstr "Ajouter une section existante"
-
 msgid "Add new %{tracker_label}"
 msgstr "Créer un(e) %{tracker_label}"
 
@@ -110,6 +107,12 @@ msgstr "Forcer la sauvegarde"
 
 msgid "Go to artifact"
 msgstr "Aller à l'artéfact"
+
+msgid "Import existing %{tracker_label}"
+msgstr "Importer un(e) %{tracker_label} existant(e)"
+
+msgid "Import existing section"
+msgstr "Importer une section existante"
 
 msgid ""
 "In order to be able to add new sections to your document, we need to know in "

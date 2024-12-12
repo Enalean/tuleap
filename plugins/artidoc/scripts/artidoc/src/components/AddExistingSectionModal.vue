@@ -27,7 +27,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="artidoc-add-existing-section-modal-title">
-                {{ $gettext("Add existing section") }}
+                {{ $gettext("Import existing section") }}
             </h1>
             <button
                 class="tlp-modal-close"

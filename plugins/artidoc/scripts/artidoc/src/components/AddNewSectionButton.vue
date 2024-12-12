@@ -82,7 +82,11 @@ const add_new_requirement_label = configuration_store.selected_tracker.value
           tracker_label: configuration_store.selected_tracker.value.item_name,
       })
     : add_new_section_label;
-const add_existing_section_label = $gettext("Add existing section");
+const add_existing_section_label = configuration_store.selected_tracker.value
+    ? interpolate($gettext("Import existing %{tracker_label}"), {
+          tracker_label: configuration_store.selected_tracker.value.item_name,
+      })
+    : $gettext("Import existing section");
 
 const configuration_bus = strictInject(OPEN_CONFIGURATION_MODAL_BUS);
 const add_existing_section_bus = strictInject(OPEN_ADD_EXISTING_SECTION_MODAL_BUS);
