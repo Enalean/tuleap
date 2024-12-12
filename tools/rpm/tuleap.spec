@@ -1255,7 +1255,7 @@ fi
 %files plugin-mediawiki-standalone
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/mediawiki_standalone
-%{_unitdir}/mediawiki-tuleap-php-fpm.service
+%attr(00644,root,root) %{_unitdir}/mediawiki-tuleap-php-fpm.service
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 
