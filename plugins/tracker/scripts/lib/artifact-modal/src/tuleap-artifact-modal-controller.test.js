@@ -32,6 +32,7 @@ import * as file_field_detector from "./adapters/UI/fields/file-field/file-field
 import * as fields_validator from "./validate-artifact-field-value.js";
 import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 import { setCatalog } from "./gettext-catalog";
+import { CurrentArtifactIdentifier } from "./domain/CurrentArtifactIdentifier";
 
 const PROJECT_ID = 133;
 
@@ -233,14 +234,16 @@ describe("TuleapArtifactModalController", () => {
             the artifact will be edited,
             the modal will be closed
             and the callback will be called`, async () => {
+            const ARTIFACT_ID = 8155;
             const createArtifact = jest.spyOn(fetch_result, "postJSON");
-            editArtifactWithConcurrencyChecking.mockResolvedValue({ id: 8155 });
+            editArtifactWithConcurrencyChecking.mockResolvedValue({ id: ARTIFACT_ID });
             isInCreationMode.mockReturnValue(false);
-            controller_params.modal_model.artifact_id = 8155;
+            controller_params.modal_model.current_artifact_identifier =
+                CurrentArtifactIdentifier.fromId(ARTIFACT_ID);
             controller_params.modal_model.last_changeset_id = 78;
             controller_params.modal_model.tracker_id = 186;
-            controller_params.modal_model.etag = "etag";
-            controller_params.modal_model.last_modified = 1629098929;
+            controller_params.modal_model.etag = "1629098929";
+            controller_params.modal_model.last_modified = "1629098929";
             ArtifactModalController = $controller(BaseModalController, controller_params);
             const values = [
                 { field_id: 983, value: 741 },
@@ -261,15 +264,15 @@ describe("TuleapArtifactModalController", () => {
                 expect.any(Object),
             );
             expect(editArtifactWithConcurrencyChecking).toHaveBeenCalledWith(
-                8155,
+                ARTIFACT_ID,
                 values,
                 followup_comment,
-                "etag",
-                1629098929,
+                "1629098929",
+                "1629098929",
             );
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
-            expect(mockCallback).toHaveBeenCalledWith(8155, {
+            expect(mockCallback).toHaveBeenCalledWith(ARTIFACT_ID, {
                 did_artifact_links_change: expect.any(Boolean),
             });
             $scope.$apply();
@@ -294,10 +297,12 @@ describe("TuleapArtifactModalController", () => {
 
         it(`and given user forced to edit the artifact despite the concurrent edit warning,
             then the modal will be closed, and the artifact will be edited`, async () => {
+            const ARTIFACT_ID = 8155;
             const createArtifact = jest.spyOn(fetch_result, "postJSON");
-            editArtifact.mockResolvedValue({ id: 8155 });
+            editArtifact.mockResolvedValue({ id: ARTIFACT_ID });
             isInCreationMode.mockReturnValue(false);
-            controller_params.modal_model.artifact_id = 8155;
+            controller_params.modal_model.current_artifact_identifier =
+                CurrentArtifactIdentifier.fromId(ARTIFACT_ID);
             controller_params.modal_model.last_changeset_id = 78;
             controller_params.modal_model.tracker_id = 186;
 
@@ -321,10 +326,10 @@ describe("TuleapArtifactModalController", () => {
                 followup_comment,
                 expect.any(Object),
             );
-            expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
+            expect(editArtifact).toHaveBeenCalledWith(ARTIFACT_ID, values, followup_comment);
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
-            expect(mockCallback).toHaveBeenCalledWith(8155, {
+            expect(mockCallback).toHaveBeenCalledWith(ARTIFACT_ID, {
                 did_artifact_links_change: expect.any(Boolean),
             });
             $scope.$apply();

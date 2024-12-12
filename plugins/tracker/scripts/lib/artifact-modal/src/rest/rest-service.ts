@@ -22,10 +22,13 @@ import { get, put } from "@tuleap/tlp-fetch";
 import { resetError, setError } from "./rest-error-state";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type {
-    ArtifactResponseNoInstance,
     JustCreatedArtifactResponse,
     NewChangesetValue,
 } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    ETagValue,
+    LastModifiedTimestamp,
+} from "../domain/initialization/CurrentArtifactWithTrackerStructure";
 
 const headers = {
     "content-type": "application/json",
@@ -39,32 +42,6 @@ export function getTracker(tracker_id: number): Promise<TrackerRepresentation> {
     return get(encodeURI(`/api/v1/trackers/${tracker_id}`)).then((response) => {
         resetError();
         return response.json();
-    }, errorHandler);
-}
-
-type EtagValue = string | null;
-type LastModifiedTimestamp = string | null;
-
-type ArtifactRepresentationWithConcurrencyHeaders = Pick<
-    ArtifactResponseNoInstance,
-    "id" | "title" | "xref"
-> & {
-    readonly Etag: EtagValue;
-    readonly "Last-Modified": LastModifiedTimestamp;
-};
-
-export function getArtifactWithCompleteTrackerStructure(
-    artifact_id: number,
-): Promise<ArtifactRepresentationWithConcurrencyHeaders> {
-    return get(
-        encodeURI(`/api/v1/artifacts/${artifact_id}?tracker_structure_format=complete`),
-    ).then(async (response) => {
-        resetError();
-        return {
-            Etag: response.headers.get("Etag"),
-            "Last-Modified": response.headers.get("Last-Modified"),
-            ...(await response.json()),
-        };
     }, errorHandler);
 }
 
@@ -99,7 +76,7 @@ export function editArtifactWithConcurrencyChecking(
     artifact_id: number,
     field_values: FieldValuesMap,
     followup_comment: FollowupComment,
-    etag: EtagValue,
+    etag: ETagValue,
     last_modified: LastModifiedTimestamp,
 ): Promise<JustEditedArtifact> {
     const body = JSON.stringify({
@@ -117,7 +94,7 @@ export function editArtifactWithConcurrencyChecking(
 }
 
 function getEditHeaders(
-    etag: EtagValue,
+    etag: ETagValue,
     last_modified: LastModifiedTimestamp,
 ): Record<string, string> {
     const returned_headers: Record<string, string> = { ...headers };

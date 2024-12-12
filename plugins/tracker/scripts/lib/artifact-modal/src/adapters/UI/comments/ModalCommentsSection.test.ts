@@ -33,7 +33,7 @@ import { setCatalog } from "../../../gettext-catalog";
 import type { FollowupEditor } from "./FollowupEditor";
 import { CommentsController } from "../../../domain/comments/CommentsController";
 import { RetrieveCommentsStub } from "../../../../tests/stubs/RetrieveCommentsStub";
-import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import { CurrentArtifactIdentifier } from "../../../domain/CurrentArtifactIdentifier";
 import type { CommentUserPreferences } from "../../../domain/comments/CommentUserPreferences";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 
@@ -97,7 +97,7 @@ describe(`ModalCommentsSection`, () => {
                 controller: CommentsController(
                     RetrieveCommentsStub.withoutComments(),
                     DispatchEventsStub.buildNoOp(),
-                    CurrentArtifactIdentifierStub.withId(91),
+                    CurrentArtifactIdentifier.fromId(91),
                     preferences,
                 ),
             } as HostElement;

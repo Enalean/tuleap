@@ -32,8 +32,7 @@ import { LinkFieldAPIClient } from "./LinkFieldAPIClient";
 import { LinkableNumberStub } from "../../../../../tests/stubs/LinkableNumberStub";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
-import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
-import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
 import { ProjectStub } from "../../../../../tests/stubs/ProjectStub";
@@ -52,7 +51,7 @@ describe(`LinkFieldAPIClient`, () => {
         const ARTIFACT_ID = 350;
 
         const getAllLinkTypes = (): ResultAsync<readonly LinkType[], Fault> => {
-            return getClient().getAllLinkTypes(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
+            return getClient().getAllLinkTypes(CurrentArtifactIdentifier.fromId(ARTIFACT_ID));
         };
 
         it(`will return an array of link types`, async () => {
@@ -97,7 +96,7 @@ describe(`LinkFieldAPIClient`, () => {
 
         const getLinkedArtifactsByLinkType = (): ResultAsync<readonly LinkedArtifact[], Fault> => {
             return getClient().getLinkedArtifactsByLinkType(
-                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
+                CurrentArtifactIdentifier.fromId(ARTIFACT_ID),
                 link_type,
             );
         };

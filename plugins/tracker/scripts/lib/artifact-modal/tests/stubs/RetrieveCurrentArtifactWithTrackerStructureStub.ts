@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CurrentArtifactIdentifier } from "../../src/domain/CurrentArtifactIdentifier";
+import { okAsync } from "neverthrow";
+import type { CurrentArtifactWithTrackerStructure } from "../../src/domain/initialization/CurrentArtifactWithTrackerStructure";
+import type { RetrieveCurrentArtifactWithTrackerStructure } from "../../src/domain/initialization/RetrieveCurrentArtifactWithTrackerStructure";
 
-export const CurrentArtifactIdentifierStub = {
-    withId: (id: number): CurrentArtifactIdentifier => ({ _type: "CurrentArtifactIdentifier", id }),
+export const RetrieveCurrentArtifactWithTrackerStructureStub = {
+    withArtifact: (
+        artifact: CurrentArtifactWithTrackerStructure,
+    ): RetrieveCurrentArtifactWithTrackerStructure => ({
+        getCurrentArtifactWithTrackerStructure: () => okAsync(artifact),
+    }),
 };

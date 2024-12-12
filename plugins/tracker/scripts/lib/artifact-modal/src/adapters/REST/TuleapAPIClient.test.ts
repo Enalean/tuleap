@@ -22,26 +22,24 @@ import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
+import type {
+    ArtifactCreationPayload,
+    ChangesetWithCommentRepresentation,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
-import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
+import { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
-import type {
-    ArtifactCreationPayload,
-    ChangesetWithCommentRepresentation,
-} from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
 import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
 import { CurrentProjectIdentifierStub } from "../../../tests/stubs/CurrentProjectIdentifierStub";
 import type { CurrentProjectIdentifier } from "../../domain/CurrentProjectIdentifier";
 
-const ARTIFACT_ID = 90;
-const ARTIFACT_TITLE = "thio";
 const PROJECT_ID = 179;
 
 describe(`TuleapAPIClient`, () => {
@@ -55,32 +53,33 @@ describe(`TuleapAPIClient`, () => {
         TuleapAPIClient(current_project_identifier);
 
     describe(`getParent()`, () => {
+        const ARTIFACT_ID = 90,
+            ARTIFACT_TITLE = "thio";
+
         const getParent = (): ResultAsync<ParentArtifact, Fault> => {
             return getClient().getParent(ParentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
         it(`will return the parent artifact matching the given id`, async () => {
             const artifact: ParentArtifact = { title: ARTIFACT_TITLE };
-            const getSpy = jest.spyOn(fetch_result, "getJSON");
-            getSpy.mockReturnValue(okAsync(artifact));
+            const getJSON = jest.spyOn(fetch_result, "getJSON");
+            getJSON.mockReturnValue(okAsync(artifact));
 
             const result = await getParent();
 
-            if (!result.isOk()) {
-                throw new Error("Expected an Ok");
-            }
-            expect(result.value).toBe(artifact);
+            expect(result.unwrapOr(null)).toBe(artifact);
+            expect(getJSON.mock.calls[0][0]).toStrictEqual(uri`/api/v1/artifacts/${ARTIFACT_ID}`);
         });
     });
 
     describe(`createFileUpload()`, () => {
-        const FILE_FIELD_ID = 380;
-        const FILE_ID = 886;
-        const UPLOAD_HREF = `/uploads/tracker/file/${FILE_ID}`;
-        const FILE_NAME = "edestan_bretelle.zip";
-        const FILE_SIZE = 1579343;
-        const FILE_TYPE = "application/zip";
-        const DESCRIPTION = "protestive visceration";
+        const FILE_FIELD_ID = 380,
+            FILE_ID = 886,
+            UPLOAD_HREF = `/uploads/tracker/file/${FILE_ID}`,
+            FILE_NAME = "edestan_bretelle.zip",
+            FILE_SIZE = 1579343,
+            FILE_TYPE = "application/zip",
+            DESCRIPTION = "protestive visceration";
 
         const createFileUpload = (): ResultAsync<FileUploadCreated, Fault> => {
             const new_file_upload: NewFileUpload = {
@@ -124,7 +123,8 @@ describe(`TuleapAPIClient`, () => {
 
     describe(`getComments()`, () => {
         const FIRST_COMMENT_BODY = "<p>An HTML comment</p>",
-            SECOND_COMMENT_BODY = "Plain text comment";
+            SECOND_COMMENT_BODY = "Plain text comment",
+            ARTIFACT_ID = 70;
         let is_order_inverted: boolean,
             first_comment: ChangesetWithCommentRepresentation,
             second_comment: ChangesetWithCommentRepresentation;
@@ -141,7 +141,7 @@ describe(`TuleapAPIClient`, () => {
 
         const getComments = (): ResultAsync<readonly FollowUpComment[], Fault> => {
             return getClient().getComments(
-                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
+                CurrentArtifactIdentifier.fromId(ARTIFACT_ID),
                 is_order_inverted,
             );
         };

@@ -22,17 +22,15 @@ import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js
 
 import { has } from "lodash-es";
 import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.ts";
-import {
-    getArtifactWithCompleteTrackerStructure,
-    getTracker,
-    getUserPreference,
-} from "./rest/rest-service";
+import { getTracker, getUserPreference } from "./rest/rest-service";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
 import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { getSelectedValues } from "./model/field-values-formatter.js";
 import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
+import { InitializationAPIClient } from "./adapters/REST/initialization/InitializationAPIClient";
+import { CurrentArtifactIdentifier } from "./domain/CurrentArtifactIdentifier";
 
 export default ArtifactModalService;
 
@@ -109,7 +107,12 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             controllerAs: "modal",
             tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
-                modal_model: self.initEditionModalModel(user_id, tracker_id, artifact_id),
+                modal_model: self.initEditionModalModel(
+                    user_id,
+                    tracker_id,
+                    artifact_id,
+                    InitializationAPIClient(),
+                ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : noop,
             },
         });
@@ -145,71 +148,76 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         });
     }
 
-    function initEditionModalModel(user_id, tracker_id, artifact_id) {
+    function initEditionModalModel(user_id, tracker_id, artifact_id, api_client) {
+        const current_artifact_identifier = CurrentArtifactIdentifier.fromId(artifact_id);
         const modal_model = {
             user_id,
             tracker_id,
-            artifact_id,
+            current_artifact_identifier,
             user_date_time_format: document.body.dataset.dateTimeFormat,
             user_locale: document.body.dataset.userLocale,
         };
 
         const creation_mode = false;
         setCreationMode(creation_mode);
-        var transformed_tracker;
 
-        return $q
-            .all([
-                getArtifactWithCompleteTrackerStructure(artifact_id),
-                getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
-                getTextFieldsFormatUserPreference(user_id, modal_model),
-                getRelativeDatesDisplayUserPreference(user_id, modal_model),
-            ])
-            .then(function (promises) {
-                const tracker = promises[0].tracker;
-                transformed_tracker = transform(tracker, creation_mode);
+        return Promise.all([
+            getCurrentArtifact(current_artifact_identifier, api_client),
+            getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
+            getTextFieldsFormatUserPreference(user_id, modal_model),
+            getRelativeDatesDisplayUserPreference(user_id, modal_model),
+        ]).then(function (promises) {
+            const tracker = promises[0].tracker;
+            const transformed_tracker = transform(tracker, creation_mode);
 
-                modal_model.ordered_fields = transformed_tracker.ordered_fields;
-                modal_model.color = transformed_tracker.color_name;
+            modal_model.ordered_fields = transformed_tracker.ordered_fields;
+            modal_model.color = transformed_tracker.color_name;
 
-                const artifact_values = getArtifactFieldValues(promises[0]);
-                let tracker_with_field_values = addFieldValuesToTracker(
-                    artifact_values,
-                    transformed_tracker,
-                );
+            const artifact_values = getArtifactFieldValues(promises[0]);
+            let tracker_with_field_values = addFieldValuesToTracker(
+                artifact_values,
+                transformed_tracker,
+            );
 
-                applyWorkflowTransitions(tracker_with_field_values, artifact_values);
-                modal_model.values = getSelectedValues(artifact_values, transformed_tracker);
-                modal_model.title = artifact_values.title;
-                modal_model.etag = promises[0].Etag;
-                modal_model.last_modified = promises[0]["Last-Modified"];
+            applyWorkflowTransitions(tracker_with_field_values, artifact_values);
+            modal_model.values = getSelectedValues(artifact_values, transformed_tracker);
+            modal_model.title = artifact_values.title;
+            modal_model.etag = promises[0].etag;
+            modal_model.last_modified = promises[0].last_modified;
 
-                modal_model.tracker = tracker_with_field_values;
-                modal_model.ordered_fields = buildFormTree(tracker_with_field_values);
+            modal_model.tracker = tracker_with_field_values;
+            modal_model.ordered_fields = buildFormTree(tracker_with_field_values);
 
-                return modal_model;
-            });
+            return modal_model;
+        });
+    }
+
+    function getCurrentArtifact(current_artifact_identifier, api_client) {
+        return api_client.getCurrentArtifactWithTrackerStructure(current_artifact_identifier).match(
+            (artifact) => artifact,
+            (fault) => {
+                throw Error(fault.toString());
+            },
+        );
     }
 
     function getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model) {
         var preference_key = "tracker_comment_invertorder_" + tracker_id;
 
-        return $q.when(getUserPreference(user_id, preference_key)).then(function (data) {
+        return getUserPreference(user_id, preference_key).then(function (data) {
             modal_model.invert_followups_comments_order = data.value === "0";
         });
     }
 
     function getTextFieldsFormatUserPreference(user_id, modal_model) {
-        return $q
-            .when(getUserPreference(user_id, "user_edition_default_format"))
-            .then(function (data) {
-                const format = isValidTextFormat(data.value) ? data.value : TEXT_FORMAT_COMMONMARK;
-                modal_model.text_fields_format = format;
-            });
+        return getUserPreference(user_id, "user_edition_default_format").then(function (data) {
+            const format = isValidTextFormat(data.value) ? data.value : TEXT_FORMAT_COMMONMARK;
+            modal_model.text_fields_format = format;
+        });
     }
 
     function getRelativeDatesDisplayUserPreference(user_id, modal_model) {
-        return $q.when(getUserPreference(user_id, "relative_dates_display")).then(function (data) {
+        return getUserPreference(user_id, "relative_dates_display").then(function (data) {
             modal_model.relative_dates_display =
                 data.value !== false ? data.value : "relative_first-absolute_tooltip";
         });

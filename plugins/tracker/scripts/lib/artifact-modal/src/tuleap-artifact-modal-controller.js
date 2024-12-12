@@ -32,7 +32,6 @@ import { ParentFeedbackController } from "./domain/parent/ParentFeedbackControll
 import { LinkFieldController } from "./domain/fields/link-field/LinkFieldController";
 import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
 import { LinksRetriever } from "./domain/fields/link-field/LinksRetriever";
-import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
 import { LinksMarkedForRemovalStore } from "./adapters/Memory/fields/link-field/LinksMarkedForRemovalStore";
 import { LinksStore } from "./adapters/Memory/fields/link-field/LinksStore";
@@ -104,12 +103,10 @@ function ArtifactModalController(
 
     const event_dispatcher = EventDispatcher();
     const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
-    const current_artifact_option = CurrentArtifactIdentifierProxy.fromModalArtifactId(
-        modal_model.artifact_id,
-    );
     const current_project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(
         modal_model.tracker,
     );
+    const current_artifact_option = Option.fromNullable(modal_model.current_artifact_identifier);
     const api_client = TuleapAPIClient(current_project_identifier);
     const link_field_api_client = LinkFieldAPIClient(current_artifact_option);
     const artifact_creation_api_client = ArtifactCreationAPIClient();
@@ -131,12 +128,10 @@ function ArtifactModalController(
 
     Object.assign(self, {
         $onInit: init,
-        artifact_id: modal_model.artifact_id,
         current_artifact_identifier: current_artifact_option.unwrapOr(null), // Fields using it are not allowed in creation mode
         color: formatColor(modal_model.color),
         creation_mode: isInCreationMode(),
         ordered_fields: modal_model.ordered_fields,
-        parent: null,
         parent_artifact_id: modal_model.parent_artifact_id,
         title: getTitle(),
         tracker: modal_model.tracker,
@@ -275,7 +270,6 @@ function ArtifactModalController(
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
-        getDropdownAttribute,
         getRestErrorMessage: getErrorMessage,
         hasRestError: hasError,
         isDisabled,
@@ -409,13 +403,13 @@ function ArtifactModalController(
                 }
                 if (self.confirm_action_to_edit) {
                     return editArtifact(
-                        modal_model.artifact_id,
+                        modal_model.current_artifact_identifier.id,
                         validated_values,
                         self.new_followup_comment,
                     );
                 }
                 return editArtifactWithConcurrencyChecking(
-                    modal_model.artifact_id,
+                    modal_model.current_artifact_identifier.id,
                     validated_values,
                     self.new_followup_comment,
                     modal_model.etag,
@@ -465,10 +459,6 @@ function ArtifactModalController(
             setError(gettextCatalog.getString("An error occurred while saving the artifact."));
         }
         TuleapArtifactModalLoading.loading = false;
-    }
-
-    function getDropdownAttribute(field) {
-        return isDisabled(field) ? "" : "dropdown";
     }
 
     function toggleFieldset(fieldset) {

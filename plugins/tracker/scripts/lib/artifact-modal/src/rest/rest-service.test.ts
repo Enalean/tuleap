@@ -41,43 +41,6 @@ describe("rest-service", () => {
         expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/trackers/84");
     });
 
-    it("getArtifactWithCompleteTrackerStructure() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", async () => {
-        const return_json = {
-            id: 40,
-            values: [
-                {
-                    field_id: 866,
-                    label: "unpredisposed",
-                    value: "ectogenous",
-                },
-                {
-                    field_id: 468,
-                    label: "coracler",
-                    value: "caesaropapism",
-                },
-            ],
-            title: "coincoin",
-        };
-        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), {
-            return_json,
-            headers: {
-                get: (header) => {
-                    if (header === "Etag") {
-                        return "etag";
-                    }
-                    if (header === "Last-Modified") {
-                        return "1629098386";
-                    }
-                    return null;
-                },
-            },
-        });
-
-        const values = await RestService.getArtifactWithCompleteTrackerStructure(40);
-
-        expect(values).toEqual({ ...return_json, Etag: "etag", "Last-Modified": "1629098386" });
-    });
-
     describe("searchUsers() -", () => {
         it("Given a query, when I search for a username containing the query, then a promise will be resolved with an array of user representations", async () => {
             const return_json = [
