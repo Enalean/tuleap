@@ -70,7 +70,9 @@ class SubmittedValueEmptyChecker
 
     private function isSubmittingAParentArtifact(array $submitted_value): bool
     {
-        return isset($submitted_value['parent']) && ! empty($submitted_value['parent']);
+        return isset($submitted_value['parent']) &&
+            count($submitted_value['parent']) !== 0 &&
+            (isset($submitted_value['parent'][0]) && $submitted_value['parent'][0] !== '');
     }
 
     private function isSubmittingNewLinks(array $submitted_value): bool
