@@ -22,110 +22,64 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\Artifact\Artifact;
 
 final readonly class RawSectionsToRepresentationTransformer implements TransformRawSectionsToRepresentation
 {
     public function __construct(
-        private \Tracker_ArtifactDao $artifact_dao,
-        private \Tracker_ArtifactFactory $artifact_factory,
-        private ArtifactSectionRepresentationBuilder $section_representation_builder,
-        private RequiredArtifactInformationBuilder $required_artifact_information_builder,
+        private SectionRepresentationBuilder $section_representation_builder,
+        private RequiredSectionInformationCollector $required_section_information_collector,
     ) {
     }
 
     public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
     {
-        return $this->instantiateArtifacts($raw_sections, $user)
-            ->andThen(fn (array $artifacts) => $this->instantiateSections($raw_sections->artidoc, $artifacts, $user))
-            ->map(
-                /**
-                 * @param list<ArtifactSectionRepresentation> $sections
-                 */
-                static fn (array $sections) => new PaginatedArtidocSectionRepresentationCollection($sections, $raw_sections->total)
-            );
+        return $this->collectRequiredSectionInformationForAllSections($raw_sections)
+            ->andThen(function () use ($raw_sections, $user) {
+                $representations = [];
+                foreach ($raw_sections->rows as $section) {
+                    $result = $this->section_representation_builder
+                        ->getSectionRepresentation($section, $this->required_section_information_collector, $user);
+
+                    if (Result::isErr($result)) {
+                        return $result;
+                    }
+
+                    $result->map(
+                        static function (SectionRepresentation $representation) use (&$representations) {
+                            $representations[] = $representation;
+                        },
+                    );
+                }
+
+                return Result::ok(new PaginatedArtidocSectionRepresentationCollection($representations, $raw_sections->total));
+            });
     }
 
     /**
-     * @return Ok<list<array{artifact: Artifact, section_identifier: SectionIdentifier}>>|Err<Fault>
+     * @return Ok<null>|Err<Fault>
      */
-    private function instantiateArtifacts(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
+    private function collectRequiredSectionInformationForAllSections(PaginatedRawSections $raw_sections): Ok|Err
     {
-        $identifiers  = [];
-        $artifact_ids = [];
-        foreach ($raw_sections->rows as $row) {
-            $row->content->apply(
-                static function ($artifact_id) use ($row, &$identifiers, &$artifact_ids) {
-                    $artifact_ids[]            = $artifact_id;
-                    $identifiers[$artifact_id] = $row->id;
-
-                    return Result::ok(null);
+        foreach ($raw_sections->rows as $section) {
+            $result = $section->content->apply(
+                function (int $artifact_id) use ($raw_sections) {
+                    return $this->required_section_information_collector
+                        ->collectRequiredSectionInformation($raw_sections->artidoc, $artifact_id);
                 },
                 static fn () => Result::ok(null),
             );
-        }
-        if (count($artifact_ids) === 0) {
-            return Result::ok([]);
-        }
-
-        $artifact_order = array_flip($artifact_ids);
-
-        $artifacts = [];
-        foreach ($this->artifact_dao->searchByIds($artifact_ids) as $row) {
-            $artifact = $this->artifact_factory->getInstanceFromRow($row);
-            if (! $artifact->userCanView($user)) {
-                return Result::err(Fault::fromMessage('User cannot read one of the artifact of artidoc #' . $raw_sections->artidoc->document->getId()));
-            }
-
-            $id = $artifact->getId();
-
-            $artifacts[$artifact_order[$id]] = [
-                'artifact'           => $artifact,
-                'section_identifier' => $identifiers[$id],
-            ];
-        }
-
-        ksort($artifacts);
-
-        return Result::ok(array_values($artifacts));
-    }
-
-    /**
-     * @param list<array{artifact: Artifact, section_identifier: SectionIdentifier}> $artifacts
-     * @return Ok<list<ArtifactSectionRepresentation>>|Err<Fault>
-     */
-    private function instantiateSections(ArtidocWithContext $artidoc, array $artifacts, \PFUser $user): Ok|Err
-    {
-        $sections = [];
-        foreach ($artifacts as $section) {
-            $artifact = $section['artifact'];
-
-            $result = $this->required_artifact_information_builder
-                ->getRequiredArtifactInformation($artidoc, $artifact, $user)
-                ->andThen(
-                    function (RequiredArtifactInformation $artifact_information) use ($user, $section, &$sections) {
-                        $sections[] = $this->section_representation_builder->build(
-                            $artifact_information,
-                            $section['section_identifier'],
-                            $user,
-                        );
-
-                        return Result::ok(true);
-                    },
-                );
 
             if (Result::isErr($result)) {
                 return $result;
             }
         }
 
-        return Result::ok($sections);
+        return Result::ok(null);
     }
 }

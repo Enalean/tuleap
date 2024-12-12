@@ -179,7 +179,7 @@ final class ArtidocResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return ArtifactSectionRepresentation[]
+     * @return SectionRepresentation[]
      *
      * @status 200
      * @throws RestException
@@ -192,17 +192,17 @@ final class ArtidocResource extends AuthenticatedResource
 
         return $this->getPaginatedRawSectionsRetriever($user)
             ->retrievePaginatedRawSections($id, $limit, $offset)
-            ->andThen(fn (PaginatedRawSections $raw_sections) => $this->getRepresentationTransformer()->getRepresentation($raw_sections, $user))
-            ->match(
-                function (PaginatedArtidocSectionRepresentationCollection $collection) use ($limit, $offset) {
-                    Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
-                    return $collection->sections;
-                },
-                function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
-                    throw new RestException(404);
-                },
-            );
+            ->andThen(fn (PaginatedRawSections $raw_sections) =>
+                $this->getRepresentationTransformer($user)->getRepresentation($raw_sections, $user))->match(
+                    function (PaginatedArtidocSectionRepresentationCollection $collection) use ($limit, $offset) {
+                        Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
+                        return $collection->sections;
+                    },
+                    function (Fault $fault) {
+                        Fault::writeToLogger($fault, RESTLogger::getLogger());
+                        throw new RestException(404);
+                    },
+                );
     }
 
     /**
@@ -566,33 +566,43 @@ final class ArtidocResource extends AuthenticatedResource
         );
     }
 
-    private function getRepresentationTransformer(): RawSectionsToRepresentationTransformer
+    private function getRepresentationTransformer(\PFUser $user): RawSectionsToRepresentationTransformer
+    {
+        return new RawSectionsToRepresentationTransformer(
+            $this->getSectionRepresentationBuilder(),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance())
+            ),
+        );
+    }
+
+    private function getSectionRepresentationBuilder(): SectionRepresentationBuilder
+    {
+        return new SectionRepresentationBuilder($this->getArtifactSectionRepresentationBuilder());
+    }
+
+    private function getArtifactSectionRepresentationBuilder(): ArtifactSectionRepresentationBuilder
     {
         $form_element_factory = \Tracker_FormElementFactory::instance();
-        $artifact_factory     = \Tracker_ArtifactFactory::instance();
 
-        return new RawSectionsToRepresentationTransformer(
-            new \Tracker_ArtifactDao(),
-            $artifact_factory,
-            new ArtifactSectionRepresentationBuilder(
-                new FileUploadDataProvider(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                \TransitionFactory::instance(),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
+        return new ArtifactSectionRepresentationBuilder(
+            new FileUploadDataProvider(
+                new FrozenFieldDetector(
+                    new TransitionRetriever(
+                        new StateFactory(
+                            \TransitionFactory::instance(),
+                            new SimpleWorkflowDao()
                         ),
-                        new FrozenFieldsRetriever(
-                            new FrozenFieldsDao(),
-                            $form_element_factory
-                        )
+                        new TransitionExtractor()
                     ),
-                    $form_element_factory
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao(),
+                        $form_element_factory
+                    )
                 ),
+                $form_element_factory
             ),
-            new RequiredArtifactInformationBuilder($artifact_factory),
         );
     }
 

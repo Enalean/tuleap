@@ -57,7 +57,7 @@ final class SectionRetriever
     {
         return $raw_section->content->apply(
             fn (int $artifact_id) => $this->collect_required_section_information->collectRequiredSectionInformation($artidoc, $artifact_id),
-            static fn () => Result::ok(true),
+            static fn () => Result::ok(null),
         );
     }
 }

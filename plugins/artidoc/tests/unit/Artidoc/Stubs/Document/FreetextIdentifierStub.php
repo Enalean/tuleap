@@ -20,14 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Stubs\Document;
 
-final readonly class PaginatedArtidocSectionRepresentationCollection
+use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
+
+final class FreetextIdentifierStub
 {
-    /**
-     * @param list<SectionRepresentation> $sections
-     */
-    public function __construct(public array $sections, public int $total)
+    public static function create(): FreetextIdentifier
     {
+        $uuid_factory = new \Tuleap\DB\DatabaseUUIDV7Factory();
+
+        return (new UUIDFreetextIdentifierFactory($uuid_factory))->buildIdentifier();
     }
 }
