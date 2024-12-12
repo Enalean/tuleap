@@ -1186,9 +1186,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $checked             = '';
                         $classname           = 'tracker_report_table_';
                         $name                = '';
+                        $data_test           = '';
                         if ($extracolumn === self::EXTRACOLUMN_MASSCHANGE && $this->report->getTracker()->userIsAdmin($current_user)) {
                             $classname .= 'masschange';
                             $name       = 'masschange_aids';
+                            $data_test  = 'masschange-checkbox';
                         } elseif ($extracolumn === self::EXTRACOLUMN_LINK) {
                             $classname .= 'link';
                             $name       = 'link-artifact[search]';
@@ -1205,7 +1207,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if ($display_extracolumn) {
                             $html .= '<td class="' . $purifier->purify($classname) . '" width="1">';
                             if ($artifact_link_can_be_modified) {
-                                $html .= '<span><input type="checkbox" name="' . $purifier->purify($name) . '[]" value="' . $purifier->purify($row['id']) . '" ' . $checked . ' /></span>';
+                                $html .= '<span><input type="checkbox" data-test="' . $purifier->purify($data_test) . '" name="' . $purifier->purify($name) . '[]" value="' . $purifier->purify($row['id']) . '" ' . $checked . ' /></span>';
                             }
                             $html .= '</td>';
                         }
@@ -1795,8 +1797,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html     .= '<form method="POST" action="" id="tracker_report_table_masschange_form">';
             $html     .= '<input type="hidden" name="func" value="display-masschange-form" />';
             $html     .= '<div id="tracker_report_table_masschange_panel">';
-            $html     .= '<input id="masschange_btn_checked" type="submit" class="btn" name="renderer_table[masschange_checked]" value="' . dgettext('tuleap-tracker', 'Mass Change Checked') . '" /> ';
-            $html     .= '<input id="masschange_btn_all" type="submit" class="btn" name="renderer_table[masschange_all]" value="' . sprintf(dgettext('tuleap-tracker', 'Mass Change All (%1$s artifacts)'), $total_rows) . '" />';
+            $html     .= '<input id="masschange_btn_checked" data-test="masschange-button-checked" type="submit" class="btn" name="renderer_table[masschange_checked]" value="' . dgettext('tuleap-tracker', 'Mass Change Checked') . '" /> ';
+            $html     .= '<input id="masschange_btn_all" data-test="masschange-button-all" type="submit" class="btn" name="renderer_table[masschange_all]" value="' . sprintf(dgettext('tuleap-tracker', 'Mass Change All (%1$s artifacts)'), $total_rows) . '" />';
             $html     .= '</div>';
             $html     .= '</form>';
         }
