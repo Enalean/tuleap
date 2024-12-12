@@ -44,8 +44,14 @@ class Tracker_Masschange_Presenter
      */
     public $project_id;
 
-    public function __construct(\Project $project, array $masschange_aids, $form_elements, $javascript_rules, array $external_actions)
-    {
+    public function __construct(
+        \Project $project,
+        array $masschange_aids,
+        $form_elements,
+        $javascript_rules,
+        array $external_actions,
+        public readonly bool $has_notifications,
+    ) {
         $this->project_id       = (int) $project->getID();
         $this->masschange_aids  = $masschange_aids;
         $this->form_elements    = $form_elements;

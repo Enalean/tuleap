@@ -42,14 +42,22 @@
 
         <h3>{{ add_comment }}</h3>
 
-        <textarea
-          wrap="soft"
-          rows="12"
-          cols="80"
-          name="artifact_masschange_followup_comment"
-          id="artifact_masschange_followup_comment"
-          data-project-id="{{ project_id }}"
-        >{{ default_comment }}</textarea>
+        <div class="masschange-followup-comment">
+            <textarea
+              wrap="soft"
+              rows="12"
+              cols="80"
+              name="artifact_masschange_followup_comment"
+              id="artifact_masschange_followup_comment"
+              data-project-id="{{ project_id }}"
+            >{{ default_comment }}</textarea>
+            {{# has_notifications }}
+            <p class="text-info">{{# dgettext }}tuleap-tracker | When you use @ to mention someone, they will get an email notification.{{/ dgettext }}</p>
+            {{/ has_notifications }}
+            {{^ has_notifications }}
+            <p class="text-warning">{{# dgettext }}tuleap-tracker | This tracker's notifications are disabled, when you use @ to mention someone, no email will be sent.{{/dgettext}}</p>
+            {{/ has_notifications }}
+        </div>
         <br />
 
         <input class="btn btn-primary masschange-submit" type="submit" value="{{ masschange_submit }}"/>
