@@ -47,7 +47,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
                 true,
                 false,
                 false,
-                false,
+                true,
                 null,
                 null,
                 null

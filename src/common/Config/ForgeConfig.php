@@ -123,7 +123,6 @@ class ForgeConfig
 
     private static function loadLocalInc(): void
     {
-        self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
         self::loadFromFile((new Config_LocalIncFinder())->getLocalIncPath());
     }
 

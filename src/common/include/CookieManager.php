@@ -22,9 +22,15 @@
 namespace Tuleap;
 
 use ForgeConfig;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyString;
 
 class CookieManager
 {
+    #[ConfigKey('The default Tuleap domain')]
+    #[ConfigKeyString('TULEAP')]
+    public const PREFIX = 'sys_cookie_prefix';
+
     private const PREFIX_HOST = '__Host-';
 
     public function setCookie(string $name, string $value, int $expire = 0): void

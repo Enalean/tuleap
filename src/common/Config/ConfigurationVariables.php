@@ -24,9 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Config;
 
 /**
- * This class will hold the configuration variables transferred from local.inc.dist until they find an appropriate location
+ * This class will hold the configuration variables initially transferred from src/etc/local.inc.dist
  *
- * You will smile when you will annotate this file to see there was still a hope in 2022 that someday this will be done.
+ * It's the older sister of ConfigurationVariablesLocalIncDist that contains the "other" variables from local.inc.dist
+ * moved during the second batch of transfer.
+ * We still need to distinguish the two classes because during init sequence of Tuleap we must be able to set a list of
+ * variables (@see \TuleapCfg\Command\SetupTuleap\SetupTuleap) until the init sequence can save values in database.
  */
 final class ConfigurationVariables
 {
@@ -64,13 +67,13 @@ final class ConfigurationVariables
 
     #[ConfigKey('When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects')]
     #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyLegacyBool]
+    #[ConfigKeyLegacyBool(false)]
     public const MAIL_SECURE_MODE = 'sys_mail_secure_mode';
 
     #[ConfigKey('Disable sub-domains (like svn.proj.example.com)')]
     #[ConfigKeyHelp('This is a legacy configuration variable. Subdomains must be left deactivated')]
     #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyLegacyBool]
+    #[ConfigKeyLegacyBool(false)]
     public const DISABLE_SUBDOMAINS = 'sys_disable_subdomains';
 
     #[ConfigKey('Server timezone')]
