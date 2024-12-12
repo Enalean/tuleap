@@ -24,6 +24,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
+use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
@@ -322,6 +323,9 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
 
     private function getArtidocDao(): ArtidocDao
     {
-        return (new ArtidocDao(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory())));
+        return new ArtidocDao(
+            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
+            new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory()),
+        );
     }
 }

@@ -33,7 +33,7 @@ final class SectionRepresentationBuilder implements BuildSectionRepresentation
     {
     }
 
-    public function build(RequiredArtifactInformation $artifact_information, SectionIdentifier $section_identifier, \PFUser $user): ArtidocSectionRepresentation
+    public function build(RequiredArtifactInformation $artifact_information, SectionIdentifier $section_identifier, \PFUser $user): ArtifactSectionRepresentation
     {
         $can_user_edit_section = $artifact_information->title_field->userCanUpdate($user)
             && $artifact_information->description_field->userCanUpdate($user);
@@ -48,7 +48,7 @@ final class SectionRepresentationBuilder implements BuildSectionRepresentation
                 ?? ArtifactFieldValueFileFullRepresentation::fromEmptyValues($file_upload_data->getField());
         }
 
-        return new ArtidocSectionRepresentation(
+        return new ArtifactSectionRepresentation(
             $section_identifier->toString(),
             ArtifactReference::build($artifact),
             $artifact_information->title,

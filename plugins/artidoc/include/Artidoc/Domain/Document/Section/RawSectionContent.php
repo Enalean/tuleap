@@ -22,42 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Option\Option;
 
-final readonly class RawSection
+/**
+ * @psalm-immutable
+ */
+final readonly class RawSectionContent
 {
+    /**
+     * @param Option<int> $artifact_id
+     * @param Option<RawSectionContentFreetext> $freetext
+     */
     private function __construct(
-        public SectionIdentifier $id,
-        public int $item_id,
-        public RawSectionContent $content,
-        public int $rank,
+        public Option $artifact_id,
+        public Option $freetext,
     ) {
     }
 
-    /**
-     * @param array{ id: SectionIdentifier, item_id: int, artifact_id: int, rank: int, ... } $row
-     */
-    public static function fromArtifact(array $row): self
+    public static function fromArtifact(int $artifact_id): self
     {
         return new self(
-            $row['id'],
-            $row['item_id'],
-            RawSectionContent::fromArtifact($row['artifact_id']),
-            $row['rank'],
+            Option::fromValue($artifact_id),
+            Option::nothing(RawSectionContentFreetext::class),
         );
     }
 
-    /**
-     * @param array{ id: SectionIdentifier, item_id: int, freetext_id: FreetextIdentifier, freetext_title: string, freetext_description: string, rank: int, ... } $row
-     */
-    public static function fromFreetext(array $row): self
+    public static function fromFreetext(FreetextIdentifier $id, string $title, string $description): self
     {
         return new self(
-            $row['id'],
-            $row['item_id'],
-            RawSectionContent::fromFreetext($row['freetext_id'], $row['freetext_title'], $row['freetext_description']),
-            $row['rank'],
+            Option::nothing(\Psl\Type\int()),
+            Option::fromValue(
+                new RawSectionContentFreetext(
+                    $id,
+                    new FreetextContent($title, $description),
+                ),
+            ),
         );
     }
 }

@@ -20,14 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier;
 
-final readonly class PaginatedArtidocSectionRepresentationCollection
+
+interface FreetextIdentifier
 {
-    /**
-     * @param list<ArtifactSectionRepresentation> $sections
-     */
-    public function __construct(public array $sections, public int $total)
-    {
-    }
+    public function getBytes(): string;
+
+    public function toString(): string;
 }

@@ -18,23 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\NeverThrow\Fault;
 
-interface SaveOneSection
+/**
+ * @psalm-immutable
+ */
+final readonly class AlreadyExistingSectionWithSameFreetextFault extends Fault
 {
-    /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
-     * @throws AlreadyExistingSectionWithSameFreetextException
-     */
-    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): SectionIdentifier;
-
-    /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
-     * @throws AlreadyExistingSectionWithSameFreetextException
-     * @throws UnableToFindSiblingSectionException
-     */
-    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): SectionIdentifier;
+    public static function fromThrowable(\Throwable $throwable): Fault
+    {
+        return new self($throwable->getMessage(), $throwable);
+    }
 }

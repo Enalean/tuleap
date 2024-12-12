@@ -64,13 +64,17 @@ final readonly class SectionCreator
         int $artifact_id,
         Option $before_section_id,
     ): Ok|Err {
+        $content = ContentToInsert::fromArtifactId($artifact_id);
+
         try {
             $section_id = $before_section_id->match(
-                fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($artidoc, $artifact_id, $sibling_section_id),
-                fn () => $this->save_section->saveSectionAtTheEnd($artidoc, $artifact_id),
+                fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($artidoc, $content, $sibling_section_id),
+                fn () => $this->save_section->saveSectionAtTheEnd($artidoc, $content),
             );
         } catch (AlreadyExistingSectionWithSameArtifactException $exception) {
             return Result::err(AlreadyExistingSectionWithSameArtifactFault::fromThrowable($exception));
+        } catch (AlreadyExistingSectionWithSameFreetextException $exception) {
+            return Result::err(AlreadyExistingSectionWithSameFreetextFault::fromThrowable($exception));
         } catch (UnableToFindSiblingSectionException $exception) {
             return Result::err(UnableToFindSiblingSectionFault::fromThrowable($exception));
         }

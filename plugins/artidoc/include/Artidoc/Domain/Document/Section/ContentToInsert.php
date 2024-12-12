@@ -20,28 +20,39 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
+use Tuleap\Option\Option;
 
 /**
  * @psalm-immutable
  */
-final readonly class ArtidocSectionRepresentation
+final readonly class ContentToInsert
 {
     /**
-     * @psalm-param ArtifactFieldValueFullRepresentation|ArtifactTextFieldValueRepresentation $title
+     * @param Option<int> $artifact_id
+     * @param Option<FreetextContent> $freetext
      */
-    public function __construct(
-        public string $id,
-        public ArtifactReference $artifact,
-        public mixed $title,
-        public ArtifactTextFieldValueRepresentation $description,
-        public bool $can_user_edit_section,
-        public ?ArtifactFieldValueFileFullRepresentation $attachments,
+    private function __construct(
+        public Option $artifact_id,
+        public Option $freetext,
     ) {
+    }
+
+    public static function fromArtifactId(int $artifact_id): self
+    {
+        return new self(
+            Option::fromValue($artifact_id),
+            Option::nothing(FreetextContent::class),
+        );
+    }
+
+    public static function fromFreetext(FreetextContent $freetext): self
+    {
+        return new self(
+            Option::nothing(\Psl\Type\int()),
+            Option::fromValue($freetext),
+        );
     }
 }
