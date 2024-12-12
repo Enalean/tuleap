@@ -18,20 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite\SSHKey;
 
+use InvalidArgumentException;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-class KeyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class KeyTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     public function testItChecksUsernameValidity(): void
     {
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         new Key(
             'This is not a valid " username',
             'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDgTGQXojsjAemABiCqPS9k7h5VLigeNhfJFc1Xx3DRZ0B1+eCAI7IT65VzYEHlkW8pTK9IZO6yFLM5aYiLF5GD1VoDxP7zuslCU5gTIl1eWJzMQY/5mc4IP+8dk+p4CoTlXwU5xnZatUWwiF8PnaM2evga4sAwLHBZ8QqiNIaHEQ=='
@@ -47,7 +48,7 @@ class KeyTest extends \Tuleap\Test\PHPUnit\TestCase
             '
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDgTGQXojsjAemABiCqPS9k7h5VLigeNhfJFc1Xx3DRZ0B1+eCAI7IT65VzYEHlkW8pTK9IZO6yFLM5aYiLF5GD1VoDxP7zuslCU5gTIl1eWJzMQY/5mc4IP+8dk+p4CoTlXwU5xnZatUWwiF8PnaM2evga4sAwLHBZ8QqiNIaHEQ==',
             $key->getKey()
         );
@@ -55,7 +56,7 @@ class KeyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAcceptsOnlyOneKey(): void
     {
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         new Key(
             'user',
             'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDgTGQXojsjAemABiCqPS9k7h5VLigeNhfJFc1Xx3DRZ0B1+eCAI7IT65VzYEHlkW8pTK9IZO6yFLM5aYiLF5GD1VoDxP7zuslCU5gTIl1eWJzMQY/5mc4IP+8dk+p4CoTlXwU5xnZatUWwiF8PnaM2evga4sAwLHBZ8QqiNIaHEQ==

@@ -18,31 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite\SSHKey;
 
 use Tuleap\Git\GlobalParameterDao;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ManagementDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ManagementDetectorTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItIsAbleToFindThatTuleapManagesAuthorizedKeysFile(): void
     {
-        $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
-        $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(false);
+        $global_parameter_dao = $this->createMock(GlobalParameterDao::class);
+        $global_parameter_dao->method('isAuthorizedKeysFileManagedByTuleap')->willReturn(false);
 
         $management_detector = new ManagementDetector($global_parameter_dao);
 
-        $this->assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
+        self::assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }
 
     public function testItIsAbleToDetectThatTuleapManagesAuthorizedKeysFile(): void
     {
-        $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
-        $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(true);
+        $global_parameter_dao = $this->createMock(GlobalParameterDao::class);
+        $global_parameter_dao->method('isAuthorizedKeysFileManagedByTuleap')->willReturn(true);
 
         $management_detector = new ManagementDetector($global_parameter_dao);
 
-        $this->assertTrue($management_detector->isAuthorizedKeysFileManagedByTuleap());
+        self::assertTrue($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }
 }

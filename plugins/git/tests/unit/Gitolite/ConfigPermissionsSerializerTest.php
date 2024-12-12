@@ -19,140 +19,136 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite;
 
 use EventManager;
 use Git;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
-use Mockery;
+use GitRepository;
 use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use ProjectUGroup;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ConfigPermissionsSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ConfigPermissionsSerializerTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_Gitolite_ConfigPermissionsSerializer
-     */
-    private $serializer;
-
-    private $project;
-    private $project_id = 100;
-
-    private $repository;
-    private $repository_id = 200;
-    private PermissionsManager $permissions_manager;
+    private Git_Gitolite_ConfigPermissionsSerializer $serializer;
+    private Project $project;
+    private int $project_id = 100;
+    private GitRepository $repository;
+    private int $repository_id = 200;
+    private PermissionsManager&MockObject $permissions_manager;
 
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->project_id++;
         $this->repository_id++;
 
-        $this->project = Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getId')->andReturns($this->project_id);
-        $this->project->shouldReceive('getUnixName')->andReturns('project' . $this->project_id);
+        $this->project    = ProjectTestBuilder::aProject()->withId($this->project_id)->withUnixName("project$this->project_id")->build();
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId($this->repository_id)->inProject($this->project)->build();
 
-        $this->repository = Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns($this->repository_id);
-        $this->repository->shouldReceive('getProject')->andReturn($this->project);
-
-        PermissionsManager::setInstance(Mockery::spy(\PermissionsManager::class));
-        $this->permissions_manager = PermissionsManager::instance();
+        $this->permissions_manager = $this->createMock(PermissionsManager::class);
+        PermissionsManager::setInstance($this->permissions_manager);
 
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
+            $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
-            Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            Mockery::spy(EventManager::class)
+            $this->createMock(FineGrainedRetriever::class),
+            $this->createMock(FineGrainedPermissionFactory::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $this->createMock(EventManager::class)
         );
     }
 
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();
-        parent::tearDown();
     }
 
-    public function testItReturnsEmptyStringForUnknownType()
+    public function testItReturnsEmptyStringForUnknownType(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, '__none__');
-        $this->assertSame('', $result);
+        self::assertSame('', $result);
     }
 
-    public function testItReturnsEmptyStringForAUserIdLowerOrEqualThan100()
+    public function testItReturnsEmptyStringForAUserIdLowerOrEqualThan100(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([100]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([100]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertSame('', $result);
+        self::assertSame('', $result);
     }
 
-    public function testItReturnsStringWithUserIdIfIdGreaterThan100()
+    public function testItReturnsStringWithUserIdIfIdGreaterThan100(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertMatchesRegularExpression('/=\s@ug_101$/', $result);
+        self::assertMatchesRegularExpression('/=\s@ug_101$/', $result);
     }
 
-    public function testItReturnsSiteActiveIfUserGroupIsRegistered()
+    public function testItReturnsSiteActiveIfUserGroupIsRegistered(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::REGISTERED]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([ProjectUGroup::REGISTERED]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertMatchesRegularExpression('/=\s@site_active @' . $this->project->getUnixName() . '_project_members$/', $result);
+        self::assertMatchesRegularExpression('/=\s@site_active @' . $this->project->getUnixName() . '_project_members$/', $result);
     }
 
-    public function testItReturnsProjectNameWithProjectMemberIfUserIsProjectMember()
+    public function testItReturnsProjectNameWithProjectMemberIfUserIsProjectMember(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([ProjectUGroup::PROJECT_MEMBERS]);
         $result       = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
-        $this->assertMatchesRegularExpression('/=\s@' . $project_name . '_project_members$/', $result);
+        self::assertMatchesRegularExpression('/=\s@' . $project_name . '_project_members$/', $result);
     }
 
-    public function testItReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin()
+    public function testItReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::PROJECT_ADMIN]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([ProjectUGroup::PROJECT_ADMIN]);
         $result       = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
-        $this->assertMatchesRegularExpression('/=\s@' . $project_name . '_project_admin$/', $result);
+        self::assertMatchesRegularExpression('/=\s@' . $project_name . '_project_admin$/', $result);
     }
 
-    public function testItPrefixesWithRForReaders()
+    public function testItPrefixesWithRForReaders(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertMatchesRegularExpression('/^\sR\s\s\s=/', $result);
+        self::assertMatchesRegularExpression('/^\sR\s\s\s=/', $result);
     }
 
-    public function testItPrefixesWithRWForWriters()
+    public function testItPrefixesWithRWForWriters(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WRITE);
-        $this->assertMatchesRegularExpression('/^\sRW\s\s=/', $result);
+        self::assertMatchesRegularExpression('/^\sRW\s\s=/', $result);
     }
 
-    public function testItPrefixesWithRWPlusForWritersPlus()
+    public function testItPrefixesWithRWPlusForWritersPlus(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WPLUS);
-        $this->assertMatchesRegularExpression('/^\sRW\+\s=/', $result);
+        self::assertMatchesRegularExpression('/^\sRW\+\s=/', $result);
     }
 
-    public function testItReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroups()
+    public function testItReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroups(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([666, ProjectUGroup::REGISTERED]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([666, ProjectUGroup::REGISTERED]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertSame(' R   = @ug_666 @site_active @' . $this->project->getUnixName() . '_project_members' . PHP_EOL, $result);
+        self::assertSame(' R   = @ug_666 @site_active @' . $this->project->getUnixName() . '_project_members' . PHP_EOL, $result);
     }
 
-    public function testItDeniesAllAccessToRepository()
+    public function testItDeniesAllAccessToRepository(): void
     {
         $result = $this->serializer->denyAccessForRepository();
-        $this->assertSame(' - refs/.*$ = @all' . PHP_EOL, $result);
+        self::assertSame(' - refs/.*$ = @all' . PHP_EOL, $result);
     }
 }

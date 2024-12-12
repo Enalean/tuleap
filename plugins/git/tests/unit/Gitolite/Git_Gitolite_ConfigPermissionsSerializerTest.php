@@ -18,39 +18,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../bootstrap.php';
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace Tuleap\Git\Gitolite;
+
+use EventManager;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
+use Git_Gitolite_ConfigPermissionsSerializer;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase // @codingStandardsIgnoreLine
+final class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testProtectedReferencesArePresentInTheSerialization()
+    public function testProtectedReferencesArePresentInTheSerialization(): void
     {
-        $event_manager                 = Mockery::mock(EventManager::class);
-        $fine_grained_retriever        = Mockery::mock(FineGrainedRetriever::class);
-        $regexp_fine_grained_retriever = Mockery::mock(RegexpFineGrainedRetriever::class);
-        $serializer                    = Mockery::mock(
-            Git_Gitolite_ConfigPermissionsSerializer::class . '[fetchConfigPermissions]',
-            [
-                Mockery::mock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
+        $event_manager                 = $this->createMock(EventManager::class);
+        $fine_grained_retriever        = $this->createMock(FineGrainedRetriever::class);
+        $regexp_fine_grained_retriever = $this->createMock(RegexpFineGrainedRetriever::class);
+        $serializer                    = $this->getMockBuilder(Git_Gitolite_ConfigPermissionsSerializer::class)
+            ->setConstructorArgs([
+                $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
                 '',
                 $fine_grained_retriever,
-                Mockery::mock(FineGrainedPermissionFactory::class),
+                $this->createMock(FineGrainedPermissionFactory::class),
                 $regexp_fine_grained_retriever,
                 $event_manager,
-            ]
-        );
-        $serializer->shouldReceive('fetchConfigPermissions');
+            ])
+            ->onlyMethods(['fetchConfigPermissions'])
+            ->getMock();
+        $serializer->method('fetchConfigPermissions');
 
-        $event_manager->shouldReceive('processEvent')->with(
-            Mockery::on(function ($event) {
+        $event_manager->method('processEvent')->with(
+            self::callback(function ($event) {
                 if (! $event instanceof GetProtectedGitReferences) {
                     return false;
                 }
@@ -58,16 +63,16 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase // @codingSt
                 return true;
             })
         );
-        $fine_grained_retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(false);
-        $regexp_fine_grained_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(true);
+        $fine_grained_retriever->method('doesRepositoryUseFineGrainedPermissions')->willReturn(false);
+        $regexp_fine_grained_retriever->method('areRegexpActivatedForRepository')->willReturn(true);
 
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturns(Mockery::mock(Project::class));
-        $repository->shouldReceive('getId')->andReturns(1);
-        $repository->shouldReceive('isMigratedToGerrit')->andReturns(false);
+        $repository = GitRepositoryTestBuilder::aProjectRepository()
+            ->inProject(ProjectTestBuilder::aProject()->build())
+            ->withId(1)
+            ->build();
 
         $gitolite_permissions = $serializer->getForRepository($repository);
 
-        $this->assertEquals(' - refs/tests/.* = @all' . PHP_EOL, $gitolite_permissions);
+        self::assertEquals(' - refs/tests/.* = @all' . PHP_EOL, $gitolite_permissions);
     }
 }
