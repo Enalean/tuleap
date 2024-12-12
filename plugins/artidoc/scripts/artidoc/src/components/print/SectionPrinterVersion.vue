@@ -36,6 +36,7 @@
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
             v-bind:is_print_mode="true"
             v-bind:upload_file="UploadFileStub.uploadNotInProgress()"
+            v-bind:is_there_any_change="false"
             v-bind:project_id="section.artifact.tracker.project.id"
         />
     </article>
