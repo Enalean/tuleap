@@ -19,9 +19,18 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\GraphOnTrackersV5;
+
+use GraphOnTrackersV5_Chart;
+use GraphOnTrackersV5_Chart_Bar;
+use GraphOnTrackersV5_Chart_Burndown;
+use GraphOnTrackersV5_Chart_Pie;
+use GraphOnTrackersV5_InSessionChartSorter;
+use Tracker_Report_Session;
+
 require_once __DIR__ . '/bootstrap.php';
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var GraphOnTrackersV5_Chart_Pie&\PHPUnit\Framework\MockObject\MockObject */
@@ -45,9 +54,9 @@ final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPU
     {
         parent::setUp();
 
-        $this->pie      = $this->createMock(\GraphOnTrackersV5_Chart_Pie::class);
-        $this->bar      = $this->createMock(\GraphOnTrackersV5_Chart_Bar::class);
-        $this->burndown = $this->createMock(\GraphOnTrackersV5_Chart_Burndown::class);
+        $this->pie      = $this->createMock(GraphOnTrackersV5_Chart_Pie::class);
+        $this->bar      = $this->createMock(GraphOnTrackersV5_Chart_Bar::class);
+        $this->burndown = $this->createMock(GraphOnTrackersV5_Chart_Burndown::class);
         $this->charts   = [
             $this->pie,
             $this->bar,
@@ -63,7 +72,7 @@ final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPU
         $this->burndown->method('getId')->willReturn('burndown');
         $this->burndown->method('getRank')->willReturn(2);
 
-        $this->session = $this->createMock(\Tracker_Report_Session::class);
+        $this->session = $this->createMock(Tracker_Report_Session::class);
 
         $this->sorter = new GraphOnTrackersV5_InSessionChartSorter($this->session);
     }
