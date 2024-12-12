@@ -194,7 +194,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $print_css_url = $core_assets->getFileURL('FlamingParrot/print.css');
         echo '<link rel="stylesheet" type="text/css" href="' . $print_css_url . '" media="print" />';
 
-        $custom_dir = ForgeConfig::get('codendi_dir') . '/src/www' . $this->getStylesheetTheme('') . 'custom';
+        $custom_dir = __DIR__ . '/../../' . $this->getStylesheetTheme('') . 'custom';
         foreach (glob($custom_dir . '/*.css') as $custom_css_file) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getStylesheetTheme('custom/' . basename($custom_css_file)) . '" />';
         }

@@ -46,7 +46,6 @@ final class WorkerEventProcessorFinderTest extends TestCase
 
     public function testExtractArchiveAndCreateProject(): void
     {
-        ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../');
         ForgeConfig::set('sys_data_dir', '/var/lib/tuleap');
 
         self::assertInstanceOf(

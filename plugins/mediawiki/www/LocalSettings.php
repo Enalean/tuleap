@@ -218,7 +218,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     }
 
     $wgHtml5          = false;
-    $wgStyleDirectory = forge_get_config('codendi_dir') . forge_get_config('mw_style_path', 'mediawiki');
+    $wgStyleDirectory = __DIR__ . '/../../../' . forge_get_config('mw_style_path', 'mediawiki');
     $wgWellFormedXml  = true;
     $wgLogo           = '';
 

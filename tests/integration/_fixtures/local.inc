@@ -21,17 +21,6 @@ $sys_cookie_prefix = "TULEAP";
 //
 //
 
-// In order to run a test server (without backend cron jobs, SVN, vhosts, FRS, etc.)
-// Please update the following variables:
-// $codendi_dir = "mydir/tuleap"
-// $sys_custom_dir = "mydir/etc/tuleap"
-// $sys_data_dir = "mydir/data"
-
-
-// Tuleap directory (PHP pages, site-content, etc)
-$codendi_dir = "/usr/share/tuleap";
-$tuleap_dir  = $codendi_dir;
-
 // Site specific settings are stored there:
 $sys_custom_dir = "/etc/tuleap";
 
@@ -49,19 +38,12 @@ $tmp_dir = "/tmp";
 
 // Tuleap utils directory
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
-// For instance, do *not* use someting like
-//    *wrong* $codendi_utils_prefix = $codendi_dir . "tuleap/utils" *wrong*
-// this is because those variables will be read by shell scripts.
 $codendi_utils_prefix         = "/usr/share/tuleap/src/utils";
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
 
-// Where the Tuleap files are placed
-$sys_urlroot = $codendi_dir . "/src/www/";
-
 // Site-content paths
-$sys_incdir = $codendi_dir . '/site-content';// Directory which hosts the site content
 $sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts the customized site content
 
 // Cache location

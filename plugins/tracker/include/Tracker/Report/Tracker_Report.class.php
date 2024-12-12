@@ -848,7 +848,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return TemplateRendererFactory::build()->getRenderer(
             [
                 TRACKER_TEMPLATE_DIR . '/report',
-                ForgeConfig::get('codendi_dir') . '/src/templates/common',
+                __DIR__ . '/../../../../../src/templates/common',
             ]
         );
     }

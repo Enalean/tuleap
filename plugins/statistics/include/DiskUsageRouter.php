@@ -21,7 +21,6 @@
 namespace Tuleap\Statistics;
 
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 
@@ -103,7 +102,7 @@ class DiskUsageRouter
         $admin_page_renderer = new AdminPageRenderer();
         $admin_page_renderer->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+            __DIR__ . '/../templates',
             'disk-usage-services',
             $disk_usage_services_presenter
         );
@@ -134,7 +133,7 @@ class DiskUsageRouter
         $admin_page_renderer = new AdminPageRenderer();
         $admin_page_renderer->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+            __DIR__ . '/../templates',
             'disk-usage-projects',
             $disk_usage_projects_presenter
         );
@@ -149,7 +148,7 @@ class DiskUsageRouter
         $admin_page_renderer = new AdminPageRenderer();
         $admin_page_renderer->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+            __DIR__ . '/../templates',
             'disk-usage-global',
             $disk_usage_global_presenter
         );

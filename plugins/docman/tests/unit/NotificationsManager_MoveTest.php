@@ -62,7 +62,6 @@ final class NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.
     protected function setUp(): void
     {
         ForgeConfig::set('sys_noreply', 'norelpy@example.com');
-        ForgeConfig::set('codendi_dir', '/tuleap');
         $this->mail_filter = $this->createMock(MailFilter::class);
     }
 

@@ -26,7 +26,6 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -35,7 +34,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
     private const PROJECT_ID = 123;
@@ -47,8 +45,6 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
-
         $this->request                    = $this->createStub(\Codendi_Request::class);
         $this->config_manager             = $this->createMock(\AgileDashboard_ConfigurationManager::class);
         $this->event_manager              = $this->createStub(\EventManager::class);

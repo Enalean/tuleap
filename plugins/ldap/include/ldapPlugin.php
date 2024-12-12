@@ -235,8 +235,8 @@ class LdapPlugin extends Plugin
     {
         return TemplateRendererFactory::build()->getRenderer(
             [
-                dirname(__FILE__) . '/../templates',
-                ForgeConfig::get('codendi_dir') . '/src/templates/search',
+                __DIR__ . '/../templates',
+                __DIR__ . '/../../../src/templates/search',
             ]
         );
     }

@@ -59,7 +59,7 @@ class ProjectCreationModerationDisplayController implements DispatchableWithRequ
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(
             _('Project creation moderation settings'),
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+            __DIR__ . '/../../templates/admin/projects/',
             'moderation',
             $presenter
         );

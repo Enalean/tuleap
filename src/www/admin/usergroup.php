@@ -351,7 +351,7 @@ $invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
 $GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 $siteadmin->renderAPresenter(
     $Language->getText('admin_usergroup', 'title'),
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
+    __DIR__ . '/../../templates/admin/users/',
     'user',
     new UserDetailsPresenter(
         $user,

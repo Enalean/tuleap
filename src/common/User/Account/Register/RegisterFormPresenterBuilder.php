@@ -131,7 +131,7 @@ final class RegisterFormPresenterBuilder
             $presenter = new \Account_RegisterByUserPresenter($prefill, $extra_plugin_field);
             $template  = 'register-user';
         }
-        $renderer = $this->renderer_factory->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/account/');
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/');
 
         return static function () use ($renderer, $template, $presenter): void {
             $renderer->renderToPage($template, $presenter);

@@ -87,7 +87,7 @@ $presenter_builder = new UGroupListPresenterBuilder(
 
 $synchronized_membership_token = UGroupRouter::getCSRFTokenSynchronizer();
 
-$templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/user_groups';
+$templates_dir = __DIR__ . '/../../../templates/project/admin/user_groups';
 TemplateRendererFactory::build()
     ->getRenderer($templates_dir)
     ->renderToPage(

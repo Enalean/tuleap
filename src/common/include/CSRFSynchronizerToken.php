@@ -145,7 +145,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
     public function fetchHTMLInput()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/common/'
+            __DIR__ . '/../../templates/common/'
         );
 
         return $renderer->renderToString('csrf_token_input', $this);

@@ -28,8 +28,6 @@ use Tuleap\DB\DBTransactionExecutor;
 
 final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Tuleap\ForgeConfigSandbox;
-
     private AgileDashboardRouter|\PHPUnit\Framework\MockObject\MockObject $router;
     private MilestoneControllerFactory|\PHPUnit\Framework\MockObject\MockObject $milestone_controller_factory;
     private Planning_Controller|\PHPUnit\Framework\MockObject\MockObject $planning_controller;
@@ -38,7 +36,6 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
     protected function setUp(): void
     {
         parent::setUp();
-        ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
 
         $this->milestone_controller_factory = $this->createMock(MilestoneControllerFactory::class);
         $this->planning_controller          = $this->createMock(Planning_Controller::class);

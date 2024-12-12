@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
-use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
@@ -69,7 +68,7 @@ class IndexController
 
         $this->displayHeader($title, $project);
 
-        $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/labels/';
+        $templates_dir = __DIR__ . '/../../../templates/project/labels/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
         $renderer->renderToPage(
             'list-labels',

@@ -608,7 +608,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 echo '<span class="small" style="color:#666"><i>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_msg', formatByteToMb(ForgeConfig::get('sys_max_size_upload')))) . '</i> </span>';
 
                 $renderer = TemplateRendererFactory::build()->getRenderer(
-                    ForgeConfig::get('codendi_dir') . '/src/templates/frs/'
+                    __DIR__ . '/../../templates/frs/'
                 );
 
                 $uploaded_links_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());

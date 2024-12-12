@@ -150,7 +150,6 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
 
     public function testItGeneratesHTMLInput(): void
     {
-        ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
         $token1 = new CSRFSynchronizerToken(

@@ -24,7 +24,6 @@ namespace Tuleap\FRS;
 use TemplateRendererFactory;
 use Project;
 use Service;
-use ForgeConfig;
 use User_UGroup;
 use Feedback;
 use PFUser;
@@ -153,7 +152,7 @@ class PermissionController extends BaseFrsPresenter
     /** @return TemplateRenderer */
     private function getRenderer()
     {
-        $template_dir = ForgeConfig::get('codendi_dir') . '/src/templates/frs';
+        $template_dir = __DIR__ . '/../../templates/frs';
 
         return TemplateRendererFactory::build()->getRenderer($template_dir);
     }

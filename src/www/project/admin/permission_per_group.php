@@ -95,7 +95,7 @@ $title                = _('Permissions per group');
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 
-$templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/project/admin/';
+$templates_dir = __DIR__ . '/../../../templates/project/admin/';
 TemplateRendererFactory::build()
     ->getRenderer($templates_dir)
     ->renderToPage('permission-per-group', $presenter);

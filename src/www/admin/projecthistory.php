@@ -81,7 +81,7 @@ $event_manager = EventManager::instance();
 $renderer = new AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
     _('Editing Project'),
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+    __DIR__ . '/../../templates/admin/projects/',
     'project-history',
     new ProjectHistoryPresenter(
         $project,

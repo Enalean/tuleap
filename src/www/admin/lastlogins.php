@@ -54,7 +54,7 @@ $most_recent_logins_presenter = new MostRecentLoginsPresenter($most_recent_login
 $admin_page = new AdminPageRenderer();
 $admin_page->renderAPresenter(
     $Language->getText('admin_lastlogins', 'title'),
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/most_recent_logins/',
+    __DIR__ . '/../../templates/admin/most_recent_logins/',
     'most-recent-logins',
     $most_recent_logins_presenter
 );

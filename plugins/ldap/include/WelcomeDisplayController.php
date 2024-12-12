@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use Account_TimezoneSelectorPresenter;
-use ForgeConfig;
 use HTTPRequest;
 use LDAP_UserManager;
 use TemplateRendererFactory;
@@ -169,7 +168,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
     private function getTimezonePopup(BaseLayout $layout, ?string $timezone): string
     {
         $layout->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../src/templates/account/');
         return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($timezone));
     }
 }

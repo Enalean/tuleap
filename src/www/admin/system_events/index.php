@@ -141,7 +141,7 @@ $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
     $title,
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/system_events/',
+    __DIR__ . '/../../../templates/admin/system_events/',
     'admin-system-events',
     new SystemEvents_adminPresenter(
         $title,

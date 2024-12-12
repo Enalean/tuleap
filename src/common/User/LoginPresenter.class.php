@@ -57,7 +57,7 @@ class User_LoginPresenter
 
     public function getTemplateDir()
     {
-        return ForgeConfig::get('codendi_dir') . '/src/templates/user';
+        return __DIR__ . '/../../templates/user';
     }
 
     public function getTemplate()

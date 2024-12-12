@@ -143,7 +143,7 @@ class ProjectDashboardController
                 ->build()
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
+            __DIR__ . '/../../../templates/dashboard'
         );
 
         $event = new ProjectProviderEvent($this->project);

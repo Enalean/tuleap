@@ -21,7 +21,6 @@
 namespace Tuleap\Statistics;
 
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 
@@ -73,7 +72,7 @@ class DataExportRouter
         $admin_page_renderer = new AdminPageRenderer();
         $admin_page_renderer->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+            __DIR__ . '/../templates',
             'data-export',
             $data_export_presenter
         );

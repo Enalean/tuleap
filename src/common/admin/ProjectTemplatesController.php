@@ -21,7 +21,6 @@
 
 namespace Tuleap\Admin;
 
-use ForgeConfig;
 use HTTPRequest;
 use ProjectManager;
 use Tuleap\Layout\BaseLayout;
@@ -57,7 +56,7 @@ class ProjectTemplatesController implements DispatchableWithRequest
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+            __DIR__ . '/../../templates/admin/projects/',
             'templatelist',
             $presenter
         );

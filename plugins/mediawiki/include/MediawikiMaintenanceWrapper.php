@@ -20,7 +20,6 @@
 
 namespace Tuleap\Mediawiki;
 
-use ForgeConfig;
 use Project;
 use System_Command;
 use System_Command_CommandException;
@@ -48,7 +47,7 @@ class MediawikiMaintenanceWrapper
         $project_name = escapeshellarg($project->getUnixName());
         $backup_path  = escapeshellarg($backup_path);
 
-        $command = ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' .
+        $command = __DIR__ . '/../../../src/utils/php-launcher.sh ' .
             $this->getMaintenanceWrapperPath() . " $project_name dumpBackup.php --full --quiet >> $backup_path ";
 
         $this->sys_command->exec($command);
@@ -89,7 +88,7 @@ class MediawikiMaintenanceWrapper
         $picture_system_path = escapeshellarg($temporary_dump_path_on_filesystem . '/' . $folder_picture);
         $export_folder       = escapeshellarg($project_name_dir . '/images');
         $project_name        = escapeshellarg($project->getUnixName());
-        $command             = ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' .
+        $command             = __DIR__ . '/../../../src/utils/php-launcher.sh ' .
             $this->getMaintenanceWrapperPath() .
             " $project_name  dumpUploads.php --full " .
             "| sed 's~mwstore://local-backend/local-public~$export_folder~' " .

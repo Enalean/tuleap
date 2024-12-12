@@ -132,7 +132,7 @@ $user_statistics_presenter = new UsersStatisticsPresenter(
     stats_getactiveusers($last_3_months),
     $additional_statistics
 );
-$renderer                  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/admin/homepage/');
+$renderer                  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/admin/homepage/');
 
 $user_stats = new Widget_Static(_('Users statistics'));
 $user_stats->setIcon('fa-pie-chart');
@@ -314,7 +314,7 @@ $system_events_pane_builder  = new Tuleap\Admin\SystemEvents\HomepagePanePresent
     SystemEventManager::instance()
 );
 $system_events_pane_renderer = TemplateRendererFactory::build()->getRenderer(
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/system_events/'
+    __DIR__ . '/../../templates/admin/system_events/'
 );
 $system_events_pane_renderer->renderToPage(
     Tuleap\Admin\SystemEvents\HomepagePanePresenter::TEMPLATE,

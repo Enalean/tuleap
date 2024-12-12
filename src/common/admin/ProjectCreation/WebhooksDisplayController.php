@@ -22,7 +22,6 @@
 namespace Tuleap\Admin\ProjectCreation;
 
 use CSRFSynchronizerToken;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
@@ -84,7 +83,7 @@ class WebhooksDisplayController implements DispatchableWithRequest
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+            __DIR__ . '/../../../templates/admin/projects/',
             'configuration',
             $presenter
         );

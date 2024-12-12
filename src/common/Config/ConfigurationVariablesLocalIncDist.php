@@ -28,16 +28,6 @@ namespace Tuleap\Config;
  */
 final readonly class ConfigurationVariablesLocalIncDist
 {
-    #[ConfigKey('Sources directory (legacy name)')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString('/usr/share/tuleap')]
-    public const LEGACY_SOURCE_DIR = 'codendi_dir';
-
-    #[ConfigKey('Sources directory')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString('/usr/share/tuleap')]
-    public const SOURCE_DIR = 'tuleap_dir';
-
     #[ConfigKey('Configuration directory')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString('/etc/tuleap')]

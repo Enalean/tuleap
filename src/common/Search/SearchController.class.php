@@ -41,7 +41,7 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->event_manager = $event_manager;
         $this->renderer      = TemplateRendererFactory::build()->getRenderer(
             [
-                ForgeConfig::get('codendi_dir') . '/src/templates/search',
+                __DIR__ . '/../../templates/search',
             ]
         );
         $this->search_types  = [

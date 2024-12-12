@@ -93,7 +93,7 @@ class BackendSVN extends Backend
                 true,
                 $hook_commit_path,
                 'svn_post_commit.php',
-                ForgeConfig::get('tuleap_dir') . '/src/utils/php-launcher.sh',
+                realpath(__DIR__ . '/../../utils/php-launcher.sh'),
                 'svn_pre_commit.php'
             )
         ) {
@@ -273,7 +273,7 @@ class BackendSVN extends Backend
         if ($update_hook) {
             $command  = 'REPOS="$1"' . "\n";
             $command .= 'TXN="$2"' . "\n";
-            $command .= ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' . $hook_commit_path . '/' . $pre_commit_file . ' "$REPOS" "$TXN" || exit 1';
+            $command .= realpath(__DIR__ . '/../../utils/php-launcher.sh') . ' ' . $hook_commit_path . '/' . $pre_commit_file . ' "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
         }
         $this->chown($filename, $this->getHTTPUser());

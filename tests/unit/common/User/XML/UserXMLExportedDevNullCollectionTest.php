@@ -23,18 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\User\XML;
 
 use PFUser;
-use Tuleap\ForgeConfigSandbox;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
 final class UserXMLExportedDevNullCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForgeConfigSandbox;
-
     public function testItIgnoresUsersAddedToTheCollection(): void
     {
-        \ForgeConfig::set('tuleap_dir', __DIR__ . '/../../../../../');
-
         $collection = new UserXMLExportedDevNullCollection(
             new XML_RNGValidator(),
             new XML_SimpleXMLCDATAFactory()

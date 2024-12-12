@@ -20,7 +20,6 @@
 
 namespace Tuleap\User\Profile;
 
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
@@ -86,7 +85,7 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
     private function renderToPage(PFUser $user, PFUser $current_user)
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/user'
+            __DIR__ . '/../../../templates/user'
         );
         $renderer->renderToPage('profile', $this->presenter_builder->getPresenter($user, $current_user));
     }

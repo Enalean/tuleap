@@ -23,7 +23,6 @@ namespace Tuleap\admin\ProjectEdit;
 use Event;
 use EventManager;
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
 use Project;
 use ProjectHistoryDao;
@@ -88,7 +87,7 @@ class ProjectEditController
     public function index()
     {
         $renderer      = new \Tuleap\Admin\AdminPageRenderer();
-        $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/';
+        $template_path = __DIR__ . '/../../../templates/admin/projects/';
 
         $renderer->renderANoFramedPresenter(
             _('Editing Project'),

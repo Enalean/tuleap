@@ -330,7 +330,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     {
         $retVal = 0;
         $output = [];
-        $mvCmd  = ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' . ForgeConfig::get('codendi_dir') . '/plugins/git/bin/gl-rename-project.php ' . escapeshellarg($oldName) . ' ' . escapeshellarg($newName);
+        $mvCmd  = realpath(__DIR__ . '/../../../src/utils/php-launcher.sh') . ' ' . realpath(__DIR__ . '/../bin/gl-rename-project.php') . ' ' . escapeshellarg($oldName) . ' ' . escapeshellarg($newName);
         $cmd    = 'su -l codendiadm -c "' . $mvCmd . ' 2>&1"';
         exec($cmd, $output, $retVal);
         if ($retVal == 0) {

@@ -68,7 +68,7 @@ if ($request->valid($vProcId)) {
 }
 
 
-$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/frs');
+$renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/frs');
 $presenter = new ToolbarPresenter($project);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();

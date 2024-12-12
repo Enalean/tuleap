@@ -20,7 +20,6 @@
 
 namespace Tuleap\News;
 
-use ForgeConfig;
 use HTTPRequest;
 use ProjectManager;
 use Service;
@@ -95,7 +94,7 @@ class ChooseNewsItemController
         $items     = $this->data_mapper->fetchAll($this->getProjectFromRequest());
         $presenter = new ChooseNewsPresenter($items, $this->request->get('project_id'));
         $renderer  = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/news/'
+            __DIR__ . '/../../templates/news/'
         );
 
         $renderer->renderToPage('choose_news', $presenter);

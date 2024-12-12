@@ -67,7 +67,7 @@ class MediawikiSiteAdminController
 
         $this->admin_page_renderer->renderAPresenter(
             'Mediawiki',
-            ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
+            __DIR__ . '/../../../src/templates/resource_restrictor',
             $presenter::TEMPLATE,
             $presenter
         );

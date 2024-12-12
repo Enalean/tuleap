@@ -81,6 +81,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
         $redirect_uri         = 'https://example.com/redirect';
+        $csrf_storage         = [];
         $form_data            = new AuthorizationFormData(
             new OAuth2App(
                 1,
@@ -89,7 +90,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                 true,
                 new \Project(['group_id' => 101, 'group_name' => 'Test Project'])
             ),
-            $this->createMock(\CSRFSynchronizerToken::class),
+            new \CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage),
             $redirect_uri,
             'xyz',
             'pkce_chall',

@@ -25,7 +25,6 @@
 namespace Tuleap\Project\Admin\Navigation;
 
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use Project;
 use Tuleap\Layout\HeaderConfigurationBuilder;
@@ -51,7 +50,7 @@ class HeaderNavigationDisplayer
 
         site_project_header($project, $params);
 
-        $template_path = ForgeConfig::get('tuleap_dir') . '/src/templates/project';
+        $template_path = __DIR__ . '/../../../../templates/project';
 
         $request = HTTPRequest::instance();
 

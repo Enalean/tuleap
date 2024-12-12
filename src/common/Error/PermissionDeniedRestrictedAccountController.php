@@ -20,7 +20,6 @@
 
 namespace Tuleap\Error;
 
-use ForgeConfig;
 use TemplateRendererFactory;
 use ThemeManager;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
@@ -47,7 +46,7 @@ class PermissionDeniedRestrictedAccountController
         $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Permission denied')));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/error/'
+            __DIR__ . '/../../templates/error/'
         );
 
         $renderer->renderToPage('permission-denied-restricted-account', []);

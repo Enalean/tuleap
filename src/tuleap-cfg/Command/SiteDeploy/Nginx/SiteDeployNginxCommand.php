@@ -57,7 +57,7 @@ final class SiteDeployNginxCommand extends Command
         $deploy         = new SiteDeployNginx(
             $console_logger,
             new NginxServerNamesHashBucketSizeCalculator(new CurrentCPUInformation()),
-            ForgeConfig::get('tuleap_dir'),
+            __DIR__ . '/../../../../../',
             '/etc/nginx',
             ForgeConfig::get('sys_default_domain'),
             $development

@@ -56,7 +56,7 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 return $event;
             }
         };
-        $csrf_token                          = $this->createMock(CSRFSynchronizerToken::class);
+        $csrf_token                          = new CSRFSynchronizerToken('something');
         $this->access_keys_presenter_builder = $this->createMock(AccessKeyPresenterBuilder::class);
         $this->svn_token_handler             = $this->createStub(\SVN_TokenHandler::class);
         $svn_tokens_presenter_builder        = new SVNTokensPresenterBuilder(

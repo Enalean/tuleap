@@ -62,7 +62,7 @@ final readonly class WorkerEventProcessorFinder implements FindWorkerEventProces
                                 new TuleapRegisterMail(
                                     new MailPresenterFactory(),
                                     TemplateRendererFactory::build()->getRenderer(
-                                        ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+                                        __DIR__ . '/../../templates/mail/'
                                     ),
                                     $user_manager,
                                     $locale_switcher,
