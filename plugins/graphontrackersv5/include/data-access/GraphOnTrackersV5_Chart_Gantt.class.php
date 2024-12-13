@@ -21,6 +21,9 @@
  */
 
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
+use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_DatesV5;
+use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5;
+use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5;
 
 class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 {

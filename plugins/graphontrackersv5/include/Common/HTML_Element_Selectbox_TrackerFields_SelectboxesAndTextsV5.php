@@ -1,29 +1,37 @@
 <?php
-/*
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+/**
+ * Copyright (c) cjt Systemsoftware AG, 2017. All Rights Reserved.
  *
- * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
+ * Based on cody by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\GraphOnTrackersV5\Common;
+
+use HTML_Element_Option;
+use HTML_Element_Selectbox;
+use Tracker_FormElementFactory;
+
 /**
- * Define an html selectbox field for selectbox fields provided by the tracker
+ * Define an html selectbox field for selectbox fields and text fields provided by the tracker
  */
-class HTML_Element_Selectbox_TrackerFields_SelectboxesV5 extends HTML_Element_Selectbox
+final class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = '', $with_user = true, $desc = '')
     {
@@ -37,6 +45,12 @@ class HTML_Element_Selectbox_TrackerFields_SelectboxesV5 extends HTML_Element_Se
                     $selected = $this->value == $field->id;
                     $this->addOption(new HTML_Element_Option($field->getLabel(), $field->id, $selected));
                 }
+            }
+        }
+        foreach ($aff->getUsedStringFields($tracker) as $field) {
+            if ($field->userCanRead()) {
+                $selected = $this->value == $field->id;
+                $this->addOption(new HTML_Element_Option($field->getLabel(), $field->id, $selected));
             }
         }
     }
