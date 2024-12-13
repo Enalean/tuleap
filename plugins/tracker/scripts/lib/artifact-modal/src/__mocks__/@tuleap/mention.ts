@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initMentions } from "@tuleap/mention";
-
-export function initMentionsOnEditorDataReady(ckeditor: CKEDITOR.editor): void {
-    // This MUST be called after "dataReady" event because calling setData() on CKEditor will kill the event listeners of @tuleap/mention
-    if (!ckeditor.document) {
-        return;
-    }
-    initMentions(ckeditor.document.getBody().$);
+export function initMentions(): void {
+    // Mock @tuleap/mention because it needs jquery in tests
 }

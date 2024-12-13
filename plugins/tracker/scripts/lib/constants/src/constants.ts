@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { ColorName } from "@tuleap/core-constants";
+export type { ColorName, LocaleString } from "@tuleap/core-constants";
 export { ARTIFACT_TYPE, KANBAN_TYPE } from "@tuleap/core-constants";
 
 export type ArtifactIdFieldIdentifier = "aid";

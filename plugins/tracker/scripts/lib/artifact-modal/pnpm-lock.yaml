@@ -32,6 +32,9 @@ dependencies:
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/list-picker
+  '@tuleap/mention':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/mention
   '@tuleap/option':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/option

@@ -64,6 +64,7 @@ export const renderTextField = (host: TextField): UpdateFunction<TextField> => h
         ${getTextAndFormatTemplate(host, {
             identifier: getIdentifier(host),
             rows: 5,
+            allows_mentions: false,
             onContentChange,
             onFormatChange,
         })}

@@ -43,10 +43,11 @@ export interface TextAndFormat {
 export type HostElement = TextAndFormat & HTMLElement;
 
 export interface TextAndFormatOptions {
-    identifier: string;
-    rows: number;
-    onContentChange: (host: never, event: CustomEvent) => void;
-    onFormatChange: (host: never, event: CustomEvent) => void;
+    readonly identifier: string;
+    readonly rows: number;
+    readonly allows_mentions: boolean;
+    onContentChange(host: never, event: CustomEvent): void;
+    onFormatChange(host: never, event: CustomEvent): void;
 }
 
 export const interpretCommonMark = async (host: TextAndFormat, content: string): Promise<void> => {
@@ -108,6 +109,7 @@ export const getTextAndFormatTemplate = (
         disabled="${isDisabled(host)}"
         required="${host.required}"
         rows="${options.rows}"
+        allows_mentions="${options.allows_mentions}"
         controller="${host.controller}"
         oncontent-change="${options.onContentChange}"
         onformat-change="${options.onFormatChange}"

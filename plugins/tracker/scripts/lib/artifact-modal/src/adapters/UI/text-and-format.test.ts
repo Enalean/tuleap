@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Fault } from "@tuleap/fault";
+import { selectOrThrow } from "@tuleap/dom";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import type { HostElement, TextAndFormat, TextAndFormatOptions } from "./text-and-format";
 import { getTextAndFormatTemplate, interpretCommonMark, isDisabled } from "./text-and-format";
 import { setCatalog } from "../../gettext-catalog";
 import { FormattedTextController } from "../../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
-import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import type { InterpretCommonMark } from "../../domain/common/InterpretCommonMark";
 import { InterpretCommonMarkStub } from "../../../tests/stubs/InterpretCommonMarkStub";
-import { Fault } from "@tuleap/fault";
 
 const noop = (): void => {
     //Do nothing
@@ -34,6 +35,7 @@ const noop = (): void => {
 const getOptions = (data?: Partial<TextAndFormatOptions>): TextAndFormatOptions => ({
     identifier: "unique-id",
     rows: 3,
+    allows_mentions: false,
     onContentChange: noop,
     onFormatChange: noop,
     ...data,
@@ -41,6 +43,10 @@ const getOptions = (data?: Partial<TextAndFormatOptions>): TextAndFormatOptions 
 
 const HTML_STRING = `<h1>Oh no! Anyway...</h1>`;
 const COMMONMARK_STRING = "# Oh no! Anyway...";
+
+function hasIdentifier(element: HTMLElement): element is HTMLElement & { identifier: string } {
+    return "identifier" in element && typeof element.identifier === "string";
+}
 
 describe(`TextAndFormat`, () => {
     let target: ShadowRoot, interpreter: InterpretCommonMark, doc: Document;
@@ -113,8 +119,8 @@ describe(`TextAndFormat`, () => {
             const update = getTextAndFormatTemplate(host, getOptions({ identifier }));
             update(host, target);
 
-            const format_selector_element = getSelector("[data-test=format-selector]");
-            const text_editor_element = getSelector("[data-test=text-editor]");
+            const format_selector_element = selectOrThrow(target, "[data-test=format-selector]");
+            const text_editor_element = selectOrThrow(target, "[data-test=text-editor]");
 
             if (!hasIdentifier(format_selector_element) || !hasIdentifier(text_editor_element)) {
                 throw new Error("Element is missing an 'identifier' attribute.");
@@ -130,7 +136,7 @@ describe(`TextAndFormat`, () => {
             update(host, target);
 
             expect(
-                getSelector("[data-test=text-editor]").classList.contains(
+                selectOrThrow(target, "[data-test=text-editor]").classList.contains(
                     "tuleap-artifact-modal-hidden",
                 ),
             ).toBe(false);
@@ -144,7 +150,7 @@ describe(`TextAndFormat`, () => {
             update(host, target);
 
             expect(
-                getSelector("[data-test=text-editor]").classList.contains(
+                selectOrThrow(target, "[data-test=text-editor]").classList.contains(
                     "tuleap-artifact-modal-hidden",
                 ),
             ).toBe(true);
@@ -164,12 +170,12 @@ describe(`TextAndFormat`, () => {
             update(host, target);
 
             expect(
-                getSelector("[data-test=text-editor]").classList.contains(
+                selectOrThrow(target, "[data-test=text-editor]").classList.contains(
                     "tuleap-artifact-modal-hidden",
                 ),
             ).toBe(true);
             expect(target.querySelector("[data-test=text-field-commonmark-preview]")).toBeNull();
-            expect(getSelector("[data-test=text-field-error]").textContent).toContain(
+            expect(selectOrThrow(target, "[data-test=text-field-error]").textContent).toContain(
                 "Interpretation failed !!!!!!!!",
             );
         });
@@ -192,16 +198,4 @@ describe(`TextAndFormat`, () => {
             expect(isDisabled(host)).toBe(false);
         });
     });
-
-    function getSelector(selector: string): HTMLElement {
-        const selected = target.querySelector(selector);
-        if (!(selected instanceof HTMLElement)) {
-            throw new Error("Could not select element");
-        }
-        return selected;
-    }
-
-    function hasIdentifier(element: HTMLElement): element is HTMLElement & { identifier: string } {
-        return "identifier" in element && typeof element.identifier === "string";
-    }
 });

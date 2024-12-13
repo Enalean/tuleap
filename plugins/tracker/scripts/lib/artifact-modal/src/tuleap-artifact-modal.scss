@@ -27,6 +27,7 @@
 @use "./adapters/UI/fields/computed-field/computed-field";
 @use "./fields/open-list-field/open-list-field";
 @use "pkg:@tuleap/list-picker";
+@use "pkg:@tuleap/mention";
 
 .tuleap-artifact-modal-title {
     display: flex;

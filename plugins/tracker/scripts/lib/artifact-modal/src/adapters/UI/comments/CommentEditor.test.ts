@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import { setCatalog } from "../../../gettext-catalog";
-import type { HostElement } from "./FollowupEditor";
-import { renderFollowupEditor } from "./FollowupEditor";
+import type { HostElement } from "./CommentEditor";
+import { renderCommentEditor } from "./CommentEditor";
 import { FormattedTextController } from "../../../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
-import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import { InterpretCommonMarkStub } from "../../../../tests/stubs/InterpretCommonMarkStub";
 
 function getHost(data: Partial<HostElement>): HostElement {
@@ -33,11 +34,15 @@ function getHost(data: Partial<HostElement>): HostElement {
             InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
             TEXT_FORMAT_TEXT,
         ),
-        dispatchEvent: jest.fn(),
+        dispatchEvent(event) {
+            if (event) {
+                //Do nothing
+            }
+        },
     } as HostElement;
 }
 
-describe(`FollowupEditor`, () => {
+describe(`CommentEditor`, () => {
     let target: ShadowRoot;
     beforeEach(() => {
         const doc = document.implementation.createHTMLDocument();
@@ -49,14 +54,14 @@ describe(`FollowupEditor`, () => {
         let host: HostElement;
         beforeEach(() => {
             host = getHost({ contentValue: "previous content", format: "text" });
-            const update = renderFollowupEditor(host);
+            const update = renderCommentEditor(host);
             update(host, target);
         });
 
         it(`when the RichTextEditor emits a "content-change" event,
             it will emit a "value-changed" event with the new content`, () => {
             const dispatch = jest.spyOn(host, "dispatchEvent");
-            getSelector("[data-test=text-editor]").dispatchEvent(
+            selectOrThrow(target, "[data-test=text-editor]").dispatchEvent(
                 new CustomEvent("content-change", {
                     detail: { content: "chrysopid" },
                 }),
@@ -64,7 +69,7 @@ describe(`FollowupEditor`, () => {
 
             const value_changed = dispatch.mock.calls[0][0];
             if (!(value_changed instanceof CustomEvent)) {
-                throw new Error("Expected a CustomEvent");
+                throw Error("Expected a CustomEvent");
             }
             expect(value_changed.type).toBe("value-changed");
             expect(value_changed.detail.body).toBe("chrysopid");
@@ -75,7 +80,7 @@ describe(`FollowupEditor`, () => {
         it(`when the RichTextEditor emits a "format-change" event,
             it will emit a "value-changed" event with the new format and the new content`, () => {
             const dispatch = jest.spyOn(host, "dispatchEvent");
-            getSelector("[data-test=text-editor]").dispatchEvent(
+            selectOrThrow(target, "[data-test=text-editor]").dispatchEvent(
                 new CustomEvent("format-change", {
                     detail: { format: "commonmark", content: "chrysopid" },
                 }),
@@ -83,7 +88,7 @@ describe(`FollowupEditor`, () => {
 
             const value_changed = dispatch.mock.calls[0][0];
             if (!(value_changed instanceof CustomEvent)) {
-                throw new Error("Expected a CustomEvent");
+                throw Error("Expected a CustomEvent");
             }
             expect(value_changed.type).toBe("value-changed");
             expect(value_changed.detail.body).toBe("chrysopid");
@@ -92,12 +97,4 @@ describe(`FollowupEditor`, () => {
             expect(host.contentValue).toBe("chrysopid");
         });
     });
-
-    function getSelector(selector: string): HTMLElement {
-        const selected = target.querySelector(selector);
-        if (!(selected instanceof HTMLElement)) {
-            throw new Error("Could not select element");
-        }
-        return selected;
-    }
 });
