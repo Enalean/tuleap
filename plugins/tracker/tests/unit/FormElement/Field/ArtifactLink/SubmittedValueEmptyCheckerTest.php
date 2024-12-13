@@ -117,6 +117,23 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
         );
     }
 
+    public function testValueIsEmptyIfNoDataAtAllForFieldSubmittedFromTheArtifactView(): void
+    {
+        $submitted_value = [
+            'new_values' => '',
+            'type' => '',
+            'parent' => [ 0 => ''],
+        ];
+
+        self::assertTrue(
+            $this->empty_checker->isSubmittedValueEmpty(
+                $submitted_value,
+                $this->buildArtifactLinkFieldWithoutData(),
+                ArtifactTestBuilder::anArtifact(1)->build(),
+            )
+        );
+    }
+
     public function testValueIsEmptyIfRemovingAllLinks(): void
     {
         $submitted_value = [
