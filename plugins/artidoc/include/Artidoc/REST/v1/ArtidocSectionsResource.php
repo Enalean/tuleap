@@ -27,6 +27,7 @@ use Luracast\Restler\RestException;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
+use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
@@ -160,7 +161,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         $dao       = new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $retriever = new ArtidocWithContextRetriever(
-            new ArtidocRetriever($dao, new Docman_ItemFactory()),
+            new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
@@ -180,7 +181,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         $dao       = new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $retriever = new ArtidocWithContextRetriever(
-            new ArtidocRetriever($dao, new Docman_ItemFactory()),
+            new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
