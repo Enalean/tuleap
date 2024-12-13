@@ -26,10 +26,11 @@ import type {
     FieldSetIdentifier,
     LastUpdateDateFieldIdentifier,
     MultiSelectBoxFieldIdentifier,
+    Permission,
     PermissionFieldIdentifier,
     RadioButtonFieldIdentifier,
+    StringFieldIdentifier,
     SubmissionDateFieldIdentifier,
-    Permission,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -50,6 +51,10 @@ export interface BaseFieldStructure {
 
 export interface UnknownFieldStructure extends BaseFieldStructure {
     readonly type: never;
+}
+
+interface StringFieldStructure extends BaseFieldStructure {
+    readonly type: StringFieldIdentifier;
 }
 
 export interface CommonDateFieldStructure extends BaseFieldStructure {
@@ -101,13 +106,14 @@ export interface ArtifactLinkFieldStructure extends BaseFieldStructure {
 
 export type StructureFields =
     | UnknownFieldStructure
-    | DateFieldStructure
+    | ArtifactLinkFieldStructure
     | ContainerFieldStructure
-    | ListLikeFieldStructure
+    | DateFieldStructure
     | ListFieldStructure
+    | ListLikeFieldStructure
     | OpenListFieldStructure
     | PermissionsOnArtifactFieldStructure
-    | ArtifactLinkFieldStructure;
+    | StringFieldStructure;
 
 export interface StructureFormat {
     readonly id: number;
@@ -121,6 +127,35 @@ export type SemanticsRepresentation = {
         readonly field_id: number;
     };
 };
+
+interface NotificationsRepresentation {
+    readonly enabled: boolean;
+}
+
+interface ListDependencyRule {
+    readonly source_field_id: number;
+    readonly source_value_id: number;
+    readonly target_field_id: number;
+    readonly target_value_id: number;
+}
+
+interface WorkflowTransition {
+    readonly id: number;
+    readonly from_id: number;
+    readonly to_id: number;
+}
+
+interface WorkflowRepresentation {
+    readonly field_id: number;
+    readonly is_advanced: boolean;
+    readonly is_legacy: boolean;
+    readonly is_used: "1" | "";
+    readonly rules: {
+        readonly dates: ReadonlyArray<unknown>;
+        readonly lists: ReadonlyArray<ListDependencyRule>;
+    };
+    readonly transitions: ReadonlyArray<WorkflowTransition>;
+}
 
 export interface MinimalTrackerResponse {
     readonly id: number;
@@ -140,6 +175,12 @@ export interface TrackerResponseWithProject extends MinimalTrackerResponse {
     readonly project: TrackerProjectRepresentation;
 }
 
+export interface TrackerReference extends MinimalTrackerResponse {
+    readonly color: ColorName;
+    readonly uri: string;
+    readonly project: TrackerProjectRepresentation;
+}
+
 /**
  * Do not use this type directly as it contains way too many things.
  * Instead, create your own type with Pick:
@@ -153,6 +194,9 @@ export interface TrackerResponseNoInstance
     readonly fields: ReadonlyArray<StructureFields>;
     readonly structure: ReadonlyArray<StructureFormat>;
     readonly semantics: SemanticsRepresentation;
+    readonly workflow: WorkflowRepresentation;
+    readonly notifications: NotificationsRepresentation;
+    readonly parent: TrackerReference | null;
 }
 
 export interface TrackerUsedArtifactLinkResponse {

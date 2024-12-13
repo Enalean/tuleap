@@ -339,7 +339,7 @@
         <tuleap-artifact-modal-comments-section
             ng-if="! modal.creation_mode"
             class="tuleap-artifact-modal-followups"
-            controller="modal.comments_controller"
+            controller="modal.getCommentsController()"
             formatted-text-controller="modal.getFormattedTextController()"
             on-new-comment="modal.setFollowupComment($event)"
             ce-one-way

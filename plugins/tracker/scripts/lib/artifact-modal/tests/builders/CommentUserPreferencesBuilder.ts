@@ -31,6 +31,7 @@ export class CommentUserPreferencesBuilder {
     #date_time_format: DateTimeFormat = en_US_DATE_TIME_FORMAT;
     #locale: LocaleString = en_US_LOCALE;
     #relative_dates_display: RelativeDatesDisplayPreference = "relative_first-absolute_tooltip";
+    #are_mentions_effective = true;
 
     private constructor() {
         // Prefer static method for instantiation
@@ -38,11 +39,6 @@ export class CommentUserPreferencesBuilder {
 
     static userPreferences(): CommentUserPreferencesBuilder {
         return new CommentUserPreferencesBuilder();
-    }
-
-    withCommentOrder(is_comment_order_inverted: boolean): this {
-        this.#is_comment_order_inverted = is_comment_order_inverted;
-        return this;
     }
 
     withNewCommentAllowed(is_allowed_to_add_comment: boolean): this {
@@ -60,11 +56,6 @@ export class CommentUserPreferencesBuilder {
         return this;
     }
 
-    withDateTimeFormat(format: DateTimeFormat): this {
-        this.#date_time_format = format;
-        return this;
-    }
-
     withRelativeDatesDisplay(display_preference: RelativeDatesDisplayPreference): this {
         this.#relative_dates_display = display_preference;
         return this;
@@ -73,6 +64,7 @@ export class CommentUserPreferencesBuilder {
     build(): CommentUserPreferences {
         return {
             is_allowed_to_add_comment: this.#is_allowed_to_add_comment,
+            are_mentions_effective: this.#are_mentions_effective,
             is_comment_order_inverted: this.#is_comment_order_inverted,
             relative_dates_display: this.#relative_dates_display,
             date_time_format: this.#date_time_format,

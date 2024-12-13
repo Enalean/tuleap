@@ -240,6 +240,11 @@ msgstr "Houve um erro na pré-visualização do Markdown:"
 msgid "This artifact is already linked"
 msgstr ""
 
+msgid ""
+"This tracker's notifications are disabled, when you use @ to mention "
+"someone, no email will be sent."
+msgstr ""
+
 msgid "Title"
 msgstr ""
 

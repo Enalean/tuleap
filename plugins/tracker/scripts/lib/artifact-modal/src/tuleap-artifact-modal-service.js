@@ -143,6 +143,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             applyWorkflowTransitions(transformed_tracker, {});
             modal_model.values = getSelectedValues(initial_values, transformed_tracker);
             modal_model.ordered_fields = buildFormTree(transformed_tracker);
+            modal_model.are_mentions_effective = false;
 
             return modal_model;
         });
@@ -170,11 +171,11 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             const tracker = promises[0].tracker;
             const transformed_tracker = transform(tracker, creation_mode);
 
-            modal_model.ordered_fields = transformed_tracker.ordered_fields;
             modal_model.color = transformed_tracker.color_name;
+            modal_model.are_mentions_effective = tracker.are_mentions_effective;
 
             const artifact_values = getArtifactFieldValues(promises[0]);
-            let tracker_with_field_values = addFieldValuesToTracker(
+            const tracker_with_field_values = addFieldValuesToTracker(
                 artifact_values,
                 transformed_tracker,
             );
