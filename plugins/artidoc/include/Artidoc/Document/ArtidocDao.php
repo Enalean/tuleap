@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
-use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\Direction;
 use Tuleap\Artidoc\Domain\Document\Order\ReorderSections;
@@ -49,30 +48,13 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
+final class ArtidocDao extends DataAccessObject implements SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
 {
     public function __construct(
         private readonly SectionIdentifierFactory $section_identifier_factory,
         private readonly FreetextIdentifierFactory $freetext_identifier_factory,
     ) {
         parent::__construct();
-    }
-
-    public function searchByItemId(int $item_id): ?array
-    {
-        return $this->getDB()->row(
-            <<<EOS
-            SELECT *
-            FROM plugin_docman_item
-            WHERE item_id = ?
-              AND item_type = ?
-              AND other_type = ?
-              AND delete_date IS NULL
-            EOS,
-            $item_id,
-            \Docman_Item::TYPE_OTHER,
-            ArtidocDocument::TYPE,
-        );
     }
 
     public function searchSectionById(SectionIdentifier $section_id): Ok|Err
