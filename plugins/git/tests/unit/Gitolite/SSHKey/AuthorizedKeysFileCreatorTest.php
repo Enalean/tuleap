@@ -18,29 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite\SSHKey;
 
-use Mockery;
+use ArrayIterator;
+use System_Command;
+use System_Command_CommandException;
 use Tuleap\Git\Gitolite\SSHKey\Provider\IProvideKey;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-class AuthorizedKeysFileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AuthorizedKeysFileCreatorTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItGeneratesAuthorizedKeysFile(): void
     {
         $key1 = new Key('user1', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDgTGQXojsjAemABiCqPS9k7h5VLigeNhfJFc1Xx3DRZ0B1+eCAI7IT65VzYEHlkW8pTK9IZO6yFLM5aYiLF5GD1VoDxP7zuslCU5gTIl1eWJzMQY/5mc4IP+8dk+p4CoTlXwU5xnZatUWwiF8PnaM2evga4sAwLHBZ8QqiNIaHEQ==');
         $key2 = new Key('user2', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF8IKZurK86EWGW2Q8jYkiXmkWZfEQ2SJlYnIylWMey0tRB5pr9G9oKbKt25RHigfeFJXgKIvPhAku5R08ejfoAG+/V3H8cXqf0zk0VxuIuTZk7OJ+8ll0i8x52Daepr102i7agnNk2c7CQ9Tz2+sXgYrMVPK4QroEOXY1rFCbHQ== user2@example.com');
 
-        $keys = new class extends \ArrayIterator implements IProvideKey
-        {
+        $keys = new class extends ArrayIterator implements IProvideKey {
             //Do nothing
         };
         $keys->append($key1);
         $keys->append($key2);
-        $system_command = Mockery::spy('System_Command');
+        $system_command = $this->createMock(System_Command::class);
+        $system_command->method('exec');
 
         $temporary_file = tempnam(sys_get_temp_dir(), 'AuthorizedKeysFileCreatorUnitTests');
 
@@ -54,8 +55,8 @@ class AuthorizedKeysFileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 command="/bin/false user2",some-options ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF8IKZurK86EWGW2Q8jYkiXmkWZfEQ2SJlYnIylWMey0tRB5pr9G9oKbKt25RHigfeFJXgKIvPhAku5R08ejfoAG+/V3H8cXqf0zk0VxuIuTZk7OJ+8ll0i8x52Daepr102i7agnNk2c7CQ9Tz2+sXgYrMVPK4QroEOXY1rFCbHQ== user2@example.com
 ';
 
-        $this->assertEquals($expected_authorized_keys, $generated_authorized_keys);
-        $this->assertFalse($invalid_keys_collector->hasInvalidKeys());
+        self::assertEquals($expected_authorized_keys, $generated_authorized_keys);
+        self::assertFalse($invalid_keys_collector->hasInvalidKeys());
     }
 
     public function testItRejectsInvalidGeneratedKeysFile(): void
@@ -63,16 +64,20 @@ command="/bin/false user2",some-options ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF
         $key1 = new Key('invalid_user', 'ssh-rsa not_valid');
         $key2 = new Key('valid_user', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF8IKZurK86EWGW2Q8jYkiXmkWZfEQ2SJlYnIylWMey0tRB5pr9G9oKbKt25RHigfeFJXgKIvPhAku5R08ejfoAG+/V3H8cXqf0zk0VxuIuTZk7OJ+8ll0i8x52Daepr102i7agnNk2c7CQ9Tz2+sXgYrMVPK4QroEOXY1rFCbHQ== user2@example.com');
 
-        $keys = new class extends \ArrayIterator implements IProvideKey
-        {
+        $keys = new class extends ArrayIterator implements IProvideKey {
             //Do nothing
         };
         $keys->append($key1);
         $keys->append($key2);
-        $system_command = Mockery::mock('System_Command');
-        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', [], 1))->ordered();
-        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', [], 1))->ordered();
-        $system_command->shouldReceive('exec')->once()->andReturnTrue()->ordered();
+        $system_command = $this->createMock(System_Command::class);
+        $counter        = 0;
+        $system_command->expects(self::exactly(3))->method('exec')
+            ->willReturnCallback(static function () use (&$counter) {
+                if (++$counter === 3) {
+                    return true;
+                }
+                throw new System_Command_CommandException('', [], 1);
+            });
         $temporary_file = tempnam(sys_get_temp_dir(), 'AuthorizedKeysFileCreatorUnitTests');
 
         $invalid_keys_collector       = new InvalidKeysCollector();
@@ -84,9 +89,9 @@ command="/bin/false user2",some-options ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF
         $expected_authorized_keys = 'command="/bin/false valid_user",some-options ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF8IKZurK86EWGW2Q8jYkiXmkWZfEQ2SJlYnIylWMey0tRB5pr9G9oKbKt25RHigfeFJXgKIvPhAku5R08ejfoAG+/V3H8cXqf0zk0VxuIuTZk7OJ+8ll0i8x52Daepr102i7agnNk2c7CQ9Tz2+sXgYrMVPK4QroEOXY1rFCbHQ== user2@example.com
 ';
 
-        $this->assertEquals($expected_authorized_keys, $generated_authorized_keys);
-        $this->assertTrue($invalid_keys_collector->hasInvalidKeys());
+        self::assertEquals($expected_authorized_keys, $generated_authorized_keys);
+        self::assertTrue($invalid_keys_collector->hasInvalidKeys());
         $invalid_keys = $invalid_keys_collector->getInvalidKeys();
-        $this->assertEquals($invalid_keys[0], $key1);
+        self::assertEquals($invalid_keys[0], $key1);
     }
 }
