@@ -18,32 +18,30 @@
  */
 
 import "../themes/label.scss";
-import Vue from "vue";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { createApp } from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import LabeledItemsList from "./LabeledItemsList.vue";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    Vue.use(VueDOMPurifyHTML, {
-        namedConfigurations: {
-            svg: {
-                USE_PROFILES: { svg: true },
-            },
-        },
+    const gettext = await initVueGettext(createGettext, (locale) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
     });
 
-    await initVueGettext(
-        Vue,
-        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
-
     const widgets = document.getElementsByClassName("labeled-items-widget");
-    const RootComponent = Vue.extend(LabeledItemsList);
-
-    const widgets_array = [...widgets];
-    for (const widget of widgets_array) {
-        new RootComponent({
-            propsData: { ...widget.dataset },
-        }).$mount(widget);
+    for (const widget of widgets) {
+        createApp(LabeledItemsList, {
+            ...widget.dataset,
+        })
+            .use(gettext)
+            .use(VueDOMPurifyHTML, {
+                namedConfigurations: {
+                    svg: {
+                        USE_PROFILES: { svg: true },
+                    },
+                },
+            })
+            .mount(widget);
     }
 });

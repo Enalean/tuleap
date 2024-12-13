@@ -19,7 +19,7 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
