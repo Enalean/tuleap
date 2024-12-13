@@ -17,10 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync } from "neverthrow";
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-
 export const noop = (): void => {};
 export const promised_noop = (): Promise<void> => Promise.resolve();
-export const result_noop = (): ResultAsync<unknown, Fault> => okAsync(null);

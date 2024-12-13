@@ -68,6 +68,7 @@
                     v-bind:is_first="index === 0"
                     v-bind:is_last="index === (sections?.length || 0) - 1"
                     v-bind:section="section"
+                    v-bind:sections_reorderer="sections_reorderer"
                     v-on:moved-section-up-or-down="showJustSavedTemporaryFeedback"
                     v-on:moving-section-up-or-down="showSectionBeingMovedTemporaryFeedback"
                     v-on:moved-section-up-or-down-fault="handleReorderingFault"
@@ -96,14 +97,16 @@ import type { InternalArtidocSectionId } from "@/stores/useSectionsStore";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { isCannotReorderSectionsFault } from "@/stores/CannotReorderSectionsFault";
+import { buildSectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
 
 const { $gettext } = useGettext();
 
-const { sections, is_sections_loading, moveSectionAtTheEnd, moveSectionBefore } =
-    strictInject(SECTIONS_STORE);
+const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const document_id = strictInject(DOCUMENT_ID);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
+
+const sections_reorderer = buildSectionsReorderer(sections);
 
 const is_reorder_allowed = can_user_edit_document;
 
@@ -165,7 +168,7 @@ onMounted(() => {
             showSectionBeingMovedTemporaryFeedback(moved_section);
 
             if (context.next_sibling === null) {
-                moveSectionAtTheEnd(document_id, moved_section).match(() => {
+                sections_reorderer.moveSectionAtTheEnd(document_id, moved_section).match(() => {
                     showJustSavedTemporaryFeedback(moved_section);
                 }, handleReorderingFault);
                 return;
@@ -180,7 +183,7 @@ onMounted(() => {
             const sibling = {
                 internal_id: context.next_sibling.dataset.internalId,
             };
-            moveSectionBefore(document_id, moved_section, sibling).match(() => {
+            sections_reorderer.moveSectionBefore(document_id, moved_section, sibling).match(() => {
                 showJustSavedTemporaryFeedback(moved_section);
             }, handleReorderingFault);
         },
