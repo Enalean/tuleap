@@ -33,9 +33,13 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { createGettext } from "vue3-gettext";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("SectionContent", () => {
-    describe("when the sections are loaded", () => {
+    describe.each([
+        ["artifact", ArtifactSectionFactory],
+        ["freetext", FreetextSectionFactory],
+    ])("when the %s sections are loaded", (name, factory) => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
@@ -56,7 +60,7 @@ describe("SectionContent", () => {
                     },
                 },
                 props: {
-                    section: ArtifactSectionFactory.create(),
+                    section: factory.create(),
                 },
             });
         });
@@ -71,7 +75,10 @@ describe("SectionContent", () => {
         });
     });
 
-    describe("when the sections are loading", () => {
+    describe.each([
+        ["artifact", ArtifactSectionFactory],
+        ["freetext", FreetextSectionFactory],
+    ])("when the %s sections are loading", (name, factory) => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
@@ -92,7 +99,7 @@ describe("SectionContent", () => {
                     },
                 },
                 props: {
-                    section: ArtifactSectionFactory.create(),
+                    section: factory.create(),
                 },
             });
         });

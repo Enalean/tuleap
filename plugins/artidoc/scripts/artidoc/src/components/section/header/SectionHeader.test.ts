@@ -46,6 +46,7 @@ describe("SectionHeader", () => {
             props: {
                 title: current_title,
                 is_print_mode,
+                is_freetext: false,
             },
         });
 

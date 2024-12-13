@@ -22,7 +22,7 @@ import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
 import { injectInternalId } from "@/helpers/inject-internal-id";
-import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
+import { extractArtifactAndFreetextSectionsFromArtidocSections } from "@/helpers/extract-artifact-and-freetext-sections-from-artidoc-sections";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
@@ -41,7 +41,9 @@ export const InjectedSectionsStoreStub = {
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref(sections.map(injectInternalId)),
-        saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
+        saved_sections: computed(() =>
+            extractArtifactAndFreetextSectionsFromArtidocSections(sections),
+        ),
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -53,7 +55,9 @@ export const InjectedSectionsStoreStub = {
         updateSection: noop,
         is_sections_loading: ref(true),
         sections: ref(sections.map(injectInternalId)),
-        saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
+        saved_sections: computed(() =>
+            extractArtifactAndFreetextSectionsFromArtidocSections(sections),
+        ),
     }),
     withSectionsInError: (): SectionsStore => ({
         replacePendingByArtifactSection: noop,

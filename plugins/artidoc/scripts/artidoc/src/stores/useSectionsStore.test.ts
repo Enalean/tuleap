@@ -27,6 +27,7 @@ import { Fault } from "@tuleap/fault";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import type { Tracker } from "@/stores/configuration-store";
+import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import { isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 
 describe("useSectionsStore", () => {
@@ -209,9 +210,14 @@ describe("useSectionsStore", () => {
                 }),
             );
 
+            const section_0: SectionBasedOnArtifact = store.sections
+                .value?.[0] as SectionBasedOnArtifact;
+            const section_1: SectionBasedOnArtifact = store.sections
+                .value?.[1] as SectionBasedOnArtifact;
+
             expect(store.sections.value).toHaveLength(2);
-            expect(store.sections.value?.[0].title.value).toBe("Section A");
-            expect(store.sections.value?.[1].title.value).toBe("Updated section B");
+            expect(section_0?.title.value).toBe("Section A");
+            expect(section_1?.title.value).toBe("Updated section B");
         });
     });
 

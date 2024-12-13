@@ -28,14 +28,14 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { noop } from "@/helpers/noop";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 
 describe("SectionDescription", () => {
-    let are_sections_loading: boolean, can_user_edit_document: boolean, is_print_mode: boolean;
+    let are_sections_loading: boolean, can_user_edit_document: boolean;
 
     beforeEach(() => {
         are_sections_loading = false;
         can_user_edit_document = true;
-        is_print_mode = false;
     });
 
     const getWrapper = (): VueWrapper => {
@@ -60,7 +60,6 @@ describe("SectionDescription", () => {
                 editable_description: "Lorem ipsum",
                 readonly_description: "Lorem ipsum",
                 is_edit_mode: false,
-                is_print_mode,
                 upload_url: "/file/upload",
                 add_attachment_to_waiting_list: noop,
                 input_section_content: noop,
@@ -68,6 +67,7 @@ describe("SectionDescription", () => {
                 upload_file: UploadFileStub.uploadNotInProgress(),
                 is_there_any_change: false,
                 project_id: 101,
+                section: ArtifactSectionFactory.create(),
             },
         });
     };
@@ -79,16 +79,6 @@ describe("SectionDescription", () => {
 
         expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
         expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
-        expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-    });
-
-    it("When the section is in print mode, then it should display a readonly description", () => {
-        is_print_mode = true;
-
-        const wrapper = getWrapper();
-
-        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
         expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
     });
 

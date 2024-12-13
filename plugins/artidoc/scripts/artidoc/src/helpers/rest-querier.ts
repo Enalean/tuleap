@@ -29,13 +29,11 @@ import {
 } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import TurndownService from "turndown";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
+import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
 import type { PositionForSection } from "@/stores/useSectionsStore";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
-
-type ArtidocSectionFromRest = Omit<ArtidocSection, "display_title">;
 
 export function putConfiguration(
     document_id: number,
@@ -53,7 +51,7 @@ export function putConfiguration(
 export function putArtifact(
     artifact_id: number,
     new_title: string,
-    title: ArtidocSection["title"],
+    title: ArtifactSection["title"],
     new_description: string,
     description_field_id: number,
     file_field: ReturnType<AttachmentFile["mergeArtifactAttachments"]>,
@@ -91,7 +89,7 @@ export function putArtifact(
 export function postArtifact(
     tracker: Tracker,
     new_title: string,
-    title: ArtidocSection["title"],
+    title: ArtifactSection["title"],
     new_description: string,
     description_field_id: number,
     file_field: ReturnType<AttachmentFile["mergeArtifactAttachments"]>,
@@ -149,22 +147,22 @@ export function createSection(
     artifact_id: number,
     position: PositionForSection,
 ): ResultAsync<ArtidocSection, Fault> {
-    return postJSON<ArtidocSectionFromRest>(uri`/api/artidoc/${document_id}/sections`, {
+    return postJSON<ArtidocSection>(uri`/api/artidoc/${document_id}/sections`, {
         artifact: { id: artifact_id },
         position,
     }).map(injectDisplayTitle);
 }
 
 export function getAllSections(document_id: number): ResultAsync<readonly ArtidocSection[], Fault> {
-    return getAllJSON<ArtidocSectionFromRest>(uri`/api/artidoc/${document_id}/sections`, {
+    return getAllJSON<ArtidocSection>(uri`/api/artidoc/${document_id}/sections`, {
         params: {
             limit: 50,
         },
-    }).map((sections: readonly ArtidocSectionFromRest[]) => sections.map(injectDisplayTitle));
+    }).map((sections: readonly ArtidocSection[]) => sections.map(injectDisplayTitle));
 }
 
 export function getSection(section_id: string): ResultAsync<ArtidocSection, Fault> {
-    return getJSON<ArtidocSectionFromRest>(uri`/api/artidoc_sections/${section_id}`).map(
+    return getJSON<ArtidocSection>(uri`/api/artidoc_sections/${section_id}`).map(
         injectDisplayTitle,
     );
 }
@@ -175,9 +173,15 @@ export function deleteSection(section_id: string): ResultAsync<Response, Fault> 
 
 const turndown_service = new TurndownService({ emDelimiter: "*" });
 
-function injectDisplayTitle(section: ArtidocSectionFromRest): ArtidocSection {
-    const title = section.title;
+function injectDisplayTitle(section: ArtidocSection): ArtidocSection {
+    if (isFreetextSection(section)) {
+        return {
+            ...section,
+            display_title: section.title,
+        };
+    }
 
+    const title = section.title;
     const display_title = isTitleAString(title)
         ? title.value
         : isCommonmark(title)

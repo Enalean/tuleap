@@ -53,32 +53,29 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 
-const props = withDefaults(
-    defineProps<{
-        title: string;
-        add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
-        upload_url: string;
-        editable_description: string;
-        readonly_description: string;
-        is_edit_mode: boolean;
-        is_image_upload_allowed: boolean;
-        is_print_mode?: boolean;
-        upload_file: UseUploadFileType;
-        project_id: number;
-        input_section_content: EditorSectionContent["inputSectionContent"];
-        is_there_any_change: boolean;
-    }>(),
-    {
-        is_print_mode: false,
-    },
-);
+const props = defineProps<{
+    title: string;
+    add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
+    upload_url: string;
+    editable_description: string;
+    readonly_description: string;
+    is_edit_mode: boolean;
+    is_image_upload_allowed: boolean;
+    upload_file: UseUploadFileType;
+    project_id: number;
+    input_section_content: EditorSectionContent["inputSectionContent"];
+    is_there_any_change: boolean;
+    section: ArtidocSection;
+}>();
 
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const can_section_be_edited = computed(
-    () => props.is_print_mode !== true && can_user_edit_document,
+    () => can_user_edit_document && isSectionBasedOnArtifact(props.section),
 );
 
 const async_editor = defineAsyncComponent({

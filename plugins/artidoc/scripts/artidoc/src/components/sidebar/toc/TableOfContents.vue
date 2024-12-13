@@ -46,7 +46,7 @@
 
             <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
             <a
-                v-else-if="isArtifactSection(section)"
+                v-else-if="isArtifactSection(section) || !isSectionBasedOnArtifact(section)"
                 v-bind:href="`#section-${section.id}`"
                 class="table-of-content-section-title"
                 data-not-drag-handle="true"
@@ -56,7 +56,6 @@
             <span v-else class="table-of-content-section-title" data-not-drag-handle="true">
                 {{ section.display_title }}
             </span>
-
             <span
                 class="reorder-arrows"
                 data-test="reorder-arrows"
@@ -82,7 +81,7 @@
 import { useGettext } from "vue3-gettext";
 import { onMounted, onUnmounted, ref } from "vue";
 import type { Ref } from "vue";
-import { isArtifactSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";

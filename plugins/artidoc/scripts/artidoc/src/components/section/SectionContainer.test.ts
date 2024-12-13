@@ -22,6 +22,7 @@ import SectionContainer from "@/components/section/SectionContainer.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("SectionContainer", () => {
     it("should use the color of the artifact tracker", () => {
@@ -58,6 +59,16 @@ describe("SectionContainer", () => {
         const wrapper = shallowMount(SectionContainer, {
             props: {
                 section: ArtifactSectionFactory.skeleton(),
+            },
+        });
+
+        expect(wrapper.classes()).toStrictEqual(["artidoc-section-container"]);
+    });
+
+    it("should not use the tlp-swatch palette if it is a Freetext section", () => {
+        const wrapper = shallowMount(SectionContainer, {
+            props: {
+                section: FreetextSectionFactory.create(),
             },
         });
 
