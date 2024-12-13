@@ -26,7 +26,7 @@ import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-ar
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { noop, promised_noop, result_noop } from "@/helpers/noop";
+import { noop, promised_noop } from "@/helpers/noop";
 
 const resultasync_noop = (): ResultAsync<boolean, Fault> => okAsync(true);
 
@@ -42,10 +42,6 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(false),
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
-        moveSectionUp: result_noop,
-        moveSectionDown: result_noop,
-        moveSectionBefore: result_noop,
-        moveSectionAtTheEnd: result_noop,
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -58,10 +54,6 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(true),
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
-        moveSectionUp: result_noop,
-        moveSectionDown: result_noop,
-        moveSectionBefore: result_noop,
-        moveSectionAtTheEnd: result_noop,
     }),
     withSectionsInError: (): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -74,10 +66,6 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(false),
         sections: ref(undefined),
         saved_sections: computed(() => undefined),
-        moveSectionUp: result_noop,
-        moveSectionDown: result_noop,
-        moveSectionBefore: result_noop,
-        moveSectionAtTheEnd: result_noop,
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -90,29 +78,6 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(false),
         sections: ref([]),
         saved_sections: computed(() => []),
-        moveSectionUp: result_noop,
-        moveSectionDown: result_noop,
-        moveSectionBefore: result_noop,
-        moveSectionAtTheEnd: result_noop,
-    }),
-    withMockedMoveSection: (
-        moveSectionUp: SectionsStore["moveSectionUp"],
-        moveSectionDown: SectionsStore["moveSectionDown"],
-    ): SectionsStore => ({
-        replacePendingByArtifactSection: noop,
-        getSectionPositionForSave: () => null,
-        insertPendingArtifactSectionForEmptyDocument: noop,
-        insertSection: noop,
-        removeSection: resultasync_noop,
-        loadSections: promised_noop,
-        updateSection: noop,
-        is_sections_loading: ref(false),
-        sections: ref([]),
-        saved_sections: computed(() => []),
-        moveSectionUp,
-        moveSectionDown,
-        moveSectionBefore: result_noop,
-        moveSectionAtTheEnd: result_noop,
     }),
     withMockedInsertPendingArtifactSectionForEmptyDocument: (
         insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void,

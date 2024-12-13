@@ -46,11 +46,16 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/useSectionsStore";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import type { SectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
 
-const props = defineProps<{ is_first: boolean; is_last: boolean; section: StoredArtidocSection }>();
+const props = defineProps<{
+    is_first: boolean;
+    is_last: boolean;
+    section: StoredArtidocSection;
+    sections_reorderer: SectionsReorderer;
+}>();
 
 const { $gettext } = useGettext();
 
@@ -58,7 +63,6 @@ const title_up = $gettext("Move up");
 const title_down = $gettext("Move down");
 
 const document_id = strictInject(DOCUMENT_ID);
-const { moveSectionUp, moveSectionDown } = strictInject(SECTIONS_STORE);
 
 const emit = defineEmits<{
     (event: "moved-section-up-or-down", section: InternalArtidocSectionId): void;
@@ -81,7 +85,7 @@ const dispatchFault = (fault: Fault): void => {
 function up(event: Event): void {
     dispatchMovingSection();
 
-    moveSectionUp(document_id, props.section).match(() => {
+    props.sections_reorderer.moveSectionUp(document_id, props.section).match(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }
@@ -93,7 +97,7 @@ function up(event: Event): void {
 function down(event: Event): void {
     dispatchMovingSection();
 
-    moveSectionDown(document_id, props.section).match(() => {
+    props.sections_reorderer.moveSectionDown(document_id, props.section).match(() => {
         if (event.target instanceof HTMLButtonElement) {
             event.target.focus();
         }
