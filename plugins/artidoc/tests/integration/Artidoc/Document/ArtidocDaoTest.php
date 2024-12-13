@@ -144,7 +144,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         self::assertSame(
             [1001, 1002, 1003, 1004],
             array_map(
-                static fn (RawSection $raw_section) => $raw_section->content->artifact_id->unwrapOr(null),
+                $this->getContentForAssertion(...),
                 $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows,
             ),
         );
@@ -153,29 +153,25 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         self::assertSame(
             [1002, 1003],
             array_map(
-                static fn (RawSection $raw_section) => $raw_section->content->artifact_id->unwrapOr(null),
+                $this->getContentForAssertion(...),
                 $dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->rows,
             ),
         );
 
-        $sections_in_artidoc_102 = $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0);
-        self::assertSame(4, $sections_in_artidoc_102->total);
-        self::assertTrue($sections_in_artidoc_102->rows[0]->content->freetext->isValue());
-        $sections_in_artidoc_102->rows[0]->content->freetext->apply(
-            static fn (RawSectionContentFreetext $freetext) => self::assertSame('Introduction', $freetext->content->title),
+        self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->total);
+        self::assertSame(
+            ['Introduction', 'Requirements', 2001, 1001],
+            array_map(
+                $this->getContentForAssertion(...),
+                $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->rows,
+            )
         );
-        self::assertTrue($sections_in_artidoc_102->rows[1]->content->freetext->isValue());
-        $sections_in_artidoc_102->rows[1]->content->freetext->apply(
-            static fn (RawSectionContentFreetext $freetext) => self::assertSame('Requirements', $freetext->content->title),
-        );
-        self::assertSame(2001, $sections_in_artidoc_102->rows[2]->content->artifact_id->unwrapOr(null));
-        self::assertSame(1001, $sections_in_artidoc_102->rows[3]->content->artifact_id->unwrapOr(null));
 
         self::assertSame(0, $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->total);
         self::assertSame(
             [],
             array_map(
-                static fn (RawSection $raw_section) => $raw_section->content->artifact_id->unwrapOr(null),
+                $this->getContentForAssertion(...),
                 $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->rows,
             ),
         );
@@ -269,7 +265,10 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
                 function (RawSection $section) use ($row) {
                     self::assertNotNull($section);
                     self::assertSame($row->id->toString(), $section->id->toString());
-                    self::assertSame($row->content->artifact_id->unwrapOr(null), $section->content->artifact_id->unwrapOr(null));
+                    self::assertSame(
+                        $this->getContentForAssertion($row),
+                        $this->getContentForAssertion($section),
+                    );
                     self::assertSame(101, $section->item_id);
                 },
                 function () {
@@ -603,13 +602,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
         self::assertSame(count($content), $paginated_raw_sections->total);
         self::assertSame($content, array_map(
-            static fn (RawSection $raw_section) => $raw_section->content->artifact_id->match(
-                static fn (int $artifact_id) => $artifact_id,
-                static fn () => $raw_section->content->freetext->match(
-                    static fn (RawSectionContentFreetext $freetext) => $freetext->content->title,
-                    static fn () => throw new \LogicException('Section is neither an artifact nor a freetext, this is not expected'),
-                ),
-            ),
+            $this->getContentForAssertion(...),
             $paginated_raw_sections->rows,
         ));
     }
@@ -633,5 +626,13 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     private function getFreetextIdentifierFactory(): FreetextIdentifierFactory
     {
         return new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+    }
+
+    private function getContentForAssertion(RawSection $raw_section): int|string|null
+    {
+        return $raw_section->content->apply(
+            static fn (int $id) => Result::ok($id),
+            static fn (RawSectionContentFreetext $freetext) => Result::ok($freetext->content->title),
+        )->unwrapOr(null);
     }
 }

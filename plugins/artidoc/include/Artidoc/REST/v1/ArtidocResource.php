@@ -485,11 +485,11 @@ final class ArtidocResource extends AuthenticatedResource
         );
     }
 
-    private function getRepresentationBuilder(): SectionRepresentationBuilder
+    private function getRepresentationBuilder(): ArtifactSectionRepresentationBuilder
     {
         $form_element_factory = \Tracker_FormElementFactory::instance();
 
-        return new SectionRepresentationBuilder(
+        return new ArtifactSectionRepresentationBuilder(
             new FileUploadDataProvider(
                 new FrozenFieldDetector(
                     new TransitionRetriever(
@@ -574,7 +574,7 @@ final class ArtidocResource extends AuthenticatedResource
         return new RawSectionsToRepresentationTransformer(
             new \Tracker_ArtifactDao(),
             $artifact_factory,
-            new SectionRepresentationBuilder(
+            new ArtifactSectionRepresentationBuilder(
                 new FileUploadDataProvider(
                     new FrozenFieldDetector(
                         new TransitionRetriever(

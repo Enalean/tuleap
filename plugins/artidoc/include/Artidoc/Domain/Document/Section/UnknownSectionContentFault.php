@@ -18,15 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\REST\v1;
+declare(strict_types=1);
 
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-interface BuildSectionRepresentation
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class UnknownSectionContentFault extends Fault
 {
-    public function build(
-        RequiredArtifactInformation $artifact_information,
-        SectionIdentifier $section_identifier,
-        \PFUser $user,
-    ): ArtifactSectionRepresentation;
+    public static function build(): Fault
+    {
+        return new self(
+            'The section content is undetermined.',
+        );
+    }
 }

@@ -218,7 +218,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -306,7 +306,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -375,7 +375,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -479,7 +479,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -571,7 +571,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -644,7 +644,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -725,7 +725,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -806,7 +806,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -871,7 +871,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(
@@ -906,7 +906,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
-            new SectionRepresentationBuilder($file_upload_provider),
+            new ArtifactSectionRepresentationBuilder($file_upload_provider),
             new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
         );
         $result      = $transformer->getRepresentation(

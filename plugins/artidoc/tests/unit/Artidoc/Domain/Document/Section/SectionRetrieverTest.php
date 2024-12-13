@@ -62,7 +62,13 @@ final class SectionRetrieverTest extends TestCase
 
         $result = $builder->retrieveSection($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
         self::assertTrue(Result::isOk($result));
-        self::assertSame(self::ARTIFACT_ID, $result->value->content->artifact_id->unwrapOr(null));
+        self::assertSame(
+            self::ARTIFACT_ID,
+            $result->value->content->apply(
+                static fn ($id) => Result::ok($id),
+                static fn () => Result::ok(null),
+            )->unwrapOr(null),
+        );
         self::assertTrue($collector->isCalled());
     }
 

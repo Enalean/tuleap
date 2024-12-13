@@ -24,11 +24,11 @@ namespace Tuleap\Artidoc\Stubs;
 
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\REST\v1\ArtifactSectionRepresentation;
-use Tuleap\Artidoc\REST\v1\BuildSectionRepresentation;
+use Tuleap\Artidoc\REST\v1\BuildArtifactSectionRepresentation;
 use Tuleap\Artidoc\REST\v1\RequiredArtifactInformation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
-final class BuildSectionRepresentationStub implements BuildSectionRepresentation
+final class BuildArtifactSectionRepresentationStub implements BuildArtifactSectionRepresentation
 {
     private function __construct()
     {

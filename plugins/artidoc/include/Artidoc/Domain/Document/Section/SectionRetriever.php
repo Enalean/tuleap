@@ -55,9 +55,9 @@ final class SectionRetriever
 
     private function collectRequiredSectionInformation(ArtidocWithContext $artidoc, RawSection $raw_section): Ok|Err
     {
-        return $raw_section->content->artifact_id->match(
+        return $raw_section->content->apply(
             fn (int $artifact_id) => $this->collect_required_section_information->collectRequiredSectionInformation($artidoc, $artifact_id),
-            static fn () => Result::err('Unable to retrieve freetext section for now'),
+            static fn () => Result::ok(true),
         );
     }
 }

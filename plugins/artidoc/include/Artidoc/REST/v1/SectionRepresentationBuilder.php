@@ -22,39 +22,56 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Tracker\Artifact\GetFileUploadData;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-final class SectionRepresentationBuilder implements BuildSectionRepresentation
+final readonly class SectionRepresentationBuilder
 {
-    public function __construct(private GetFileUploadData $file_upload_data_provider)
-    {
+    public function __construct(
+        private ArtifactSectionRepresentationBuilder $artifact_section_representation_builder,
+    ) {
     }
 
-    public function build(RequiredArtifactInformation $artifact_information, SectionIdentifier $section_identifier, \PFUser $user): ArtifactSectionRepresentation
-    {
-        $can_user_edit_section = $artifact_information->title_field->userCanUpdate($user)
-            && $artifact_information->description_field->userCanUpdate($user);
+    /**
+     * @return Ok<SectionRepresentation>|Err<Fault>
+     */
+    public function getSectionRepresentation(
+        RawSection $section,
+        RequiredSectionInformationCollector $collector,
+        \PFUser $user,
+    ): Ok|Err {
+        return $section->content->apply(
+            fn (int $artifact_id) => $collector->getCollectedRequiredSectionInformation($artifact_id)
+                ->map(fn(RequiredArtifactInformation $info) => new SectionWrapper($section->id, $info))
+                ->map(
+                    /**
+                     * @return SectionRepresentation
+                     */
+                    fn (SectionWrapper $wrapper) => $this->artifact_section_representation_builder->build(
+                        $wrapper->required_info,
+                        $wrapper->section_identifier,
+                        $user,
+                    )
+                ),
+            fn (RawSectionContentFreetext $freetext) => Result::ok(
+                $this->getSectionRepresentationForFreetext($section->id, $freetext),
+            )
+        );
+    }
 
-        $artifact = $artifact_information->last_changeset->getArtifact();
-
-        $file_upload_data = $this->file_upload_data_provider->getFileUploadData($artifact->getTracker(), $artifact, $user);
-
-        $attachments = null;
-        if ($file_upload_data) {
-            $attachments = $file_upload_data->getField()->getRESTValue($user, $artifact_information->last_changeset)
-                ?? ArtifactFieldValueFileFullRepresentation::fromEmptyValues($file_upload_data->getField());
-        }
-
-        return new ArtifactSectionRepresentation(
-            $section_identifier->toString(),
-            ArtifactReference::build($artifact),
-            $artifact_information->title,
-            $artifact_information->description,
-            $can_user_edit_section,
-            $attachments
+    private function getSectionRepresentationForFreetext(
+        SectionIdentifier $section_identifier,
+        RawSectionContentFreetext $freetext,
+    ): SectionRepresentation {
+        return FreetextSectionRepresentation::fromRawSectionContentFreetext(
+            $section_identifier,
+            $freetext,
         );
     }
 }
