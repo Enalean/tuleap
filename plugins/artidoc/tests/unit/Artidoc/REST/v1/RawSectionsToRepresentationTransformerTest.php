@@ -26,17 +26,17 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Artifact_Changeset;
-use Tracker_ArtifactDao;
-use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -165,16 +165,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1, 2, 3, 4])
-            ->willReturn([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3],
-                ['id' => 4],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
@@ -196,15 +186,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getDescriptionValue($art4),
             });
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn(array $row) => match ($row['id']) {
-                1 => $art1,
-                2 => $art2,
-                3 => $art3,
-                4 => $art4,
-            });
-
         $file_upload_provider = GetFileUploadDataStub::withField($file);
 
         $file->method('getRESTValue')
@@ -216,10 +197,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             });
 
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -249,6 +233,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         array_walk(
             $expected,
             static function (array $expected, int $index) use ($result) {
+                self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
@@ -258,6 +243,89 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[$index]->attachments);
             }
         );
+    }
+
+    public function testHappyPathWithFreetext(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('getId')->willReturn(1001);
+        $title->method('userCanRead')->willReturn(true);
+        $title->method('userCanUpdate')->willReturn(true);
+        $this->semantic_title->method('getField')->willReturn($title);
+
+        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('getId')->willReturn(1002);
+        $description->method('userCanRead')->willReturn(true);
+        $description->method('userCanUpdate')->willReturn(true);
+        $this->semantic_description->method('getField')->willReturn($description);
+
+        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file->method('getId')->willReturn(600);
+        $file->method('getLabel')->willReturn('Attachments');
+
+        $art1 = $this->getArtifact(1, $title, $user);
+
+        $title->method('getFullRESTValue')
+            ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getTitleValue($art1),
+            });
+
+        $description->method('getFullRESTValue')
+            ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
+            });
+
+        $file_upload_provider = GetFileUploadDataStub::withField($file);
+
+        $file->method('getRESTValue')
+            ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getFileValue($file, $art1),
+            });
+
+        $transformer = new RawSectionsToRepresentationTransformer(
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
+            ),
+        );
+        $result      = $transformer->getRepresentation(
+            new PaginatedRawSections(
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
+                [
+                    RawSection::fromFreetext([
+                        'freetext_title'       => 'Requirements',
+                        'freetext_description' => 'Lorem ipsum',
+                        'freetext_id'          => FreetextIdentifierStub::create(),
+                        'id'                   => SectionIdentifierStub::create(),
+                        'item_id'              => 101,
+                        'rank'                 => 0,
+                    ]),
+                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                ],
+                10,
+            ),
+            $user
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(10, $result->value->total);
+        self::assertCount(2, $result->value->sections);
+
+        $first = $result->value->sections[0];
+        self::assertInstanceOf(FreetextSectionRepresentation::class, $first);
+        self::assertSame('Requirements', $first->title);
+        self::assertSame('Lorem ipsum', $first->description);
+
+        $second = $result->value->sections[1];
+        self::assertInstanceOf(ArtifactSectionRepresentation::class, $second);
+        self::assertSame(1, $second->artifact->id);
+        self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $second->title);
+        self::assertSame('Title for #1', $second->title->value);
     }
 
     public function testArtifactHasEmptyAttachmentFieldThatHasBeenCreatedAfterArtifactCreation(): void
@@ -280,13 +348,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1])
-            ->willReturn([
-                ['id' => 1],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
 
         $title->method('getFullRESTValue')
@@ -295,19 +356,18 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('getFullRESTValue')
             ->willReturn($this->getDescriptionValue($art1));
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturn($art1);
-
         $file_upload_provider = GetFileUploadDataStub::withField($file);
 
         $file->method('getRESTValue')->willReturn(null);
 
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -323,6 +383,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
         self::assertCount(1, $result->value->sections);
+        self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[0]);
         self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[0]->attachments);
     }
 
@@ -342,13 +403,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('userCanUpdate')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1])
-            ->willReturn([
-                ['id' => 1],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
 
         $title->method('getFullRESTValue')
@@ -361,22 +415,19 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art1->getLastChangeset() => $this->getDescriptionValue($art1),
             });
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn(array $row) => match ($row['id']) {
-                1 => $art1,
-            });
-
         $file_upload_provider = GetFileUploadDataStub::withoutField();
 
         $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
         $editor_builder->method('getDataAttributes')->willReturn([]);
 
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -400,6 +451,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         array_walk(
             $expected,
             static function (array $expected, int $index) use ($result) {
+                self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
@@ -427,17 +479,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('userCanUpdate')->willReturn(false);
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $dao                          = $this->createMock(Tracker_ArtifactDao::class);
-        $artifact_rows_in_mixed_order = [
-            ['id' => 4],
-            ['id' => 2],
-            ['id' => 1],
-            ['id' => 3],
-        ];
-        $dao->method('searchByIds')
-            ->with([1, 2, 3, 4])
-            ->willReturn($artifact_rows_in_mixed_order);
-
         $art1 = $this->getArtifact(1, $title, $user);
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
@@ -459,15 +500,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getDescriptionValue($art4),
             });
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn (array $row) => match ($row['id']) {
-                1 => $art1,
-                2 => $art2,
-                3 => $art3,
-                4 => $art4,
-            });
-
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
@@ -477,10 +509,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $editor_builder->method('getDataAttributes')->willReturn([]);
 
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -509,6 +544,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         array_walk(
             $expected,
             static function (array $expected, int $index) use ($result) {
+                self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
@@ -532,16 +568,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1, 2, 3, 4])
-            ->willReturn([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3],
-                ['id' => 4],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
@@ -555,24 +581,18 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getDescriptionValue($art4),
             });
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn (array $row) => match ($row['id']) {
-                1 => $art1,
-                2 => $art2,
-                3 => $art3,
-                4 => $art4,
-            });
-
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -605,16 +625,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1, 2, 3, 4])
-            ->willReturn([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3],
-                ['id' => 4],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
@@ -628,24 +638,18 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getDescriptionValue($art4),
             });
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn (array $row) => match ($row['id']) {
-                1 => $art1,
-                2 => $art2,
-                3 => $art3,
-                4 => $art4,
-            });
-
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -678,16 +682,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('userCanRead')->willReturn(false);
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1, 2, 3, 4])
-            ->willReturn([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3],
-                ['id' => 4],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
@@ -709,24 +703,18 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getDescriptionValue($art4),
             });
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn (array $row) => match ($row['id']) {
-                1 => $art1,
-                2 => $art2,
-                3 => $art3,
-                4 => $art4,
-            });
-
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -759,16 +747,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn(null);
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1, 2, 3, 4])
-            ->willReturn([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3],
-                ['id' => 4],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
@@ -790,24 +768,18 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getDescriptionValue($art4),
             });
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn (array $row) => match ($row['id']) {
-                1 => $art1,
-                2 => $art2,
-                3 => $art3,
-                4 => $art4,
-            });
-
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -840,28 +812,23 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $description->method('userCanRead')->willReturn(true);
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-        $dao->method('searchByIds')
-            ->with([1, 2, 3, 4])
-            ->willReturn([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3],
-                ['id' => 4],
-            ]);
-
         $art1 = $this->getArtifact(1, $title, $user);
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifactUserCannotView(3, $user);
         $art4 = $this->getArtifact(4, $title, $user);
 
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $factory->method('getInstanceFromRow')
-            ->willReturnCallback(static fn (array $row) => match ($row['id']) {
-                1 => $art1,
-                2 => $art2,
-                3 => $art3,
-                4 => $art4,
+        $title->method('getFullRESTValue')
+            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getTitleValue($art1),
+                $art2->getLastChangeset() => $this->getTitleValue($art2),
+                $art4->getLastChangeset() => $this->getTitleValue($art4),
+            });
+
+        $description->method('getFullRESTValue')
+            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
+                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
+                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
             });
 
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
@@ -869,10 +836,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             null
         );
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
@@ -895,19 +865,18 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $dao = $this->createMock(Tracker_ArtifactDao::class);
-
-        $factory = $this->createMock(Tracker_ArtifactFactory::class);
-
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
         $transformer = new RawSectionsToRepresentationTransformer(
-            $dao,
-            $factory,
-            new ArtifactSectionRepresentationBuilder($file_upload_provider),
-            new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact()),
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact())
+            ),
         );
         $result      = $transformer->getRepresentation(
             new PaginatedRawSections(
