@@ -27,6 +27,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_Artifact_Changeset;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
@@ -34,13 +35,13 @@ use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuerStub;
@@ -70,7 +71,7 @@ final class NewChangesetPostProcessorTest extends TestCase
         $this->changeset        = ChangesetTestBuilder::aChangeset(1)->ofArtifact($this->artifact)->withTextComment('@peralta and @holt')->build();
         $this->user             = UserTestBuilder::anActiveUser()->build();
         $this->comment_creation = CommentCreation::fromNewComment(
-            NewComment::buildEmpty(UserTestBuilder::buildWithDefaults(), 1),
+            NewComment::fromParts('@peralta and @holt', CommentFormatIdentifier::TEXT, UserTestBuilder::buildWithDefaults(), 1, []),
             (int) $this->changeset->getId(),
             new CreatedFileURLMapping()
         );
@@ -86,7 +87,7 @@ final class NewChangesetPostProcessorTest extends TestCase
             $this->event_manager,
             $this->post_action_queuer,
             $this->changeset_comment_index,
-            new MentionedUserInCommentRetriever($user_manager),
+            new MentionedUserInTextRetriever($user_manager),
         ))->postProcessCreation($changeset_created, $this->artifact, $creation_context, null, $this->user);
     }
 

@@ -41,6 +41,7 @@ use TrackerXmlExport;
 use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Reference\CrossReferencesDao;
@@ -75,7 +76,6 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -167,7 +167,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                         $event_manager,
                         new \Tracker_Artifact_Changeset_CommentDao(),
                     ),
-                    new MentionedUserInCommentRetriever($user_manager),
+                    new MentionedUserInTextRetriever($user_manager),
                 ),
             ),
             new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $tracker_artifact_factory),

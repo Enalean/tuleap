@@ -33,6 +33,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
@@ -73,7 +74,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
@@ -424,7 +424,7 @@ final class tracker_functionsPlugin extends Plugin
                     $event_manager,
                     new Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInCommentRetriever($user_manager),
+                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

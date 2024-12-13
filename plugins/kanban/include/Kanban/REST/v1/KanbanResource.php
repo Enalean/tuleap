@@ -62,6 +62,7 @@ use TransitionFactory;
 use Tuleap\Kanban\RealTime\KanbanRealtimeStructureMessageSender;
 use Tuleap\Kanban\RealTimeMercure\KanbanStructureRealTimeMercure;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\Search\ItemToIndexQueueEventBased;
@@ -97,7 +98,6 @@ use Tuleap\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentation;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentationBuilder;
@@ -1695,7 +1695,7 @@ final class KanbanResource extends AuthenticatedResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInCommentRetriever($user_manager),
+                new MentionedUserInTextRetriever($user_manager),
             ),
         );
     }

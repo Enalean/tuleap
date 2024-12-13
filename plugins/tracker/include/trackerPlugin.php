@@ -49,6 +49,7 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -224,7 +225,6 @@ use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
@@ -2735,7 +2735,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInCommentRetriever($user_manager),
+                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 
