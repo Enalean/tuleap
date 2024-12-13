@@ -36,122 +36,20 @@ use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\SaveOneSection;
-use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
-use Tuleap\Artidoc\Domain\Document\Section\SearchPaginatedRawSections;
 use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class ArtidocDao extends DataAccessObject implements SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
+final class ArtidocDao extends DataAccessObject implements DeleteOneSection, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
 {
     public function __construct(
         private readonly SectionIdentifierFactory $section_identifier_factory,
         private readonly FreetextIdentifierFactory $freetext_identifier_factory,
     ) {
         parent::__construct();
-    }
-
-    public function searchSectionById(SectionIdentifier $section_id): Ok|Err
-    {
-        $row = $this->getDB()->row(
-            <<<EOS
-            SELECT section.id,
-                   section.item_id,
-                   section.artifact_id,
-                   freetext.id AS freetext_id,
-                   freetext.title AS freetext_title,
-                   freetext.description AS freetext_description,
-                   section.`rank`
-            FROM plugin_artidoc_document AS section
-                LEFT JOIN plugin_artidoc_section_freetext AS freetext
-                    ON (section.freetext_id = freetext.id)
-            WHERE section.id = ?
-            EOS,
-            $section_id->getBytes(),
-        );
-
-        if ($row === null) {
-            return Result::err(Fault::fromMessage('Unable to find section'));
-        }
-
-        $row['id'] = $section_id;
-
-        return Result::ok($this->instantiateRawSection($row));
-    }
-
-    /**
-     * @param array{ id: SectionIdentifier, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int } $row
-     */
-    private function instantiateRawSection(array $row): RawSection
-    {
-        if ($row['artifact_id'] !== null) {
-            return RawSection::fromArtifact($row);
-        }
-
-        if ($row['freetext_id'] !== null) {
-            $row['freetext_id'] = $this->freetext_identifier_factory->buildFromBytesData((string) $row['freetext_id']);
-
-            $row['freetext_title']       = (string) $row['freetext_title'];
-            $row['freetext_description'] = (string) $row['freetext_description'];
-
-            return RawSection::fromFreetext($row);
-        }
-
-        throw new \LogicException('Section is neither an artifact nor a freetext, this is not expected');
-    }
-
-    public function searchPaginatedRawSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRawSections
-    {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $limit, $offset) {
-            $item_id = $artidoc->document->getId();
-
-            $rows = $db->run(
-                <<<EOS
-                SELECT section.id,
-                   section.item_id,
-                   section.artifact_id,
-                   freetext.id AS freetext_id,
-                   freetext.title AS freetext_title,
-                   freetext.description AS freetext_description,
-                   section.`rank`
-                FROM plugin_artidoc_document AS section
-                LEFT JOIN plugin_artidoc_section_freetext AS freetext
-                    ON (section.freetext_id = freetext.id)
-                WHERE section.item_id = ?
-                ORDER BY section.`rank`
-                LIMIT ? OFFSET ?
-                EOS,
-                $item_id,
-                $limit,
-                $offset,
-            );
-
-            $total = $db->cell('SELECT COUNT(*) FROM plugin_artidoc_document WHERE item_id = ?', $item_id);
-
-            return new PaginatedRawSections(
-                $artidoc,
-                array_values(
-                    array_map(
-                        /**
-                         * @param array{ id: string, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int } $row
-                         */
-                        function (array $row): RawSection {
-                            $row['id'] = $this->section_identifier_factory->buildFromBytesData($row['id']);
-
-                            return $this->instantiateRawSection($row);
-                        },
-                        $rows,
-                    ),
-                ),
-                $total,
-            );
-        });
     }
 
     public function cloneItem(int $source_id, int $target_id): void

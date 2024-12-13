@@ -31,6 +31,7 @@ use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
+use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
@@ -151,7 +152,6 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $retriever = new ArtidocWithContextRetriever(
             new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
@@ -161,7 +161,14 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             ),
         );
 
-        return new SectionDeletor($dao, $retriever, $dao);
+        $section_identifier_factory  = $this->getSectionIdentifierFactory();
+        $freetext_identifier_factory = $this->getFreetextIdentifierFactory();
+
+        return new SectionDeletor(
+            new RetrieveArtidocSectionDao($section_identifier_factory, $freetext_identifier_factory),
+            $retriever,
+            new ArtidocDao($section_identifier_factory, $freetext_identifier_factory),
+        );
     }
 
     private function getSectionRetriever(\PFUser $user, CollectRequiredSectionInformation $collector): SectionRetriever
@@ -171,7 +178,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
+        $dao       = new RetrieveArtidocSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $retriever = new ArtidocWithContextRetriever(
             new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
