@@ -36,6 +36,7 @@ use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
+use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -444,7 +445,7 @@ final class ArtidocResource extends AuthenticatedResource
         }
 
         $uuid_factory = new DatabaseUUIDV7Factory();
-        $dao          = new ArtidocDao(new UUIDSectionIdentifierFactory($uuid_factory), new UUIDFreetextIdentifierFactory($uuid_factory));
+        $dao          = new RetrieveArtidocSectionDao(new UUIDSectionIdentifierFactory($uuid_factory), new UUIDFreetextIdentifierFactory($uuid_factory));
         $retriever    = new ArtidocWithContextRetriever(
             new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),

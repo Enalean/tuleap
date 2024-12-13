@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Document;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
@@ -52,129 +53,6 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->artidoc_101 = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));
         $this->artidoc_102 = new ArtidocWithContext(new ArtidocDocument(['item_id' => 102]));
         $this->artidoc_103 = new ArtidocWithContext(new ArtidocDocument(['item_id' => 103]));
-    }
-
-    public function testSearchPaginatedRawSectionsById(): void
-    {
-        $identifier_factory = $this->getSectionIdentifierFactory();
-
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $introduction_id = $this->getFreetextIdentifierFactory()->buildIdentifier()->getBytes();
-        $db->insert(
-            'plugin_artidoc_section_freetext',
-            [
-                'id'          => $introduction_id,
-                'title'       => 'Introduction',
-                'description' => 'Lorem ipsum',
-            ]
-        );
-        $requirements_id = $this->getFreetextIdentifierFactory()->buildIdentifier()->getBytes();
-        $db->insert(
-            'plugin_artidoc_section_freetext',
-            [
-                'id'          => $requirements_id,
-                'title'       => 'Requirements',
-                'description' => '',
-            ]
-        );
-
-        $db->insertMany('plugin_artidoc_document', [
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_101->document->getId(),
-                'artifact_id' => 1001,
-                'freetext_id' => null,
-                'rank'        => 1,
-            ],
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
-                'artifact_id' => null,
-                'freetext_id' => $introduction_id,
-                'rank'        => 1,
-            ],
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
-                'artifact_id' => null,
-                'freetext_id' => $requirements_id,
-                'rank'        => 2,
-            ],
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
-                'artifact_id' => 1001,
-                'freetext_id' => null,
-                'rank'        => 4,
-            ],
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
-                'artifact_id' => 2001,
-                'freetext_id' => null,
-                'rank'        => 3,
-            ],
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_101->document->getId(),
-                'artifact_id' => 1003,
-                'freetext_id' => null,
-                'rank'        => 3,
-            ],
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_101->document->getId(),
-                'artifact_id' => 1002,
-                'freetext_id' => null,
-                'rank'        => 2,
-            ],
-            [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_101->document->getId(),
-                'artifact_id' => 1004,
-                'freetext_id' => null,
-                'rank'        => 4,
-            ],
-        ]);
-
-        $dao = new ArtidocDao($identifier_factory, $this->getFreetextIdentifierFactory());
-
-        self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->total);
-        self::assertSame(
-            [1001, 1002, 1003, 1004],
-            array_map(
-                $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows,
-            ),
-        );
-
-        self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->total);
-        self::assertSame(
-            [1002, 1003],
-            array_map(
-                $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->rows,
-            ),
-        );
-
-        self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->total);
-        self::assertSame(
-            ['Introduction', 'Requirements', 2001, 1001],
-            array_map(
-                $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->rows,
-            )
-        );
-
-        self::assertSame(0, $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->total);
-        self::assertSame(
-            [],
-            array_map(
-                $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->rows,
-            ),
-        );
     }
 
     private function createArtidocSections(ArtidocDao $dao, ArtidocWithContext $artidoc, array $content): void
@@ -208,14 +86,14 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         ]);
         $dao->saveTracker($this->artidoc_102->document->getId(), 10001);
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_103, []);
+        $this->assertSectionsForDocument($this->artidoc_103, []);
         self::assertSame(2, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
 
         $dao->cloneItem($this->artidoc_102->document->getId(), $this->artidoc_103->document->getId());
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, ['Introduction', 'Requirements', 2001, 1001]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_103, ['Introduction', 'Requirements', 2001, 1001]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001]);
+        $this->assertSectionsForDocument($this->artidoc_102, ['Introduction', 'Requirements', 2001, 1001]);
+        $this->assertSectionsForDocument($this->artidoc_103, ['Introduction', 'Requirements', 2001, 1001]);
         self::assertSame(4, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
 
         self::assertSame(10001, $dao->getTracker($this->artidoc_103->document->getId()));
@@ -229,8 +107,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
         $dao->cloneItem($this->artidoc_101->document->getId(), $this->artidoc_103->document->getId());
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, []);
-        $this->assertSectionsForDocument($dao, $this->artidoc_103, []);
+        $this->assertSectionsForDocument($this->artidoc_101, []);
+        $this->assertSectionsForDocument($this->artidoc_103, []);
 
         self::assertSame(10001, $dao->getTracker($this->artidoc_103->document->getId()));
     }
@@ -240,46 +118,17 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao = $this->getDao();
         $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001, 1002, 1003]);
 
         $this->createArtidocSections($dao, $this->artidoc_102, $this->getArtifactIdsToInsert(1001, 1003));
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002, 1003]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1001, 1003]);
 
         $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert());
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, []);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1003]);
-    }
-
-    public function testSearchSectionById(): void
-    {
-        $dao = $this->getDao();
-
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
-        $rows = $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows;
-
-        foreach ($rows as $row) {
-            $dao->searchSectionById($row->id)->match(
-                function (RawSection $section) use ($row) {
-                    self::assertNotNull($section);
-                    self::assertSame($row->id->toString(), $section->id->toString());
-                    self::assertSame(
-                        $this->getContentForAssertion($row),
-                        $this->getContentForAssertion($section),
-                    );
-                    self::assertSame(101, $section->item_id);
-                },
-                function () {
-                    self::fail('Section is expected');
-                },
-            );
-        }
-
-        $first_section_id = $rows[0]->id;
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert());
-        self::assertTrue(Result::isErr($dao->searchSectionById($first_section_id)));
+        $this->assertSectionsForDocument($this->artidoc_101, []);
+        $this->assertSectionsForDocument($this->artidoc_102, [1001, 1003]);
     }
 
     public function testSaveTracker(): void
@@ -316,8 +165,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             ContentToInsert::fromArtifactId(1004),
         );
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002, 1004]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001, 1002, 1004]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1003]);
     }
 
     public function testSaveAlreadyExistingSectionAtTheEnd(): void
@@ -379,7 +228,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $uuid_3,
         );
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1004, 1001, 1005, 1002, 1006, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1004, 1001, 1005, 1002, 1006, 1003]);
     }
 
     public function testSaveAlreadyExistingArtifactSectionBefore(): void
@@ -449,9 +298,9 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao->deleteSectionsByArtifactId(1003);
         $dao->deleteSectionsByArtifactId(1005);
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1002]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1002, 1004]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_103, []);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001, 1002]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1002, 1004]);
+        $this->assertSectionsForDocument($this->artidoc_103, []);
     }
 
     public function testDeleteSectionsById(): void
@@ -473,7 +322,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
         $dao->deleteSectionById($uuid_2);
 
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001, 1003]);
     }
 
     public function testReorderSections(): void
@@ -515,8 +364,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1002, 1001, 1003]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1002, 1001, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
 
         // "before", in the middle
         $order = $order_builder->build([$uuid_3->toString()], 'before', $uuid_1->toString());
@@ -526,8 +375,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1002, 1003, 1001]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1002, 1003, 1001]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
 
         // "after", at the end
         $order = $order_builder->build([$uuid_2->toString()], 'after', $uuid_1->toString());
@@ -537,8 +386,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1003, 1001, 1002]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1003, 1001, 1002]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
 
         // "after", in the middle
         $order = $order_builder->build([$uuid_3->toString()], 'after', $uuid_1->toString());
@@ -548,8 +397,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             $order->value,
         );
         self::assertTrue(Result::isOk($result));
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001, 1003, 1002]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1001, 1002, 1003]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001, 1003, 1002]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
     }
 
     public function testExceptionWhenReorderSectionsOutsideOfDocument(): void
@@ -575,8 +424,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         );
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(UnknownSectionToMoveFault::class, $result->error);
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1002]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1002]);
 
         $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
         self::assertTrue(Result::isOk($order));
@@ -586,18 +435,18 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         );
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(UnableToReorderSectionOutsideOfDocumentFault::class, $result->error);
-        $this->assertSectionsForDocument($dao, $this->artidoc_101, [1001]);
-        $this->assertSectionsForDocument($dao, $this->artidoc_102, [1002]);
+        $this->assertSectionsForDocument($this->artidoc_101, [1001]);
+        $this->assertSectionsForDocument($this->artidoc_102, [1002]);
     }
 
     /**
      * @param list<int|string> $content
      */
     private function assertSectionsForDocument(
-        ArtidocDao $dao,
         ArtidocWithContext $artidoc,
         array $content,
     ): void {
+        $dao                    = new RetrieveArtidocSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $paginated_raw_sections = $dao->searchPaginatedRawSections($artidoc, 50, 0);
 
         self::assertSame(count($content), $paginated_raw_sections->total);
