@@ -25,6 +25,7 @@ use HTTPRequest;
 use Project;
 use ProjectManager;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
+use Tuleap\Forum\DeprecatedForum;
 use Widget;
 
 /**
@@ -45,9 +46,16 @@ class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassD
         $request = $this->getHTTPRequest();
         $pm      = $this->getProjectManager();
         $project = $pm->getProject($request->get('group_id'));
-        if ($project && $this->canBeUsedByProject($project)) {
+        if ($project && $this->canBeUsedByProject($project) && DeprecatedForum::isProjectAllowed($project)) {
             require_once __DIR__ . '/../../www/news/news_utils.php';
-            $this->content = news_show_latest($request->get('group_id'), 10, false);
+            $deprecation_message = DeprecatedForum::getDeprecationMessage();
+            $this->content       = <<<EOT
+            <div class="tlp-alert-danger">
+                $deprecation_message
+            </div>
+            EOT;
+
+            $this->content .= news_show_latest($request->get('group_id'), 10, false);
         }
     }
 

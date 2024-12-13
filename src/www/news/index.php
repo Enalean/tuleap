@@ -46,6 +46,8 @@ if ($group_id) {
     $title = $Language->getText('news_index', 'news');
 }
 
+\Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($project, $GLOBALS['Response']);
+
 news_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_admin_index', 'title'))
     ->inProject($project, Service::NEWS)
     ->withPrinterVersion($pv)

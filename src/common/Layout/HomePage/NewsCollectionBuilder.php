@@ -23,6 +23,7 @@ namespace Tuleap\Layout\HomePage;
 
 use ForgeConfig;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Forum\DeprecatedForum;
 use Tuleap\News\NewsDao;
 
 class NewsCollectionBuilder
@@ -60,14 +61,17 @@ class NewsCollectionBuilder
         $all_news = [];
         if (ForgeConfig::get(self::CONFIG_DISPLAY_NEWS)) {
             foreach ($this->dao->getNewsForSiteHomePage() as $news) {
-                $all_news[] = new HomePageNews(
-                    $this->purifier,
-                    $this->project_manager->getProject($news['group_id']),
-                    $this->user_manager->getUserById($news['submitted_by']),
-                    new \DateTimeImmutable('@' . $news['date']),
-                    $news['summary'],
-                    $news['details']
-                );
+                $project = $this->project_manager->getProject($news['group_id']);
+                if (DeprecatedForum::isProjectAllowed($project)) {
+                    $all_news[] = new HomePageNews(
+                        $this->purifier,
+                        $project,
+                        $this->user_manager->getUserById($news['submitted_by']),
+                        new \DateTimeImmutable('@' . $news['date']),
+                        $news['summary'],
+                        $news['details']
+                    );
+                }
             }
         }
         return new NewsCollection($all_news);

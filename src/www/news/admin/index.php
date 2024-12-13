@@ -102,6 +102,7 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
     }
 
     $project = $pm->getProject($group_id);
+    \Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($project, $GLOBALS['Response']);
     news_header(
         \Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_admin_index', 'title'))
             ->inProject($project, Service::NEWS)

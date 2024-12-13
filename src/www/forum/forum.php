@@ -293,6 +293,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     $project = $pm->getProject($group_id);
     $title   = $project->getPublicName() . ' forum: ' . $forum_name;
 
+    \Tuleap\Forum\DeprecatedForum::redirectIfNotAllowed($project, $GLOBALS['Response']);
+
     forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Forum Administration'))
         ->inProject($project, Service::FORUM)
         ->withPrinterVersion((int) $pv)

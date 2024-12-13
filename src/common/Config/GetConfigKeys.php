@@ -31,6 +31,7 @@ use Tuleap\Date\OpeningDaysRetriever;
 use Tuleap\DB\DBConfig;
 use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Forum\DeprecatedForum;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
 use Tuleap\Http\Client\OutboundHTTPRequestProxy;
@@ -97,6 +98,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         ThereIsAnOngoingTransactionChecker::class,
         OpeningDaysRetriever::class,
         CookieManager::class,
+        DeprecatedForum::class,
     ];
 
     /**
