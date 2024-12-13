@@ -17,20 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { Option } from "@tuleap/option";
-import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type { DispatchEvents } from "../DispatchEvents";
 import type { FileUploadSetup } from "../fields/file-field/FileUploadSetup";
 import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSetup";
 import type { WillDisableSubmit } from "../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../submit/WillEnableSubmit";
 import type { DidUploadImage } from "../fields/file-field/DidUploadImage";
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
 import type { InterpretCommonMark } from "./InterpretCommonMark";
+import type { FormattedTextUserPreferences } from "./FormattedTextUserPreferences";
 
 export type FormattedTextControllerType = {
-    getDefaultTextFormat(): TextFieldFormat;
+    getUserPreferences(): FormattedTextUserPreferences;
     getFileUploadSetup(): Option<FileUploadSetup>;
     interpretCommonMark(commonmark: string): ResultAsync<string, Fault>;
     onFileUploadStart(event: WillDisableSubmit): void;
@@ -41,9 +41,9 @@ export type FormattedTextControllerType = {
 export const FormattedTextController = (
     event_dispatcher: DispatchEvents,
     commonmark_retriever: InterpretCommonMark,
-    default_text_format: TextFieldFormat,
+    user_preferences: FormattedTextUserPreferences,
 ): FormattedTextControllerType => ({
-    getDefaultTextFormat: () => default_text_format,
+    getUserPreferences: () => user_preferences,
 
     getFileUploadSetup(): Option<FileUploadSetup> {
         const event = WillGetFileUploadSetup();
