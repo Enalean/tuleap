@@ -28,11 +28,11 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
+use Tuleap\Artidoc\Adapter\Document\Section\DeleteOneSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
-use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
@@ -167,7 +167,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         return new SectionDeletor(
             new RetrieveArtidocSectionDao($section_identifier_factory, $freetext_identifier_factory),
             $retriever,
-            new ArtidocDao($section_identifier_factory, $freetext_identifier_factory),
+            new DeleteOneSectionDao(),
         );
     }
 
