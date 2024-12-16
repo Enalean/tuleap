@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "types": "src/mention.d.ts",
+  "types": "./src/mention.d.ts",
   "exports": {
     ".": {
       "sass": "./dist/style.css",

@@ -25,8 +25,8 @@ import { getTextAndFormatTemplate } from "../text-and-format";
 import { getValidFormat } from "../RichTextEditor";
 import "../FormatSelector";
 
-export type FollowupEditor = TextAndFormat;
-export type HostElement = FollowupEditor & HTMLElement;
+export type CommentEditor = TextAndFormat;
+export type HostElement = CommentEditor & HTMLElement;
 
 const onFormatChange = (host: HostElement, event: CustomEvent): void => {
     const { format, content } = event.detail;
@@ -41,16 +41,17 @@ const onContentChange = (host: HostElement, event: CustomEvent): void => {
     dispatch(host, "value-changed", { detail: { format: host.format, body: content } });
 };
 
-export const renderFollowupEditor = (host: FollowupEditor): UpdateFunction<FollowupEditor> =>
+export const renderCommentEditor = (host: CommentEditor): UpdateFunction<CommentEditor> =>
     getTextAndFormatTemplate(host, {
         identifier: "followup_comment",
         rows: 3,
+        allows_mentions: true,
         onContentChange,
         onFormatChange,
     });
 
-export const FollowupEditor = define<FollowupEditor>({
-    tag: "tuleap-artifact-modal-followup-editor",
+export const CommentEditor = define<CommentEditor>({
+    tag: "tuleap-artifact-modal-comment-editor",
     label: () => getCommentLabel(),
     format: getValidFormat,
     contentValue: "",
@@ -62,5 +63,5 @@ export const FollowupEditor = define<FollowupEditor>({
     has_error: false,
     error_message: "",
     controller: (host, controller) => controller,
-    render: renderFollowupEditor,
+    render: renderCommentEditor,
 });

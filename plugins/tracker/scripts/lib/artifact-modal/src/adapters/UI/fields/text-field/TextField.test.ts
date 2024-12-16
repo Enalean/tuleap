@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import type { HostElement } from "./TextField";
 import { getClasses, getIdentifier, renderTextField } from "./TextField";
 import { FormattedTextController } from "../../../../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
-import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import { InterpretCommonMarkStub } from "../../../../../tests/stubs/InterpretCommonMarkStub";
 
 function getHost(data?: Partial<HostElement>): HostElement {
@@ -32,7 +33,11 @@ function getHost(data?: Partial<HostElement>): HostElement {
             InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
             TEXT_FORMAT_TEXT,
         ),
-        dispatchEvent: jest.fn(),
+        dispatchEvent(event) {
+            if (event) {
+                //Do nothing
+            }
+        },
     } as HostElement;
 }
 
@@ -80,7 +85,7 @@ describe(`TextField`, () => {
         it(`when the RichTextEditor emits a "content-change" event,
             it will emit a "value-changed" event with the new content`, () => {
             const dispatch = jest.spyOn(host, "dispatchEvent");
-            getSelector("[data-test=text-editor]").dispatchEvent(
+            selectOrThrow(target, "[data-test=text-editor]").dispatchEvent(
                 new CustomEvent("content-change", {
                     detail: { content: "unhostilely" },
                 }),
@@ -88,7 +93,7 @@ describe(`TextField`, () => {
 
             const value_changed = dispatch.mock.calls[0][0];
             if (!(value_changed instanceof CustomEvent)) {
-                throw new Error("Expected a CustomEvent");
+                throw Error("Expected a CustomEvent");
             }
             expect(value_changed.type).toBe("value-changed");
             expect(value_changed.detail.field_id).toBe(field_id);
@@ -100,7 +105,7 @@ describe(`TextField`, () => {
         it(`when the RichTextEditor emits a "format-change" event,
             it will emit a "value-changed" event with the new format and the new content`, () => {
             const dispatch = jest.spyOn(host, "dispatchEvent");
-            getSelector("[data-test=text-editor]").dispatchEvent(
+            selectOrThrow(target, "[data-test=text-editor]").dispatchEvent(
                 new CustomEvent("format-change", {
                     detail: { format: "commonmark", content: "unhostilely" },
                 }),
@@ -108,7 +113,7 @@ describe(`TextField`, () => {
 
             const value_changed = dispatch.mock.calls[0][0];
             if (!(value_changed instanceof CustomEvent)) {
-                throw new Error("Expected a CustomEvent");
+                throw Error("Expected a CustomEvent");
             }
             expect(value_changed.type).toBe("value-changed");
             expect(value_changed.detail.field_id).toBe(field_id);
@@ -117,13 +122,5 @@ describe(`TextField`, () => {
             expect(host.format).toBe("commonmark");
             expect(host.contentValue).toBe("unhostilely");
         });
-
-        function getSelector(selector: string): HTMLElement {
-            const selected = target.querySelector(selector);
-            if (!(selected instanceof HTMLElement)) {
-                throw new Error("Could not select element");
-            }
-            return selected;
-        }
     });
 });

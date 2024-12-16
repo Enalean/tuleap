@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { define, dispatch, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
@@ -37,6 +37,7 @@ import {
 } from "@tuleap/plugin-tracker-constants";
 import type { Option } from "@tuleap/option";
 import { selectOrThrow } from "@tuleap/dom";
+import { initMentions } from "@tuleap/mention";
 import {
     getNoPasteMessage,
     getRTEHelpMessage,
@@ -56,14 +57,17 @@ export interface RichTextEditor {
     disabled: boolean;
     required: boolean;
     rows: number;
+    allows_mentions: boolean;
+    readonly controller: FormattedTextControllerType;
+}
+interface InternalRichTextEditor extends RichTextEditor {
     textarea: HTMLTextAreaElement;
     editor: TextEditorInterface | undefined;
     is_help_shown: boolean;
     upload_setup: Option<FileUploadSetup>;
-    readonly controller: FormattedTextControllerType;
     render(): HTMLElement;
 }
-export type HostElement = RichTextEditor & HTMLElement;
+export type HostElement = InternalRichTextEditor & HTMLElement;
 
 export const getValidFormat = (host: unknown, value: string): TextFieldFormat => {
     if (isValidTextFormat(value)) {
@@ -192,13 +196,22 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
         onEditorInit: (ckeditor): void => {
             onInstanceReady(host, ckeditor);
         },
+        onEditorDataReady: (ckeditor): void => {
+            // This MUST be called after "dataReady" event because calling setData() on CKEditor will kill the event listeners of @tuleap/mention
+            if (!ckeditor.document) {
+                return;
+            }
+            if (host.allows_mentions) {
+                initMentions(ckeditor.document.getBody().$);
+            }
+        },
     });
 };
 
 // Destroy the rich text editor on disconnect
-export const connect = (host: RichTextEditor) => (): void => host.editor?.destroy();
+export const connect = (host: HostElement) => (): void => host.editor?.destroy();
 
-export const renderRichTextEditor = (host: RichTextEditor): UpdateFunction<RichTextEditor> =>
+export const renderRichTextEditor = (host: HostElement): UpdateFunction<RichTextEditor> =>
     html`<textarea
             data-textarea
             data-test="textarea"
@@ -214,7 +227,7 @@ ${host.contentValue}</textarea
         >${host.is_help_shown &&
         html`<p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>`} `;
 
-export const RichTextEditor = define<RichTextEditor>({
+export const RichTextEditor = define<InternalRichTextEditor>({
     tag: "tuleap-artifact-modal-rich-text-editor",
     identifier: {
         value: "",
@@ -236,8 +249,14 @@ export const RichTextEditor = define<RichTextEditor>({
     disabled: false,
     required: false,
     rows: 5,
-    textarea: (host: RichTextEditor): HTMLTextAreaElement =>
-        selectOrThrow(host.render(), "[data-textarea]", HTMLTextAreaElement),
+    allows_mentions: false,
+    textarea: (host: HostElement): HTMLTextAreaElement => {
+        const textarea = selectOrThrow(host.render(), "[data-textarea]", HTMLTextAreaElement);
+        if (host.allows_mentions) {
+            initMentions(textarea);
+        }
+        return textarea;
+    },
     upload_setup: (host, upload_section) => upload_section ?? host.controller.getFileUploadSetup(),
     is_help_shown: false,
     controller: (host, controller) => controller,
