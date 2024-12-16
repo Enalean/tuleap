@@ -34,6 +34,7 @@ use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -375,7 +376,8 @@ final class PullRequestNotificationSupport
                                     $git_repository_factory,
                                     $html_purifier,
                                 ),
-                            )
+                                new MentionedUserInTextRetriever($user_manager)
+                            ),
                         );
                     },
                 ],

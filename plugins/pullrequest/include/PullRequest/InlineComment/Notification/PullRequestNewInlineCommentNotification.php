@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use PFUser;
 use TemplateRendererFactory;
+use Tuleap\Notification\Mention\MentionedUserCollection;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\FormatNotificationContent;
@@ -34,56 +35,22 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 
-final class PullRequestNewInlineCommentNotification implements NotificationToProcess
+/**
+ * @psalm-immutable
+ */
+final readonly class PullRequestNewInlineCommentNotification implements NotificationToProcess
 {
     /**
-     * @var PullRequest
-     * @psalm-readonly
-     */
-    private $pull_request;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    private $change_user_display_name;
-    /**
-     * @var array
-     * @psalm-readonly
-     */
-    private $owners;
-    /**
-     * @var InlineComment
-     * @psalm-readonly
-     */
-    private $inline_comment;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    private $code_context;
-    /**
-     * @var NotificationEnhancedContent
-     * @psalm-readonly
-     */
-    private $enhanced_content;
-
-    /**
-     * @param PFUser[] $owners_without_change_user
+     * @param PFUser[] $recipients_without_change_user
      */
     private function __construct(
-        PullRequest $pull_request,
-        string $change_user_display_name,
-        array $owners_without_change_user,
-        InlineComment $inline_comment,
-        string $code_context,
-        NotificationEnhancedContent $enhanced_content,
+        private PullRequest $pull_request,
+        private string $change_user_display_name,
+        private InlineComment $inline_comment,
+        private string $code_context,
+        private NotificationEnhancedContent $enhanced_content,
+        private array $recipients_without_change_user,
     ) {
-        $this->pull_request             = $pull_request;
-        $this->change_user_display_name = $change_user_display_name;
-        $this->owners                   = $owners_without_change_user;
-        $this->inline_comment           = $inline_comment;
-        $this->code_context             = $code_context;
-        $this->enhanced_content         = $enhanced_content;
     }
 
     /**
@@ -101,16 +68,16 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         InlineComment $inline_comment,
         InlineCommentCodeContextExtractor $code_context_extractor,
         FormatNotificationContent $format_notification_content,
+        MentionedUserCollection $mentioned_users,
     ): self {
         $code_context = $code_context_extractor->getCodeContext($inline_comment, $pull_request);
 
-        $change_user_display_name   = $user_helper->getDisplayNameFromUser($change_user) ?? '';
-        $owners_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners);
+        $change_user_display_name       = $user_helper->getDisplayNameFromUser($change_user) ?? '';
+        $recipients_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners, ...$mentioned_users->users);
 
         return new self(
             $pull_request,
             $change_user_display_name,
-            $owners_without_change_user,
             $inline_comment,
             $code_context,
             new NotificationTemplatedContent(
@@ -125,30 +92,25 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
                     $format_notification_content->getFormattedAndPurifiedNotificationContent($pull_request, $inline_comment),
                     $inline_comment->getFilePath(),
                     $code_context,
-                )
-            )
+                ),
+            ),
+            $recipients_without_change_user
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
     }
 
     /**
-     * @psalm-mutation-free
+     * @return \PFUser[]
      */
     public function getRecipients(): array
     {
-        return $this->owners;
+        return $this->recipients_without_change_user;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function asPlaintext(): string
     {
         return sprintf(
@@ -162,9 +124,6 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;
