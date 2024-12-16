@@ -30,7 +30,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class SectionRetriever
+final class SectionRetriever implements RetrieveSection
 {
     public function __construct(
         private SearchOneSection $search_section,
@@ -39,14 +39,22 @@ final class SectionRetriever
     ) {
     }
 
-    /**
-     * @return Ok<RawSection>|Err<Fault>
-     */
-    public function retrieveSection(SectionIdentifier $id): Ok|Err
+    public function retrieveSectionUserCanRead(SectionIdentifier $id): Ok|Err
     {
         return $this->search_section->searchSectionById($id)
             ->match(
                 fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($raw_section->item_id)
+                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collectRequiredSectionInformation($artidoc, $raw_section))
+                    ->map(static fn() => $raw_section),
+                static fn (Fault $fault) => Result::err($fault),
+            );
+    }
+
+    public function retrieveSectionUserCanWrite(SectionIdentifier $id): Ok|Err
+    {
+        return $this->search_section->searchSectionById($id)
+            ->match(
+                fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanWrite($raw_section->item_id)
                     ->andThen(fn (ArtidocWithContext $artidoc) => $this->collectRequiredSectionInformation($artidoc, $raw_section))
                     ->map(static fn() => $raw_section),
                 static fn (Fault $fault) => Result::err($fault),

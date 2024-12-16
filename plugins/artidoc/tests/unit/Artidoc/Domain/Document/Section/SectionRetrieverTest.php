@@ -46,7 +46,7 @@ final class SectionRetrieverTest extends TestCase
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
-    public function testHappyPath(): void
+    public function testHappyPathUserCanRead(): void
     {
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
@@ -60,7 +60,36 @@ final class SectionRetrieverTest extends TestCase
             $collector,
         );
 
-        $result = $builder->retrieveSection($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        $result = $builder->retrieveSectionUserCanRead($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(
+            self::ARTIFACT_ID,
+            $result->value->content->apply(
+                static fn ($id) => Result::ok($id),
+                static fn () => Result::ok(null),
+            )->unwrapOr(null),
+        );
+        self::assertTrue($collector->isCalled());
+
+        $result = $builder->retrieveSectionUserCanWrite($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        self::assertTrue(Result::isErr($result));
+    }
+
+    public function testHappyPathUserCanWrite(): void
+    {
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
+
+        $builder = new SectionRetriever(
+            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
+                new ArtidocWithContext(
+                    new ArtidocDocument(['item_id' => self::ITEM_ID]),
+                )
+            ),
+            $collector,
+        );
+
+        $result = $builder->retrieveSectionUserCanWrite($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
         self::assertTrue(Result::isOk($result));
         self::assertSame(
             self::ARTIFACT_ID,
@@ -82,7 +111,11 @@ final class SectionRetrieverTest extends TestCase
             $collector,
         );
 
-        $result = $builder->retrieveSection($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        $result = $builder->retrieveSectionUserCanRead($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        self::assertTrue(Result::isErr($result));
+        self::assertFalse($collector->isCalled());
+
+        $result = $builder->retrieveSectionUserCanWrite($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
         self::assertTrue(Result::isErr($result));
         self::assertFalse($collector->isCalled());
     }
@@ -97,7 +130,11 @@ final class SectionRetrieverTest extends TestCase
             $collector,
         );
 
-        $result = $builder->retrieveSection($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        $result = $builder->retrieveSectionUserCanRead($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        self::assertTrue(Result::isErr($result));
+        self::assertFalse($collector->isCalled());
+
+        $result = $builder->retrieveSectionUserCanWrite($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
         self::assertTrue(Result::isErr($result));
         self::assertFalse($collector->isCalled());
     }
@@ -116,7 +153,11 @@ final class SectionRetrieverTest extends TestCase
             $collector,
         );
 
-        $result = $builder->retrieveSection($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        $result = $builder->retrieveSectionUserCanRead($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
+        self::assertTrue(Result::isErr($result));
+        self::assertTrue($collector->isCalled());
+
+        $result = $builder->retrieveSectionUserCanWrite($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID));
         self::assertTrue(Result::isErr($result));
         self::assertTrue($collector->isCalled());
     }
