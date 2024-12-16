@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const creator = RichTextEditorsCreator(
         document,
-        new UploadImageFormFactory(document, locale),
+        UploadImageFormFactory(document, locale),
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
     creator.createTextFieldEditors();

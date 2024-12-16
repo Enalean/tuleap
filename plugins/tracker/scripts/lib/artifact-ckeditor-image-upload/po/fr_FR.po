@@ -23,6 +23,6 @@ msgstr ""
 "Vous n'êtes pas autorisé à téléverser des fichiers avec une taille excédant "
 "%s."
 
-msgid "You can drag 'n drop or paste image directly in the editor."
+msgid "You can drag and drop or paste an image directly in the editor."
 msgstr ""
 "Vous pouvez glisser-déposer ou coller une image directement dans l'éditeur."

@@ -114,7 +114,7 @@ const editor_factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(
     document,
     locale
 );
-const upload_factory = new UploadImageFormFactory(document, locale);
+const upload_factory = UploadImageFormFactory(document, locale);
 
 const help_block = upload_factory.createHelpBlock(textarea);
 

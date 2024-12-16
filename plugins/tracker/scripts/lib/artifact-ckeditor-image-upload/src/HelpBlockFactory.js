@@ -19,32 +19,23 @@
 
 import { HelpBlock } from "./HelpBlock";
 
-export class HelpBlockFactory {
-    constructor(doc, gettext_provider, textarea) {
-        this.doc = doc;
-        this.gettext_provider = gettext_provider;
-        this.textarea = textarea;
-    }
-
+export const HelpBlockFactory = (doc, gettext_provider) => ({
     createHelpBlock(textarea) {
         if (typeof textarea.dataset.helpId === "undefined") {
             return null;
         }
-        const help_block_element = this.doc.getElementById(textarea.dataset.helpId);
+        const help_block_element = doc.getElementById(textarea.dataset.helpId);
         if (!help_block_element) {
             return null;
         }
 
-        if (help_block_element.textContent) {
+        if (help_block_element.textContent !== "") {
             return null;
         }
 
-        const p = this.doc.createElement("p");
-        p.textContent = this.gettext_provider.gettext(
-            "You can drag 'n drop or paste image directly in the editor.",
+        help_block_element.textContent = gettext_provider.gettext(
+            "You can drag and drop or paste an image directly in the editor.",
         );
-        help_block_element.appendChild(p);
-
         return new HelpBlock(help_block_element);
-    }
-}
+    },
+});

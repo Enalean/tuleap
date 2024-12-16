@@ -40,7 +40,7 @@ const locale = "en_US"; // Retrieve the locale somehow
 
 const creator = new RichTextEditorsCreator(
     document,
-    new UploadImageFormFactory(document, locale),
+    UploadImageFormFactory(document, locale),
     RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
 );
 creator.createNewCommentEditor();

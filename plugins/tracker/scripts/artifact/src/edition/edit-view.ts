@@ -35,7 +35,7 @@ document.addEventListener("readystatechange", () => {
     const locale = getLocaleWithDefault(document);
     const creator = RichTextEditorsCreator(
         document,
-        new UploadImageFormFactory(document, locale),
+        UploadImageFormFactory(document, locale),
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
     creator.createNewCommentEditor();
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     const editor_creator = RichTextEditorsCreator(
         document,
-        new UploadImageFormFactory(document, locale),
+        UploadImageFormFactory(document, locale),
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
 

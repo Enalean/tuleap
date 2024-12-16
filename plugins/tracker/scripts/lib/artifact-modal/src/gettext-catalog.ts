@@ -35,7 +35,7 @@ export const getSyntaxHelperTitle = (): string => gettextCatalog.getString("Help
 export const getSyntaxHelperType = (): string => gettextCatalog.getString("Type...");
 export const getSyntaxHelperToGet = (): string => gettextCatalog.getString("...to get");
 export const getRTEHelpMessage = (): string =>
-    gettextCatalog.getString("You can drag 'n drop or paste image directly in the editor.");
+    gettextCatalog.getString("You can drag and drop or paste an image directly in the editor.");
 export const getUploadSizeExceeded = (): string =>
     gettextCatalog.getString("You are not allowed to upload files bigger than %s.");
 export const getUploadError = (): string => gettextCatalog.getString("Unable to upload the file");

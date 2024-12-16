@@ -67,7 +67,7 @@
             <translate>There was an error in the Markdown preview:</translate>
             {{ error_text }}
         </div>
-        <div class="muted tracker-richtexteditor-help shown" v-bind:id="description_help_id"></div>
+        <p class="text-info tracker-richtexteditor-help shown" v-bind:id="description_help_id"></p>
 
         <section class="ttm-definition-step-expected">
             <step-definition-arrow-expected />
@@ -224,7 +224,7 @@ export default {
             if (document.body.dataset.userLocale) {
                 locale = document.body.dataset.userLocale;
             }
-            const image_upload_factory = new UploadImageFormFactory(document, locale);
+            const image_upload_factory = UploadImageFormFactory(document, locale);
             const help_block = image_upload_factory.createHelpBlock(text_area);
             const editor = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(
                 document,

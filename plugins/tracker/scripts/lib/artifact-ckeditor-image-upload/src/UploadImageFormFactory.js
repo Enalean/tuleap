@@ -25,24 +25,23 @@ import { Initializer } from "./Initializer";
 import { HelpBlockFactory } from "./HelpBlockFactory";
 import { disablePasteOfImages } from "./paste-image-disabler";
 
-export class UploadImageFormFactory {
-    constructor(doc, locale) {
-        this.doc = doc;
-        this.gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
-    }
+export const UploadImageFormFactory = (doc, locale) => {
+    const gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
 
-    initiateImageUpload(ckeditor_instance, textarea) {
-        const detector = new UploadEnabledDetector(this.doc, textarea);
-        const initializer = new Initializer(this.doc, this.gettext_provider, detector);
-        initializer.init(ckeditor_instance, textarea);
-    }
+    return {
+        initiateImageUpload(ckeditor_instance, textarea) {
+            const detector = new UploadEnabledDetector(doc, textarea);
+            const initializer = new Initializer(doc, gettext_provider, detector);
+            initializer.init(ckeditor_instance, textarea);
+        },
 
-    forbidImageUpload(ckeditor_instance) {
-        disablePasteOfImages(ckeditor_instance, this.gettext_provider);
-    }
+        forbidImageUpload(ckeditor_instance) {
+            disablePasteOfImages(ckeditor_instance, gettext_provider);
+        },
 
-    createHelpBlock(textarea) {
-        const factory = new HelpBlockFactory(this.doc, this.gettext_provider, textarea);
-        return factory.createHelpBlock(textarea);
-    }
-}
+        createHelpBlock(textarea) {
+            const factory = HelpBlockFactory(doc, gettext_provider);
+            return factory.createHelpBlock(textarea);
+        },
+    };
+};

@@ -29,7 +29,7 @@ import {
 } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 
 const locale = "en_US"; // Retrieve the locale somehow
-const factory = new UploadImageFormFactory(document, locale);
+const factory = UploadImageFormFactory(document, locale);
 
 const help_block = factory.createHelpBlock(textarea);
 help_block.onFormatChange(new_format); // call this when the editor format changes

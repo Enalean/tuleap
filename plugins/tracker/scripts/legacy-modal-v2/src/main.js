@@ -71,7 +71,7 @@ tuleap.textarea = tuleap.textarea || {};
             }
             const editor_creator = RichTextEditorsCreator(
                 document,
-                new UploadImageFormFactory(document, locale),
+                UploadImageFormFactory(document, locale),
                 RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
             );
             editor_creator.createTextFieldEditors();

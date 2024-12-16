@@ -83,15 +83,15 @@ $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $track
     max-width: 960px;
 }
 
+.artifact-new-comment-section > .tracker-richtexteditor-help {
+    margin-bottom: 0;
+}
+
 /* stylelint-disable-next-line selector-id-pattern -- Still used in JavaScript */
 #tracker_followup_comment_new {
     box-sizing: border-box;
     width: 100%;
     margin: 0 0 5px;
-}
-
-.artifact-comment-at-mention-info-icon {
-    margin: 0 5px 0 0;
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- Still used in JavaScript */
