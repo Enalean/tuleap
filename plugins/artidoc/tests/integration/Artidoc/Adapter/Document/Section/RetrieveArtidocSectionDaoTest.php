@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\Adapter\Document\Section;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
-use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
@@ -174,7 +173,7 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
 
     private function createArtidocSections(ArtidocWithContext $artidoc, array $content): void
     {
-        $dao = new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
+        $dao = new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $artidoc->document->getId());

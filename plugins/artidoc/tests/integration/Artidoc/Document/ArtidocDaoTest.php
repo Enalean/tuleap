@@ -25,19 +25,14 @@ namespace Tuleap\Artidoc\Document;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\SectionsAsserter;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
-use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
-use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
-use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DBFactory;
-use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class ArtidocDaoTest extends TestIntegrationTestCase
@@ -53,8 +48,10 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->artidoc_103 = new ArtidocWithContext(new ArtidocDocument(['item_id' => 103]));
     }
 
-    private function createArtidocSections(ArtidocDao $dao, ArtidocWithContext $artidoc, array $content): void
+    private function createArtidocSections(ArtidocWithContext $artidoc, array $content): void
     {
+        $dao = new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
+
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $artidoc->document->getId());
 
@@ -75,8 +72,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     {
         $db  = DBFactory::getMainTuleapDBConnection()->getDB();
         $dao = $this->getDao();
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001));
-        $this->createArtidocSections($dao, $this->artidoc_102, [
+        $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert(1001));
+        $this->createArtidocSections($this->artidoc_102, [
             ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum')),
             ContentToInsert::fromFreetext(new FreetextContent('Requirements', '')),
             ContentToInsert::fromArtifactId(2001),
@@ -100,7 +97,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     public function testCloneItemForEmptyDocument(): void
     {
         $dao = $this->getDao();
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert());
+        $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert());
         $dao->saveTracker($this->artidoc_101->document->getId(), 10001);
 
         $dao->cloneItem($this->artidoc_101->document->getId(), $this->artidoc_103->document->getId());
@@ -114,16 +111,16 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     public function testSave(): void
     {
         $dao = $this->getDao();
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
+        $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
 
         SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001, 1002, 1003]);
 
-        $this->createArtidocSections($dao, $this->artidoc_102, $this->getArtifactIdsToInsert(1001, 1003));
+        $this->createArtidocSections($this->artidoc_102, $this->getArtifactIdsToInsert(1001, 1003));
 
         SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001, 1002, 1003]);
         SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1003]);
 
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert());
+        $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert());
 
         SectionsAsserter::assertSectionsForDocument($this->artidoc_101, []);
         SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1003]);
@@ -142,156 +139,12 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         self::assertSame(1002, $dao->getTracker($this->artidoc_101->document->getId()));
     }
 
-    public function testSaveSectionAtTheEnd(): void
-    {
-        $dao = $this->getDao();
-
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1001),
-        );
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1002),
-        );
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_102,
-            ContentToInsert::fromArtifactId(1003),
-        );
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1004),
-        );
-
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001, 1002, 1004]);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1003]);
-    }
-
-    public function testSaveAlreadyExistingSectionAtTheEnd(): void
-    {
-        $dao = $this->getDao();
-
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1001),
-        );
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1002),
-        );
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_102,
-            ContentToInsert::fromArtifactId(1003),
-        );
-
-        $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
-        $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1001),
-        );
-    }
-
-    public function testSaveSectionBefore(): void
-    {
-        $dao = $this->getDao();
-
-        [$uuid_1, $uuid_2, $uuid_3] = [
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1001),
-            ),
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1002),
-            ),
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1003),
-            ),
-        ];
-
-        $dao->saveSectionBefore(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1004),
-            $uuid_1,
-        );
-        $dao->saveSectionBefore(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1005),
-            $uuid_2,
-        );
-        $dao->saveSectionBefore(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1006),
-            $uuid_3,
-        );
-
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1004, 1001, 1005, 1002, 1006, 1003]);
-    }
-
-    public function testSaveAlreadyExistingArtifactSectionBefore(): void
-    {
-        $dao = $this->getDao();
-
-        [$uuid_1] = [
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1001),
-            ),
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1002),
-            ),
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1003),
-            ),
-        ];
-
-        $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
-        $dao->saveSectionBefore(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1003),
-            $uuid_1,
-        );
-    }
-
-    public function testSaveSectionBeforeUnknownSectionWillRaiseAnException(): void
-    {
-        $dao = $this->getDao();
-
-        [, $uuid_2] = [
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1001),
-            ),
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1002),
-            ),
-            $dao->saveSectionAtTheEnd(
-                $this->artidoc_101,
-                ContentToInsert::fromArtifactId(1003),
-            ),
-        ];
-
-        // remove section linked to artifact #1002
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1003));
-
-        $this->expectException(UnableToFindSiblingSectionException::class);
-        $dao->saveSectionBefore(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1004),
-            $uuid_2,
-        );
-    }
-
     public function testDeleteSectionsByArtifactId(): void
     {
         $dao = $this->getDao();
-        $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
-        $this->createArtidocSections($dao, $this->artidoc_102, $this->getArtifactIdsToInsert(1002, 1003, 1004));
-        $this->createArtidocSections($dao, $this->artidoc_103, $this->getArtifactIdsToInsert(1003));
+        $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
+        $this->createArtidocSections($this->artidoc_102, $this->getArtifactIdsToInsert(1002, 1003, 1004));
+        $this->createArtidocSections($this->artidoc_103, $this->getArtifactIdsToInsert(1003));
 
         $dao->deleteSectionsByArtifactId(1003);
         $dao->deleteSectionsByArtifactId(1005);
@@ -299,120 +152,6 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001, 1002]);
         SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1002, 1004]);
         SectionsAsserter::assertSectionsForDocument($this->artidoc_103, []);
-    }
-
-    public function testReorderSections(): void
-    {
-        $dao = $this->getDao();
-
-        $uuid_1 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1001),
-        );
-        $uuid_2 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1002),
-        );
-        $uuid_3 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1003),
-        );
-        $uuid_4 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_102,
-            ContentToInsert::fromArtifactId(1001),
-        );
-        $uuid_5 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_102,
-            ContentToInsert::fromArtifactId(1002),
-        );
-        $uuid_6 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_102,
-            ContentToInsert::fromArtifactId(1003),
-        );
-
-        $order_builder = new SectionOrderBuilder($this->getSectionIdentifierFactory());
-
-        // "before", at the beginning
-        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
-        self::assertTrue(Result::isOk($order));
-        $result = $dao->reorder(
-            $this->artidoc_101,
-            $order->value,
-        );
-        self::assertTrue(Result::isOk($result));
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1002, 1001, 1003]);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
-
-        // "before", in the middle
-        $order = $order_builder->build([$uuid_3->toString()], 'before', $uuid_1->toString());
-        self::assertTrue(Result::isOk($order));
-        $result = $dao->reorder(
-            $this->artidoc_101,
-            $order->value,
-        );
-        self::assertTrue(Result::isOk($result));
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1002, 1003, 1001]);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
-
-        // "after", at the end
-        $order = $order_builder->build([$uuid_2->toString()], 'after', $uuid_1->toString());
-        self::assertTrue(Result::isOk($order));
-        $result = $dao->reorder(
-            $this->artidoc_101,
-            $order->value,
-        );
-        self::assertTrue(Result::isOk($result));
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1003, 1001, 1002]);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
-
-        // "after", in the middle
-        $order = $order_builder->build([$uuid_3->toString()], 'after', $uuid_1->toString());
-        self::assertTrue(Result::isOk($order));
-        $result = $dao->reorder(
-            $this->artidoc_101,
-            $order->value,
-        );
-        self::assertTrue(Result::isOk($result));
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001, 1003, 1002]);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
-    }
-
-    public function testExceptionWhenReorderSectionsOutsideOfDocument(): void
-    {
-        $dao = $this->getDao();
-
-        $uuid_1 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1001),
-        );
-        $uuid_2 = $dao->saveSectionAtTheEnd(
-            $this->artidoc_102,
-            ContentToInsert::fromArtifactId(1002),
-        );
-
-        $order_builder = new SectionOrderBuilder($this->getSectionIdentifierFactory());
-
-        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
-        self::assertTrue(Result::isOk($order));
-        $result = $dao->reorder(
-            $this->artidoc_101,
-            $order->value,
-        );
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(UnknownSectionToMoveFault::class, $result->error);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001]);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1002]);
-
-        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
-        self::assertTrue(Result::isOk($order));
-        $result = $dao->reorder(
-            $this->artidoc_102,
-            $order->value,
-        );
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(UnableToReorderSectionOutsideOfDocumentFault::class, $result->error);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001]);
-        SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1002]);
     }
 
     private function getDao(): ArtidocDao
