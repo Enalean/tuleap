@@ -31,6 +31,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\MoveArtifactActionEventProxy;
@@ -260,7 +261,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
@@ -972,7 +972,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInCommentRetriever($user_manager),
+                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

@@ -33,8 +33,10 @@ use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -51,7 +53,6 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
-use Tuleap\Tracker\Notifications\Recipient\RetrieveMentionedUserInCommentStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
@@ -265,7 +266,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 \Mockery::spy(\EventManager::class),
                 PostCreationActionsQueuerStub::doNothing(),
                 $changeset_comment_indexer,
-                RetrieveMentionedUserInCommentStub::withoutMentionedUser(),
+                new MentionedUserInTextRetriever(ProvideAndRetrieveUserStub::build($user)),
             ),
         );
         $creator->create($changeset_creation, PostCreationContext::withNoConfig($send_notification));
@@ -440,7 +441,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
         $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
         $artifact->shouldReceive('getActionsQueuer')->andReturns(PostCreationActionsQueuerStub::doNothing());
-        $artifact->shouldReceive('getMentionedUserInCommentRetriever')->andReturns(RetrieveMentionedUserInCommentStub::withoutMentionedUser());
+        $artifact->shouldReceive('getUserManager')->andReturns(ProvideAndRetrieveUserStub::build($user));
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -704,7 +705,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $workflow->shouldReceive('validate')->andReturns(true);
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
         $artifact->shouldReceive('getWorkflowRetriever')->andReturns(RetrieveWorkflowStub::withWorkflow($workflow));
-        $artifact->shouldReceive('getMentionedUserInCommentRetriever')->andReturns(RetrieveMentionedUserInCommentStub::withoutMentionedUser());
+        $artifact->shouldReceive('getUserManager')->andReturns(ProvideAndRetrieveUserStub::build($user));
 
         // Valid
         $fields_data = [

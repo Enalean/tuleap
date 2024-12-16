@@ -26,6 +26,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Option\Option;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -98,7 +99,6 @@ use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
@@ -3215,7 +3215,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInCommentRetriever($this->getUserManager()),
+                new MentionedUserInTextRetriever($this->getUserManager()),
             ),
         );
 

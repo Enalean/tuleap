@@ -37,6 +37,7 @@ use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -72,7 +73,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
-use Tuleap\Tracker\Notifications\Recipient\MentionedUserInCommentRetriever;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -172,7 +172,7 @@ class TrackerArtifactCreator
                             $event_dispatcher,
                             new \Tracker_Artifact_Changeset_CommentDao(),
                         ),
-                        new MentionedUserInCommentRetriever($user_manager),
+                        new MentionedUserInTextRetriever($user_manager),
                     ),
                 ),
             ),
