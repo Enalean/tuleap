@@ -18,18 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
 use Git_RemoteServer_Dao;
 use Git_RemoteServer_Gerrit_ReplicationSSHKey;
+use PDOException;
 use Tuleap\Git\Gitolite\SSHKey\Key;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
-class GerritServerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GerritServerTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItExtractsGerritServerSSHKey(): void
     {
         $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
@@ -54,19 +54,19 @@ class GerritServerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'ssh_key' => $server3_key->getKey(),
             ],
         ];
-        $gerrit_server_dao           = \Mockery::mock(Git_RemoteServer_Dao::class);
-        $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andReturns($gerrit_server_access_result);
+        $gerrit_server_dao           = $this->createMock(Git_RemoteServer_Dao::class);
+        $gerrit_server_dao->method('searchAllServersWithSSHKey')->willReturn($gerrit_server_access_result);
 
         $gerrit_server_provider = new GerritServer($gerrit_server_dao);
         $expected_result        = [$server1_key, $server3_key];
 
-        $this->assertEquals($expected_result, array_values(iterator_to_array($gerrit_server_provider)));
+        self::assertEquals($expected_result, array_values(iterator_to_array($gerrit_server_provider)));
     }
 
     public function testItThrowsAnExceptionIfGerritServerDataCanNotBeAccessed(): void
     {
-        $gerrit_server_dao = \Mockery::mock(Git_RemoteServer_Dao::class);
-        $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andThrows(new \PDOException());
+        $gerrit_server_dao = $this->createMock(Git_RemoteServer_Dao::class);
+        $gerrit_server_dao->method('searchAllServersWithSSHKey')->willThrowException(new PDOException());
 
         $this->expectException('Tuleap\Git\Gitolite\SSHKey\Provider\AccessException');
         new GerritServer($gerrit_server_dao);

@@ -18,25 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
-use Mockery;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class WholeInstanceKeysAggregatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WholeInstanceKeysAggregatorTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItUsesAllKeyProviders(): void
     {
-        $gitolite_admin_key = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin');
-        $gerrit_server_keys = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer');
-        $user_keys          = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\User');
+        $gitolite_admin_key = $this->createMock(GitoliteAdmin::class);
+        $gerrit_server_keys = $this->createMock(GerritServer::class);
+        $user_keys          = $this->createMock(User::class);
+
+        $gitolite_admin_key->expects(self::atLeastOnce())->method('valid');
+        $gerrit_server_keys->expects(self::atLeastOnce())->method('valid');
+        $user_keys->expects(self::atLeastOnce())->method('valid');
+        $gitolite_admin_key->method('rewind');
+        $gerrit_server_keys->method('rewind');
+        $user_keys->method('rewind');
 
         $whole_instance_keys = new WholeInstanceKeysAggregator($gitolite_admin_key, $gerrit_server_keys, $user_keys);
-
-        $gitolite_admin_key->shouldReceive('valid')->atLeast()->once();
-        $gerrit_server_keys->shouldReceive('valid')->atLeast()->once();
-        $user_keys->shouldReceive('valid')->atLeast()->once();
 
         iterator_to_array($whole_instance_keys);
     }
