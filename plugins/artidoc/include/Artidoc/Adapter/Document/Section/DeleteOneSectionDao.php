@@ -30,11 +30,15 @@ final class DeleteOneSectionDao extends DataAccessObject implements DeleteOneSec
 {
     public function deleteSectionById(SectionIdentifier $section_id): void
     {
-        $this->getDB()->delete(
-            'plugin_artidoc_document',
-            [
-                'id' => $section_id->getBytes(),
-            ]
+        $this->getDB()->run(
+            <<<EOS
+            DELETE section, freetext
+            FROM plugin_artidoc_document AS section
+                LEFT JOIN plugin_artidoc_section_freetext AS freetext
+                ON (section.freetext_id = freetext.id)
+            WHERE section.id = ?
+            EOS,
+            $section_id->getBytes(),
         );
     }
 }
