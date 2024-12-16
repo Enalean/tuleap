@@ -121,7 +121,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
-use Tuleap\Statistics\CSV\StatisticsServiceUsage;
+use Tuleap\StatisticsCore\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;

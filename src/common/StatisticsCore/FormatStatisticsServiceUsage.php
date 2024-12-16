@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,20 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Statistics\CSV;
+namespace Tuleap\StatisticsCore;
 
-use Statistics_Services_UsageFormatter;
-
-final class StatisticsServiceUsage implements \Tuleap\Event\Dispatchable
+interface FormatStatisticsServiceUsage
 {
-    public function __construct(
-        public readonly Statistics_Services_UsageFormatter $csv_exporter,
-        public readonly string $start_date,
-        public readonly string $end_date,
-    ) {
-    }
+    /**
+     * Build CSV datas from SQL queries results to export them in a file
+     * @param array|\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $query_result
+     */
+    public function buildDatas($query_result, string $title): array;
 }

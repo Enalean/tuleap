@@ -1,7 +1,6 @@
 deptrac:
   skip_violations:
     AgileDashboardPlugin:
-      - Tuleap\Statistics\CSV\StatisticsServiceUsage
       - Tuleap\TestManagement\Event\GetItemsFromMilestone
       - Tuleap\TestManagement\Event\GetMilestone
     DocmanPlugin:
@@ -19,14 +18,11 @@ deptrac:
       - Statistics_Formatter
     Git_Driver_Gerrit_User:
       - LDAP_User
-    KanbanPlugin:
-      - Tuleap\Statistics\CSV\StatisticsServiceUsage
     LdapPlugin:
       - Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent
     SvnPlugin:
       - Statistics_DiskUsageDao
       - Statistics_DiskUsageManager
-      - Tuleap\Statistics\CSV\StatisticsServiceUsage
       - Tuleap\Statistics\DiskUsage\Subversion\Collector
       - Tuleap\Statistics\DiskUsage\Subversion\Retriever
     Tracker_Chart_Burndown:
@@ -62,8 +58,6 @@ deptrac:
       - Statistics_DiskUsageManager
     Tuleap\SVN\Statistic\SCMUsageCollector:
       - Statistics_Formatter
-    Tuleap\SVN\Statistic\ServiceUsageCollector:
-      - Statistics_Services_UsageFormatter
     Tuleap\TestManagement\Administration\AdminController:
       - Planning_Milestone
     Tuleap\TestManagement\Event\GetMilestone:
@@ -96,7 +90,6 @@ deptrac:
       - Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation
       - Tuleap\AgileDashboard\REST\v1\MilestoneResource
       - Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder
-      - Tuleap\Statistics\CSV\StatisticsServiceUsage
       - Tuleap\Statistics\FrequenciesLabels
       - Tuleap\Statistics\FrequenciesSamples
     velocityPlugin:

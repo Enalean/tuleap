@@ -98,7 +98,7 @@ use Tuleap\Search\IndexAllPendingItemsEvent;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Service\ServiceCreator;
-use Tuleap\Statistics\CSV\StatisticsServiceUsage;
+use Tuleap\StatisticsCore\StatisticsServiceUsage;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;

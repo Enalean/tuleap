@@ -63,7 +63,7 @@ use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
-use Tuleap\Statistics\CSV\StatisticsServiceUsage;
+use Tuleap\StatisticsCore\StatisticsServiceUsage;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/constants.php';
