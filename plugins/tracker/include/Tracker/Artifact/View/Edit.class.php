@@ -220,7 +220,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
 
     private function fetchAddNewComment(Tracker $tracker, $submitted_comment)
     {
-        $html = '<div>';
+        $html = '<div class="artifact-new-comment-section">';
         $hp   = Codendi_HTMLPurifier::instance();
 
         if (count($responses = $tracker->getCannedResponseFactory()->getCannedResponses($tracker))) {

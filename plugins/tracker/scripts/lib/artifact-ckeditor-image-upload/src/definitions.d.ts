@@ -22,9 +22,8 @@ declare module "@tuleap/plugin-tracker-artifact-ckeditor-image-upload" {
         onFormatChange(new_format: string): void;
     }
 
-    export class UploadImageFormFactory {
-        constructor(doc: Document, locale: string);
-
+    export function UploadImageFormFactory(doc: Document, locale: string): UploadImageFormFactory;
+    interface UploadImageFormFactory {
         initiateImageUpload(
             ckeditor_instance: CKEDITOR.editor,
             textarea: HTMLTextAreaElement,

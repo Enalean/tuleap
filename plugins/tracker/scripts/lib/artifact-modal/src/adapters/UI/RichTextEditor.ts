@@ -225,7 +225,7 @@ export const renderRichTextEditor = (host: HostElement): UpdateFunction<RichText
         >
 ${host.contentValue}</textarea
         >${host.is_help_shown &&
-        html`<p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>`} `;
+        html`<p data-test="help" class="tlp-text-info">${getRTEHelpMessage()}</p>`} `;
 
 export const RichTextEditor = define<InternalRichTextEditor>({
     tag: "tuleap-artifact-modal-rich-text-editor",

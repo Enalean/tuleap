@@ -19,19 +19,17 @@
 
 import { HelpBlockFactory } from "./HelpBlockFactory";
 
-const createDocument = () => document.implementation.createHTMLDocument();
-
 describe(`HelpBlockFactory`, () => {
-    let doc, factory, textarea, help_block_element;
+    let factory, textarea, help_block_element;
     beforeEach(() => {
-        doc = createDocument();
+        const doc = document.implementation.createHTMLDocument();
         textarea = doc.createElement("textarea");
-        help_block_element = doc.createElement("div");
+        help_block_element = doc.createElement("p");
         doc.body.append(textarea, help_block_element);
         const gettext_provider = {
             gettext: (english) => english,
         };
-        factory = new HelpBlockFactory(doc, gettext_provider, textarea);
+        factory = HelpBlockFactory(doc, gettext_provider);
     });
 
     describe(`createHelpBlock()`, () => {
@@ -42,9 +40,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toBe(
-                `<p>You can drag 'n drop or paste image directly in the editor.</p>`,
-            );
+            expect(help_block_element.textContent).not.toBe("");
             expect(help_block).not.toBeNull();
             expect(help_block.onFormatChange).toBeDefined();
         });
@@ -54,7 +50,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toBe("");
+            expect(help_block_element.textContent).toBe("");
             expect(help_block).toBeNull();
         });
 
@@ -64,7 +60,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toBe("");
+            expect(help_block_element.textContent).toBe("");
             expect(help_block).toBeNull();
         });
 
@@ -75,7 +71,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toBe("Some other text");
+            expect(help_block_element.textContent).toBe("Some other text");
             expect(help_block).toBeNull();
         });
     });

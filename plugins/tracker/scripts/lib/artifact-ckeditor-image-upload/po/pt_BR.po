@@ -15,5 +15,5 @@ msgstr "Você não está autorizado a colar imagens aqui"
 msgid "You are not allowed to upload files bigger than %s."
 msgstr "Você não está autorizado a carregar arquivos maiores que %s."
 
-msgid "You can drag 'n drop or paste image directly in the editor."
+msgid "You can drag and drop or paste an image directly in the editor."
 msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."

@@ -2,14 +2,12 @@
     {{> rich-textarea }}
 {{/ textarea }}
 {{# are_at_mentions_effective }}
-    <p class="alert alert-info">
-        <i class="fa-solid fa-exclamation-circle artifact-comment-at-mention-info-icon" aria-hidden="true"></i>
+    <p class="text-info">
         {{# dgettext }}tuleap-tracker| When you use @ to mention someone, they will get an email notification.{{/ dgettext }}
     </p>
 {{/ are_at_mentions_effective }}
 {{^ are_at_mentions_effective }}
-    <p class="alert alert-warning">
-        <i class="fa-solid fa-triangle-exclamation artifact-comment-at-mention-info-icon" aria-hidden="true"></i>
+    <p class="text-warning">
         {{# dgettext}}tuleap-tracker| This tracker's notifications are disabled, when you use @ to mention someone, no email will be sent.{{/dgettext}}
     </p>
 {{/ are_at_mentions_effective }}
