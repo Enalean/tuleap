@@ -32,6 +32,7 @@ pipeline {
                     script {
                         @Library('tuleap-jenkinsfile-library@master') _
                         def lib_signing = new org.tuleap.Signing();
+                        lib_signing.authenticateOnTailscale();
                         lib_signing.prefetchToolsToSignDockerImages('ci-write');
                         def image_name = 'tlp-doc';
                         sh 'docker load < $(nix-build --no-out-link ./src/scripts/tlp-doc/container-image.nix)'
