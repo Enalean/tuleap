@@ -23,6 +23,12 @@
 declare(strict_types=1);
 
 use Tuleap\GraphOnTrackersV5\Async\ChartDataController;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Bar;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Burndown;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Gantt;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Pie;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use Tuleap\GraphOnTrackersV5\XML\Template\CompleteIssuesTemplate;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
@@ -274,24 +280,24 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     {
         $params['factories']['pie']             = [
             'chart_type'      => 'pie',
-            'chart_classname' => 'GraphOnTrackersV5_Chart_Pie',
+            'chart_classname' => GraphOnTrackersV5_Chart_Pie::class,
             'title'           => dgettext('tuleap-graphontrackersv5', 'Pie'),
         ];
         $params['factories']['bar']             = [
             'chart_type'      => 'bar',
-            'chart_classname' => 'GraphOnTrackersV5_Chart_Bar',
+            'chart_classname' => GraphOnTrackersV5_Chart_Bar::class,
             'title'           => dgettext('tuleap-graphontrackersv5', 'Bar'),
         ];
         $params['factories']['gantt']           = [
             'chart_type'      => 'gantt',
-            'chart_classname' => 'GraphOnTrackersV5_Chart_Gantt',
+            'chart_classname' => GraphOnTrackersV5_Chart_Gantt::class,
             'title'           => dgettext('tuleap-graphontrackersv5', 'Gantt'),
         ];
         $params['factories']['burndown']        = [
             //The type of the chart
             'chart_type'      => 'burndown',
             //The classname of the chart. The class must be already declared.
-            'chart_classname' => 'GraphOnTrackersV5_Chart_Burndown',
+            'chart_classname' => GraphOnTrackersV5_Chart_Burndown::class,
             //The title for the button 'Add a chart'
             'title'           => dgettext('tuleap-graphontrackersv5', 'Scrum BurnDown'),
         ];
@@ -299,7 +305,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             //The type of the chart
             'chart_type'      => 'cumulative_flow',
             //The classname of the chart. The class must be already declared.
-            'chart_classname' => 'GraphOnTrackersV5_Chart_CumulativeFlow',
+            'chart_classname' => GraphOnTrackersV5_Chart_CumulativeFlow::class,
             //The title for the button 'Add a chart'
             'title'           => dgettext('tuleap-graphontrackersv5', 'Cumulative flow chart'),
         ];

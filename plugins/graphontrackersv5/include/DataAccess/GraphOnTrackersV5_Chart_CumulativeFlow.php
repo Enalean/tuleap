@@ -21,6 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
+
+use ChartDataBuilderV5;
+use GraphOnTrackersV5_CumulativeFlow_DataBuilder;
+use GraphOnTrackersV5_Engine;
+use GraphOnTrackersV5_Engine_CumulativeFlow;
+use HTML_Element_Input_Date;
+use HTML_Element_Selectbox;
+use SimpleXMLElement;
+use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesV5;
 

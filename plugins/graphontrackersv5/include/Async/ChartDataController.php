@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -50,7 +51,7 @@ final class ChartDataController extends DispatchablePSR15Compatible
     public function __construct(
         \Tracker_ReportFactory $report_factory,
         \Tracker_Report_RendererFactory $renderer_factory,
-        \GraphOnTrackersV5_ChartFactory $chart_factory,
+        GraphOnTrackersV5_ChartFactory $chart_factory,
         \UserManager $user_manager,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,

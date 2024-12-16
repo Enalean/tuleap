@@ -20,34 +20,40 @@
 
 namespace Tuleap\GraphOnTrackersV5\Chart;
 
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Bar;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Burndown;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Gantt;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Pie;
+
 class D3CompatibleChartVisitor implements Visitor
 {
-    public function visitBarChart(\GraphOnTrackersV5_Chart_Bar $chart)
+    public function visitBarChart(GraphOnTrackersV5_Chart_Bar $chart)
     {
         return true;
     }
 
-    public function visitBurndown(\GraphOnTrackersV5_Chart_Burndown $chart)
+    public function visitBurndown(GraphOnTrackersV5_Chart_Burndown $chart)
     {
         return false;
     }
 
-    public function visitCumulativeFlowChart(\GraphOnTrackersV5_Chart_CumulativeFlow $chart)
+    public function visitCumulativeFlowChart(GraphOnTrackersV5_Chart_CumulativeFlow $chart)
     {
         return true;
     }
 
-    public function visitGantt(\GraphOnTrackersV5_Chart_Gantt $chart)
+    public function visitGantt(GraphOnTrackersV5_Chart_Gantt $chart)
     {
         return false;
     }
 
-    public function visitGroupedBarChart(\GraphOnTrackersV5_Chart_Bar $chart)
+    public function visitGroupedBarChart(GraphOnTrackersV5_Chart_Bar $chart)
     {
         return true;
     }
 
-    public function visitPieChart(\GraphOnTrackersV5_Chart_Pie $chart)
+    public function visitPieChart(GraphOnTrackersV5_Chart_Pie $chart)
     {
         return true;
     }

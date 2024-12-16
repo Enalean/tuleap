@@ -19,6 +19,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
+
+use ChartDataBuilderV5;
+use Codendi_HTMLPurifier;
+use CSRFSynchronizerToken;
+use EventManager;
+use Exception;
+use GraphOnTrackersV5_Engine;
+use GraphOnTrackersV5_GraphActionsPresenter;
+use GraphOnTrackersV5_Renderer;
+use HTML_Element_Columns;
+use HTML_Element_Input_Hidden;
+use HTML_Element_Input_Text;
+use HTML_Element_Selectbox_Rank;
+use HTML_Element_Textarea;
+use PFUser;
+use SimpleXMLElement;
+use TemplateRendererFactory;
+use Tracker_Report_Session;
+use TrackerFactory;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -30,6 +50,10 @@ use Tuleap\GraphOnTrackersV5\Chart\D3CompatibleChartVisitor;
 use Tuleap\GraphOnTrackersV5\Chart\Visitable;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 use Tuleap\Widget\WidgetFactory;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
+use XML_SimpleXMLCDATAFactory;
 
 /**
  * Describe a chart
