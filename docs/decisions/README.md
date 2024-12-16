@@ -34,6 +34,7 @@ This log lists the architectural decisions for Tuleap. You will find below the A
 * [ADR-0030](0030-php-folder-structure-for-plugins.md) - PHP folder structure for plugins
 * [ADR-0031](0031-use-markdown-architectural-decision-records-v4.md) - Use Markdown Architectural Decision Records v4.0.0
 * [ADR-0032](0032-simulate-network-responses-frontend) - Simulate network responses for front-end components
+* [ADR-0033](0033-avoid-using-stores-in-vue-apps.md) - Avoid using stores in Vue apps
 
 Plugins and libraries can also have their own ADRs:
 * [GitLab](../../plugins/gitlab/docs/glossary.md)
