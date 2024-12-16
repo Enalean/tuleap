@@ -22,20 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Git_SystemEventManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Project_NotFoundException;
+use ProjectManager;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class RegenerateConfigurationCommandTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RegenerateConfigurationCommandTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $project_manager;
-    private $event_manager;
+    private ProjectManager&MockObject $project_manager;
+    private Git_SystemEventManager&MockObject $event_manager;
 
     protected function setUp(): void
     {
-        $this->project_manager = \Mockery::mock(\ProjectManager::class);
-        $this->event_manager   = \Mockery::mock(\Git_SystemEventManager::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->event_manager   = $this->createMock(Git_SystemEventManager::class);
     }
 
     public function testConfigurationForAllProjectsCanBeRegenerated(): void
@@ -43,15 +47,13 @@ class RegenerateConfigurationCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
 
-        $project_1 = \Mockery::mock(\Project::class);
-        $project_1->shouldReceive('getID')->andReturns('999');
-        $project_2 = \Mockery::mock(\Project::class);
-        $project_2->shouldReceive('getID')->andReturns('888');
-        $this->project_manager->shouldReceive('getProjectsByStatus')->with(\Project::STATUS_ACTIVE)->andReturns([$project_1, $project_2]);
-        $this->event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(['999', '888'])->once();
+        $project_1 = ProjectTestBuilder::aProject()->withId(999)->build();
+        $project_2 = ProjectTestBuilder::aProject()->withId(888)->build();
+        $this->project_manager->method('getProjectsByStatus')->with(Project::STATUS_ACTIVE)->willReturn([$project_1, $project_2]);
+        $this->event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with(['999', '888']);
 
         $command_tester->execute(['--all' => true, 'project_ids' => ['102', '103']]);
-        $this->assertSame(0, $command_tester->getStatusCode());
+        self::assertSame(0, $command_tester->getStatusCode());
     }
 
     public function testConfigurationForSomeProjectsCanBeRegenerated(): void
@@ -59,22 +61,19 @@ class RegenerateConfigurationCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
 
-        $project_1 = \Mockery::mock(\Project::class);
-        $project_1->shouldReceive('getID')->andReturns('102');
-        $project_1->shouldReceive('isActive')->andReturns(true);
-        $project_2 = \Mockery::mock(\Project::class);
-        $project_2->shouldReceive('getID')->andReturns('103');
-        $project_2->shouldReceive('isActive')->andReturns(true);
-        $project_3 = \Mockery::mock(\Project::class);
-        $project_3->shouldReceive('getID')->andReturns('104');
-        $project_3->shouldReceive('isActive')->andReturns(false);
-        $this->project_manager->shouldReceive('getValidProject')->with('102')->andReturns($project_1);
-        $this->project_manager->shouldReceive('getValidProject')->with('103')->andReturns($project_2);
-        $this->project_manager->shouldReceive('getValidProject')->with('104')->andReturns($project_3);
-        $this->event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(['102', '103'])->once();
+        $project_1 = ProjectTestBuilder::aProject()->withId(102)->withStatusActive()->build();
+        $project_2 = ProjectTestBuilder::aProject()->withId(103)->withStatusActive()->build();
+        $project_3 = ProjectTestBuilder::aProject()->withId(104)->withStatusSuspended()->build();
+        $this->project_manager->method('getValidProject')
+            ->willReturnCallback(static fn($id) => match ((int) $id) {
+                102 => $project_1,
+                103 => $project_2,
+                104 => $project_3,
+            });
+        $this->event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with(['102', '103']);
 
         $command_tester->execute(['project_ids' => ['102', '103']]);
-        $this->assertSame(0, $command_tester->getStatusCode());
+        self::assertSame(0, $command_tester->getStatusCode());
     }
 
     public function testInvalidProjectIDIsRejected(): void
@@ -82,11 +81,11 @@ class RegenerateConfigurationCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
 
-        $this->project_manager->shouldReceive('getValidProject')->andThrows(\Project_NotFoundException::class);
-        $this->event_manager->shouldReceive('queueProjectsConfigurationUpdate')->never();
+        $this->project_manager->method('getValidProject')->willThrowException(new Project_NotFoundException());
+        $this->event_manager->expects(self::never())->method('queueProjectsConfigurationUpdate');
 
         $command_tester->execute(['project_ids' => ['999999999999999999', '103']]);
-        $this->assertSame(1, $command_tester->getStatusCode());
+        self::assertSame(1, $command_tester->getStatusCode());
     }
 
     public function testNoUnnecessaryWorkIsDoneWhenNoProjectIDIsProvided(): void
@@ -94,9 +93,9 @@ class RegenerateConfigurationCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
 
-        $this->event_manager->shouldReceive('queueProjectsConfigurationUpdate')->never();
+        $this->event_manager->expects(self::never())->method('queueProjectsConfigurationUpdate');
 
         $command_tester->execute(['project_ids' => []]);
-        $this->assertSame(0, $command_tester->getStatusCode());
+        self::assertSame(0, $command_tester->getStatusCode());
     }
 }

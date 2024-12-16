@@ -18,122 +18,103 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite;
 
 use EventManager;
 use Git;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
-use Mockery;
+use GitRepository;
 use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ConfigPermissionsSerializerGerritTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ConfigPermissionsSerializerGerritTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $serializer;
-    private $repository;
-    private $gerrit_status;
-    /**
-     * @var PermissionsManager&Mockery\MockInterface
-     */
-    private $permissions_manager;
+    private Git_Gitolite_ConfigPermissionsSerializer $serializer;
+    private GitRepository $repository;
+    private Git_Driver_Gerrit_ProjectCreatorStatus&MockObject $gerrit_status;
 
     public function setUp(): void
     {
-        parent::setUp();
+        $project          = ProjectTestBuilder::aProject()->withId(102)->withUnixName('gpig')->build();
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1001)->inProject($project)->migratedToGerrit(2)->build();
 
-        $project = Mockery::spy(\Project::class);
-        $project->shouldReceive('getId')->andReturn(102);
-        $project->shouldReceive('getUnixName')->andReturn('gpig');
+        $permissions_manager = $this->createMock(PermissionsManager::class);
+        $permissions_manager->method('getAuthorizedUGroupIdsForProject')
+            ->willReturnCallback(static fn($project, $id, $perm) => match ($perm) {
+                Git::PERM_READ  => [ProjectUGroup::REGISTERED],
+                Git::PERM_WRITE => [ProjectUGroup::PROJECT_MEMBERS],
+                Git::PERM_WPLUS => [],
+            });
+        PermissionsManager::setInstance($permissions_manager);
 
-        $this->repository = Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturn(1001);
-        $this->repository->shouldReceive('getProject')->andReturn($project);
+        $this->gerrit_status = $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class);
 
-        $this->permissions_manager = Mockery::spy(PermissionsManager::class);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
-            ->with(Mockery::any(), Mockery::any(), Git::PERM_READ)
-            ->andReturn([ProjectUGroup::REGISTERED]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
-            ->with(Mockery::any(), Mockery::any(), Git::PERM_WRITE)
-            ->andReturn([ProjectUGroup::PROJECT_MEMBERS]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
-            ->with(Mockery::any(), Mockery::any(), Git::PERM_WPLUS)
-            ->andReturn([]);
-
-        PermissionsManager::setInstance($this->permissions_manager);
-
-        $this->gerrit_status = Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class);
-
-        $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+        $event_manager          = $this->createMock(EventManager::class);
+        $fine_grained_retriever = $this->createMock(FineGrainedRetriever::class);
+        $this->serializer       = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->gerrit_status,
             'whatever',
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
-            Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            Mockery::spy(EventManager::class)
+            $fine_grained_retriever,
+            $this->createMock(FineGrainedPermissionFactory::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $event_manager
         );
+        $fine_grained_retriever->method('doesRepositoryUseFineGrainedPermissions');
+        $event_manager->method('processEvent');
     }
 
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();
-        parent::tearDown();
     }
 
-    public function testItGeneratesTheDefaultConfiguration()
+    public function testItGeneratesTheDefaultConfiguration(): void
     {
-        $this->assertSame(
+        $this->gerrit_status->method('getStatus')->willReturn(null);
+        self::assertSame(
             " R   = @site_active @gpig_project_members\n" .
             " RW  = @gpig_project_members\n",
             $this->serializer->getForRepository($this->repository)
         );
     }
 
-    public function testItGrantsEverythingToGerritUserAfterMigrationIsDoneWithSuccess()
+    public function testItGrantsEverythingToGerritUserAfterMigrationIsDoneWithSuccess(): void
     {
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturn(true);
-        $this->repository->shouldReceive('getRemoteServerId')->andReturn(2);
+        $this->gerrit_status->method('getStatus')->with($this->repository)->willReturn(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
 
-        $this->gerrit_status->shouldReceive('getStatus')->with($this->repository)->andReturn(
-            Git_Driver_Gerrit_ProjectCreatorStatus::DONE
-        );
-
-        $this->assertSame(
+        self::assertSame(
             " R   = @site_active @gpig_project_members\n" .
             " RW+ = forge__gerrit_2\n",
             $this->serializer->getForRepository($this->repository)
         );
     }
 
-    public function testItDoesntGrantAllPermissionsToGerritIfMigrationIsWaitingForExecution()
+    public function testItDoesntGrantAllPermissionsToGerritIfMigrationIsWaitingForExecution(): void
     {
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturn(true);
-        $this->repository->shouldReceive('getRemoteServerId')->andReturn(2);
+        $this->gerrit_status->method('getStatus')->with($this->repository)->willReturn(Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE);
 
-        $this->gerrit_status->shouldReceive('getStatus')->with($this->repository)->andReturn(
-            Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE
-        );
-
-        $this->assertSame(
+        self::assertSame(
             " R   = @site_active @gpig_project_members\n" .
             " RW  = @gpig_project_members\n",
             $this->serializer->getForRepository($this->repository)
         );
     }
 
-    public function testItDoesntGrantAllPermissionsToGerritIfMigrationIsError()
+    public function testItDoesntGrantAllPermissionsToGerritIfMigrationIsError(): void
     {
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturn(true);
-        $this->repository->shouldReceive('getRemoteServerId')->andReturn(2);
+        $this->gerrit_status->method('getStatus')->with($this->repository)->willReturn(Git_Driver_Gerrit_ProjectCreatorStatus::ERROR);
 
-        $this->gerrit_status->shouldReceive('getStatus')->with($this->repository)->andReturn(
-            Git_Driver_Gerrit_ProjectCreatorStatus::ERROR
-        );
-
-        $this->assertSame(
+        self::assertSame(
             " R   = @site_active @gpig_project_members\n" .
             " RW  = @gpig_project_members\n",
             $this->serializer->getForRepository($this->repository)
