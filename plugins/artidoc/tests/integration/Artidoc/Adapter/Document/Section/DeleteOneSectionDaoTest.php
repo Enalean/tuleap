@@ -27,36 +27,69 @@ use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIden
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
 {
-    public function testDeleteSectionsById(): void
+    private ArtidocWithContext $artidoc;
+    private SectionIdentifier $uuid_intro;
+    private SectionIdentifier $uuid_2;
+
+    protected function setUp(): void
     {
+        $this->artidoc = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));
+
         $save_dao = new SaveSectionDao(
-            new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()),
-            new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()),
+            new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
+            new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
-        $delete_dao = new DeleteOneSectionDao();
-
-        $artidoc = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));
-
-        $uuid_1 = $save_dao->saveSectionAtTheEnd(
-            $artidoc,
+        $this->uuid_intro = $save_dao->saveSectionAtTheEnd(
+            $this->artidoc,
+            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum')),
+        );
+        $save_dao->saveSectionAtTheEnd(
+            $this->artidoc,
             ContentToInsert::fromArtifactId(1001),
         );
-        $uuid_2 = $save_dao->saveSectionAtTheEnd(
-            $artidoc,
+        $this->uuid_2 = $save_dao->saveSectionAtTheEnd(
+            $this->artidoc,
             ContentToInsert::fromArtifactId(1002),
         );
-        $uuid_3 = $save_dao->saveSectionAtTheEnd(
-            $artidoc,
+        $save_dao->saveSectionAtTheEnd(
+            $this->artidoc,
             ContentToInsert::fromArtifactId(1003),
         );
+        $save_dao->saveSectionAtTheEnd(
+            $this->artidoc,
+            ContentToInsert::fromFreetext(new FreetextContent('Legal', 'doloret')),
+        );
+    }
 
-        $delete_dao->deleteSectionById($uuid_2);
+    public function testDeleteArtifactSectionById(): void
+    {
+        $delete_dao = new DeleteOneSectionDao();
 
-        SectionsAsserter::assertSectionsForDocument($artidoc, [1001, 1003]);
+        SectionsAsserter::assertSectionsForDocument($this->artidoc, ['Introduction', 1001, 1002, 1003, 'Legal']);
+        $delete_dao->deleteSectionById($this->uuid_2);
+        SectionsAsserter::assertSectionsForDocument($this->artidoc, ['Introduction', 1001, 1003, 'Legal']);
+    }
+
+    public function testDeleteFreetextSectionById(): void
+    {
+        $db         = DBFactory::getMainTuleapDBConnection()->getDB();
+        $delete_dao = new DeleteOneSectionDao();
+
+        SectionsAsserter::assertSectionsForDocument($this->artidoc, ['Introduction', 1001, 1002, 1003, 'Legal']);
+        self::assertSame(2, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
+
+        $delete_dao->deleteSectionById($this->uuid_intro);
+
+        SectionsAsserter::assertSectionsForDocument($this->artidoc, [1001, 1002, 1003, 'Legal']);
+        self::assertSame(1, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
     }
 }
