@@ -31,7 +31,6 @@ use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocument
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
-use Tuleap\Artidoc\Domain\Document\Section\DeleteOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -43,7 +42,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class ArtidocDao extends DataAccessObject implements DeleteOneSection, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
+final class ArtidocDao extends DataAccessObject implements SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker, ReorderSections
 {
     public function __construct(
         private readonly SectionIdentifierFactory $section_identifier_factory,
@@ -262,16 +261,6 @@ final class ArtidocDao extends DataAccessObject implements DeleteOneSection, Sav
             'plugin_artidoc_document',
             [
                 'artifact_id' => $artifact_id,
-            ]
-        );
-    }
-
-    public function deleteSectionById(SectionIdentifier $section_id): void
-    {
-        $this->getDB()->delete(
-            'plugin_artidoc_document',
-            [
-                'id' => $section_id->getBytes(),
             ]
         );
     }
