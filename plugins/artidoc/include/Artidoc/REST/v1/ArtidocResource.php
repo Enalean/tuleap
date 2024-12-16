@@ -35,8 +35,10 @@ use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Adapter\Document\Section\ReorderSectionsDao;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
+use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -470,7 +472,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $uuid_factory       = new DatabaseUUIDV7Factory();
         $identifier_factory = new UUIDSectionIdentifierFactory($uuid_factory);
-        $dao                = new ArtidocDao($identifier_factory, new UUIDFreetextIdentifierFactory($uuid_factory));
+        $dao                = new SaveSectionDao($identifier_factory, new UUIDFreetextIdentifierFactory($uuid_factory));
         $retriever          = new ArtidocWithContextRetriever(
             new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
@@ -521,10 +523,8 @@ final class ArtidocResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $uuid_factory       = new DatabaseUUIDV7Factory();
-        $identifier_factory = new UUIDSectionIdentifierFactory($uuid_factory);
-        $dao                = new ArtidocDao($identifier_factory, new UUIDFreetextIdentifierFactory($uuid_factory));
-        $retriever          = new ArtidocWithContextRetriever(
+        $dao       = new ReorderSectionsDao();
+        $retriever = new ArtidocWithContextRetriever(
             new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
             CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(

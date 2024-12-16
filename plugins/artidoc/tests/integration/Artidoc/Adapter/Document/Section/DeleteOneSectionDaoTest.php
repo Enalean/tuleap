@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\Adapter\Document\Section;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
-use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -34,7 +33,7 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
 {
     public function testDeleteSectionsById(): void
     {
-        $save_dao = new ArtidocDao(
+        $save_dao = new SaveSectionDao(
             new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()),
             new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()),
         );
