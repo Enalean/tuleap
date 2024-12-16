@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Comment\Notification;
 
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
@@ -38,17 +39,18 @@ use UserHelper;
 /**
  * @template-implements NotificationToProcessBuilder<PullRequestNewCommentEvent>
  */
-final class PullRequestNewCommentNotificationToProcessBuilder implements NotificationToProcessBuilder
+final readonly class PullRequestNewCommentNotificationToProcessBuilder implements NotificationToProcessBuilder
 {
     public function __construct(
-        private readonly RetrieveUserById $user_retriever,
-        private readonly PullRequestRetriever $pull_request_factory,
-        private readonly CommentRetriever $comment_retriever,
-        private readonly OwnerRetriever $owner_retriever,
-        private readonly FilterUserFromCollection $filter_user_from_collection,
-        private readonly UserHelper $user_helper,
-        private readonly HTMLURLBuilder $html_url_builder,
-        private readonly FormatNotificationContent $format_notification_content,
+        private RetrieveUserById $user_retriever,
+        private PullRequestRetriever $pull_request_factory,
+        private CommentRetriever $comment_retriever,
+        private OwnerRetriever $owner_retriever,
+        private FilterUserFromCollection $filter_user_from_collection,
+        private UserHelper $user_helper,
+        private HTMLURLBuilder $html_url_builder,
+        private FormatNotificationContent $format_notification_content,
+        private MentionedUserInTextRetriever $mentioned_user_retriever,
     ) {
     }
 
@@ -63,7 +65,8 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
                             return [];
                         }
 
-                        $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
+                        $pull_request_owners       = $this->owner_retriever->getOwners($pull_request);
+                        $mentioned_user_collection = $this->mentioned_user_retriever->getMentionedUsers($comment->getContent());
 
                         return [
                             PullRequestNewCommentNotification::fromOwnersAndComment(
@@ -74,7 +77,8 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
                                 $pull_request,
                                 $change_user,
                                 $pull_request_owners,
-                                $comment
+                                $comment,
+                                $mentioned_user_collection,
                             ),
                         ];
                     },

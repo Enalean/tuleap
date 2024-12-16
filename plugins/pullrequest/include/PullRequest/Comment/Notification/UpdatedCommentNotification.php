@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Comment\Notification;
 
 use PFUser;
 use TemplateRendererFactory;
+use Tuleap\Notification\Mention\MentionedUserCollection;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\FormatNotificationContent;
@@ -42,7 +43,7 @@ final class UpdatedCommentNotification implements NotificationToProcess
     public function __construct(
         private readonly PullRequest $pull_request,
         private readonly string $comment_author_name,
-        private readonly array $owners_without_comment_author,
+        private readonly array $recipients,
         private readonly string $comment,
         private readonly NotificationEnhancedContent $enhanced_content,
     ) {
@@ -57,9 +58,10 @@ final class UpdatedCommentNotification implements NotificationToProcess
         PFUser $comment_author,
         array $owners,
         Comment $comment,
+        MentionedUserCollection $mentioned_user_collection,
     ): self {
         $comment_author_name           = $user_helper->getDisplayNameFromUser($comment_author) ?? '';
-        $owners_without_comment_author = $filter_user_from_collection->filter($comment_author, ...$owners);
+        $owners_without_comment_author = $filter_user_from_collection->filter($comment_author, ...$owners, ...$mentioned_user_collection->users);
 
         return new self(
             $pull_request,
@@ -88,7 +90,7 @@ final class UpdatedCommentNotification implements NotificationToProcess
 
     public function getRecipients(): array
     {
-        return $this->owners_without_comment_author;
+        return $this->recipients;
     }
 
     public function asPlaintext(): string
