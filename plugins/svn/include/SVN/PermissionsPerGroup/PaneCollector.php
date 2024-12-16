@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\PermissionsPerGroup;
 
-use ForgeConfig;
 use SvnPlugin;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -42,7 +41,7 @@ class PaneCollector
     {
         $service_presenter = $this->group_pane_builder->buildPresenter($event);
 
-        $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/svn/templates/';
+        $templates_dir = __DIR__ . '/../../../templates/';
         $content       = TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $service_presenter);

@@ -104,7 +104,7 @@ class PluginsAdministrationViews extends Views
 
                 $renderer->renderAPresenter(
                     dgettext('tuleap-pluginsadministration', 'Plugins'),
-                    ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
+                    __DIR__ . '/../../../src/templates/resource_restrictor',
                     PluginsAdministration_ManageAllowedProjectsPresenter::TEMPLATE,
                     $presenter
                 );

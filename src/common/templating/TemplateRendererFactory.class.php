@@ -57,7 +57,7 @@ class TemplateRendererFactory
     /**
      * Returns a new TemplateRenderer according to Config.
      *
-     * @param string $plugin_templates_dir
+     * @param string|list<string> $plugin_templates_dir
      * @return TemplateRenderer
      */
     public function getRenderer($plugin_templates_dir)

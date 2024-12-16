@@ -208,7 +208,7 @@ if ($special_cat) {
     $pagination_params['special_cat'] = $special_cat;
 }
 
-$renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/softwaremap');
+$renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/softwaremap');
 
 $GLOBALS['HTML']->header(
     \Tuleap\Layout\HeaderConfigurationBuilder::get($Language->getOverridableText('softwaremap_trove_list', 'map'))

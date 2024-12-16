@@ -43,6 +43,6 @@ class MassmailFormPresenter
 
     public function getTemplateDir()
     {
-        return ForgeConfig::get('codendi_dir') . '/src/templates/widgets';
+        return __DIR__ . '/../../templates/widgets';
     }
 }

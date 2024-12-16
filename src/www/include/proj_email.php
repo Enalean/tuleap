@@ -32,7 +32,7 @@ function send_new_project_email(Project $project)
         $subject   = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' ' . $language->getText('include_proj_email', 'proj_approve', $project->getUnixName());
         $presenter = new MailPresenterFactory();
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/mail/');
         $mail     = new TuleapRegisterMail($presenter, $renderer, UserManager::instance(), new LocaleSwitcher(), 'mail-project-register');
         $mail     = $mail->getMailProject($subject, ForgeConfig::get('sys_noreply'), $user->getEmail(), $project);
         $mail->send();
@@ -46,7 +46,7 @@ function send_new_user_email_notification($to, $login)
     $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
     $presenter = new MailPresenterFactory();
 
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/mail/');
     $mail     = new TuleapRegisterMail($presenter, $renderer, UserManager::instance(), new LocaleSwitcher(), 'mail-notification');
     $mail     = $mail->getMail($login, '', $base_url, ForgeConfig::get('sys_noreply'), $to, 'admin-notification');
     return $mail->send();
@@ -58,7 +58,7 @@ function send_approval_new_user_email($to, $login)
     $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
     $presenter = new MailPresenterFactory();
 
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/mail/');
     $mail     = new TuleapRegisterMail($presenter, $renderer, UserManager::instance(), new LocaleSwitcher(), 'mail-admin-approval');
     $mail     = $mail->getMail($login, '', $base_url, ForgeConfig::get('sys_noreply'), $to, 'admin-approval');
     return $mail->send();

@@ -25,7 +25,6 @@ use Admin_Homepage_Dao;
 use CSRFSynchronizerToken;
 use EventManager;
 use HTTPRequest;
-use ForgeConfig;
 use Event;
 use ProjectManager;
 use SVN_LogDao;
@@ -134,7 +133,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
 
         $statistics_collection = $statistics_collection_builder->build();
 
-        $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
+        $templates_dir = __DIR__ . '/../../templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
         $presenter     = new HomePagePresenter(
             $headline,

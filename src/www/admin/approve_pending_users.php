@@ -209,7 +209,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             new \TuleapRegisterMail(
                 new \MailPresenterFactory(),
                 TemplateRendererFactory::build()
-                    ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
+                    ->getRenderer(__DIR__ . '/../../templates/mail/'),
                 $user_manager,
                 new LocaleSwitcher(),
                 'mail'
@@ -286,7 +286,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 new \TuleapRegisterMail(
                     new \MailPresenterFactory(),
                     TemplateRendererFactory::build()
-                        ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
+                        ->getRenderer(__DIR__ . '/../../templates/mail/'),
                     $user_manager,
                     new LocaleSwitcher(),
                     'mail'
@@ -388,7 +388,7 @@ if (count($users) === 0) {
     $siteadmin = new Tuleap\Admin\AdminPageRenderer();
     $siteadmin->renderAPresenter(
         $title,
-        ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
+        __DIR__ . '/../../templates/admin/users/',
         'no-pending',
         [
             'title'   => $title,
@@ -400,7 +400,7 @@ if (count($users) === 0) {
     $siteadmin = new Tuleap\Admin\AdminPageRenderer();
     $siteadmin->renderAPresenter(
         $title,
-        ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
+        __DIR__ . '/../../templates/admin/users/',
         'pending',
         new Tuleap\User\Admin\PendingUsersCollectionPresenter($title, $users, $page, $csrf_token)
     );

@@ -50,7 +50,7 @@ class ProjectMembers extends Widget
     public function getContent()
     {
         $renderer = \TemplateRendererFactory::build()->getRenderer(
-            \ForgeConfig::get('tuleap_dir') . '/src/templates/widgets'
+            __DIR__ . '/../../../templates/widgets'
         );
 
         $request = \HTTPRequest::instance();

@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\Events;
 
-use ForgeConfig;
 use SystemEvent;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\CannotCreateAccessFileHistoryException;
@@ -83,7 +82,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
 
             $this->backend_svn->createRepositorySVN(
                 $repository,
-                ForgeConfig::get('tuleap_dir') . '/plugins/svn/bin/',
+                __DIR__ . '/../../bin/',
                 $user,
                 $parameters['initial_layout'],
             );

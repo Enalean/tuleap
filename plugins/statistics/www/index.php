@@ -119,7 +119,7 @@ $frequencies_presenter = new FrequenciesPresenter(
 $admin_page_renderer = new AdminPageRenderer();
 $admin_page_renderer->renderANoFramedPresenter(
     $title,
-    ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+    __DIR__ . '/../templates',
     FrequenciesPresenter::TEMPLATE,
     $frequencies_presenter
 );

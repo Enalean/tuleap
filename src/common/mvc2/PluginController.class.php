@@ -29,7 +29,7 @@ abstract class MVC2_PluginController extends MVC2_Controller
 
     protected function getTemplatesDir()
     {
-        return ForgeConfig::get('codendi_dir') . '/plugins/' . $this->base_name . '/templates';
+        return __DIR__ . '/../../../plugins/' . $this->base_name . '/templates';
     }
 
     /**

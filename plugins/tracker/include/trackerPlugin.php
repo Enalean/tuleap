@@ -1472,8 +1472,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new MailGatewayConfigDao(),
         );
 
-        $src_dir = ForgeConfig::get('codendi_dir');
-        $script  = $src_dir . '/plugins/tracker/bin/emailgateway-wrapper.sh';
+        $script = realpath(__DIR__ . '/../bin/emailgateway-wrapper.sh');
 
         $command = "sudo -u codendiadm $script";
 

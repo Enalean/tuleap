@@ -79,7 +79,7 @@ $num_packages    = 0;
 $show_release_id = $request->getValidated('show_release_id', 'uint', false);
 
 $renderer = TemplateRendererFactory::build()->getRenderer(
-    ForgeConfig::get('codendi_dir') . '/src/templates/frs/'
+    __DIR__ . '/../../templates/frs/'
 );
 
 $uploaded_links_retriever         = new UploadedLinksRetriever(new UploadedLinksDao(), $user_manager);

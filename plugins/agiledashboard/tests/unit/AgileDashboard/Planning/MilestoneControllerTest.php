@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use Codendi_Request;
-use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 use Planning_MilestoneController;
@@ -34,7 +33,6 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -44,8 +42,6 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 final class MilestoneControllerTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     private string $plugin_path;
     private Planning_Milestone&MockObject $product;
     private Planning_Milestone&MockObject $release;
@@ -60,8 +56,6 @@ final class MilestoneControllerTest extends TestCase
 
     public function setUp(): void
     {
-        ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../../..');
-
         $this->plugin_path       = '/plugin/path';
         $this->milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
         $project_manager         = $this->createMock(ProjectManager::class);

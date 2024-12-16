@@ -70,10 +70,11 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             }
         };
 
+        $csrf_storage     = [];
         $this->controller = new DisplayAccountInformationController(
             $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $this->createMock(CSRFSynchronizerToken::class)
+            new CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage)
         );
 
         $language = $this->createStub(\BaseLanguage::class);

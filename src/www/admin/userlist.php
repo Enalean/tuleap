@@ -240,7 +240,7 @@ if ($group_id) {
 
     $admin_page->renderANoFramedPresenter(
         $Language->getText('admin_project', 'members_label'),
-        ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
+        __DIR__ . '/../../templates/admin/users/',
         'project-members',
         $user_list_presenter
     );
@@ -259,7 +259,7 @@ if ($group_id) {
 
     $admin_page->renderAPresenter(
         $title,
-        ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
+        __DIR__ . '/../../templates/admin/users/',
         'all-users',
         $user_list_presenter
     );

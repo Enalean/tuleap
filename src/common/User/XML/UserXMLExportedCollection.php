@@ -67,7 +67,7 @@ class UserXMLExportedCollection
             $this->cdata_factory->insert($user_node, 'ldapid', $user->getLdapId());
         }
 
-        $rng_path = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/users.rng');
+        $rng_path = realpath(__DIR__ . '/../../xml/resources/users.rng');
         $this->xml_validator->validate($xml_element, $rng_path);
 
         return $this->convertToXml($xml_element);

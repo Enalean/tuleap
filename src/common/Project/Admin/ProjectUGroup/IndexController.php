@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use CSRFSynchronizerToken;
-use ForgeConfig;
 use PFUser;
 use ProjectUGroup;
 use TemplateRendererFactory;
@@ -59,7 +58,7 @@ class IndexController
 
         $this->displayHeader($ugroup);
         TemplateRendererFactory::build()
-            ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/')
+            ->getRenderer(__DIR__ . '/../../../../templates/project/admin/')
             ->renderToPage(
                 'ugroup-settings',
                 $presenter

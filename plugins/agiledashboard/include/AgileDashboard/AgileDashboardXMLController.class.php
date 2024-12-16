@@ -149,7 +149,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
             return;
         }
 
-        $rng_path = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
+        $rng_path = realpath(__DIR__ . '/../../../../src/common/xml/resources/project/project.rng');
 
         $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml->asXml());
         $this->external_field_extractor->extractExternalFieldFromProjectElement($partial_element);

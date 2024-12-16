@@ -100,7 +100,7 @@ $presenter = new \Tuleap\Admin\MassmailPresenter(
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderAPresenter(
     $title,
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/global-utils/',
+    __DIR__ . '/../../templates/admin/global-utils/',
     'massmail',
     $presenter
 );

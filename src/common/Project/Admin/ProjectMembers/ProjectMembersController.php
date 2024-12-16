@@ -28,7 +28,6 @@ use ArtifactTypeFactory;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use Project;
@@ -262,7 +261,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $title = _('Members');
 
         $project_members_list = $this->getFormattedProjectMembers($project);
-        $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project/members';
+        $template_path        = __DIR__ . '/../../../../templates/project/members';
         $renderer             = TemplateRendererFactory::build()->getRenderer($template_path);
         $user_locale          = $request->getCurrentUser()->getLocale();
         $additional_modals    = new ProjectMembersAdditionalModalCollectionPresenter(

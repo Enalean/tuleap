@@ -869,7 +869,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         );
         $presenter = $builder->buildPresenter($event);
 
-        $templates_dir = ForgeConfig::get('tuleap_dir') . '/plugins/mediawiki/templates/';
+        $templates_dir = __DIR__ . '/../templates/';
         $content       = TemplateRendererFactory::build()
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $presenter);

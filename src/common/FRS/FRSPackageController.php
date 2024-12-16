@@ -22,7 +22,6 @@ namespace Tuleap\FRS;
 
 require_once __DIR__ . '/../../www/file/file_utils.php';
 
-use ForgeConfig;
 use FRSPackage;
 use FRSPackageFactory;
 use FRSReleaseFactory;
@@ -227,6 +226,6 @@ class FRSPackageController
 
     private function getTemplateDir()
     {
-        return ForgeConfig::get('codendi_dir') . '/src/templates/frs';
+        return __DIR__ . '/../../templates/frs';
     }
 }

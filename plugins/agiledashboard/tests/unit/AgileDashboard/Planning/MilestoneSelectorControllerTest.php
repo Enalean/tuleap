@@ -24,14 +24,12 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Codendi_Request;
 use EventManager;
-use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
 use Planning_MilestoneSelectorController;
 use Planning_NoMilestone;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -40,7 +38,6 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class MilestoneSelectorControllerTest extends TestCase
 {
-    use ForgeConfigSandbox;
     use GlobalResponseMock;
 
     private int $current_milestone_artifact_id;
@@ -49,7 +46,6 @@ final class MilestoneSelectorControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
         $planning_id   = '321';
         $user          = UserTestBuilder::buildWithDefaults();
         $this->request = new Codendi_Request(['planning_id' => $planning_id]);

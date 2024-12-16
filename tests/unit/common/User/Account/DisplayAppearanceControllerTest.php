@@ -43,7 +43,7 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private DisplayAppearanceController $controller;
     private MockObject&AppearancePresenterBuilder $appearance_builder;
-    private CSRFSynchronizerToken&MockObject $csrf_token;
+    private CSRFSynchronizerToken $csrf_token;
 
     public function setUp(): void
     {
@@ -57,7 +57,8 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $GLOBALS['Language']->method('gettext')->with('system', 'datefmt_short')->willReturn('d/m/Y');
 
         $this->appearance_builder = $this->createMock(AppearancePresenterBuilder::class);
-        $this->csrf_token         = $this->createMock(CSRFSynchronizerToken::class);
+        $csrf_storage             = [];
+        $this->csrf_token         = new CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage);
 
         $this->controller = new DisplayAppearanceController(
             $event_manager,
@@ -88,7 +89,7 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willReturn(
                 new AppearancePresenter(
                     $this->csrf_token,
-                    $this->createMock(AccountTabPresenterCollection::class),
+                    new AccountTabPresenterCollection($user, 'href'),
                     [],
                     [],
                     true,

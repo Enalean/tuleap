@@ -83,7 +83,6 @@ final class SystemEventProcessorRootTest extends TestCase
             ])
             ->getMock();
 
-        ForgeConfig::set('codendi_dir', '/usr/share/codendi');
         ForgeConfig::set('sys_http_user', $this->sys_http_user);
     }
 

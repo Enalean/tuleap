@@ -19,7 +19,6 @@
 */
 namespace Tuleap\News\Admin;
 
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 
@@ -55,7 +54,7 @@ class AdminNewsController
         $title = $GLOBALS['Language']->getText('news_admin_index', 'title');
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/news/',
+            __DIR__ . '/../../../templates/admin/news/',
             'admin-news',
             $presenter
         );
@@ -68,7 +67,7 @@ class AdminNewsController
         $title = $GLOBALS['Language']->getText('news_admin_index', 'title');
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/news/',
+            __DIR__ . '/../../../templates/admin/news/',
             'admin-news',
             $presenter
         );
@@ -81,7 +80,7 @@ class AdminNewsController
         $title = $GLOBALS['Language']->getText('news_admin_index', 'title');
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/news/',
+            __DIR__ . '/../../../templates/admin/news/',
             'admin-news',
             $presenter
         );
@@ -98,7 +97,7 @@ class AdminNewsController
         $presenter = $this->admin_news_builder->getNewsDetailsPresenter($result, $current_tab);
         $this->admin_page_renderer->renderAPresenter(
             $presenter->title,
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/news/',
+            __DIR__ . '/../../../templates/admin/news/',
             'admin-news-details',
             $presenter
         );

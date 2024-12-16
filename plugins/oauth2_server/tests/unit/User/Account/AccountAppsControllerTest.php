@@ -87,7 +87,7 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->presenter_builder->expects(self::once())->method('build')
             ->with($user, self::isInstanceOf(CSRFSynchronizerTokenPresenter::class))
-            ->willReturn(new AppsPresenter($csrf_presenter, $this->createMock(AccountTabPresenterCollection::class)));
+            ->willReturn(new AppsPresenter($csrf_presenter, new AccountTabPresenterCollection($user, 'href')));
 
         $response = $this->controller->handle(
             (new NullServerRequest())->withAttribute(BaseLayout::class, LayoutBuilder::build())

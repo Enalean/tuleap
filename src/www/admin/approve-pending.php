@@ -90,7 +90,7 @@ $presenter = new ProjectPendingPresenter($project_list, $csrf_token);
 
 $siteadmin->renderAPresenter(
     $GLOBALS['Language']->getText('admin_approve_pending', 'title'),
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+    __DIR__ . '/../../templates/admin/projects/',
     'project-pending',
     $presenter
 );

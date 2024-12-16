@@ -133,9 +133,9 @@ class SvnAdmin
                 $repository->getProject(),
                 $repository->getSystemPath(),
                 true,
-                ForgeConfig::get('tuleap_dir') . '/plugins/svn/bin/',
+                realpath(__DIR__ . '/../../bin/'),
                 'svn_post_commit.php',
-                ForgeConfig::get('tuleap_dir') . '/src/utils/php-launcher.sh',
+                realpath(__DIR__ . '/../../../../src/utils/php-launcher.sh'),
                 'svn_pre_commit.php'
             );
 

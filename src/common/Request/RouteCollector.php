@@ -1293,7 +1293,7 @@ class RouteCollector
             $invitation_instrumentation
         );
         $mail_renderer              = $renderer_factory->getRenderer(
-            \ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+            __DIR__ . '/../../templates/mail/'
         );
 
 

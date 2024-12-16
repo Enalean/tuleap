@@ -21,7 +21,6 @@ namespace Tuleap\Project\REST\v1;
 
 use BackendLogger;
 use EventManager;
-use ForgeConfig;
 use Luracast\Restler\RestException;
 use MailPresenterFactory;
 use PaginatedWikiPagesFactory;
@@ -442,7 +441,7 @@ class ProjectResource extends AuthenticatedResource
             new TuleapRegisterMail(
                 new MailPresenterFactory(),
                 TemplateRendererFactory::build()->getRenderer(
-                    ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+                    __DIR__ . '/../../../../templates/mail/'
                 ),
                 UserManager::instance(),
                 new LocaleSwitcher(),

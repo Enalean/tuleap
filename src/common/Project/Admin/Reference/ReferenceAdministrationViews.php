@@ -22,7 +22,6 @@
 namespace Tuleap\Project\Admin\Reference;
 
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use ReferenceManager;
 use TemplateRendererFactory;
@@ -109,7 +108,7 @@ class ReferenceAdministrationViews extends Views
             $user
         );
 
-        $template_path = ForgeConfig::get('tuleap_dir') . '/src/templates/admin';
+        $template_path = __DIR__ . '/../../../../templates/admin';
         echo $this->renderer_factory->getRenderer($template_path)->renderToString('add-reference', $presenter);
     }
 
@@ -146,7 +145,7 @@ class ReferenceAdministrationViews extends Views
             $ref,
         );
 
-        $template_path = ForgeConfig::get('tuleap_dir') . '/src/templates/admin';
+        $template_path = __DIR__ . '/../../../../templates/admin';
         echo $this->renderer_factory->getRenderer($template_path)->renderToString('edit-reference', $presenter);
     }
 }

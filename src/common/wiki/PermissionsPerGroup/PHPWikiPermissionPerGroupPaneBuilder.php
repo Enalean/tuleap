@@ -20,7 +20,6 @@
 
 namespace Tuleap\PHPWiki\PermissionsPerGroup;
 
-use ForgeConfig;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
@@ -83,7 +82,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
             $ugroup
         );
 
-        $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/wiki/';
+        $templates_dir = __DIR__ . '/../../../templates/wiki/';
 
         return $this->template_renderer_factory
             ->getRenderer($templates_dir)

@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
@@ -151,7 +150,7 @@ class UserDashboardController
             ->build()
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
+            __DIR__ . '/../../../templates/dashboard'
         );
         $renderer->renderToPage(
             'my',

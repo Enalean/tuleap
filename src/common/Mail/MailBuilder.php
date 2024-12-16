@@ -39,7 +39,7 @@ class MailBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         MailFilter $mail_filter,
     ) {
         $this->renderer = $template_factory->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/mail/truncated'
+            __DIR__ . '/../../templates/mail/truncated'
         );
 
         $this->mail_filter = $mail_filter;

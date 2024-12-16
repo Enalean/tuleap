@@ -110,7 +110,7 @@ if (TrackerV3::instance()->available()) {
 
     $tv3_presenter = new ArtifactPendingDeletionPresenter($tracker_list);
     $renderer->renderToPage(
-        ForgeConfig::get('codendi_dir') . '/src/templates/admin/trackers',
+        __DIR__ . '/../../../templates/admin/trackers',
         'pending-trackers-deletion',
         $tv3_presenter
     );

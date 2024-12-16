@@ -153,7 +153,7 @@ class ProjectDetailsController
 
         $this->displayHeader($title, $project);
 
-        $template_path = ForgeConfig::get('tuleap_dir') . '/src/templates/project';
+        $template_path = __DIR__ . '/../../../../templates/project';
 
         $project_id                        = $project->getID();
         $group_info                        = $this->project_details_dao->searchGroupInfo($project_id);

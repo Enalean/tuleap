@@ -20,7 +20,6 @@
 
 namespace Tuleap\Widget;
 
-use ForgeConfig;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
@@ -53,7 +52,7 @@ class ProjectHeartbeat extends Widget
     public function getContent()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('tuleap_dir') . '/src/templates/widgets'
+            __DIR__ . '/../../templates/widgets'
         );
 
         $request = HTTPRequest::instance();

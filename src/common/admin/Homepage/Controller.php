@@ -138,7 +138,7 @@ class Admin_Homepage_Controller
 
     private function getTemplateDir()
     {
-        return ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
+        return __DIR__ . '/../../../templates/homepage/';
     }
 
     /**

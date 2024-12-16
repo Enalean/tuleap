@@ -21,7 +21,6 @@
 
 namespace Tuleap\Error;
 
-use ForgeConfig;
 use Project;
 use TemplateRendererFactory;
 use ThemeManager;
@@ -62,7 +61,7 @@ class PermissionDeniedPrivateProjectController
         $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Project access error')));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/error/'
+            __DIR__ . '/../../templates/error/'
         );
 
         $this->dependencies_injector->includeJavascriptDependencies($layout);

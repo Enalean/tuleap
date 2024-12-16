@@ -124,7 +124,7 @@ class ForgeAccess_AdminController
 
     private function getTemplateDir()
     {
-        return ForgeConfig::get('codendi_dir') . '/src/templates/admin/anonymous/';
+        return __DIR__ . '/../../templates/admin/anonymous/';
     }
 
     private function redirectToIndex()

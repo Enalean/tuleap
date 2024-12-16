@@ -46,10 +46,11 @@ final class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
+        $csrf_storage     = [];
         $this->controller = new DisplayEditionController(
             $event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $this->createMock(CSRFSynchronizerToken::class)
+            new CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage)
         );
     }
 

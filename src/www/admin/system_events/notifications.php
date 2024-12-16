@@ -160,7 +160,7 @@ $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
     $title,
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/system_events/',
+    __DIR__ . '/../../../templates/admin/system_events/',
     'notifications',
     new \Tuleap\SystemEvent\NotificationsPresenter(
         $title,

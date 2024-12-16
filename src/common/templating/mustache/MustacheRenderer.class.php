@@ -35,7 +35,7 @@ class MustacheRenderer extends TemplateRenderer
     {
         $templates_directories = (array) $plugin_templates_dir;
 
-        $common_templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/common/';
+        $common_templates_dir = __DIR__ . '/../../../templates/common/';
         if (is_dir($common_templates_dir)) {
             $templates_directories[] = $common_templates_dir;
         }

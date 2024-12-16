@@ -22,17 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\User\XML;
 
-use ForgeConfig;
 use PFUser;
-use Tuleap\ForgeConfigSandbox;
 use UserXMLExportedCollection;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
 final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForgeConfigSandbox;
-
     private UserXMLExportedCollection $collection;
     private PFUser $a_user;
     private PFUser $another_user;
@@ -41,7 +37,6 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        ForgeConfig::set('tuleap_dir', __DIR__ . '/../../../../../');
 
         $this->a_user = new PFUser(
             [

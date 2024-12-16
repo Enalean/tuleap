@@ -136,7 +136,7 @@ $project_list_presenter = new ProjectListPresenter(
 $admin_page = new AdminPageRenderer();
 $admin_page->renderAPresenter(
     $Language->getText('admin_projectlist', 'title'),
-    ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+    __DIR__ . '/../../templates/admin/projects/',
     'projectlist',
     $project_list_presenter
 );

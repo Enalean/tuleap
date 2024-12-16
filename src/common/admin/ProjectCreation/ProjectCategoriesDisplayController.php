@@ -21,7 +21,6 @@
 
 namespace Tuleap\Admin\ProjectCreation;
 
-use ForgeConfig;
 use HTTPRequest;
 use TroveCatDao;
 use Tuleap\Admin\AdminPageRenderer;
@@ -72,7 +71,7 @@ class ProjectCategoriesDisplayController implements DispatchableWithRequest
         $admin_renderer = new AdminPageRenderer();
         $admin_renderer->renderANoFramedPresenter(
             $GLOBALS['Language']->getText('admin_trove_cat_list', 'title'),
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects',
+            __DIR__ . '/../../../templates/admin/projects',
             'trovecatlist',
             $presenter
         );

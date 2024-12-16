@@ -93,7 +93,7 @@ abstract class MVC2_Controller
 
     protected function getTemplatesDir()
     {
-        return ForgeConfig::get('codendi_dir') . '/src/templates/' . $this->base_name;
+        return __DIR__ . '/../../templates/' . $this->base_name;
     }
 
     protected function render($template_name, $presenter)

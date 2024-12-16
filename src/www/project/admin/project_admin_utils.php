@@ -45,7 +45,7 @@ function project_admin_header(string $title, string $current_pane_shortname): vo
 function project_admin_footer($params)
 {
     TemplateRendererFactory::build()
-        ->getRenderer(ForgeConfig::get('tuleap_dir') . '/src/templates/project')
+        ->getRenderer(__DIR__ . '/../../../templates/project')
         ->renderToPage('end-project-admin-content', []);
     site_project_footer($params);
 }
@@ -263,7 +263,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
         $forwardSubEvents = '&event=' . $event;
     }
 
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/project/');
 
     //Event select Box
     $events = [
