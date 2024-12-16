@@ -22,19 +22,19 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
 interface SaveOneSection
 {
     /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
-     * @throws AlreadyExistingSectionWithSameFreetextException
+     * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): SectionIdentifier;
+    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): Ok|Err;
 
     /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
-     * @throws AlreadyExistingSectionWithSameFreetextException
-     * @throws UnableToFindSiblingSectionException
+     * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): SectionIdentifier;
+    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): Ok|Err;
 }

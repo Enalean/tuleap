@@ -26,12 +26,11 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DBFactory;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class SaveSectionDaoTest extends TestIntegrationTestCase
@@ -87,11 +86,12 @@ final class SaveSectionDaoTest extends TestIntegrationTestCase
             ContentToInsert::fromArtifactId(1003),
         );
 
-        $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
-        $dao->saveSectionAtTheEnd(
+        $result = $dao->saveSectionAtTheEnd(
             $this->artidoc_101,
             ContentToInsert::fromArtifactId(1001),
         );
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(AlreadyExistingSectionWithSameArtifactFault::class, $result->error);
     }
 
     public function testSaveSectionBefore(): void
@@ -102,16 +102,20 @@ final class SaveSectionDaoTest extends TestIntegrationTestCase
             $dao->saveSectionAtTheEnd(
                 $this->artidoc_101,
                 ContentToInsert::fromArtifactId(1001),
-            ),
+            )->unwrapOr(null),
             $dao->saveSectionAtTheEnd(
                 $this->artidoc_101,
                 ContentToInsert::fromArtifactId(1002),
-            ),
+            )->unwrapOr(null),
             $dao->saveSectionAtTheEnd(
                 $this->artidoc_101,
                 ContentToInsert::fromArtifactId(1003),
-            ),
+            )->unwrapOr(null),
         ];
+
+        self::assertNotNull($uuid_1);
+        self::assertNotNull($uuid_2);
+        self::assertNotNull($uuid_3);
 
         $dao->saveSectionBefore(
             $this->artidoc_101,
@@ -140,7 +144,7 @@ final class SaveSectionDaoTest extends TestIntegrationTestCase
             $dao->saveSectionAtTheEnd(
                 $this->artidoc_101,
                 ContentToInsert::fromArtifactId(1001),
-            ),
+            )->unwrapOr(null),
             $dao->saveSectionAtTheEnd(
                 $this->artidoc_101,
                 ContentToInsert::fromArtifactId(1002),
@@ -151,12 +155,15 @@ final class SaveSectionDaoTest extends TestIntegrationTestCase
             ),
         ];
 
-        $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
-        $dao->saveSectionBefore(
+        self::assertNotNull($uuid_1);
+
+        $result = $dao->saveSectionBefore(
             $this->artidoc_101,
             ContentToInsert::fromArtifactId(1003),
             $uuid_1,
         );
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(AlreadyExistingSectionWithSameArtifactFault::class, $result->error);
     }
 
     public function testSaveSectionBeforeUnknownSectionWillRaiseAnException(): void
@@ -171,22 +178,25 @@ final class SaveSectionDaoTest extends TestIntegrationTestCase
             $dao->saveSectionAtTheEnd(
                 $this->artidoc_101,
                 ContentToInsert::fromArtifactId(1002),
-            ),
+            )->unwrapOr(null),
             $dao->saveSectionAtTheEnd(
                 $this->artidoc_101,
                 ContentToInsert::fromArtifactId(1003),
             ),
         ];
 
+        self::assertNotNull($uuid_2);
+
         // remove section linked to artifact #1002
         $this->createArtidocSections($dao, $this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1003));
 
-        $this->expectException(UnableToFindSiblingSectionException::class);
-        $dao->saveSectionBefore(
+        $result = $dao->saveSectionBefore(
             $this->artidoc_101,
             ContentToInsert::fromArtifactId(1004),
             $uuid_2,
         );
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(UnableToFindSiblingSectionFault::class, $result->error);
     }
 
     private function getDao(): SaveSectionDao

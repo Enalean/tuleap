@@ -22,13 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Domain\Document\Section;
 
+use Tuleap\Artidoc\Adapter\Document\Section\AlreadyExistingSectionWithSameArtifactFault;
+use Tuleap\Artidoc\Adapter\Document\Section\UnableToFindSiblingSectionFault;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\SaveOneSection;
-use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 final class SaveOneSectionStub implements SaveOneSection
 {
@@ -47,8 +51,10 @@ final class SaveOneSectionStub implements SaveOneSection
     /**
      * @param-param self::EXCEPTION_*|SectionIdentifierFactory $identifier_factory
      */
-    private function __construct(private string|SectionIdentifierFactory $identifier_factory, private string $id)
-    {
+    private function __construct(
+        private readonly string|SectionIdentifierFactory $identifier_factory,
+        private readonly string $id,
+    ) {
     }
 
     public static function withGeneratedSectionId(SectionIdentifierFactory $identifier_factory, string $id): self
@@ -81,34 +87,38 @@ final class SaveOneSectionStub implements SaveOneSection
         return $this->saved_before[$id];
     }
 
-    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): SectionIdentifier
+    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): Ok|Err
     {
-        $this->raiseExceptionIfNeeded();
+        return $this->getSectionIdentifierFactory()
+            ->map(function (SectionIdentifierFactory $identifier_factory) use ($artidoc, $content) {
+                $this->saved_end[$artidoc->document->getId()] = $content;
 
-        $this->saved_end[$artidoc->document->getId()] = $content;
-
-        return $this->identifier_factory->buildFromHexadecimalString($this->id);
+                return $identifier_factory->buildFromHexadecimalString($this->id);
+            });
     }
 
-    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): SectionIdentifier
+    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): Ok|Err
     {
-        $this->raiseExceptionIfNeeded();
+        return $this->getSectionIdentifierFactory()
+            ->map(function (SectionIdentifierFactory $identifier_factory) use ($artidoc, $content) {
+                $this->saved_before[$artidoc->document->getId()] = $content;
 
-        $this->saved_before[$artidoc->document->getId()] = $content;
-
-        return $this->identifier_factory->buildFromHexadecimalString($this->id);
+                return $identifier_factory->buildFromHexadecimalString($this->id);
+            });
     }
 
     /**
-     * @psalm-assert SectionIdentifierFactory $this->identifier_factory
+     * @return Ok<SectionIdentifierFactory>|Err<Fault>
      */
-    private function raiseExceptionIfNeeded(): void
+    private function getSectionIdentifierFactory(): Ok|Err
     {
         if (! $this->identifier_factory instanceof SectionIdentifierFactory) {
-            throw match ($this->identifier_factory) {
-                self::EXCEPTION_ALREADY_EXISTING_ARTIFACT => new AlreadyExistingSectionWithSameArtifactException(),
-                self::EXCEPTION_NO_SIBLING_SECTION => new UnableToFindSiblingSectionException(),
-            };
+            return Result::err(match ($this->identifier_factory) {
+                self::EXCEPTION_ALREADY_EXISTING_ARTIFACT => AlreadyExistingSectionWithSameArtifactFault::build(),
+                self::EXCEPTION_NO_SIBLING_SECTION => UnableToFindSiblingSectionFault::build(),
+            });
         }
+
+        return Result::ok($this->identifier_factory);
     }
 }

@@ -48,17 +48,27 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
             new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
-        $this->uuid_intro = $save_dao->saveSectionAtTheEnd(
+        $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
             ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum')),
+        )->match(
+            function (SectionIdentifier $identifier) {
+                $this->uuid_intro = $identifier;
+            },
+            static fn () => self::fail(),
         );
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
             ContentToInsert::fromArtifactId(1001),
         );
-        $this->uuid_2 = $save_dao->saveSectionAtTheEnd(
+        $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
             ContentToInsert::fromArtifactId(1002),
+        )->match(
+            function (SectionIdentifier $identifier) {
+                $this->uuid_2 = $identifier;
+            },
+            static fn () => self::fail(),
         );
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
