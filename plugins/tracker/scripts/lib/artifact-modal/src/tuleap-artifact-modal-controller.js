@@ -72,6 +72,7 @@ import { StaticOpenListFieldController } from "./adapters/UI/fields/open-list-fi
 import { UserGroupOpenListFieldController } from "./adapters/UI/fields/open-list-field/user-groups/UserGroupOpenListFieldController";
 import { LinkFieldAPIClient } from "./adapters/REST/fields/link-field/LinkFieldAPIClient";
 import { ArtifactCreationAPIClient } from "./adapters/REST/fields/link-field/creation/ArtifactCreationAPIClient";
+import { FormattedTextUserPreferences } from "./domain/common/FormattedTextUserPreferences";
 
 export default ArtifactModalController;
 
@@ -260,7 +261,7 @@ function ArtifactModalController(
             return FormattedTextController(
                 event_dispatcher,
                 api_client,
-                modal_model.text_fields_format,
+                FormattedTextUserPreferences.build(modal_model.text_fields_format, user_locale),
             );
         },
         getStaticOpenListFieldController: (field) => {

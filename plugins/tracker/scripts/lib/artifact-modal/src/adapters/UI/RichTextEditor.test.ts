@@ -25,6 +25,7 @@ import type {
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
@@ -48,6 +49,7 @@ import { FormattedTextController } from "../../domain/common/FormattedTextContro
 import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 import type { FileUploadSetup } from "../../domain/fields/file-field/FileUploadSetup";
 import { InterpretCommonMarkStub } from "../../../tests/stubs/InterpretCommonMarkStub";
+import { FormattedTextUserPreferences } from "../../domain/common/FormattedTextUserPreferences";
 
 type CKEditorEventHandler = (event: CKEDITOR.eventInfo) => void;
 
@@ -171,7 +173,7 @@ describe(`RichTextEditor`, () => {
             controller: FormattedTextController(
                 event_dispatcher,
                 InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
-                TEXT_FORMAT_TEXT,
+                FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, en_US_LOCALE),
             ),
         } as HostElement);
     }

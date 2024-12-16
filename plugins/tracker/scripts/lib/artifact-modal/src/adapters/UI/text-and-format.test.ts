@@ -19,6 +19,7 @@
 
 import { Fault } from "@tuleap/fault";
 import { selectOrThrow } from "@tuleap/dom";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import type { HostElement, TextAndFormat, TextAndFormatOptions } from "./text-and-format";
 import { getTextAndFormatTemplate, interpretCommonMark, isDisabled } from "./text-and-format";
@@ -27,6 +28,7 @@ import { FormattedTextController } from "../../domain/common/FormattedTextContro
 import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 import type { InterpretCommonMark } from "../../domain/common/InterpretCommonMark";
 import { InterpretCommonMarkStub } from "../../../tests/stubs/InterpretCommonMarkStub";
+import { FormattedTextUserPreferences } from "../../domain/common/FormattedTextUserPreferences";
 
 const noop = (): void => {
     //Do nothing
@@ -67,7 +69,7 @@ describe(`TextAndFormat`, () => {
             controller: FormattedTextController(
                 DispatchEventsStub.buildNoOp(),
                 interpreter,
-                TEXT_FORMAT_TEXT,
+                FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, en_US_LOCALE),
             ),
         } as HostElement;
         return Object.assign(element, host);
