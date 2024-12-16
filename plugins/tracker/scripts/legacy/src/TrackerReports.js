@@ -553,6 +553,7 @@ document.observe("dom:loaded", function () {
                 var masschange_button = new Element("div", { className: "btn-group" }).update(
                     new Element("a", {
                         href: "#masschange",
+                        "data-test": "masschange-button",
                     })
                         .addClassName("btn btn-mini")
                         .observe("click", function (evt) {

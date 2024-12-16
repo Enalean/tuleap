@@ -597,7 +597,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanUpdate()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html    .= '<div class="field-masschange ' . $this->getClassNames([], false) . '">';
+            $html    .= '<div data-test="field-masschange" class="field-masschange ' . $this->getClassNames([], false) . '">';
             $html    .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
 
             $html .= $this->fetchSubmitValueMasschange();

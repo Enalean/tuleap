@@ -49,6 +49,7 @@
               cols="80"
               name="artifact_masschange_followup_comment"
               id="artifact_masschange_followup_comment"
+              data-test="masschange-new-comment"
               data-project-id="{{ project_id }}"
             >{{ default_comment }}</textarea>
             {{# has_notifications }}
@@ -60,7 +61,7 @@
         </div>
         <br />
 
-        <input class="btn btn-primary masschange-submit" type="submit" value="{{ masschange_submit }}"/>
+        <input class="btn btn-primary masschange-submit" data-test="masschange-submit" type="submit" value="{{ masschange_submit }}"/>
     </form>
 
     {{{ javascript_rules }}}
