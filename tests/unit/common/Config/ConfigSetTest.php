@@ -106,7 +106,7 @@ final class ConfigSetTest extends TestCase
                 return $this->metadata[$key];
             }
 
-            public function getKeysThatCanBeModified(): array
+            public function getKeysThatCanBeModifiedWithConfigSet(): array
             {
                 return [];
             }

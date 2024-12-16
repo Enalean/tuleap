@@ -129,22 +129,16 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
     /**
      * @return string[]
      */
-    public function getKeysThatCanBeModified(): array
+    public function getKeysThatCanBeModifiedWithConfigSet(): array
     {
         $this->initWhiteList();
         $keys = [];
         foreach ($this->white_listed_keys as $key => $metadata) {
-            if ($metadata->can_be_modified) {
+            if ($metadata->can_be_modified instanceof ConfigKeyModifierDatabase) {
                 $keys[] = $key;
             }
         }
         return $keys;
-    }
-
-    public function canBeModified(string $key): bool
-    {
-        $this->initWhiteList();
-        return isset($this->white_listed_keys[$key]) && $this->white_listed_keys[$key]->can_be_modified;
     }
 
     /**
@@ -190,7 +184,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         foreach ($reflected_class->getReflectionConstants(\ReflectionClassConstant::IS_PUBLIC) as $const) {
             $key               = '';
             $summary           = '';
-            $can_be_modified   = true;
+            $can_be_modified   = new ConfigKeyModifierDatabase();
             $is_secret         = false;
             $is_hidden         = false;
             $has_default_value = false;
@@ -212,8 +206,11 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
                         $summary = $attribute_object->summary;
                     }
                 }
-                if ($attribute_object instanceof ConfigCannotBeModifiedInterface) {
-                    $can_be_modified = false;
+                if ($attribute_object instanceof ConfigCannotBeModifiedYet) {
+                    $can_be_modified = new ConfigKeyModifierFile($attribute_object->path_to_file);
+                }
+                if ($attribute_object instanceof ConfigCannotBeModified) {
+                    $can_be_modified = new ConfigKeyNoModifier();
                 }
                 if ($attribute_object instanceof ConfigKeySecret) {
                     $is_secret = true;

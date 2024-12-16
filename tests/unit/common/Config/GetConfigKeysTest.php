@@ -44,7 +44,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(
             new ConfigKeyMetadata(
                 'Is project creation allowed to regular users (1) or not (0)',
-                true,
+                new ConfigKeyModifierDatabase(),
                 false,
                 false,
                 true,
@@ -67,7 +67,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $get_config_keys = new GetConfigKeys();
         $get_config_keys->addConfigClass($class::class);
 
-        self::assertFalse($get_config_keys->getSortedKeysWithMetadata()['foo']->can_be_modified);
+        self::assertInstanceOf(ConfigKeyNoModifier::class, $get_config_keys->getSortedKeysWithMetadata()['foo']->can_be_modified);
     }
 
     public function testCannotBeModifiedAttributeDependsOnConfigKey(): void
@@ -88,7 +88,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $get_config_keys = new GetConfigKeys();
 
-        self::assertContains('sys_use_project_registration', $get_config_keys->getKeysThatCanBeModified());
+        self::assertContains('sys_use_project_registration', $get_config_keys->getKeysThatCanBeModifiedWithConfigSet());
     }
 
     public function testGetKeysThatCanBeModifiedDoesntListKeysThatCannotBeModified(): void
@@ -102,14 +102,14 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $get_config_keys = new GetConfigKeys();
         $get_config_keys->addConfigClass($class::class);
 
-        self::assertNotContains('foo', $get_config_keys->getKeysThatCanBeModified());
+        self::assertNotContains('foo', $get_config_keys->getKeysThatCanBeModifiedWithConfigSet());
     }
 
     public function testCanBeModifiedWithAKeyThatCanBeModified(): void
     {
         $get_config_keys = new GetConfigKeys();
 
-        self::assertTrue($get_config_keys->canBeModified('sys_use_project_registration'));
+        self::assertInstanceOf(ConfigKeyModifierDatabase::class, $get_config_keys->getKeyMetadata('sys_use_project_registration')->can_be_modified);
     }
 
     public function testCanBeModifiedWithAKeyThatCannotBeModified(): void
@@ -123,7 +123,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $get_config_keys = new GetConfigKeys();
         $get_config_keys->addConfigClass($class::class);
 
-        self::assertFalse($get_config_keys->canBeModified('foo'));
+        self::assertInstanceOf(ConfigKeyNoModifier::class, $get_config_keys->getKeyMetadata('foo')->can_be_modified);
     }
 
     public function testDetectsIfConfigHasADefaultValue(): void

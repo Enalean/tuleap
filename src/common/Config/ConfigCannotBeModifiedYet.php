@@ -28,6 +28,9 @@ namespace Tuleap\Config;
  * because config-set only supports pure database backed config variables.
  */
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
-final class ConfigCannotBeModifiedYet implements ConfigCannotBeModifiedInterface
+final class ConfigCannotBeModifiedYet
 {
+    public function __construct(public string $path_to_file = '/etc/tuleap/conf/local.inc')
+    {
+    }
 }

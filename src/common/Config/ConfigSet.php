@@ -42,7 +42,7 @@ final class ConfigSet implements ConfigUpdater
     public function set(string $key, string|ConcealedString $value): void
     {
         $key_metadata = $this->config_keys->getKeyMetadata($key);
-        if (! $key_metadata->can_be_modified) {
+        if (! $key_metadata->can_be_modified instanceof ConfigKeyModifierDatabase) {
             throw new InvalidConfigKeyException($this->config_keys);
         }
 
