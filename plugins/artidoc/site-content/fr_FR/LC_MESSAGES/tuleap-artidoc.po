@@ -18,6 +18,10 @@ msgstr "Administration"
 msgid "Artidoc"
 msgstr "Artidoc"
 
+msgid "Artifact sections cannot be updated via this route."
+msgstr ""
+"Les sections d'artéfacts ne peuvent pas être mises à jour via cette route."
+
 msgid "Artifacts as Documents"
 msgstr "Artéfacts sous forme de Documents"
 

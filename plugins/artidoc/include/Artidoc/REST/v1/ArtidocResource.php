@@ -245,10 +245,7 @@ final class ArtidocResource extends AuthenticatedResource
         $this->getSectionOrderBuilder()
             ->build($order->ids, $order->direction, $order->compared_to)
             ->andThen(fn (SectionOrder $order) => $this->getReorderHandler($user)->reorder($id, $order))
-            ->match(
-                static function () {
-                    // nothing to do
-                },
+            ->mapErr(
                 static function (Fault $fault) use ($order) {
                     Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {
@@ -402,10 +399,7 @@ final class ArtidocResource extends AuthenticatedResource
         $user = UserManager::instance()->getCurrentUser();
         $this->getPutConfigurationHandler($user)
             ->handle($id, $configuration, $user)
-            ->match(
-                static function () {
-                    // nothing to do
-                },
+            ->mapErr(
                 function (Fault $fault) {
                     Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {

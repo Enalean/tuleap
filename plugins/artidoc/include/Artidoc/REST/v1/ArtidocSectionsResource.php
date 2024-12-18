@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\DeleteOneSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
+use Tuleap\Artidoc\Adapter\Document\Section\Freetext\UpdateFreetextContentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
@@ -42,10 +43,14 @@ use Tuleap\Artidoc\Domain\Document\Section\SectionRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\SectionDeletor;
+use Tuleap\Artidoc\Domain\Document\Section\SectionUpdater;
+use Tuleap\Artidoc\Domain\Document\Section\UnableToUpdateArtifactSectionFault;
+use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\RESTLogger;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -66,7 +71,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      */
     public function options(string $id): void
     {
-        Header::allowOptionsGetDelete();
+        Header::allowOptionsGetPutDelete();
     }
 
     /**
@@ -98,7 +103,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
 
         return $this->getSectionRetriever($user, $collector)
-            ->retrieveSection($section_id)
+            ->retrieveSectionUserCanRead($section_id)
             ->andThen(fn(RawSection $section) =>
                 $this->getSectionRepresentationBuilder()->getSectionRepresentation($section, $collector, $user))->match(
                     fn(SectionRepresentation $representation) => $representation,
@@ -107,6 +112,61 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                         throw new RestException(404);
                     },
                 );
+    }
+
+    /**
+     * Update section
+     *
+     * Update the content of a section (title, description)
+     *
+     * <p><b>Note:</b> Only freetext section can be updated via this route.
+     * To update an artifact section, you should use artifact dedicated route.
+     * </p>
+     *
+     * @url    PUT {id}
+     * @access hybrid
+     *
+     * @param string $id Uuid of the section
+     * @param PUTSectionRepresentation $content New content of the section {@from body}
+     *
+     * @status 200
+     * @throws RestException 404
+     */
+    public function put(string $id, PUTSectionRepresentation $content): void
+    {
+        $this->checkAccess();
+
+        try {
+            $section_id = $this->getSectionIdentifierFactory()->buildFromHexadecimalString($id);
+        } catch (InvalidSectionIdentifierStringException) {
+            throw new RestException(404);
+        }
+
+        $user      = UserManager::instance()->getCurrentUser();
+        $collector = new RequiredSectionInformationCollector(
+            $user,
+            new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance())
+        );
+
+        $updater = new SectionUpdater($this->getSectionRetriever($user, $collector), new UpdateFreetextContentDao());
+
+        $updater->update($section_id, $content->title, $content->description)
+            ->mapErr(
+                function (Fault $fault) {
+                    Fault::writeToLogger($fault, RESTLogger::getLogger());
+                    throw match (true) {
+                        $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
+                            403,
+                            dgettext('tuleap-artidoc', "You don't have permission to write the document.")
+                        ),
+                        $fault instanceof UnableToUpdateArtifactSectionFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'Artifact sections cannot be updated via this route.')
+                        ),
+                        default => new RestException(404),
+                    };
+                }
+            );
     }
 
     /**
