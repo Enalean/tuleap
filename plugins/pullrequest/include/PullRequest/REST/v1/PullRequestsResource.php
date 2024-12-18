@@ -1382,7 +1382,7 @@ class PullRequestsResource extends AuthenticatedResource
      */
     private function getGitoliteAccessURLGenerator()
     {
-        return new GitoliteAccessURLGenerator($this->git_plugin->getPluginInfo());
+        return new GitoliteAccessURLGenerator();
     }
 
     private function getPullRequestIsMergeableChecker(): PullRequestIsMergeableChecker

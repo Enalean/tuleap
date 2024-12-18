@@ -304,11 +304,9 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
         $driver             = \Mockery::spy(\Git_GitoliteDriver::class);
         $dao                = \Mockery::spy(GitDao::class);
         $permissionsManager = \Mockery::spy(\PermissionsManager::class);
-        $gitPlugin          = \Mockery::mock(GitPlugin::class);
         $backend            = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateExecutorStub(), \Mockery::spy(\Psr\Log\LoggerInterface::class));
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
-        $backend->setGitPlugin($gitPlugin);
         return $backend;
     }
 }

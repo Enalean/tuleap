@@ -33,10 +33,6 @@ use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\PullRequest\REST\v1\Authors\RepositoryPullRequestsAuthorsRepresentation;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Dao as PullRequestDao;
@@ -140,32 +136,20 @@ class RepositoryResource extends AuthenticatedResource
 
         $repository = $this->getRepositoryUserCanSee($id);
 
-        return $this->getGETHandler()
-            ->andThen(function ($get_handler) use ($repository, $query, $order, $limit, $offset) {
-                return $get_handler->handle($repository, $query, $order, $limit, $offset);
-            })
-            ->match(
-                function (RepositoryPullRequestRepresentation $representation) use ($limit, $offset) {
-                    Header::allowOptionsGet();
-                    $this->sendPaginationHeaders($limit, $offset, $representation->total_size);
+        return $this->getGETHandler()->handle($repository, $query, $order, $limit, $offset)->match(
+            function (RepositoryPullRequestRepresentation $representation) use ($limit, $offset) {
+                Header::allowOptionsGet();
+                $this->sendPaginationHeaders($limit, $offset, $representation->total_size);
 
-                    return $representation;
-                },
-                FaultMapper::mapToRestException(...)
-            );
+                return $representation;
+            },
+            FaultMapper::mapToRestException(...)
+        );
     }
 
-    /**
-     * @return Ok<GETHandler> | Err<Fault>
-     */
-    private function getGETHandler(): Ok|Err
+    private function getGETHandler(): GETHandler
     {
-        $git_plugin = \PluginFactory::instance()->getPluginByName('git');
-        if (! $git_plugin) {
-            return Result::err(Fault::fromMessage('Pullrequest plugin cannot find git plugin'));
-        }
-
-        $gitolite_access_URL_generator = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
+        $gitolite_access_URL_generator = new GitoliteAccessURLGenerator();
 
         $user_manager           = UserManager::instance();
         $pull_request_dao       = new PullRequestDao();
@@ -173,7 +157,7 @@ class RepositoryResource extends AuthenticatedResource
             new GitDao(),
             ProjectManager::instance()
         );
-        $get_handler            = new GETHandler(
+        return new GETHandler(
             new QueryToSearchCriteriaConverter(),
             $pull_request_dao,
             $user_manager,
@@ -199,8 +183,6 @@ class RepositoryResource extends AuthenticatedResource
             \pullrequestPlugin::getLogger(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
-
-        return Result::ok($get_handler);
     }
 
     /**
