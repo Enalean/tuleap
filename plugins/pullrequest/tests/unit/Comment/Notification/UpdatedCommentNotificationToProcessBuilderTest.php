@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Comment\Notification;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
@@ -35,6 +36,7 @@ use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
 
@@ -73,6 +75,7 @@ final class UpdatedCommentNotificationToProcessBuilderTest extends \Tuleap\Test\
             $this->user_helper,
             $this->html_url_builder,
             FormatNotificationContentStub::withDefault(),
+            new MentionedUserInTextRetriever(ProvideAndRetrieveUserStub::build($this->change_user)),
         );
         return $builder->getNotificationsToProcess($event);
     }

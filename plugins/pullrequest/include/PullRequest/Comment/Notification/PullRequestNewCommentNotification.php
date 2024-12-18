@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Comment\Notification;
 
 use PFUser;
 use TemplateRendererFactory;
+use Tuleap\Notification\Mention\MentionedUserCollection;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\FormatNotificationContent;
@@ -50,7 +51,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
      * @var array
      * @psalm-readonly
      */
-    private $owners;
+    private $recipients;
     /**
      * @var string
      * @psalm-readonly
@@ -63,18 +64,18 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
     private $enhanced_content;
 
     /**
-     * @param PFUser[] $owners_without_change_user
+     * @param PFUser[] $recipients
      */
     private function __construct(
         PullRequest $pull_request,
         string $change_user_display_name,
-        array $owners_without_change_user,
+        array $recipients,
         string $comment,
         NotificationEnhancedContent $enhanced_content,
     ) {
         $this->pull_request             = $pull_request;
         $this->change_user_display_name = $change_user_display_name;
-        $this->owners                   = $owners_without_change_user;
+        $this->recipients               = $recipients;
         $this->comment                  = $comment;
         $this->enhanced_content         = $enhanced_content;
     }
@@ -91,9 +92,10 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
         PFUser $change_user,
         array $owners,
         Comment $comment,
+        MentionedUserCollection $mentioned_user_collection,
     ): self {
         $change_user_display_name   = $user_helper->getDisplayNameFromUser($change_user) ?? '';
-        $owners_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners);
+        $owners_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners, ...$mentioned_user_collection->users);
 
         return new self(
             $pull_request,
@@ -128,7 +130,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
      */
     public function getRecipients(): array
     {
-        return $this->owners;
+        return $this->recipients;
     }
 
     /**

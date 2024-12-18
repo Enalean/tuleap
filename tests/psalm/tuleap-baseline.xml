@@ -14733,9 +14733,6 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/Gitolite/ConfigPermissionsSerializer.class.php">
-    <InvalidArgument>
-      <code><![CDATA[$template_dirs]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$etc_templates_path]]></code>
       <code><![CDATA[$hostname]]></code>
@@ -23819,12 +23816,6 @@
     <DeprecatedMethod>
       <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[[
-                dirname(__FILE__) . '/../templates',
-                ForgeConfig::get('codendi_dir') . '/src/templates/search',
-            ]]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$params]]></code>
@@ -27390,6 +27381,7 @@
                                     $git_repository_factory,
                                     $html_purifier,
                                 ),
+                                new MentionedUserInTextRetriever($user_manager),
                             )]]></code>
       <code><![CDATA[new PullRequestNewInlineCommentNotificationToProcessBuilder(
                                 $user_manager,
@@ -27499,6 +27491,7 @@
                                     $git_repository_factory,
                                     $html_purifier,
                                 ),
+                                new MentionedUserInTextRetriever($user_manager),
                             )]]></code>
       <code><![CDATA[new UpdatedInlineCommentNotificationToProcessBuilder(
                                 $user_manager,
@@ -44346,10 +44339,6 @@
       <code><![CDATA[$this]]></code>
       <code><![CDATA[$this]]></code>
       <code><![CDATA[$this]]></code>
-      <code><![CDATA[[
-                TRACKER_TEMPLATE_DIR . '/report',
-                ForgeConfig::get('codendi_dir') . '/src/templates/common',
-            ]]]></code>
     </InvalidArgument>
     <InvalidReturnStatement>
       <code><![CDATA[$new_from_where]]></code>
@@ -60465,11 +60454,6 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Search/SearchController.class.php">
-    <InvalidArgument>
-      <code><![CDATA[[
-                ForgeConfig::get('codendi_dir') . '/src/templates/search',
-            ]]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$redirect_to_services]]></code>
       <code><![CDATA[$results]]></code>

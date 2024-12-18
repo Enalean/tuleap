@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Comment\Notification;
 
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\FormatNotificationContent;
@@ -33,6 +34,9 @@ use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
+use Tuleap\User\RetrieveUserByUserName;
 use UserHelper;
 
 final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -41,11 +45,13 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
     use TemporaryTestDirectory;
 
     private PFUser $user_103;
+    private PFUser $change_user;
     private PullRequest $pull_request;
 
     protected function setUp(): void
     {
-        $this->user_103     = $this->buildUser(103);
+        $this->user_103     = UserTestBuilder::buildWithId(103);
+        $this->change_user  = UserTestBuilder::anActiveUser()->withId(102)->withUserName('UserA')->build();
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(14)->withTitle('PR title')->build();
     }
 
@@ -54,6 +60,7 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
         $notification = $this->buildNotification(
             CommentTestBuilder::aMarkdownComment('My comment')->build(),
             FormatNotificationContentStub::withDefault(),
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults()),
         );
 
         self::assertEqualsCanonicalizing([$this->user_103], $notification->getRecipients());
@@ -84,6 +91,7 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
         $notification = $this->buildNotification(
             CommentTestBuilder::aMarkdownComment('**My comment**')->build(),
             FormatNotificationContentStub::withFormattedContent('<em>My comment</em>'),
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults()),
         );
 
         self::assertEqualsCanonicalizing([$this->user_103], $notification->getRecipients());
@@ -109,23 +117,45 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
         );
     }
 
-    private function buildUser(int $user_id): PFUser
+    public function testNewCommentNotificationCanBeBuiltWithMentionedUsers(): void
     {
-        return new PFUser(['user_id' => $user_id, 'language_id' => 'en']);
+        $user_bob     = UserTestBuilder::anActiveUser()->withUserName('bob')->build();
+        $notification = $this->buildNotification(
+            CommentTestBuilder::aMarkdownComment('Hello @bob')->build(),
+            FormatNotificationContentStub::withFormattedContent('Hello <a href="https://example.com/users/bob">@bob</a>'),
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$user_bob]),
+        );
+
+        self::assertEqualsCanonicalizing([$this->user_103, $user_bob], $notification->getRecipients());
     }
 
-    private function buildNotification(Comment $comment, FormatNotificationContent $format_notification_content): PullRequestNewCommentNotification
+    public function testCommentCreatorIsRemovedFromRecipients(): void
     {
-        $change_user      = $this->buildUser(102);
-        $owners           = [$change_user, $this->user_103];
+        $notification = $this->buildNotification(
+            CommentTestBuilder::aMarkdownComment('Hello @UserA')->build(),
+            FormatNotificationContentStub::withFormattedContent('Hello <a href="https://example.com/users/UserA">@UserA</a>'),
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$this->change_user]),
+        );
+
+        self::assertEqualsCanonicalizing([$this->user_103], $notification->getRecipients());
+    }
+
+    private function buildNotification(
+        Comment $comment,
+        FormatNotificationContent $format_notification_content,
+        RetrieveUserByUserName $user_retriever,
+    ): PullRequestNewCommentNotification {
+        $owners           = [$this->change_user, $this->user_103];
         $user_helper      = $this->createMock(UserHelper::class);
         $html_url_builder = $this->createMock(HTMLURLBuilder::class);
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
-        $user_helper->method('getDisplayNameFromUser')->with($change_user)->willReturn('User A');
-        $user_helper->method('getAbsoluteUserURL')->with($change_user)->willReturn('https://example.com/users/usera');
+        $user_helper->method('getDisplayNameFromUser')->with($this->change_user)->willReturn('User A');
+        $user_helper->method('getAbsoluteUserURL')->with($this->change_user)->willReturn('https://example.com/users/usera');
         $html_url_builder->method('getAbsolutePullRequestOverviewUrl')->with($this->pull_request)->willReturn('https://example.com/pr-link');
+
+        $mentioned_user_retriever = new MentionedUserInTextRetriever($user_retriever);
 
         return PullRequestNewCommentNotification::fromOwnersAndComment(
             $user_helper,
@@ -133,9 +163,10 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
             new FilterUserFromCollection(),
             $format_notification_content,
             $this->pull_request,
-            $change_user,
+            $this->change_user,
             $owners,
             $comment,
+            $mentioned_user_retriever->getMentionedUsers($comment->getContent()),
         );
     }
 }
