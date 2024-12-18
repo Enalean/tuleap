@@ -18,117 +18,101 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite;
 
+use ForgeConfig;
+use GitPluginInfo;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class GitoliteAccessURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitoliteAccessURLGeneratorTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     protected function setUp(): void
     {
-        \ForgeConfig::store();
-        \ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_default_domain', 'example.com');
     }
 
-    protected function tearDown(): void
+    public function testGetSSHAccessTypeShouldUseGitoliteSshUser(): void
     {
-        \ForgeConfig::restore();
-    }
-
-    public function testGetSSHAccessTypeShouldUseGitoliteSshUser()
-    {
-        $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url');
+        $git_plugin_info = $this->createMock(GitPluginInfo::class);
+        $git_plugin_info->method('getPropertyValueForName')->with('git_ssh_url');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName');
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturns($project);
-        $repository->shouldReceive('getFullName');
+        $project    = ProjectTestBuilder::aProject()->build();
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->build();
 
         $url = $access_url_generator->getSSHURL($repository);
 
-        $this->assertMatchesRegularExpression('%^ssh://gitolite@%', $url);
+        self::assertMatchesRegularExpression('%^ssh://gitolite@%', $url);
     }
 
-    public function testGetAccessTypeShouldIncludesRepositoryFullName()
+    public function testGetAccessTypeShouldIncludesRepositoryFullName(): void
     {
-        $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url');
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_http_url')
-            ->andReturns('https://%server_name%/plugins/git');
+        $git_plugin_info = $this->createMock(GitPluginInfo::class);
+        $git_plugin_info->method('getPropertyValueForName')->willReturnOnConsecutiveCalls(null, 'https://%server_name%/plugins/git');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('gpig');
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturns($project);
-        $repository->shouldReceive('getFullName')->andReturns('u/johndoe/uber/bionic');
+        $project    = ProjectTestBuilder::aProject()->withUnixName('gpig')->build();
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->withName('u/johndoe/uber/bionic')->build();
 
         $ssh_url  = $access_url_generator->getSSHURL($repository);
         $http_url = $access_url_generator->getHTTPURL($repository);
 
-        $this->assertMatchesRegularExpression('%/gpig/u/johndoe/uber/bionic\.git$%', $ssh_url);
-        $this->assertMatchesRegularExpression('%/gpig/u/johndoe/uber/bionic\.git$%', $http_url);
+        self::assertMatchesRegularExpression('%/gpig/u/johndoe/uber/bionic\.git$%', $ssh_url);
+        self::assertMatchesRegularExpression('%/gpig/u/johndoe/uber/bionic\.git$%', $http_url);
     }
 
-    public function testSSHURLIsEmptyWhenParameterIsSetToEmpty()
+    public function testSSHURLIsEmptyWhenParameterIsSetToEmpty(): void
     {
-        $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url')->andReturns('');
+        $git_plugin_info = $this->createMock(GitPluginInfo::class);
+        $git_plugin_info->method('getPropertyValueForName')->with('git_ssh_url')->willReturn('');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 
-        $repository = \Mockery::mock(\GitRepository::class);
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->build();
         $ssh_url    = $access_url_generator->getSSHURL($repository);
 
-        $this->assertEquals('', $ssh_url);
+        self::assertEquals('', $ssh_url);
     }
 
-    public function testGetSSHAccessWorksWithCustomSSHURL()
+    public function testGetSSHAccessWorksWithCustomSSHURL(): void
     {
-        $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url')
-            ->andReturns('ssh://git@stuf.example.com:2222');
+        $git_plugin_info = $this->createMock(GitPluginInfo::class);
+        $git_plugin_info->method('getPropertyValueForName')->with('git_ssh_url')
+            ->willReturn('ssh://git@stuf.example.com:2222');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('gpig');
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturns($project);
-        $repository->shouldReceive('getFullName')->andReturns('bionic');
+        $project    = ProjectTestBuilder::aProject()->withUnixName('gpig')->build();
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->withName('bionic')->build();
 
         $url = $access_url_generator->getSSHURL($repository);
 
-        $this->assertEquals('ssh://git@stuf.example.com:2222/gpig/bionic.git', $url);
+        self::assertEquals('ssh://git@stuf.example.com:2222/gpig/bionic.git', $url);
     }
 
-    public function testServerNameIsReplaced()
+    public function testServerNameIsReplaced(): void
     {
-        $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url');
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_http_url')
-            ->andReturns('https://%server_name%/plugins/git');
+        $git_plugin_info = $this->createMock(GitPluginInfo::class);
+        $git_plugin_info->method('getPropertyValueForName')->willReturnOnConsecutiveCalls(null, 'https://%server_name%/plugins/git');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('gpig');
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturns($project);
-        $repository->shouldReceive('getFullName')->andReturns('u/johndoe/uber/bionic');
+        $project    = ProjectTestBuilder::aProject()->withUnixName('gpig')->build();
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->withName('u/johndoe/uber/bionic')->build();
 
         $ssh_url  = $access_url_generator->getSSHURL($repository);
         $http_url = $access_url_generator->getHTTPURL($repository);
 
-        $this->assertMatchesRegularExpression('%^ssh://gitolite@example.com%', $ssh_url);
-        $this->assertMatchesRegularExpression('%^https://example.com%', $http_url);
+        self::assertMatchesRegularExpression('%^ssh://gitolite@example.com%', $ssh_url);
+        self::assertMatchesRegularExpression('%^https://example.com%', $http_url);
     }
 }

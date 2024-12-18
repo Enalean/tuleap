@@ -18,27 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite\SSHKey;
 
+use Git_Exec;
 use Git_Gitolite_SSHKeyDumper;
 use Git_Gitolite_SSHKeyMassDumper;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
+use System_Command;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-class DumperFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DumperFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItBuildsGitoliteDumperIfTuleapDoesNotManageAuthorizedKeysFile()
+    public function testItBuildsGitoliteDumperIfTuleapDoesNotManageAuthorizedKeysFile(): void
     {
-        $management_detector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\ManagementDetector::class);
-        $management_detector->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturnFalse();
-        $authorized_keys_file_creator = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator::class);
-        $system_command               = \Mockery::spy(\System_Command::class);
-        $git_exec                     = \Mockery::spy(\Git_Exec::class);
-        $user_manager                 = \Mockery::spy(\UserManager::class);
-        $logger                       = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $management_detector = $this->createMock(ManagementDetector::class);
+        $management_detector->method('isAuthorizedKeysFileManagedByTuleap')->willReturn(false);
+        $authorized_keys_file_creator = $this->createMock(AuthorizedKeysFileCreator::class);
+        $system_command               = $this->createMock(System_Command::class);
+        $git_exec                     = $this->createMock(Git_Exec::class);
+        $user_manager                 = $this->createMock(UserManager::class);
+        $logger                       = new NullLogger();
 
         $dumper_factory = new DumperFactory(
             $management_detector,
@@ -50,19 +52,19 @@ class DumperFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $this->assertInstanceOf(Git_Gitolite_SSHKeyDumper::class, $dumper_factory->buildDumper());
-        $this->assertInstanceOf(Git_Gitolite_SSHKeyMassDumper::class, $dumper_factory->buildMassDumper());
+        self::assertInstanceOf(Git_Gitolite_SSHKeyDumper::class, $dumper_factory->buildDumper());
+        self::assertInstanceOf(Git_Gitolite_SSHKeyMassDumper::class, $dumper_factory->buildMassDumper());
     }
 
-    public function testItBuildsTuleapDumperIfTuleapManagesAuthorizedKeysFile()
+    public function testItBuildsTuleapDumperIfTuleapManagesAuthorizedKeysFile(): void
     {
-        $management_detector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\ManagementDetector::class);
-        $management_detector->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturnTrue();
-        $authorized_keys_file_creator = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator::class);
-        $system_command               = \Mockery::spy(\System_Command::class);
-        $git_exec                     = \Mockery::spy(\Git_Exec::class);
-        $user_manager                 = \Mockery::spy(\UserManager::class);
-        $logger                       = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $management_detector = $this->createMock(ManagementDetector::class);
+        $management_detector->method('isAuthorizedKeysFileManagedByTuleap')->willReturn(true);
+        $authorized_keys_file_creator = $this->createMock(AuthorizedKeysFileCreator::class);
+        $system_command               = $this->createMock(System_Command::class);
+        $git_exec                     = $this->createMock(Git_Exec::class);
+        $user_manager                 = $this->createMock(UserManager::class);
+        $logger                       = new NullLogger();
 
         $dumper_factory = new DumperFactory(
             $management_detector,
@@ -74,7 +76,7 @@ class DumperFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $this->assertInstanceOf(Gitolite3Dumper::class, $dumper_factory->buildDumper());
-        $this->assertInstanceOf(Gitolite3MassDumper::class, $dumper_factory->buildMassDumper());
+        self::assertInstanceOf(Gitolite3Dumper::class, $dumper_factory->buildDumper());
+        self::assertInstanceOf(Gitolite3MassDumper::class, $dumper_factory->buildMassDumper());
     }
 }
