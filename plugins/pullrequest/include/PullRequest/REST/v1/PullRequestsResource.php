@@ -195,7 +195,8 @@ class PullRequestsResource extends AuthenticatedResource
             new GitPullRequestReferenceCreator(
                 new GitPullRequestReferenceDAO(),
                 new GitPullRequestReferenceNamespaceAvailabilityChecker()
-            )
+            ),
+            $event_dispatcher,
         );
         $this->pull_request_closer  = new PullRequestCloser(
             $this->pull_request_dao,

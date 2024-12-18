@@ -22,11 +22,13 @@ namespace Tuleap\PullRequest;
 
 use EventManager;
 use GitRepository;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 use Tuleap\PullRequest\Exception\PullRequestTargetException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
+use Tuleap\PullRequest\Notification\NewPullRequestEvent;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
 class PullRequestCreator
@@ -37,6 +39,7 @@ class PullRequestCreator
         private readonly PullRequestMerger $pull_request_merger,
         private readonly EventManager $event_manager,
         private readonly GitPullRequestReferenceCreator $git_pull_request_reference_creator,
+        private readonly EventDispatcherInterface $notification_event_dispatcher,
     ) {
     }
 
@@ -112,6 +115,8 @@ class PullRequestCreator
 
         $event = new GetCreatePullRequest($pull_request, $creator, $repository_dest->getProject());
         $this->event_manager->processEvent($event);
+
+        $this->notification_event_dispatcher->dispatch(NewPullRequestEvent::fromPullRequestId($pull_request->getId()));
 
         return $pull_request;
     }
