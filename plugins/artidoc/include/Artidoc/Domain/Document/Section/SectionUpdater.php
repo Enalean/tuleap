@@ -42,6 +42,11 @@ final readonly class SectionUpdater
      */
     public function update(SectionIdentifier $section_identifier, string $title, string $description): Ok|Err
     {
+        $title = trim($title);
+        if ($title === '') {
+            return Result::err(EmptyTitleFault::build());
+        }
+
         return $this->retriever
             ->retrieveSectionUserCanWrite($section_identifier)
             ->andThen(fn (RawSection $section) => $section->content->apply(

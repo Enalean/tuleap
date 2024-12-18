@@ -37,6 +37,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
+use Tuleap\Artidoc\Domain\Document\Section\EmptyTitleFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\RawSection;
 use Tuleap\Artidoc\Domain\Document\Section\SectionRetriever;
@@ -155,6 +156,10 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 function (Fault $fault) {
                     Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {
+                        $fault instanceof EmptyTitleFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'Title of the section cannot be empty.')
+                        ),
                         $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
                             403,
                             dgettext('tuleap-artidoc', "You don't have permission to write the document.")

@@ -69,6 +69,9 @@ msgid ""
 msgstr ""
 "Il y a déjà une section existante avec le même artéfact dans le document."
 
+msgid "Title of the section cannot be empty."
+msgstr "Le titre de la section ne peut pas être vide."
+
 #, php-format
 msgid "Unknown direction \"%s\". Expected one of the following values: %s"
 msgstr ""
