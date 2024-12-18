@@ -18,42 +18,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite;
 
 use EventManager;
+use ForgeConfig;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
-use Mockery;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
-    private string $cache_dir;
-
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->cache_dir = $this->getTmpDir();
-        \ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
+        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
     }
 
     public function testItDumpsTheConf(): void
     {
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
+            $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
-            Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            Mockery::spy(EventManager::class)
+            $this->createMock(FineGrainedRetriever::class),
+            $this->createMock(FineGrainedPermissionFactory::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $this->createMock(EventManager::class)
         );
 
-        $this->assertSame(
+        self::assertSame(
             file_get_contents(__DIR__ . '/_fixtures/default_gitolite.conf'),
             $serializer->getGitoliteDotConf(['projecta', 'projectb'])
         );
@@ -62,15 +63,15 @@ class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\T
     public function testItAllowsOverrideBySiteAdmin(): void
     {
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
+            $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
             __DIR__ . '/_fixtures/etc_templates',
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
-            Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            Mockery::spy(EventManager::class)
+            $this->createMock(FineGrainedRetriever::class),
+            $this->createMock(FineGrainedPermissionFactory::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $this->createMock(EventManager::class)
         );
 
-        $this->assertSame(
+        self::assertSame(
             file_get_contents(__DIR__ . '/_fixtures/override_gitolite.conf'),
             $serializer->getGitoliteDotConf(['projecta', 'projectb'])
         );
