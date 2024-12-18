@@ -40,12 +40,6 @@ deptrac:
       - PlanningFactory
     Tuleap\Baseline\Adapter\SemanticFieldRepository:
       - AgileDashBoard_Semantic_InitialEffort
-    Tuleap\BotMattermostGit\Presenter\AttachmentPreTextPresenter:
-      - Tuleap\PullRequest\PullRequest
-    Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder:
-      - Tuleap\PullRequest\PullRequest
-    Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender:
-      - Tuleap\PullRequest\PullRequest
     Tuleap\GitLFS\Statistics\Collector:
       - Statistics_DiskUsageDao
     Tuleap\Git\Artifact\Action\CreateBranchButtonFetcher:
@@ -89,8 +83,6 @@ deptrac:
       - Planning_Milestone
     Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate:
       - Tuleap\JiraImport\JiraAgile\ScrumTrackerBuilder
-    botmattermost_gitPlugin:
-      - Tuleap\PullRequest\GetCreatePullRequest
     embedPlugin:
       - Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay
     frsPlugin:
