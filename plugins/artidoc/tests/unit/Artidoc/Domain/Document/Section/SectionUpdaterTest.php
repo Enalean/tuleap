@@ -65,6 +65,31 @@ final class SectionUpdaterTest extends TestCase
         self::assertTrue($update->isCalled());
     }
 
+    /**
+     * @testWith [""]
+     *           [" "]
+     */
+    public function testFaultWhenTitleIsEmpty(string $empty): void
+    {
+        $update = UpdateFreetextContentStub::build();
+
+        $updater = new SectionUpdater(
+            RetrieveSectionStub::witMatchingSectionUserCanWrite(
+                $this->getMatchingFreetextSection(),
+            ),
+            $update,
+        );
+
+        $result = $updater->update(
+            $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
+            $empty,
+            '',
+        );
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(EmptyTitleFault::class, $result->error);
+        self::assertFalse($update->isCalled());
+    }
+
     public function testFaultWhenSectionIsAnArtifactSection(): void
     {
         $update = UpdateFreetextContentStub::build();
