@@ -611,9 +611,15 @@ class Docman_Controller extends Controler
                 $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'details':
-                if ($this->request->get('section') === 'properties') {
+                $section = $this->request->get('section');
+                if ($section === 'properties') {
                     $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing properties via the old interface is not supported.'));
                     $GLOBALS['Response']->redirect(DocumentItemPreviewUrlBuilder::buildSelf()->getUrl($item));
+                } elseif ($section === 'history') {
+                    $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing the history via the old interface is not supported.'));
+                    $project      = ProjectManager::instance()->getProject((int) $item->getGroupId());
+                    $redirect_url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/versions/' . urlencode($item->getId());
+                    $GLOBALS['Response']->redirect($redirect_url);
                 }
                 $this->view = ucfirst($view);
                 break;
