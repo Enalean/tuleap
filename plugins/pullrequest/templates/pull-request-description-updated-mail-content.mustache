@@ -1,0 +1,12 @@
+<p>
+    {{# dgettext }}
+        tuleap-pullrequest |
+        %s updated the description of the pull request %s: %s |
+        <a href="{{ owner_profile_url }}">{{ owner_display_name }}</a> |
+        <a href="{{ pull_request_url }}">#{{ pull_request_id }}</a> |
+        {{ pull_request_title }}
+    {{/ dgettext }}
+</p>
+<p>
+    {{{ purified_pull_request_description }}}
+</p>

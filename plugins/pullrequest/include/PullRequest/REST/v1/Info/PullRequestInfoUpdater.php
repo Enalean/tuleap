@@ -24,16 +24,21 @@ namespace Tuleap\PullRequest\REST\v1\Info;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
+use Tuleap\PullRequest\Notification\PullRequestDescriptionUpdatedEvent;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
 use Tuleap\PullRequest\REST\v1\PullRequestPATCHRepresentation;
 
-final class PullRequestInfoUpdater
+final readonly class PullRequestInfoUpdater
 {
-    public function __construct(private readonly PullRequestFactory $pull_request_factory, private readonly PullRequestIsMergeableChecker $pull_request_is_mergeable_checker)
-    {
+    public function __construct(
+        private PullRequestFactory $pull_request_factory,
+        private PullRequestIsMergeableChecker $pull_request_is_mergeable_checker,
+        private EventDispatcherInterface $notification_event_dispatcher,
+    ) {
     }
 
     /**
@@ -76,5 +81,7 @@ final class PullRequestInfoUpdater
                 $format
             );
         }
+
+        $this->notification_event_dispatcher->dispatch(PullRequestDescriptionUpdatedEvent::fromPullRequestIdAndUserId($pull_request->getId(), (int) $user->getId()));
     }
 }
