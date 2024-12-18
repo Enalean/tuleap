@@ -28,7 +28,6 @@ use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
 final readonly class SectionCreator
@@ -66,19 +65,9 @@ final readonly class SectionCreator
     ): Ok|Err {
         $content = ContentToInsert::fromArtifactId($artifact_id);
 
-        try {
-            $section_id = $before_section_id->match(
-                fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($artidoc, $content, $sibling_section_id),
-                fn () => $this->save_section->saveSectionAtTheEnd($artidoc, $content),
-            );
-        } catch (AlreadyExistingSectionWithSameArtifactException $exception) {
-            return Result::err(AlreadyExistingSectionWithSameArtifactFault::fromThrowable($exception));
-        } catch (AlreadyExistingSectionWithSameFreetextException $exception) {
-            return Result::err(AlreadyExistingSectionWithSameFreetextFault::fromThrowable($exception));
-        } catch (UnableToFindSiblingSectionException $exception) {
-            return Result::err(UnableToFindSiblingSectionFault::fromThrowable($exception));
-        }
-
-        return Result::ok($section_id);
+        return $before_section_id->match(
+            fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($artidoc, $content, $sibling_section_id),
+            fn () => $this->save_section->saveSectionAtTheEnd($artidoc, $content),
+        );
     }
 }

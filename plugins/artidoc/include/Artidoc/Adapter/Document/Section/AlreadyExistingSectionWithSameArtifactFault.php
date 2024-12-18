@@ -20,8 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section;
+namespace Tuleap\Artidoc\Adapter\Document\Section;
 
-final class AlreadyExistingSectionWithSameFreetextException extends \Exception
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class AlreadyExistingSectionWithSameArtifactFault extends Fault
 {
+    public static function build(): Fault
+    {
+        return new self('A section already exists with the same artifact.');
+    }
 }

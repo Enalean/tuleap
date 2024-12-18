@@ -31,6 +31,7 @@ use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocument
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -50,27 +51,36 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
     {
         $save_dao = new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
 
-        $uuid_1 = $save_dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1001),
-        );
-        $uuid_2 = $save_dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1002),
-        );
-        $uuid_3 = $save_dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1003),
-        );
-        $uuid_4 = $save_dao->saveSectionAtTheEnd(
+        $uuid_1 = $save_dao
+            ->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1001),
+            )->map(fn (SectionIdentifier $identifier) => $identifier->toString())
+            ->unwrapOr('');
+        self::assertNotSame('', $uuid_1);
+        $uuid_2 = $save_dao
+            ->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1002),
+            )->map(fn (SectionIdentifier $identifier) => $identifier->toString())
+            ->unwrapOr('');
+        self::assertNotSame('', $uuid_2);
+        $uuid_3 = $save_dao
+            ->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1003),
+            )->map(fn (SectionIdentifier $identifier) => $identifier->toString())
+            ->unwrapOr('');
+        self::assertNotSame('', $uuid_3);
+        $save_dao->saveSectionAtTheEnd(
             $this->artidoc_102,
             ContentToInsert::fromArtifactId(1001),
         );
-        $uuid_5 = $save_dao->saveSectionAtTheEnd(
+        $save_dao->saveSectionAtTheEnd(
             $this->artidoc_102,
             ContentToInsert::fromArtifactId(1002),
         );
-        $uuid_6 = $save_dao->saveSectionAtTheEnd(
+        $save_dao->saveSectionAtTheEnd(
             $this->artidoc_102,
             ContentToInsert::fromArtifactId(1003),
         );
@@ -80,7 +90,7 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
         $order_builder = new SectionOrderBuilder($this->getSectionIdentifierFactory());
 
         // "before", at the beginning
-        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2], 'before', $uuid_1);
         self::assertTrue(Result::isOk($order));
         $result = $reorder_dao->reorder(
             $this->artidoc_101,
@@ -91,7 +101,7 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
         SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
 
         // "before", in the middle
-        $order = $order_builder->build([$uuid_3->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_3], 'before', $uuid_1);
         self::assertTrue(Result::isOk($order));
         $result = $reorder_dao->reorder(
             $this->artidoc_101,
@@ -102,7 +112,7 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
         SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
 
         // "after", at the end
-        $order = $order_builder->build([$uuid_2->toString()], 'after', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2], 'after', $uuid_1);
         self::assertTrue(Result::isOk($order));
         $result = $reorder_dao->reorder(
             $this->artidoc_101,
@@ -113,7 +123,7 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
         SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1001, 1002, 1003]);
 
         // "after", in the middle
-        $order = $order_builder->build([$uuid_3->toString()], 'after', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_3], 'after', $uuid_1);
         self::assertTrue(Result::isOk($order));
         $result = $reorder_dao->reorder(
             $this->artidoc_101,
@@ -128,20 +138,26 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
     {
         $save_dao = new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
 
-        $uuid_1 = $save_dao->saveSectionAtTheEnd(
-            $this->artidoc_101,
-            ContentToInsert::fromArtifactId(1001),
-        );
-        $uuid_2 = $save_dao->saveSectionAtTheEnd(
-            $this->artidoc_102,
-            ContentToInsert::fromArtifactId(1002),
-        );
+        $uuid_1 = $save_dao
+            ->saveSectionAtTheEnd(
+                $this->artidoc_101,
+                ContentToInsert::fromArtifactId(1001),
+            )->map(fn (SectionIdentifier $identifier) => $identifier->toString())
+            ->unwrapOr('');
+        self::assertNotSame('', $uuid_1);
+        $uuid_2 = $save_dao
+            ->saveSectionAtTheEnd(
+                $this->artidoc_102,
+                ContentToInsert::fromArtifactId(1002),
+            )->map(fn (SectionIdentifier $identifier) => $identifier->toString())
+            ->unwrapOr('');
+        self::assertNotSame('', $uuid_2);
 
         $reorder_dao = new ReorderSectionsDao();
 
         $order_builder = new SectionOrderBuilder($this->getSectionIdentifierFactory());
 
-        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2], 'before', $uuid_1);
         self::assertTrue(Result::isOk($order));
         $result = $reorder_dao->reorder(
             $this->artidoc_101,
@@ -152,7 +168,7 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
         SectionsAsserter::assertSectionsForDocument($this->artidoc_101, [1001]);
         SectionsAsserter::assertSectionsForDocument($this->artidoc_102, [1002]);
 
-        $order = $order_builder->build([$uuid_2->toString()], 'before', $uuid_1->toString());
+        $order = $order_builder->build([$uuid_2], 'before', $uuid_1);
         self::assertTrue(Result::isOk($order));
         $result = $reorder_dao->reorder(
             $this->artidoc_102,

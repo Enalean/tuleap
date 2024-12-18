@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section;
+namespace Tuleap\Artidoc\Adapter\Document\Section;
 
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final readonly class AlreadyExistingSectionWithSameArtifactFault extends Fault
+final readonly class UnableToFindSiblingSectionFault extends Fault
 {
-    public static function fromThrowable(\Throwable $throwable): Fault
+    public static function build(): Fault
     {
-        return new self($throwable->getMessage(), $throwable);
+        return new self('Unable to find sibling section');
     }
 }

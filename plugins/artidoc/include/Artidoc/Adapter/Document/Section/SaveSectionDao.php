@@ -24,15 +24,17 @@ namespace Tuleap\Artidoc\Adapter\Document\Section;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\SaveOneSection;
-use Tuleap\Artidoc\Domain\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 final class SaveSectionDao extends DataAccessObject implements SaveOneSection
 {
@@ -43,7 +45,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
         parent::__construct();
     }
 
-    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): SectionIdentifier
+    public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): Ok|Err
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $content) {
             $item_id = $artidoc->document->getId();
@@ -57,7 +59,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
         });
     }
 
-    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): SectionIdentifier
+    public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): Ok|Err
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $content, $sibling_section_id) {
             $item_id = $artidoc->document->getId();
@@ -69,7 +71,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
             );
 
             if ($rank === false) {
-                throw new UnableToFindSiblingSectionException();
+                return Result::err(UnableToFindSiblingSectionFault::build());
             }
 
             $db->run(
@@ -87,24 +89,24 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
     }
 
     /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
+     * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    private function insertSection(EasyDB $db, int $item_id, ContentToInsert $content, int $rank): SectionIdentifier
+    private function insertSection(EasyDB $db, int $item_id, ContentToInsert $content, int $rank): Ok|Err
     {
         return $content->artifact_id
             ->match(
                 fn (int $artifact_id) => $this->insertArtifactSection($db, $item_id, $artifact_id, $rank),
                 fn () => $content->freetext->match(
                     fn (FreetextContent $content) => $this->insertFreetextSection($db, $item_id, $content, $rank),
-                    static fn () => throw new \LogicException('Section is neither an artifact nor a freetext, this is not expected'),
+                    static fn () => Result::err(Fault::fromMessage('Section is neither an artifact nor a freetext, this is not expected')),
                 ),
             );
     }
 
     /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
+     * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    private function insertArtifactSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): SectionIdentifier
+    private function insertArtifactSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): Ok|Err
     {
         if (
             $db->cell(
@@ -117,7 +119,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
                 $artifact_id,
             )
         ) {
-            throw new AlreadyExistingSectionWithSameArtifactException();
+            return Result::err(AlreadyExistingSectionWithSameArtifactFault::build());
         }
 
         $id = $this->section_identifier_factory->buildIdentifier();
@@ -132,10 +134,13 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
             ],
         );
 
-        return $id;
+        return Result::ok($id);
     }
 
-    private function insertFreetextSection(EasyDB $db, int $item_id, FreetextContent $content, int $rank): SectionIdentifier
+    /**
+     * @return Ok<SectionIdentifier>|Err<Fault>
+     */
+    private function insertFreetextSection(EasyDB $db, int $item_id, FreetextContent $content, int $rank): Ok|Err
     {
         $freetext_id = $this->freetext_identifier_factory->buildIdentifier()->getBytes();
         $db->insert(
@@ -159,6 +164,6 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
             ],
         );
 
-        return $id;
+        return Result::ok($id);
     }
 }
