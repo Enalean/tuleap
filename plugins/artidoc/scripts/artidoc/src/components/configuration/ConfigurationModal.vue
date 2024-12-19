@@ -25,7 +25,7 @@
         ref="modal_element"
         v-on:submit="onSubmit"
     >
-        <configuration-modal-header />
+        <configuration-modal-header v-bind:close_modal="closeModal" />
 
         <div class="tlp-modal-body">
             <introductory-text v-bind:configuration_helper="configuration_helper" />
@@ -45,6 +45,7 @@
                     class="tlp-button-primary tlp-modal-action"
                     v-if="is_success"
                     v-on:click="closeModal"
+                    data-test="close-modal-after-success"
                 >
                     {{ $gettext("Close") }}
                 </button>
@@ -102,15 +103,15 @@ const modal_element = ref<HTMLElement | undefined>(undefined);
 
 const noop = (): void => {};
 
-let onSuccessfulSavedCallback: () => void = noop;
+let onSuccessfulSaveCallback: () => void = noop;
 
 strictInject(OPEN_CONFIGURATION_MODAL_BUS).registerHandler(openModal);
 
 let modal: Modal | null = null;
 function openModal(onSuccessfulSaved?: () => void): void {
-    onSuccessfulSavedCallback = onSuccessfulSaved || noop;
+    onSuccessfulSaveCallback = onSuccessfulSaved || noop;
     if (modal === null && modal_element.value) {
-        modal = createModal(toRaw(modal_element.value));
+        modal = createModal(toRaw(modal_element.value), { dismiss_on_backdrop_click: false });
     }
 
     if (modal) {
@@ -123,10 +124,14 @@ function closeModal(): void {
     if (modal) {
         modal.hide();
     }
+
+    if (is_success.value) {
+        onSuccessfulSaveCallback();
+    }
 }
 
 function onSubmit(event: Event): void {
-    configuration_helper.onSubmit(event, onSuccessfulSavedCallback);
+    configuration_helper.onSubmit(event);
 }
 </script>
 

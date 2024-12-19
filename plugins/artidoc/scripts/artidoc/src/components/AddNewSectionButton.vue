@@ -119,9 +119,23 @@ onUnmounted(() => {
 
 function addExistingSection(): void {
     dropdown?.hide();
+
+    if (configuration_store.selected_tracker.value === null) {
+        openConfigurationModalBeforeInsertingExistingSection();
+        return;
+    }
+
+    openAddExistingSectionModal();
+}
+
+function openAddExistingSectionModal(): void {
     add_existing_section_bus.openModal(props.position, (section: ArtidocSection): void => {
         props.insert_section_callback(section, props.position);
     });
+}
+
+function openConfigurationModalBeforeInsertingExistingSection(): void {
+    configuration_bus.openModal(openAddExistingSectionModal);
 }
 
 function addNewSection(): void {
