@@ -20,7 +20,11 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import { okAsync } from "neverthrow";
-import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
+import {
+    isArtifactSection,
+    isFreetextSection,
+    isPendingArtifactSection,
+} from "@/helpers/artidoc-section.type";
 import type {
     ArtidocSection,
     PendingArtifactSection,
@@ -118,7 +122,10 @@ export function useSectionsStore(): SectionsStore {
         const length = sections.value.length;
         for (let i = 0; i < length; i++) {
             const current = sections.value[i];
-            if (isArtifactSection(current) && current.id === section.id) {
+            if (
+                (isArtifactSection(current) || isFreetextSection(current)) &&
+                current.id === section.id
+            ) {
                 sections.value[i] = {
                     ...section,
                     internal_id: sections.value[i].internal_id,

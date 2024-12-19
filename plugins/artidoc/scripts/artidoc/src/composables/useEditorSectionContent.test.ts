@@ -23,6 +23,7 @@ import type { EditorSectionContent } from "@/composables/useEditorSectionContent
 import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { ref } from "vue";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 type ShowButtonsCallbacks = { showActionsButtons: Mock; hideActionsButtons: Mock };
 const getCallbacks = (): ShowButtonsCallbacks => {
@@ -31,65 +32,133 @@ const getCallbacks = (): ShowButtonsCallbacks => {
         hideActionsButtons: vi.fn(),
     };
 };
-const section = ref(ArtifactSectionFactory.create());
+const artifact_section = ref(ArtifactSectionFactory.create());
+const freetext_section = ref(FreetextSectionFactory.create());
 
 describe("useEditorSectionContent", () => {
-    let section_content: EditorSectionContent, callbacks: ShowButtonsCallbacks;
+    let artifact_section_content: EditorSectionContent,
+        freetext_section_content: EditorSectionContent,
+        callbacks: ShowButtonsCallbacks;
 
     beforeEach(() => {
         callbacks = getCallbacks();
-        section_content = useEditorSectionContent(section, callbacks);
+        artifact_section_content = useEditorSectionContent(artifact_section, callbacks);
+        freetext_section_content = useEditorSectionContent(freetext_section, callbacks);
     });
 
     describe("On EditorSectionContent initialization", () => {
-        it("should init the editable_title and the editable_description with the current section title and description", () => {
-            expect(section_content.editable_title.value).toBe(section.value.title.value);
-            expect(section_content.editable_description.value).toBe(
-                section.value.description.value,
+        it("should init the editable_title and the editable_description with the current artifact section title and description", () => {
+            expect(artifact_section_content.editable_title.value).toBe(
+                artifact_section.value.title.value,
+            );
+            expect(artifact_section_content.editable_description.value).toBe(
+                artifact_section.value.description.value,
+            );
+        });
+
+        it("should init the editable_title and the editable_description with the current freetext section title and description", () => {
+            expect(freetext_section_content.editable_title.value).toBe(
+                freetext_section.value.title,
+            );
+            expect(freetext_section_content.editable_description.value).toBe(
+                freetext_section.value.description,
             );
         });
     });
 
     describe("get_readonly_description", () => {
         it("should return the read only description", () => {
-            expect(section_content.getReadonlyDescription()).toBe(section.value.description.value);
+            expect(artifact_section_content.getReadonlyDescription()).toBe(
+                artifact_section.value.description.value,
+            );
+            expect(freetext_section_content.getReadonlyDescription()).toBe(
+                freetext_section.value.description,
+            );
         });
     });
 
     describe("inputSectionContent", () => {
-        it("should update the editable title and the editable description", () => {
-            section_content.inputSectionContent("new title", "new description");
-
-            expect(section_content.editable_title.value).toBe("new title");
-            expect(section_content.editable_description.value).toBe("new description");
+        it("should update the editable title and the editable description of the artifact section", () => {
+            artifact_section_content.inputSectionContent("new title", "new description");
+            expect(artifact_section_content.editable_title.value).toBe("new title");
+            expect(artifact_section_content.editable_description.value).toBe("new description");
         });
-        describe("when the user types something in the artidoc-section-title", () => {
-            it("should display actions buttons", () => {
-                section_content.inputSectionContent("new title", section.value.description.value);
 
-                expect(section_content.editable_title.value).toBe("new title");
-                expect(section_content.editable_description.value).toBe(
-                    section.value.description.value,
+        it("should update the editable title and the editable description of the freetext section", () => {
+            freetext_section_content.inputSectionContent("new title", "new description");
+            expect(freetext_section_content.editable_title.value).toBe("new title");
+            expect(freetext_section_content.editable_description.value).toBe("new description");
+        });
+
+        describe("when the user types something in the artidoc-section-title", () => {
+            it("should display actions buttons of the artifact section", () => {
+                artifact_section_content.inputSectionContent(
+                    "new title",
+                    artifact_section.value.description.value,
+                );
+
+                expect(artifact_section_content.editable_title.value).toBe("new title");
+                expect(artifact_section_content.editable_description.value).toBe(
+                    artifact_section.value.description.value,
+                );
+                expect(callbacks.showActionsButtons).toHaveBeenCalledOnce();
+            });
+
+            it("should display actions buttons of the freetext section", () => {
+                freetext_section_content.inputSectionContent(
+                    "new title",
+                    freetext_section.value.description,
+                );
+
+                expect(freetext_section_content.editable_title.value).toBe("new title");
+                expect(freetext_section_content.editable_description.value).toBe(
+                    freetext_section.value.description,
                 );
                 expect(callbacks.showActionsButtons).toHaveBeenCalledOnce();
             });
         });
 
         describe("when the user types something in the artidoc-section-description", () => {
-            it("should display actions buttons", () => {
-                section_content.inputSectionContent(section.value.title.value, "new description");
+            it("should display actions buttons of the artifact section", () => {
+                artifact_section_content.inputSectionContent(
+                    artifact_section.value.title.value,
+                    "new description",
+                );
 
-                expect(section_content.editable_description.value).toBe("new description");
-                expect(section_content.editable_title.value).toBe(section.value.title.value);
+                expect(artifact_section_content.editable_description.value).toBe("new description");
+                expect(artifact_section_content.editable_title.value).toBe(
+                    artifact_section.value.title.value,
+                );
+                expect(callbacks.showActionsButtons).toHaveBeenCalledOnce();
+            });
+            it("should display actions buttons of the freetext section", () => {
+                freetext_section_content.inputSectionContent(
+                    freetext_section.value.title,
+                    "new description",
+                );
+
+                expect(freetext_section_content.editable_description.value).toBe("new description");
+                expect(freetext_section_content.editable_title.value).toBe(
+                    freetext_section.value.title,
+                );
                 expect(callbacks.showActionsButtons).toHaveBeenCalledOnce();
             });
         });
 
         describe("when the user focuses the editor but no change has occurred", () => {
-            it("should hide actions buttons", () => {
-                section_content.inputSectionContent(
-                    section.value.title.value,
-                    section.value.description.value,
+            it("should hide actions buttons of the artifact section", () => {
+                artifact_section_content.inputSectionContent(
+                    artifact_section.value.title.value,
+                    artifact_section.value.description.value,
+                );
+
+                expect(callbacks.hideActionsButtons).toHaveBeenCalledOnce();
+            });
+
+            it("should hide actions buttons of the freetext section", () => {
+                freetext_section_content.inputSectionContent(
+                    freetext_section.value.title,
+                    freetext_section.value.description,
                 );
 
                 expect(callbacks.hideActionsButtons).toHaveBeenCalledOnce();
@@ -98,17 +167,35 @@ describe("useEditorSectionContent", () => {
     });
 
     describe("reset_content", () => {
-        it("should reset description and title to the original state", () => {
-            section_content.editable_title.value = "new title";
-            section_content.editable_description.value = "new description";
-            expect(section_content.editable_title.value).toEqual("new title");
-            expect(section_content.editable_description.value).toEqual("new description");
+        it("should reset description and title of the artifact section to the original state", () => {
+            artifact_section_content.editable_title.value = "new title";
+            artifact_section_content.editable_description.value = "new description";
+            expect(artifact_section_content.editable_title.value).toEqual("new title");
+            expect(artifact_section_content.editable_description.value).toEqual("new description");
 
-            section_content.resetContent();
+            artifact_section_content.resetContent();
 
-            expect(section_content.editable_title.value).toEqual(section.value.display_title);
-            expect(section_content.editable_description.value).toEqual(
-                section.value.description.value,
+            expect(artifact_section_content.editable_title.value).toEqual(
+                artifact_section.value.display_title,
+            );
+            expect(artifact_section_content.editable_description.value).toEqual(
+                artifact_section.value.description.value,
+            );
+        });
+
+        it("should reset description and title of the freetext section to the original state", () => {
+            freetext_section_content.editable_title.value = "new title";
+            freetext_section_content.editable_description.value = "new description";
+            expect(freetext_section_content.editable_title.value).toEqual("new title");
+            expect(freetext_section_content.editable_description.value).toEqual("new description");
+
+            freetext_section_content.resetContent();
+
+            expect(freetext_section_content.editable_title.value).toEqual(
+                freetext_section.value.display_title,
+            );
+            expect(freetext_section_content.editable_description.value).toEqual(
+                freetext_section.value.description,
             );
         });
     });

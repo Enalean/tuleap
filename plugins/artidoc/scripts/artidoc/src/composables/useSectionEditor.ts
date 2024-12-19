@@ -95,14 +95,12 @@ export function useSectionEditor(
         removeSection,
         updateSection,
     } = strictInject(SECTIONS_STORE);
-    const is_section_in_edit_mode = isFreetextSection(current_section.value)
-        ? ref(false)
-        : ref(isPendingArtifactSection(current_section.value));
+    const is_section_in_edit_mode = ref(isPendingArtifactSection(current_section.value));
     const is_section_editable = computed(() => {
-        if (isFreetextSection(current_section.value)) {
-            return false;
-        }
-        if (isPendingArtifactSection(current_section.value)) {
+        if (
+            isPendingArtifactSection(current_section.value) ||
+            isFreetextSection(current_section.value)
+        ) {
             return can_user_edit_document;
         }
 

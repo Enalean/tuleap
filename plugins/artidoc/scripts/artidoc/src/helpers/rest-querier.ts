@@ -167,6 +167,21 @@ export function getSection(section_id: string): ResultAsync<ArtidocSection, Faul
     );
 }
 
+export function putSection(
+    section_id: string,
+    title: string,
+    description: string,
+): ResultAsync<Response, Fault> {
+    return putResponse(
+        uri`/api/artidoc_sections/${section_id}`,
+        {},
+        {
+            title,
+            description,
+        },
+    );
+}
+
 export function deleteSection(section_id: string): ResultAsync<Response, Fault> {
     return del(uri`/api/artidoc_sections/${section_id}`);
 }

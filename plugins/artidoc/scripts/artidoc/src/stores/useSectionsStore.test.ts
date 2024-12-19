@@ -27,8 +27,9 @@ import { Fault } from "@tuleap/fault";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import type { Tracker } from "@/stores/configuration-store";
-import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import type { FreetextSection, SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import { isPendingArtifactSection } from "@/helpers/artidoc-section.type";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("useSectionsStore", () => {
     describe("loadSections", () => {
@@ -40,7 +41,7 @@ describe("useSectionsStore", () => {
 
         it("should store loaded sections", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([ArtifactSectionFactory.create()]),
+                okAsync([ArtifactSectionFactory.create(), FreetextSectionFactory.create()]),
             );
 
             const store = useSectionsStore();
@@ -48,7 +49,7 @@ describe("useSectionsStore", () => {
 
             await flushPromises();
 
-            expect(store.sections.value).toHaveLength(1);
+            expect(store.sections.value).toHaveLength(2);
         });
 
         it("should create an internal id because when section are replaced (pending section -> artifact section) the fake id is replaced by the real one and it could mess up the v-for.key", async () => {
@@ -133,7 +134,7 @@ describe("useSectionsStore", () => {
 
         it("should says that sections are not anymore loading when they are loaded #CaptainObvious", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([ArtifactSectionFactory.create()]),
+                okAsync([ArtifactSectionFactory.create(), FreetextSectionFactory.create()]),
             );
 
             const store = useSectionsStore();
@@ -159,22 +160,26 @@ describe("useSectionsStore", () => {
     });
 
     describe("updateSection", () => {
-        it("should throw when we try to update a section while sections are undefined", async () => {
-            const section = ArtifactSectionFactory.create();
+        it.each([
+            ["artifact", ArtifactSectionFactory.create()],
+            ["freetext", FreetextSectionFactory.create()],
+        ])(
+            "should throw when we try to update a %s section while sections are undefined",
+            async (name, section) => {
+                vi.spyOn(rest, "getAllSections").mockReturnValue(
+                    errAsync(Fault.fromMessage("Oopsie!")),
+                );
 
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                errAsync(Fault.fromMessage("Oopsie!")),
-            );
+                const store = useSectionsStore();
+                store.loadSections(101, null, true);
 
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
+                await flushPromises();
 
-            await flushPromises();
+                expect(() => store.updateSection(section)).toThrow();
+            },
+        );
 
-            expect(() => store.updateSection(section)).toThrow();
-        });
-
-        it("should update the section", async () => {
+        it("should update the artifact section", async () => {
             const section = ArtifactSectionFactory.create();
             const section_a = ArtifactSectionFactory.override({
                 ...section,
@@ -218,6 +223,41 @@ describe("useSectionsStore", () => {
             expect(store.sections.value).toHaveLength(2);
             expect(section_0?.title.value).toBe("Section A");
             expect(section_1?.title.value).toBe("Updated section B");
+        });
+
+        it("should update the freetext section", async () => {
+            const section = FreetextSectionFactory.create();
+            const section_a = FreetextSectionFactory.override({
+                ...section,
+                id: "section-a",
+                title: "Section A",
+            });
+            const section_b = FreetextSectionFactory.override({
+                ...section,
+                id: "section-b",
+                title: "Section B",
+            });
+
+            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section_a, section_b]));
+
+            const store = useSectionsStore();
+            store.loadSections(101, null, true);
+
+            await flushPromises();
+
+            store.updateSection(
+                FreetextSectionFactory.override({
+                    ...section_b,
+                    title: "Updated section B",
+                }),
+            );
+
+            const section_0: FreetextSection = store.sections.value?.[0] as FreetextSection;
+            const section_1: FreetextSection = store.sections.value?.[1] as FreetextSection;
+
+            expect(store.sections.value).toHaveLength(2);
+            expect(section_0?.title).toBe("Section A");
+            expect(section_1?.title).toBe("Updated section B");
         });
     });
 

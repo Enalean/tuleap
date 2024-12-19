@@ -29,74 +29,78 @@ import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { noop } from "@/helpers/noop";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
-describe("SectionDescription", () => {
-    let are_sections_loading: boolean, can_user_edit_document: boolean;
+describe.each([[ArtifactSectionFactory], [FreetextSectionFactory]])(
+    "SectionDescription",
+    (factory) => {
+        let are_sections_loading: boolean, can_user_edit_document: boolean;
 
-    beforeEach(() => {
-        are_sections_loading = false;
-        can_user_edit_document = true;
-    });
+        beforeEach(() => {
+            are_sections_loading = false;
+            can_user_edit_document = true;
+        });
 
-    const getWrapper = (): VueWrapper => {
-        const sections_store = are_sections_loading
-            ? InjectedSectionsStoreStub.withLoadingSections([])
-            : InjectedSectionsStoreStub.withLoadedSections([]);
+        const getWrapper = (): VueWrapper => {
+            const sections_store = are_sections_loading
+                ? InjectedSectionsStoreStub.withLoadingSections([])
+                : InjectedSectionsStoreStub.withLoadedSections([]);
 
-        return shallowMount(SectionDescription, {
-            global: {
-                provide: {
-                    [SECTIONS_STORE.valueOf()]: sections_store,
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
-                },
-                stubs: {
-                    async_editor: {
-                        template: "<span/>",
+            return shallowMount(SectionDescription, {
+                global: {
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: sections_store,
+                        [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    },
+                    stubs: {
+                        async_editor: {
+                            template: "<span/>",
+                        },
                     },
                 },
-            },
-            props: {
-                title: "Title",
-                editable_description: "Lorem ipsum",
-                readonly_description: "Lorem ipsum",
-                is_edit_mode: false,
-                upload_url: "/file/upload",
-                add_attachment_to_waiting_list: noop,
-                input_section_content: noop,
-                is_image_upload_allowed: true,
-                upload_file: UploadFileStub.uploadNotInProgress(),
-                is_there_any_change: false,
-                project_id: 101,
-                section: ArtifactSectionFactory.create(),
-            },
+                props: {
+                    title: "Title",
+                    editable_description: "Lorem ipsum",
+                    readonly_description: "Lorem ipsum",
+                    is_edit_mode: false,
+                    upload_url: "/file/upload",
+                    add_attachment_to_waiting_list: noop,
+                    input_section_content: noop,
+                    is_image_upload_allowed: true,
+                    upload_file: UploadFileStub.uploadNotInProgress(),
+                    is_there_any_change: false,
+                    project_id: 101,
+                    section: factory.create(),
+                },
+            });
+        };
+
+        it("When sections are loading, Then it should display the skeleton", () => {
+            are_sections_loading = true;
+
+            const wrapper = getWrapper();
+
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
         });
-    };
 
-    it("When sections are loading, Then it should display the skeleton", () => {
-        are_sections_loading = true;
+        it("When the current user cannot edit the document, then it should display a readonly description", () => {
+            can_user_edit_document = false;
 
-        const wrapper = getWrapper();
+            const wrapper = getWrapper();
 
-        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
-        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
-        expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-    });
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+        });
 
-    it("When the current user cannot edit the document, then it should display a readonly description", () => {
-        can_user_edit_document = false;
+        it("When the current user can edit the document, then the editor should be displayed", () => {
+            const wrapper = getWrapper();
 
-        const wrapper = getWrapper();
-
-        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-        expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-    });
-
-    it("When the current user can edit the document, then the editor should be displayed", () => {
-        const wrapper = getWrapper();
-
-        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
-        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-        expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
-    });
-});
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
+        });
+    },
+);

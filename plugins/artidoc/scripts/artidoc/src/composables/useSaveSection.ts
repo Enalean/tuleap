@@ -17,14 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import {
     isArtifactSection,
     isFreetextSection,
     isPendingArtifactSection,
     isSectionBasedOnArtifact,
 } from "@/helpers/artidoc-section.type";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { createSection, getSection, postArtifact, putArtifact } from "@/helpers/rest-querier";
+import {
+    createSection,
+    getSection,
+    postArtifact,
+    putArtifact,
+    putSection,
+} from "@/helpers/rest-querier";
 import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
@@ -75,7 +81,7 @@ export default function useSaveSection(
     function getLatestVersionOfCurrentSection(
         section: ArtidocSection,
     ): ResultAsync<ArtidocSection, Fault> {
-        if (isArtifactSection(section)) {
+        if (isArtifactSection(section) || isFreetextSection(section)) {
             return getSection(section.id);
         }
 
@@ -96,37 +102,38 @@ export default function useSaveSection(
             title: string;
         },
     ): void {
-        if (!isArtifactSection(section)) {
+        if (!isArtifactSection(section) && !isFreetextSection(section)) {
             return;
         }
 
         editor_errors.is_outdated.value = false;
         is_being_saved.value = true;
 
-        putArtifact(
-            section.artifact.id,
-            new_value.title,
-            section.title,
-            new_value.description,
-            section.description.field_id,
-            callbacks.mergeArtifactAttachments(section, new_value.description),
-        )
-            .andThen(() => getLatestVersionOfCurrentSection(section))
-            .match(
-                (artidoc_section: ArtidocSection) => {
-                    callbacks.updateCurrentSection(artidoc_section);
-                    if (isArtifactSection(artidoc_section)) {
-                        callbacks.updateSectionStore(artidoc_section);
-                    }
-                    callbacks.closeEditor();
-                    is_being_saved.value = false;
-                    addTemporaryJustSavedFlag();
-                },
-                (fault: Fault) => {
-                    editor_errors.handleError(fault);
-                    is_being_saved.value = false;
-                },
-            );
+        const put = isFreetextSection(section)
+            ? putSection(section.id, new_value.title, new_value.description)
+            : putArtifact(
+                  section.artifact.id,
+                  new_value.title,
+                  section.title,
+                  new_value.description,
+                  section.description.field_id,
+                  callbacks.mergeArtifactAttachments(section, new_value.description),
+              );
+        put.andThen(() => getLatestVersionOfCurrentSection(section)).match(
+            (artidoc_section: ArtidocSection) => {
+                callbacks.updateCurrentSection(artidoc_section);
+                if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
+                    callbacks.updateSectionStore(artidoc_section);
+                }
+                callbacks.closeEditor();
+                is_being_saved.value = false;
+                addTemporaryJustSavedFlag();
+            },
+            (fault: Fault) => {
+                editor_errors.handleError(fault);
+                is_being_saved.value = false;
+            },
+        );
     }
 
     const save = (
@@ -169,7 +176,10 @@ export default function useSaveSection(
             (artidoc_section: ArtidocSection) => {
                 if (isPendingArtifactSection(section) && isArtifactSection(artidoc_section)) {
                     callbacks.replacePendingByArtifactSection(section, artidoc_section);
-                } else if (isArtifactSection(artidoc_section)) {
+                } else if (
+                    isArtifactSection(artidoc_section) ||
+                    isFreetextSection(artidoc_section)
+                ) {
                     callbacks.updateSectionStore(artidoc_section);
                 }
                 callbacks.updateCurrentSection(artidoc_section);
@@ -211,20 +221,22 @@ export default function useSaveSection(
 
         return getSectionInItsLatestVersion(section)
             .andThen(() => {
-                if (!isArtifactSection(section)) {
+                if (!isArtifactSection(section) && !isFreetextSection(section)) {
                     return errAsync(
                         Fault.fromMessage("Save of new section is not implemented yet"),
                     );
                 }
 
-                return putArtifact(
-                    section.artifact.id,
-                    new_value.title,
-                    section.title,
-                    new_value.description,
-                    section.description.field_id,
-                    callbacks.mergeArtifactAttachments(section, new_value.description),
-                );
+                return isFreetextSection(section)
+                    ? putSection(section.id, new_value.title, new_value.description)
+                    : putArtifact(
+                          section.artifact.id,
+                          new_value.title,
+                          section.title,
+                          new_value.description,
+                          section.description.field_id,
+                          callbacks.mergeArtifactAttachments(section, new_value.description),
+                      );
             })
             .andThen(() => getLatestVersionOfCurrentSection(section));
     }
