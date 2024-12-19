@@ -193,6 +193,7 @@ deptrac:
       - Core
       - BotMattermost
       - Git
+      - PullRequest
     Cardwall:
       - Core
       - AgileDashboard
