@@ -18,7 +18,7 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 import { viteExternalsPlugin } from "vite-plugin-externals";
@@ -43,14 +43,19 @@ export default vite.defineAppConfig(
         ],
         build: {
             rollupOptions: {
-                external: ["jquery"],
                 input: {
                     "pullrequest-overview": path.resolve(__dirname, "src/index.ts"),
                 },
             },
         },
         resolve: {
-            dedupe: ["vue"],
+            dedupe: [
+                "vue",
+                "neverthrow",
+                "@tuleap/fault",
+                "@tuleap/fetch-result",
+                "@tuleap/option",
+            ],
         },
     },
 );
