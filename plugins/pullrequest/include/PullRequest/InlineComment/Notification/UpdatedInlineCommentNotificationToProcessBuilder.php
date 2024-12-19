@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
@@ -50,6 +51,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilder implements Notifica
         private readonly UserHelper $user_helper,
         private readonly HTMLURLBuilder $html_url_builder,
         private readonly FormatNotificationContent $format_notification_content,
+        private readonly MentionedUserInTextRetriever $mentioned_user_in_text_retriever,
     ) {
     }
 
@@ -77,7 +79,8 @@ final class UpdatedInlineCommentNotificationToProcessBuilder implements Notifica
                                     $pull_request_owners,
                                     $comment,
                                     $this->code_context_extractor,
-                                    $this->format_notification_content
+                                    $this->format_notification_content,
+                                    $this->mentioned_user_in_text_retriever->getMentionedUsers($comment->getContent())
                                 ),
                             ];
                         } catch (InlineCommentCodeContextException $exception) {

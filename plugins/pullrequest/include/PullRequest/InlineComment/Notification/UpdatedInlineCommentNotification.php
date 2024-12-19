@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use PFUser;
 use TemplateRendererFactory;
+use Tuleap\Notification\Mention\MentionedUserCollection;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\FormatNotificationContent;
@@ -40,12 +41,12 @@ use UserHelper;
 final class UpdatedInlineCommentNotification implements NotificationToProcess
 {
     /**
-     * @param PFUser[] $owners_without_comment_author
+     * @param PFUser[] $recipients_without_author_user
      */
     private function __construct(
         private readonly PullRequest $pull_request,
         private readonly string $comment_author_name,
-        private readonly array $owners_without_comment_author,
+        private readonly array $recipients_without_author_user,
         private readonly InlineComment $inline_comment,
         private readonly string $code_context,
         private readonly NotificationEnhancedContent $enhanced_content,
@@ -67,16 +68,17 @@ final class UpdatedInlineCommentNotification implements NotificationToProcess
         InlineComment $inline_comment,
         InlineCommentCodeContextExtractor $code_context_extractor,
         FormatNotificationContent $format_notification_content,
+        MentionedUserCollection $mentioned_users,
     ): self {
         $code_context = $code_context_extractor->getCodeContext($inline_comment, $pull_request);
 
-        $comment_author_name        = $user_helper->getDisplayNameFromUser($comment_author) ?? '';
-        $owners_without_author_user = $filter_user_from_collection->filter($comment_author, ...$owners);
+        $comment_author_name            = $user_helper->getDisplayNameFromUser($comment_author) ?? '';
+        $recipients_without_author_user = $filter_user_from_collection->filter($comment_author, ...$owners, ...$mentioned_users->users);
 
         return new self(
             $pull_request,
             $comment_author_name,
-            $owners_without_author_user,
+            $recipients_without_author_user,
             $inline_comment,
             $code_context,
             new NotificationTemplatedContent(
@@ -103,7 +105,7 @@ final class UpdatedInlineCommentNotification implements NotificationToProcess
 
     public function getRecipients(): array
     {
-        return $this->owners_without_comment_author;
+        return $this->recipients_without_author_user;
     }
 
     public function asPlaintext(): string
