@@ -18,130 +18,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite;
 
 use EventManager;
 use Git;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepository;
 use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use Tuleap\Git\Permissions\FineGrainedPermission;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ConfigPermissionsSerializerFineGrainedPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tuleap\Git\Permissions\FineGrainedRetriever
-     */
-    private $retriever;
-
-    /**
-     * @var Tuleap\Git\Permissions\FineGrainedPermissionFactory
-     */
-    private $factory;
-
-    /**
-     * @var Git_Gitolite_ConfigPermissionsSerializer
-     */
-    private $serializer;
-
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var GitRepository
-     */
-    private $repository;
-
-    /**
-     * @var PermissionsManager
-     */
-    private $permissions_manager;
-
-    /**
-     * @var ProjectUGroup
-     */
-    private $ugroup_01;
-
-    /**
-     * @var ProjectUGroup
-     */
-    private $ugroup_02;
-
-    /**
-     * @var ProjectUGroup
-     */
-    private $ugroup_03;
-
-    /**
-     * @var ProjectUGroup
-     */
-    private $ugroup_nobody;
-
-    /**
-     * @var FineGrainedPermission
-     */
-    private $permission_01;
-
-    /**
-     * @var FineGrainedPermission
-     */
-    private $permission_02;
-
-    /**
-     * @var FineGrainedPermission
-     */
-    private $permission_03;
-
-    /**
-     * @var Tuleap\Git\Permissions\RegexpFineGrainedRetriever
-     */
-    private $regexp_retriever;
+    private FineGrainedRetriever&MockObject $retriever;
+    private FineGrainedPermissionFactory&MockObject $factory;
+    private Git_Gitolite_ConfigPermissionsSerializer $serializer;
+    private GitRepository $repository;
+    private ProjectUGroup $ugroup_01;
+    private ProjectUGroup $ugroup_02;
+    private ProjectUGroup $ugroup_03;
+    private ProjectUGroup $ugroup_nobody;
+    private FineGrainedPermission $permission_01;
+    private FineGrainedPermission $permission_02;
+    private FineGrainedPermission $permission_03;
+    private RegexpFineGrainedRetriever&MockObject $regexp_retriever;
 
     public function setUp(): void
     {
-        parent::setUp();
+        $this->retriever        = $this->createMock(FineGrainedRetriever::class);
+        $this->factory          = $this->createMock(FineGrainedPermissionFactory::class);
+        $this->regexp_retriever = $this->createMock(RegexpFineGrainedRetriever::class);
 
-        $this->retriever        = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
-        $this->factory          = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
-        $this->regexp_retriever = Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
-
+        $event_manager    = $this->createMock(EventManager::class);
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
+            $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
             $this->retriever,
             $this->factory,
             $this->regexp_retriever,
-            Mockery::spy(EventManager::class)
+            $event_manager
         );
+        $event_manager->method('processEvent');
 
-        $this->project = Mockery::spy(\Project::class);
 
-        $this->repository = Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturn(1);
-        $this->repository->shouldReceive('getProject')->andReturn($this->project);
+        $project = ProjectTestBuilder::aProject()->withUnixName('')->build();
 
-        $this->permissions_manager = Mockery::spy(\PermissionsManager::class);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
-            ->with(Mockery::any(), Mockery::any(), Git::PERM_READ)
-            ->andReturn([ProjectUGroup::REGISTERED]);
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)->inProject($project)->build();
 
-        $this->ugroup_01 = Mockery::spy(\ProjectUGroup::class);
-        $this->ugroup_01->shouldReceive('getId')->andReturn('101');
+        $permissions_manager = $this->createMock(PermissionsManager::class);
+        $permissions_manager->method('getAuthorizedUGroupIdsForProject')
+            ->with(self::anything(), self::anything(), Git::PERM_READ)
+            ->willReturn([ProjectUGroup::REGISTERED]);
 
-        $this->ugroup_02 = Mockery::spy(\ProjectUGroup::class);
-        $this->ugroup_02->shouldReceive('getId')->andReturn('102');
+        $this->ugroup_01 = ProjectUGroupTestBuilder::aCustomUserGroup(101)->build();
+        $this->ugroup_02 = ProjectUGroupTestBuilder::aCustomUserGroup(102)->build();
+        $this->ugroup_03 = ProjectUGroupTestBuilder::aCustomUserGroup(103)->build();
 
-        $this->ugroup_03 = Mockery::spy(\ProjectUGroup::class);
-        $this->ugroup_03->shouldReceive('getId')->andReturn('103');
-
-        $this->ugroup_nobody = Mockery::spy(\ProjectUGroup::class);
-        $this->ugroup_nobody->shouldReceive('getId')->andReturn('100');
+        $this->ugroup_nobody = ProjectUGroupTestBuilder::buildNobody();
 
         $this->permission_01 = new FineGrainedPermission(
             1,
@@ -167,19 +111,18 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends \Tuleap\Test
             []
         );
 
-        PermissionsManager::setInstance($this->permissions_manager);
+        PermissionsManager::setInstance($permissions_manager);
     }
 
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();
-        parent::tearDown();
     }
 
-    public function testItMustFollowTheExpectedOrderForPermission()
+    public function testItMustFollowTheExpectedOrderForPermission(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_01]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([]);
 
         $writers   = [$this->ugroup_01, $this->ugroup_02];
         $rewinders = [$this->ugroup_03];
@@ -187,7 +130,8 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends \Tuleap\Test
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(false);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -199,13 +143,13 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends \Tuleap\Test
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 
-    public function testItFetchesFineGrainedPermissions()
+    public function testItFetchesFineGrainedPermissions(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_01]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([2 => $this->permission_02]);
 
         $writers   = [$this->ugroup_01, $this->ugroup_02];
         $rewinders = [$this->ugroup_03];
@@ -216,7 +160,8 @@ EOS;
         $this->permission_02->setWriters($writers);
         $this->permission_02->setRewinders($rewinders);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(false);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -231,13 +176,13 @@ EOS;
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 
-    public function testItDealsWithNobody()
+    public function testItDealsWithNobody(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_01]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([2 => $this->permission_02]);
 
         $writers          = [$this->ugroup_01, $this->ugroup_02];
         $rewinders        = [$this->ugroup_03];
@@ -249,7 +194,8 @@ EOS;
         $this->permission_02->setWriters($writers);
         $this->permission_02->setRewinders($rewinders_nobody);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(false);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -263,13 +209,13 @@ EOS;
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 
-    public function testItDealsWithStarPath()
+    public function testItDealsWithStarPath(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_03]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_03]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([2 => $this->permission_02]);
 
         $writers   = [$this->ugroup_01, $this->ugroup_02];
         $rewinders = [$this->ugroup_03];
@@ -280,7 +226,8 @@ EOS;
         $this->permission_02->setWriters($writers);
         $this->permission_02->setRewinders($rewinders);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(false);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -295,13 +242,13 @@ EOS;
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 
-    public function testItDealsWithNoUgroupSelected()
+    public function testItDealsWithNoUgroupSelected(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_01]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([2 => $this->permission_02]);
 
         $writers   = [$this->ugroup_01, $this->ugroup_02];
         $rewinders = [];
@@ -312,7 +259,8 @@ EOS;
         $this->permission_02->setWriters($writers);
         $this->permission_02->setRewinders($rewinders);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(false);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -325,13 +273,13 @@ EOS;
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 
-    public function testItDeniesPatternIfNobodyCanWriteAndRewind()
+    public function testItDeniesPatternIfNobodyCanWriteAndRewind(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_01]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([2 => $this->permission_02]);
 
         $writers   = [$this->ugroup_nobody];
         $rewinders = [];
@@ -342,7 +290,8 @@ EOS;
         $this->permission_02->setWriters($writers);
         $this->permission_02->setRewinders($rewinders);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(false);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -353,13 +302,13 @@ EOS;
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 
-    public function testItAddEndCharacterAtPatternEndWhenRegexpAreDisabled()
+    public function testItAddEndCharacterAtPatternEndWhenRegexpAreDisabled(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_01]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([2 => $this->permission_02]);
 
         $writers   = [$this->ugroup_01, $this->ugroup_02];
         $rewinders = [$this->ugroup_03];
@@ -370,8 +319,8 @@ EOS;
         $this->permission_02->setWriters($writers);
         $this->permission_02->setRewinders($rewinders);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
-        $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->with($this->repository)->andReturn(false);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->with($this->repository)->willReturn(false);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -386,13 +335,13 @@ EOS;
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 
-    public function testItDoesntUpdatePatternWhenRegexpAreEnabled()
+    public function testItDoesntUpdatePatternWhenRegexpAreEnabled(): void
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn([1 => $this->permission_01]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([2 => $this->permission_02]);
 
         $writers   = [$this->ugroup_01, $this->ugroup_02];
         $rewinders = [$this->ugroup_03];
@@ -403,8 +352,8 @@ EOS;
         $this->permission_02->setWriters($writers);
         $this->permission_02->setRewinders($rewinders);
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturn(true);
-        $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->with($this->repository)->andReturn(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->willReturn(true);
+        $this->regexp_retriever->method('areRegexpActivatedForRepository')->with($this->repository)->willReturn(true);
 
         $config = $this->serializer->getForRepository($this->repository);
 
@@ -419,6 +368,6 @@ EOS;
 
 EOS;
 
-        $this->assertSame($config, $expected);
+        self::assertSame($expected, $config);
     }
 }
