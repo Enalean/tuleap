@@ -26,7 +26,6 @@ use Tuleap\CreateTestEnv\ActivitiesAnalytics\WeeklySummaryController;
 use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
 use Tuleap\CreateTestEnv\ActivitiesAnalytics\ListActivitiesController;
 use Tuleap\CreateTestEnv\REST\ResourcesInjector as CreateTestEnvResourcesInjector;
-use Tuleap\CreateTestEnv\Plugin\PluginInfo;
 use Tuleap\Project\ServiceAccessEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -47,14 +46,18 @@ class create_test_envPlugin extends Plugin
         bindtextdomain('tuleap-create_test_env', __DIR__ . '/../site-content');
     }
 
-    /**
-     * @return Tuleap\CreateTestEnv\Plugin\PluginInfo
-     */
-    public function getPluginInfo()
+    public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
-            $this->pluginInfo = new PluginInfo($this);
+            $this->pluginInfo = new \PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-create_test_env', 'Create test environment'),
+                    dgettext('tuleap-create_test_env', 'Automate creation of test users and environments')
+                )
+            );
         }
+
         return $this->pluginInfo;
     }
 

@@ -119,7 +119,7 @@ class DynamicCredentialsResource
     {
         $plugin = \PluginFactory::instance()->getPluginByName(\dynamic_credentialsPlugin::NAME);
         assert($plugin instanceof \dynamic_credentialsPlugin);
-        $settings = new DynamicCredentialsSettings($plugin->getPluginInfo());
+        $settings = new DynamicCredentialsSettings();
         return new RequestSignatureVerifier($settings->getSignaturePublicKey());
     }
 }

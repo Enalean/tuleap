@@ -39,19 +39,12 @@ class ArtifactDateReminderFactory
     // The field id
     public mixed $field_id;
 
-    /**
-     * @var TrackerDateReminder_Logger
-     */
-    private $logger;
-
-    public function __construct($notification_id, TrackerDateReminder_Logger $logger)
+    public function __construct($notification_id)
     {
         // Set object attributes
         $this->notification_id = $notification_id;
         $notif_array           = $this->getNotificationData($notification_id);
         $this->setFromArray($notif_array);
-
-        $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '[Notif id ' . $notification_id . ']');
     }
 
     /**
@@ -502,17 +495,11 @@ class ArtifactDateReminderFactory
     {
         global $art_field_fact;
 
-        $logger = new TrackerDateReminder_Logger_Prefix($this->logger, '[handleNotification]');
-        $logger->info('Start');
-
         $group          = ProjectManager::instance()->getProject($this->getGroupId());
         $at             = new ArtifactType($group, $this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
         $field          = $art_field_fact->getFieldFromId($this->getFieldId());
         $art            = new Artifact($at, $this->getArtifactId(), false);
-
-        $logger->info('tracker: ' . $this->getGroupArtifactId());
-        $logger->info('artifact: ' . $this->getArtifactId());
 
         $sent = true;
         $week = date('W', $this->getDateValue());
@@ -533,16 +520,12 @@ class ArtifactDateReminderFactory
         $mail->setBodyText($body);
 
         $allNotified = $this->getNotifiedPeople();
-        $logger->info('notify: ' . implode(', ', $allNotified));
         foreach ($allNotified as $notified) {
             $mail->setTo($notified);
             if (! $mail->send()) {
-                $logger->error("faild to notify $notified");
                 $sent = false;
             }
         }
-
-        $logger->info('End');
 
         return $sent;
     }
@@ -559,20 +542,14 @@ class ArtifactDateReminderFactory
      */
     public function checkReminderStatus($current_time)
     {
-        $this->logger->info('Start');
-
         $notificationSent = $this->getNotificationSent();
         $recurse          = $this->getRecurse();
-        $this->logger->info("notification_sent = $notificationSent");
-        $this->logger->info("recurse           = $recurse");
         if ($notificationSent < $recurse) {
             $notificationToBeSent = $this->getNotificationToBeSent($current_time);
-            $this->logger->info("notification_to_be_sent = $notificationToBeSent");
             if ($notificationToBeSent > 0 && $notificationToBeSent > $this->getNotificationSent()) {
                 //previous notification mails were not sent (for different possible reasons: push to prod of the feature, mail server crash, bug, etc)
                 //in this case, re-adjust 'notification_sent' field
                 $this->updateNotificationSent($notificationToBeSent);
-                $this->logger->warn('update notification sent');
             }
 
             $next_day = intval($this->getNextReminderDate() + 24 * 3600);
@@ -581,10 +558,7 @@ class ArtifactDateReminderFactory
                     //Increment 'notification_sent' field
                     $this->updateNotificationSent();
                 }
-            } else {
-                $this->logger->info('out of notification period');
             }
         }
-        $this->logger->info('End');
     }
 }

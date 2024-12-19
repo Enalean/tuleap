@@ -48,10 +48,16 @@ class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys /
         bindtextdomain('tuleap-dynamic_credentials', __DIR__ . '/../site-content');
     }
 
-    public function getPluginInfo()
+    public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
-            $this->pluginInfo = new \Tuleap\DynamicCredentials\Plugin\PluginInfo($this);
+            $this->pluginInfo = new \PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-dynamic_credentials', 'Dynamic credentials generation'),
+                    dgettext('tuleap-dynamic_credentials', 'Allow your support staff to access your instance when needed')
+                )
+            );
         }
 
         return $this->pluginInfo;
@@ -161,6 +167,6 @@ class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys /
 
     private function getSettings(): DynamicCredentialsSettings
     {
-        return new DynamicCredentialsSettings($this->getPluginInfo());
+        return new DynamicCredentialsSettings();
     }
 }

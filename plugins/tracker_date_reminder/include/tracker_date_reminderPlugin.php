@@ -54,34 +54,24 @@ class tracker_date_reminderPlugin extends Plugin
         $this->addHook('tracker_postmod', 'tracker_update_artifact');
     }
 
-    public function getPluginInfo()
+    public function getPluginInfo(): \PluginInfo
     {
-        if (! $this->pluginInfo instanceof \TrackerDateReminderPluginInfo) {
-            include_once('TrackerDateReminderPluginInfo.class.php');
-            $this->pluginInfo = new TrackerDateReminderPluginInfo($this);
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new \PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-tracker_date_reminder', 'Tracker date based reminder'),
+                    dgettext('tuleap-tracker_date_reminder', 'Date based notification in trackers.')
+                )
+            );
         }
-        return $this->pluginInfo;
-    }
 
-    private function isLoggingEnabled()
-    {
-        return $this->getPluginInfo()->getPropertyValueForName('enable_log');
+        return $this->pluginInfo;
     }
 
     public function codendi_daily_start($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        include_once 'ArtifactDateReminder.class.php';
-        include_once 'TrackerDateReminder_Logger_Prefix.class.php';
-
-        if ($this->isLoggingEnabled()) {
-            $logfile = ForgeConfig::get('codendi_log') . '/tracker_date_reminder.log';
-        } else {
-            $logfile = false;
-        }
-
-        $logger = new TrackerDateReminder_Logger($logfile);
-
-        $artifactDateReminder = new ArtifactDateReminder($logger);
+        $artifactDateReminder = new ArtifactDateReminder();
         $artifactDateReminder->codexDaily();
     }
 

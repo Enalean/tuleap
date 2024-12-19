@@ -31,33 +31,15 @@ final class DynamicCredentialsSettingsTest extends TestCase
 
     private const PUBLIC_KEY = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
 
-    private PluginInfo&\PHPUnit\Framework\MockObject\Stub $plugin_info;
     private DynamicCredentialsSettings $settings;
 
     protected function setUp(): void
     {
-        $this->plugin_info = $this->createStub(PluginInfo::class);
-        $this->settings    = new DynamicCredentialsSettings($this->plugin_info);
-    }
-
-    public function testFetchSettingsFromLegacyIncFile(): void
-    {
-        $expected_real_name = 'Some real name';
-        $this->plugin_info->method('getPropertyValueForName')->willReturnMap([
-            ['signature_public_key', self::PUBLIC_KEY],
-            ['dynamic_user_realname', $expected_real_name],
-        ]);
-
-        $key = $this->settings->getSignaturePublicKey();
-        self::assertTrue($key->isValue());
-        $name = $this->settings->getDynamicUserRealname();
-        self::assertSame($expected_real_name, $name);
+        $this->settings = new DynamicCredentialsSettings();
     }
 
     public function testFetchSettingsFromForgeConfig(): void
     {
-        $this->plugin_info->method('getPropertyValueForName')->willReturn(false);
-
         $expected_real_name = 'my_real_name';
         \ForgeConfig::set('dynamic_credentials_user_real_name', $expected_real_name);
         \ForgeConfig::set('dynamic_credentials_signature_public_key', self::PUBLIC_KEY);
@@ -70,8 +52,6 @@ final class DynamicCredentialsSettingsTest extends TestCase
 
     public function testDoesNotAttemptToBuildSignaturePublicKeyWhenNoInformationIsAvailable(): void
     {
-        $this->plugin_info->method('getPropertyValueForName')->willReturn(false);
-
         $key = $this->settings->getSignaturePublicKey();
         self::assertTrue($key->isNothing());
     }
