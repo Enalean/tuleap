@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, it, expect } from "vitest";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { getWritingZoneTemplate } from "./WritingZoneTemplate";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
@@ -26,6 +26,12 @@ import { WritingZonePresenter } from "./WritingZonePresenter";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 import "@tuleap/commonmark-popover/commonmark-popover-stub";
+
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
 
 const project_id = 105;
 

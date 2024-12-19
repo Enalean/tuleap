@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/mention": "workspace:^",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",

@@ -26,6 +26,12 @@ import { buildPreviewTab, buildWriteTab } from "./WritingZoneTabsTemplate";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
+
 const project_id = 105;
 
 describe("WritingZoneTabsTemplate", () => {

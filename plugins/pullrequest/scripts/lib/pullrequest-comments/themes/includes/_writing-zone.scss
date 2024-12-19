@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "pkg:@tuleap/mention";
+
 $writing-zone-content-height: 254px;
 
 .pull-request-comment-writing-zone-header {

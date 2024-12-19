@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
@@ -37,6 +37,12 @@ const current_user_avatar_url = "url/to/user_avatar.png";
 const noop = (): void => {
     // do nothing
 };
+
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
 
 describe("OverviewNewCommentForm", () => {
     it("should init a <tuleap-pullrequest-new-comment-form /> component", () => {

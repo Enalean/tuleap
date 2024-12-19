@@ -76,6 +76,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/mention':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/mention
   '@tuleap/plugin-pullrequest-rest-api-types':
     specifier: workspace:*
     version: link:../lib/rest-api-types

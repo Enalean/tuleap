@@ -18,6 +18,7 @@
  */
 
 import { define } from "hybrids";
+import { initMentions } from "@tuleap/mention";
 import { gettext_provider } from "../gettext-provider";
 import type { ElementContainingAWritingZone } from "../types";
 import type { ControlWritingZone } from "./WritingZoneController";
@@ -30,7 +31,7 @@ export type InternalWritingZone = {
     controller: ControlWritingZone;
     presenter: WritingZonePresenter;
     textarea: HTMLTextAreaElement;
-    render: () => HTMLElement;
+    render(): HTMLElement;
 };
 
 export type HostElement = InternalWritingZone & HTMLElement;
@@ -95,17 +96,15 @@ define<InternalWritingZone>({
         value: (host: HostElement) => {
             const textarea_element = document.createElement("textarea");
             textarea_element.setAttribute("data-test", "writing-zone-textarea");
-            textarea_element.setAttribute(
-                "class",
-                "pull-request-comment-writing-zone-textarea tlp-textarea",
+            textarea_element.classList.add(
+                "pull-request-comment-writing-zone-textarea",
+                "tlp-textarea",
             );
-            textarea_element.setAttribute("rows", "10");
-            textarea_element.setAttribute(
-                "placeholder",
-                gettext_provider.gettext("Say something…"),
-            );
+            textarea_element.rows = 10;
+            textarea_element.placeholder = gettext_provider.gettext("Say something…");
             textarea_element.addEventListener("input", () => host.controller.onTextareaInput(host));
 
+            initMentions(textarea_element);
             return textarea_element;
         },
         connect: (host) => {

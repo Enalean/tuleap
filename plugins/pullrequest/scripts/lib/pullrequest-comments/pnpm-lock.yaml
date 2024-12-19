@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/gettext':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/gettext
+  '@tuleap/mention':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/mention
   '@tuleap/option':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/option
