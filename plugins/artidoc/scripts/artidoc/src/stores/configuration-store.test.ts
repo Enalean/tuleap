@@ -33,8 +33,6 @@ describe("configuration-store", () => {
             const insert = vi.fn();
             vi.spyOn(rest, "putConfiguration").mockReturnValue(okAsync(new Response()));
 
-            const onSuccessfulSave = vi.fn();
-
             const sections =
                 InjectedSectionsStoreStub.withMockedInsertPendingArtifactSectionForEmptyDocument(
                     insert,
@@ -47,23 +45,20 @@ describe("configuration-store", () => {
 
             expect(store.selected_tracker.value).toStrictEqual(null);
 
-            store.saveConfiguration(bugs, onSuccessfulSave);
+            store.saveConfiguration(bugs);
             await flushPromises();
 
             expect(store.selected_tracker.value).toStrictEqual(bugs);
             expect(insert).toHaveBeenCalled();
             expect(store.is_success.value).toBe(true);
             expect(store.is_error.value).toBe(false);
-            expect(onSuccessfulSave).toHaveBeenCalled();
         });
 
-        it("should expos the error", async () => {
+        it("should display the error", async () => {
             const insert = vi.fn();
             vi.spyOn(rest, "putConfiguration").mockReturnValue(
                 errAsync(Fault.fromMessage("Bad request")),
             );
-
-            const onSuccessfulSave = vi.fn();
 
             const sections =
                 InjectedSectionsStoreStub.withMockedInsertPendingArtifactSectionForEmptyDocument(
@@ -77,7 +72,7 @@ describe("configuration-store", () => {
 
             expect(store.selected_tracker.value).toStrictEqual(null);
 
-            store.saveConfiguration(bugs, onSuccessfulSave);
+            store.saveConfiguration(bugs);
             await flushPromises();
 
             expect(store.selected_tracker.value).toStrictEqual(null);
@@ -85,7 +80,6 @@ describe("configuration-store", () => {
             expect(store.is_success.value).toBe(false);
             expect(store.is_error.value).toBe(true);
             expect(store.error_message.value).toBe("Bad request");
-            expect(onSuccessfulSave).not.toHaveBeenCalled();
         });
     });
 

@@ -60,7 +60,7 @@ export const ConfigurationStoreStub = {
         is_saving: ref(true),
     }),
 
-    withSuccessfullSave: (): ConfigurationStore => ({
+    withSuccessfulSave: (): ConfigurationStore => ({
         ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
         is_success: ref(true),
     }),

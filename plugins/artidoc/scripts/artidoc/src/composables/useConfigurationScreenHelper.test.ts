@@ -132,7 +132,7 @@ describe("useConfigurationScreenHelper", () => {
     describe("resetSelection", () => {
         it("should reset current selection", () => {
             const store: ConfigurationStore = {
-                ...ConfigurationStoreStub.withSuccessfullSave(),
+                ...ConfigurationStoreStub.withSuccessfulSave(),
                 selected_tracker: ref(ConfigurationStoreStub.bugs),
             };
             mockStrictInject([[CONFIGURATION_STORE, store]]);

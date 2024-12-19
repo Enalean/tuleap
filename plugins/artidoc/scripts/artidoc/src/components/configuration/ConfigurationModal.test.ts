@@ -25,7 +25,7 @@ import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { createGettext } from "vue3-gettext";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
-import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
+import type { ConfigurationStore } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { OpenConfigurationModalBusStore } from "@/stores/useOpenConfigurationModalBusStore";
 import {
@@ -51,7 +51,7 @@ describe("ConfigurationModal", () => {
 
     it("should display success feedback", () => {
         const wrapper = getWrapper(
-            ConfigurationStoreStub.withSuccessfullSave(),
+            ConfigurationStoreStub.withSuccessfulSave(),
             useOpenConfigurationModalBusStore(),
         );
 
@@ -69,28 +69,37 @@ describe("ConfigurationModal", () => {
         expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(true);
     });
 
-    it("should save the configuration and call the onSave callback", async () => {
+    it("should save the configuration", async () => {
         let has_been_called = false;
-        const onSuccessfulSaved = (): void => {
-            has_been_called = true;
-        };
 
         const bus = useOpenConfigurationModalBusStore();
 
         const save: ConfigurationStore["saveConfiguration"] = vi
             .fn()
-            .mockImplementation((new_selected_tracker: Tracker, onSave: () => void): void => {
-                onSave();
+            .mockImplementation((): void => {
+                has_been_called = true;
             });
 
         const wrapper = getWrapper(ConfigurationStoreStub.withMockedSavedConfiguration(save), bus);
 
-        bus.openModal(onSuccessfulSaved);
+        bus.openModal();
 
         expect(has_been_called).toBe(false);
 
         await wrapper.find("form").trigger("submit");
 
         expect(has_been_called).toBe(true);
+    });
+
+    it("When the modal is closed after a successful save, then it should execute onSuccessfulSaveCallback", () => {
+        const bus = useOpenConfigurationModalBusStore();
+        const wrapper = getWrapper(ConfigurationStoreStub.withSuccessfulSave(), bus);
+        const onSuccessfulSaveCallback = vi.fn();
+
+        bus.openModal(onSuccessfulSaveCallback);
+
+        wrapper.find("[data-test=close-modal-after-success]").trigger("click");
+
+        expect(onSuccessfulSaveCallback).toHaveBeenCalledOnce();
     });
 });

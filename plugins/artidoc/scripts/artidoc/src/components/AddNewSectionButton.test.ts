@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Mock } from "vitest";
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -33,6 +32,7 @@ import {
 import { createGettext } from "vue3-gettext";
 import { AT_THE_END } from "@/stores/useSectionsStore";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
+import { noop } from "@/helpers/noop";
 import type { OpenAddExistingSectionModalBus } from "@/composables/useOpenAddExistingSectionModalBus";
 import {
     OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
@@ -43,7 +43,7 @@ vi.mock("@tuleap/tlp-dropdown");
 
 describe("AddNewSectionButton", () => {
     function getWrapper(
-        insert_section_callback: Mock,
+        insert_section_callback: () => void,
         configuration_store: ConfigurationStore,
         configuration_bus: OpenConfigurationModalBusStore,
         add_existing_section_bus: OpenAddExistingSectionModalBus,
@@ -61,7 +61,7 @@ describe("AddNewSectionButton", () => {
         });
     }
 
-    describe("when the tracker is not configured", () => {
+    describe("[Create new section] when the tracker is not configured", () => {
         it("should ask to open the configuration modal on click", async () => {
             let has_modal_been_opened = false;
 
@@ -114,7 +114,7 @@ describe("AddNewSectionButton", () => {
         });
     });
 
-    describe("when the tracker is configured but user cannot submit title", () => {
+    describe("[Create new section] when the tracker is configured but user cannot submit title", () => {
         it("should ask to open the configuration modal on click when title is not submittable", async () => {
             let has_modal_been_opened = false;
 
@@ -186,7 +186,7 @@ describe("AddNewSectionButton", () => {
         });
     });
 
-    describe("when the tracker is configured but user cannot submit description", () => {
+    describe("[Create new section] when the tracker is configured but user cannot submit description", () => {
         it("should ask to open the configuration modal on click when description is not submittable", async () => {
             let has_modal_been_opened = false;
 
@@ -258,7 +258,7 @@ describe("AddNewSectionButton", () => {
         });
     });
 
-    describe("when tracker is configured and user can submit new section", () => {
+    describe("[Create new section] when tracker is configured and user can submit new section", () => {
         it("should insert a pending artifact section", async () => {
             let has_modal_been_opened = false;
 
@@ -335,6 +335,50 @@ describe("AddNewSectionButton", () => {
 
             expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("[Add existing section] when the tracker is not configured", () => {
+        it("should ask to open the configuration modal on click", async () => {
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
+
+            const openConfigurationModal = vi.spyOn(configuration_bus, "openModal");
+            const openAddExistingSectionModal = vi.spyOn(add_existing_section_bus, "openModal");
+
+            const wrapper = getWrapper(
+                noop,
+                ConfigurationStoreStub.withSelectedTracker(null),
+                configuration_bus,
+                add_existing_section_bus,
+            );
+
+            await wrapper.find("[data-test=add-existing-section]").trigger("click");
+
+            expect(openConfigurationModal).toHaveBeenCalledOnce();
+            expect(openAddExistingSectionModal).not.toHaveBeenCalled();
+        });
+
+        it("should open the AddExistingSectionModal after the configuration is saved", async () => {
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
+            const store = ConfigurationStoreStub.withSelectedTracker(null);
+
+            const openAddExistingSectionModal = vi.spyOn(add_existing_section_bus, "openModal");
+
+            let has_modal_been_opened = false;
+            configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
+                has_modal_been_opened = true;
+                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                onSuccessfulSaved();
+            });
+
+            const wrapper = getWrapper(noop, store, configuration_bus, add_existing_section_bus);
+
+            await wrapper.find("[data-test=add-existing-section]").trigger("click");
+
+            expect(has_modal_been_opened).toBe(true);
+            expect(openAddExistingSectionModal).toHaveBeenCalledOnce();
         });
     });
 });
