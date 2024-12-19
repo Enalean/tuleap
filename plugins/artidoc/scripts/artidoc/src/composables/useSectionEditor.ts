@@ -19,7 +19,11 @@
 import { computed, ref } from "vue";
 import type { Ref, ComputedRef } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
+import {
+    isFreetextSection,
+    isArtifactSection,
+    isPendingArtifactSection,
+} from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import type { Tracker } from "@/stores/configuration-store";
@@ -75,20 +79,29 @@ export function useSectionEditor(
     const current_section: Ref<ArtidocSection> = ref(section);
     const editor_errors_handler = useEditorErrors();
 
-    const is_image_upload_allowed = computed(
-        () =>
+    const is_image_upload_allowed = computed(() => {
+        if (isFreetextSection(section)) {
+            return false;
+        }
+        return (
             current_section.value.attachments !== null &&
             undefined !== current_section.value.attachments.field_id &&
-            0 !== current_section.value.attachments?.field_id,
-    );
+            0 !== current_section.value.attachments?.field_id
+        );
+    });
     const {
         getSectionPositionForSave,
         replacePendingByArtifactSection,
         removeSection,
         updateSection,
     } = strictInject(SECTIONS_STORE);
-    const is_section_in_edit_mode = ref(isPendingArtifactSection(current_section.value));
+    const is_section_in_edit_mode = isFreetextSection(current_section.value)
+        ? ref(false)
+        : ref(isPendingArtifactSection(current_section.value));
     const is_section_editable = computed(() => {
+        if (isFreetextSection(current_section.value)) {
+            return false;
+        }
         if (isPendingArtifactSection(current_section.value)) {
             return can_user_edit_document;
         }

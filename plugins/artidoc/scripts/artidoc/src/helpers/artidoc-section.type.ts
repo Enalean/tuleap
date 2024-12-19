@@ -56,15 +56,25 @@ export type ArtifactTextFieldValueRepresentation =
     | ArtifactFieldValueCommonmarkRepresentation
     | ArtifactFieldValueTextRepresentation;
 
-export interface ArtidocSection {
+export type ArtidocSection = FreetextSection | SectionBasedOnArtifact;
+
+export type FreetextSection = {
+    id: string;
+    title: string;
+    display_title: string;
+    description: string;
+    attachments: null;
+};
+
+export type SectionBasedOnArtifact = {
     id: string;
     title: ArtifactFieldValueStringRepresentation | ArtifactTextFieldValueRepresentation;
     display_title: string;
     description: ArtifactTextFieldValueRepresentation;
     attachments: ArtifactFieldValueFileFullRepresentation | null;
-}
+};
 
-export interface ArtifactSection extends ArtidocSection {
+export interface ArtifactSection extends SectionBasedOnArtifact {
     artifact: {
         id: number;
         uri: string;
@@ -79,9 +89,9 @@ export interface ArtifactSection extends ArtidocSection {
     can_user_edit_section: boolean;
 }
 
-export interface PendingArtifactSection extends ArtidocSection {
+export type PendingArtifactSection = SectionBasedOnArtifact & {
     tracker: Tracker;
-}
+};
 
 export function isPendingArtifactSection(
     section: ArtidocSection,
@@ -93,8 +103,18 @@ export function isArtifactSection(section: ArtidocSection): section is ArtifactS
     return "artifact" in section;
 }
 
+export function isSectionBasedOnArtifact(
+    section: ArtidocSection,
+): section is SectionBasedOnArtifact {
+    return typeof section.title !== "string";
+}
+
+export function isFreetextSection(section: ArtidocSection): section is FreetextSection {
+    return typeof section.title === "string";
+}
+
 export function isTitleAString(
-    title: ArtidocSection["title"],
+    title: SectionBasedOnArtifact["title"],
 ): title is ArtifactFieldValueStringRepresentation {
     return title.type === "string";
 }

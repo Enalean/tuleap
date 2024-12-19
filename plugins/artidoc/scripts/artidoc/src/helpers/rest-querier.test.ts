@@ -23,9 +23,10 @@ import { errAsync, okAsync } from "neverthrow";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { getAllSections, getSection, putArtifact } from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 import { Fault } from "@tuleap/fault";
 import { uri } from "@tuleap/fetch-result";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("rest-querier", () => {
     describe("getAllSections", () => {
@@ -206,6 +207,46 @@ describe("rest-querier", () => {
             expect(all_sections[0].display_title).toBe("Le title A");
             expect(all_sections[1].display_title).toBe("Le title B");
         });
+
+        it("should returns retrieved sections when title is a text in a freetext section", async () => {
+            const section_a = FreetextSectionFactory.create();
+            const section_b = ArtifactSectionFactory.create();
+            vi.spyOn(fetch, "getAllJSON").mockReturnValue(
+                okAsync([
+                    FreetextSectionFactory.override({
+                        ...section_a,
+                        title: "Le title A",
+                    }),
+                    ArtifactSectionFactory.override({
+                        ...section_b,
+                        title: {
+                            ...section_b.title,
+                            type: "text",
+                            format: "html",
+                            value: "<p>Le title</p>\r\n<p>B</p>",
+                            post_processed_value: "<p>Le title</p>\r\n<p>B</p>",
+                            commonmark: "Le title\r\nB",
+                        },
+                    }),
+                ]),
+            );
+
+            let all_sections: readonly ArtidocSection[] = [];
+            getAllSections(123).match(
+                (sections) => {
+                    all_sections = sections;
+                },
+                () => {
+                    throw new Error();
+                },
+            );
+
+            await flushPromises();
+
+            expect(all_sections).toHaveLength(2);
+            expect(all_sections[0].display_title).toBe("Le title A");
+            expect(all_sections[1].display_title).toBe("Le title B");
+        });
     });
 
     describe("getSection", () => {
@@ -335,6 +376,32 @@ describe("rest-querier", () => {
 
             expect(retrieved_section.display_title).toBe("Le title A");
         });
+
+        it("should returns retrieved section when title is a text in a freetext section", async () => {
+            const section = FreetextSectionFactory.create();
+            vi.spyOn(fetch, "getJSON").mockReturnValue(
+                okAsync(
+                    FreetextSectionFactory.override({
+                        ...section,
+                        title: "Le title A",
+                    }),
+                ),
+            );
+
+            let retrieved_section: ArtidocSection = FreetextSectionFactory.create();
+            getSection("section-id").match(
+                (section) => {
+                    retrieved_section = section;
+                },
+                () => {
+                    throw new Error();
+                },
+            );
+
+            await flushPromises();
+
+            expect(retrieved_section.display_title).toBe("Le title A");
+        });
     });
 
     describe("putArtifactDescription", () => {
@@ -387,7 +454,7 @@ describe("rest-querier", () => {
             );
         });
 
-        it.each<[ArtidocSection["title"]]>([
+        it.each<[ArtifactSection["title"]]>([
             [
                 {
                     field_id: 1001,
@@ -421,7 +488,7 @@ describe("rest-querier", () => {
             ],
         ])(
             "should update artifact, when title is a text field with %s",
-            async (title: ArtidocSection["title"]) => {
+            async (title: ArtifactSection["title"]) => {
                 const put = vi
                     .spyOn(fetch, "putResponse")
                     .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));

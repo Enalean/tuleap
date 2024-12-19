@@ -23,7 +23,7 @@
             <section-dropdown
                 v-bind:editor="editor"
                 v-bind:section="section"
-                v-if="!is_sections_loading"
+                v-if="!is_sections_loading && isSectionBasedOnArtifact(section)"
             />
         </div>
 
@@ -40,7 +40,8 @@
             <section-header
                 class="section-header"
                 v-if="!is_sections_loading"
-                v-bind:title="editable_title"
+                v-bind:title="section.display_title"
+                v-bind:is_freetext="!isSectionBasedOnArtifact(section)"
             />
             <section-header-skeleton v-if="is_sections_loading" class="section-header" />
             <section-description
@@ -52,9 +53,11 @@
                 v-bind:is_image_upload_allowed="is_image_upload_allowed"
                 v-bind:upload_file="upload_file"
                 v-bind:project_id="getProjectId()"
-                v-bind:title="editable_title"
+                v-bind:title="section.display_title"
                 v-bind:input_section_content="inputSectionContent"
                 v-bind:is_there_any_change="is_there_any_change"
+                v-bind:section="section"
+                v-bind:editor_section_content="editor.editor_section_content"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
@@ -63,7 +66,11 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
+import {
+    isSectionBasedOnArtifact,
+    isPendingArtifactSection,
+    isArtifactSection,
+} from "@/helpers/artidoc-section.type";
 import SectionHeader from "./header/SectionHeader.vue";
 import SectionDescription from "./description/SectionDescription.vue";
 import { useSectionEditor } from "@/composables/useSectionEditor";
@@ -79,7 +86,6 @@ import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ section: ArtidocSection }>();
-
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 
@@ -116,13 +122,8 @@ const {
 } = editor.editor_state;
 const { is_in_error, is_outdated } = editor.editor_error;
 
-const {
-    inputSectionContent,
-    is_there_any_change,
-    editable_title,
-    editable_description,
-    getReadonlyDescription,
-} = editor.editor_section_content;
+const { inputSectionContent, is_there_any_change, editable_description, getReadonlyDescription } =
+    editor.editor_section_content;
 
 function getProjectId(): number {
     if (isArtifactSection(props.section)) {

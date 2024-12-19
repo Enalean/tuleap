@@ -30,7 +30,6 @@ import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-s
 import { computed } from "vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
-
 const additional_class = computed(() => {
     const color = isArtifactSection(props.section)
         ? props.section.artifact.tracker.color

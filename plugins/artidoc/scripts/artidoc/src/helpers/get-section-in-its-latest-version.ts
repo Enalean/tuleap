@@ -18,6 +18,7 @@
  */
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isFreetextSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
@@ -45,9 +46,18 @@ export function getSectionInItsLatestVersion(
     return getSection(old_section.id).andThen(
         (new_section: ArtidocSection): ResultAsync<ArtidocSection, OutdatedSectionFault> => {
             if (
+                isSectionBasedOnArtifact(new_section) &&
+                isSectionBasedOnArtifact(old_section) &&
                 new_section.display_title === old_section.display_title &&
                 convertDescriptionToHtml(new_section.description) ===
                     convertDescriptionToHtml(old_section.description)
+            ) {
+                return okAsync(new_section);
+            }
+            if (
+                isFreetextSection(new_section) &&
+                isFreetextSection(old_section) &&
+                new_section.display_title === old_section.display_title
             ) {
                 return okAsync(new_section);
             }

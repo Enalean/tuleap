@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
+import {
+    isArtifactSection,
+    isFreetextSection,
+    isPendingArtifactSection,
+    isSectionBasedOnArtifact,
+} from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { createSection, getSection, postArtifact, putArtifact } from "@/helpers/rest-querier";
 import { Fault } from "@tuleap/fault";
@@ -135,6 +140,7 @@ export default function useSaveSection(
         editor_errors.is_outdated.value = false;
 
         if (
+            isSectionBasedOnArtifact(section) &&
             new_value.description === section.description.value &&
             new_value.title === section.title.value
         ) {
@@ -142,6 +148,16 @@ export default function useSaveSection(
                 return;
             }
 
+            callbacks.setEditMode(false);
+            addTemporaryJustSavedFlag();
+            return;
+        }
+
+        if (
+            isFreetextSection(section) &&
+            new_value.description === section.description &&
+            new_value.title === section.title
+        ) {
             callbacks.setEditMode(false);
             addTemporaryJustSavedFlag();
             return;

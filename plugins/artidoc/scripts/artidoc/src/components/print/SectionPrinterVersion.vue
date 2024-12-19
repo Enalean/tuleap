@@ -22,35 +22,23 @@
     <article>
         <section-header
             class="section-header"
-            v-bind:title="editable_title"
+            v-bind:title="section.display_title"
             v-bind:is_print_mode="true"
+            v-bind:is_freetext="!isArtifactSection(section)"
         />
-        <section-description
-            v-bind:title="editable_title"
-            v-bind:editable_description="editable_description"
-            v-bind:readonly_description="readonly_description"
-            v-bind:input_section_content="noop"
-            v-bind:is_edit_mode="false"
-            v-bind:add_attachment_to_waiting_list="noop"
-            v-bind:upload_url="upload_url"
-            v-bind:is_image_upload_allowed="is_image_upload_allowed"
-            v-bind:is_print_mode="true"
-            v-bind:upload_file="UploadFileStub.uploadNotInProgress()"
-            v-bind:is_there_any_change="false"
-            v-bind:project_id="section.artifact.tracker.project.id"
-        />
+        <section-description-read-only v-bind:readonly_value="readonly_description" />
     </article>
 </template>
 
 <script setup lang="ts">
-import type { ArtifactSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import SectionHeader from "@/components/section/header/SectionHeader.vue";
-import SectionDescription from "@/components/section/description/SectionDescription.vue";
 import { computed, ref } from "vue";
 import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
-import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
+import SectionDescriptionReadOnly from "@/components/section/description/SectionDescriptionReadOnly.vue";
 
-const props = defineProps<{ section: ArtifactSection }>();
+const props = defineProps<{ section: ArtidocSection }>();
 
 const content = computed(() =>
     useEditorSectionContent(ref(props.section), {
@@ -59,11 +47,7 @@ const content = computed(() =>
     }),
 );
 
-const editable_title = computed(() => content.value.editable_title.value);
 const readonly_description = computed(() => content.value.getReadonlyDescription());
 
 function noop(): void {}
-const upload_url = "";
-const is_image_upload_allowed = false;
-const editable_description = "";
 </script>

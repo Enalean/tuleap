@@ -31,6 +31,7 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { noop } from "@/helpers/noop";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
@@ -68,7 +69,7 @@ describe("TableOfContents", () => {
 
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
-        let section_1: ArtidocSection, section_2: ArtidocSection;
+        let section_1: ArtidocSection, section_2: ArtidocSection, freetext_section: ArtidocSection;
 
         beforeAll(() => {
             const default_section = ArtifactSectionFactory.create();
@@ -78,6 +79,7 @@ describe("TableOfContents", () => {
             section_2 = ArtifactSectionFactory.override({
                 artifact: { ...default_section.artifact, id: 2 },
             });
+            freetext_section = FreetextSectionFactory.create();
 
             wrapper = getWrapper(true);
         });
@@ -91,6 +93,7 @@ describe("TableOfContents", () => {
                         [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadedSections([
                             section_1,
                             section_2,
+                            freetext_section,
                         ]),
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
@@ -102,11 +105,11 @@ describe("TableOfContents", () => {
         describe("when user can edit document", () => {
             it("should have dragndrop grip to reorder sections", () => {
                 const wrapper = getWrapper(true);
-                expect(wrapper.findAll("[data-test=dragndrop-grip]").length).toBe(2);
+                expect(wrapper.findAll("[data-test=dragndrop-grip]").length).toBe(3);
             });
             it("should have arrows to reorder sections without dragndrop", () => {
                 const wrapper = getWrapper(true);
-                expect(wrapper.findAll("[data-test=reorder-arrows]").length).toBe(2);
+                expect(wrapper.findAll("[data-test=reorder-arrows]").length).toBe(3);
             });
         });
 
@@ -123,17 +126,19 @@ describe("TableOfContents", () => {
 
         it("should display the two title sections", () => {
             const list = wrapper.findAll("li");
-            expect(list).toHaveLength(2);
+            expect(list).toHaveLength(3);
             expect(list[0].find("a").text()).toBe("Technologies section");
             expect(list[1].find("a").text()).toBe("Technologies section");
+            expect(list[2].find("a").text()).toBe("Introduction section");
         });
 
         it("should have an url to redirect to the section", () => {
             const list = wrapper.find("ol");
             const links = list.findAll("li a");
-            expect(links.length).toBe(2);
+            expect(links.length).toBe(3);
             expect(links[0].attributes().href).toBe(`#section-${section_1.id}`);
             expect(links[1].attributes().href).toBe(`#section-${section_2.id}`);
+            expect(links[2].attributes().href).toBe(`#section-${freetext_section.id}`);
         });
 
         it("should display the table of content title", () => {

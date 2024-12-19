@@ -17,21 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isArtifactSection } from "@/helpers/artidoc-section.type";
-import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.type";
+import type {
+    ArtidocSection,
+    ArtifactSection,
+    FreetextSection,
+} from "@/helpers/artidoc-section.type";
 
-export function extractArtifactSectionsFromArtidocSections(
+export function extractArtifactAndFreetextSectionsFromArtidocSections(
     sections: readonly ArtidocSection[] | undefined,
-): readonly ArtifactSection[] | undefined {
+): ReadonlyArray<ArtifactSection | FreetextSection> | undefined {
     if (sections === undefined) {
         return undefined;
     }
 
-    return sections.reduce((saved: ArtifactSection[], current: ArtidocSection) => {
-        if (isArtifactSection(current)) {
-            saved.push(current);
-        }
+    return sections.reduce(
+        (saved: Array<ArtifactSection | FreetextSection>, current: ArtidocSection) => {
+            if (isArtifactSection(current) || isFreetextSection(current)) {
+                saved.push(current);
+            }
 
-        return saved;
-    }, []);
+            return saved;
+        },
+        [],
+    );
 }
