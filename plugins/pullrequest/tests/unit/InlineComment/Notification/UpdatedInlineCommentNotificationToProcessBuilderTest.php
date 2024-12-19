@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
@@ -36,6 +37,7 @@ use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
 
@@ -77,6 +79,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
             $this->user_helper,
             $this->html_url_builder,
             FormatNotificationContentStub::withDefault(),
+            new MentionedUserInTextRetriever(ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithId(1510)))
         );
         return $builder->getNotificationsToProcess($event);
     }
@@ -101,8 +104,8 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
         );
 
         $notifications = $this->getNotifications($event);
-        $this->assertCount(1, $notifications);
-        $this->assertInstanceOf(UpdatedInlineCommentNotification::class, $notifications[0]);
+        self::assertCount(1, $notifications);
+        self::assertInstanceOf(UpdatedInlineCommentNotification::class, $notifications[0]);
     }
 
     public function testNoNotificationIsBuiltWhenTheInlineCommentCannotBeFound(): void
@@ -110,7 +113,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
         $this->inline_comment_searcher = InlineCommentSearcherStub::withNoComment();
 
         $event = UpdatedInlineCommentEvent::fromInlineComment(InlineCommentTestBuilder::aMarkdownComment('No comment')->withId(404)->build());
-        $this->assertEmpty($this->getNotifications($event));
+        self::assertEmpty($this->getNotifications($event));
     }
 
     public function testNoNotificationIsBuiltWhenThePullRequestCannotBeFound(): void
@@ -122,7 +125,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
         $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
         $this->pull_request_dao        = SearchPullRequestStub::withNoRow();
 
-        $this->assertEmpty($this->getNotifications($event));
+        self::assertEmpty($this->getNotifications($event));
     }
 
     public function testNoNotificationIsBuiltWhenTheUserCommentingCannotBeFound(): void
@@ -136,7 +139,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
         $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
         $this->user_retriever          = RetrieveUserByIdStub::withNoUser();
 
-        $this->assertEmpty($this->getNotifications($event));
+        self::assertEmpty($this->getNotifications($event));
     }
 
     public function testNoNotificationIsBuiltWhenTheCodeContextExtractionFails(): void
@@ -157,6 +160,6 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
                 }
             );
 
-        $this->assertEmpty($this->getNotifications($event));
+        self::assertEmpty($this->getNotifications($event));
     }
 }

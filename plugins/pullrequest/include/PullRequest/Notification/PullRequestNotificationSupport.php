@@ -430,6 +430,7 @@ final class PullRequestNotificationSupport
                                     $git_repository_factory,
                                     $html_purifier,
                                 ),
+                                new MentionedUserInTextRetriever($user_manager),
                             )
                         );
                     },
