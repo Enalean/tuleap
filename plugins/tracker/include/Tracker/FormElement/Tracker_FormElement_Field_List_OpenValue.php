@@ -62,6 +62,9 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
         if (! $field instanceof Tracker_FormElement_Field_OpenList) {
             throw new InvalidArgumentException('Expected ' . Tracker_FormElement_Field_OpenList::class . ', got ' . $field::class);
         }
-        return $field->getBind()->getFullRESTValue($this);
+        return [
+            'id'    => $this->getJsonId(),
+            'label' => $this->getLabel(),
+        ];
     }
 }

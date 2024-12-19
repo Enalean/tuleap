@@ -600,9 +600,23 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             return Option::nothing(ParametrizedFromWhere::class);
         }
 
-        $criteria_value = $this->extractCriteriaValue($this->getCriteriaValue($criteria));
-        $openvalues     = [];
-        $bindvalues     = [];
+        $not_extracted_criteria_value = $this->getCriteriaValue($criteria);
+        $criteria_value               = $this->extractCriteriaValue($not_extracted_criteria_value);
+        $openvalues                   = [];
+        $bindvalues                   = [];
+
+        if (
+            count($criteria_value) === 0 && (
+            (is_string($not_extracted_criteria_value) && $not_extracted_criteria_value !== '') ||
+            (is_array($not_extracted_criteria_value) && count($not_extracted_criteria_value) > 0)
+            )
+        ) {
+            // When requested to filter on an unknown value no results should be returned
+            return Option::fromValue(
+                new ParametrizedFromWhere('', '0', [], [])
+            );
+        }
+
         foreach ($criteria_value as $v) {
             if ($v instanceof \Tracker_FormElement_Field_List_UnsavedValue) {
                 //ignore it
@@ -662,7 +676,24 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     protected function formatCriteriaValue($value_to_match)
     {
+        $first_char_value = $value_to_match[0] ?? '';
+        if ($first_char_value === self::OPEN_PREFIX || $first_char_value === self::BIND_PREFIX) {
+            return $value_to_match;
+        }
         return 'b' . $value_to_match;
+    }
+
+    protected function isAValidCriteriaValueFromREST(mixed $value_to_match): bool
+    {
+        if (! is_scalar($value_to_match)) {
+            return false;
+        }
+        $value_to_match   = (string) $value_to_match;
+        $first_char_value = $value_to_match[0] ?? '';
+        if ($first_char_value === self::OPEN_PREFIX || $first_char_value === self::BIND_PREFIX) {
+            return parent::isAValidCriteriaValueFromREST(substr($value_to_match, 1));
+        }
+        return parent::isAValidCriteriaValueFromREST($value_to_match);
     }
 
     /**
