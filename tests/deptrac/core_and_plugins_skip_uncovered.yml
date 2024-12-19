@@ -1,0 +1,303 @@
+imports:
+  - deptrac.baseline.yaml
+deptrac:
+  paths:
+    - ../../src/common
+    - ../../plugins
+  exclude_files:
+    - '#.*Test\.php$#'
+    - node_modules
+    - vendor
+  layers:
+    - name: Core
+      collectors:
+        - type: directory
+          value: src/common/.*
+    - name: Plugins
+      collectors:
+        - type: directory
+          value: plugins/api_explorer|plugins/archivedeleteditems|plugins/bugzilla_reference|plugins/captcha|plugins/dynamic_credentials|plugins/embed|plugins/enalean_licensemanager|plugins/label|plugins/ldap|plugins/mediawiki|plugins/mediawiki_standalone|plugins/oauth2_server|plugins/openidconnectclient|plugins/pdftemplate|plugins/pluginsadministration|plugins/projectlinks|plugins/project_ownership|plugins/prometheus_metrics|plugins/securitytxt|plugins/statistics|plugins/tee_container|plugins/template|plugins/userlog|plugins/webauthn
+    - name: AgileDashboard
+      collectors:
+        - type: directory
+          value: plugins/agiledashboard/include/.*
+    - name: Artidoc
+      collectors:
+        - type: directory
+          value: plugins/artidoc/include/.*
+    - name: Baseline
+      collectors:
+        - type: directory
+          value: plugins/baseline/include/.*
+    - name: BotMattermost
+      collectors:
+        - type: directory
+          value: plugins/botmattermost/include/.*
+    - name: BotMattermostAgiledashboard
+      collectors:
+        - type: directory
+          value: plugins/botmattermost_agiledashboard/include/.*
+    - name: BotMattermostGit
+      collectors:
+        - type: directory
+          value: plugins/botmattermost_git/include/.*
+    - name: Cardwall
+      collectors:
+        - type: directory
+          value: plugins/cardwall/include/.*
+    - name: CreateTestEnv
+      collectors:
+        - type: directory
+          value: plugins/create_test_env/include/.*
+    - name: CrossTracker
+      collectors:
+        - type: directory
+          value: plugins/crosstracker/include/.*
+    - name: Document
+      collectors:
+        - type: directory
+          value: plugins/docman/include/.*
+        - type: directory
+          value: plugins/document/include/.*
+    - name: DocumentGeneration
+      collectors:
+        - type: directory
+          value: plugins/document_generation/include/.*
+    - name: FRS
+      collectors:
+        - type: directory
+          value: plugins/frs/include/.*
+    - name: Git
+      collectors:
+        - type: directory
+          value: plugins/git/include/.*
+    - name: GitLab
+      collectors:
+        - type: directory
+          value: plugins/gitlab/include/.*
+    - name: GitLFS
+      collectors:
+        - type: directory
+          value: plugins/gitlfs/include/.*
+    - name: GraphOnTracker
+      collectors:
+        - type: directory
+          value: plugins/graphontrackersv5/include/.*
+    - name: Jenkins
+      collectors:
+        - type: directory
+          value: plugins/hudson/include/.*
+    - name: JenkinsGit
+      collectors:
+        - type: directory
+          value: plugins/hudson_git/include/.*
+    - name: JenkinsSVN
+      collectors:
+        - type: directory
+          value: plugins/hudson_svn/include/.*
+    - name: JiraImport
+      collectors:
+        - type: directory
+          value: plugins/jira_import/include/.*
+    - name: Kanban
+      collectors:
+        - type: directory
+          value: plugins/kanban/include/.*
+    - name: OnlyOffice
+      collectors:
+        - type: directory
+          value: plugins/onlyoffice/include/.*
+    - name: ProgramManagement
+      collectors:
+        - type: directory
+          value: plugins/program_management/include/.*
+    - name: ProjectMilestones
+      collectors:
+        - type: directory
+          value: plugins/projectmilestones/include/.*
+    - name: PullRequest
+      collectors:
+        - type: directory
+          value: plugins/pullrequest/include/.*
+    - name: RoadMap
+      collectors:
+        - type: directory
+          value: plugins/roadmap/include/.*
+    - name: SVN
+      collectors:
+        - type: directory
+          value: plugins/svn/include/.*
+    - name: Taskboard
+      collectors:
+        - type: directory
+          value: plugins/taskboard/include/.*
+    - name: TestManagement
+      collectors:
+        - type: directory
+          value: plugins/testmanagement/include/.*
+    - name: TestPlan
+      collectors:
+        - type: directory
+          value: plugins/testplan/include/.*
+    - name: TimeTracking
+      collectors:
+        - type: directory
+          value: plugins/timetracking/include/.*
+    - name: Tracker
+      collectors:
+        - type: directory
+          value: plugins/tracker/include/.*
+    - name: TrackerDateReminder
+      collectors:
+        - type: directory
+          value: plugins/tracker_date_reminder/include/.*
+    - name: TrackerEncryption
+      collectors:
+        - type: directory
+          value: plugins/tracker_encryption/include/.*
+    - name: TrackerFunctions
+      collectors:
+        - type: directory
+          value: plugins/tracker_functions/include/.*
+    - name: Velocity
+      collectors:
+        - type: directory
+          value: plugins/velocity/include/.*
+    - name: Webdav
+      collectors:
+        - type: directory
+          value: plugins/webdav/include/.*
+  ruleset:
+    Plugins:
+      - Core
+    AgileDashboard:
+      - Core
+      - Cardwall
+      - Kanban
+      - Tracker
+    Artidoc:
+      - Core
+      - Document
+      - Tracker
+    Baseline:
+      - Core
+      - Tracker
+    BotMattermost:
+      - Core
+    BotMattermostAgiledashboard:
+      - Core
+      - AgileDashboard
+      - BotMattermost
+      - Tracker
+    BotMattermostGit:
+      - Core
+      - BotMattermost
+      - Git
+    Cardwall:
+      - Core
+      - AgileDashboard
+      - Tracker
+    CreateTestEnv:
+      - Core
+      - Tracker
+    CrossTracker:
+      - Core
+      - Tracker
+    Document:
+      - Core
+      - Document
+    DocumentGeneration:
+      - Core
+      - Tracker
+    FRS:
+      - Core
+      - Tracker
+    Git:
+      - Core
+    GitLab:
+      - Core
+      - Git
+      - Tracker
+    GitLFS:
+      - Core
+      - Git
+    GraphOnTracker:
+      - Core
+      - Tracker
+    Jenkins:
+      - Core
+    JenkinsSVN:
+      - Core
+      - Jenkins
+      - SVN
+    JenkinsGit:
+      - Core
+      - Git
+      - Jenkins
+    JiraImport:
+      - Core
+      - AgileDashboard
+      - Cardwall
+      - Kanban
+      - ProjectMilestones
+      - RoadMap
+      - Tracker
+    Kanban:
+      - Core
+      - Cardwall
+      - Tracker
+    OnlyOffice:
+      - Core
+      - Document
+    ProjectMilestones:
+      - Core
+      - AgileDashboard
+      - Tracker
+    ProgramManagement:
+      - Core
+      - AgileDashboard
+      - Cardwall
+      - Tracker
+    PullRequest:
+      - Core
+      - Git
+    RoadMap:
+      - Core
+      - Tracker
+    SVN:
+      - Core
+    Taskboard:
+      - Core
+      - AgileDashboard
+      - Cardwall
+      - Kanban
+      - Tracker
+    TestManagement:
+      - Core
+      - Tracker
+    TimeTracking:
+      - Core
+      - Tracker
+    TestPlan:
+      - Core
+      - AgileDashboard
+      - Tracker
+      - TestManagement
+    Tracker:
+      - Core
+    TrackerDateReminder:
+      - Core
+      - Tracker
+    TrackerEncryption:
+      - Core
+      - Tracker
+    TrackerFunctions:
+      - Core
+      - Tracker
+    Velocity:
+      - Core
+      - AgileDashboard
+      - Tracker
+    Webdav:
+      - Core
+      - Document

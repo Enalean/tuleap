@@ -1,0 +1,111 @@
+deptrac:
+  skip_violations:
+    AgileDashboardPlugin:
+      - Tuleap\Statistics\CSV\StatisticsServiceUsage
+      - Tuleap\TestManagement\Event\GetItemsFromMilestone
+      - Tuleap\TestManagement\Event\GetMilestone
+    DocmanPlugin:
+      - Tuleap\Statistics\FrequenciesLabels
+      - Tuleap\Statistics\FrequenciesSamples
+    Docman_Sample:
+      - Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample
+    GitPlugin:
+      - Tuleap\Statistics\FrequenciesLabels
+      - Tuleap\Statistics\FrequenciesSamples
+      - Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
+      - Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService
+      - Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent
+    Git_Backend_Gitolite:
+      - Statistics_Formatter
+    Git_Driver_Gerrit_User:
+      - LDAP_User
+    KanbanPlugin:
+      - Tuleap\Statistics\CSV\StatisticsServiceUsage
+    LdapPlugin:
+      - Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent
+    SvnPlugin:
+      - Statistics_DiskUsageDao
+      - Statistics_DiskUsageManager
+      - Tuleap\Statistics\CSV\StatisticsServiceUsage
+      - Tuleap\Statistics\DiskUsage\Subversion\Collector
+      - Tuleap\Statistics\DiskUsage\Subversion\Retriever
+    Tracker_Chart_Burndown:
+      - GraphOnTrackersV5_Burndown_Data
+    Tracker_Chart_BurndownView:
+      - GraphOnTrackersV5_Burndown_Data
+    Tracker_Sample:
+      - Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample
+    Tuleap\Baseline\Adapter\ArtifactLinkRepository:
+      - Planning
+      - PlanningFactory
+    Tuleap\Baseline\Adapter\SemanticFieldRepository:
+      - AgileDashBoard_Semantic_InitialEffort
+    Tuleap\BotMattermostGit\Presenter\AttachmentPreTextPresenter:
+      - Tuleap\PullRequest\PullRequest
+    Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder:
+      - Tuleap\PullRequest\PullRequest
+    Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender:
+      - Tuleap\PullRequest\PullRequest
+    Tuleap\GitLFS\Statistics\Collector:
+      - Statistics_DiskUsageDao
+    Tuleap\Git\Artifact\Action\CreateBranchButtonFetcher:
+      - Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction
+      - Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter
+      - Tuleap\Tracker\Artifact\Artifact
+    Tuleap\Git\DiskUsage\Collector:
+      - Statistics_DiskUsageManager
+    Tuleap\Git\DiskUsage\Retriever:
+      - Statistics_DiskUsageDao
+    Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact:
+      - Tuleap\Tracker\Artifact\Artifact
+    Tuleap\Git\Statistics\FrequenciesSample:
+      - Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample
+    Tuleap\SVN\DiskUsage\DiskUsageCollector:
+      - Statistics_DiskUsageDao
+      - Statistics_DiskUsageManager
+    Tuleap\SVN\DiskUsage\DiskUsageRetriever:
+      - Statistics_DiskUsageDao
+      - Statistics_DiskUsageManager
+    Tuleap\SVN\Statistic\SCMUsageCollector:
+      - Statistics_Formatter
+    Tuleap\SVN\Statistic\ServiceUsageCollector:
+      - Statistics_Services_UsageFormatter
+    Tuleap\TestManagement\Administration\AdminController:
+      - Planning_Milestone
+    Tuleap\TestManagement\Event\GetMilestone:
+      - Planning_Milestone
+    Tuleap\TestManagement\GetURIForMilestoneFromTTM:
+      - Planning_Milestone
+      - Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo
+    Tuleap\TestManagement\IndexController:
+      - Planning_Milestone
+    Tuleap\TestManagement\REST\v1\MilestoneRepresentation:
+      - Planning_Milestone
+    Tuleap\TestManagement\TestManagementController:
+      - Planning_Milestone
+    Tuleap\Tracker\Creation\JiraImporter\Import\JiraAllIssuesInXmlExporterBuilder:
+      - Tuleap\JiraImport\Project\CreateProjectFromJiraCommand
+    Tuleap\Tracker\REST\v1\MilestonesBurndownResource:
+      - Planning_Milestone
+    Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate:
+      - Tuleap\JiraImport\JiraAgile\ScrumTrackerBuilder
+    botmattermost_gitPlugin:
+      - Tuleap\PullRequest\GetCreatePullRequest
+    embedPlugin:
+      - Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay
+    frsPlugin:
+      - Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector
+    gitlfsPlugin:
+      - Statistics_DiskUsageManager
+      - Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild
+      - Tuleap\Statistics\Events\StatisticsRefreshDiskUsage
+    trackerPlugin:
+      - AgileDashboard_XMLFullStructureExporter
+      - Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation
+      - Tuleap\AgileDashboard\REST\v1\MilestoneResource
+      - Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder
+      - Tuleap\Statistics\CSV\StatisticsServiceUsage
+      - Tuleap\Statistics\FrequenciesLabels
+      - Tuleap\Statistics\FrequenciesSamples
+    velocityPlugin:
+      - Tuleap\JiraImport\JiraAgile\ScrumTrackerStructureEvent
