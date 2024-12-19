@@ -33,7 +33,6 @@ export type ControlWritingZone = {
     initWritingZone(): WritingZonePresenter;
     setWritingZoneContent(host: HostElement, content: string): void;
     shouldFocusWritingZoneWhenConnected(): boolean;
-    getDocument(): Document;
 };
 
 export type WritingZoneConfig = {
@@ -60,10 +59,6 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
 
     const blurWritingZone = (host: HTMLElement & InternalWritingZone): void => {
         host.presenter = WritingZonePresenter.buildBlurred(host.presenter);
-
-        if (host.presenter.is_in_writing_mode && config.document.activeElement === host.textarea) {
-            host.textarea.blur();
-        }
 
         if (host.parentElement) {
             host.parentElement.classList.remove(PARENT_ELEMENT_ACTIVE_CLASS);
@@ -140,7 +135,5 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         },
 
         shouldFocusWritingZoneWhenConnected: () => config.focus_writing_zone_when_connected ?? true,
-
-        getDocument: () => config.document,
     };
 };

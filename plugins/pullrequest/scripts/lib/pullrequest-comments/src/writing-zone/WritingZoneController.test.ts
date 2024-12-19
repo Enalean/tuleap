@@ -125,7 +125,7 @@ describe("WritingZoneController", () => {
         expect(Array.from(parent_element.classList)).toContain(PARENT_ELEMENT_ACTIVE_CLASS);
     });
 
-    it("blurWritingZone() should blur the <textarea/>, remove the component focused state and remove the active class on its parent element", () => {
+    it("blurWritingZone() should remove the component focused state and remove the active class on its parent element", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
@@ -135,17 +135,11 @@ describe("WritingZoneController", () => {
             parentElement: parent_element,
         } as unknown as HostElement;
 
-        const blur = vi.spyOn(textarea, "blur");
-
         WritingZoneController({
-            document: {
-                ...doc,
-                activeElement: textarea,
-            },
+            document: doc,
             project_id,
         }).blurWritingZone(host);
 
-        expect(blur).toHaveBeenCalledOnce();
         expect(host.presenter.is_focused).toBe(false);
         expect(Array.from(parent_element.classList)).not.toContain(PARENT_ELEMENT_ACTIVE_CLASS);
     });
@@ -241,7 +235,7 @@ describe("WritingZoneController", () => {
         expect(tooltip.loadTooltips).not.toHaveBeenCalled();
     });
 
-    it("resetWritingZone() should empty + blur the <textarea/> and display back the writing mode", () => {
+    it("resetWritingZone() should empty the <textarea/> and display back the writing mode", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
@@ -254,18 +248,12 @@ describe("WritingZoneController", () => {
 
         textarea.value = "Please rebase!";
 
-        const blur = vi.spyOn(textarea, "blur");
-
         WritingZoneController({
-            document: {
-                ...doc,
-                activeElement: textarea,
-            },
+            document: doc,
             project_id,
         }).resetWritingZone(host);
 
         expect(textarea.value).toBe("");
-        expect(blur).toHaveBeenCalledOnce();
         expect(host.presenter.is_focused).toBe(false);
         expect(host.presenter.is_in_writing_mode).toBe(true);
         expect(Array.from(parent_element.classList)).not.toContain(PARENT_ELEMENT_ACTIVE_CLASS);
