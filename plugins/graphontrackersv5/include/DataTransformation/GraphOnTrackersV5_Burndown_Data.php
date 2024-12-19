@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataTransformation;
+
 use Tuleap\Date\DatePeriodWithWeekEnd;
 
 /**

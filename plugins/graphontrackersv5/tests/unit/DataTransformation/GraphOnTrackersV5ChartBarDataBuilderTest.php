@@ -21,7 +21,6 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
-use GraphOnTrackersV5_Chart_BarDataBuilder;
 use GraphOnTrackersV5_Engine_Bar;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;

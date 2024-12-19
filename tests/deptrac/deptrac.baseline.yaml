@@ -30,9 +30,9 @@ deptrac:
       - Tuleap\Statistics\DiskUsage\Subversion\Collector
       - Tuleap\Statistics\DiskUsage\Subversion\Retriever
     Tracker_Chart_Burndown:
-      - GraphOnTrackersV5_Burndown_Data
+      - Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Burndown_Data
     Tracker_Chart_BurndownView:
-      - GraphOnTrackersV5_Burndown_Data
+      - Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Burndown_Data
     Tracker_Sample:
       - Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample
     Tuleap\Baseline\Adapter\ArtifactLinkRepository:

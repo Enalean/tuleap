@@ -22,7 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataTransformation;
+
+use Tracker_FormElementFactory;
 use Tuleap\Date\DatePeriodWithWeekEnd;
+use UserManager;
 
 class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
 {

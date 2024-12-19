@@ -21,7 +21,6 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataAccess;
 
-use ChartDataBuilderV5;
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use EventManager;
@@ -48,6 +47,7 @@ use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\GraphOnTrackersV5\Chart\D3CompatibleChartVisitor;
 use Tuleap\GraphOnTrackersV5\Chart\Visitable;
+use Tuleap\GraphOnTrackersV5\DataTransformation\ChartDataBuilderV5;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;

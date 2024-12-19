@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataTransformation;
+
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+
 class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
 {
     /**

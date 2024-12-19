@@ -20,6 +20,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataTransformation;
+
+use Tracker_FormElement_Field_List;
+use Tracker_FormElementFactory;
+
 class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
 {
     /**
@@ -36,7 +41,7 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
         $ff             = Tracker_FormElementFactory::instance();
         $af             = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
         if (! $af) {
-            throw new \Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException($this->chart->getTitle());
+            throw new ChartFieldNotFoundException($this->chart->getTitle());
         }
         \assert($af instanceof Tracker_FormElement_Field_List);
 
