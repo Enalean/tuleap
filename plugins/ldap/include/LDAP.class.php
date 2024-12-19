@@ -149,7 +149,9 @@ class LDAP
     {
         if (! $this->ds) {
             foreach (preg_split('/[,;]/', $this->ldapParams['server']) as $ldap_server) {
+                $this->logger->debug('Attempting to connect to LDAP server ' . $ldap_server);
                 $this->ds = ldap_connect($ldap_server);
+                $this->logger->debug('Connected to LDAP server ' . $ldap_server);
                 if ($this->ds) {
                     // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
                     ldap_set_option($this->ds, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -159,6 +161,7 @@ class LDAP
                     // OpenLdap 2.2.x, we have to check that this ressource is
                     // valid with a bind, If bind success: that's great, if
                     // not, this is a connexion failure.
+                    $this->logger->debug('Attempting to bind on LDAP server ' . $ldap_server);
                     if ($this->bind()) {
                         $this->logger->debug('Bound to LDAP server: ' . $ldap_server);
                         return true;
