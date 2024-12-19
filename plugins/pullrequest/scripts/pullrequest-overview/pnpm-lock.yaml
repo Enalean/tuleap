@@ -35,9 +35,6 @@ dependencies:
   '@tuleap/plugin-pullrequest-constants':
     specifier: workspace:*
     version: link:../lib/constants
-  '@tuleap/plugin-pullrequest-rest-api-types':
-    specifier: workspace:*
-    version: link:../lib/rest-api-types
   '@tuleap/plugin-pullrequest-stub':
     specifier: workspace:*
     version: link:../lib/pull-request-stub
@@ -79,6 +76,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/plugin-pullrequest-rest-api-types':
+    specifier: workspace:*
+    version: link:../lib/rest-api-types
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin

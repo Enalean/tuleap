@@ -8,9 +8,6 @@ dependencies:
   '@tuleap/angular-tlp':
     specifier: workspace:*
     version: link:../../../../lib/frontend/angular-tlp
-  '@tuleap/core-rest-api-types':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../../lib/frontend/date-helper
@@ -29,9 +26,6 @@ dependencies:
   '@tuleap/plugin-pullrequest-constants':
     specifier: workspace:*
     version: link:../lib/constants
-  '@tuleap/plugin-pullrequest-rest-api-types':
-    specifier: workspace:*
-    version: link:../lib/rest-api-types
   '@tuleap/potentially-dangerous-bidirectional-characters':
     specifier: workspace:*
     version: link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters
@@ -79,9 +73,15 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../lib/frontend/dom
+  '@tuleap/plugin-pullrequest-rest-api-types':
+    specifier: workspace:*
+    version: link:../lib/rest-api-types
   '@types/codemirror':
     specifier: ^5.60.5
     version: 5.60.5

@@ -6,14 +6,12 @@
   "private": true,
   "dependencies": {
     "@tuleap/angular-tlp": "workspace:*",
-    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/option": "workspace:*",
     "@tuleap/plugin-pullrequest-comments": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
-    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
@@ -31,7 +29,9 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/dom": "workspace:*",
+    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@types/codemirror": "^5.60.5",
     "angular-mocks": "^1.8.2"
   },

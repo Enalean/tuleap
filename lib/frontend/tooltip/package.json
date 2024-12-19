@@ -7,6 +7,7 @@
   "version": "0.0.0",
   "type": "module",
   "types": "./dist/tooltip.d.ts",
+  "module": "./dist/tooltip.js",
   "exports": {
     ".": {
       "types": "./dist/tooltip.d.ts",

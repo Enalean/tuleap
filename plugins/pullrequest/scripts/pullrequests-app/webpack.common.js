@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
+const path = require("node:path");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
 module.exports = [
@@ -30,6 +30,7 @@ module.exports = [
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
+            jquery: "jQuery",
         },
         module: {
             rules: [
@@ -49,7 +50,27 @@ module.exports = [
             extensions: [".ts", ".js"],
             alias: {
                 // deduplicate angular that is also used by angular-async
-                angular$: path.resolve(__dirname, "./node_modules/angular"),
+                angular$: path.resolve(__dirname, "node_modules/angular"),
+                // deduplicate common dependencies
+                "@tuleap/date-helper": path.resolve(__dirname, "node_modules/@tuleap/date-helper"),
+                "@tuleap/fault": path.resolve(__dirname, "node_modules/@tuleap/fault"),
+                "@tuleap/fetch-result": path.resolve(
+                    __dirname,
+                    "node_modules/@tuleap/fetch-result",
+                ),
+                "@tuleap/option": path.resolve(__dirname, "node_modules/@tuleap/option"),
+                "@tuleap/plugin-pullrequest-constants": path.resolve(
+                    __dirname,
+                    "node_modules/@tuleap/plugin-pullrequest-constants",
+                ),
+                "@tuleap/tlp-fetch": path.resolve(__dirname, "node_modules/@tuleap/tlp-fetch"),
+                "@tuleap/tlp-relative-date": path.resolve(
+                    __dirname,
+                    "node_modules/@tuleap/tlp-relative-date",
+                ),
+                "@tuleap/tooltip": path.resolve(__dirname, "node_modules/@tuleap/tooltip"),
+                hybrids: path.resolve(__dirname, "node_modules/hybrids/src/index.js"),
+                neverthrow: path.resolve(__dirname, "node_modules/neverthrow"),
             },
         },
     },

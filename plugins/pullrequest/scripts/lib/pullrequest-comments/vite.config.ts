@@ -18,16 +18,19 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
-import { viteExternalsPlugin } from "vite-plugin-externals";
+import pkg from "./package.json";
 
 export default vite.defineLibConfig({
-    plugins: [POGettextPlugin.vite(), viteDtsPlugin(), viteExternalsPlugin({ jquery: "jQuery" })],
+    plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/main.ts"),
             name: "PullrequestComments",
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
         },
     },
 });

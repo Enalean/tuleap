@@ -22,7 +22,6 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/option": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
-    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
@@ -32,6 +31,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/dompurify": "^3.0.5"
   },
