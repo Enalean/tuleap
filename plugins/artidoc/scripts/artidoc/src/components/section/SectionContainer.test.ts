@@ -32,7 +32,10 @@ describe("SectionContainer", () => {
             },
         });
 
-        expect(wrapper.classes()).toContain("tlp-swatch-fiesta-red");
+        expect(wrapper.classes()).toStrictEqual([
+            "artidoc-section-container",
+            "tlp-swatch-fiesta-red",
+        ]);
     });
 
     it("should use the color of the pending artifact tracker", () => {
@@ -42,7 +45,10 @@ describe("SectionContainer", () => {
             },
         });
 
-        expect(wrapper.classes()).toContain("tlp-swatch-flamingo-pink");
+        expect(wrapper.classes()).toStrictEqual([
+            "artidoc-section-container",
+            "tlp-swatch-flamingo-pink",
+        ]);
     });
 
     it("should not use the tlp-swatch palette if it is not an artifact section", () => {
@@ -52,7 +58,10 @@ describe("SectionContainer", () => {
             },
         });
 
-        expect(wrapper.classes()).toStrictEqual(["artidoc-section-container"]);
+        expect(wrapper.classes()).toStrictEqual([
+            "artidoc-section-container",
+            "artidoc-section-container-without-border",
+        ]);
     });
 
     it("should not use the tlp-swatch palette if it is a skeleton", () => {
@@ -62,7 +71,10 @@ describe("SectionContainer", () => {
             },
         });
 
-        expect(wrapper.classes()).toStrictEqual(["artidoc-section-container"]);
+        expect(wrapper.classes()).toStrictEqual([
+            "artidoc-section-container",
+            "artidoc-section-container-without-border",
+        ]);
     });
 
     it("should not use the tlp-swatch palette if it is a Freetext section", () => {
@@ -72,6 +84,9 @@ describe("SectionContainer", () => {
             },
         });
 
-        expect(wrapper.classes()).toStrictEqual(["artidoc-section-container"]);
+        expect(wrapper.classes()).toStrictEqual([
+            "artidoc-section-container",
+            "artidoc-section-container-without-border",
+        ]);
     });
 });
