@@ -27422,6 +27422,7 @@
                                     $git_repository_factory,
                                     $html_purifier,
                                 ),
+                                new MentionedUserInTextRetriever($user_manager)
                             )]]></code>
       <code><![CDATA[new PullRequestUpdatedNotificationToProcessBuilder(
                                 $user_manager,
