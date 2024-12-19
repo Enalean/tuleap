@@ -21,6 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
 use Tuleap\GraphOnTrackersV5\DataTransformation\CumulativeFlowColumnBuilder;
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5

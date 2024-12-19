@@ -20,7 +20,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
+
+class GraphOnTrackersV5_Chart_PieDao extends \DataAccessObject
 {
     public function __construct($da = null)
     {
@@ -64,7 +66,7 @@ class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject
         foreach ($field_mapping as $mapping) {
             $from = $this->da->escapeInt($mapping['from']);
             $to   = $this->da->escapeInt($mapping['to']);
-            $sql  = "UPDATE $this->table_name 
+            $sql  = "UPDATE $this->table_name
                     SET field_base = $to
                     WHERE id = $to_chart_id
                       AND field_base = $from";

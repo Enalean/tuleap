@@ -17,6 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
+
+use Tracker_Report_Session;
+
 class GraphOnTrackersV5_InSessionChartSorter
 {
     public const FREEZE__DONT_MOVE = '--';

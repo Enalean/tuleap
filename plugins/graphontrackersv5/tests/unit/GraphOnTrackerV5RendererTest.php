@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\GraphOnTrackersV5;
 
-use GraphOnTrackersV5_Chart_Bar;
-use GraphOnTrackersV5_Chart_CumulativeFlow;
-use GraphOnTrackersV5_Chart_Gantt;
-use GraphOnTrackersV5_Chart_Pie;
-use GraphOnTrackersV5_ChartFactory;
 use GraphOnTrackersV5_Renderer;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tracker_Report;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Bar;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Gantt;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Pie;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use UserManager;
 
 final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase

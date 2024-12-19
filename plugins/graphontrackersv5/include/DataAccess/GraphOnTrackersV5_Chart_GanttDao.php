@@ -20,7 +20,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5_Chart_GanttDao extends DataAccessObject
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
+
+class GraphOnTrackersV5_Chart_GanttDao extends \DataAccessObject
 {
     public function __construct($da = null)
     {

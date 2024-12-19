@@ -19,6 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
+
+use ArrayObject;
+use CodendiDataAccess;
+use EventManager;
+use GraphOnTrackersV5_Renderer;
+use Tracker_Report_RendererFactory;
+use Tracker_Report_Session;
 use Tuleap\Project\MappingRegistry;
 
 class GraphOnTrackersV5_ChartFactory

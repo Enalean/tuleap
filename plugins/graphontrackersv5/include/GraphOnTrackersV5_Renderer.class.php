@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeViteAssets;

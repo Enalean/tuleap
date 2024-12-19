@@ -21,6 +21,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use Tuleap\GraphOnTrackersV5\Widget\WidgetChartDao;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;

@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
 
     /**
      *  Data Access Object for GraphicReportCharts
      */
-class GraphOnTrackersV5_ChartDao extends DataAccessObject
+class GraphOnTrackersV5_ChartDao extends \DataAccessObject
 {
     /**
      * Constructs the GraphOnTrackersV5_ChartDao

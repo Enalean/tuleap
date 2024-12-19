@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\GraphOnTrackersV5\Async;
 
-use GraphOnTrackersV5_Chart;
-use GraphOnTrackersV5_ChartFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tracker_Report;
 use Tracker_Report_RendererFactory;
 use Tracker_ReportFactory;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;

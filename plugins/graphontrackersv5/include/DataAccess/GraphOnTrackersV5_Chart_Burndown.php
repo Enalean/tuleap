@@ -21,6 +21,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataAccess;
+
+use ChartDataBuilderV5;
+use GraphOnTrackersV5_Burndown_DataBuilder;
+use GraphOnTrackersV5_Engine;
+use GraphOnTrackersV5_Engine_Burndown;
+use HTML_Element_Input_Date;
+use HTML_Element_Input_Text;
+use SimpleXMLElement;
+use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_NumericFieldsV5;
 

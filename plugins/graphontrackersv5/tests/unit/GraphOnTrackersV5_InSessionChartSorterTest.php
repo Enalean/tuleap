@@ -21,12 +21,12 @@ declare(strict_types=1);
 
 namespace Tuleap\GraphOnTrackersV5;
 
-use GraphOnTrackersV5_Chart;
-use GraphOnTrackersV5_Chart_Bar;
-use GraphOnTrackersV5_Chart_Burndown;
-use GraphOnTrackersV5_Chart_Pie;
-use GraphOnTrackersV5_InSessionChartSorter;
 use Tracker_Report_Session;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Bar;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Burndown;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Pie;
+use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_InSessionChartSorter;
 
 require_once __DIR__ . '/bootstrap.php';
 
