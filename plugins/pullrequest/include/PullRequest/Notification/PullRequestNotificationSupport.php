@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
+use Codendi_HTMLPurifier;
 use GitDao;
 use GitRepositoryFactory;
 use ProjectManager;
@@ -71,6 +72,7 @@ use Tuleap\PullRequest\StateStatus\PullRequestMergedNotificationToProcessBuilder
 use Tuleap\PullRequest\Timeline\Dao as TimelineDAO;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use UserManager;
 
 final class PullRequestNotificationSupport
 {
@@ -92,6 +94,24 @@ final class PullRequestNotificationSupport
     {
         return new EventSubjectToNotificationSynchronousDispatcher(
             new EventSubjectToNotificationListenerProvider([
+                NewPullRequestEvent::class => [
+                    static function (): EventSubjectToNotificationListener {
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
+                        return new EventSubjectToNotificationListener(
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
+                            new NewPullRequestNotificationToProcessBuilder(
+                                new PullRequestRetriever(new Dao()),
+                                UserManager::instance(),
+                                $git_repository_factory,
+                                new MentionedUserInTextRetriever(UserManager::instance()),
+                                new FilterUserFromCollection(),
+                                $html_url_builder,
+                                CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
+                            ),
+                        );
+                    },
+                ],
                 ReviewerChangeEvent::class => [
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
@@ -104,7 +124,7 @@ final class PullRequestNotificationSupport
                                     new PullRequestRetriever(
                                         new Dao(),
                                     ),
-                                    \UserManager::instance()
+                                    UserManager::instance()
                                 ),
                                 \UserHelper::instance(),
                                 $html_url_builder
@@ -116,7 +136,7 @@ final class PullRequestNotificationSupport
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
-                        $user_manager           = \UserManager::instance();
+                        $user_manager           = UserManager::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestAbandonedNotificationToProcessBuilder(
@@ -154,7 +174,7 @@ final class PullRequestNotificationSupport
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
-                        $user_manager           = \UserManager::instance();
+                        $user_manager           = UserManager::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestMergedNotificationToProcessBuilder(
@@ -192,7 +212,7 @@ final class PullRequestNotificationSupport
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
-                        $user_manager           = \UserManager::instance();
+                        $user_manager           = UserManager::instance();
 
                         $git_plugin = \PluginFactory::instance()->getPluginByName('git');
                         assert($git_plugin instanceof \GitPlugin);
@@ -239,8 +259,8 @@ final class PullRequestNotificationSupport
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
-                        $user_manager           = \UserManager::instance();
-                        $html_purifier          = \Codendi_HTMLPurifier::instance();
+                        $user_manager           = UserManager::instance();
+                        $html_purifier          = Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewCommentNotificationToProcessBuilder(
@@ -287,8 +307,8 @@ final class PullRequestNotificationSupport
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
-                        $user_manager           = \UserManager::instance();
-                        $html_purifier          = \Codendi_HTMLPurifier::instance();
+                        $user_manager           = UserManager::instance();
+                        $html_purifier          = Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new UpdatedCommentNotificationToProcessBuilder(
@@ -335,8 +355,8 @@ final class PullRequestNotificationSupport
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
-                        $user_manager           = \UserManager::instance();
-                        $html_purifier          = \Codendi_HTMLPurifier::instance();
+                        $user_manager           = UserManager::instance();
+                        $html_purifier          = Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewInlineCommentNotificationToProcessBuilder(
@@ -387,8 +407,8 @@ final class PullRequestNotificationSupport
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
-                        $user_manager           = \UserManager::instance();
-                        $html_purifier          = \Codendi_HTMLPurifier::instance();
+                        $user_manager           = UserManager::instance();
+                        $html_purifier          = Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new UpdatedInlineCommentNotificationToProcessBuilder(
@@ -448,7 +468,7 @@ final class PullRequestNotificationSupport
             new \MailBuilder(
                 TemplateRendererFactory::build(),
                 new MailFilter(
-                    \UserManager::instance(),
+                    UserManager::instance(),
                     new ProjectAccessChecker(
                         new RestrictedUserCanAccessProjectVerifier(),
                         $event_manager

@@ -27299,6 +27299,15 @@
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Notification/PullRequestNotificationSupport.php">
     <InvalidArgument>
+      <code><![CDATA[new NewPullRequestNotificationToProcessBuilder(
+                                new PullRequestRetriever(new Dao()),
+                                UserManager::instance(),
+                                $git_repository_factory,
+                                new MentionedUserInTextRetriever(UserManager::instance()),
+                                new FilterUserFromCollection(),
+                                $html_url_builder,
+                                CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
+                            )]]></code>
       <code><![CDATA[new PullRequestAbandonedNotificationToProcessBuilder(
                                 $user_manager,
                                 new PullRequestRetriever(
