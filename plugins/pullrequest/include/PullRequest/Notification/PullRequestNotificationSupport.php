@@ -40,8 +40,8 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdateCommitDiff;
-use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
-use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedNotificationToProcessBuilder;
+use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent as PullRequestBranchUpdatedEvent;
+use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedNotificationToProcessBuilder as PullRequestBranchUpdatedNotificationToProcessBuilder;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
@@ -94,7 +94,7 @@ final class PullRequestNotificationSupport
     {
         return new EventSubjectToNotificationSynchronousDispatcher(
             new EventSubjectToNotificationListenerProvider([
-                NewPullRequestEvent::class => [
+                NewPullRequestEvent::class     => [
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
@@ -112,7 +112,25 @@ final class PullRequestNotificationSupport
                         );
                     },
                 ],
-                ReviewerChangeEvent::class => [
+                PullRequestDescriptionUpdatedEvent::class => [
+                    static function (): EventSubjectToNotificationListener {
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
+                        return new EventSubjectToNotificationListener(
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
+                            new PullRequestDescriptionUpdatedNotificationToProcessBuilder(
+                                new PullRequestRetriever(new Dao()),
+                                UserManager::instance(),
+                                $git_repository_factory,
+                                new MentionedUserInTextRetriever(UserManager::instance()),
+                                new FilterUserFromCollection(),
+                                $html_url_builder,
+                                CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
+                            ),
+                        );
+                    },
+                ],
+                ReviewerChangeEvent::class     => [
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
@@ -208,7 +226,7 @@ final class PullRequestNotificationSupport
                         );
                     },
                 ],
-                PullRequestUpdatedEvent::class => [
+                PullRequestBranchUpdatedEvent::class => [
                     static function (): EventSubjectToNotificationListener {
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
@@ -219,7 +237,7 @@ final class PullRequestNotificationSupport
 
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
-                            new PullRequestUpdatedNotificationToProcessBuilder(
+                            new PullRequestBranchUpdatedNotificationToProcessBuilder(
                                 $user_manager,
                                 new PullRequestRetriever(
                                     new Dao(),

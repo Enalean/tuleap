@@ -27336,6 +27336,48 @@
                                 \UserHelper::instance(),
                                 $html_url_builder
                             )]]></code>
+      <code><![CDATA[new PullRequestBranchUpdatedNotificationToProcessBuilder(
+                                $user_manager,
+                                new PullRequestRetriever(
+                                    new Dao(),
+                                ),
+                                $git_repository_factory,
+                                new OwnerRetriever(
+                                    $user_manager,
+                                    new ReviewerRetriever(
+                                        $user_manager,
+                                        new ReviewerDAO(),
+                                        new PullRequestPermissionChecker(
+                                            $git_repository_factory,
+                                            new \Tuleap\Project\ProjectAccessChecker(
+                                                new RestrictedUserCanAccessProjectVerifier(),
+                                                \EventManager::instance()
+                                            ),
+                                            new AccessControlVerifier(
+                                                new FineGrainedRetriever(new FineGrainedDao()),
+                                                new \System_Command()
+                                            )
+                                        )
+                                    ),
+                                    new TimelineDAO()
+                                ),
+                                new FilterUserFromCollection(),
+                                \UserHelper::instance(),
+                                $html_url_builder,
+                                new \Git_GitRepositoryUrlManager(
+                                    $git_plugin
+                                ),
+                                new PullRequestUpdateCommitDiff()
+                            )]]></code>
+      <code><![CDATA[new PullRequestDescriptionUpdatedNotificationToProcessBuilder(
+                                new PullRequestRetriever(new Dao()),
+                                UserManager::instance(),
+                                $git_repository_factory,
+                                new MentionedUserInTextRetriever(UserManager::instance()),
+                                new FilterUserFromCollection(),
+                                $html_url_builder,
+                                CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
+                            )]]></code>
       <code><![CDATA[new PullRequestMergedNotificationToProcessBuilder(
                                 $user_manager,
                                 new PullRequestRetriever(
@@ -27441,39 +27483,6 @@
                                     $html_purifier,
                                 ),
                                 new MentionedUserInTextRetriever($user_manager)
-                            )]]></code>
-      <code><![CDATA[new PullRequestUpdatedNotificationToProcessBuilder(
-                                $user_manager,
-                                new PullRequestRetriever(
-                                    new Dao(),
-                                ),
-                                $git_repository_factory,
-                                new OwnerRetriever(
-                                    $user_manager,
-                                    new ReviewerRetriever(
-                                        $user_manager,
-                                        new ReviewerDAO(),
-                                        new PullRequestPermissionChecker(
-                                            $git_repository_factory,
-                                            new \Tuleap\Project\ProjectAccessChecker(
-                                                new RestrictedUserCanAccessProjectVerifier(),
-                                                \EventManager::instance()
-                                            ),
-                                            new AccessControlVerifier(
-                                                new FineGrainedRetriever(new FineGrainedDao()),
-                                                new \System_Command()
-                                            )
-                                        )
-                                    ),
-                                    new TimelineDAO()
-                                ),
-                                new FilterUserFromCollection(),
-                                \UserHelper::instance(),
-                                $html_url_builder,
-                                new \Git_GitRepositoryUrlManager(
-                                    $git_plugin
-                                ),
-                                new PullRequestUpdateCommitDiff()
                             )]]></code>
       <code><![CDATA[new UpdatedCommentNotificationToProcessBuilder(
                                 $user_manager,

@@ -162,6 +162,7 @@ class PullRequestsResource extends AuthenticatedResource
     private GitCommitRepresentationBuilder $commit_representation_builder;
     private CommitStatusRetriever $status_retriever;
     private readonly PullRequestDao $pull_request_dao;
+    private readonly PullRequestInfoUpdater $pull_request_info_updater;
 
     public function __construct()
     {
@@ -216,13 +217,18 @@ class PullRequestsResource extends AuthenticatedResource
         );
         $this->labels_updater   = new LabelsUpdater(new LabelDao(), new PullRequestLabelDao(), new ProjectHistoryDao());
 
-        $this->permission_checker = new PullRequestPermissionChecker(
+        $this->permission_checker        = new PullRequestPermissionChecker(
             $this->git_repository_factory,
             new \Tuleap\Project\ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 $this->event_manager
             ),
             $this->access_control_verifier
+        );
+        $this->pull_request_info_updater = new PullRequestInfoUpdater(
+            $this->pull_request_factory,
+            $this->getPullRequestIsMergeableChecker(),
+            $event_dispatcher,
         );
 
         $git_plugin = PluginFactory::instance()->getPluginByName('git');
@@ -905,8 +911,7 @@ class PullRequestsResource extends AuthenticatedResource
         if ($status !== null) {
             $this->patchStatus($user, $pull_request, $status);
         } else {
-            $patch_info_updater = new PullRequestInfoUpdater($this->pull_request_factory, $this->getPullRequestIsMergeableChecker());
-            $patch_info_updater->patchInfo(
+            $this->pull_request_info_updater->patchInfo(
                 $user,
                 $pull_request,
                 (int) $repository_src->getProjectId(),

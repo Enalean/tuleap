@@ -31,6 +31,7 @@ use Tuleap\PullRequest\REST\v1\PullRequestPATCHRepresentation;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class PullRequestInfoUpdaterTest extends TestCase
 {
@@ -51,7 +52,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $this->pull_request_is_mergeable_checker = $this->createMock(PullRequestIsMergeableChecker::class);
         $this->pullrequest                       = PullRequestTestBuilder::aMergedPullRequest()->build();
 
-        $this->info_updater = new PullRequestInfoUpdater($this->factory, $this->pull_request_is_mergeable_checker);
+        $this->info_updater = new PullRequestInfoUpdater($this->factory, $this->pull_request_is_mergeable_checker, EventDispatcherStub::withIdentityCallback());
     }
 
     public function testItCheckPermissionsWhenUserIsNotOwnerOfPullRequest(): void

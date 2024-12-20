@@ -76,6 +76,13 @@ msgid "%s requested your review on %s: %s"
 msgstr "%s a demandé une revue de votre part sur %s : %s"
 
 #, php-format
+msgid "%s updated the description of the pull request #%d: %s"
+msgstr "%s a modifié la description de la pull request #%d : %s"
+
+msgid "%s updated the description of the pull request %s: %s"
+msgstr "%s a modifié la description de la pull request %s : %s"
+
+#, php-format
 msgid ""
 "%s updated their comment on #%d: %s in %s:\n"
 "\n"
