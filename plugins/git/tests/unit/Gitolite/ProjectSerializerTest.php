@@ -18,79 +18,79 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite;
 
 use EventManager;
+use ForgeConfig;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
 use Git_Gitolite_ProjectSerializer;
 use Git_GitRepositoryUrlManager;
+use GitPlugin;
 use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepositoryFactory;
 use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectSerializerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var Git_Gitolite_ProjectSerializer
-     */
-    private $project_serializer;
-
-    private $repository_factory;
-    private $url_manager;
-    private $gitolite_permissions_serializer;
-    private $logger;
-    private $fix_dir;
-    private $permissions_manager;
-    private $gerrit_project_status;
-    private $big_object_authorization_manager;
+    private Git_Gitolite_ProjectSerializer $project_serializer;
+    private GitRepositoryFactory&MockObject $repository_factory;
+    private string $fix_dir;
+    private PermissionsManager&MockObject $permissions_manager;
+    private Git_Driver_Gerrit_ProjectCreatorStatus&MockObject $gerrit_project_status;
+    private BigObjectAuthorizationManager&MockObject $big_object_authorization_manager;
 
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->fix_dir = __DIR__ . '/_fixtures';
 
-        \ForgeConfig::set('sys_default_domain', 'localhost');
+        ForgeConfig::set('sys_default_domain', 'localhost');
 
-        PermissionsManager::setInstance(Mockery::spy(\PermissionsManager::class));
-        $this->permissions_manager = PermissionsManager::instance();
+        $this->permissions_manager = $this->createMock(PermissionsManager::class);
+        PermissionsManager::setInstance($this->permissions_manager);
 
-        $this->repository_factory = Mockery::spy(\GitRepositoryFactory::class);
+        $this->repository_factory = $this->createMock(GitRepositoryFactory::class);
 
-        $git_plugin = Mockery::spy(\GitPlugin::class);
-        $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturn(false);
+        $git_plugin = $this->createMock(GitPlugin::class);
+        $git_plugin->method('areFriendlyUrlsActivated')->willReturn(false);
 
-        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
-        $this->gerrit_project_status = Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class);
+        $this->gerrit_project_status = $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class);
 
-        $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+        $event_manager                   = $this->createMock(EventManager::class);
+        $fine_grained_retriever          = $this->createMock(FineGrainedRetriever::class);
+        $gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->gerrit_project_status,
             'whatever',
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
-            Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            Mockery::spy(EventManager::class)
+            $fine_grained_retriever,
+            $this->createMock(FineGrainedPermissionFactory::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $event_manager,
         );
+        $event_manager->method('processEvent');
+        $fine_grained_retriever->method('doesRepositoryUseFineGrainedPermissions');
 
-        $this->logger = Mockery::spy(\Psr\Log\LoggerInterface::class);
-
-        $this->big_object_authorization_manager = Mockery::mock(BigObjectAuthorizationManager::class);
+        $this->big_object_authorization_manager = $this->createMock(BigObjectAuthorizationManager::class);
 
         $this->project_serializer = new Git_Gitolite_ProjectSerializer(
-            $this->logger,
+            new NullLogger(),
             $this->repository_factory,
-            $this->gitolite_permissions_serializer,
-            $this->url_manager,
+            $gitolite_permissions_serializer,
+            $url_manager,
             $this->big_object_authorization_manager,
         );
     }
@@ -98,22 +98,18 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();
-
-        parent::tearDown();
     }
 
-    public function testGetMailHookConfig()
+    public function testGetMailHookConfig(): void
     {
-        $prj = Mockery::spy(\Project::class);
-        $prj->shouldReceive('getUnixName')->andReturn('project1');
-        $prj->shouldReceive('getID')->andReturn(101);
+        $prj = ProjectTestBuilder::aProject()->withUnixName('project1')->withId(101)->build();
 
         // ShowRev
         $repo = new GitRepository();
         $repo->setId(5);
         $repo->setProject($prj);
         $repo->setName('test_default');
-        $this->assertSame(
+        self::assertSame(
             file_get_contents($this->fix_dir . '/gitolite-mail-config/mailhook-rev.txt'),
             $this->project_serializer->fetchMailHookConfig($prj, $repo)
         );
@@ -124,7 +120,7 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->setProject($prj);
         $repo->setName('test_default');
         $repo->setMailPrefix('[KOIN] ');
-        $this->assertSame(
+        self::assertSame(
             file_get_contents($this->fix_dir . '/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
             $this->project_serializer->fetchMailHookConfig($prj, $repo)
         );
@@ -135,7 +131,7 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->setProject($prj);
         $repo->setName('test_default');
         $repo->setMailPrefix('["\_o<"] \t');
-        $this->assertSame(
+        self::assertSame(
             file_get_contents($this->fix_dir . '/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
             $this->project_serializer->fetchMailHookConfig($prj, $repo)
         );
@@ -144,11 +140,9 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
     // The project has 2 repositories nb 4 & 5.
     // 4 has defaults
     // 5 has pimped perms
-    public function testDumpProjectRepoPermissions()
+    public function testDumpProjectRepoPermissions(): void
     {
-        $prj = Mockery::spy(\Project::class);
-        $prj->shouldReceive('getUnixName')->andReturn('project1');
-        $prj->shouldReceive('getID')->andReturn(404);
+        $prj = ProjectTestBuilder::aProject()->withUnixName('project1')->withId(404)->build();
 
         $repo = new GitRepository();
         $repo->setId(4);
@@ -165,35 +159,37 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo2->setNamespace('');
 
         // List all repo
-        $this->repository_factory->shouldReceive('getAllRepositoriesOfProject')
-            ->with($prj)
-            ->once()
-            ->andReturn([$repo, $repo2]);
+        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+            ->with($prj)->willReturn([$repo, $repo2]);
 
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(['2']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(['3']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns([]);
-
         // Repo 5 (test_pimped): R = project_members | W = project_admin | W+ = user groups 101
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(['3']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(['4']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(['125']);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')
+            ->willReturnCallback(static fn($project, $id, $permission) => match ($id) {
+                4 => match ($permission) {
+                    'PLUGIN_GIT_READ'  => [2],
+                    'PLUGIN_GIT_WRITE' => [3],
+                    'PLUGIN_GIT_WPLUS' => [],
+                },
+                5 => match ($permission) {
+                    'PLUGIN_GIT_READ'  => [3],
+                    'PLUGIN_GIT_WRITE' => [4],
+                    'PLUGIN_GIT_WPLUS' => [125],
+                }
+            });
 
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
+        $this->big_object_authorization_manager->method('getAuthorizedProjects')->willReturn([]);
 
         // Ensure file is correct
         $result   = $this->project_serializer->dumpProjectRepoConf($prj);
         $expected = file_get_contents($this->fix_dir . '/perms/project1-full.conf');
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 
-    public function testRewindAccessRightsToGerritUserWhenRepoIsMigratedToGerrit()
+    public function testRewindAccessRightsToGerritUserWhenRepoIsMigratedToGerrit(): void
     {
-        $prj = Mockery::spy(\Project::class);
-        $prj->shouldReceive('getUnixName')->andReturns('project1');
-        $prj->shouldReceive('getID')->andReturns(404);
+        $prj = ProjectTestBuilder::aProject()->withUnixName('project1')->withId(404)->build();
 
         $repo = new GitRepository();
         $repo->setId(4);
@@ -209,35 +205,30 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo2->setRemoteServerId(1);
 
         // List all repo
-        $this->repository_factory->shouldReceive('getAllRepositoriesOfProject')
-            ->with($prj)
-            ->once()
-            ->andReturn([$repo, $repo2]);
+        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+            ->with($prj)->willReturn([$repo, $repo2]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(['2']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(['3']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns(['125']);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')
+            ->willReturnCallback(static fn($project, $id, $permission) => match ($permission) {
+                'PLUGIN_GIT_READ'  => [2],
+                'PLUGIN_GIT_WRITE' => [3],
+                'PLUGIN_GIT_WPLUS' => [125],
+            });
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(['2']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(['3']);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(['125']);
+        $this->gerrit_project_status->method('getStatus')->willReturn(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
 
-        $this->gerrit_project_status->shouldReceive('getStatus')->andReturn(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
-
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
+        $this->big_object_authorization_manager->method('getAuthorizedProjects')->willReturn([]);
 
         // Ensure file is correct
         $result   = $this->project_serializer->dumpProjectRepoConf($prj);
         $expected = file_get_contents($this->fix_dir . '/perms/migrated_to_gerrit.conf');
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 
-    public function testDumpSuspendedProjectRepoPermissions()
+    public function testDumpSuspendedProjectRepoPermissions(): void
     {
-        $project = Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturn('project1');
-        $project->shouldReceive('getID')->andReturn(404);
+        $project = ProjectTestBuilder::aProject()->withUnixName('project1')->withId(404)->build();
 
         $repo = new GitRepository();
         $repo->setId(4);
@@ -254,10 +245,8 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo2->setNamespace('');
 
         // List all repo
-        $this->repository_factory->shouldReceive('getAllRepositoriesOfProject')
-            ->with($project)
-            ->once()
-            ->andReturn([$repo, $repo2]);
+        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+            ->with($project)->willReturn([$repo, $repo2]);
 
         // Ensure file is correct
         $result   = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
@@ -271,24 +260,21 @@ repo project1/test_pimped
 
 EOS;
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 
-    public function testRepoFullNameConcatsUnixProjectNameNamespaceAndName()
+    public function testRepoFullNameConcatsUnixProjectNameNamespaceAndName(): void
     {
         $unix_name = 'project1';
 
         $repo = $this->givenARepositoryWithNameAndNamespace('repo', 'toto');
-        $this->assertSame('project1/toto/repo', $this->project_serializer->repoFullName($repo, $unix_name));
+        self::assertSame('project1/toto/repo', $this->project_serializer->repoFullName($repo, $unix_name));
 
         $repo = $this->givenARepositoryWithNameAndNamespace('repo', '');
-        $this->assertSame('project1/repo', $this->project_serializer->repoFullName($repo, $unix_name));
+        self::assertSame('project1/repo', $this->project_serializer->repoFullName($repo, $unix_name));
     }
 
-    /**
-     * @return GitRepository
-     */
-    private function givenARepositoryWithNameAndNamespace($name, $namespace)
+    private function givenARepositoryWithNameAndNamespace($name, $namespace): GitRepository
     {
         $repo = new GitRepository();
         $repo->setName($name);
@@ -296,11 +282,9 @@ EOS;
         return $repo;
     }
 
-    public function testDoNotWriteBigObjectRuleIfProjectIsAuthorized()
+    public function testDoNotWriteBigObjectRuleIfProjectIsAuthorized(): void
     {
-        $prj = Mockery::spy(\Project::class);
-        $prj->shouldReceive('getUnixName')->andReturn('project1');
-        $prj->shouldReceive('getID')->andReturn(404);
+        $prj = ProjectTestBuilder::aProject()->withUnixName('project1')->withId(404)->build();
 
         $repo = new GitRepository();
         $repo->setId(4);
@@ -317,25 +301,16 @@ EOS;
         $repo2->setNamespace('');
 
         // List all repo
-        $this->repository_factory->shouldReceive('getAllRepositoriesOfProject')
-            ->with($prj)
-            ->once()
-            ->andReturn([$repo, $repo2]);
+        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+            ->with($prj)->willReturn([$repo, $repo2]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns([]);
-
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns([]);
-
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([$prj]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);
+        $this->big_object_authorization_manager->method('getAuthorizedProjects')->willReturn([$prj]);
 
         // Ensure file is correct
         $result   = $this->project_serializer->dumpProjectRepoConf($prj);
         $expected = file_get_contents($this->fix_dir . '/perms/bigobject.conf');
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 }
