@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Cryptography\ConcealedString;
 
 /**
@@ -29,6 +32,7 @@ use Tuleap\Cryptography\ConcealedString;
  * The ldap object is initialized with global parameters (from local.inc):
  * servers, query templates, etc.
  */
+#[ConfigKeyCategory('LDAP')]
 class LDAP
 {
     public const CONFIGURATION_VARIABLES = [
@@ -65,6 +69,10 @@ class LDAP
         'sys_ldap_threshold_users_suspension',
         'search_depth',
     ];
+
+    #[ConfigKey('Timeout delay for LDAP operations in seconds')]
+    #[ConfigKeyInt(5)]
+    public const CONFIG_LDAP_TIMEOUT = 'sys_ldap_timeout';
 
     /**
      * This is equivalent to searching the entire directory.
@@ -157,6 +165,9 @@ class LDAP
                     ldap_set_option($this->ds, LDAP_OPT_PROTOCOL_VERSION, 3);
                     ldap_set_option($this->ds, LDAP_OPT_REFERRALS, 0);
 
+                    ldap_set_option($this->ds, LDAP_OPT_TIMEOUT, \ForgeConfig::getInt(self::CONFIG_LDAP_TIMEOUT));
+                    ldap_set_option($this->ds, LDAP_OPT_NETWORK_TIMEOUT, \ForgeConfig::getInt(self::CONFIG_LDAP_TIMEOUT));
+
                     // Since ldap_connect always return a resource with
                     // OpenLdap 2.2.x, we have to check that this ressource is
                     // valid with a bind, If bind success: that's great, if
@@ -183,30 +194,6 @@ class LDAP
         } else {
             return true;
         }
-    }
-
-    private function authenticatedBindConnect($servers, $binddn, $bindpwd)
-    {
-        $ds = false;
-        foreach (preg_split('/[,;]/', $servers) as $ldap_server) {
-            $ds = ldap_connect($ldap_server);
-            if ($ds) {
-                // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
-                ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-                ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
-
-                // Since ldap_connect always return a resource with
-                // OpenLdap 2.2.x, we have to check that this ressource is
-                // valid with a bind, If bind success: that's great, if
-                // not, this is a connexion failure.
-                if (@ldap_bind($ds, $binddn, $bindpwd)) {
-                    return $ds;
-                } else {
-                    throw new LDAP_Exception_BindException(ldap_error($ds));
-                }
-            }
-        }
-        throw new LDAP_Exception_ConnexionException(ldap_error($ds));
     }
 
     /**
