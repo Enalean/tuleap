@@ -30,6 +30,7 @@ import * as rest from "@/helpers/rest-querier";
 import type { StoredArtidocSection } from "@/stores/useSectionsStore";
 import { buildSectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
 import type { SectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("SectionsReorderer", () => {
     let reorderer: SectionsReorderer;
@@ -41,7 +42,7 @@ describe("SectionsReorderer", () => {
     let reorder: MockInstance;
 
     beforeEach(() => {
-        stored_section0 = injectInternalId(ArtifactSectionFactory.override({ display_title: "A" }));
+        stored_section0 = injectInternalId(FreetextSectionFactory.override({ display_title: "A" }));
         stored_section1 = injectInternalId(
             PendingArtifactSectionFactory.override({ display_title: "B" }),
         );
