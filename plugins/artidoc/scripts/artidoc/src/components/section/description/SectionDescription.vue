@@ -54,9 +54,8 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 
-const props = defineProps<{
+defineProps<{
     title: string;
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
     upload_url: string;
@@ -74,9 +73,7 @@ const props = defineProps<{
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const can_section_be_edited = computed(
-    () => can_user_edit_document && isSectionBasedOnArtifact(props.section),
-);
+const can_section_be_edited = computed(() => can_user_edit_document);
 
 const async_editor = defineAsyncComponent({
     loader: () => import("./SectionDescriptionEditorProseMirror.vue"),

@@ -32,7 +32,6 @@ const props = withDefaults(
     defineProps<{
         title: string;
         is_print_mode?: boolean;
-        is_freetext: boolean;
     }>(),
     {
         is_print_mode: false,
@@ -40,9 +39,7 @@ const props = withDefaults(
 );
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-const can_header_be_edited = computed(
-    () => props.is_print_mode !== true && can_user_edit_document && !props.is_freetext,
-);
+const can_header_be_edited = computed(() => props.is_print_mode !== true && can_user_edit_document);
 </script>
 
 <style lang="scss" scoped>

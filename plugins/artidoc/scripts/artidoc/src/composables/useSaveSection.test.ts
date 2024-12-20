@@ -30,8 +30,10 @@ import * as rest_querier from "@/helpers/rest-querier";
 import * as latest from "@/helpers/get-section-in-its-latest-version";
 import { okAsync } from "neverthrow";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
-const section = ArtifactSectionFactory.create();
+const artifact_section = ArtifactSectionFactory.create();
+const freetext_section = FreetextSectionFactory.create();
 
 describe("useSaveSection", () => {
     let editor_errors: EditorErrors;
@@ -57,17 +59,29 @@ describe("useSaveSection", () => {
         ]);
     });
     describe("forceSave", () => {
-        it("should save section", async () => {
+        it("should save artifact section", async () => {
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putArtifact")
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = useSaveSection(editor_errors, callbacks);
 
-            forceSave(section, { description: "new description", title: "new title" });
+            forceSave(artifact_section, { description: "new description", title: "new title" });
             await flushPromises();
 
             expect(mock_put_artifact_description).toHaveBeenCalledOnce();
+        });
+        it("should save freetext section", async () => {
+            const mock_put_freetext_description = vi
+                .spyOn(rest_querier, "putSection")
+                .mockReturnValue(okAsync(new Response()));
+
+            const { forceSave } = useSaveSection(editor_errors, callbacks);
+
+            forceSave(freetext_section, { description: "new description", title: "new title" });
+            await flushPromises();
+
+            expect(mock_put_freetext_description).toHaveBeenCalledOnce();
         });
     });
     describe("save", () => {
@@ -77,30 +91,74 @@ describe("useSaveSection", () => {
             );
         });
         describe("when the new description and title are the same as the original one", () => {
-            it("should disable edit mode", () => {});
-            it("should not save section", async () => {
+            it("should disable edit mode with artifact section", () => {
+                const { save } = useSaveSection(editor_errors, callbacks);
+
+                save(artifact_section, {
+                    description: artifact_section.description.value,
+                    title: artifact_section.display_title,
+                });
+
+                expect(callbacks.setEditMode).toBeCalledWith(false);
+            });
+            it("should disable edit mode with freetext section", () => {
+                const { save } = useSaveSection(editor_errors, callbacks);
+
+                save(freetext_section, {
+                    description: freetext_section.description,
+                    title: freetext_section.display_title,
+                });
+
+                expect(callbacks.setEditMode).toBeCalledWith(false);
+            });
+            it("should not save artifact section", async () => {
                 const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
                 const { save } = useSaveSection(editor_errors, callbacks);
 
-                save(section, {
-                    description: section.description.value,
-                    title: section.display_title,
+                save(artifact_section, {
+                    description: artifact_section.description.value,
+                    title: artifact_section.display_title,
                 });
 
                 await flushPromises();
 
                 expect(mock_put_artifact_description).not.toHaveBeenCalledOnce();
             });
+
+            it("should not save freetext section", async () => {
+                const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
+                const { save } = useSaveSection(editor_errors, callbacks);
+
+                save(freetext_section, {
+                    description: freetext_section.description,
+                    title: freetext_section.display_title,
+                });
+
+                await flushPromises();
+
+                expect(mock_put_freetext_description).not.toHaveBeenCalledOnce();
+            });
         });
-        it("should save section", async () => {
+
+        it("should save artifact section", async () => {
             const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
 
             const { save } = useSaveSection(editor_errors, callbacks);
 
-            save(section, { description: "new description", title: "new title" });
+            save(artifact_section, { description: "new description", title: "new title" });
             await flushPromises();
 
             expect(mock_put_artifact_description).toHaveBeenCalledOnce();
+        });
+        it("should save freetext section", async () => {
+            const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
+
+            const { save } = useSaveSection(editor_errors, callbacks);
+
+            save(freetext_section, { description: "new description", title: "new title" });
+            await flushPromises();
+
+            expect(mock_put_freetext_description).toHaveBeenCalledOnce();
         });
     });
 });

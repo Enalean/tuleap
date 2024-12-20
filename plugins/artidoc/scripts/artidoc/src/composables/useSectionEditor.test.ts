@@ -38,8 +38,10 @@ import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
 import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
-const section = ArtifactSectionFactory.create();
+const artifact_section = ArtifactSectionFactory.create();
+const freetext_section = FreetextSectionFactory.create();
 const merge_artifacts = vi.fn();
 const set_waiting_list = vi.fn();
 
@@ -69,7 +71,10 @@ describe("useSectionEditor", () => {
     });
 
     describe("editor_state", () => {
-        it("should return editor states", () => {
+        it.each([
+            ["artifact_section", artifact_section],
+            ["freetext_section", freetext_section],
+        ])("should return editor states with %s", (name, section) => {
             const { editor_state } = useSectionEditor(
                 section,
                 merge_artifacts,
@@ -78,7 +83,11 @@ describe("useSectionEditor", () => {
                 () => {},
             );
 
-            expect(editor_state.is_image_upload_allowed.value).toEqual(true);
+            if (name === "artifact_section") {
+                expect(editor_state.is_image_upload_allowed.value).toEqual(true);
+            } else {
+                expect(editor_state.is_image_upload_allowed.value).toEqual(false);
+            }
             expect(editor_state.is_save_allowed.value).toEqual(false);
             expect(editor_state.is_section_editable.value).toEqual(true);
             expect(editor_state.is_section_in_edit_mode.value).toEqual(false);
@@ -110,7 +119,10 @@ describe("useSectionEditor", () => {
         });
 
         describe("enable_editor", () => {
-            it("should enable editor", () => {
+            it.each([
+                ["artifact_section", artifact_section],
+                ["freetext_section", freetext_section],
+            ])("should enable editor with %s", (name, section) => {
                 const { editor_actions, editor_state } = useSectionEditor(
                     section,
                     merge_artifacts,
@@ -129,7 +141,10 @@ describe("useSectionEditor", () => {
         });
 
         describe("save_editor", () => {
-            it("should save the editor content", () => {
+            it.each([
+                ["artifact_section", artifact_section],
+                ["freetext_section", freetext_section],
+            ])("should save the editor content with %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
                     section,
                     merge_artifacts,
@@ -143,7 +158,10 @@ describe("useSectionEditor", () => {
             });
         });
         describe("force_save_editor", () => {
-            it("should force save the editor content", () => {
+            it.each([
+                ["artifact_section", artifact_section],
+                ["freetext_section", freetext_section],
+            ])("should force save the editor content %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
                     section,
                     merge_artifacts,
@@ -157,7 +175,10 @@ describe("useSectionEditor", () => {
             });
         });
         describe("refresh_section", () => {
-            it("should refresh the editor content", () => {
+            it.each([
+                ["artifact_section", artifact_section],
+                ["freetext_section", freetext_section],
+            ])("should refresh the editor content with %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
                     section,
                     merge_artifacts,
@@ -171,7 +192,10 @@ describe("useSectionEditor", () => {
             });
         });
         describe("cancel_editor", () => {
-            it("should cancel edit mode", () => {
+            it.each([
+                ["artifact_section", artifact_section],
+                ["freetext_section", freetext_section],
+            ])("should cancel edit mode with %s", (name, section) => {
                 const { editor_actions, editor_state, editor_section_content } = useSectionEditor(
                     section,
                     merge_artifacts,
@@ -188,12 +212,23 @@ describe("useSectionEditor", () => {
                 editor_actions.cancelEditor(null);
 
                 expect(editor_state.is_section_in_edit_mode.value).toBe(false);
-                expect(editor_section_content.getReadonlyDescription()).toBe(
-                    section.description.value,
-                );
+
+                if (name === "artifact_section") {
+                    expect(editor_section_content.getReadonlyDescription()).toBe(
+                        artifact_section.description.value,
+                    );
+                } else {
+                    expect(editor_section_content.getReadonlyDescription()).toBe(
+                        freetext_section.description,
+                    );
+                }
+
                 expect(store_stub.removeSection).not.toHaveBeenCalled();
             });
-            it("should cancel file uploads", () => {
+            it.each([
+                ["artifact_section", artifact_section],
+                ["freetext_section", freetext_section],
+            ])("should cancel file uploads with %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
                     section,
                     merge_artifacts,
@@ -220,7 +255,10 @@ describe("useSectionEditor", () => {
         });
     });
     describe("editor_error", () => {
-        it("should enable editor", () => {
+        it.each([
+            ["artifact_section", artifact_section],
+            ["freetext_section", freetext_section],
+        ])("should enable editor with %s", (name, section) => {
             const editor_error_handler = vi.spyOn(editorError, "useEditorErrors");
 
             const { editor_error } = useSectionEditor(
@@ -235,7 +273,10 @@ describe("useSectionEditor", () => {
         });
     });
     describe("editor_section_content", () => {
-        it("should return the editor content", () => {
+        it.each([
+            ["artifact_section", artifact_section],
+            ["freetext_section", freetext_section],
+        ])("should return the editor content %s", (name, section) => {
             const editor_content = vi.spyOn(editorContent, "useEditorSectionContent");
 
             const { editor_section_content } = useSectionEditor(

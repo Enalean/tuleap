@@ -26,8 +26,10 @@ import { errAsync, okAsync } from "neverthrow";
 import * as rest from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
-const section = ArtifactSectionFactory.create();
+const artifact_section = ArtifactSectionFactory.create();
+const freetext_section = ArtifactSectionFactory.create();
 const editor_errors: EditorErrors = {
     ...SectionEditorStub.withoutEditableSection().editor_error,
     handleError: vi.fn(),
@@ -43,14 +45,15 @@ describe("useRefreshSection", () => {
         };
     });
     describe("refresh_section", () => {
-        describe("when the api call get section is successful", () => {
-            const new_section = ArtifactSectionFactory.create();
-
+        describe.each([
+            ["artifact", artifact_section, ArtifactSectionFactory.create()],
+            ["freetext", freetext_section, FreetextSectionFactory.create()],
+        ])("when the api call get section is successful with %s", (name, section, new_section) => {
             beforeEach(() => {
                 vi.spyOn(rest, "getSection").mockReturnValue(okAsync(new_section));
             });
 
-            it("should call update section from editor", async () => {
+            it(`should call update section from editor with ${name}`, async () => {
                 const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
                 refreshSection();
 
@@ -58,7 +61,7 @@ describe("useRefreshSection", () => {
 
                 expect(callbacks.updateCurrentSection).toHaveBeenCalledWith(new_section);
             });
-            it("should close editor", async () => {
+            it(`should close editor with ${name}`, async () => {
                 const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
 
                 refreshSection();
@@ -68,7 +71,11 @@ describe("useRefreshSection", () => {
             });
             describe("when the api call returns an artifact section", () => {
                 it("should call update section from store", async () => {
-                    const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
+                    const { refreshSection } = useRefreshSection(
+                        ArtifactSectionFactory.create(),
+                        editor_errors,
+                        callbacks,
+                    );
 
                     refreshSection();
                     await flushPromises();
@@ -77,21 +84,24 @@ describe("useRefreshSection", () => {
                 });
             });
         });
-        describe("when the api call get section trigger an error", () => {
+        describe.each([
+            ["artifact", artifact_section],
+            ["freetext", freetext_section],
+        ])("when the api call get section trigger an error with %s", (name, section) => {
             const fault = Fault.fromMessage("an error");
 
             beforeEach(() => {
                 vi.spyOn(rest, "getSection").mockReturnValue(errAsync(fault));
             });
 
-            it("should call handle error from editor", async () => {
+            it(`should call handle error from editor with ${name}`, async () => {
                 const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
                 refreshSection();
                 await flushPromises();
 
                 expect(editor_errors.handleError).toHaveBeenCalledWith(fault);
             });
-            it("should update is_outdated", async () => {
+            it(`should update is_outdated with ${name}`, async () => {
                 const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
                 editor_errors.is_outdated.value = true;
                 expect(editor_errors.is_outdated.value).toBe(true);

@@ -21,7 +21,7 @@ import { describe, expect, it, vi } from "vitest";
 import * as fetch from "@tuleap/fetch-result";
 import { errAsync, okAsync } from "neverthrow";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { getAllSections, getSection, putArtifact } from "@/helpers/rest-querier";
+import { getAllSections, getSection, putArtifact, putSection } from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 import { Fault } from "@tuleap/fault";
@@ -528,5 +528,26 @@ describe("rest-querier", () => {
                 );
             },
         );
+    });
+
+    describe("putSection", () => {
+        it("should update freetext", async () => {
+            const put = vi
+                .spyOn(fetch, "putResponse")
+                .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
+
+            putSection("123", "New title", "New description");
+
+            await flushPromises();
+
+            expect(put).toHaveBeenCalledWith(
+                uri`/api/artidoc_sections/123`,
+                {},
+                {
+                    title: "New title",
+                    description: "New description",
+                },
+            );
+        });
     });
 });

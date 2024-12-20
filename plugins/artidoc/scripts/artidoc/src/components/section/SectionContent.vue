@@ -41,7 +41,6 @@
                 class="section-header"
                 v-if="!is_sections_loading"
                 v-bind:title="section.display_title"
-                v-bind:is_freetext="!isSectionBasedOnArtifact(section)"
             />
             <section-header-skeleton v-if="is_sections_loading" class="section-header" />
             <section-description

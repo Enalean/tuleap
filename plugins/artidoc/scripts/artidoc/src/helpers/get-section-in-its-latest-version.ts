@@ -57,7 +57,8 @@ export function getSectionInItsLatestVersion(
             if (
                 isFreetextSection(new_section) &&
                 isFreetextSection(old_section) &&
-                new_section.display_title === old_section.display_title
+                new_section.display_title === old_section.display_title &&
+                new_section.description === old_section.description
             ) {
                 return okAsync(new_section);
             }

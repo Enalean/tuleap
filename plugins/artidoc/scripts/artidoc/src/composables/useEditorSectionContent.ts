@@ -21,7 +21,7 @@ import type { Ref } from "vue";
 import { computed, ref } from "vue";
 import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isFreetextSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 
 export type EditorSectionContent = {
     inputSectionContent(new_title: string, new_description: string): void;
@@ -52,10 +52,6 @@ export function useEditorSectionContent(
     );
 
     const inputSectionContent = (new_title: string, new_description: string): void => {
-        if (isFreetextSection(section.value)) {
-            return;
-        }
-
         is_there_any_change.value =
             new_title !== original_title.value || new_description !== original_description.value;
         if (is_there_any_change.value) {

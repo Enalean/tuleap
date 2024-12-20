@@ -21,6 +21,7 @@ import { describe, expect, it, vi } from "vitest";
 import * as rest from "@/helpers/rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import {
     isOutdatedSectionFault,
     getSectionInItsLatestVersion,
@@ -28,39 +29,47 @@ import {
 import { Fault } from "@tuleap/fault";
 
 describe("get-section-in-its-latest-version", () => {
-    it("should return true if retrieved section content is the same than the old one", async () => {
-        const section = ArtifactSectionFactory.create();
+    it.each([
+        ["artifact", ArtifactSectionFactory.create()],
+        ["freetext", FreetextSectionFactory.create()],
+    ])(
+        "should return true if retrieved %s section content is the same than the old one",
+        async (name, section) => {
+            vi.spyOn(rest, "getSection").mockReturnValue(okAsync(section));
 
-        vi.spyOn(rest, "getSection").mockReturnValue(okAsync(section));
+            const result = await getSectionInItsLatestVersion(section);
 
-        const result = await getSectionInItsLatestVersion(section);
+            expect(result.isOk()).toBe(true);
+        },
+    );
 
-        expect(result.isOk()).toBe(true);
-    });
+    it.each([
+        ["artifact", ArtifactSectionFactory.create()],
+        ["freetext", FreetextSectionFactory.create()],
+    ])(
+        "should return fault if retrieved %s section title is not the same than the old one",
+        async (name, section) => {
+            vi.spyOn(rest, "getSection").mockReturnValue(
+                okAsync({
+                    ...section,
+                    display_title: "Remotely updated title",
+                }),
+            );
 
-    it("should return fault if retrieved section title is not the same than the old one", async () => {
-        const section = ArtifactSectionFactory.create();
-
-        vi.spyOn(rest, "getSection").mockReturnValue(
-            okAsync({
+            const result = await getSectionInItsLatestVersion({
                 ...section,
-                display_title: "Remotely updated title",
-            }),
-        );
+                display_title: "Original title",
+            });
 
-        const result = await getSectionInItsLatestVersion({
-            ...section,
-            display_title: "Original title",
-        });
+            expect(result.isErr()).toBe(true);
+            result.match(
+                () => {},
+                (fault: Fault) => expect(isOutdatedSectionFault(fault)).toBe(true),
+            );
+        },
+    );
 
-        expect(result.isErr()).toBe(true);
-        result.match(
-            () => {},
-            (fault: Fault) => expect(isOutdatedSectionFault(fault)).toBe(true),
-        );
-    });
-
-    it("should return fault if retrieved section description is not the same than the old one", async () => {
+    it("should return fault if retrieved artifact section description is not the same than the old one", async () => {
         const section = ArtifactSectionFactory.create();
 
         vi.spyOn(rest, "getSection").mockReturnValue(
@@ -84,12 +93,36 @@ describe("get-section-in-its-latest-version", () => {
             (fault: Fault) => expect(isOutdatedSectionFault(fault)).toBe(true),
         );
     });
+    it("should return fault if retrieved freetext section description is not the same than the old one", async () => {
+        const section = FreetextSectionFactory.create();
 
-    it("should return fault if section cannot be retrieved", async () => {
+        vi.spyOn(rest, "getSection").mockReturnValue(
+            okAsync({
+                ...section,
+                description: "Remotely updated description",
+            }),
+        );
+
+        const result = await getSectionInItsLatestVersion({
+            ...section,
+            description: "Original description",
+        });
+
+        expect(result.isErr()).toBe(true);
+        result.match(
+            () => {},
+            (fault: Fault) => expect(isOutdatedSectionFault(fault)).toBe(true),
+        );
+    });
+
+    it.each([
+        ["artifact", ArtifactSectionFactory.create()],
+        ["freetext", FreetextSectionFactory.create()],
+    ])("should return fault if %s section cannot be retrieved", async (name, section) => {
         const err = Fault.fromMessage("Not found");
         vi.spyOn(rest, "getSection").mockReturnValue(errAsync(err));
 
-        const result = await getSectionInItsLatestVersion(ArtifactSectionFactory.create());
+        const result = await getSectionInItsLatestVersion(section);
 
         expect(result.isErr()).toBe(true);
         result.match(

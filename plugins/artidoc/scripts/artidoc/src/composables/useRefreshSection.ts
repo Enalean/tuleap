@@ -16,8 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { isArtifactSection } from "@/helpers/artidoc-section.type";
-import type { ArtifactSection, ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.type";
+import type {
+    ArtifactSection,
+    ArtidocSection,
+    FreetextSection,
+} from "@/helpers/artidoc-section.type";
 import { getSection } from "@/helpers/rest-querier";
 import type { Fault } from "@tuleap/fault";
 import type { EditorErrors } from "@/composables/useEditorErrors";
@@ -35,21 +39,21 @@ export function useRefreshSection(
     editor_errors: EditorErrors,
     callbacks: {
         closeEditor: () => void;
-        updateSectionStore: (section: ArtifactSection) => void;
+        updateSectionStore: (section: ArtifactSection | FreetextSection) => void;
         updateCurrentSection: (section: ArtidocSection) => void;
     },
 ): RefreshSection {
     const is_just_refreshed: Ref<boolean> = ref(false);
 
     function refreshSection(): void {
-        if (!isArtifactSection(section)) {
+        if (!isArtifactSection(section) && !isFreetextSection(section)) {
             return;
         }
 
         getSection(section.id).match(
             (artidoc_section: ArtidocSection) => {
                 callbacks.updateCurrentSection(artidoc_section);
-                if (isArtifactSection(artidoc_section)) {
+                if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
                     callbacks.updateSectionStore(artidoc_section);
                 }
                 callbacks.closeEditor();
