@@ -26,6 +26,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\LDAP\User\UserDao;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
@@ -73,7 +74,7 @@ use Tuleap\User\UserNameNormalizer;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class LdapPlugin extends Plugin
+class LdapPlugin extends Plugin implements PluginWithConfigKeys
 {
     /**
      * @type LDAP
@@ -1393,5 +1394,10 @@ class LdapPlugin extends Plugin
     public function findUserByEmailEvent(FindUserByEmailEvent $event): void
     {
         (new CreateUserFromEmail($this->getLdap(), $this->getLdapUserManager(), $this->getLogger()))->process($event);
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(\LDAP::class);
     }
 }
