@@ -150,6 +150,7 @@ export function createSection(
     return postJSON<ArtidocSection>(uri`/api/artidoc/${document_id}/sections`, {
         artifact: { id: artifact_id },
         position,
+        content: null,
     }).map(injectDisplayTitle);
 }
 

@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -43,15 +44,16 @@ final readonly class SectionCreator
      * @param Option<SectionIdentifier> $before_section_id
      * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    public function create(int $id, int $artifact_id, Option $before_section_id): Ok|Err
+    public function create(int $id, Option $before_section_id, SectionContentToBeCreated $content): Ok|Err
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(function (ArtidocWithContext $artidoc) use ($artifact_id, $before_section_id) {
-                return $this->collect_required_section_information_for_creation
+            ->andThen(fn (ArtidocWithContext $artidoc) => $content->apply(
+                fn (int $artifact_id) => $this->collect_required_section_information_for_creation
                     ->collectRequiredSectionInformation($artidoc, $artifact_id)
-                    ->andThen(fn () => $this->saveSection($artidoc, $artifact_id, $before_section_id));
-            });
+                    ->andThen(fn () => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id), $before_section_id)),
+                fn (SectionContentToBeCreatedFreetext $freetext) => $this->saveSection($artidoc, ContentToInsert::fromFreetext($freetext->content), $before_section_id)
+            ));
     }
 
     /**
@@ -60,11 +62,9 @@ final readonly class SectionCreator
      */
     private function saveSection(
         ArtidocWithContext $artidoc,
-        int $artifact_id,
+        ContentToInsert $content,
         Option $before_section_id,
     ): Ok|Err {
-        $content = ContentToInsert::fromArtifactId($artifact_id);
-
         return $before_section_id->match(
             fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($artidoc, $content, $sibling_section_id),
             fn () => $this->save_section->saveSectionAtTheEnd($artidoc, $content),
