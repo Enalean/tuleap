@@ -22,8 +22,8 @@ import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
-import { isArtifactSection } from "@/helpers/artidoc-section.type";
-import type { ArtifactSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.type";
+import type { ArtifactSection, FreetextSection } from "@/helpers/artidoc-section.type";
 import { reorderSections } from "@/helpers/rest-querier";
 import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/useSectionsStore";
 import { CannotReorderSectionsFault } from "@/stores/CannotReorderSectionsFault";
@@ -48,14 +48,16 @@ export type SectionsReorderer = {
 export const buildSectionsReorderer = (
     sections: Ref<StoredArtidocSection[] | undefined>,
 ): SectionsReorderer => {
-    function getNextArtifactSection(start: number): Option<ArtifactSection> {
+    function getNextArtifacOrFreetextSection(
+        start: number,
+    ): Option<ArtifactSection | FreetextSection> {
         if (sections.value === undefined) {
             return Option.nothing();
         }
 
         for (let i = start; i < sections.value.length; i++) {
             const next_section = sections.value[i];
-            if (isArtifactSection(next_section)) {
+            if (isArtifactSection(next_section) || isFreetextSection(next_section)) {
                 return Option.fromValue(next_section);
             }
         }
@@ -63,14 +65,16 @@ export const buildSectionsReorderer = (
         return Option.nothing();
     }
 
-    function getPreviousArtifactSection(start: number): Option<ArtifactSection> {
+    function getPreviousArtifactOrFreetextSection(
+        start: number,
+    ): Option<ArtifactSection | FreetextSection> {
         if (sections.value === undefined) {
             return Option.nothing();
         }
 
         for (let i = start; i >= 0; i--) {
             const previous_section = sections.value[i];
-            if (isArtifactSection(previous_section)) {
+            if (isArtifactSection(previous_section) || isFreetextSection(previous_section)) {
                 return Option.fromValue(previous_section);
             }
         }
@@ -78,39 +82,39 @@ export const buildSectionsReorderer = (
         return Option.nothing();
     }
 
-    function moveArtifactSectionBeforeSibling(
+    function moveArtifactOrFreetextSectionBeforeSibling(
         moved_section_index: number,
         document_id: number,
         section: StoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
-        if (!isArtifactSection(section)) {
+        if (!isArtifactSection(section) && !isFreetextSection(section)) {
             return okAsync(null);
         }
 
-        const next_artifact_section = getNextArtifactSection(moved_section_index).unwrapOr(null);
-        if (!next_artifact_section) {
+        const next_section = getNextArtifacOrFreetextSection(moved_section_index).unwrapOr(null);
+        if (!next_section) {
             return okAsync(null);
         }
 
-        return reorderSections(document_id, section.id, "before", next_artifact_section.id);
+        return reorderSections(document_id, section.id, "before", next_section.id);
     }
 
-    function moveArtifactSectionAfterSibling(
+    function moveArtifactOrFreetextSectionAfterSibling(
         moved_section_index: number,
         document_id: number,
         section: StoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
-        if (!isArtifactSection(section)) {
+        if (!isArtifactSection(section) && !isFreetextSection(section)) {
             return okAsync(null);
         }
 
-        const next_artifact_section =
-            getPreviousArtifactSection(moved_section_index).unwrapOr(null);
-        if (!next_artifact_section) {
+        const previous_section =
+            getPreviousArtifactOrFreetextSection(moved_section_index).unwrapOr(null);
+        if (!previous_section) {
             return okAsync(null);
         }
 
-        return reorderSections(document_id, section.id, "after", next_artifact_section.id);
+        return reorderSections(document_id, section.id, "after", previous_section.id);
     }
 
     function moveSectionUp(
@@ -132,13 +136,15 @@ export const buildSectionsReorderer = (
                 sections.value.splice(index, 1);
                 sections.value.splice(index - 1, 0, section);
 
-                return moveArtifactSectionBeforeSibling(index, document_id, section).mapErr(
-                    (fault) => {
-                        sections.value = sections_before_move;
+                return moveArtifactOrFreetextSectionBeforeSibling(
+                    index,
+                    document_id,
+                    section,
+                ).mapErr((fault) => {
+                    sections.value = sections_before_move;
 
-                        return fault;
-                    },
-                );
+                    return fault;
+                });
             },
             () => errAsync(CannotReorderSectionsFault.build()),
         );
@@ -163,13 +169,15 @@ export const buildSectionsReorderer = (
                 sections.value.splice(index, 1);
                 sections.value.splice(index + 1, 0, section);
 
-                return moveArtifactSectionAfterSibling(index, document_id, section).mapErr(
-                    (fault) => {
-                        sections.value = sections_before_move;
+                return moveArtifactOrFreetextSectionAfterSibling(
+                    index,
+                    document_id,
+                    section,
+                ).mapErr((fault) => {
+                    sections.value = sections_before_move;
 
-                        return fault;
-                    },
-                );
+                    return fault;
+                });
             },
             () => errAsync(CannotReorderSectionsFault.build()),
         );
@@ -211,7 +219,7 @@ export const buildSectionsReorderer = (
                         sections.value.splice(index_section, 1);
                         sections.value.splice(new_section_index, 0, section);
 
-                        return moveArtifactSectionBeforeSibling(
+                        return moveArtifactOrFreetextSectionBeforeSibling(
                             new_section_index + 1,
                             document_id,
                             section,
@@ -254,7 +262,7 @@ export const buildSectionsReorderer = (
                 sections.value.push(section);
 
                 const penultimate_index = sections.value.length - 2;
-                return moveArtifactSectionAfterSibling(
+                return moveArtifactOrFreetextSectionAfterSibling(
                     penultimate_index,
                     document_id,
                     section,
