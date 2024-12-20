@@ -18,7 +18,7 @@
  */
 
 import type { GroupOfItems, LazyAutocompleter, LazyboxItem } from "@tuleap/lazybox";
-import type { TrackerWithSubmittableSection } from "@/stores/configuration-store";
+import type { TitleFieldDefinition, Tracker } from "@/stores/configuration-store";
 import { getJSON, uri } from "@tuleap/fetch-result";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
@@ -57,7 +57,8 @@ const items: GroupOfItems = {
 export function searchExistingArtifactsForAutocompleter(
     query: string,
     autocompleter: LazyAutocompleter,
-    tracker: TrackerWithSubmittableSection,
+    tracker: Tracker,
+    title_field: TitleFieldDefinition,
     sections: readonly (ArtidocSection & InternalArtidocSectionId)[],
     gettext_provider: Language,
 ): ResultAsync<boolean, Fault> {
@@ -76,7 +77,7 @@ export function searchExistingArtifactsForAutocompleter(
     ]);
 
     const q: Record<number, string> = {};
-    q[tracker.title.field_id] = query;
+    q[title_field.field_id] = query;
 
     return getJSON<Artifact[]>(
         uri`/api/trackers/${tracker.id}/artifacts?query=${JSON.stringify(q)}`,
