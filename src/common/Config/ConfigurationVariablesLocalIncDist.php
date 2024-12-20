@@ -58,11 +58,6 @@ final readonly class ConfigurationVariablesLocalIncDist
     #[ConfigKeyString('/var/tmp')]
     public const TMP_DIR = 'tmp_dir';
 
-    #[ConfigKey('Tuleap utils directory')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString('/usr/share/tuleap/src/utils')]
-    public const CODENDI_UTILS_PREFIX = 'codendi_utils_prefix';
-
     #[ConfigKey('Where Legacy PhpWiki attachments are stored')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString('/var/lib/tuleap/wiki')]
