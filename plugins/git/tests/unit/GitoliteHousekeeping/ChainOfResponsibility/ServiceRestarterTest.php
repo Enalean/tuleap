@@ -18,43 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git\GitoliteHousekeeping\ChainOfResponsibility;
+
+use BackendService;
+use Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingResponse;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class ServiceRestarterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&\Mockery\MockInterface
-     */
-    private $response;
-    /**
-     * @var BackendService&\Mockery\MockInterface
-     */
-    private $backend_service;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&MockObject $response;
+    private BackendService&MockObject $backend_service;
     private Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->response        = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
-        $this->backend_service = \Mockery::spy(\BackendService::class);
+        $this->response        = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->backend_service = $this->createMock(BackendService::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service);
     }
 
-    public function testItRestartsTheService(): void
+    public function testItRestartsTheServiceAndEndsWithSuccess(): void
     {
-        $this->response->shouldReceive('info')->with('Restarting service')->once();
-        $this->backend_service->shouldReceive('start')->once();
-
-        $this->command->execute();
-    }
-
-    public function testItEndsWithSuccess(): void
-    {
-        $this->response->shouldReceive('success')->once();
+        $this->response->expects(self::once())->method('info')->with('Restarting service');
+        $this->backend_service->expects(self::once())->method('start');
+        $this->response->expects(self::once())->method('success');
 
         $this->command->execute();
     }

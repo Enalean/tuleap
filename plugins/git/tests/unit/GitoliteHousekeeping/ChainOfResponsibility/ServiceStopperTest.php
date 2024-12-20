@@ -18,47 +18,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopperTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git\GitoliteHousekeeping\ChainOfResponsibility;
+
+use BackendService;
+use Git_GitoliteHousekeeping_ChainOfResponsibility_Command;
+use Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingResponse;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class ServiceStopperTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&\Mockery\MockInterface
-     */
-    private $response;
-    /**
-     * @var BackendService&\Mockery\MockInterface
-     */
-    private $backend_service;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&MockObject $response;
+    private BackendService&MockObject $backend_service;
     private Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->response        = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
-        $this->backend_service = \Mockery::spy(\BackendService::class);
+        $this->response        = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->backend_service = $this->createMock(BackendService::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper($this->response, $this->backend_service);
     }
 
     public function testItStopsTheService(): void
     {
-        $this->response->shouldReceive('info')->with('Stopping service')->once();
-        $this->backend_service->shouldReceive('stop')->once();
+        $this->response->expects(self::once())->method('info')->with('Stopping service');
+        $this->backend_service->expects(self::once())->method('stop');
 
         $this->command->execute();
     }
 
     public function testItExecutesTheNextCommand(): void
     {
-        $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
-        $next->shouldReceive('execute')->once();
+        $next = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
+        $next->expects(self::once())->method('execute');
 
         $this->command->setNextCommand($next);
 
+        $this->response->method('info');
+        $this->backend_service->method('stop');
         $this->command->execute();
     }
 }
