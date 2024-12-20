@@ -57,7 +57,6 @@
                 v-bind:input_section_content="inputSectionContent"
                 v-bind:is_there_any_change="is_there_any_change"
                 v-bind:section="section"
-                v-bind:editor_section_content="editor.editor_section_content"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
