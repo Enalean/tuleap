@@ -30,6 +30,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Config\ConfigDao;
+use Tuleap\Config\ConfigKeyModifierDatabase;
 use Tuleap\Config\KeyMetadataProvider;
 
 final class ConfigResetCommand extends Command
@@ -58,7 +59,7 @@ final class ConfigResetCommand extends Command
 
         $key_metadata = $this->config_keys->getKeyMetadata($key);
 
-        if (! $key_metadata->can_be_modified) {
+        if (! $key_metadata->can_be_modified instanceof ConfigKeyModifierDatabase) {
             throw new InvalidArgumentException("$key cannot be modified");
         }
 

@@ -23,11 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-use Tuleap\Config\ConfigCannotBeModified;
+use Tuleap\Config\ConfigCannotBeModifiedYet;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\ConfigKeyLegacyBool;
+use Tuleap\Config\ConfigKeySecret;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\ConfigKeyHelp;
 
@@ -35,31 +36,32 @@ use Tuleap\Config\ConfigKeyHelp;
 final class DBConfig
 {
     #[ConfigKey('Database server hostname or IP address')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString('localhost')]
     public const CONF_HOST = 'sys_dbhost';
 
     #[ConfigKey('Database server port')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyInt(self::DEFAULT_MYSQL_PORT)]
     public const CONF_PORT = 'sys_dbport';
 
     #[ConfigKey('Database name')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString(self::DEFAULT_MYSQL_TULEAP_DB_NAME)]
     public const CONF_DBNAME = 'sys_dbname';
 
     #[ConfigKey('Database application user')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString(self::DEFAULT_MYSQL_TULEAP_USER_NAME)]
     public const CONF_DBUSER = 'sys_dbuser';
 
     #[ConfigKey('Database application user password')]
-    #[ConfigCannotBeModified]
+    #[ConfigKeySecret]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     public const CONF_DBPASSWORD = 'sys_dbpasswd';
 
     #[ConfigKey('Database is accessed with TLS')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyLegacyBool(false)]
     #[ConfigKeyHelp(<<<EOT
     If set to '1' (one) connexions to DB are made through SSL.
@@ -70,17 +72,17 @@ final class DBConfig
     public const CONF_ENABLE_SSL = 'sys_enablessl';
 
     #[ConfigKey('Database TLS CA')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString(self::DEFAULT_MYSQL_CA_FILE_PATH)]
     public const CONF_SSL_CA = 'sys_db_ssl_ca';
 
     #[ConfigKey('Toggle verification of database certificate')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyLegacyBool(false)]
     public const CONF_SSL_VERIFY_CERT = 'sys_db_ssl_verify_cert';
 
     #[ConfigKey('Adjust the maximum number of JOIN the mysql server can accept')]
-    #[ConfigCannotBeModified]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyInt(20)]
     public const CONF_NB_MAX_JOIN = 'sys_server_join';
 

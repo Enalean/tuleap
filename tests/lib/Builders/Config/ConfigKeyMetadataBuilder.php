@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Test\Builders\Config;
 
 use Tuleap\Config\ConfigKeyMetadata;
+use Tuleap\Config\ConfigKeyModifier;
+use Tuleap\Config\ConfigKeyModifierDatabase;
+use Tuleap\Config\ConfigKeyModifierFile;
 use Tuleap\Config\SecretValidator;
 use Tuleap\Config\ValueValidator;
 
@@ -33,18 +36,18 @@ final class ConfigKeyMetadataBuilder
     private ?ValueValidator $value_validator   = null;
     private bool $has_default_value            = false;
 
-    private function __construct(private readonly bool $can_be_modified)
+    private function __construct(private readonly ConfigKeyModifier $can_be_modified)
     {
     }
 
     public static function aModifiableMetadata(): self
     {
-        return new self(true);
+        return new self(new ConfigKeyModifierDatabase());
     }
 
     public static function aNonModifiableMetadata(): self
     {
-        return new self(false);
+        return new self(new ConfigKeyModifierFile('/tmp/foo'));
     }
 
     public function withValidator(ValueValidator $value_validator): self

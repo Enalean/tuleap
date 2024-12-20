@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-interface ConfigCannotBeModifiedInterface
+/**
+ * @psalm-immutable
+ */
+final readonly class ConfigKeyModifierFile implements ConfigKeyModifier
 {
+    public function __construct(public string $path)
+    {
+    }
+
+    public function getModifierLabel(): string
+    {
+        return $this->path;
+    }
 }

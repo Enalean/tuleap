@@ -30,7 +30,7 @@ final class ConfigKeyMetadata
 {
     public function __construct(
         public string $description,
-        public bool $can_be_modified,
+        public ConfigKeyModifier $can_be_modified,
         public bool $is_secret,
         public bool $is_hidden,
         public readonly bool $has_default_value,

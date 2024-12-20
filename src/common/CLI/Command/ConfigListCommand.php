@@ -53,7 +53,7 @@ class ConfigListCommand extends Command
         $config_keys = $this->event_manager->dispatch(new GetConfigKeys());
 
         $table = new Table($output);
-        $table->setHeaders(['Variable', 'Documentation', 'Can be set ?']);
+        $table->setHeaders(['Variable', 'Documentation', 'How to set ?']);
 
         $categorized_rows   = [];
         $uncategorized_rows = [];
@@ -83,7 +83,7 @@ class ConfigListCommand extends Command
         return [
             $key,
             $key_metadata->description,
-            $key_metadata->can_be_modified ? 'Yes' : 'No',
+            $key_metadata->can_be_modified->getModifierLabel(),
         ];
     }
 }

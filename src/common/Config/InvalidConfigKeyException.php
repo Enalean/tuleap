@@ -35,6 +35,6 @@ final class InvalidConfigKeyException extends \Exception
      */
     public function getConfigKeys(): array
     {
-        return $this->config_keys->getKeysThatCanBeModified();
+        return $this->config_keys->getKeysThatCanBeModifiedWithConfigSet();
     }
 }
