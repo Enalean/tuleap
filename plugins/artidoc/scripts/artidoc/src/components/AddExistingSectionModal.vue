@@ -27,7 +27,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="artidoc-add-existing-section-modal-title">
-                {{ $gettext("Import existing section") }}
+                {{ title }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="tlp-modal-body" ref="body">
+        <div class="tlp-modal-body" ref="body" v-if="is_search_allowed">
             <p>{{ explanations }}</p>
         </div>
 
@@ -80,7 +80,7 @@ import { OPEN_ADD_EXISTING_SECTION_MODAL_BUS } from "@/composables/useOpenAddExi
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { HTMLTemplateResult, HTMLTemplateStringProcessor, LazyboxItem } from "@tuleap/lazybox";
 import { createLazyAutocompleter } from "@tuleap/lazybox";
-import { CONFIGURATION_STORE, isTrackerWithSubmittableSection } from "@/stores/configuration-store";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { LazyAutocompleter } from "@tuleap/lazybox/src/LazyAutocompleterElement";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
@@ -108,7 +108,11 @@ const { sections } = strictInject(SECTIONS_STORE);
 const modal_element = ref<HTMLElement | undefined>(undefined);
 
 const selected = ref<Artifact | null>(null);
-const is_submit_button_disabled = computed(() => selected.value === null);
+const title_field = computed(() => configuration.selected_tracker.value?.title);
+const is_search_allowed = computed(() => Boolean(title_field.value));
+const is_submit_button_disabled = computed(
+    () => is_search_allowed.value === false || selected.value === null,
+);
 const submit_button_icon = "fa-solid fa-plus";
 const explanations = computed(() =>
     interpolate(
@@ -118,7 +122,25 @@ const explanations = computed(() =>
         },
     ),
 );
-const error_message = ref("");
+const title = computed(() =>
+    configuration.selected_tracker.value
+        ? interpolate($gettext("Import existing %{tracker_label}"), {
+              tracker_label: configuration.selected_tracker.value.item_name,
+          })
+        : $gettext("Import existing section"),
+);
+const error_message = ref(
+    is_search_allowed.value
+        ? ""
+        : interpolate(
+              $gettext(
+                  "There is no title field on the configured tracker %{ tracker } (or you cannot submit it), therefore you cannot search for artifacts to import.",
+              ),
+              {
+                  tracker: configuration.selected_tracker.value?.label,
+              },
+          ),
+);
 const has_error_message = computed(() => error_message.value.length > 0);
 
 const body = ref<HTMLElement>();
@@ -152,7 +174,7 @@ function openModal(
                     return;
                 }
 
-                if (!isTrackerWithSubmittableSection(configuration.selected_tracker.value)) {
+                if (!title_field.value) {
                     return;
                 }
 
@@ -164,6 +186,7 @@ function openModal(
                     query,
                     autocompleter,
                     configuration.selected_tracker.value,
+                    title_field.value,
                     sections.value || [],
                     gettext_provider,
                 ).orElse((fault) => {

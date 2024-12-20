@@ -44,7 +44,14 @@ describe("search-existing-artifacts-for-autocompleter", () => {
             replaceContent,
         } as unknown as LazyAutocompleter;
 
-        searchExistingArtifactsForAutocompleter(query, autocompleter, tracker, [], gettext).match(
+        searchExistingArtifactsForAutocompleter(
+            query,
+            autocompleter,
+            tracker,
+            tracker.title,
+            [],
+            gettext,
+        ).match(
             () => {
                 expect(replaceContent).toHaveBeenCalledWith([
                     {
@@ -80,7 +87,14 @@ describe("search-existing-artifacts-for-autocompleter", () => {
 
         vi.spyOn(fetch, "getJSON");
 
-        searchExistingArtifactsForAutocompleter(query, autocompleter, tracker, [], gettext);
+        searchExistingArtifactsForAutocompleter(
+            query,
+            autocompleter,
+            tracker,
+            tracker.title,
+            [],
+            gettext,
+        );
         expect(replaceContent).toHaveBeenCalledWith([
             {
                 label: "Matching artifacts",
@@ -110,7 +124,14 @@ describe("search-existing-artifacts-for-autocompleter", () => {
 
         vi.spyOn(fetch, "getJSON").mockReturnValue(okAsync([]));
 
-        searchExistingArtifactsForAutocompleter(query, autocompleter, tracker, [], gettext).match(
+        searchExistingArtifactsForAutocompleter(
+            query,
+            autocompleter,
+            tracker,
+            tracker.title,
+            [],
+            gettext,
+        ).match(
             () => {
                 expect(replaceContent).toHaveBeenCalledWith([
                     {
@@ -165,7 +186,14 @@ describe("search-existing-artifacts-for-autocompleter", () => {
             ]),
         );
 
-        searchExistingArtifactsForAutocompleter(query, autocompleter, tracker, [], gettext).match(
+        searchExistingArtifactsForAutocompleter(
+            query,
+            autocompleter,
+            tracker,
+            tracker.title,
+            [],
+            gettext,
+        ).match(
             () => {
                 expect(replaceContent).toHaveBeenCalledWith([
                     {
@@ -261,6 +289,7 @@ describe("search-existing-artifacts-for-autocompleter", () => {
             query,
             autocompleter,
             tracker,
+            tracker.title,
             sections,
             gettext,
         ).match(

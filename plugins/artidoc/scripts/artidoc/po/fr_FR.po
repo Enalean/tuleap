@@ -208,6 +208,14 @@ msgid_plural "There are %{ remaining_uploads } other uploads in progress..."
 msgstr[0] "Il y a %{ remaining_uploads } autre téléchargement en cours..."
 msgstr[1] "Il y a %{ remaining_uploads } autres téléchargements en cours..."
 
+msgid ""
+"There is no title field on the configured tracker %{ tracker } (or you "
+"cannot submit it), therefore you cannot search for artifacts to import."
+msgstr ""
+"Il n'y a pas de titre dans le tracker configuré %{ tracker } (ou vous n'avez "
+"pas les droits de le soumettre), ainsi vous ne pouvez pas rechercher des "
+"artéfacts pour les importer."
+
 msgid "There isn't any suitable trackers in this project"
 msgstr "Il n'y a pas de tracker utilisable dans ce projet"
 

@@ -24,7 +24,7 @@ import type { SectionsStore } from "@/stores/useSectionsStore";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Project } from "@/helpers/project.type";
 
-interface TitleFieldDefinition {
+export interface TitleFieldDefinition {
     readonly field_id: number;
     readonly label: string;
     readonly type: "string" | "text";
