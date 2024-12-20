@@ -48,10 +48,16 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         bindtextdomain('tuleap-prometheus_metrics', __DIR__ . '/../site-content');
     }
 
-    public function getPluginInfo()
+    public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
-            $this->pluginInfo = new \Tuleap\PrometheusMetrics\Plugin\PluginInfo($this);
+            $this->pluginInfo = new \PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-prometheus_metrics', 'Prometheus metrics end point'),
+                    dgettext('tuleap-prometheus_metrics', 'Exposes tuleap instrumentation for prometheus consumption')
+                )
+            );
         }
 
         return $this->pluginInfo;

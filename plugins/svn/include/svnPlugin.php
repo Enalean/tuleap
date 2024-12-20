@@ -219,11 +219,18 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    public function getPluginInfo()
+    public function getPluginInfo(): \PluginInfo
     {
-        if (! is_a($this->pluginInfo, 'SvnPluginInfo')) {
-            $this->pluginInfo = new SvnPluginInfo($this);
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new \PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-svn', 'SVN with multiple repositories'),
+                    dgettext('tuleap-svn', 'SVN repository manager. Supports multiple repositories for the same project.')
+                )
+            );
         }
+
         return $this->pluginInfo;
     }
 
@@ -269,18 +276,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 );
             }
         );
-    }
-
-    /**
-     * Returns the configuration defined for given variable name
-     *
-     * @param String $key
-     *
-     * @return Mixed
-     */
-    public function getConfigurationParameter($key)
-    {
-        return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
     #[ListeningToEventName(Event::UGROUP_RENAME)]

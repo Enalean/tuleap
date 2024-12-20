@@ -21,22 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('ArtifactDateReminderFactory.class.php');
-
-// The artifact date reminder object
 class ArtifactDateReminder
 {
-    private $logger;
-
-    public function __construct(TrackerDateReminder_Logger $logger)
-    {
-        $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '');
-    }
-
     public function codexDaily()
     {
-        $this->logger->info('Start');
-
         $sql = 'SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id';
         $res = db_query($sql);
         if (db_numrows($res) > 0) {
@@ -44,11 +32,9 @@ class ArtifactDateReminder
                 $notification_id = $rows['notification_id'];
                 // For each event(represented by a row in artifact_date_reminder_processing table),
                 // instantiate a new ArtifactDateReminderFactory, then check its reminder status
-                $adrf = new ArtifactDateReminderFactory($notification_id, $this->logger);
+                $adrf = new ArtifactDateReminderFactory($notification_id);
                 $adrf->checkReminderStatus(\Tuleap\Request\RequestTime::getTimestamp());
             }
         }
-
-        $this->logger->info('End');
     }
 }

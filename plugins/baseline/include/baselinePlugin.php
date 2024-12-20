@@ -74,10 +74,16 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         return self::SERVICE_SHORTNAME;
     }
 
-    public function getPluginInfo()
+    public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
-            $this->pluginInfo = new \Tuleap\Baseline\Plugin\PluginInfo($this);
+            $this->pluginInfo = new \PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-baseline', 'Baseline'),
+                    dgettext('tuleap-baseline', 'Set and compare baseline of items')
+                )
+            );
         }
 
         return $this->pluginInfo;

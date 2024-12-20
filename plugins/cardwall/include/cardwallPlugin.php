@@ -48,9 +48,6 @@ use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
-/**
- * CardwallPlugin
- */
 class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
@@ -268,11 +265,18 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
-    public function getPluginInfo()
+    public function getPluginInfo(): \PluginInfo
     {
-        if (! $this->pluginInfo instanceof \CardwallPluginInfo) {
-            $this->pluginInfo = new CardwallPluginInfo($this);
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new \PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-cardwall', 'Card Wall'),
+                    dgettext('tuleap-cardwall', 'Electronic card wall for trackers for scrum, kanban, ...')
+                )
+            );
         }
+
         return $this->pluginInfo;
     }
 
