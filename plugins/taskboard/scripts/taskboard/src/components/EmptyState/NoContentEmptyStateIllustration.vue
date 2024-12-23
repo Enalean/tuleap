@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="534"
@@ -151,10 +151,4 @@
         />
     </svg>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component
-export default class NoContentEmptyStateIllustration extends Vue {}
-</script>
+<script setup lang="ts"></script>

@@ -7,15 +7,15 @@ exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = 
   <div
     class="empty-state-illustration"
   >
-    <!---->
+    <no-content-empty-state-illustration-stub />
   </div>
    
   <h1
     class="empty-state-title"
-    data-current-language="en_US"
-    data-msgid="This taskboard is empty"
   >
-    This taskboard is empty
+    
+        This taskboard is empty
+    
   </h1>
 </section>
 `;
