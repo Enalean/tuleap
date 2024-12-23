@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Scrum;
 
-use AdminScrumPresenter;
 use AgileDashboard_ConfigurationManager;
 use EventManager;
 use PFUser;
@@ -32,6 +31,7 @@ use Planning_PlanningAdminPresenter;
 use Planning_PlanningOutOfHierarchyAdminPresenter;
 use PlanningFactory;
 use Project;
+use Tuleap\AgileDashboard\AdminScrumPresenter;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;

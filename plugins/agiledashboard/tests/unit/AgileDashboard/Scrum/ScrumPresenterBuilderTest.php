@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Scrum;
 
-use AdminScrumPresenter;
 use AgileDashboard_ConfigurationManager;
 use EventManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_PlanningAdminPresenter;
 use PlanningFactory;
+use Tuleap\AgileDashboard\AdminScrumPresenter;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
