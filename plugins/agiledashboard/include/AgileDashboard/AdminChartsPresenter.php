@@ -22,32 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use CSRFSynchronizerToken;
 use Project;
 
-class AdminChartsPresenter
+final readonly class AdminChartsPresenter
 {
-    /**
-     * @var int
-     */
-    public $project_id;
-
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
-
-    /**
-     * @var bool
-     */
-    public $is_burnup_count_mode_activated;
+    public int $project_id;
 
     public function __construct(
         Project $project,
-        \CSRFSynchronizerToken $token,
-        bool $is_burnup_count_mode_activated,
+        public CSRFSynchronizerToken $csrf_token,
+        public bool $is_burnup_count_mode_activated,
     ) {
-        $this->project_id                     = $project->getID();
-        $this->csrf_token                     = $token;
-        $this->is_burnup_count_mode_activated = $is_burnup_count_mode_activated;
+        $this->project_id = (int) $project->getID();
     }
 }
