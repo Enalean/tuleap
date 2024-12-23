@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\GraphOnTrackersV5;
 
-use GraphOnTrackersV5_Renderer;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tracker_Report;

@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\GraphOnTrackersV5;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use Project;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
@@ -26,8 +31,11 @@ use Tuleap\GraphOnTrackersV5\Widget\WidgetChartDao;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
+use Valid_String;
+use Valid_UInt;
+use Widget;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class GraphOnTrackersV5_Widget_Chart extends Widget
 {
     public $chart_title;

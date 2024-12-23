@@ -19,7 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\GraphOnTrackersV5;
+
 use Tuleap\Dashboard\User\UserDashboardController;
+use UserManager;
 
 class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart
 {

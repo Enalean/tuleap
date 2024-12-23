@@ -19,6 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5;
+
+use HTTPRequest;
+use PFUser;
+use SimpleXMLElement;
+use TemplateRendererFactory;
+use Tracker_FormElementFactory;
+use Tracker_Report_Renderer;
+use Tracker_Report_RendererFactory;
+use Tracker_Report_Session;
+use TrackerManager;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use Tuleap\Layout\BaseLayout;
@@ -27,8 +38,9 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+use UserManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 {
     protected $charts;
