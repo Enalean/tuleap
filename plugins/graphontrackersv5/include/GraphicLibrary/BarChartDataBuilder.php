@@ -21,8 +21,6 @@
 
 namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
 
-use GraphOnTrackersV5_Engine_Bar;
-
 final class BarChartDataBuilder
 {
     public function buildGroupedBarChartData(GraphOnTrackersV5_Engine_Bar $engine): array

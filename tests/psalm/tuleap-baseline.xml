@@ -2766,9 +2766,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getPluginInfo]]></code>
-    </MissingReturnType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$label]]></code>
     </RiskyTruthyFalsyComparison>
@@ -3780,11 +3777,6 @@
   <file src="plugins/cardwall/include/CardwallFromXmlImportCannotBeEnabledException.class.php">
     <MissingParamType>
       <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/cardwall/include/CardwallPluginInfo.class.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin]]></code>
     </MissingParamType>
   </file>
   <file src="plugins/cardwall/include/Cardwall_Renderer.class.php">
@@ -5023,7 +5015,6 @@
       <code><![CDATA[getFieldForInstance]]></code>
       <code><![CDATA[getHooksAndCallbacks]]></code>
       <code><![CDATA[getPaneInfo]]></code>
-      <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[importRendererFromXmlEvent]]></code>
       <code><![CDATA[isAgileDashboardOrTrackerUrl]]></code>
       <code><![CDATA[isFieldUsedInASemanticEvent]]></code>
@@ -13278,7 +13269,6 @@
     <MissingReturnType>
       <code><![CDATA[dailyCleanup]]></code>
       <code><![CDATA[getHooksAndCallbacks]]></code>
-      <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[restResources]]></code>
       <code><![CDATA[userManagerGetUserInstance]]></code>
     </MissingReturnType>
@@ -21262,12 +21252,7 @@
       <code><![CDATA[null]]></code>
     </NullArgument>
   </file>
-  <file src="plugins/graphontrackersv5/include/XML/XMLChart.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphicLibrary/GraphOnTrackersV5_Engine.php">
     <MissingParamType>
       <code><![CDATA[$available_colors]]></code>
       <code><![CDATA[$color]]></code>
@@ -21289,7 +21274,7 @@
       <code><![CDATA[toArrayColors]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_Bar.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphicLibrary/GraphOnTrackersV5_Engine_Bar.php">
     <MissingParamType>
       <code><![CDATA[$a]]></code>
       <code><![CDATA[$b]]></code>
@@ -21320,13 +21305,13 @@
       <code><![CDATA[SIDE_DOWN]]></code>
     </UndefinedConstant>
   </file>
-  <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphicLibrary/GraphOnTrackersV5_Engine_Burndown.php">
     <MissingPropertyType>
       <code><![CDATA[$duration]]></code>
       <code><![CDATA[$start_date]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_CumulativeFlow.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphicLibrary/GraphOnTrackersV5_Engine_CumulativeFlow.php">
     <MissingParamType>
       <code><![CDATA[$error]]></code>
     </MissingParamType>
@@ -21352,7 +21337,7 @@
       <code><![CDATA[setError]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_Gantt.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphicLibrary/GraphOnTrackersV5_Engine_Gantt.php">
     <MissingParamType>
       <code><![CDATA[$asOfDate]]></code>
       <code><![CDATA[$data]]></code>
@@ -21432,7 +21417,7 @@
       <code><![CDATA[$this->width]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_Pie.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphicLibrary/GraphOnTrackersV5_Engine_Pie.php">
     <MissingPropertyType>
       <code><![CDATA[$field_base]]></code>
       <code><![CDATA[$height]]></code>
@@ -21450,6 +21435,11 @@
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->description]]></code>
     </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/graphontrackersv5/include/XML/XMLChart.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/graphontrackersv5/include/graphontrackersv5Plugin.php">
     <ArgumentTypeCoercion>
@@ -23108,7 +23098,6 @@
   </file>
   <file src="plugins/ldap/include/LDAP.class.php">
     <InvalidArgument>
-      <code><![CDATA[$ds]]></code>
       <code><![CDATA[$this->ds]]></code>
     </InvalidArgument>
     <MissingClosureParamType>
@@ -23116,10 +23105,7 @@
       <code><![CDATA[$errstr]]></code>
     </MissingClosureParamType>
     <MissingParamType>
-      <code><![CDATA[$binddn]]></code>
-      <code><![CDATA[$bindpwd]]></code>
       <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$servers]]></code>
       <code><![CDATA[$validEmail]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -23131,7 +23117,6 @@
     <MissingReturnType>
       <code><![CDATA[_initErrorHandler]]></code>
       <code><![CDATA[_restoreErrorHandler]]></code>
-      <code><![CDATA[authenticatedBindConnect]]></code>
       <code><![CDATA[getDefaultAttributes]]></code>
       <code><![CDATA[getScopeFromConf]]></code>
       <code><![CDATA[getSearchGroupScope]]></code>
@@ -26787,9 +26772,6 @@
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getPluginInfo]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Comment/Dao.php">
     <MissingParamType>
@@ -31443,14 +31425,8 @@
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/svn/include/SvnPluginInfo.class.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/svn/include/svnPlugin.php">
     <ArgumentTypeCoercion>
-      <code><![CDATA['SvnPluginInfo']]></code>
       <code><![CDATA[Backend::instance(Backend::SVN)]]></code>
       <code><![CDATA[Backend::instance(Backend::SVN)]]></code>
     </ArgumentTypeCoercion>
@@ -31467,7 +31443,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[getApacheConfGenerator]]></code>
-      <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[getReferenceExtractor]]></code>
       <code><![CDATA[getTypes]]></code>
       <code><![CDATA[lastMonthStatisticsCollectorSVN]]></code>
@@ -50335,9 +50310,6 @@
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
     </DeprecatedFunction>
-    <MissingPropertyType>
-      <code><![CDATA[$logger]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[codexDaily]]></code>
     </MissingReturnType>
@@ -50414,11 +50386,6 @@
       <code><![CDATA[checkReminderStatus]]></code>
       <code><![CDATA[updateNotificationSent]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker_date_reminder/include/TrackerDateReminderPluginInfo.class.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin]]></code>
-    </MissingParamType>
   </file>
   <file src="plugins/tracker_date_reminder/include/TrackerDateReminder_ArtifactField.class.php">
     <DeprecatedFunction>
@@ -50572,37 +50539,6 @@
       <code><![CDATA[nothing]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker_date_reminder/include/TrackerDateReminder_Logger.class.php">
-    <MissingParamType>
-      <code><![CDATA[$file]]></code>
-      <code><![CDATA[$level]]></code>
-      <code><![CDATA[$message]]></code>
-      <code><![CDATA[$message]]></code>
-      <code><![CDATA[$message]]></code>
-      <code><![CDATA[$message]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$file]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[error]]></code>
-      <code><![CDATA[info]]></code>
-      <code><![CDATA[log]]></code>
-      <code><![CDATA[warn]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker_date_reminder/include/TrackerDateReminder_Logger_Prefix.class.php">
-    <MissingParamType>
-      <code><![CDATA[$message]]></code>
-      <code><![CDATA[$message]]></code>
-      <code><![CDATA[$message]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[error]]></code>
-      <code><![CDATA[info]]></code>
-      <code><![CDATA[warn]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker_date_reminder/include/tracker_date_reminderPlugin.php">
     <DeprecatedFunction>
       <code><![CDATA[db_query($sql)]]></code>
@@ -50633,8 +50569,6 @@
       <code><![CDATA[artifact_type_factory_delete_artifact_type]]></code>
       <code><![CDATA[artifact_type_html_display_notification_form]]></code>
       <code><![CDATA[codendi_daily_start]]></code>
-      <code><![CDATA[getPluginInfo]]></code>
-      <code><![CDATA[isLoggingEnabled]]></code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$_REQUEST['frequency']]]></code>

@@ -21,6 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
+
 class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
 {
     public $scale;

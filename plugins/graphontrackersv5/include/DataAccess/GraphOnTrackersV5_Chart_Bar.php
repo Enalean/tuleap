@@ -23,12 +23,12 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataAccess;
 
-use GraphOnTrackersV5_Engine_Bar;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Chart_BarDataBuilder;
+use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
 
 class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
 {

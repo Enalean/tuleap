@@ -21,6 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
+
+use Chart_Pie;
+use PiePlot;
+
 require_once __DIR__ . '/../../../../src/embedded_vendor/jpgraph/jpgraph_ttf.inc.php';
 
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine

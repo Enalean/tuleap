@@ -23,8 +23,6 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataAccess;
 
-use GraphOnTrackersV5_Engine;
-use GraphOnTrackersV5_Engine_Burndown;
 use HTML_Element_Input_Date;
 use HTML_Element_Input_Text;
 use SimpleXMLElement;
@@ -33,6 +31,8 @@ use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_NumericFieldsV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\ChartDataBuilderV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Burndown_DataBuilder;
+use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine;
+use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Burndown;
 
 /**
  * Base class to provide a Scrum Burndown Chart

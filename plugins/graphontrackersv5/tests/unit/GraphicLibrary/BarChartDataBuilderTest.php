@@ -21,7 +21,6 @@
 
 namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
 
-use GraphOnTrackersV5_Engine_Bar;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class BarChartDataBuilderTest extends TestCase
