@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
 
-use GraphOnTrackersV5_Engine_Burndown;
 use Tuleap\GlobalLanguageMock;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

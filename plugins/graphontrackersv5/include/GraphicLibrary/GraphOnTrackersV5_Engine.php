@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
+
+use ColorHelper;
+use LogicException;
 
 /**
  * Graphic engine which builds a graph

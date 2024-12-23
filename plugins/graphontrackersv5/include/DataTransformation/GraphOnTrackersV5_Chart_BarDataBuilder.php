@@ -23,11 +23,11 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
-use GraphOnTrackersV5_Engine_Bar;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
+use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
 
 class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
 {

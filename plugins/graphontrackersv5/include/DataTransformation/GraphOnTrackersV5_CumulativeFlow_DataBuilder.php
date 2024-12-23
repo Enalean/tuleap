@@ -23,10 +23,10 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
-use GraphOnTrackersV5_Engine_CumulativeFlow;
 use Tracker_FormElementFactory;
 use Tracker_Report;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
+use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_CumulativeFlow;
 use UserManager;
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5

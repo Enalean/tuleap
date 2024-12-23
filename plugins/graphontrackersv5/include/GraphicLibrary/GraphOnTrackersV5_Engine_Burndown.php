@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
+
+use Tracker_Chart_Burndown;
 use Tuleap\Chart\Chart;
 
 class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine

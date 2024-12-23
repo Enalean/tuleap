@@ -21,6 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
+
+use Chart_Gantt;
+use Chart_GanttBar;
+use Chart_GanttMileStone;
 use Tuleap\chart\GanttVerticalLine;
 
 require_once __DIR__ . '/../../../../src/embedded_vendor/jpgraph/jpgraph_ttf.inc.php';

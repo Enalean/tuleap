@@ -21,8 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
+
+use BarPlot;
+use GroupBarPlot;
 use Tuleap\Chart\Chart;
-use Tuleap\GraphOnTrackersV5\GraphicLibrary\BarChartDataBuilder;
 
 class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 {

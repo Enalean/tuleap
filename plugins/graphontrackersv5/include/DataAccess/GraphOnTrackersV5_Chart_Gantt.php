@@ -22,7 +22,6 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataAccess;
 
-use GraphOnTrackersV5_Engine_Gantt;
 use HTML_Element_Columns;
 use HTML_Element_Input_Date;
 use HTML_Element_Selectbox_Scale;
@@ -33,6 +32,7 @@ use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_DatesV5
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Chart_GanttDataBuilder;
+use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Gantt;
 
 class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 {
