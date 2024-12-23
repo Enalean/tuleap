@@ -18,38 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Git\GitoliteHousekeeping\ChainOfResponsibility;
+
+use Git_Exec;
+use Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo;
+use Git_GitoliteHousekeeping_ChainOfResponsibility_Command;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingResponse;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Process\Process;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CleanUpGitoliteAdminRepoTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
-    private $fixtures;
-    /**
-     * @var Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo
-     */
-    private $command;
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $response;
-    /**
-     * @var string
-     */
-    private $remote_admin_repository;
-    /**
-     * @var string
-     */
-    private $expected_file_in_old_dir;
+    private string $fixtures;
+    private Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo $command;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&MockObject $response;
+    private string $remote_admin_repository;
+    private string $expected_file_in_old_dir;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->response = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->response = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->fixtures = $this->getTmpDir();
         copy(__DIR__ . '/_fixtures/gitolite_admin.tgz', $this->fixtures . '/gitolite_admin.tgz');
 
@@ -81,46 +75,49 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
 
     public function testItAbortsIfThereIsAlreadyABackupDir(): void
     {
-        $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
+        $next = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
         (new Process(['cp', '-r', 'admin', 'admin.old'], $this->fixtures))->mustRun();
         $this->command->setNextCommand($next);
 
-        $this->response->shouldReceive('error')->with("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.")->once();
-        $this->response->shouldReceive('abort')->once();
-        $next->shouldReceive('execute')->never();
+        $this->response->expects(self::once())->method('error')->with("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.");
+        $this->response->expects(self::once())->method('abort');
+        $next->expects(self::never())->method('execute');
 
         $this->command->execute();
     }
 
     public function testItMovesTheAdminDirInABackupDir(): void
     {
+        $this->response->method('info');
         $this->command->execute();
 
-        $this->assertTrue(is_file($this->fixtures . '/admin.old/' . $this->expected_file_in_old_dir));
+        self::assertTrue(is_file($this->fixtures . '/admin.old/' . $this->expected_file_in_old_dir));
     }
 
     public function testItClonesAFreshRepository(): void
     {
+        $this->response->method('info');
         $this->command->execute();
 
-        $this->assertTrue(is_dir($this->fixtures . '/admin/'));
-        $this->assertFalse(is_dir($this->fixtures . '/admin/' . $this->expected_file_in_old_dir));
+        self::assertTrue(is_dir($this->fixtures . '/admin/'));
+        self::assertFalse(is_dir($this->fixtures . '/admin/' . $this->expected_file_in_old_dir));
     }
 
     public function testItDisplaysMeaningfulFeedbackToTheUser(): void
     {
-        $this->response->shouldReceive('info')->with("Moving admin to $this->fixtures/admin.old and cloning $this->remote_admin_repository")->once();
+        $this->response->expects(self::once())->method('info')->with("Moving admin to $this->fixtures/admin.old and cloning $this->remote_admin_repository");
 
         $this->command->execute();
     }
 
     public function testItExecutesTheNextCommand(): void
     {
-        $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
-        $next->shouldReceive('execute')->once();
+        $next = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
+        $next->expects(self::once())->method('execute');
 
         $this->command->setNextCommand($next);
 
+        $this->response->method('info');
         $this->command->execute();
     }
 }

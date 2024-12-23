@@ -18,28 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once __DIR__ . '/../../../bootstrap.php';
+namespace Tuleap\Git\GitoliteHousekeeping\ChainOfResponsibility;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest extends \Tuleap\Test\PHPUnit\TestCase
+use Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents;
+use Git_GitoliteHousekeeping_ChainOfResponsibility_Command;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingResponse;
+use PHPUnit\Framework\MockObject\MockObject;
+use SystemEventProcess;
+use SystemEventProcessManager;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class CheckRunningEventsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $process_manager;
-    private $process;
-    private $response;
-    private $next;
+    private SystemEventProcessManager&MockObject $process_manager;
+    private SystemEventProcess&MockObject $process;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&MockObject $response;
+    private Git_GitoliteHousekeeping_ChainOfResponsibility_Command&MockObject $next;
     private Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->process_manager = \Mockery::spy(\SystemEventProcessManager::class);
-        $this->process         = \Mockery::spy(\SystemEventProcess::class);
-        $this->response        = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
-        $this->next            = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
+        $this->process_manager = $this->createMock(SystemEventProcessManager::class);
+        $this->process         = $this->createMock(SystemEventProcess::class);
+        $this->response        = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->next            = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents($this->response, $this->process_manager, $this->process);
         $this->command->setNextCommand($this->next);
@@ -47,28 +51,30 @@ final class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTes
 
     public function testItExecuteTheNextCommandIfThereIsNoRunningEvents(): void
     {
-        $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(false);
+        $this->process_manager->method('isAlreadyRunning')->with($this->process)->willReturn(false);
 
-        $this->next->shouldReceive('execute')->once();
+        $this->next->expects(self::once())->method('execute');
 
         $this->command->execute();
     }
 
     public function testItDoesNotExectuteTheNextCommandIfThereIsARunningEvent(): void
     {
-        $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(true);
+        $this->process_manager->method('isAlreadyRunning')->with($this->process)->willReturn(true);
 
-        $this->next->shouldReceive('execute')->never();
+        $this->next->expects(self::never())->method('execute');
 
+        $this->response->method('error');
+        $this->response->method('abort');
         $this->command->execute();
     }
 
     public function testItStopsTheExecutionWhenThereIsARemainingSystemEventRunning(): void
     {
-        $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(true);
+        $this->process_manager->method('isAlreadyRunning')->with($this->process)->willReturn(true);
 
-        $this->response->shouldReceive('error')->with('There is still an event marked as running. Start again when all events marked as running are done.')->once();
-        $this->response->shouldReceive('abort')->once();
+        $this->response->expects(self::once())->method('error')->with('There is still an event marked as running. Start again when all events marked as running are done.');
+        $this->response->expects(self::once())->method('abort');
 
         $this->command->execute();
     }

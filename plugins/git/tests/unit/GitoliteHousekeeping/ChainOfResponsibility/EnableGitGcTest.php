@@ -18,47 +18,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git\GitoliteHousekeeping\ChainOfResponsibility;
+
+use Git_GitoliteHousekeeping_ChainOfResponsibility_Command;
+use Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingDao;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingResponse;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class EnableGitGcTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&\Mockery\MockInterface
-     */
-    private $response;
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao&\Mockery\MockInterface
-     */
-    private $dao;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&MockObject $response;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingDao&MockObject $dao;
     private Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->response = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
-        $this->dao      = \Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
+        $this->response = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->dao      = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc($this->response, $this->dao);
     }
 
     public function testItEnablesGitGc(): void
     {
-        $this->response->shouldReceive('info')->with('Enabling git gc')->once();
-        $this->dao->shouldReceive('enableGitGc')->once();
+        $this->response->expects(self::once())->method('info')->with('Enabling git gc');
+        $this->dao->expects(self::once())->method('enableGitGc');
 
         $this->command->execute();
     }
 
     public function testItExecutesTheNextCommand(): void
     {
-        $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
-        $next->shouldReceive('execute')->once();
+        $next = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
+        $next->expects(self::once())->method('execute');
 
         $this->command->setNextCommand($next);
 
+        $this->response->method('info');
+        $this->dao->method('enableGitGc');
         $this->command->execute();
     }
 }
