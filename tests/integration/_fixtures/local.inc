@@ -36,10 +36,6 @@ $sys_data_dir = "/var/lib/tuleap";
 // Place to put temporary data: deleted user's accounts, etc
 $tmp_dir = "/tmp";
 
-// Tuleap utils directory
-// WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
-$codendi_utils_prefix         = "/usr/share/tuleap/src/utils";
-
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
 
