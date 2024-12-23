@@ -25,6 +25,20 @@ set -euo pipefail
 script="$(realpath "$0")"
 root_path="$(dirname "$script")/../../"
 
+function checkThatPluginAreDefinedInYmlFile() {
+   plugins_dir="plugins"
+   yaml_file="tests/deptrac/core_and_plugins_skip_uncovered.yml"
+
+   folders=$(find "$plugins_dir" -mindepth 1 -maxdepth 1 -type d -printf "%f\n")
+   yaml_content=$(cat "$yaml_file")
+   for folder in $folders; do
+    if [[ $yaml_content != *"$folder"* ]]; then
+        echo "The plugin '$folder' is NOT defined in deptrac yaml_file '$yaml_file'."
+        exit 1
+    fi
+   done
+}
+
 function execDeptrac() {
     local config_file_path="$1"
     local config_file_name
@@ -42,6 +56,9 @@ function execDeptrac() {
 }
 
 pushd "$root_path" > /dev/null
+
+checkThatPluginAreDefinedInYmlFile
+
 find ./"${SEARCH_PATH:-}" -type f -wholename '*/tests/deptrac/*.yml' -print0 | while IFS= read -r -d '' deptrac_config; do
     execDeptrac "$deptrac_config"
 done || exit 1
