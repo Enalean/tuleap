@@ -20,9 +20,9 @@
 
 namespace Tuleap\GraphOnTrackersV5;
 
-use GraphOnTrackersV5_Burndown_Data;
 use Tracker_Chart_Burndown;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Burndown_Data;
 
 require_once __DIR__ . '/bootstrap.php';
 
@@ -34,7 +34,7 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
     public function setUp(): void
     {
         parent::setUp();
-        $this->burndown_data = $this->createMock(\GraphOnTrackersV5_Burndown_Data::class);
+        $this->burndown_data = $this->createMock(GraphOnTrackersV5_Burndown_Data::class);
     }
 
     public function testItNormalizeDataDayByDayStartingAtStartDate(): void

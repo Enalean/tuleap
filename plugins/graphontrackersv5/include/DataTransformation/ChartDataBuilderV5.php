@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataTransformation;
+
+use TrackerFactory;
+
 abstract class ChartDataBuilderV5
 {
     protected $chart;

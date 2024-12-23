@@ -20989,6 +20989,123 @@
       <code><![CDATA[sortChartInSession]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/graphontrackersv5/include/DataTransformation/ChartDataBuilderV5.php">
+    <MissingParamType>
+      <code><![CDATA[$artifacts]]></code>
+      <code><![CDATA[$chart]]></code>
+      <code><![CDATA[$engine]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$artifacts]]></code>
+      <code><![CDATA[$chart]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[buildProperties]]></code>
+      <code><![CDATA[getTracker]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/graphontrackersv5/include/DataTransformation/GraphOnTrackersV5_Burndown_Data.php">
+    <DeprecatedFunction>
+      <code><![CDATA[db_fetch_array($query_result)]]></code>
+    </DeprecatedFunction>
+    <MissingParamType>
+      <code><![CDATA[$query_result]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$artifact_ids]]></code>
+      <code><![CDATA[$max_day]]></code>
+      <code><![CDATA[$min_day]]></code>
+      <code><![CDATA[$remaining_effort]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[getArtifactIds]]></code>
+      <code><![CDATA[getMaxDay]]></code>
+      <code><![CDATA[getMinDay]]></code>
+      <code><![CDATA[getRemainingEffort]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/graphontrackersv5/include/DataTransformation/GraphOnTrackersV5_Burndown_DataBuilder.php">
+    <DeprecatedFunction>
+      <code><![CDATA[db_ei($effort_field_id)]]></code>
+      <code><![CDATA[db_ei_implode($artifact_ids)]]></code>
+      <code><![CDATA[db_es($type)]]></code>
+      <code><![CDATA[db_query($sql)]]></code>
+    </DeprecatedFunction>
+    <MissingParamType>
+      <code><![CDATA[$effort_field]]></code>
+      <code><![CDATA[$effort_field_id]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[getBurnDownData]]></code>
+      <code><![CDATA[isValidEffortField]]></code>
+      <code><![CDATA[isValidType]]></code>
+    </MissingReturnType>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Burndown_Engine]]></code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/graphontrackersv5/include/DataTransformation/GraphOnTrackersV5_Chart_GanttDataBuilder.php">
+    <MissingParamType>
+      <code><![CDATA[$artifact_data]]></code>
+      <code><![CDATA[$engine]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[buildProperties]]></code>
+      <code><![CDATA[getSuitableDateForSorting]]></code>
+    </MissingReturnType>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Bar_Engine]]></code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/graphontrackersv5/include/DataTransformation/GraphOnTrackersV5_Chart_PieDataBuilder.php">
+    <MissingReturnType>
+      <code><![CDATA[buildProperties]]></code>
+    </MissingReturnType>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Pie_Engine]]></code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/graphontrackersv5/include/DataTransformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.php">
+    <DeprecatedFunction>
+      <code><![CDATA[db_ei_implode($changesets)]]></code>
+      <code><![CDATA[db_fetch_array($res)]]></code>
+      <code><![CDATA[db_fetch_array($res)]]></code>
+      <code><![CDATA[db_query($sql)]]></code>
+      <code><![CDATA[db_query($sql)]]></code>
+    </DeprecatedFunction>
+    <MissingClosureReturnType>
+      <code><![CDATA[function ($value) {]]></code>
+    </MissingClosureReturnType>
+    <MissingParamType>
+      <code><![CDATA[$engine]]></code>
+      <code><![CDATA[$observed_field]]></code>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$labels]]></code>
+      <code><![CDATA[$observed_field_id]]></code>
+      <code><![CDATA[$stopDate]]></code>
+      <code><![CDATA[$timeFiller]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[buildProperties]]></code>
+      <code><![CDATA[getColumns]]></code>
+      <code><![CDATA[getCumulativeFlowData]]></code>
+      <code><![CDATA[isColumnEmpty]]></code>
+      <code><![CDATA[isValidType]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidDocblockTag>
+      <code><![CDATA[@var array]]></code>
+    </PossiblyInvalidDocblockTag>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int) $this->scale]]></code>
+    </RedundantCastGivenDocblockType>
+    <UndefinedPropertyAssignment>
+      <code><![CDATA[$engine->legend]]></code>
+    </UndefinedPropertyAssignment>
+  </file>
   <file src="plugins/graphontrackersv5/include/GraphActionsPresenter.class.php">
     <MissingParamType>
       <code><![CDATA[$can_be_updated]]></code>
@@ -21149,179 +21266,6 @@
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-transformation/ChartDataBuilderV5.class.php">
-    <MissingParamType>
-      <code><![CDATA[$artifacts]]></code>
-      <code><![CDATA[$chart]]></code>
-      <code><![CDATA[$engine]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifacts]]></code>
-      <code><![CDATA[$chart]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[buildProperties]]></code>
-      <code><![CDATA[getTracker]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-transformation/DataBuilderV5.class.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($af_x->getId())]]></code>
-      <code><![CDATA[db_ei($af_x->getId())]]></code>
-      <code><![CDATA[db_ei($af_x->getId())]]></code>
-      <code><![CDATA[db_ei($af_y->getId())]]></code>
-      <code><![CDATA[db_ei($af_y->getId())]]></code>
-      <code><![CDATA[db_ei($af_y->getId())]]></code>
-      <code><![CDATA[db_ei($this->atid)]]></code>
-      <code><![CDATA[db_es($af_y->getName())]]></code>
-      <code><![CDATA[db_es($this->field_X)]]></code>
-      <code><![CDATA[db_es($this->field_X)]]></code>
-      <code><![CDATA[db_es($this->field_Y)]]></code>
-      <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_fetch_array($result_group_id)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($result_group_id)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql_group_id)]]></code>
-    </DeprecatedFunction>
-    <InvalidDocblock>
-      <code><![CDATA[public function generateData()]]></code>
-    </InvalidDocblock>
-    <MissingParamType>
-      <code><![CDATA[$artifacts]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$field_X]]></code>
-      <code><![CDATA[$field_Y]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifacts]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$data]]></code>
-      <code><![CDATA[$field_X]]></code>
-      <code><![CDATA[$field_Y]]></code>
-      <code><![CDATA[$x_values]]></code>
-      <code><![CDATA[$y_values]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[generateData]]></code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$result]]></code>
-    </PossiblyUndefinedVariable>
-    <UndefinedClass>
-      <code><![CDATA[Tracker_Field]]></code>
-    </UndefinedClass>
-    <UndefinedMethod>
-      <code><![CDATA[isStandardField]]></code>
-      <code><![CDATA[isStandardField]]></code>
-      <code><![CDATA[isStandardField]]></code>
-      <code><![CDATA[isUsername]]></code>
-      <code><![CDATA[isUsername]]></code>
-      <code><![CDATA[isUsername]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Burndown_Data.class.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($query_result)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$query_result]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifact_ids]]></code>
-      <code><![CDATA[$max_day]]></code>
-      <code><![CDATA[$min_day]]></code>
-      <code><![CDATA[$remaining_effort]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getArtifactIds]]></code>
-      <code><![CDATA[getMaxDay]]></code>
-      <code><![CDATA[getMinDay]]></code>
-      <code><![CDATA[getRemainingEffort]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Burndown_DataBuilder.class.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($effort_field_id)]]></code>
-      <code><![CDATA[db_ei_implode($artifact_ids)]]></code>
-      <code><![CDATA[db_es($type)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$effort_field]]></code>
-      <code><![CDATA[$effort_field_id]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getBurnDownData]]></code>
-      <code><![CDATA[isValidEffortField]]></code>
-      <code><![CDATA[isValidType]]></code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Burndown_Engine]]></code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Chart_GanttDataBuilder.class.php">
-    <MissingParamType>
-      <code><![CDATA[$artifact_data]]></code>
-      <code><![CDATA[$engine]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[buildProperties]]></code>
-      <code><![CDATA[getSuitableDateForSorting]]></code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Bar_Engine]]></code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Chart_PieDataBuilder.class.php">
-    <MissingReturnType>
-      <code><![CDATA[buildProperties]]></code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Pie_Engine]]></code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei_implode($changesets)]]></code>
-      <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-    </DeprecatedFunction>
-    <MissingClosureReturnType>
-      <code><![CDATA[function ($value) {]]></code>
-    </MissingClosureReturnType>
-    <MissingParamType>
-      <code><![CDATA[$engine]]></code>
-      <code><![CDATA[$observed_field]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$labels]]></code>
-      <code><![CDATA[$observed_field_id]]></code>
-      <code><![CDATA[$stopDate]]></code>
-      <code><![CDATA[$timeFiller]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[buildProperties]]></code>
-      <code><![CDATA[getColumns]]></code>
-      <code><![CDATA[getCumulativeFlowData]]></code>
-      <code><![CDATA[isColumnEmpty]]></code>
-      <code><![CDATA[isValidType]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidDocblockTag>
-      <code><![CDATA[@var array]]></code>
-    </PossiblyInvalidDocblockTag>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->scale]]></code>
-    </RedundantCastGivenDocblockType>
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$engine->legend]]></code>
-    </UndefinedPropertyAssignment>
   </file>
   <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine.class.php">
     <MissingParamType>

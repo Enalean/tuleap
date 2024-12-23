@@ -21,8 +21,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataTransformation;
+
+use GraphOnTrackersV5_Engine_CumulativeFlow;
+use Tracker_FormElementFactory;
+use Tracker_Report;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
-use Tuleap\GraphOnTrackersV5\DataTransformation\CumulativeFlowColumnBuilder;
+use UserManager;
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
 {
@@ -60,7 +65,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         $form_element_factory = Tracker_FormElementFactory::instance();
         $observed_field       = $form_element_factory->getFormElementById($this->chart->getFieldId());
         if (! $this->isValidObservedField($observed_field) || ! $this->isValidType($form_element_factory->getType($observed_field))) {
-            throw new \Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException($this->chart->getTitle());
+            throw new ChartFieldNotFoundException($this->chart->getTitle());
         }
         $this->observed_field_id = $observed_field->getId();
         $this->timeFiller        = [GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600 * 24,

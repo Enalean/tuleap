@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Chart\Chart;
+use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Burndown_Data;
 
 /**
  * I'm responsible of

@@ -23,8 +23,6 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataAccess;
 
-use ChartDataBuilderV5;
-use GraphOnTrackersV5_CumulativeFlow_DataBuilder;
 use GraphOnTrackersV5_Engine;
 use GraphOnTrackersV5_Engine_CumulativeFlow;
 use HTML_Element_Input_Date;
@@ -33,6 +31,8 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesV5;
+use Tuleap\GraphOnTrackersV5\DataTransformation\ChartDataBuilderV5;
+use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_CumulativeFlow_DataBuilder;
 
 /**
  * Base class to provide a cumulative flow Chart

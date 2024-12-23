@@ -21,6 +21,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\GraphOnTrackersV5\DataTransformation;
+
+use GraphOnTrackersV5_Engine_Bar;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 
 class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
@@ -72,7 +78,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
     {
         $source_field = $this->getFormElementFactory()->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
         if (! $source_field) {
-            throw new \Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException($this->chart->getTitle());
+            throw new ChartFieldNotFoundException($this->chart->getTitle());
         }
         \assert($source_field instanceof Tracker_FormElement_Field_List);
 
