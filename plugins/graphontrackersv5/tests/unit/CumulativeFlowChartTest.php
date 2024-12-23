@@ -40,7 +40,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->report = $this->createMock(\Tracker_Report::class);
 
-        $renderer = $this->createMock(\GraphOnTrackersV5_Renderer::class);
+        $renderer = $this->createMock(GraphOnTrackersV5_Renderer::class);
         $renderer->method('getReport')->willReturn($this->report);
 
         $chart = $this->createMock(GraphOnTrackersV5_Chart_CumulativeFlow::class);

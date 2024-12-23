@@ -21091,7 +21091,7 @@
       <code><![CDATA[$engine->legend]]></code>
     </UndefinedPropertyAssignment>
   </file>
-  <file src="plugins/graphontrackersv5/include/GraphActionsPresenter.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5_GraphActionsPresenter.php">
     <MissingParamType>
       <code><![CDATA[$can_be_updated]]></code>
       <code><![CDATA[$delete_url]]></code>
@@ -21119,16 +21119,10 @@
       <code><![CDATA[report_is_created]]></code>
     </MissingReturnType>
     <UndefinedDocblockClass>
-      <code><![CDATA[ProjectDashboard[]]]></code>
       <code><![CDATA[WidgetMyDashboardPresenter[]]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5PluginInfo.class.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5_Renderer.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5_Renderer.php">
     <MissingParamType>
       <code><![CDATA[$charts]]></code>
       <code><![CDATA[$current_user]]></code>
@@ -21190,7 +21184,7 @@
       <code><![CDATA[$this->report_session]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5_Widget_Chart.class.php">
+  <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5_Widget_Chart.php">
     <DeprecatedFunction>
       <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
@@ -21437,9 +21431,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/graphontrackersv5/include/graphontrackersv5Plugin.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['GraphOnTrackersV5PluginInfo']]></code>
-    </ArgumentTypeCoercion>
     <DeprecatedMethod>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
@@ -21479,7 +21470,6 @@
     <MissingReturnType>
       <code><![CDATA[canIncludeStylesheets]]></code>
       <code><![CDATA[collectRoutesEvent]]></code>
-      <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[getProjectWidgetList]]></code>
       <code><![CDATA[getUserWidgetList]]></code>
       <code><![CDATA[graphontrackersv5_load_chart_factories]]></code>

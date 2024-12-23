@@ -29,6 +29,9 @@ use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Gantt;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Pie;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
+use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_Renderer;
+use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_Widget_MyChart;
+use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_Widget_ProjectChart;
 use Tuleap\GraphOnTrackersV5\XML\Template\CompleteIssuesTemplate;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
@@ -249,10 +252,15 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     /**
      * function to get plugin info
      */
-    public function getPluginInfo()
+    public function getPluginInfo(): PluginInfo
     {
-        if (! is_a($this->pluginInfo, 'GraphOnTrackersV5PluginInfo')) {
-            $this->pluginInfo = new GraphOnTrackersV5PluginInfo($this);
+        if ($this->pluginInfo === null) {
+            $plugin_info = new PluginInfo($this);
+            $plugin_info->setPluginDescriptor(new PluginDescriptor(
+                dgettext('tuleap-graphontrackersv5', 'Graphs On Trackers v5'),
+                dgettext('tuleap-graphontrackersv5', 'Plugin that allow drawing graphic on trackers v5'),
+            ));
+            $this->pluginInfo = $plugin_info;
         }
         return $this->pluginInfo;
     }

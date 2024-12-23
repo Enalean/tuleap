@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\GraphOnTrackersV5;
+
+use HTTPRequest;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Chart
