@@ -18,57 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git\GitoliteHousekeeping;
+
+use BackendService;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingDao;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingResponse;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingRunner;
+use SystemEventProcess;
+use SystemEventProcessManager;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitoliteHousekeepingRunnerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SystemEventProcessManager&\Mockery\MockInterface
-     */
-    private $process_manager;
-    /**
-     * @var SystemEventProcess&\Mockery\MockInterface
-     */
-    private $process;
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao&\Mockery\MockInterface
-     */
-    private $housekeeping_dao;
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&\Mockery\MockInterface
-     */
-    private $response;
-    /**
-     * @var BackendService&\Mockery\MockInterface
-     */
-    private $backend_service;
-    private string $gitolite_var_path;
-    private string $remote_admin_repository;
     private Git_GitoliteHousekeeping_GitoliteHousekeepingRunner $runner;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->process_manager  = \Mockery::spy(\SystemEventProcessManager::class);
-        $this->process          = \Mockery::spy(\SystemEventProcess::class);
-        $this->housekeeping_dao = Mockery::mock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
-        $this->response         = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
-        $this->backend_service  = \Mockery::spy(\BackendService::class);
-
-        $this->gitolite_var_path       = 'gitolite_var_path';
-        $this->remote_admin_repository = 'remote_admin_repository';
-
         $this->runner = new Git_GitoliteHousekeeping_GitoliteHousekeepingRunner(
-            $this->process_manager,
-            $this->process,
-            $this->housekeeping_dao,
-            $this->response,
-            $this->backend_service,
-            $this->gitolite_var_path,
-            $this->remote_admin_repository
+            $this->createMock(SystemEventProcessManager::class),
+            $this->createMock(SystemEventProcess::class),
+            $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class),
+            $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class),
+            $this->createMock(BackendService::class),
+            'gitolite_var_path',
+            'remote_admin_repository'
         );
     }
 
@@ -86,7 +61,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends \Tuleap\Te
         $chain = $this->runner->getChain();
 
         foreach ($expected_commands as $expected_command) {
-            $this->assertInstanceOf($expected_command, $chain);
+            self::assertInstanceOf($expected_command, $chain);
             $chain = $chain->getNextCommand();
         }
     }

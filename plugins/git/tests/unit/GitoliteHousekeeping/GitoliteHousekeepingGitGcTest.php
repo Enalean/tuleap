@@ -18,63 +18,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git\GitoliteHousekeeping;
+
+use ColinODell\PsrTestLogger\TestLogger;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingDao;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitoliteHousekeepingGitGcTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var \Psr\Log\LoggerInterface&\Mockery\MockInterface
-     */
-    private $logger;
-    /**
-     * @var \Mockery\MockInterface&Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
-     */
-    private $gitgc;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingDao&MockObject $dao;
+    private TestLogger $logger;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc&MockObject $gitgc;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->dao    = Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
-        $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->dao    = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
+        $this->logger = new TestLogger();
 
-        $this->gitgc = \Mockery::mock(
-            \Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class,
-            [
+        $this->gitgc = $this->getMockBuilder(Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class)
+            ->setConstructorArgs([
                 $this->dao,
                 $this->logger,
                 '/path/to/gitolite_admin_working_copy',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+            ])
+            ->onlyMethods(['execGitGcAsAppAdm'])
+            ->getMock();
     }
 
     public function testItRunsGitGcIfItIsAllowed(): void
     {
-        $this->dao->shouldReceive('isGitGcEnabled')->andReturns(true);
+        $this->dao->method('isGitGcEnabled')->willReturn(true);
 
-        $this->logger->shouldReceive('info')->with('Running git gc on gitolite admin working copy.')->once();
-        $this->gitgc->shouldReceive('execGitGcAsAppAdm')->once();
+        $this->gitgc->expects(self::once())->method('execGitGcAsAppAdm');
 
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
+        self::assertTrue($this->logger->hasInfoThatContains('Running git gc on gitolite admin working copy.'));
     }
 
     public function testItDoesNotRunGitGcIfItIsNotAllowed(): void
     {
-        $this->dao->shouldReceive('isGitGcEnabled')->andReturns(false);
+        $this->dao->method('isGitGcEnabled')->willReturn(false);
 
-        $this->logger->shouldReceive('warning')->with('Cannot run git gc on gitolite admin working copy. ' .
-        'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh ' .
-        '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php')->once();
-        $this->gitgc->shouldReceive('execGitGcAsAppAdm')->never();
+        $this->gitgc->expects(self::never())->method('execGitGcAsAppAdm');
 
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
+        self::assertTrue($this->logger->hasWarningThatContains(
+            'Cannot run git gc on gitolite admin working copy. ' .
+            'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh ' .
+            '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php'
+        ));
     }
 }
