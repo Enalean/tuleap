@@ -21436,30 +21436,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/graphontrackersv5/include/graphontrackersv5Plugin.php">
-    <DeprecatedMethod>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$advsrch]]></code>
       <code><![CDATA[$atid]]></code>
@@ -21472,20 +21448,6 @@
       <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$set]]></code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[canIncludeStylesheets]]></code>
-      <code><![CDATA[collectRoutesEvent]]></code>
-      <code><![CDATA[getProjectWidgetList]]></code>
-      <code><![CDATA[getUserWidgetList]]></code>
-      <code><![CDATA[graphontrackersv5_load_chart_factories]]></code>
-      <code><![CDATA[importRendererFromXmlEvent]]></code>
-      <code><![CDATA[tracker_report_add_renderer]]></code>
-      <code><![CDATA[tracker_report_create_renderer]]></code>
-      <code><![CDATA[tracker_report_renderer_types]]></code>
-      <code><![CDATA[trackers_get_renderers]]></code>
-      <code><![CDATA[uninstall]]></code>
-      <code><![CDATA[widgetInstance]]></code>
-    </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyNullArgument>

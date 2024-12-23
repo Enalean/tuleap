@@ -34,16 +34,21 @@ use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_Widget_MyChart;
 use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_Widget_ProjectChart;
 use Tuleap\GraphOnTrackersV5\XML\Template\CompleteIssuesTemplate;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
+use Tuleap\Widget\Event\GetProjectWidgetList;
+use Tuleap\Widget\Event\GetUserWidgetList;
+use Tuleap\Widget\Event\GetWidget;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const RENDERER_TYPE = 'plugin_graphontrackersv5';
 
@@ -59,47 +64,17 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     public $report_graphic_id;
     public $allowedForProject;
 
-    /**
-     *
-     *
-     * @param int $id plugin id
-     */
-    public function __construct($id)
+    public function __construct(int $id)
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
 
         bindTextDomain('tuleap-graphontrackersv5', __DIR__ . '/../site-content');
 
-        // Do not load the plugin if tracker is not installed & active
-        if (defined('TRACKER_BASE_URL')) {
-            //Tracker report renderer
-            $this->addHook('tracker_report_renderer_instance', 'tracker_report_renderer_instance');
-            $this->addHook(ImportRendererFromXmlEvent::NAME);
-            $this->addHook('tracker_report_add_renderer', 'tracker_report_add_renderer');
-            $this->addHook('tracker_report_create_renderer', 'tracker_report_create_renderer');
-            $this->addHook('tracker_report_renderer_types', 'tracker_report_renderer_types');
-            $this->addHook('trackers_get_renderers', 'trackers_get_renderers');
-
-            //Widgets
-            $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-            $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
-            $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-
-            $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories');
-
-            $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-            $this->addHook(CompleteIssuesTemplateEvent::NAME);
-            $this->addHook(IssuesTemplateDashboardDefinition::NAME);
-            $this->addHook(GetSemanticTimeframeUsageEvent::NAME);
-        }
         $this->allowedForProject = [];
     }
 
-    /**
-     * @see Plugin::getDependencies()
-     */
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return ['tracker'];
     }
@@ -107,14 +82,16 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     /**
      * This hook ask to create a new instance of a renderer
      *
-     * @param mixed instance Output parameter. must contain the new instance
-     * @param string type the type of the new renderer
-     * @param array row the base properties identifying the renderer (id, name, description, rank)
-     * @param Report report the report
-     *
-     * @return void
+     * @param array{
+     *     instance: object,
+     *     type: string,
+     *     report: Tracker_Report,
+     *     row: array,
+     *     store_in_session: bool,
+     * } $params
      */
-    public function tracker_report_renderer_instance($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventName('tracker_report_renderer_instance')]
+    public function trackerReportRendererInstance(array &$params): void
     {
         if ($params['type'] == self::RENDERER_TYPE) {
             $params['instance'] = new GraphOnTrackersV5_Renderer(
@@ -146,7 +123,8 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     /**
      * This hook ask to create a new instance of a renderer from XML
      */
-    public function importRendererFromXmlEvent(ImportRendererFromXmlEvent $event)
+    #[ListeningToEventClass]
+    public function importRendererFromXmlEvent(ImportRendererFromXmlEvent $event): void
     {
         if ($event->getType() === self::RENDERER_TYPE) {
             $event->setRowKey('charts', $event->getXml()->charts);
@@ -155,51 +133,23 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     }
 
     /**
-     * This hook says that a new renderer has been added to a report session
-     * Maybe it is time to set default specific parameters of the renderer?
-     *
-     * @param int renderer_id the id of the new renderer
-     * @param string type the type of the new renderer
-     * @param Report report the report
-     */
-    public function tracker_report_add_renderer($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['type'] == self::RENDERER_TYPE) {
-            //Nothing to do for now
-        }
-    }
-
-    /**
-     * This hook says that a new renderer has been added to a report and therefore must be created into db
-     * Maybe it is time to set default specific parameters of the renderer?
-     *
-     * @param int renderer_id the id of the new renderer
-     * @param string type the type of the new renderer
-     * @param Report report the report
-     */
-    public function tracker_report_create_renderer($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['type'] == self::RENDERER_TYPE) {
-            //Nothing to do for now
-        }
-    }
-
-    /**
      * This hook ask for types of report renderer provided by the listener
      *
-     * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
+     * @param array{
+     *     types: array<string, string>,
+     * } $params Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
-    public function tracker_report_renderer_types($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventName('tracker_report_renderer_types')]
+    public function trackerReportRendererTypes(array &$params): void
     {
         $params['types'][self::RENDERER_TYPE] = dgettext('tuleap-tracker', 'Chart(s)');
     }
 
     /**
-     * This hook adds a  GraphOnTrackersV5_Renderer in a renderers array
-     *
-     * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
+     * This hook adds a GraphOnTrackersV5_Renderer in a renderers array
      */
-    public function trackers_get_renderers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventName('trackers_get_renderers')]
+    public function trackersGetRenderers(array &$params): void
     {
         if ($params['renderer_type'] == 'plugin_graphontrackersv5') {
             $params['renderers'][$params['renderer_key']] = new GraphOnTrackersV5_Renderer(
@@ -220,7 +170,8 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
      * Search for an instance of a specific widget
      *
      */
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    #[ListeningToEventClass]
+    public function widgetInstance(GetWidget $get_widget_event): void
     {
         switch ($get_widget_event->getName()) {
             case 'my_plugin_graphontrackersv5_chart':
@@ -234,17 +185,19 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         }
     }
 
-    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
+    #[ListeningToEventClass]
+    public function getUserWidgetList(GetUserWidgetList $event): void
     {
         $event->addWidget('my_plugin_graphontrackersv5_chart');
     }
 
-    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    #[ListeningToEventClass]
+    public function getProjectWidgetList(GetProjectWidgetList $event): void
     {
         $event->addWidget('project_plugin_graphontrackersv5_chart');
     }
 
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->removeOrphanWidgets(['my_plugin_graphontrackersv5_chart', 'project_plugin_graphontrackersv5_chart']);
     }
@@ -279,12 +232,22 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         return $this->allowedForProject[$group_id];
     }
 
-    private function canIncludeStylesheets()
+    private function canIncludeStylesheets(): bool
     {
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0;
     }
 
-    public function graphontrackersv5_load_chart_factories($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    /**
+     * @param array{
+     *     factories: array<string, array{
+     *         chart_type: string,
+     *         chart_classname: class-string,
+     *         title: string,
+     *     }>
+     * } $params
+     */
+    #[ListeningToEventName('graphontrackersv5_load_chart_factories')]
+    public function graphontrackersv5LoadChartFactories(array &$params): void
     {
         $params['factories']['pie']             = [
             'chart_type'      => 'pie',
@@ -310,11 +273,8 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             'title'           => dgettext('tuleap-graphontrackersv5', 'Scrum BurnDown'),
         ];
         $params['factories']['cumulative_flow'] = [
-            //The type of the chart
             'chart_type'      => 'cumulative_flow',
-            //The classname of the chart. The class must be already declared.
             'chart_classname' => GraphOnTrackersV5_Chart_CumulativeFlow::class,
-            //The title for the button 'Add a chart'
             'title'           => dgettext('tuleap-graphontrackersv5', 'Cumulative flow chart'),
         ];
     }
@@ -340,7 +300,8 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get(
             '/plugins/graphontrackersv5/report/{report_id:\d+}/renderer/{renderer_id:-?\d+}/chart/{chart_id:-?\d+}',
@@ -348,6 +309,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         );
     }
 
+    #[ListeningToEventClass]
     public function completeIssuesTemplate(CompleteIssuesTemplateEvent $event): void
     {
         $event->addAllIssuesRenderers(...CompleteIssuesTemplate::getAllIssuesRenderers());
@@ -355,15 +317,15 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         $event->addOpenIssuesRenderers(CompleteIssuesTemplate::getOpenIssuesRenderer());
     }
 
+    #[ListeningToEventClass]
     public function issuesTemplateDashboardDefinition(IssuesTemplateDashboardDefinition $dashboard_definition): void
     {
         CompleteIssuesTemplate::defineDashboards($dashboard_definition);
     }
 
+    #[ListeningToEventClass]
     public function getSemanticTimeframeUsageEvent(GetSemanticTimeframeUsageEvent $event): void
     {
-        $event->addUsageLocation(
-            dgettext('tuleap-graphontrackersv5', 'graph on tracker')
-        );
+        $event->addUsageLocation(dgettext('tuleap-graphontrackersv5', 'graph on tracker'));
     }
 }
