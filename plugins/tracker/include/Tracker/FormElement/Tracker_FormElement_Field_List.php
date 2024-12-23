@@ -337,7 +337,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $criterias = [];
 
         foreach ($values_to_match as $value_to_match) {
-            if (! is_numeric($value_to_match)) {
+            if (! $this->isAValidCriteriaValueFromREST($value_to_match)) {
                 throw new Tracker_Report_InvalidRESTCriterionException("Invalid format for criterion field '$this->name' ($this->id)");
             }
 
@@ -351,6 +351,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $this->setCriteriaValue($criterias, $criteria->getReport()->getId());
 
         return count($criterias) > 0;
+    }
+
+    protected function isAValidCriteriaValueFromREST(mixed $value_to_match): bool
+    {
+        return is_numeric($value_to_match);
     }
 
     public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)

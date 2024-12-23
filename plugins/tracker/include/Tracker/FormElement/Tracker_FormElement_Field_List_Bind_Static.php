@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
+use Tuleap\Tracker\REST\FieldListOpenValueRepresentation;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -943,14 +944,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         $new_values = $this->getOpenValueDao()->searchByFieldId($this->getField()->getId());
         foreach ($new_values as $row_value) {
-            $bind_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(
-                $row_value['id'],
-                $row_value['label'],
-                '',
-                '',
-                ''
-            );
-            $rest_values[] = $this->getRESTBindValue($bind_value);
+            $rest_values[] = new FieldListOpenValueRepresentation((int) $row_value['id'], $row_value['label'], (bool) $row_value['is_hidden']);
         }
 
         return $rest_values;

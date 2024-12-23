@@ -36,7 +36,7 @@
       <color><![CDATA[ultra-violet]]></color>
       <cannedResponses/>
       <formElements>
-        <formElement type="string" ID="F80600" rank="0" id="80600" tracker_id="3048" parent_id="0" required="1">
+        <formElement type="string" ID="F80600" rank="0" id="80600" tracker_id="3048" parent_id="0">
           <name><![CDATA[title]]></name>
           <label><![CDATA[Title]]></label>
           <properties size="30"/>
