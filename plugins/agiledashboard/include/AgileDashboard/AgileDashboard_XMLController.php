@@ -18,89 +18,65 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard;
+
+use AgileDashboard_XMLExporter;
+use AgileDashboard_XMLExporterUnableToGetValueException;
+use AgileDashboard_XMLImporter;
+use Codendi_Request;
+use Exception;
+use MVC2_PluginController;
+use Planning_RequestValidator;
+use PlanningFactory;
+use PlanningParameters;
+use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
+use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\BypassTrackerPermissionDuringImport;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
+use Tuleap\Kanban\SemanticStatusNotFoundException;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use XML_ParseException;
+use XML_RNGValidator;
 
 /**
  * Handles the HTTP actions related to  the agile dashborad as a whole.
  *
  */
-class AgileDashboard_XMLController extends MVC2_PluginController
+final class AgileDashboard_XMLController extends MVC2_PluginController
 {
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var XML_RNGValidator
-     */
-    private $xml_rng_validator;
-
-    /**
-     * @var AgileDashboard_XMLExporter
-     */
-    private $agiledashboard_xml_exporter;
-
-    /**
-     * @var AgileDashboard_XMLImporter
-     */
-    private $agiledashboard_xml_importer;
-
-    /**
-     * @var Planning_RequestValidator
-     */
-    private $planning_request_validator;
-    /**
-     * @var XMLImporter
-     */
-    private $explicit_backlog_xml_import;
-
-    /**
-     * @var ExternalFieldsExtractor
-     */
-    private $external_field_extractor;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
     public function __construct(
         Codendi_Request $request,
-        PlanningFactory $planning_factory,
-        XML_RNGValidator $xml_rng_validator,
-        AgileDashboard_XMLExporter $agiledashboard_xml_exporter,
-        AgileDashboard_XMLImporter $agiledashboard_xml_importer,
-        Planning_RequestValidator $planning_request_validator,
-        XMLImporter $explicit_backlog_xml_import,
-        ExternalFieldsExtractor $external_field_extractor,
-        EventDispatcherInterface $event_dispatcher,
+        private readonly PlanningFactory $planning_factory,
+        private readonly XML_RNGValidator $xml_rng_validator,
+        private readonly AgileDashboard_XMLExporter $agiledashboard_xml_exporter,
+        private readonly AgileDashboard_XMLImporter $agiledashboard_xml_importer,
+        private readonly Planning_RequestValidator $planning_request_validator,
+        private readonly XMLImporter $explicit_backlog_xml_import,
+        private readonly ExternalFieldsExtractor $external_field_extractor,
+        private readonly EventDispatcherInterface $event_dispatcher,
         private readonly MilestonesInSidebarXmlImport $milestones_in_sidebar_xml_import,
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id                    = $request->getValidated('project_id', 'uint');
-        $this->planning_factory            = $planning_factory;
-        $this->xml_rng_validator           = $xml_rng_validator;
-        $this->agiledashboard_xml_exporter = $agiledashboard_xml_exporter;
-        $this->agiledashboard_xml_importer = $agiledashboard_xml_importer;
-        $this->planning_request_validator  = $planning_request_validator;
-        $this->explicit_backlog_xml_import = $explicit_backlog_xml_import;
-        $this->external_field_extractor    = $external_field_extractor;
-        $this->event_dispatcher            = $event_dispatcher;
+        $this->group_id = $request->getValidated('project_id', 'uint');
     }
 
     /**
      * @throws AgileDashboard_XMLExporterUnableToGetValueException
+     * @throws SemanticStatusNotFoundException
+     * @throws XML_ParseException
      */
-    public function export()
+    public function export(): void
     {
         $root_node = $this->request->get('into_xml');
 
@@ -115,7 +91,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
     /**
      * @throws Exception
      */
-    public function importOnlyAgileDashboard()
+    public function importOnlyAgileDashboard(): void
     {
         $this->checkUserIsAdmin();
         $project = $this->request->getProject();
@@ -138,7 +114,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      */
     public function importProject(
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        \Psr\Log\LoggerInterface $logger,
+        LoggerInterface $logger,
     ): void {
         $this->checkUserIsAdmin();
         $project = $this->request->getProject();

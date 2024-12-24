@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
+use Tuleap\AgileDashboard\AgileDashboard_XMLController;
 use Tuleap\AgileDashboard\AgileDashboardServiceHomepageUrlBuilder;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BaseController;
