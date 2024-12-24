@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/AdminScrumPresenter.class.php">
-    <MissingParamType>
-      <code><![CDATA[$additional_content]]></code>
-      <code><![CDATA[$can_create_planning]]></code>
-      <code><![CDATA[$does_configuration_allows_planning_creation]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$root_planning_name]]></code>
-      <code><![CDATA[$scrum_activated]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$additional_content]]></code>
-      <code><![CDATA[$can_create_planning]]></code>
-      <code><![CDATA[$planning_hierarchy]]></code>
-      <code><![CDATA[$root_planning_name]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[activate_scrum_label]]></code>
-      <code><![CDATA[additional_content]]></code>
-      <code><![CDATA[can_create_planning]]></code>
-      <code><![CDATA[cannot_create_planning]]></code>
-      <code><![CDATA[cannot_create_planning_config]]></code>
-      <code><![CDATA[cannot_create_planning_hierarchy]]></code>
-      <code><![CDATA[cannot_create_planning_no_trackers]]></code>
-      <code><![CDATA[cannot_create_planning_popover_title]]></code>
-      <code><![CDATA[create_planning]]></code>
-      <code><![CDATA[edit_action_label]]></code>
-      <code><![CDATA[export_template]]></code>
-      <code><![CDATA[general_settings_section]]></code>
-      <code><![CDATA[getPlanningNamesHierarchy]]></code>
-      <code><![CDATA[has_plannings]]></code>
-      <code><![CDATA[import_export_section]]></code>
-      <code><![CDATA[import_template]]></code>
-      <code><![CDATA[planning_section]]></code>
-      <code><![CDATA[token]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/AgileDashboardXMLController.class.php">
     <MissingReturnType>
       <code><![CDATA[export]]></code>
