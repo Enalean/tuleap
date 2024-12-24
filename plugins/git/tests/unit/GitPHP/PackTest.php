@@ -18,38 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\GitPHP;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Exception;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PackTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PackTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const SHA1_PACK = 'e9760fd950093eb1efd59a6200469e8c2d8c9632';
 
-    public const SHA1_PACK = 'e9760fd950093eb1efd59a6200469e8c2d8c9632';
+    private const V1_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v1.idx';
+    private const V2_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v2.idx';
+    private const V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH = __DIR__ . '/fixtures/pack/v2-64bit-index-entries.idx';
 
-    public const V1_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v1.idx';
-    public const V2_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v2.idx';
-    public const V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH = __DIR__ . '/fixtures/pack/v2-64bit-index-entries.idx';
+    private const ALL_PACK_INDEX_PATHS = [self::V1_PACK_INDEX_PATH, self::V2_PACK_INDEX_PATH, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH];
 
-    public const ALL_PACK_INDEX_PATHS = [self::V1_PACK_INDEX_PATH, self::V2_PACK_INDEX_PATH, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH];
-
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $project;
-    /**
-     * @var vfsStreamFile
-     */
-    private $pack_archive_file;
-    /**
-     * @var vfsStreamFile
-     */
-    private $pack_index_file;
+    private Project&MockObject $project;
+    private vfsStreamFile $pack_archive_file;
+    private vfsStreamFile $pack_index_file;
 
     /*
      * fixtures/pack/ contains a packed archive with 3 pack index: one in the V1 format, one in the V2 format and one
@@ -96,22 +87,22 @@ class PackTest extends \Tuleap\Test\PHPUnit\TestCase
             $git_repository->getChild('objects/pack')
         );
 
-        $this->project = \Mockery::mock(Project::class);
-        $this->project->shouldReceive('GetPath')->andReturns($git_repository->url());
+        $this->project = $this->createMock(Project::class);
+        $this->project->method('GetPath')->willReturn($git_repository->url());
     }
 
     /**
-     * @@dataProvider objectReferenceProvider
+     * @dataProvider objectReferenceProvider
      */
-    public function testContainsObject($object_reference, $expected, $pack_index_path)
+    public function testContainsObject($object_reference, $expected, $pack_index_path): void
     {
         $this->pack_index_file->withContent(file_get_contents($pack_index_path));
 
         $pack = new Pack($this->project, self::SHA1_PACK);
-        $this->assertSame($expected, $pack->ContainsObject($object_reference));
+        self::assertSame($expected, $pack->ContainsObject($object_reference));
     }
 
-    public static function objectReferenceProvider()
+    public static function objectReferenceProvider(): array
     {
         $reference_tests = [
             ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', true],
@@ -136,7 +127,7 @@ class PackTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider objectProvider
      */
-    public function testGetObject($object_reference, $sha256_expected_content, $expected_type, $pack_index_path)
+    public function testGetObject($object_reference, $sha256_expected_content, $expected_type, $pack_index_path): void
     {
         $this->pack_index_file->withContent(file_get_contents($pack_index_path));
 
@@ -144,14 +135,14 @@ class PackTest extends \Tuleap\Test\PHPUnit\TestCase
         $object_content = $pack->GetObject($object_reference, $type);
 
         if ($sha256_expected_content === null) {
-            $this->assertFalse($object_content);
+            self::assertFalse($object_content);
             return;
         }
-        $this->assertSame($sha256_expected_content, hash('sha256', $object_content));
-        $this->assertSame($type, $expected_type);
+        self::assertSame($sha256_expected_content, hash('sha256', $object_content));
+        self::assertSame($type, $expected_type);
     }
 
-    public static function objectProvider()
+    public static function objectProvider(): array
     {
         $object_tests = [
             ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', 'db098907ae9b166cb9c8078858ba284024649c971c37fb89c21d112d416264d2', Pack::OBJ_COMMIT],
@@ -172,27 +163,27 @@ class PackTest extends \Tuleap\Test\PHPUnit\TestCase
         return $full_object_tests;
     }
 
-    public function testGetObjectRejectsPackWithInvalidSignature()
+    public function testGetObjectRejectsPackWithInvalidSignature(): void
     {
         $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_PATH));
         $this->pack_archive_file->withContent('NOTAPACK');
 
         $pack = new Pack($this->project, self::SHA1_PACK);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unsupported pack format');
 
         $pack->GetObject('60bcae14911e8f4ec8949936ce5f3f4162abca0a', $type);
     }
 
-    public function testGetObjectRejectsPackWithUnsupportedVersion()
+    public function testGetObjectRejectsPackWithUnsupportedVersion(): void
     {
         $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_PATH));
         $this->pack_archive_file->withContent('PACK' . pack('N', 9));
 
         $pack = new Pack($this->project, self::SHA1_PACK);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unsupported pack format');
 
         $pack->GetObject('60bcae14911e8f4ec8949936ce5f3f4162abca0a', $type);
