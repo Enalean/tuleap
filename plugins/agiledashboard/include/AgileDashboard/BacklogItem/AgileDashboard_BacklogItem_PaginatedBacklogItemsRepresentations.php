@@ -18,28 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
-class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
+namespace Tuleap\AgileDashboard\BacklogItem;
+
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation;
+
+final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
 {
-    /** @var array */
-    public $backlog_items_representations;
-
-    /** @var int */
-    public $total_size;
-
-
-    public function __construct(array $backlog_items_representations, $total_size)
-    {
-        $this->backlog_items_representations = $backlog_items_representations;
-        $this->total_size                    = $total_size;
+    /**
+     * @param list<BacklogItemRepresentation> $backlog_items_representations
+     */
+    public function __construct(
+        public array $backlog_items_representations,
+        public int $total_size,
+    ) {
     }
 
-    public function getBacklogItemsRepresentations()
+    public function getBacklogItemsRepresentations(): array
     {
         return $this->backlog_items_representations;
     }
 
-    public function getTotalSize()
+    public function getTotalSize(): int
     {
         return $this->total_size;
     }
