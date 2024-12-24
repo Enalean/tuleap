@@ -18,16 +18,71 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\HTTP;
 
+use ColinODell\PsrTestLogger\TestLogger;
+use ForgeAccess;
+use Git_RemoteServer_NotFoundException;
+use GitRepository;
+use LogicException;
 use PermissionsManager;
+use PFO_User;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectUGroup;
+use RuntimeException;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator;
 use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyMisusageException;
+use User_InvalidPasswordException;
+use User_LoginManager;
+use UserDao;
 
-final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HTTPAccessControlTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private TestLogger $logger;
+    private ForgeAccess&MockObject $forge_access;
+    private User_LoginManager&MockObject $user_login_manager;
+    private ReplicationHTTPUserAuthenticator&MockObject $replication_http_user_authenticator;
+    private HTTPBasicAuthUserAccessKeyAuthenticator&MockObject $access_key_authenticator;
+    private PermissionsManager&MockObject $permissions_manager;
+    private UserDao&MockObject $user_dao;
+    private HTTPAccessControl $http_access_control;
+    private GitRepository $git_repository;
+    private GitHTTPOperation&MockObject $git_operation;
+    private GitHTTPAskBasicAuthenticationChallenge&MockObject $ask_basic_authentication_challenge;
+
+    protected function setUp(): void
+    {
+        $this->logger                              = new TestLogger();
+        $this->forge_access                        = $this->createMock(ForgeAccess::class);
+        $this->user_login_manager                  = $this->createMock(User_LoginManager::class);
+        $this->replication_http_user_authenticator = $this->createMock(ReplicationHTTPUserAuthenticator::class);
+        $this->access_key_authenticator            = $this->createMock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
+        $this->permissions_manager                 = $this->createMock(PermissionsManager::class);
+        $this->user_dao                            = $this->createMock(UserDao::class);
+        $this->ask_basic_authentication_challenge  = $this->createMock(GitHTTPAskBasicAuthenticationChallenge::class);
+
+        $this->http_access_control = new HTTPAccessControl(
+            $this->logger,
+            $this->forge_access,
+            $this->user_login_manager,
+            $this->replication_http_user_authenticator,
+            $this->access_key_authenticator,
+            $this->permissions_manager,
+            $this->user_dao,
+            $this->ask_basic_authentication_challenge,
+        );
+
+        $this->git_repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)
+            ->inProject(ProjectTestBuilder::aProject()->withAccessPublic()->build())->build();
+        $this->git_operation  = $this->createMock(GitHTTPOperation::class);
+    }
 
     protected function tearDown(): void
     {
@@ -36,292 +91,118 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testHTTPReplicationUserCanBeAuthenticated(): void
     {
-        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
-        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
-        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
-        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
-        $user_dao                            = \Mockery::mock(\UserDao::class);
-
-        $http_access_control = new HTTPAccessControl(
-            $logger,
-            $forge_access,
-            $user_login_manager,
-            $replication_http_user_authenticator,
-            $access_key_authenticator,
-            $permissions_manager,
-            $user_dao,
-            new GitHTTPAskBasicAuthenticationChallenge()
-        );
-
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
-
-        $logger->shouldReceive('debug');
-        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
-        $git_repository->shouldReceive('getFullName');
+        $this->forge_access->method('doesPlatformRequireLogin')->willReturn(true);
         $_SERVER['PHP_AUTH_USER'] = 'forge__gerrit_1';
         $_SERVER['PHP_AUTH_PW']   = 'password';
-        $expected_user            = \Mockery::mock(\PFO_User::class);
-        $expected_user->shouldReceive('getUserName');
-        $replication_http_user_authenticator->shouldReceive('authenticate')->andReturns($expected_user);
+        $expected_user            = $this->createMock(PFO_User::class);
+        $expected_user->method('getUserName');
+        $this->replication_http_user_authenticator->method('authenticate')->willReturn($expected_user);
 
-        $authenticated_user = $http_access_control->getUser($git_repository, $git_operation);
+        $authenticated_user = $this->http_access_control->getUser($this->git_repository, $this->git_operation);
 
-        $this->assertSame($expected_user, $authenticated_user);
+        self::assertSame($expected_user, $authenticated_user);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testTuleapUserCanBeAuthenticated(): void
     {
-        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
-        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
-        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
-        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
-        $user_dao                            = \Mockery::mock(\UserDao::class);
-
-        $http_access_control = new HTTPAccessControl(
-            $logger,
-            $forge_access,
-            $user_login_manager,
-            $replication_http_user_authenticator,
-            $access_key_authenticator,
-            $permissions_manager,
-            $user_dao,
-            new GitHTTPAskBasicAuthenticationChallenge()
-        );
-
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
-
-        $logger->shouldReceive('debug');
-        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
-        $git_repository->shouldReceive('getFullName');
+        $this->forge_access->method('doesPlatformRequireLogin')->willReturn(true);
         $_SERVER['PHP_AUTH_USER'] = 'user1';
         $_SERVER['PHP_AUTH_PW']   = 'password';
-        $replication_http_user_authenticator->shouldReceive('authenticate')
-            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $this->replication_http_user_authenticator->method('authenticate')
+            ->willThrowException(new Git_RemoteServer_NotFoundException(2));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
-        $access_key_authenticator->shouldReceive('getUser')->andReturnNull();
-        $expected_user = \Mockery::mock(\PFUser::class);
-        $expected_user->shouldReceive('getUserName');
-        $expected_user->shouldReceive('getId');
-        $user_login_manager->shouldReceive('authenticate')->andReturns($expected_user);
-        $user_dao->shouldReceive('storeLastAccessDate')->once();
+        $this->access_key_authenticator->method('getUser')->willReturn(null);
+        $expected_user = UserTestBuilder::buildWithDefaults();
+        $this->user_login_manager->method('authenticate')->willReturn($expected_user);
+        $this->user_dao->expects(self::once())->method('storeLastAccessDate');
 
-        $authenticated_user = $http_access_control->getUser($git_repository, $git_operation);
+        $authenticated_user = $this->http_access_control->getUser($this->git_repository, $this->git_operation);
 
-        $this->assertSame($expected_user, $authenticated_user);
+        self::assertSame($expected_user, $authenticated_user);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testTuleapUserCanBeAuthenticatedFromAnAccessKey(): void
     {
-        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
-        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
-        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
-        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
-        $user_dao                            = \Mockery::mock(\UserDao::class);
-
-        $http_access_control = new HTTPAccessControl(
-            $logger,
-            $forge_access,
-            $user_login_manager,
-            $replication_http_user_authenticator,
-            $access_key_authenticator,
-            $permissions_manager,
-            $user_dao,
-            new GitHTTPAskBasicAuthenticationChallenge()
-        );
-
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
-
-        $logger->shouldReceive('debug');
-        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
-        $git_repository->shouldReceive('getFullName');
+        $this->forge_access->method('doesPlatformRequireLogin')->willReturn(true);
         $_SERVER['PHP_AUTH_USER'] = 'user1';
         $_SERVER['PHP_AUTH_PW']   = 'access_key';
-        $replication_http_user_authenticator->shouldReceive('authenticate')
-            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $this->replication_http_user_authenticator->method('authenticate')
+            ->willThrowException(new Git_RemoteServer_NotFoundException(2));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
-        $expected_user          = \Mockery::mock(\PFUser::class);
-        $expected_user->shouldReceive('getUserName');
-        $expected_user->shouldReceive('getId');
-        $access_key_authenticator->shouldReceive('getUser')->andReturn($expected_user);
+        $expected_user          = UserTestBuilder::buildWithDefaults();
+        $this->access_key_authenticator->method('getUser')->willReturn($expected_user);
 
-        $authenticated_user = $http_access_control->getUser($git_repository, $git_operation);
+        $authenticated_user = $this->http_access_control->getUser($this->git_repository, $this->git_operation);
 
-        $this->assertSame($expected_user, $authenticated_user);
+        self::assertSame($expected_user, $authenticated_user);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testAuthenticationIsDeniedWhenAnAccessKeyMisusageIsDetected(): void
     {
-        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
-        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
-        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
-        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
-        $user_dao                            = \Mockery::mock(\UserDao::class);
-        $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
-
-        $http_access_control = new HTTPAccessControl(
-            $logger,
-            $forge_access,
-            $user_login_manager,
-            $replication_http_user_authenticator,
-            $access_key_authenticator,
-            $permissions_manager,
-            $user_dao,
-            $ask_basic_authentication_challenge
-        );
-
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
-
-        $logger->shouldReceive('debug');
-        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
-        $git_repository->shouldReceive('getFullName');
+        $this->forge_access->method('doesPlatformRequireLogin')->willReturn(true);
         $_SERVER['PHP_AUTH_USER'] = 'user1';
         $_SERVER['PHP_AUTH_PW']   = 'access_key';
-        $replication_http_user_authenticator->shouldReceive('authenticate')
-            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $this->replication_http_user_authenticator->method('authenticate')
+            ->willThrowException(new Git_RemoteServer_NotFoundException(2));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
-        $found_user             = \Mockery::mock(\PFUser::class);
-        $found_user->shouldReceive('getUserName')->andReturn('username');
-        $access_key_authenticator->shouldReceive('getUser')
-            ->andThrow(new HTTPBasicAuthUserAccessKeyMisusageException('user1', $found_user));
+        $found_user             = UserTestBuilder::aUser()->withUserName('username')->build();
+        $this->access_key_authenticator->method('getUser')
+            ->willThrowException(new HTTPBasicAuthUserAccessKeyMisusageException('user1', $found_user));
 
-        $not_supposed_to_return = new class extends \LogicException
-        {
-        };
-        $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->once()->andThrow($not_supposed_to_return);
-        $this->expectException($not_supposed_to_return::class);
+        $not_supposed_to_return = new LogicException();
+        $this->ask_basic_authentication_challenge->expects(self::once())->method('askBasicAuthenticationChallenge')->willThrowException($not_supposed_to_return);
+        $this->expectExceptionObject($not_supposed_to_return);
 
-        $http_access_control->getUser($git_repository, $git_operation);
+        $this->http_access_control->getUser($this->git_repository, $this->git_operation);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testAuthenticationIsDeniedWhenNoValidUserIsFound(): void
     {
-        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
-        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
-        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
-        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
-        $user_dao                            = \Mockery::mock(\UserDao::class);
-        $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
-
-        $http_access_control = new HTTPAccessControl(
-            $logger,
-            $forge_access,
-            $user_login_manager,
-            $replication_http_user_authenticator,
-            $access_key_authenticator,
-            $permissions_manager,
-            $user_dao,
-            $ask_basic_authentication_challenge
-        );
-
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
-
-        $logger->shouldReceive('debug');
-        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
-        $git_repository->shouldReceive('getFullName');
+        $this->forge_access->method('doesPlatformRequireLogin')->willReturn(true);
         $_SERVER['PHP_AUTH_USER'] = 'user1';
         $_SERVER['PHP_AUTH_PW']   = 'invalid_password';
-        $replication_http_user_authenticator->shouldReceive('authenticate')
-            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $this->replication_http_user_authenticator->method('authenticate')
+            ->willThrowException(new Git_RemoteServer_NotFoundException(2));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
-        $access_key_authenticator->shouldReceive('getUser')->andReturnNull();
-        $user_login_manager->shouldReceive('authenticate')
-            ->andThrows(\Mockery::spy(\User_LoginException::class));
+        $this->access_key_authenticator->method('getUser')->willReturn(null);
+        $this->user_login_manager->method('authenticate')
+            ->willThrowException(new User_InvalidPasswordException());
 
-        $ask_auth_throwable_test = new \RuntimeException('Thrown exception for test purposes');
-        $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->andThrow($ask_auth_throwable_test);
+        $ask_auth_throwable_test = new RuntimeException('Thrown exception for test purposes');
+        $this->ask_basic_authentication_challenge->method('askBasicAuthenticationChallenge')->willThrowException($ask_auth_throwable_test);
 
         $this->expectExceptionObject($ask_auth_throwable_test);
 
-        $http_access_control->getUser($git_repository, $git_operation);
+        $this->http_access_control->getUser($this->git_repository, $this->git_operation);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testAuthenticationIsRequestedWhenEmptyCredentialIsGiven(): void
     {
-        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
-        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
-        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
-        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
-        $user_dao                            = \Mockery::mock(\UserDao::class);
-        $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
-
-        $http_access_control = new HTTPAccessControl(
-            $logger,
-            $forge_access,
-            $user_login_manager,
-            $replication_http_user_authenticator,
-            $access_key_authenticator,
-            $permissions_manager,
-            $user_dao,
-            $ask_basic_authentication_challenge
-        );
-
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
-
-        $logger->shouldReceive('debug');
-        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
-        $git_repository->shouldReceive('getFullName');
+        $this->forge_access->method('doesPlatformRequireLogin')->willReturn(true);
         $_SERVER['PHP_AUTH_USER'] = '';
         $_SERVER['PHP_AUTH_PW']   = '';
 
-        $ask_auth_throwable_test = new \RuntimeException('Thrown exception for test purposes');
-        $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->andThrow($ask_auth_throwable_test);
+        $ask_auth_throwable_test = new RuntimeException('Thrown exception for test purposes');
+        $this->ask_basic_authentication_challenge->method('askBasicAuthenticationChallenge')->willThrowException($ask_auth_throwable_test);
 
         $this->expectExceptionObject($ask_auth_throwable_test);
 
-        $http_access_control->getUser($git_repository, $git_operation);
+        $this->http_access_control->getUser($this->git_repository, $this->git_operation);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testNoAuthenticationIsRequiredForAReadAccessOfPublicRepoOnAnInstanceAccessibleToAnonymous(): void
     {
-        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
-        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
-        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
-        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
-        $user_dao                            = \Mockery::mock(\UserDao::class);
+        $this->forge_access->method('doesPlatformRequireLogin')->willReturn(false);
+        $this->git_operation->method('isWrite')->willReturn(false);
+        $this->permissions_manager->method('getAuthorizedUgroupIds')->willReturn([ProjectUGroup::ANONYMOUS]);
 
-        $http_access_control = new HTTPAccessControl(
-            $logger,
-            $forge_access,
-            $user_login_manager,
-            $replication_http_user_authenticator,
-            $access_key_authenticator,
-            $permissions_manager,
-            $user_dao,
-            new GitHTTPAskBasicAuthenticationChallenge()
-        );
-
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
-
-        $logger->shouldReceive('debug');
-        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(false);
-        $git_operation->shouldReceive('isWrite')->andReturns(false);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('isPublic')->andReturns(true);
-        $git_repository->shouldReceive('getProject')->andReturns($project);
-        $git_repository->shouldReceive('getId')->andReturns(1);
-        $permissions_manager->shouldReceive('getAuthorizedUgroupIds')->andReturns([\ProjectUGroup::ANONYMOUS]);
-
-        $this->assertNull($http_access_control->getUser($git_repository, $git_operation));
+        self::assertNull($this->http_access_control->getUser($this->git_repository, $this->git_operation));
+        self::assertFalse($this->logger->hasDebugRecords());
     }
 }
