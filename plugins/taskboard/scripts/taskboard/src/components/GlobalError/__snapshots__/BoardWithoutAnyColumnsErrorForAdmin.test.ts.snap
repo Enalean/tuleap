@@ -7,7 +7,7 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
   <div
     class="empty-state-illustration"
   >
-    <!---->
+    <board-without-any-columns-error-for-admin-illustration-stub />
   </div>
    
   <h1

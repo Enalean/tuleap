@@ -21,20 +21,13 @@
     <board-without-any-columns-error-for-admin v-if="user_is_admin" />
     <board-without-any-columns-error-for-users v-else />
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
 import BoardWithoutAnyColumnsErrorForUsers from "./BoardWithoutAnyColumnsErrorForUsers.vue";
-import { namespace } from "vuex-class";
+import type { UserState } from "../../store/user/type";
+import { useNamespacedState } from "vuex-composition-helpers";
 
-const user = namespace("user");
-
-@Component({
-    components: { BoardWithoutAnyColumnsErrorForUsers, BoardWithoutAnyColumnsErrorForAdmin },
-})
-export default class BoardWithoutAnyColumnsError extends Vue {
-    @user.State
-    readonly user_is_admin!: boolean;
-}
+const { user_is_admin } = useNamespacedState<Pick<UserState, "user_is_admin">>("user", [
+    "user_is_admin",
+]);
 </script>
