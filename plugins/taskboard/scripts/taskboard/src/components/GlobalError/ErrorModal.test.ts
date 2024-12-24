@@ -23,10 +23,10 @@ import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ErrorModal from "./ErrorModal.vue";
-import * as tlp from "tlp";
-import type { Modal } from "tlp";
+import * as tlp from "@tuleap/tlp-modal";
+import type { Modal } from "@tuleap/tlp-modal";
 
-jest.mock("tlp", () => {
+jest.mock("@tuleap/tlp-modal", () => {
     return {
         __esModule: true,
         createModal: jest.fn(),
@@ -40,7 +40,7 @@ describe("ErrorModal", () => {
         local_vue = await createTaskboardLocalVue();
     });
 
-    function createWrapper(error_message: string): Wrapper<ErrorModal> {
+    function createWrapper(error_message: string): Wrapper<Vue> {
         return shallowMount(ErrorModal, {
             localVue: local_vue,
             mocks: {
@@ -52,7 +52,7 @@ describe("ErrorModal", () => {
     }
 
     it("warns user that something is wrong with a button to show details", () => {
-        const actual_tlp = jest.requireActual("tlp");
+        const actual_tlp = jest.requireActual("@tuleap/tlp-modal");
         jest.spyOn(tlp, "createModal").mockImplementation(actual_tlp.createModal);
         const wrapper = createWrapper("Full error message with details");
         expect(wrapper.element).toMatchSnapshot();
@@ -76,7 +76,7 @@ describe("ErrorModal", () => {
         await wrapper.get("[data-test=show-details]").trigger("click");
 
         const details = wrapper.get("[data-test=details]");
-        expect(details.text()).toEqual(error_message);
+        expect(details.text()).toStrictEqual(error_message);
     });
 
     it("warns user that something is wrong without any details", () => {
