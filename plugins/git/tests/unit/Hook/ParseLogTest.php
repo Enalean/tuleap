@@ -18,28 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Hook;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use Git_Command_Exception;
+use GitRepository;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParseLogTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & CrossReferencesExtractor
-     */
-    private $extract_cross_ref;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & LogPushes
-     */
-    private $log_pushes;
+    private CrossReferencesExtractor&MockObject $extract_cross_ref;
+    private LogPushes&MockObject $log_pushes;
     private TestLogger $logger;
 
     protected function setUp(): void
     {
-        $this->extract_cross_ref = \Mockery::spy(CrossReferencesExtractor::class);
-        $this->log_pushes        = \Mockery::spy(\Tuleap\Git\Hook\LogPushes::class);
+        $this->extract_cross_ref = $this->createMock(CrossReferencesExtractor::class);
+        $this->log_pushes        = $this->createMock(LogPushes::class);
         $this->logger            = new TestLogger();
     }
 
@@ -51,36 +51,36 @@ final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLogPush(): void
     {
-        $push_details = \Mockery::spy(PushDetails::class)
-            ->shouldReceive('getRevisionList')
-            ->andReturns(['469eaa9'])
-            ->getMock();
+        $push_details = $this->createMock(PushDetails::class);
+        $push_details->method('getRevisionList')->willReturn(['469eaa9']);
+        $push_details->method('getRefnameType');
+        $this->extract_cross_ref->method('extractCommitReference');
 
-        $this->log_pushes->shouldReceive('executeForRepository')->with($push_details)->once();
+        $this->log_pushes->expects(self::once())->method('executeForRepository')->with($push_details);
 
         $this->executeParseLog($push_details);
     }
 
     public function testItExecutesExtractOnEachCommit(): void
     {
-        $push_details = \Mockery::spy(PushDetails::class)
-            ->shouldReceive('getRevisionList')
-            ->andReturns(['469eaa9', '5eb01f0'])
-            ->getMock();
+        $push_details = $this->createMock(PushDetails::class);
+        $push_details->method('getRevisionList')->willReturn(['469eaa9', '5eb01f0']);
+        $push_details->method('getRefnameType');
 
-        $this->extract_cross_ref->shouldReceive('extractCommitReference')->twice();
+        $this->extract_cross_ref->expects(self::exactly(2))->method('extractCommitReference');
+        $this->log_pushes->method('executeForRepository');
 
         $this->executeParseLog($push_details);
     }
 
     public function testItExecutesExtractOnTag(): void
     {
-        $push_details = \Mockery::spy(PushDetails::class)
-            ->shouldReceive('getRevisionList')
-            ->andReturns(['469eaa9'])
-            ->getMock();
+        $push_details = $this->createMock(PushDetails::class);
+        $push_details->method('getRevisionList')->willReturn(['469eaa9']);
+        $push_details->method('getRefnameType');
 
-        $this->extract_cross_ref->shouldReceive('extractCommitReference')->with($push_details, '469eaa9')->once();
+        $this->extract_cross_ref->expects(self::once())->method('extractCommitReference')->with($push_details, '469eaa9');
+        $this->log_pushes->method('executeForRepository');
 
         $this->executeParseLog($push_details);
     }
@@ -88,34 +88,39 @@ final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesntAttemptToExtractWhenBranchIsDeleted(): void
     {
         $push_details = new PushDetails(
-            \Mockery::mock(\GitRepository::class),
-            \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build(),
+            GitRepositoryTestBuilder::aProjectRepository()->build(),
+            UserTestBuilder::anActiveUser()->build(),
             'refs/tags/v1',
             'create',
             'tag',
             []
         );
 
-        $this->log_pushes->shouldReceive('executeForRepository')
-            ->once()
-            ->with($push_details);
+        $this->log_pushes->expects(self::once())->method('executeForRepository')->with($push_details);
 
-        $this->extract_cross_ref->shouldReceive('extractTagReference')->once();
+        $this->extract_cross_ref->expects(self::once())->method('extractTagReference');
 
         $this->executeParseLog($push_details);
     }
 
     public function testItExecutesExtractEvenWhenThereAreErrors(): void
     {
-        $push_details = \Mockery::spy(PushDetails::class);
-        $push_details->shouldReceive('getRevisionList')->andReturns(['0fb0737', '469eaa9']);
-        $push_details->shouldReceive('getRepository')->andReturns(\Mockery::spy(\GitRepository::class));
+        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository->method('getFullPath');
+        $push_details = $this->createMock(PushDetails::class);
+        $push_details->method('getRevisionList')->willReturn(['0fb0737', '469eaa9']);
+        $push_details->method('getRepository')->willReturn($git_repository);
+        $push_details->method('getRefnameType');
+        $push_details->method('getRefname');
 
-        $this->extract_cross_ref->shouldReceive('extractCommitReference')->with($push_details, '0fb0737');
-        $this->extract_cross_ref->shouldReceive('extractCommitReference')
-            ->with($push_details, '469eaa9')
-            ->andThrows(new \Git_Command_Exception('whatever', ['whatever'], '234'));
+        $this->extract_cross_ref->method('extractCommitReference')
+            ->willReturnCallback(static function ($details, string $ref) {
+                if ($ref === '469eaa9') {
+                    throw new Git_Command_Exception('whatever', ['whatever'], '234');
+                }
+            });
 
+        $this->log_pushes->method('executeForRepository');
         $this->executeParseLog($push_details);
 
         self::assertTrue($this->logger->hasErrorRecords());
