@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItem/SubBacklogItemProvider.class.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$milestone]]></code>
-    </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code><![CDATA[$artifacts_for_planning]]></code>
-      <code><![CDATA[$artifacts_for_planning]]></code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code><![CDATA[filterBacklogIds]]></code>
-      <code><![CDATA[getMatchingIdsForMilestone]]></code>
-      <code><![CDATA[getMatchingIdsForTopBacklog]]></code>
-    </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $milestone->getArtifactId()]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItemDao.class.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -857,6 +840,7 @@
       <code><![CDATA[$artifact_status]]></code>
       <code><![CDATA[$dar]]></code>
       <code><![CDATA[$dar]]></code>
+      <code><![CDATA[getChildrenForArtifacts]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$milestone_artifact_id]]></code>
@@ -34904,11 +34888,8 @@
       <code><![CDATA[foundRows]]></code>
       <code><![CDATA[foundRows]]></code>
       <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[instanciateWith]]></code>
+      <code><![CDATA[getChildrenForArtifacts]]></code>
     </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[[$this, 'getInstanceFromRow']]]></code>
-    </InvalidArgument>
     <InvalidReturnStatement>
       <code><![CDATA[$sorted_artifacts]]></code>
     </InvalidReturnStatement>
@@ -35922,9 +35903,7 @@
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
+      <code><![CDATA[getLinkedArtifactsByIds]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[getRow]]></code>
@@ -35934,8 +35913,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -35988,10 +35965,8 @@
       <code><![CDATA[$this->retrieve($sql)]]></code>
       <code><![CDATA[$this->retrieve($sql)]]></code>
       <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>

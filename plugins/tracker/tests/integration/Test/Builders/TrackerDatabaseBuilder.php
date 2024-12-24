@@ -690,4 +690,15 @@ final class TrackerDatabaseBuilder
             ]
         );
     }
+
+    public function buildArtifactRank(int $artifact_id, int $rank = 0): void
+    {
+        $this->db->insert(
+            'tracker_artifact_priority_rank',
+            [
+                'artifact_id' => $artifact_id,
+                'rank'        => $rank,
+            ]
+        );
+    }
 }

@@ -19,32 +19,40 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\AgileDashboard\BacklogItem;
+
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Planning;
+use Planning_Milestone;
+use Planning_VirtualTopMilestone;
+use PlanningFactory;
+use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Dao\ArtifactDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SubBacklogItemProviderTest extends TestCase
 {
-    private AgileDashboard_BacklogItem_SubBacklogItemProvider $provider;
+    private SubBacklogItemProvider $provider;
     private Tracker $backlog_tracker;
-    private Tracker|MockObject $task_tracker;
-    private MockObject|Planning_Milestone $milestone;
-    private Tracker_ArtifactDao|MockObject $dao;
-    private PFUser|MockObject $user;
-    private AgileDashboard_Milestone_Backlog_BacklogFactory|MockObject $backlog_factory;
-    private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory|MockObject $backlog_item_collection_factory;
-    private PlanningFactory|MockObject $planning_factory;
-    private ExplicitBacklogDao|MockObject $explicit_backlog_dao;
-    private MockObject|ArtifactsInExplicitBacklogDao $artifact_in_explicit_backlog_dao;
+    private Tracker&MockObject $task_tracker;
+    private MockObject&Planning_Milestone $milestone;
+    private ArtifactDao&MockObject $dao;
+    private PFUser&MockObject $user;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private MockObject&ArtifactsInExplicitBacklogDao $artifact_in_explicit_backlog_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->backlog_tracker = \Tuleap\Tracker\Test\Builders\TrackerTestBuilder::aTracker()
-            ->withId(35)
-            ->build();
+        $this->backlog_tracker = TrackerTestBuilder::aTracker()->withId(35)->build();
 
         $this->task_tracker = $this->createMock(Tracker::class);
         $this->task_tracker->method('getId')->willReturn(36);
@@ -60,31 +68,29 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
         $this->milestone->method('getArtifactId')->willReturn(3);
         $this->milestone->method('getPlanning')->willReturn($sprint_planning);
 
-        $this->dao = $this->createMock(\Tracker_ArtifactDao::class);
+        $this->dao = $this->createMock(ArtifactDao::class);
 
-        $this->user                            = $this->createMock(PFUser::class);
-        $this->backlog_factory                 = $this->createMock(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
-        $this->backlog_item_collection_factory = $this->createMock(
-            \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class
-        );
-        $this->planning_factory                = $this->createMock(PlanningFactory::class);
+        $this->user                      = $this->createMock(PFUser::class);
+        $backlog_factory                 = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $backlog_item_collection_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
+        $planning_factory                = $this->createMock(PlanningFactory::class);
 
         $this->explicit_backlog_dao             = $this->createMock(ExplicitBacklogDao::class);
         $this->artifact_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
 
-        $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
+        $this->provider = new SubBacklogItemProvider(
             $this->dao,
-            $this->backlog_factory,
-            $this->backlog_item_collection_factory,
-            $this->planning_factory,
+            $backlog_factory,
+            $backlog_item_collection_factory,
+            $planning_factory,
             $this->explicit_backlog_dao,
             $this->artifact_in_explicit_backlog_dao
         );
 
-        $this->planning_factory->method('getSubPlannings')->willReturn([$sprint_planning]);
-        $this->planning_factory->method('isTrackerIdUsedInAPlanning')
-            ->willReturnCallback(static fn (int $id) => match ($id) {
-                35, 36 => false,
+        $planning_factory->method('getSubPlannings')->willReturn([$sprint_planning]);
+        $planning_factory->method('isTrackerIdUsedInAPlanning')
+            ->willReturnCallback(static fn(int $id) => match ($id) {
+                35, 36   => false,
                 105, 106 => true,
             });
     }
@@ -92,20 +98,16 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
     public function testItReturnsTheMatchingIds(): void
     {
         $this->dao->method('getLinkedArtifactsByIds')->with([3], [3])
-            ->willReturn(
-                \TestHelper::arrayToDar(
-                    ['id' => 7, 'tracker_id' => 35],
-                    ['id' => 8, 'tracker_id' => 35],
-                    ['id' => 11, 'tracker_id' => 35]
-                )
-            );
-        $this->dao->method('getChildrenForArtifacts')->with([7, 8, 11])->willReturn(
-            \TestHelper::emptyDar()
-        );
+            ->willReturn([
+                ['id' => 7, 'tracker_id' => 35],
+                ['id' => 8, 'tracker_id' => 35],
+                ['id' => 11, 'tracker_id' => 35],
+            ]);
+        $this->dao->method('getChildrenForArtifacts')->with([7, 8, 11])->willReturn([]);
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
 
-        $this->assertEquals([7, 8, 11], array_keys($result));
+        self::assertEquals([7, 8, 11], array_keys($result));
     }
 
     public function testItReturnsTheMatchingIdsInExplicitTopBacklogContext(): void
@@ -116,7 +118,7 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
         );
         $top_backlog_tracker = $this->createMock(Tracker::class);
 
-        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
+        $project = ProjectTestBuilder::aProject()->build();
         $milestone->method('getProject')->willReturn($project);
 
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(true);
@@ -132,65 +134,63 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
 
         $result = $this->provider->getMatchingIds($milestone, $top_backlog_tracker, $this->user);
 
-        $this->assertEquals([7, 8, 11], array_keys($result));
+        self::assertEquals([7, 8, 11], array_keys($result));
     }
 
     public function testItReturnsAnEmptyResultIfThereIsNoMatchingId(): void
     {
-        $this->dao->method('getLinkedArtifactsByIds')->willReturn(\TestHelper::emptyDar());
+        $this->dao->method('getLinkedArtifactsByIds')->willReturn([]);
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
-        $this->assertEquals([], $result);
+        self::assertEquals([], $result);
     }
 
     public function testItDoesNotFilterFromArtifactsThatAreNotContentOfSubOrCurrentPlanning(): void
     {
-        $this->dao->method('getLinkedArtifactsByIds')->with([3], [3])->willReturn(
-            \TestHelper::arrayToDar(
-                ['id' => 7, 'tracker_id' => 35],
-                ['id' => 8, 'tracker_id' => 35],
-                ['id' => 11, 'tracker_id' => 35],
-                ['id' => 158, 'tracker_id' => 105]
-            )
-        );
+        $this->dao->method('getLinkedArtifactsByIds')->with([3], [3])->willReturn([
+            ['id' => 7, 'tracker_id' => 35],
+            ['id' => 8, 'tracker_id' => 35],
+            ['id' => 11, 'tracker_id' => 35],
+            ['id' => 158, 'tracker_id' => 105],
+        ]);
 
         $this->dao->method('getChildrenForArtifacts')->with(
             [7, 8, 11]
-        )->willReturn(\TestHelper::emptyDar());
+        )->willReturn([]);
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
-        $this->assertEquals([7, 8, 11], array_keys($result));
+        self::assertEquals([7, 8, 11], array_keys($result));
     }
 
     public function testItFiltersFromArtifactsThatAreChildOfContentOfSubOrCurrentPlanning(): void
     {
         $this->dao->method('getLinkedArtifactsByIds')
             ->willReturnCallback(
-                static fn (array $artifact_ids, array $excluded_ids) => match (true) {
-                    $artifact_ids === [3] && $excluded_ids === [3] => \TestHelper::arrayToDar(
+                static fn(array $artifact_ids, array $excluded_ids) => match (true) {
+                    $artifact_ids === [3] && $excluded_ids === [3]                       => [
                         ['id' => 7, 'tracker_id' => 35],
                         ['id' => 8, 'tracker_id' => 35],
                         ['id' => 11, 'tracker_id' => 35],
                         ['id' => 158, 'tracker_id' => 105],
-                        ['id' => 148, 'tracker_id' => 106]
-                    ),
-                    $artifact_ids === [148] && $excluded_ids === [3, 7, 8, 11, 158, 148] => \TestHelper::emptyDar(),
+                        ['id' => 148, 'tracker_id' => 106],
+                    ],
+                    $artifact_ids === [148] && $excluded_ids === [3, 7, 8, 11, 158, 148] => [],
                 }
             );
 
         $this->dao->method('getChildrenForArtifacts')
             ->willReturnCallback(
-                static fn (array $artifact_ids) => match ($artifact_ids) {
-                    [7, 8, 11] => \TestHelper::arrayToDar(
+                static fn(array $artifact_ids) => match ($artifact_ids) {
+                    [7, 8, 11] => [
                         ['id' => 200, 'tracker_id' => 36],
                         ['id' => 201, 'tracker_id' => 36],
-                        ['id' => 159, 'tracker_id' => 105]
-                    ),
-                    [200, 201] => \TestHelper::emptyDar(),
+                        ['id' => 159, 'tracker_id' => 105],
+                    ],
+                    [200, 201] => [],
                 }
             );
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->task_tracker, $this->user);
-        $this->assertEquals([200, 201], array_keys($result));
+        self::assertEquals([200, 201], array_keys($result));
     }
 }

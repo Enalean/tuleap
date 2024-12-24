@@ -19,81 +19,64 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\BacklogItem;
+
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use PFUser;
+use Planning_Milestone;
+use PlanningFactory;
+use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\Tracker\Artifact\Dao\ArtifactDao;
 
 /**
  * Returns all tasks id in a Release
  *
- * It leverage on ArtifactLink information and will recrusively inspect the
+ * It leverages on ArtifactLink information and will recrusively inspect the
  * milestone links (from top to bottom) and keep all artifacts that belongs to
  * the backlog tracker.
  *
  * This is the same type of algorithm than used in AgileDashboard_Milestone_Backlog_ArtifactsFinder
  */
-class AgileDashboard_BacklogItem_SubBacklogItemProvider
+final class SubBacklogItemProvider
 {
-    /** @var Tracker_ArtifactDao */
-    private $dao;
-
-    /** @var array */
-    private $backlog_ids = [];
-
+    /** @var array<int, bool> */
+    private array $backlog_ids = [];
     /** @var int[] */
-    private $inspected_ids = [];
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $backlog_item_collection_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
-    private $backlog_factory;
-
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
+    private array $inspected_ids = [];
 
     public function __construct(
-        Tracker_ArtifactDao $dao,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
-        PlanningFactory $planning_factory,
-        ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private readonly ArtifactDao $dao,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
+        private readonly PlanningFactory $planning_factory,
+        private readonly ExplicitBacklogDao $explicit_backlog_dao,
+        private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
     ) {
-        $this->backlog_item_collection_factory   = $backlog_item_collection_factory;
-        $this->backlog_factory                   = $backlog_factory;
-        $this->dao                               = $dao;
-        $this->planning_factory                  = $planning_factory;
-        $this->explicit_backlog_dao              = $explicit_backlog_dao;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
     }
 
     /**
      * Return all indexed ids of artifacts linked on milestone that belong to backlog tracker
      *
-     * @return array
+     * @return array<int, bool>
      */
-    public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)
+    public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user): array
     {
-        if (! $milestone->getArtifactId()) {
+        if ($milestone->getArtifactId() === null) {
             return $this->getMatchingIdsForTopBacklog($milestone, $backlog_tracker, $user);
         }
 
         return $this->getMatchingIdsForMilestone($milestone, $backlog_tracker, $user);
     }
 
-    private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)
+    /**
+     * @return array<int, bool>
+     */
+    private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user): array
     {
         $milestone_id_seed             = [];
         $milestone_id_seed['planning'] = [$milestone->getArtifactId() ?? 0];
@@ -105,7 +88,10 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
         return $this->backlog_ids;
     }
 
-    private function getMatchingIdsForTopBacklog(Planning_VirtualTopMilestone $milestone, Tracker $backlog_tracker, PFUser $user)
+    /**
+     * @return array<int, bool>
+     */
+    private function getMatchingIdsForTopBacklog(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user): array
     {
         $project_id = (int) $milestone->getProject()->getID();
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
@@ -131,7 +117,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
      *
      * We need to keep list of ids we already looked at so we avoid cycles.
      */
-    private function filterBacklogIds(int $backlog_tracker_id, array $artifacts, array $filtrable_planning_tracker_ids)
+    private function filterBacklogIds(int $backlog_tracker_id, array $artifacts, array $filtrable_planning_tracker_ids): void
     {
         $children               = [];
         $artifacts_for_planning = [];
@@ -165,7 +151,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
     /**
      * @return int[]
      */
-    private function getSubPlanningTrackerIds(Planning_Milestone $milestone, PFUser $user)
+    private function getSubPlanningTrackerIds(Planning_Milestone $milestone, PFUser $user): array
     {
         $planning_tracker_ids = [];
         foreach ($this->planning_factory->getSubPlannings($milestone->getPlanning(), $user) as $sub_planning) {
@@ -176,19 +162,19 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
     }
 
     /**
-     * @psalm-param \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|list<array{tracker_id: int, id: int}> $artifacts_for_planning
+     * @psalm-param list<array{tracker_id: int, id: int}> $artifacts_for_planning
      * @param int[] $filtrable_planning_tracker_ids
      * @psalm-return array{planning?: list<int>, not_planning?: list<int>}
      */
     private function filterResult(
-        $artifacts_for_planning,
+        array $artifacts_for_planning,
         array $filtrable_planning_tracker_ids,
         int $backlog_tracker_id,
     ): array {
         $artifacts_to_inspect = [];
         foreach ($artifacts_for_planning as $artifact_row) {
-            $artifact_row_tracker_id = (int) $artifact_row['tracker_id'];
-            $artifact_id             = (int) $artifact_row['id'];
+            $artifact_row_tracker_id = $artifact_row['tracker_id'];
+            $artifact_id             = $artifact_row['id'];
 
             if (
                 ! $this->planning_factory->isTrackerIdUsedInAPlanning($artifact_row_tracker_id)

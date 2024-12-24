@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHan
 use Tuleap\AgileDashboard\Artifact\HomeServiceRedirectionExtractor;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\Artifact\RedirectParameterInjector;
+use Tuleap\AgileDashboard\BacklogItem\SubBacklogItemProvider;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\CreateBacklogController;
@@ -508,8 +509,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $milestone          = $milestone_provider->getMilestone();
 
         if ($milestone) {
-            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
-                new Tracker_ArtifactDao(),
+            $provider = new SubBacklogItemProvider(
+                new Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
                 $this->getBacklogFactory(),
                 $this->getBacklogItemCollectionFactory(
                     $this->getMilestoneFactory(),
