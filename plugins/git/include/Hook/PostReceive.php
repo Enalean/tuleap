@@ -31,17 +31,18 @@ use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 use Tuleap\Queue\EnqueueTaskInterface;
+use Tuleap\User\RetrieveUserByUserName;
 
 /**
  * Central access point for things that needs to happen when post-receive is
  * executed
  */
-class PostReceive
+final readonly class PostReceive
 {
     public function __construct(
         private LogAnalyzer $log_analyzer,
         private GitRepositoryFactory $repository_factory,
-        private \UserManager $user_manager,
+        private RetrieveUserByUserName $user_manager,
         private Git_Ci_Launcher $ci_launcher,
         private ParseLog $parse_log,
         private \EventManager $event_manager,

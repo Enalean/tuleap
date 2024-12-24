@@ -18,76 +18,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Hook;
 
-use Mockery;
+use EventManager;
+use Git_Ci_Launcher;
+use GitRepository;
+use GitRepositoryFactory;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
 use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
 use Tuleap\Git\Tests\Stub\VerifyIsDefaultBranchStub;
 use Tuleap\Git\Webhook\WebhookRequestSender;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EnqueueTaskStub;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
+use Tuleap\User\RetrieveUserByUserName;
+use UserManager;
 
-final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostReceiveTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalLanguageMock;
 
     private const MASTER_REF_NAME = 'refs/heads/master';
     private const OLD_REV_SHA1    = 'd8f1e57';
     private const NEW_REV_SHA1    = '469eaa9';
     private const REPOSITORY_PATH = '/var/lib/tuleap/gitolite/repositories/garden/dev.git';
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface & LogAnalyzer
-     */
-    private $log_analyzer;
-    /**
-     * @var \GitRepositoryFactory & Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $git_repository_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface & \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \GitRepository & \PHPUnit\Framework\MockObject\Stub
-     */
-    private $repository;
-    /**
-     * @var \Git_Ci_Launcher & Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $ci_launcher;
-    private \PFUser $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface & ParseLog
-     */
-    private $parse_log;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&DefaultBranchPostReceiveUpdater
-     */
-    private $default_branch_post_receive_updater;
+    private LogAnalyzer&MockObject $log_analyzer;
+    private GitRepositoryFactory&MockObject $git_repository_factory;
+    private RetrieveUserByUserName $user_retriever;
+    private GitRepository $repository;
+    private Git_Ci_Launcher&MockObject $ci_launcher;
+    private PFUser $user;
+    private ParseLog&MockObject $parse_log;
+    private DefaultBranchPostReceiveUpdater&MockObject $default_branch_post_receive_updater;
     private VerifyIsDefaultBranchStub $default_branch_verifier;
     private EnqueueTaskStub $enqueuer;
 
     protected function setUp(): void
     {
-        $this->user                                = UserTestBuilder::buildWithDefaults();
-        $this->log_analyzer                        = \Mockery::spy(LogAnalyzer::class);
-        $this->git_repository_factory              = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->user_manager                        = \Mockery::spy(\UserManager::class);
-        $this->repository                          = $this->createStub(\GitRepository::class);
-        $this->ci_launcher                         = \Mockery::spy(\Git_Ci_Launcher::class);
-        $this->parse_log                           = \Mockery::spy(ParseLog::class);
+        $this->user                                = UserTestBuilder::aUser()->withUserName('john_doe')->build();
+        $this->log_analyzer                        = $this->createMock(LogAnalyzer::class);
+        $this->git_repository_factory              = $this->createMock(GitRepositoryFactory::class);
+        $this->user_retriever                      = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults());
+        $this->repository                          = $this->createStub(GitRepository::class);
+        $this->ci_launcher                         = $this->createMock(Git_Ci_Launcher::class);
+        $this->parse_log                           = $this->createMock(ParseLog::class);
         $this->default_branch_post_receive_updater = $this->createMock(DefaultBranchPostReceiveUpdater::class);
 
         $this->repository->method('getNotifiedMails')->willReturn([]);
         $this->repository->method('getId')->willReturn(300);
         $this->repository->method('getFullName')->willReturn('foamflower/newmarket');
-        $this->repository->method('getFullPath')->willReturn(
-            '/var/lib/tuleap/gitolite/repositories/foamflower/newmarket.git'
-        );
+        $this->repository->method('getFullPath')->willReturn('/var/lib/tuleap/gitolite/repositories/foamflower/newmarket.git');
         $project = ProjectTestBuilder::aProject()->build();
         $this->repository->method('getProject')->willReturn($project);
 
@@ -96,19 +84,25 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function executePostReceive(): void
     {
-        $post_receive = new PostReceive(
+        $event_manager          = $this->createMock(EventManager::class);
+        $mail_sender            = $this->createMock(PostReceiveMailSender::class);
+        $webhook_request_sender = $this->createMock(WebhookRequestSender::class);
+        $post_receive           = new PostReceive(
             $this->log_analyzer,
             $this->git_repository_factory,
-            $this->user_manager,
+            $this->user_retriever,
             $this->ci_launcher,
             $this->parse_log,
-            \Mockery::spy(\EventManager::class),
-            \Mockery::spy(WebhookRequestSender::class),
-            \Mockery::spy(PostReceiveMailSender::class),
+            $event_manager,
+            $webhook_request_sender,
+            $mail_sender,
             $this->createStub(DefaultBranchPostReceiveUpdater::class),
             new PushAnalyzer(VerifyIsDefaultBranchStub::withAlwaysDefaultBranch()),
             $this->enqueuer
         );
+        $event_manager->method('processEvent');
+        $webhook_request_sender->method('sendRequests');
+        $mail_sender->method('sendMail');
         $post_receive->execute(
             self::REPOSITORY_PATH,
             'john_doe',
@@ -120,79 +114,85 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetRepositoryFromFactory(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->with(
-            self::REPOSITORY_PATH
-        )->once();
+        $this->git_repository_factory->expects(self::once())->method('getFromFullPath')->with(self::REPOSITORY_PATH);
 
         $this->executePostReceive();
     }
 
     public function testItGetUserFromManager(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('john_doe')->once();
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithoutRevisions());
+        $this->expectNotToPerformAssertions();
+        $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
+        $this->log_analyzer->method('getPushDetails')->willReturn($this->getPushDetailsWithoutRevisions());
+        $this->ci_launcher->method('executeForRepository');
+        $this->parse_log->method('execute');
 
         $this->executePostReceive();
     }
 
     public function testItSkipsIfRepositoryIsNotKnown(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns(null);
+        $this->git_repository_factory->method('getFromFullPath')->willReturn(null);
 
-        $this->parse_log->shouldReceive('execute')->never();
+        $this->parse_log->expects(self::never())->method('execute');
         $this->executePostReceive();
     }
 
     public function testItFallsBackOnAnonymousIfUserIsNotKnown(): void
     {
         $this->expectNotToPerformAssertions();
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithoutRevisions());
+        $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
+        $this->log_analyzer->method('getPushDetails')->willReturn($this->getPushDetailsWithoutRevisions());
+        $this->ci_launcher->method('executeForRepository');
+        $this->parse_log->method('execute');
 
         $this->executePostReceive();
     }
 
     public function testItGetsPushDetailsFromLogAnalyzer(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
+        $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
+        $this->user_retriever = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$this->user]);
 
-        $this->log_analyzer->shouldReceive('getPushDetails')
-            ->with($this->repository, Mockery::any(), self::OLD_REV_SHA1, self::NEW_REV_SHA1, self::MASTER_REF_NAME)
-            ->once()
-            ->andReturns($this->getPushDetailsWithoutRevisions());
+        $this->log_analyzer->expects(self::once())->method('getPushDetails')
+            ->with($this->repository, self::anything(), self::OLD_REV_SHA1, self::NEW_REV_SHA1, self::MASTER_REF_NAME)
+            ->willReturn($this->getPushDetailsWithoutRevisions());
+        $this->ci_launcher->method('executeForRepository');
+        $this->parse_log->method('execute');
 
         $this->executePostReceive();
     }
 
     public function testItExecutesExtractOnEachCommit(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $push_details = $this->getPushDetailsWithNewRevision();
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($push_details);
+        $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
+        $this->user_retriever = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$this->user]);
+        $push_details         = $this->getPushDetailsWithNewRevision();
+        $this->log_analyzer->method('getPushDetails')->willReturn($push_details);
 
-        $this->parse_log->shouldReceive('execute')->with($push_details)->once();
+        $this->ci_launcher->method('executeForRepository');
+        $this->parse_log->expects(self::once())->method('execute')->with($push_details);
         $this->executePostReceive();
     }
 
     public function testItTriggersACiBuild(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
+        $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
+        $this->user_retriever = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$this->user]);
+        $this->log_analyzer->method('getPushDetails')->willReturn($this->getPushDetailsWithNewRevision());
 
-        $this->ci_launcher->shouldReceive('executeForRepository')->with($this->repository)->once();
+        $this->ci_launcher->expects(self::once())->method('executeForRepository')->with($this->repository);
+        $this->parse_log->method('execute');
         $this->executePostReceive();
     }
 
     public function testItDispatchesAnAsynchronousMessage(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
+        $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
+        $this->user_retriever = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$this->user]);
+        $this->log_analyzer->method('getPushDetails')->willReturn($this->getPushDetailsWithNewRevision());
+        $this->ci_launcher->method('executeForRepository');
+        $this->parse_log->method('execute');
 
         $this->executePostReceive();
 
@@ -228,10 +228,10 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_receive = new PostReceive(
             $this->createStub(LogAnalyzer::class),
             $this->git_repository_factory,
-            $this->createStub(\UserManager::class),
-            $this->createStub(\Git_Ci_Launcher::class),
+            $this->createStub(UserManager::class),
+            $this->createStub(Git_Ci_Launcher::class),
             $this->createStub(ParseLog::class),
-            $this->createStub(\EventManager::class),
+            $this->createStub(EventManager::class),
             $this->createStub(WebhookRequestSender::class),
             $this->createStub(PostReceiveMailSender::class),
             $this->default_branch_post_receive_updater,
@@ -243,7 +243,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatesDefaultBranch(): void
     {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
 
         $this->default_branch_post_receive_updater->expects(self::once())->method('updateDefaultBranchWhenNeeded');
 
