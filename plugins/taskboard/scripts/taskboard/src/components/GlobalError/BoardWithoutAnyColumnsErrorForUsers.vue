@@ -30,18 +30,6 @@
         </p>
     </section>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-@Component({
-    components: {
-        "board-without-any-columns-error-for-users-illustration": (): Promise<
-            Record<string, unknown>
-        > =>
-            import(
-                /* webpackChunkName: "taskboard-board-without-any-columns-error-for-users-illustration" */ "./BoardWithoutAnyColumnsErrorForUsersIllustration.vue"
-            ),
-    },
-})
-export default class BoardWithoutAnyColumnsErrorForUsers extends Vue {}
+<script setup lang="ts">
+import BoardWithoutAnyColumnsErrorForUsersIllustration from "./BoardWithoutAnyColumnsErrorForUsersIllustration.vue";
 </script>

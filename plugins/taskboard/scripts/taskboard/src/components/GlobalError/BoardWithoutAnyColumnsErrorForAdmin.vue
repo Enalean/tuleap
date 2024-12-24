@@ -34,22 +34,8 @@
         </a>
     </section>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
-@Component({
-    components: {
-        "board-without-any-columns-error-for-admin-illustration": (): Promise<
-            Record<string, unknown>
-        > =>
-            import(
-                /* webpackChunkName: "taskboard-board-without-any-columns-error-for-admin-illustration" */ "./BoardWithoutAnyColumnsErrorForAdminIllustration.vue"
-            ),
-    },
-})
-export default class BoardWithoutAnyColumnsErrorForAdmin extends Vue {
-    @State
-    readonly admin_url!: string;
-}
+<script setup lang="ts">
+import { useState } from "vuex-composition-helpers";
+import BoardWithoutAnyColumnsErrorForAdminIllustration from "./BoardWithoutAnyColumnsErrorForAdminIllustration.vue";
+const { admin_url } = useState(["admin_url"]);
 </script>

@@ -7,7 +7,7 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regu
   <div
     class="empty-state-illustration"
   >
-    <!---->
+    <board-without-any-columns-error-for-users-illustration-stub />
   </div>
    
   <h1
