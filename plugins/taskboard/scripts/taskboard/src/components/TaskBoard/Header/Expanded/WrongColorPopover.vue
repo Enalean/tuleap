@@ -33,13 +33,13 @@
         >
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <translate tag="h1" class="tlp-popover-title">
-                    Incompatible usage of color
-                </translate>
+                <span tag="h1" class="tlp-popover-title">
+                    {{ $gettext("Incompatible usage of color") }}
+                </span>
             </div>
             <div class="tlp-popover-body taskboard-header-wrong-color-body">
                 <p v-dompurify-html="legacy_palette_message"></p>
-                <p v-translate>Only colors from the new palette can be used.</p>
+                <p>{{ $gettext("Only colors from the new palette can be used.") }}</p>
                 <p v-dompurify-html="adjust_configuration_message"></p>
             </div>
         </section>

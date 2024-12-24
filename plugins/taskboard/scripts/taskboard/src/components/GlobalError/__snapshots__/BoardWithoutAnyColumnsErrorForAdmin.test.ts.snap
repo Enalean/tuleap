@@ -13,21 +13,17 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
   <h1
     class="empty-state-title"
   >
-    <translate-stub
-      tag="span"
-    >
-      This taskboard is not properly configured
-    </translate-stub>
+    
+        This taskboard is not properly configured
+    
   </h1>
    
   <p
     class="empty-state-text"
   >
-    <translate-stub
-      tag="span"
-    >
-      You have to configure the columns mapping.
-    </translate-stub>
+    
+        You have to configure the columns mapping.
+    
   </p>
    
   <a
@@ -38,12 +34,9 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
       aria-hidden="true"
       class="fas fa-long-arrow-alt-right tlp-button-icon"
     />
-     
-    <translate-stub
-      tag="span"
-    >
-      Define columns
-    </translate-stub>
+    
+        Define columns
+    
   </a>
 </section>
 `;

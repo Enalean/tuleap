@@ -13,11 +13,9 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       class="tlp-modal-title"
       id="taskboard-error-modal-title"
     >
-      <translate-stub
-        tag="span"
-      >
-        Oops, there's an issue
-      </translate-stub>
+      
+            Oops, there's an issue
+        
     </h1>
      
     <button
@@ -36,19 +34,12 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
   <div
     class="tlp-modal-body"
   >
-    <p
-      data-current-language="en_US"
-      data-msgid="It seems an action you tried to perform can't be done"
-    >
+    <p>
       It seems an action you tried to perform can't be done
     </p>
      
     <a
       class="taskboard-error-modal-link"
-      data-current-language="en_US"
-      data-msgid="
-                Show error details
-            "
       data-test="show-details"
     >
       
@@ -64,11 +55,7 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
   >
     <button
       class="tlp-button-danger tlp-button-outline tlp-modal-action"
-      data-current-language="en_US"
       data-dismiss="modal"
-      data-msgid="
-            Close
-        "
       type="button"
     >
       
@@ -84,12 +71,9 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
         aria-hidden="true"
         class="fas fa-sync tlp-button-icon"
       />
-       
-      <translate-stub
-        tag="span"
-      >
-        Reload the page
-      </translate-stub>
+      
+            Reload the page
+        
     </button>
   </div>
 </div>

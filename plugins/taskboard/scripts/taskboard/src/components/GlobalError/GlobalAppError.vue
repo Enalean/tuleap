@@ -25,20 +25,15 @@
         </div>
 
         <h1 class="empty-state-title">
-            <translate>Oops, there's an issue</translate>
+            {{ $gettext("Oops, there's an issue") }}
         </h1>
-        <p class="empty-state-text" v-translate>
-            It seems an action you tried to perform can't be done.
+        <p class="empty-state-text">
+            {{ $gettext("It seems an action you tried to perform can't be done.") }}
         </p>
         <template v-if="has_more_details">
             <p class="empty-state-text taskboard-error-link">
-                <a
-                    v-if="!is_more_shown"
-                    v-on:click="is_more_shown = true"
-                    data-test="show-details"
-                    v-translate
-                >
-                    Show error details
+                <a v-if="!is_more_shown" v-on:click="is_more_shown = true" data-test="show-details">
+                    {{ $gettext("Show error details") }}
                 </a>
             </p>
             <pre v-if="is_more_shown" class="taskboard-error-details" data-test="details">{{
@@ -47,7 +42,7 @@
         </template>
         <button type="button" class="tlp-button-primary empty-state-action" v-on:click="reloadPage">
             <i class="fas fa-sync tlp-button-icon" aria-hidden="true"></i>
-            <translate>Reload the page</translate>
+            {{ $gettext("Reload the page") }}
         </button>
     </section>
 </template>

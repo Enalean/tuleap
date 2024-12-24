@@ -28,7 +28,7 @@
             data-test="cancel"
         >
             <i class="fa fa-tlp-esc-key tlp-button-icon" aria-hidden="true"></i>
-            <translate>Cancel</translate>
+            {{ $gettext("Cancel") }}
         </button>
         <button
             type="button"
@@ -43,7 +43,7 @@
                 aria-hidden="true"
                 data-test="save-icon"
             ></i>
-            <translate>Save</translate>
+            {{ $gettext("Save") }}
         </button>
     </div>
 </template>

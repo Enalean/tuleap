@@ -21,8 +21,8 @@
     <div class="taskboard-drop-not-accepted-overlay">
         <div class="taskboard-drop-not-accepted-overlay-content">
             <i class="fa fa-ban taskboard-drop-not-accepted-icon" aria-hidden="true"></i>
-            <p data-test="overlay-error-message" v-if="!isColumnCollapsed" v-translate>
-                This column does not allow to drop this card here.
+            <p data-test="overlay-error-message" v-if="!isColumnCollapsed">
+                {{ $gettext("This column does not allow to drop this card here.") }}
             </p>
         </div>
     </div>
