@@ -18,12 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Artifact;
 
 use PFUser;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
@@ -32,65 +35,18 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class AdditionalArtifactActionBuilder
+final readonly class AdditionalArtifactActionBuilder
 {
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var PlanningPermissionsManager
-     */
-    private $planning_permissions_manager;
-
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
-
-    /**
-     * @var JavascriptAssetGeneric
-     */
-    private $include_assets;
-
-    /**
-     * @var PlanningTrackerBacklogChecker
-     */
-    private $planning_tracker_backlog_checker;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
     public function __construct(
-        ExplicitBacklogDao $explicit_backlog_dao,
-        PlanningFactory $planning_factory,
-        PlanningPermissionsManager $planning_permissions_manager,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlannedArtifactDao $planned_artifact_dao,
-        JavascriptAssetGeneric $include_assets,
-        PlanningTrackerBacklogChecker $planning_tracker_backlog_checker,
-        EventDispatcherInterface $event_dispatcher,
+        private ExplicitBacklogDao $explicit_backlog_dao,
+        private PlanningFactory $planning_factory,
+        private PlanningPermissionsManager $planning_permissions_manager,
+        private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private PlannedArtifactDao $planned_artifact_dao,
+        private JavascriptAssetGeneric $include_assets,
+        private PlanningTrackerBacklogChecker $planning_tracker_backlog_checker,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
-        $this->explicit_backlog_dao              = $explicit_backlog_dao;
-        $this->planning_factory                  = $planning_factory;
-        $this->planning_permissions_manager      = $planning_permissions_manager;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->planned_artifact_dao              = $planned_artifact_dao;
-        $this->include_assets                    = $include_assets;
-        $this->planning_tracker_backlog_checker  = $planning_tracker_backlog_checker;
-        $this->event_dispatcher                  = $event_dispatcher;
     }
 
     public function buildArtifactAction(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
@@ -99,13 +55,13 @@ class AdditionalArtifactActionBuilder
         $project = $tracker->getProject();
 
         $project_id  = (int) $project->getID();
-        $artifact_id = (int) $artifact->getId();
+        $artifact_id = $artifact->getId();
 
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
             return null;
         }
 
-        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($project);
+        $block_scrum_access = new BlockScrumAccess($project);
         $this->event_dispatcher->dispatch($block_scrum_access);
         if (! $block_scrum_access->isScrumAccessEnabled()) {
             return null;
