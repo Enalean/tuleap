@@ -23,20 +23,12 @@
         <div class="empty-state-illustration">
             <no-content-empty-state-illustration />
         </div>
-        <h1 class="empty-state-title" v-translate>This taskboard is empty</h1>
+        <h1 class="empty-state-title">
+            {{ $gettext("This taskboard is empty") }}
+        </h1>
     </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-@Component({
-    components: {
-        "no-content-empty-state-illustration": (): Promise<Record<string, unknown>> =>
-            import(
-                /* webpackChunkName: "taskboard-no-content-empty-state-illustration" */ "./NoContentEmptyStateIllustration.vue"
-            ),
-    },
-})
-export default class NoContentEmptyState extends Vue {}
+<script setup lang="ts">
+import NoContentEmptyStateIllustration from "./NoContentEmptyStateIllustration.vue";
 </script>
