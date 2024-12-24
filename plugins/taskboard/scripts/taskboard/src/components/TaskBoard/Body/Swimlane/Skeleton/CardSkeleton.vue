@@ -18,6 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="tlp-card tlp-skeleton-card taskboard-card-skeleton"></div>
 </template>
+<script setup lang="ts"></script>
