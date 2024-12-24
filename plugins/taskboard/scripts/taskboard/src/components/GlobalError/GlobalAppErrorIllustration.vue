@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="360"
@@ -88,10 +88,4 @@
     </svg>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-
-@Component
-export default class GlobalAppErrorIllustration extends Vue {}
-</script>
+<script setup lang="ts"></script>
