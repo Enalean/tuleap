@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Artifact;
 
 use Tuleap\DB\DataAccessObject;
@@ -42,7 +44,10 @@ class PlannedArtifactDao extends DataAccessObject
         return count($rows) > 0;
     }
 
-    public function gatAllPlannedArtifactsOfTheProject(int $project_id, int $tracker_id)
+    /**
+     * @return list<array{artifact_id: int}>
+     */
+    public function gatAllPlannedArtifactsOfTheProject(int $project_id, int $tracker_id): array
     {
         $sql = "SELECT DISTINCT artlink.artifact_id
                 FROM tracker_changeset_value_artifactlink AS artlink

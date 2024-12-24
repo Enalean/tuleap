@@ -128,9 +128,9 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
         return $this->project;
     }
 
-    public function getGroupId()
+    public function getGroupId(): int
     {
-        return $this->project->getID();
+        return (int) $this->project->getID();
     }
 
     public function hasAncestors()

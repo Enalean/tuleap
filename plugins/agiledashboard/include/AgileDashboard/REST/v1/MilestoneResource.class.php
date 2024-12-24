@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
@@ -41,6 +40,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
+use Tuleap\AgileDashboard\BacklogItem\AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;

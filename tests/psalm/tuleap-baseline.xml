@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/Artifact/PlannedArtifactDao.php">
-    <MissingReturnType>
-      <code><![CDATA[gatAllPlannedArtifactsOfTheProject]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItem/PaginatedBacklogItemsRepresentations.class.php">
-    <MissingParamType>
-      <code><![CDATA[$total_size]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getBacklogItemsRepresentations]]></code>
-      <code><![CDATA[getTotalSize]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItem/PaginatedBacklogItemsRepresentationsBuilder.class.php">
-    <MissingParamType>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getMilestoneBacklogItems]]></code>
-    </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $milestone->getGroupId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItem/SubBacklogItemDao.class.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -2271,11 +2243,7 @@
     <InvalidNullableReturnType>
       <code><![CDATA[getArtifact]]></code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->project->getID()]]></code>
-    </InvalidReturnStatement>
     <InvalidReturnType>
-      <code><![CDATA[getGroupId]]></code>
       <code><![CDATA[getLinkedArtifacts]]></code>
       <code><![CDATA[getPlannedArtifacts]]></code>
     </InvalidReturnType>
