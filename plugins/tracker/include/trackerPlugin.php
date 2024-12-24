@@ -51,6 +51,8 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -211,6 +213,7 @@ use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
+use Tuleap\Tracker\Hierarchy\HierarchyHistoryEntry;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
@@ -348,7 +351,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook('codendi_daily_start', 'codendi_daily_start');
-        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents');
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
@@ -1173,14 +1175,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $trackerManager->sendDateReminder();
     }
 
-    /**
-     * Fill the list of subEvents related to tracker in the project history interface
-     *
-     * @param Array $params Hook params
-     *
-     * @return Void
-     */
-    public function fillProjectHistorySubEvents($params)
+    #[ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents(array $params): void
     {
         array_push(
             $params['subEvents']['event_others'],
@@ -1191,7 +1187,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             Tracker_FormElement::PROJECT_HISTORY_UPDATE,
             ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED,
             MarkTrackerAsDeletedController::PROJECT_HISTORY_TRACKER_DELETION_KEY,
-            \Tuleap\Tracker\Hierarchy\HierarchyController::TRACKER_HIERARCHY_UPDATE
+            HierarchyHistoryEntry::HierarchyUpdate->value
         );
     }
 
@@ -1207,12 +1203,31 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             );
         }
 
-        if ($event->getKey() === \Tuleap\Tracker\Hierarchy\HierarchyController::TRACKER_HIERARCHY_UPDATE) {
+        if ($event->getKey() === 'tracker_hierarchy_update') {
             $event->setLabel(
                 dgettext(
                     'tuleap-tracker',
                     'Hierarchy updated',
                 ),
+            );
+        }
+
+        $history_entry = HierarchyHistoryEntry::tryFrom($event->getKey());
+
+        if ($history_entry) {
+            $event->setLabel(
+                $history_entry->getLabel($event->parameters)
+            );
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event): void
+    {
+        $history_entry = HierarchyHistoryEntry::tryFrom($event->getKey());
+        if ($history_entry) {
+            $event->setValue(
+                $history_entry->getValue($event->getParameters())
             );
         }
     }

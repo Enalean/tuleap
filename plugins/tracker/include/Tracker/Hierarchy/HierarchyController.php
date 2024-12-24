@@ -38,8 +38,6 @@ class HierarchyController
 {
     private TemplateRenderer $renderer;
 
-    public const TRACKER_HIERARCHY_UPDATE = 'tracker_hierarchy_update';
-
     public function __construct(
         private Codendi_Request $request,
         private Tracker_Hierarchy_HierarchicalTracker $tracker,
@@ -152,29 +150,20 @@ class HierarchyController
             $current_hierarchy[] = $child->getId();
         }
 
-        $children = implode(',', array_values($children));
-        if ($children === '') {
-            $children = dgettext('tuleap-tracker', 'empty children list');
-        }
-
+        $children          = implode(',', array_values($children));
         $current_hierarchy = implode(',', $current_hierarchy);
-        if ($current_hierarchy === '') {
-            $current_hierarchy = dgettext('tuleap-tracker', 'empty previous hierarchy');
-        }
-
-        $history_value = sprintf(
-            dgettext('tuleap-tracker', 'Tracker #%d new children: %s (previous children: %s)'),
-            $this->tracker->getId(),
-            $children,
-            $current_hierarchy
-        );
 
         $this->project_history_dao->addHistory(
             $this->tracker->getProject(),
             $user,
             new \DateTimeImmutable(),
-            self::TRACKER_HIERARCHY_UPDATE,
-            $history_value
+            HierarchyHistoryEntry::HierarchyUpdate->value,
+            '',
+            [
+                $this->tracker->getId(),
+                $children,
+                $current_hierarchy,
+            ]
         );
         $this->redirectToAdminHierarchy();
     }
