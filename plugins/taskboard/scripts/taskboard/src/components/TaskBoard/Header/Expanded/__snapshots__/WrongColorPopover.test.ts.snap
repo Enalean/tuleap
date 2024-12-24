@@ -24,14 +24,14 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
     <div
       class="tlp-popover-header"
     >
-      <translate-stub
+      <span
         class="tlp-popover-title"
         tag="h1"
       >
         
                 Incompatible usage of color
             
-      </translate-stub>
+      </span>
     </div>
      
     <div
@@ -55,10 +55,7 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
         ) from the legacy palette.
       </p>
        
-      <p
-        data-current-language="en_US"
-        data-msgid="Only colors from the new palette can be used."
-      >
+      <p>
         Only colors from the new palette can be used.
       </p>
        

@@ -13,10 +13,6 @@ exports[`CellDisallowsDropOverlay displays div with an icon and an error message
     />
      
     <p
-      data-current-language="en_US"
-      data-msgid="
-            This column does not allow to drop this card here.
-        "
       data-test="overlay-error-message"
     >
       

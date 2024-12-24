@@ -23,12 +23,10 @@
             <board-without-any-columns-error-for-users-illustration />
         </div>
         <h1 class="empty-state-title">
-            <translate>This taskboard is not ready to be used</translate>
+            {{ $gettext("This taskboard is not ready to be used") }}
         </h1>
         <p class="empty-state-text">
-            <translate>
-                Your project administrator needs to finish the planning configuration.
-            </translate>
+            {{ $gettext("Your project administrator needs to finish the planning configuration.") }}
         </p>
     </section>
 </template>

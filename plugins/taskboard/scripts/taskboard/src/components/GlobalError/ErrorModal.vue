@@ -25,7 +25,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="taskboard-error-modal-title">
-                <translate>Oops, there's an issue</translate>
+                {{ $gettext("Oops, there's an issue") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -37,23 +37,19 @@
             </button>
         </div>
         <div class="tlp-modal-body">
-            <p v-translate>It seems an action you tried to perform can't be done</p>
+            <p>{{ $gettext("It seems an action you tried to perform can't be done") }}</p>
             <template v-if="has_more_details">
                 <a
                     v-if="!is_more_shown"
                     class="taskboard-error-modal-link"
                     v-on:click="is_more_shown = true"
                     data-test="show-details"
-                    v-translate
                 >
-                    Show error details
+                    {{ $gettext("Show error details") }}
                 </a>
-                <pre
-                    class="taskboard-error-modal-message"
-                    v-if="is_more_shown"
-                    data-test="details"
-                    >{{ modal_error_message }}</pre
-                >
+                <pre class="taskboard-error-modal-message" v-if="is_more_shown" data-test="details">
+                  {{ modal_error_message }}
+                </pre>
             </template>
         </div>
         <div class="tlp-modal-footer">
@@ -61,9 +57,8 @@
                 type="button"
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
-                v-translate
             >
-                Close
+                {{ $gettext("Close") }}
             </button>
             <button
                 type="button"
@@ -71,7 +66,7 @@
                 v-on:click="reloadPage"
             >
                 <i class="fas fa-sync tlp-button-icon" aria-hidden="true"></i>
-                <translate>Reload the page</translate>
+                {{ $gettext("Reload the page") }}
             </button>
         </div>
     </div>

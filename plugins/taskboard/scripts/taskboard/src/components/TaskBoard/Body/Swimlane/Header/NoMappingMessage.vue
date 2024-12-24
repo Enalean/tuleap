@@ -22,9 +22,7 @@
     <p class="tlp-text-warning taskboard-no-mapping">
         <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
         <span v-dompurify-html="message"></span>
-        <translate>
-            Please edit the card to change the status, or add children if possible.
-        </translate>
+        {{ $gettext("Please edit the card to change the status, or add children if possible.") }}
     </p>
 </template>
 

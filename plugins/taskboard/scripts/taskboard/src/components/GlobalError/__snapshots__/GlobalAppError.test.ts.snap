@@ -13,19 +13,13 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
   <h1
     class="empty-state-title"
   >
-    <translate-stub
-      tag="span"
-    >
-      Oops, there's an issue
-    </translate-stub>
+    
+        Oops, there's an issue
+    
   </h1>
    
   <p
     class="empty-state-text"
-    data-current-language="en_US"
-    data-msgid="
-        It seems an action you tried to perform can't be done.
-    "
   >
     
         It seems an action you tried to perform can't be done.
@@ -36,10 +30,6 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
     class="empty-state-text taskboard-error-link"
   >
     <a
-      data-current-language="en_US"
-      data-msgid="
-                Show error details
-            "
       data-test="show-details"
     >
       
@@ -58,12 +48,9 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
       aria-hidden="true"
       class="fas fa-sync tlp-button-icon"
     />
-     
-    <translate-stub
-      tag="span"
-    >
-      Reload the page
-    </translate-stub>
+    
+        Reload the page
+    
   </button>
 </section>
 `;
