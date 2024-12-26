@@ -21,18 +21,31 @@
 <template>
     <select
         class="tlp-select"
-        v-model="field_value"
+        v-on:change="onChange"
         v-bind:disabled="disabled"
         required
         data-test="select-date"
     >
-        <option data-test-type="placeholder" v-bind:value="null" disabled>
+        <option
+            data-test-type="placeholder"
+            v-bind:value="null"
+            disabled
+            v-bind:selected="input_value === null"
+        >
             {{ $gettext("Please choose") }}
         </option>
-        <option data-test-type="clear" v-bind:value="DATE_FIELD_VALUE.CLEAR">
+        <option
+            data-test-type="clear"
+            v-bind:value="DATE_FIELD_VALUE.CLEAR"
+            v-bind:selected="input_value === DATE_FIELD_VALUE.CLEAR"
+        >
             {{ $gettext("Clear") }}
         </option>
-        <option data-test-type="current" v-bind:value="DATE_FIELD_VALUE.CURRENT">
+        <option
+            data-test-type="current"
+            v-bind:value="DATE_FIELD_VALUE.CURRENT"
+            v-bind:selected="input_value === DATE_FIELD_VALUE.CURRENT"
+        >
             {{ $gettext("Current time") }}
         </option>
     </select>
@@ -43,7 +56,7 @@ import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
 export default {
     name: "DateInput",
     props: {
-        value: {
+        input_value: {
             type: String,
         },
         disabled: {
@@ -56,13 +69,13 @@ export default {
         };
     },
     computed: {
-        field_value: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit("input", value);
-            },
+        field_value() {
+            return this.value;
+        },
+    },
+    methods: {
+        onChange(event) {
+            this.$emit("change", event.target.value);
         },
     },
 };

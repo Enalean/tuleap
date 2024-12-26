@@ -23,7 +23,7 @@
         class="tlp-input"
         type="number"
         step="any"
-        v-bind:value="value"
+        v-bind:value="input_value"
         v-on:input="onInput"
         v-bind:disabled="disabled"
         required
@@ -34,7 +34,7 @@
 export default {
     name: "FloatInput",
     props: {
-        value: {
+        input_value: {
             type: Number,
         },
         disabled: {

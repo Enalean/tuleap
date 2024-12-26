@@ -30,11 +30,13 @@
                 class="tlp-select"
                 data-test-type="field"
                 data-test="field"
-                v-model="post_action_field"
+                v-on:change="updatePostActionField"
                 required
                 v-bind:disabled="is_modal_save_running"
             >
-                <option v-bind:value="null" disabled>{{ $gettext("Please choose") }}</option>
+                <option v-bind:value="null" disabled v-bind:selected="post_action_field === null">
+                    {{ $gettext("Please choose") }}
+                </option>
                 <optgroup
                     v-for="group in available_fields_by_groups"
                     v-bind:key="group.label"
@@ -44,9 +46,13 @@
                     <option
                         v-for="field in group.fields"
                         v-bind:key="field.field_id"
-                        v-bind:value="field"
+                        v-bind:value="field.field_id"
                         v-bind:disabled="field.disabled && field !== post_action_field"
                         v-bind:data-test-type="`field_${field.field_id}`"
+                        v-bind:selected="
+                            post_action_field !== null &&
+                            field.field_id === post_action_field.field_id
+                        "
                     >
                         {{ field.label }}
                     </option>
@@ -62,8 +68,10 @@
             <component
                 v-bind:is="value_input_component"
                 v-bind:id="value_input_id"
-                v-model="value"
+                v-on:input="updateValue"
+                v-on:change="updateValue"
                 v-bind:disabled="is_modal_save_running"
+                v-bind:input_value="value"
             />
         </div>
     </post-action>
@@ -80,7 +88,7 @@ import PlaceholderInput from "./PlaceholderInput.vue";
 
 export default {
     name: "SetValueAction",
-    components: { PostAction, DateInput, FloatInput, IntInput },
+    components: { PlaceholderInput, PostAction, DateInput, FloatInput, IntInput },
     props: {
         post_action: {
             type: Object,
@@ -128,41 +136,43 @@ export default {
             }
             return PlaceholderInput;
         },
-        post_action_field: {
-            get() {
-                if (!this.post_action.field_id) {
-                    return null;
-                }
-                const matching_fields = this.available_fields.filter(
-                    (field) => field.field_id === this.post_action.field_id,
-                );
-                if (matching_fields.length === 0) {
-                    return null;
-                }
-                return matching_fields[0];
-            },
-            set(new_field) {
-                this.$store.commit("transitionModal/updateSetValuePostActionField", {
-                    post_action: this.post_action,
-                    new_field,
-                });
-            },
+        post_action_field() {
+            if (!this.post_action.field_id) {
+                return null;
+            }
+            const matching_fields = this.available_fields.filter(
+                (field) => field.field_id === this.post_action.field_id,
+            );
+            if (matching_fields.length === 0) {
+                return null;
+            }
+            return matching_fields[0];
         },
-        value: {
-            get() {
-                return this.post_action.value;
-            },
-            set(value) {
-                this.$store.commit("transitionModal/updateSetValuePostActionValue", {
-                    post_action: this.post_action,
-                    value,
-                });
-            },
+        value() {
+            return this.post_action.value;
         },
     },
     methods: {
         getAvailableFieldsOfType(type) {
             return this.available_fields.filter((field) => field.type === type);
+        },
+        updatePostActionField(event) {
+            const field = this.available_fields.filter(
+                (field) => field.field_id === parseInt(event.target.value, 10),
+            );
+            if (field.length === 0) {
+                throw new Error("Can not update postActionField, field is not found");
+            }
+            this.$store.commit("transitionModal/updateSetValuePostActionField", {
+                post_action: this.post_action,
+                new_field: field[0],
+            });
+        },
+        updateValue(event) {
+            this.$store.commit("transitionModal/updateSetValuePostActionValue", {
+                post_action: this.post_action,
+                value: event,
+            });
         },
     },
 };

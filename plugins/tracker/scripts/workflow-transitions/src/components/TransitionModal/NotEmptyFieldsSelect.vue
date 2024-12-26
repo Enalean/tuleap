@@ -25,7 +25,7 @@
         <select
             id="workflow-configuration-not-empty-fields"
             multiple
-            v-model="not_empty_field_ids"
+            v-on:change="updateNotEmptyFields"
             v-bind:disabled="is_modal_save_running"
             data-test="not-empty-field-select"
             ref="workflow_configuration_not_empty_fields"
@@ -34,6 +34,7 @@
                 v-for="field in writable_fields"
                 v-bind:key="field.field_id"
                 v-bind:value="field.field_id"
+                v-bind:selected="not_empty_field_ids.includes(field.field_id)"
             >
                 {{ field.label }}
             </option>
@@ -72,17 +73,12 @@ export default defineComponent({
                     .sort((field1, field2) => compare(field1.label, field2.label));
             },
         }),
-        not_empty_field_ids: {
-            get() {
-                if (this.current_transition) {
-                    return this.current_transition.not_empty_field_ids;
-                }
+        not_empty_field_ids() {
+            if (this.current_transition) {
+                return this.current_transition.not_empty_field_ids;
+            }
 
-                return [];
-            },
-            set(value) {
-                this.$store.commit("transitionModal/updateNotEmptyFieldIds", value);
-            },
+            return [];
         },
     },
     mounted() {
@@ -95,8 +91,21 @@ export default defineComponent({
             },
         );
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.not_empty_fields_list_picker.destroy();
+    },
+    methods: {
+        updateNotEmptyFields(event) {
+            const select = event.target;
+            const selected_option = Array.from(select.options).filter((option) => {
+                return option.selected;
+            });
+            const values = selected_option.map((option) => {
+                return option.value;
+            });
+
+            this.$store.commit("transitionModal/updateNotEmptyFieldIds", values);
+        },
     },
 });
 </script>

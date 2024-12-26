@@ -27,9 +27,10 @@
                 id="workflow-configuration-not-empty-comment"
                 type="checkbox"
                 name="transition-comment-not-empty"
-                v-model="transition_comment_not_empty"
+                v-on:change="updateNotEmpty"
                 v-bind:disabled="is_modal_save_running"
                 data-test="not-empty-comment-checkbox"
+                v-bind:checked="transition_comment_not_empty"
             />
             <span>{{ $gettext("Comment must not be empty") }}</span>
         </label>
@@ -46,16 +47,18 @@ export default defineComponent({
     computed: {
         ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
         ...mapGetters("transitionModal", ["is_transition_from_new_artifact"]),
-        transition_comment_not_empty: {
-            get() {
-                if (!this.current_transition) {
-                    return false;
-                }
-                return this.current_transition.is_comment_required;
-            },
-            set(value) {
-                this.$store.commit("transitionModal/updateIsCommentRequired", value);
-            },
+        transition_comment_not_empty() {
+            if (!this.current_transition) {
+                return false;
+            }
+            return this.current_transition.is_comment_required;
+        },
+    },
+    methods: {
+        updateNotEmpty(event) {
+            const checkbox = event.target;
+
+            this.$store.commit("transitionModal/updateIsCommentRequired", checkbox.checked);
         },
     },
 });

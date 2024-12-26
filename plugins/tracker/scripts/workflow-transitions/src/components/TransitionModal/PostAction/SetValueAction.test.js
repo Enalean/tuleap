@@ -122,7 +122,7 @@ describe("SetValueAction", () => {
         });
 
         it("shows post action value", () => {
-            expect(wrapper.findComponent(DateInput).props().value).toBe("current");
+            expect(wrapper.findComponent(DateInput).props().input_value).toBe("current");
         });
     });
 
@@ -137,7 +137,7 @@ describe("SetValueAction", () => {
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toBe(int_field);
-            expect(wrapper.findComponent(IntInput).props().value).toBe(200);
+            expect(wrapper.findComponent(IntInput).props().input_value).toBe(200);
         });
     });
 
@@ -152,7 +152,7 @@ describe("SetValueAction", () => {
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toBe(float_field);
-            expect(wrapper.findComponent(FloatInput).props().value).toBe(12.34);
+            expect(wrapper.findComponent(FloatInput).props().input_value).toBe(12.34);
         });
     });
 });
