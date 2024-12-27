@@ -18,18 +18,18 @@
  */
 
 describe("Git", function () {
-    let now: number;
+    const now = Date.now();
+    const git_project_name = `git-project-${now}`;
     before(() => {
         cy.projectAdministratorSession();
-        now = Date.now();
-        cy.createNewPublicProject(`git-project-${now}`, "agile_alm");
-        cy.getProjectId(`git-project-${now}`).as("project_id");
+        cy.createNewPublicProject(git_project_name, "agile_alm");
+        cy.getProjectId(git_project_name).as("project_id");
         cy.createNewPublicProject(`gnotif-${now}`, "agile_alm");
     });
 
     context("Project administrators", function () {
         const visitGitService = (): void => {
-            cy.visit(`/plugins/git/git-project-${now}/`);
+            cy.visit(`/plugins/git/${git_project_name}/`);
         };
 
         it("can access to admin section", function () {
@@ -38,6 +38,59 @@ describe("Git", function () {
         });
 
         context("Git repository list", function () {
+            it("can add widget in project and user dashboards", function () {
+                cy.projectAdministratorSession();
+                cy.visit(`/projects/git-dashboard/`);
+
+                cy.log(
+                    "Push some content inside repository to be sure that last commit can be displayed",
+                );
+                const uri = encodeURI(
+                    "https://ProjectAdministrator:Correct Horse Battery Staple@tuleap/plugins/git/git-dashboard/Aquali.git",
+                );
+                const command = `cd /tmp &&
+                git -c http.sslVerify=false clone ${uri} Aquali${now} &&
+                cd /tmp/Aquali${now} &&
+                git config user.name "admin" &&
+                git config user.email "admin@example.com" &&
+                echo aa >> README &&
+                git add . &&
+                git commit -m 'test commit' &&
+                git -c http.sslVerify=false push`;
+                cy.exec(command);
+
+                cy.log("Add widget to project dashboard");
+                cy.visit(`projects/git-dashboard`);
+                cy.get("[data-test=dashboard-add-button]").click();
+                cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+                cy.get("[data-test=dashboard-add-button-submit]").click();
+                cy.get("[data-test=dashboard-configuration-button]").click();
+                cy.get("[data-test=dashboard-add-widget-button]").click();
+                cy.get("[data-test=plugin_git_project_pushes]").click();
+                cy.get("[data-test=dashboard-add-widget-button-submit]").click();
+                cy.log("Check that graph is rendered as an image");
+                cy.get("[data-test=plugin_git_project_pushes]")
+                    .find("img")
+                    .should("be.visible")
+                    .and(($img) => {
+                        expect($img[0].naturalWidth).to.be.greaterThan(0);
+                    });
+
+                cy.log("Add widget to user dashboard");
+                cy.visit(`my`);
+                cy.get("[data-test=dashboard-add-button]").click();
+                cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+                cy.get("[data-test=dashboard-add-button-submit]").click();
+                cy.get("[data-test=dashboard-configuration-button]").click();
+                cy.get("[data-test=dashboard-add-widget-button]").click();
+                cy.get("[data-test=plugin_git_user_pushes]").last().click();
+                cy.get("[data-test=dashboard-add-widget-button-submit]").click();
+                cy.get("[data-test=widget-last-git-pushes-project]").contains("Aquali");
+                // Note: force true is required for test re-playability
+                // Even if I'm in a dedicated dashboard, the expand/collapse of widget is stored globally
+                cy.get("[data-test=commit-direct-link]").first().click({ force: true });
+                cy.url().should("include", "/plugins/git/git-dashboard/Aquali");
+            });
             it("can create a new repository and delete it", function () {
                 cy.projectAdministratorSession();
                 visitGitService();
@@ -80,6 +133,7 @@ describe("Git", function () {
                     },
                     "Timed out while checking if the git repository can be deleted",
                 );
+
                 cy.get("[data-test=confirm-repository-deletion-button]").click();
                 cy.get("[data-test=deletion-confirmation-button]").click();
 
