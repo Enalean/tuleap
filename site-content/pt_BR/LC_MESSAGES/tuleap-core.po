@@ -240,9 +240,6 @@ msgstr ""
 "atual de acesso não mudará o status deles, os mesmos devem ser ajustados "
 "manualmente.</p>"
 
-msgid "<i>Disabled</i>"
-msgstr "<i>Desabilitado</i>"
-
 msgid ""
 "<p>An outbound HTTP request has been filtered in the last 24 hours in order "
 "to prevent a possible Server Side Request Forgery (SSRF) attack. You might "
@@ -1170,9 +1167,6 @@ msgstr "Excluir grupo de usuários"
 msgid "Delete widget"
 msgstr "Excluir widget"
 
-msgid "Delete?"
-msgstr "Excluir?"
-
 msgid "Deleted"
 msgstr "Excluído"
 
@@ -1198,6 +1192,9 @@ msgid "Didn't get a confirmation email? Check your spam folder."
 msgstr ""
 "Não recebeu um email de confirmação? Verique sua pasta de lixo eletrônico "
 "(spam)"
+
+msgid "Disabled"
+msgstr "Desabilitado"
 
 msgid "Disallow for all projects"
 msgstr "Desautorizar em todos os projetos"
