@@ -43,7 +43,7 @@ final class LocalSettingsPersistToPHPFile implements LocalSettingsPersist
             \Psl\File\write(
                 $path,
                 $this->renderer->renderToString('local-settings-tuleap-php', $representation),
-                WriteMode::TRUNCATE
+                WriteMode::Truncate
             );
         } catch (\RuntimeException $ex) {
             throw new CannotPersistLocalSettings(sprintf('Cannot write the LocalSettings to %s', $path), $ex);

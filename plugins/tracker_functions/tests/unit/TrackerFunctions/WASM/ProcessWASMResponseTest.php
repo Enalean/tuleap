@@ -60,9 +60,11 @@ final class ProcessWASMResponseTest extends TestCase
         $value           = new ArtifactValuesRepresentation();
         $value->field_id = 254;
         $value->value    = 'Hello!';
-        $result          = $this->processor->processResponse(Result::ok(psl_json_encode(
+        /** @psalm-var string $encoded_response */
+        $encoded_response = psl_json_encode(
             new WASMResponseRepresentation([$value], new NewChangesetCommentRepresentation('My comment', 'text'))
-        )));
+        );
+        $result           = $this->processor->processResponse(Result::ok($encoded_response));
         self::assertTrue(Result::isOk($result));
     }
 }

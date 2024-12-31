@@ -61,7 +61,7 @@ final class PasskeyStub
             'origin' => $this->relying_party,
         ]));
 
-        $relying_party_id_hash = hex2bin(\Psl\Hash\hash(parse_url($this->relying_party)['host'] ?? 'example.com', Algorithm::SHA256));
+        $relying_party_id_hash = hex2bin(\Psl\Hash\hash(parse_url($this->relying_party)['host'] ?? 'example.com', Algorithm::Sha256));
         $flags                 = hex2bin((string) 0b01000101);
         $sign_count            = '0000';
 
@@ -106,7 +106,7 @@ final class PasskeyStub
             'challenge' => Base64UrlSafe::encodeUnpadded($crypted_challenge),
             'origin' => $this->relying_party,
         ]));
-        $relying_party_id_hash = hex2bin(\Psl\Hash\hash(parse_url($this->relying_party)['host'] ?? 'example.com', Algorithm::SHA256));
+        $relying_party_id_hash = hex2bin(\Psl\Hash\hash(parse_url($this->relying_party)['host'] ?? 'example.com', Algorithm::Sha256));
         $flags                 = (string) 0b0000101;
         $sign_count            = '0000';
         // see https://www.w3.org/TR/webauthn-2/#authenticator-data
