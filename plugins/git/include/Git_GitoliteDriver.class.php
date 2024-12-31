@@ -283,19 +283,14 @@ class Git_GitoliteDriver
         return $ok;
     }
 
-    public function delete($path)
+    public function delete(string $path): void
     {
         if (empty($path) || ! is_writable($path)) {
             throw new GitDriverErrorException('Empty path or permission denied ' . $path);
         }
-        $rcode = 0;
         $this->logger->debug('Removing physically the repository...');
-        $output = system('rm -fr ' . escapeshellarg($path), $rcode);
-        if ($rcode != 0) {
-            throw new GitDriverErrorException('Unable to delete path ' . $path);
-        }
+        \Psl\Filesystem\delete_directory($path, true);
         $this->logger->debug('Removing physically the repository: done');
-        return true;
     }
 
     public function fork($repo, $old_ns, $new_ns)

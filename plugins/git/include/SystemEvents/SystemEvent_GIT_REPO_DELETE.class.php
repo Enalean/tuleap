@@ -88,10 +88,10 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
             return false;
         }
 
-        return $this->deleteRepo($repository, $projectId, $parameters);
+        return $this->deleteRepo($repository);
     }
 
-    private function deleteRepo(GitRepository $repository)
+    private function deleteRepo(GitRepository $repository): bool
     {
         $path = $repository->getPath();
 
@@ -103,6 +103,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
             $repository->delete();
         } catch (Exception $e) {
             $this->error($e->getMessage());
+            $this->logger->error('Error while deleting repository ' . $path, ['exception' => $e]);
             return false;
         }
         $this->done();
