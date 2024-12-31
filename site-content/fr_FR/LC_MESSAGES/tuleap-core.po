@@ -1214,9 +1214,6 @@ msgstr ""
 "Vous n'avez pas reçu d'e-mail de confirmation ? Vérifiez votre dossier de "
 "courriers indésirables."
 
-msgid "Disabled"
-msgstr "Inactif"
-
 msgid "Disallow for all projects"
 msgstr "Restreindre pour tous les projets"
 
@@ -1295,8 +1292,8 @@ msgid "Editing reference patterns"
 msgstr "Éditer les modèles de référence"
 
 #, php-format
-msgid "Editing reference patterns for <b>%s</b>"
-msgstr "Edition des modèles de référence de <b>%s</b>"
+msgid "Editing reference patterns for %s"
+msgstr "Edition des modèles de référence de %s"
 
 msgid "Editing system reference patterns"
 msgstr "Éditer les modèles de référence système"
@@ -1444,8 +1441,8 @@ msgstr "Exporter"
 msgid "Export project structure"
 msgstr "Exporter la structure du projet"
 
-msgid "External system references"
-msgstr "Références systèmes externes"
+msgid "External references"
+msgstr "Références externes"
 
 msgid "FRS"
 msgstr "FRS"
@@ -1967,11 +1964,8 @@ msgstr "Gérer tous les plugins"
 msgid "Manage help links"
 msgstr "Gestion des liens d'aide"
 
-msgid "Manage project reference patterns"
-msgstr "Gestion des modèles de référence projet"
-
-msgid "Manage system reference patterns"
-msgstr "Gestion des modèles de référence système"
+msgid "Manage references"
+msgstr "Gérer les références"
 
 #, php-format
 msgid "Mandatory categories where missing: %s"
@@ -2173,12 +2167,15 @@ msgstr "Nouveau mot de passe"
 msgid "New personal access key"
 msgstr "Nouvelle clé personnelle d'accès"
 
+msgid "New project reference"
+msgstr "Créer une référence projet"
+
 #, php-format
 msgid "New project registered: %s"
 msgstr "Nouveau projet enregistré : %s"
 
-msgid "New reference pattern"
-msgstr "Nouveau modèle de référence"
+msgid "New system reference"
+msgstr "Créer une référence système"
 
 msgid "New user"
 msgstr "Nouvel utilisateur"
@@ -2769,6 +2766,9 @@ msgstr ""
 
 msgid "Project privacy set to public."
 msgstr "La visibilité du projet est : publique."
+
+msgid "Project references"
+msgstr "Références projet"
 
 msgid "Project registration is disabled"
 msgstr "L'enregistrement de project est désactivé"
@@ -3399,6 +3399,9 @@ msgstr "Groupes système"
 msgid "System reference pattern deleted"
 msgstr "Modèle de référence système détruit"
 
+msgid "System references"
+msgstr "Références système"
+
 msgid "Tab"
 msgstr "Tabulation"
 
@@ -3713,8 +3716,14 @@ msgstr ""
 "Il y a déjà une opération de renommage prévue pour ce projet. Merci de "
 "consulter les <a href=\"/admin/system_events/\">Événements Système</a>."
 
+msgid "There is no project references"
+msgstr "Il n'y a pas de références projet"
+
 msgid "There is no registered passkeys"
 msgstr "Aucune clé d'authentification enregistrée"
+
+msgid "There is no system references"
+msgstr "Il n'y a pas de références système"
 
 msgid "There is no users group bound to this one."
 msgstr "Il n'y a pas de groupe lié à celui-ci."

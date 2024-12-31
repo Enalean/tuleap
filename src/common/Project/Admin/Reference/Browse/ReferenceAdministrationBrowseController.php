@@ -27,17 +27,18 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-readonly class ReferenceAdministrationBrowseController implements DispatchableWithRequest, DispatchableWithProject
+readonly class ReferenceAdministrationBrowseController implements DispatchableWithBurningParrot, DispatchableWithRequest, DispatchableWithProject
 {
     public function __construct(
         private ProjectManager $project_manager,
-        private ReferenceAdministrationBrowsingRenderer $legacy_renderer,
-        private HeaderNavigationDisplayer $header_navigation_displayer,
+        private ReferenceAdministrationBrowsingRenderer $renderer,
+        private HeaderNavigationDisplayer $header_displayer,
         private ProjectAccessChecker $project_access_checker,
         private ProjectAdministratorChecker $administrator_checker,
     ) {
@@ -60,13 +61,10 @@ readonly class ReferenceAdministrationBrowseController implements DispatchableWi
 
         $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
 
-        $this->header_navigation_displayer->displayFlamingParrotNavigation(
-            _('Editing reference patterns'),
-            $project,
-            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME
-        );
+        $this->header_displayer->displayBurningParrotNavigation(_('Editing reference patterns'), $project, NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME);
 
-        $this->legacy_renderer->render($project);
+        $this->renderer->render($project);
+        $layout->footer([]);
     }
 
     /**

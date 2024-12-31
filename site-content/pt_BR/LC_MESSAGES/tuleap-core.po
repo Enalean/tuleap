@@ -1190,9 +1190,6 @@ msgstr ""
 "Não recebeu um email de confirmação? Verique sua pasta de lixo eletrônico "
 "(spam)"
 
-msgid "Disabled"
-msgstr "Desabilitado"
-
 msgid "Disallow for all projects"
 msgstr "Desautorizar em todos os projetos"
 
@@ -1270,8 +1267,8 @@ msgid "Editing reference patterns"
 msgstr "Edição de padrões de referência"
 
 #, php-format
-msgid "Editing reference patterns for <b>%s</b>"
-msgstr "Edição de padrões de referência para <b>%s</b>"
+msgid "Editing reference patterns for %s"
+msgstr "Edição de padrões de referência para %s"
 
 msgid "Editing system reference patterns"
 msgstr "Edição de padrões de referência do sistema"
@@ -1417,8 +1414,8 @@ msgstr "Exportar"
 msgid "Export project structure"
 msgstr "Exportar a estrutura do projeto"
 
-msgid "External system references"
-msgstr "Referências externas do sistema"
+msgid "External references"
+msgstr ""
 
 msgid "FRS"
 msgstr "FRS"
@@ -1929,11 +1926,8 @@ msgstr "Gerir todos os plugins"
 msgid "Manage help links"
 msgstr "Gerenciar links de ajuda"
 
-msgid "Manage project reference patterns"
-msgstr "Gerir padrões de referência de projetos"
-
-msgid "Manage system reference patterns"
-msgstr "Gerenciar padrões de referência do sistema"
+msgid "Manage references"
+msgstr ""
 
 #, php-format
 msgid "Mandatory categories where missing: %s"
@@ -2135,12 +2129,15 @@ msgstr "Nova senha"
 msgid "New personal access key"
 msgstr "Nova chave de acesso pessoal"
 
+msgid "New project reference"
+msgstr ""
+
 #, php-format
 msgid "New project registered: %s"
 msgstr "Novo projeto registrado: %s"
 
-msgid "New reference pattern"
-msgstr "Novo padrão de referência"
+msgid "New system reference"
+msgstr ""
 
 msgid "New user"
 msgstr "Novo usuário"
@@ -2715,6 +2712,9 @@ msgstr "Privacidade do projeto definida para o público, incluindo restrito."
 
 msgid "Project privacy set to public."
 msgstr "Privacidade do projeto definida para Público."
+
+msgid "Project references"
+msgstr ""
 
 msgid "Project registration is disabled"
 msgstr "O registro do projeto está desativado"
@@ -3340,6 +3340,9 @@ msgstr "Grupos de sistema"
 msgid "System reference pattern deleted"
 msgstr "Padrão de referência do sistema excluído"
 
+msgid "System references"
+msgstr ""
+
 msgid "Tab"
 msgstr "Aba"
 
@@ -3643,7 +3646,13 @@ msgstr ""
 "Já há um evento programado para renomear este projeto. Por favor, verifique "
 "<a href=\"/admin/system_events/\">System Event Monitor</a>."
 
+msgid "There is no project references"
+msgstr ""
+
 msgid "There is no registered passkeys"
+msgstr ""
+
+msgid "There is no system references"
 msgstr ""
 
 msgid "There is no users group bound to this one."

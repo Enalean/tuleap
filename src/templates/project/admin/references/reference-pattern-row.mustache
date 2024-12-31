@@ -2,15 +2,17 @@
     <td><a href="{{ edit_url }}" title="{{ description}}">{{ keyword }}</a></td>
     <td>{{ description }}</td>
     <td>{{ nature }} </td>
-    <td align="center">{{# is_enabled }}{{# gettext }}Enabled{{/ gettext }}{{/ is_enabled }}{{^ is_enabled }}<i>{{# gettext }}Disabled{{/ gettext }}</i>{{/ is_enabled }}</td>
+    <td>{{# is_enabled }}<i class="fas fa-check"></i>{{/ is_enabled }}</td>
     {{# is_template_project }}
-        <td align="center">{{ scope }} </td>
-        <td align="center">{{ service_shortname }} </td>
+        <td>{{ scope }} </td>
+        <td>{{ service_shortname }} </td>
     {{/  is_template_project }}
     {{# can_be_deleted }}
-          <td align="center">
+          <td>
             <form method="post" action="{{ delete_url }}" style="margin: 0;" onsubmit="return confirm('{{ delete_reference_label }}')">
-                <input type="image" src="{{ trash_icon }}" height="16" width="16" border="0" alt="DELETE">
+                <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline">
+                    <i class="far fa-fw fa-trash-alt tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
+                </button>
                 {{# csrf_token }}
                    {{> csrf_token_input }}
                 {{/ csrf_token }}
@@ -18,6 +20,6 @@
           </td>
     {{/ can_be_deleted }}
     {{^ can_be_deleted }}
-        <td align="center"></td>
+        <td></td>
     {{/ can_be_deleted }}
 </tr>
