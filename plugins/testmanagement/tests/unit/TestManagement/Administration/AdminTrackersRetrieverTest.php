@@ -22,70 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Administration;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tracker;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\MissingArtifactLinkException;
-use Tuleap\TestManagement\TrackerDefinitionNotValidException;
-use Tuleap\TestManagement\TrackerExecutionNotValidException;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerChecker
-     */
-    private $tracker_checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Config
-     */
-    private $config;
-    /**
-     * @var AdminTrackersRetriever
-     */
-    private $admin_trackers_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker_2;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker_1;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker_3;
+    private TrackerFactory&MockObject $tracker_factory;
+    private TrackerChecker&MockObject $tracker_checker;
+    private Config&MockObject $config;
+    private AdminTrackersRetriever $admin_trackers_retriever;
+    private Project&MockObject $project;
+    private Tracker $tracker_2;
+    private Tracker $tracker_1;
 
     protected function setUp(): void
     {
-        $this->tracker_1 = Mockery::mock(Tracker::class);
-        $this->tracker_2 = Mockery::mock(Tracker::class);
-        $this->tracker_3 = Mockery::mock(Tracker::class);
+        $this->tracker_1 = TrackerTestBuilder::aTracker()->withId(13)->withName('tracker_1')->build();
+        $this->tracker_2 = TrackerTestBuilder::aTracker()->withId(14)->withName('tracker_2')->build();
 
-        $this->tracker_1->shouldReceive('getId')->andReturn(13);
-        $this->tracker_1->shouldReceive('getName')->andReturn('tracker_1');
-        $this->tracker_2->shouldReceive('getId')->andReturn(14);
-        $this->tracker_2->shouldReceive('getName')->andReturn('tracker_2');
-        $this->tracker_3->shouldReceive('getId')->andReturn(15);
+        $this->project = $this->createMock(Project::class);
+        $this->project->method('getGroupId')->willReturn(444);
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getGroupId')->andReturn(444);
-
-        $this->tracker_factory = Mockery::mock(TrackerFactory::class);
-        $this->tracker_checker = Mockery::mock(TrackerChecker::class);
-        $this->config          = Mockery::mock(Config::class);
+        $this->tracker_factory = $this->createMock(TrackerFactory::class);
+        $this->tracker_checker = $this->createMock(TrackerChecker::class);
+        $this->config          = $this->createMock(Config::class);
 
         $this->admin_trackers_retriever = new AdminTrackersRetriever(
             $this->tracker_factory,
@@ -96,22 +60,16 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAvailableTrackersForCampaign(): void
     {
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getId')->andReturn(12);
-        $tracker_campaign->shouldReceive('getName')->andReturn('chosen tracker');
+        $tracker_campaign = TrackerTestBuilder::aTracker()->withId(12)->withName('chosen tracker')->build();
 
         $trackers_available = [$this->tracker_1, $this->tracker_2];
 
-        $this->config->shouldReceive('getCampaignTrackerId')->andReturn(12);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker_campaign);
+        $this->config->method('getCampaignTrackerId')->willReturn(12);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker_campaign);
 
-        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn($trackers_available);
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn($trackers_available);
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs([$this->project, 13]);
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs([$this->project, 14]);
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs(
-            [$this->project, 15]
-        )->andThrow(MissingArtifactLinkException::class);
+        $this->tracker_checker->method('checkSubmittedTrackerCanBeUsed');
 
         $expected_result = new ListOfAdminTrackersPresenter(
             new AdminTrackerPresenter('chosen tracker', 12),
@@ -131,16 +89,12 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $trackers_available = [$this->tracker_1, $this->tracker_2];
 
-        $this->config->shouldReceive('getCampaignTrackerId')->andReturn(12);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
+        $this->config->method('getCampaignTrackerId')->willReturn(12);
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
-        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn($trackers_available);
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn($trackers_available);
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs([$this->project, 13]);
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs([$this->project, 14]);
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs(
-            [$this->project, 15]
-        )->andThrow(MissingArtifactLinkException::class);
+        $this->tracker_checker->method('checkSubmittedTrackerCanBeUsed');
 
         $expected_result = new ListOfAdminTrackersPresenter(
             null,
@@ -158,22 +112,16 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAvailableTrackersForExecution(): void
     {
-        $tracker_execution = Mockery::mock(Tracker::class);
-        $tracker_execution->shouldReceive('getId')->andReturn(12);
-        $tracker_execution->shouldReceive('getName')->andReturn('chosen tracker');
+        $tracker_execution = TrackerTestBuilder::aTracker()->withId(12)->withName('chosen tracker')->build();
 
         $trackers_available = [$this->tracker_1, $this->tracker_2];
 
-        $this->config->shouldReceive('getTestExecutionTrackerId')->andReturn(12);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker_execution);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(12);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker_execution);
 
-        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn($trackers_available);
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn($trackers_available);
 
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->withArgs([$this->project, 13]);
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->withArgs([$this->project, 14]);
-        $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->withArgs(
-            [$this->project, 15]
-        )->andThrow(TrackerExecutionNotValidException::class);
+        $this->tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $expected_result = new ListOfAdminTrackersPresenter(
             new AdminTrackerPresenter('chosen tracker', 12),
@@ -191,22 +139,16 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAvailableTrackersForDefinition(): void
     {
-        $tracker_definition = Mockery::mock(Tracker::class);
-        $tracker_definition->shouldReceive('getId')->andReturn(12);
-        $tracker_definition->shouldReceive('getName')->andReturn('chosen tracker');
+        $tracker_definition = TrackerTestBuilder::aTracker()->withId(12)->withName('chosen tracker')->build();
 
         $trackers_available = [$this->tracker_1, $this->tracker_2];
 
-        $this->config->shouldReceive('getTestDefinitionTrackerId')->andReturn(12);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker_definition);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(12);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker_definition);
 
-        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn($trackers_available);
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn($trackers_available);
 
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->withArgs([$this->project, 13]);
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->withArgs([$this->project, 14]);
-        $this->tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->withArgs(
-            [$this->project, 15]
-        )->andThrow(TrackerDefinitionNotValidException::class);
+        $this->tracker_checker->method('checkSubmittedDefinitionTrackerCanBeUsed');
 
         $expected_result = new ListOfAdminTrackersPresenter(
             new AdminTrackerPresenter('chosen tracker', 12),
@@ -224,22 +166,16 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAvailableTrackersForIssue(): void
     {
-        $tracker_issue = Mockery::mock(Tracker::class);
-        $tracker_issue->shouldReceive('getId')->andReturn(12);
-        $tracker_issue->shouldReceive('getName')->andReturn('chosen tracker');
+        $tracker_issue = TrackerTestBuilder::aTracker()->withId(12)->withName('chosen tracker')->build();
 
         $trackers_available = [$this->tracker_1, $this->tracker_2];
 
-        $this->config->shouldReceive('getIssueTrackerId')->andReturn(12);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker_issue);
+        $this->config->method('getIssueTrackerId')->willReturn(12);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker_issue);
 
-        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn($trackers_available);
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn($trackers_available);
 
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs([$this->project, 13]);
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs([$this->project, 14]);
-        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->withArgs(
-            [$this->project, 15]
-        )->andThrow(MissingArtifactLinkException::class);
+        $this->tracker_checker->method('checkSubmittedTrackerCanBeUsed');
 
         $expected_result = new ListOfAdminTrackersPresenter(
             new AdminTrackerPresenter('chosen tracker', 12),
