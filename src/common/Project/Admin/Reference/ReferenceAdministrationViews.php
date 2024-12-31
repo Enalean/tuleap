@@ -36,6 +36,7 @@ use Tuleap\Reference\NatureCollection;
 
 class ReferenceAdministrationViews extends Views
 {
+    private const TEMPLATE_PAH = __DIR__ . '/../../../../templates/project/admin/references';
     private NatureCollection $nature_collection;
     private ReferenceManager $reference_manager;
     private \UserManager $user_manager;
@@ -108,8 +109,7 @@ class ReferenceAdministrationViews extends Views
             $user
         );
 
-        $template_path = __DIR__ . '/../../../../templates/project/admin/references';
-        echo $this->renderer_factory->getRenderer($template_path)->renderToString('add-reference', $presenter);
+        echo $this->renderer_factory->getRenderer(self::TEMPLATE_PAH)->renderToString('add-reference', $presenter);
     }
 
     public function edit(): void
@@ -145,7 +145,6 @@ class ReferenceAdministrationViews extends Views
             $ref,
         );
 
-        $template_path = __DIR__ . '/../../../../templates/project/admin/references';
-        echo $this->renderer_factory->getRenderer($template_path)->renderToString('edit-reference', $presenter);
+        echo $this->renderer_factory->getRenderer(self::TEMPLATE_PAH)->renderToString('edit-reference', $presenter);
     }
 }
