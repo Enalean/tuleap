@@ -20,82 +20,47 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Mockery;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\REST\v1\Execution\ListOfDefinitionsForCampaignRetriever;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var ArtifactDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $artifact_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DefinitionForExecutionRetriever
-     */
-    private $definition_retriever;
-    /**
-     * @var ListOfDefinitionsForCampaignRetriever
-     */
-    private $list_of_definition_retriever;
-    /**
-     * @var Artifact|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $execution1;
-    /**
-     * @var Artifact|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $execution2;
-    /**
-     * @var Artifact|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $execution3;
-    /**
-     * @var Artifact|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $def1;
-    /**
-     * @var Artifact|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $def2;
-    /**
-     * @var Artifact|Mockery\MockInterface
-     */
-    private $campaign_artifact;
+    private \PFUser $user;
+    private ArtifactDao&MockObject $artifact_dao;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private DefinitionForExecutionRetriever&MockObject $definition_retriever;
+    private ListOfDefinitionsForCampaignRetriever $list_of_definition_retriever;
+    private Artifact $execution1;
+    private Artifact $execution2;
+    private Artifact $execution3;
+    private Artifact $def1;
+    private Artifact $def2;
+    private Artifact $campaign_artifact;
 
     protected function setUp(): void
     {
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->campaign_artifact = Mockery::mock(Artifact::class);
-        $this->campaign_artifact->shouldReceive('getId')->andReturn(12);
+        $this->campaign_artifact = ArtifactTestBuilder::anArtifact(12)->build();
 
-        $this->execution1 = Mockery::mock(Artifact::class);
-        $this->execution2 = Mockery::mock(Artifact::class);
-        $this->execution3 = Mockery::mock(Artifact::class);
+        $this->execution1 = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->execution2 = ArtifactTestBuilder::anArtifact(2)->build();
+        $this->execution3 = ArtifactTestBuilder::anArtifact(3)->build();
 
-        $this->def1 = Mockery::mock(Artifact::class);
-        $this->def1->shouldReceive('getId')->andReturn(42);
-        $this->def2 = Mockery::mock(Artifact::class);
-        $this->def2->shouldReceive('getId')->andReturn(43);
+        $this->def1 = ArtifactTestBuilder::anArtifact(42)->build();
+        $this->def2 = ArtifactTestBuilder::anArtifact(43)->build();
 
-        $this->artifact_dao         = Mockery::mock(ArtifactDao::class);
-        $this->artifact_factory     = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->definition_retriever = Mockery::mock(DefinitionForExecutionRetriever::class);
+        $this->artifact_dao         = $this->createMock(ArtifactDao::class);
+        $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->definition_retriever = $this->createMock(DefinitionForExecutionRetriever::class);
 
 
         $this->list_of_definition_retriever = new ListOfDefinitionsForCampaignRetriever(
@@ -107,24 +72,27 @@ class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testGetDefinitionListForCampaign(): void
     {
-        $this->artifact_dao->shouldReceive('searchExecutionArtifactsForCampaign')
+        $this->artifact_dao->method('searchExecutionArtifactsForCampaign')
             ->with(12, 666)
-            ->andReturn([
+            ->willReturn([
                 ['id' => 1],
                 ['id' => 2],
                 ['id' => 3],
             ]);
 
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with(['id' => 1])->andReturn($this->execution1);
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with(['id' => 2])->andReturn($this->execution2);
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with(['id' => 3])->andReturn($this->execution3);
+        $this->artifact_factory->method('getInstanceFromRow')
+            ->willReturnCallback(fn(array $row) => match ($row) {
+                ['id' => 1] => $this->execution1,
+                ['id' => 2] => $this->execution2,
+                ['id' => 3] => $this->execution3,
+            });
 
-        $this->definition_retriever->shouldReceive('getDefinitionRepresentationForExecution')
-            ->withArgs([$this->user, $this->execution1])->andReturn($this->def1);
-        $this->definition_retriever->shouldReceive('getDefinitionRepresentationForExecution')
-            ->withArgs([$this->user, $this->execution2])->andReturn($this->def2);
-        $this->definition_retriever->shouldReceive('getDefinitionRepresentationForExecution')
-            ->withArgs([$this->user, $this->execution3])->andThrow(Mockery::mock(DefinitionNotFoundException::class));
+        $this->definition_retriever->method('getDefinitionRepresentationForExecution')
+            ->willReturnCallback(fn (PFUser $user, Artifact $execution) => match ($execution) {
+                $this->execution1 => $this->def1,
+                $this->execution2 => $this->def2,
+                $this->execution3 => throw new DefinitionNotFoundException($execution),
+            });
 
         $result = $this->list_of_definition_retriever->getDefinitionListForCampaign(
             $this->user,
