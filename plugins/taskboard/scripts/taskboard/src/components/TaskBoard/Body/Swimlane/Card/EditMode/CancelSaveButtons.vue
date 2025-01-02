@@ -48,39 +48,46 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, onBeforeUnmount } from "vue";
 import { TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
-@Component
-export default class CancelSaveButtons extends Vue {
-    @Prop({ required: true })
-    readonly is_action_ongoing!: boolean;
+const props = withDefaults(
+    defineProps<{
+        is_action_ongoing: boolean;
+    }>(),
+    {
+        is_action_ongoing: false,
+    },
+);
 
-    get save_icon(): string {
-        return this.is_action_ongoing ? "fa-circle-o-notch fa-spin" : "fa-tlp-enter-key";
+const emit = defineEmits<{
+    (e: "cancel"): void;
+    (e: "save"): void;
+}>();
+
+const save_icon = computed((): string => {
+    return props.is_action_ongoing ? "fa-circle-o-notch fa-spin" : "fa-tlp-enter-key";
+});
+
+onMounted((): void => {
+    EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, cancel);
+});
+
+onBeforeUnmount((): void => {
+    EventBus.$off(TaskboardEvent.ESC_KEY_PRESSED, cancel);
+});
+
+function cancel(): void {
+    if (!props.is_action_ongoing) {
+        emit("cancel");
     }
+}
 
-    mounted(): void {
-        EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
-    }
-
-    beforeDestroy(): void {
-        EventBus.$off(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
-    }
-
-    cancel(): void {
-        if (!this.is_action_ongoing) {
-            this.$emit("cancel");
-        }
-    }
-
-    save(): void {
-        if (!this.is_action_ongoing) {
-            this.$emit("save");
-        }
+function save(): void {
+    if (!props.is_action_ongoing) {
+        emit("save");
     }
 }
 </script>

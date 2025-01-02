@@ -24,7 +24,7 @@ import { TaskboardEvent } from "../../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 import EventBus from "../../../../../../helpers/event-bus";
 
-async function createWrapper(is_action_ongoing: boolean): Promise<Wrapper<CancelSaveButtons>> {
+async function createWrapper(is_action_ongoing: boolean): Promise<Wrapper<Vue>> {
     return shallowMount(CancelSaveButtons, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
@@ -35,7 +35,7 @@ async function createWrapper(is_action_ongoing: boolean): Promise<Wrapper<Cancel
 
 describe("CancelSaveButtons", () => {
     describe(`When there is no ongoing action`, () => {
-        let wrapper: Wrapper<CancelSaveButtons>;
+        let wrapper: Wrapper<Vue>;
         beforeEach(async () => {
             wrapper = await createWrapper(false);
         });
@@ -63,7 +63,7 @@ describe("CancelSaveButtons", () => {
     });
 
     describe(`When there is an ongoing action`, () => {
-        let wrapper: Wrapper<CancelSaveButtons>;
+        let wrapper: Wrapper<Vue>;
         beforeEach(async () => {
             wrapper = await createWrapper(true);
         });
