@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard;
 
-use AgileDashboard_BacklogItemDao;
 use AgileDashboard_ConfigurationManager;
 use Codendi_Request;
 use CSRFSynchronizerToken;
@@ -229,7 +228,7 @@ class AdminController extends BaseController
             new ConfigurationUpdater(
                 $explicit_backlog_dao,
                 new MilestoneReportCriterionDao(),
-                new AgileDashboard_BacklogItemDao(),
+                new BacklogItemDao(),
                 Planning_MilestoneFactory::build(),
                 $explicit_artifacts_dao,
                 new UnplannedArtifactsAdder(

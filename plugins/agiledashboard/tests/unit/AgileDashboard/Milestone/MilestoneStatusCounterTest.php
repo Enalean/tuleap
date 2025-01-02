@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -40,11 +40,11 @@ final class MilestoneStatusCounterTest extends TestCase
     private PFUser $user;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private Tracker_ArtifactDao&MockObject $artifact_dao;
-    private AgileDashboard_BacklogItemDao&MockObject $backlog_dao;
+    private BacklogItemDao&MockObject $backlog_dao;
 
     protected function setUp(): void
     {
-        $this->backlog_dao      = $this->createMock(AgileDashboard_BacklogItemDao::class);
+        $this->backlog_dao      = $this->createMock(BacklogItemDao::class);
         $this->artifact_dao     = $this->createMock(Tracker_ArtifactDao::class);
         $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
         $this->user             = UserTestBuilder::buildWithDefaults();
@@ -72,7 +72,7 @@ final class MilestoneStatusCounterTest extends TestCase
 
     public function testItReturnsZeroOpenClosedWhenNoArtifacts(): void
     {
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(TestHelper::emptyDar());
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([]);
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals([
             Artifact::STATUS_OPEN   => 0,
@@ -82,16 +82,14 @@ final class MilestoneStatusCounterTest extends TestCase
 
     public function testItDoesntTryToFetchChildrenWhenNoBacklog(): void
     {
-        $this->backlog_dao->method('getBacklogArtifacts')->willReturn(TestHelper::emptyDar());
+        $this->backlog_dao->method('getBacklogArtifacts')->willReturn([]);
         $this->artifact_dao->expects(self::never())->method('getChildrenForArtifacts');
         $this->counter->getStatus($this->user, 12);
     }
 
     public function testItFetchesTheStatusOfReturnedArtifacts(): void
     {
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(
-            TestHelper::arrayToDar(['id' => 35], ['id' => 36])
-        );
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 35], ['id' => 36]]);
         $this->artifact_dao->method('getArtifactsStatusByIds')->with([35, 36])->willReturn(TestHelper::arrayToDar(
             ['id' => 36, 'status' => Artifact::STATUS_OPEN],
             ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
@@ -107,9 +105,7 @@ final class MilestoneStatusCounterTest extends TestCase
     public function testItFetchesTheStatusOfReturnedArtifactsAtSublevel(): void
     {
         // Level 0
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(
-            TestHelper::arrayToDar(['id' => 35], ['id' => 36])
-        );
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 35], ['id' => 36]]);
 
         // Level -1
         $this->artifact_dao->method('getChildrenForArtifacts')->with([35, 36])->willReturn(
@@ -151,9 +147,7 @@ final class MilestoneStatusCounterTest extends TestCase
             ->withConsecutive([35], [36])
             ->willReturnOnConsecutiveCalls($artifact, $other_artifact);
 
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(
-            TestHelper::arrayToDar(['id' => 35], ['id' => 36])
-        );
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 35], ['id' => 36]]);
         $this->artifact_dao->method('getArtifactsStatusByIds')->willReturn(
             TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN])
         );
@@ -181,7 +175,7 @@ final class MilestoneStatusCounterTest extends TestCase
             ->withConsecutive([36], [37], [38])
             ->willReturnOnConsecutiveCalls($artifact_36, $artifact_37, $artifact_38);
 
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(TestHelper::arrayToDar(['id' => 36]));
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 36]]);
         $this->artifact_dao->method('getArtifactsStatusByIds')
             ->withConsecutive([[36]], [[37, 38]])
             ->willReturnOnConsecutiveCalls(

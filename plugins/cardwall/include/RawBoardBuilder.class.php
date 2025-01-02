@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -71,7 +72,7 @@ class Cardwall_RawBoardBuilder
         $pane_board_builder = new Cardwall_PaneBoardBuilder(
             $presenter_builder,
             $artifact_factory,
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $swimline_factory
         );
         $board              = $pane_board_builder->getBoard($user, $milestone->getArtifact(), $columns, $mapping_collection);

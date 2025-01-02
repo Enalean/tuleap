@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
@@ -118,7 +119,7 @@ class taskboardPlugin extends Plugin
             new BoardPresenterBuilder(
                 $agiledashboard_plugin->getMilestonePaneFactory(),
                 ColumnPresenterCollectionRetriever::build(),
-                new AgileDashboard_BacklogItemDao(),
+                new BacklogItemDao(),
                 new TrackerPresenterCollectionBuilder(
                     \Tuleap\Taskboard\Tracker\TrackerCollectionRetriever::build(),
                     new \Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever(
@@ -139,7 +140,7 @@ class taskboardPlugin extends Plugin
             new VisitRecorder(new RecentlyVisitedDao()),
             new HeaderOptionsProvider(
                 new AgileDashboard_Milestone_Backlog_BacklogFactory(
-                    new AgileDashboard_BacklogItemDao(),
+                    new BacklogItemDao(),
                     Tracker_ArtifactFactory::instance(),
                     $planning_factory,
                 ),

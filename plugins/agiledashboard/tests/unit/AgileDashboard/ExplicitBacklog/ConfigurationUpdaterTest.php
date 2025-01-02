@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use AgileDashboard_BacklogItemDao;
 use Codendi_Request;
 use MilestoneReportCriterionDao;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,7 +29,7 @@ use Planning;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use TestHelper;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalResponseMock;
@@ -46,7 +45,7 @@ class ConfigurationUpdaterTest extends TestCase
     private ConfigurationUpdater $updater;
     private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
     private MilestoneReportCriterionDao&MockObject $milestone_report_criterion_dao;
-    private AgileDashboard_BacklogItemDao&MockObject $backlog_item_dao;
+    private BacklogItemDao&MockObject $backlog_item_dao;
     private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
     private Codendi_Request&MockObject $request;
     private UnplannedArtifactsAdder&MockObject $unplanned_artifacts_adder;
@@ -59,7 +58,7 @@ class ConfigurationUpdaterTest extends TestCase
 
         $this->explicit_backlog_dao               = $this->createMock(ExplicitBacklogDao::class);
         $this->milestone_report_criterion_dao     = $this->createMock(MilestoneReportCriterionDao::class);
-        $this->backlog_item_dao                   = $this->createMock(AgileDashboard_BacklogItemDao::class);
+        $this->backlog_item_dao                   = $this->createMock(BacklogItemDao::class);
         $milestone_factory                        = $this->createMock(Planning_MilestoneFactory::class);
         $this->artifacts_in_explicit_backlog_dao  = $this->createMock(ArtifactsInExplicitBacklogDao::class);
         $this->unplanned_artifacts_adder          = $this->createMock(UnplannedArtifactsAdder::class);
@@ -165,12 +164,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog');
         $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
         $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
-        $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn(
-            TestHelper::arrayToDar(
-                ['id' => '201'],
-                ['id' => '202']
-            )
-        );
+        $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn([['id' => '201'], ['id' => '202']]);
         $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds');
 
         $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
@@ -208,12 +202,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog');
         $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
         $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
-        $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn(
-            TestHelper::arrayToDar(
-                ['id' => '201'],
-                ['id' => '202']
-            )
-        );
+        $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn([['id' => '201'], ['id' => '202']]);
         $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds');
 
         $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')

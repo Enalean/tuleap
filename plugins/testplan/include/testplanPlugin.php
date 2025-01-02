@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use FastRoute\RouteCollector;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
@@ -183,7 +184,7 @@ final class testplanPlugin extends Plugin
             new TestPlanHeaderOptionsProvider(
                 new HeaderOptionsProvider(
                     new AgileDashboard_Milestone_Backlog_BacklogFactory(
-                        new AgileDashboard_BacklogItemDao(),
+                        new BacklogItemDao(),
                         Tracker_ArtifactFactory::instance(),
                         $planning_factory,
                     ),

@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Board;
 
-use AgileDashboard_BacklogItemDao;
 use AgileDashboard_MilestonePresenter;
 use PFUser;
 use Planning_MilestonePaneFactory;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
 use Tuleap\Taskboard\Tracker\TrackerPresenterCollectionBuilder;
 
@@ -41,7 +41,7 @@ class BoardPresenterBuilder
      */
     private $columns_retriever;
     /**
-     * @var AgileDashboard_BacklogItemDao
+     * @var BacklogItemDao
      */
     private $backlog_item_dao;
     /** @var TrackerPresenterCollectionBuilder */
@@ -55,7 +55,7 @@ class BoardPresenterBuilder
     public function __construct(
         Planning_MilestonePaneFactory $pane_factory,
         ColumnPresenterCollectionRetriever $columns_retriever,
-        AgileDashboard_BacklogItemDao $backlog_item_dao,
+        BacklogItemDao $backlog_item_dao,
         TrackerPresenterCollectionBuilder $trackers_builder,
         Tracker_ArtifactFactory $artifact_factory,
     ) {

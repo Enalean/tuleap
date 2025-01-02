@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-use AgileDashboard_BacklogItemDao;
 use AgileDashboard_BacklogItemPresenter;
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogItem;
@@ -38,6 +37,7 @@ use PlanningFactory;
 use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_Integer;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
@@ -59,11 +59,11 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
     private AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection&MockObject $backlog_item_builder;
     private RemainingEffortValueRetriever&MockObject $remaining_effort_value_retriever;
     private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
-    private AgileDashboard_BacklogItemDao&MockObject $dao;
+    private BacklogItemDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao                               = $this->createMock(AgileDashboard_BacklogItemDao::class);
+        $this->dao                               = $this->createMock(BacklogItemDao::class);
         $this->artifact_factory                  = $this->createMock(Tracker_ArtifactFactory::class);
         $this->milestone_factory                 = $this->createMock(Planning_MilestoneFactory::class);
         $this->planning_factory                  = $this->createMock(PlanningFactory::class);

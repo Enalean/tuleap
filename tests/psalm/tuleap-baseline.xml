@@ -1,72 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItemDao.class.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$milestone_artifact_id]]></code>
-      <code><![CDATA[$milestone_artifact_id]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$sub_milestone_ids]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getArtifactsSemantics]]></code>
-      <code><![CDATA[getBacklogArtifacts]]></code>
-      <code><![CDATA[getBacklogArtifactsWithLimitAndOffset]]></code>
-      <code><![CDATA[getOpenUnplannedTopBacklogArtifacts]]></code>
-      <code><![CDATA[getOpenUnplannedTopBacklogArtifactsWithLimitAndOffset]]></code>
-      <code><![CDATA[getPlannedItemIds]]></code>
-      <code><![CDATA[getTopBacklogArtifacts]]></code>
-      <code><![CDATA[getTopBacklogArtifactsWithLimitAndOffset]]></code>
-      <code><![CDATA[getUnplannedTopBacklogArtifacts]]></code>
-      <code><![CDATA[getUnplannedTopBacklogArtifactsWithLimitAndOffset]]></code>
-    </MissingReturnType>
-    <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
-    </PossiblyFalseReference>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItemPresenter.class.php">
     <MissingParamType>
       <code><![CDATA[$has_children]]></code>
@@ -582,13 +515,6 @@
       <code><![CDATA[foundRows]]></code>
       <code><![CDATA[foundRows]]></code>
       <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$children]]></code>
@@ -838,8 +764,6 @@
     <DeprecatedMethod>
       <code><![CDATA[$artifact_status]]></code>
       <code><![CDATA[$artifact_status]]></code>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[$dar]]></code>
       <code><![CDATA[getChildrenForArtifacts]]></code>
     </DeprecatedMethod>
     <MissingParamType>
@@ -851,7 +775,6 @@
       <code><![CDATA[countStatus]]></code>
       <code><![CDATA[getBacklogArtifactsUserCanView]]></code>
       <code><![CDATA[getChildrenUserCanView]]></code>
-      <code><![CDATA[getIdsUserCanView]]></code>
       <code><![CDATA[getStatusForMilestoneArtifactId]]></code>
     </MissingReturnType>
   </file>
@@ -18432,7 +18355,6 @@
       <code><![CDATA[$message]]></code>
       <code><![CDATA[$new_ns]]></code>
       <code><![CDATA[$old_ns]]></code>
-      <code><![CDATA[$path]]></code>
       <code><![CDATA[$repo]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -18446,7 +18368,6 @@
       <code><![CDATA[backup]]></code>
       <code><![CDATA[checkAuthorizedKeys]]></code>
       <code><![CDATA[commit]]></code>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[deleteBackup]]></code>
       <code><![CDATA[dumpProjectRepoConf]]></code>
       <code><![CDATA[dumpSuspendedProjectRepositoriesConfiguration]]></code>
@@ -18957,13 +18878,9 @@
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_DELETE.class.php">
     <MissingReturnType>
-      <code><![CDATA[deleteRepo]]></code>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
-    <TooManyArguments>
-      <code><![CDATA[deleteRepo]]></code>
-    </TooManyArguments>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_FORK..php">
     <MissingReturnType>
@@ -31378,9 +31295,6 @@
     </InvalidDocblock>
   </file>
   <file src="plugins/taskboard/include/REST/v1/TaskboardResource.php">
-    <DeprecatedMethod>
-      <code><![CDATA[foundRows]]></code>
-    </DeprecatedMethod>
     <InvalidDocblock>
       <code><![CDATA[public function getCards(int $id, int $limit = 100, int $offset = 0): array]]></code>
       <code><![CDATA[public function getColumns(int $id): array]]></code>

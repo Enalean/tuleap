@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
 {
-    /** @var AgileDashboard_BacklogItemDao */
+    /** @var BacklogItemDao */
     private $item_dao;
 
     /** @var Tracker_ArtifactDao */
@@ -44,7 +45,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     private $found_rows;
 
     public function __construct(
-        AgileDashboard_BacklogItemDao $item_dao,
+        BacklogItemDao $item_dao,
         Tracker_ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
         Planning_Milestone $milestone,
@@ -108,8 +109,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     public function getAllTopMilestoneOpenUnplannedBacklogItems(PFUser $user, $sub_milestone_ids)
     {
         $result = $this->item_dao->getOpenUnplannedTopBacklogArtifacts(
-            $this->backlog_tracker_ids,
-            $sub_milestone_ids
+            $this->backlog_tracker_ids
         );
 
         return $this->getItemsForUser($user, $result, $this->item_dao->foundRows());
@@ -242,7 +242,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     }
 
     /**
-     * @param LegacyDataAccessResultInterface|false $result
+     * @param LegacyDataAccessResultInterface|false|array $result
      * @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection
      */
     private function getItemsForUser(PFUser $user, $result, $found_rows)

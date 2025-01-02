@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\REST\v2;
 
-use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
@@ -34,6 +33,7 @@ use PlanningPermissionsManager;
 use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
@@ -78,13 +78,13 @@ class ProjectBacklogResource
         $this->milestone_factory = Planning_MilestoneFactory::build();
 
         $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $tracker_artifact_factory,
             $this->planning_factory,
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $tracker_artifact_factory,
             $this->milestone_factory,
             $this->planning_factory,

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
@@ -217,7 +218,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
     private function getMilestoneContentItems()
     {
         $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $this->artifact_factory,
             $this->milestone_factory,
             $this->planning_factory,
@@ -231,7 +232,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
         );
 
         $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $this->artifact_factory,
             $this->planning_factory,
         );
