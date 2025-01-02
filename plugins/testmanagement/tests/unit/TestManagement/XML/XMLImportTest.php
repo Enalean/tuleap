@@ -21,8 +21,6 @@
 
 namespace Tuleap\TestManagement\XML;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\TestManagement\Administration\TrackerChecker;
@@ -35,51 +33,36 @@ use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItImportsConfigurationFromXMLContent(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
-        $execution_dao   = Mockery::mock(ExecutionDao::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
+        $execution_dao   = $this->createMock(ExecutionDao::class);
 
         $xml_import = new XMLImport($config, $tracker_checker, $execution_dao);
 
-        $artifact_id_mapping = Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class);
+        $artifact_id_mapping = $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class);
         $artifact_id_mapping
-            ->shouldReceive('containsSource')
-            ->with('123')
-            ->once()
-            ->andReturn(true);
+            ->method('containsSource')
+            ->willReturnCallback(static fn (string $source_id) => match ($source_id) {
+                '123', '124' => true,
+            });
         $artifact_id_mapping
-            ->shouldReceive('get')
-            ->with('123')
-            ->once()
-            ->andReturn(1123);
-        $artifact_id_mapping
-            ->shouldReceive('containsSource')
-            ->with('124')
-            ->once()
-            ->andReturn(true);
-        $artifact_id_mapping
-            ->shouldReceive('get')
-            ->with('124')
-            ->once()
-            ->andReturn(1124);
+            ->method('get')
+            ->willReturnCallback(static fn (string $source_id) => match ($source_id) {
+                '123' => 1123,
+                '124' => 1124,
+            });
 
-        $changeset_mapping = Mockery::spy(ImportedChangesetMapping::class);
+        $changeset_mapping = $this->createMock(ImportedChangesetMapping::class);
         $changeset_mapping
-            ->shouldReceive('get')
-            ->with('CHANGESET_10001')
-            ->once()
-            ->andReturn(11001);
-        $changeset_mapping
-            ->shouldReceive('get')
-            ->with('CHANGESET_10002')
-            ->once()
-            ->andReturn(11002);
+            ->method('get')
+            ->willReturnCallback(static fn (string $name) => match ($name) {
+                'CHANGESET_10001' => 11001,
+                'CHANGESET_10002' => 11002,
+            });
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T1' => 101,
@@ -88,22 +71,27 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
-        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->once();
+        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
-        $config->shouldReceive('setProjectConfiguration')
-            ->with($project, 102, 103, 104, 101)
-            ->once();
+        $config
+            ->expects(self::once())
+            ->method('setProjectConfiguration')
+            ->with($project, 102, 103, 104, 101);
 
         $execution_dao
-            ->shouldReceive('updateExecutionToUseSpecificVersionOfDefinition')
-            ->with(1123, 104, 11001, 103)
-            ->once();
-        $execution_dao
-            ->shouldReceive('updateExecutionToUseSpecificVersionOfDefinition')
-            ->with(1124, 104, 11002, 103)
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('updateExecutionToUseSpecificVersionOfDefinition')
+            ->willReturnCallback(static fn (
+                int $execution_artifact_id,
+                int $execution_tracker_id,
+                int $definition_changeset_id,
+                int $definition_tracker_id,
+            ) => match (true) {
+                $execution_artifact_id === 1123 && $definition_changeset_id === 11001 => true,
+                $execution_artifact_id === 1124 && $definition_changeset_id === 11002 => true,
+            });
 
         $xml_import->import(
             $project,
@@ -116,66 +104,66 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItImportsNothingIfConfigIsNotSet(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
 
-        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+        $xml_import = new XMLImport($config, $tracker_checker, $this->createMock(ExecutionDao::class));
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->never();
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->never();
-        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->never();
-        $config->shouldReceive('setProjectConfiguration')->never();
+        $tracker_checker->expects(self::never())->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects(self::never())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $config->expects(self::never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
             $extraction_path,
             $tracker_mapping,
-            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
-            Mockery::spy(ImportedChangesetMapping::class)
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(ImportedChangesetMapping::class)
         );
     }
 
     public function testItIDoesNotImportANonProperlySetConfiguration(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
 
-        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+        $xml_import = new XMLImport($config, $tracker_checker, $this->createMock(ExecutionDao::class));
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T2' => 102,
             'T3' => 103,
         ];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->never();
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->never();
-        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->never();
+        $tracker_checker->expects(self::never())->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects(self::never())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
-        $config->shouldReceive('setProjectConfiguration')->never();
+        $config->expects(self::never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
             $extraction_path,
             $tracker_mapping,
-            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
-            Mockery::spy(ImportedChangesetMapping::class)
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(ImportedChangesetMapping::class)
         );
     }
 
     public function testItThrowsAnExceptionIfAtLeastOneProvidedTrackerIdIsNotUsable(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
 
-        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+        $xml_import = new XMLImport($config, $tracker_checker, $this->createMock(ExecutionDao::class));
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T1' => 101,
@@ -184,32 +172,32 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')
+        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($project, 103)
-            ->andThrow(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
+            ->willThrowException(new TrackerHasAtLeastOneFrozenFieldsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->shouldReceive('setProjectConfiguration')->never();
+        $config->expects(self::never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
             $extraction_path,
             $tracker_mapping,
-            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
-            Mockery::spy(ImportedChangesetMapping::class)
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(ImportedChangesetMapping::class)
         );
     }
 
     public function testItThrowsAnExceptionIfTrackerHasHiddenFieldPostAction(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
 
-        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+        $xml_import = new XMLImport($config, $tracker_checker, $this->createMock(ExecutionDao::class));
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T1' => 101,
@@ -218,33 +206,32 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
-        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
-            ->with($project, 103)
-            ->andThrow(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
+        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
+            ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->shouldReceive('setProjectConfiguration')->never();
+        $config->expects(self::never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
             $extraction_path,
             $tracker_mapping,
-            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
-            Mockery::spy(ImportedChangesetMapping::class)
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(ImportedChangesetMapping::class)
         );
     }
 
     public function testItThrowsAnExceptionIfATrackerHasArtifactLinkField(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
 
-        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+        $xml_import = new XMLImport($config, $tracker_checker, $this->createMock(ExecutionDao::class));
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T1' => 101,
@@ -253,33 +240,34 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
-            ->andThrow(MissingArtifactLinkException::class)
-            ->once();
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->never();
-        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->never();
+        $tracker_checker
+            ->expects(self::once())
+            ->method('checkSubmittedTrackerCanBeUsed')
+            ->willThrowException(new MissingArtifactLinkException());
+        $tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects(self::never())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $this->expectException(\Exception::class);
 
-        $config->shouldReceive('setProjectConfiguration')->never();
+        $config->expects(self::never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
             $extraction_path,
             $tracker_mapping,
-            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
-            Mockery::spy(ImportedChangesetMapping::class)
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(ImportedChangesetMapping::class)
         );
     }
 
     public function testItThrowsAnExceptionIfDefinitionTrackerHasNotStepDefinitionField(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
 
-        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+        $xml_import = new XMLImport($config, $tracker_checker, $this->createMock(ExecutionDao::class));
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T1' => 101,
@@ -288,33 +276,32 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
-        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
-            ->with($project, 103)
-            ->andThrow(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
+        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
+            ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->shouldReceive('setProjectConfiguration')->never();
+        $config->expects(self::never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
             $extraction_path,
             $tracker_mapping,
-            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
-            Mockery::spy(ImportedChangesetMapping::class)
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(ImportedChangesetMapping::class)
         );
     }
 
     public function testItThrowsAnExceptionIfExecutionTrackerHasNotStepExecutionField(): void
     {
-        $config          = Mockery::mock(Config::class);
-        $tracker_checker = Mockery::mock(TrackerChecker::class);
+        $config          = $this->createMock(Config::class);
+        $tracker_checker = $this->createMock(TrackerChecker::class);
 
-        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+        $xml_import = new XMLImport($config, $tracker_checker, $this->createMock(ExecutionDao::class));
 
-        $project         = Mockery::mock(Project::class);
+        $project         = $this->createMock(Project::class);
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T1' => 101,
@@ -323,22 +310,21 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
-        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
-        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
-            ->with($project, 103)
-            ->andThrow(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
+        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
+            ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->shouldReceive('setProjectConfiguration')->never();
+        $config->expects(self::never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
             $extraction_path,
             $tracker_mapping,
-            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
-            Mockery::spy(ImportedChangesetMapping::class)
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(ImportedChangesetMapping::class)
         );
     }
 }
