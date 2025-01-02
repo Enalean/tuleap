@@ -18,148 +18,131 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Permissions;
 
 use Codendi_Request;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepository;
+use PermissionsManager;
+use PermissionsNormalizer;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
+use TestHelper;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
 
-class FineGrainedPermissionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FineGrainedPermissionFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var FineGrainedPermissionFactory
-     */
-    private $factory;
-    /**
-     * @var FineGrainedDao&Mockery\MockInterface
-     */
-    private Mockery\LegacyMockInterface|FineGrainedDao|Mockery\MockInterface $dao;
-    /**
-     * @var \UGroupManager&Mockery\MockInterface
-     */
-    private $ugroup_manager;
-    /**
-     * @var \PermissionsNormalizer&Mockery\MockInterface
-     */
-    private $normalizer;
-    /**
-     * @var Mockery\MockInterface&\GitRepository
-     */
-    private $repository;
+    private ProjectManager&MockObject $project_manager;
+    private FineGrainedPermissionFactory $factory;
+    private GitRepository $repository;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->dao            = Mockery::mock(FineGrainedDao::class);
-        $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
-        $this->normalizer     = \Mockery::spy(\PermissionsNormalizer::class);
+        $dao            = $this->createMock(FineGrainedDao::class);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $normalizer     = $this->createMock(PermissionsNormalizer::class);
 
         $this->factory = new FineGrainedPermissionFactory(
-            $this->dao,
-            $this->ugroup_manager,
-            $this->normalizer,
-            \Mockery::spy(\PermissionsManager::class),
+            $dao,
+            $ugroup_manager,
+            $normalizer,
+            $this->createMock(PermissionsManager::class),
             new PatternValidator(
                 new FineGrainedPatternValidator(),
                 new FineGrainedRegexpValidator(),
-                \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)
+                $this->createMock(RegexpFineGrainedRetriever::class)
             ),
             new FineGrainedPermissionSorter(),
-            \Mockery::spy(\Tuleap\Git\XmlUgroupRetriever::class)
+            $this->createMock(XmlUgroupRetriever::class)
         );
 
-        $this->repository = Mockery::mock(\GitRepository::class)->shouldReceive('getId')->andReturn(43)->getMock();
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(43)->build();
 
-        $project               = \Mockery::spy(\Project::class);
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
+        $project               = ProjectTestBuilder::aProject()->build();
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
-        $ugroup_01 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(101)->getMock();
-        $ugroup_02 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $ugroup_03 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(103)->getMock();
+        $ugroup_01 = ProjectUGroupTestBuilder::aCustomUserGroup(101)->build();
+        $ugroup_02 = ProjectUGroupTestBuilder::aCustomUserGroup(102)->build();
+        $ugroup_03 = ProjectUGroupTestBuilder::aCustomUserGroup(103)->build();
 
-        $this->ugroup_manager->shouldReceive('getById')->with(101)->andReturns($ugroup_01);
-        $this->ugroup_manager->shouldReceive('getById')->with(102)->andReturns($ugroup_02);
-        $this->ugroup_manager->shouldReceive('getById')->with(103)->andReturns($ugroup_03);
-        $this->project_manager->shouldReceive('getProject')->with(101)->andReturns($project);
-        $this->normalizer->shouldReceive('getNormalizedUGroupIds')->andReturns([]);
+        $ugroup_manager->method('getById')->willReturnCallback(static fn($id) => match ($id) {
+            101 => $ugroup_01,
+            102 => $ugroup_02,
+            103 => $ugroup_03,
+        });
+        $this->project_manager->method('getProjectById')->with(101)->willReturn($project);
+        $normalizer->method('getNormalizedUGroupIds')->willReturn([]);
 
-        $this->dao->shouldReceive('searchBranchesFineGrainedPermissionsForRepository')->andReturns(\TestHelper::arrayToDar([
+        $dao->method('searchBranchesFineGrainedPermissionsForRepository')->willReturn(TestHelper::arrayToDar([
             'id'            => 1,
             'repository_id' => 43,
             'pattern'       => 'refs/heads/master',
         ]));
 
-        $this->dao->shouldReceive('searchTagsFineGrainedPermissionsForRepository')->andReturns(\TestHelper::arrayToDar([
+        $dao->method('searchTagsFineGrainedPermissionsForRepository')->willReturn(TestHelper::arrayToDar([
             'id'            => 2,
             'repository_id' => 43,
             'pattern'       => 'refs/tags/v1',
         ]));
 
-        $this->dao->shouldReceive('searchWriterUgroupIdsForFineGrainedPermissions')->with(1)->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 101], ['ugroup_id' => 102]));
+        $dao->method('searchWriterUgroupIdsForFineGrainedPermissions')
+            ->willReturnCallback(static fn($id) => match ($id) {
+                1 => TestHelper::arrayToDar(['ugroup_id' => 101], ['ugroup_id' => 102]),
+                2 => TestHelper::arrayToDar(['ugroup_id' => 101]),
+            });
 
-        $this->dao->shouldReceive('searchRewinderUgroupIdsForFineGrainePermissions')->with(1)->andReturns(\TestHelper::arrayToDar([
-            'ugroup_id' => 103,
-        ]));
-
-        $this->dao->shouldReceive('searchWriterUgroupIdsForFineGrainedPermissions')->with(2)->andReturns(\TestHelper::arrayToDar([
-            'ugroup_id' => 101,
-        ]));
-
-        $this->dao->shouldReceive('searchRewinderUgroupIdsForFineGrainePermissions')->with(2)->andReturns(\TestHelper::arrayToDar([
-            'ugroup_id' => 102,
-        ]));
+        $dao->method('searchRewinderUgroupIdsForFineGrainePermissions')
+            ->willReturnCallback(static fn($id) => match ($id) {
+                1 => TestHelper::arrayToDar(['ugroup_id' => 103]),
+                2 => TestHelper::arrayToDar(['ugroup_id' => 102]),
+            });
     }
 
     private function buildRequest(array $params): Codendi_Request
     {
-        return new Codendi_Request(
-            $params,
-            $this->project_manager
-        );
+        return new Codendi_Request($params, $this->project_manager);
     }
 
     public function testItRetrievesUpdatedPermissions(): void
     {
         $params = [
-            'edit-branch-write' => [1 => [101, 102]],
+            'edit-branch-write'  => [1 => [101, 102]],
             'edit-branch-rewind' => [1 => [102]],
-            'edit-tag-write' => [2 => [101]],
-            'edit-tag-rewind' => [2 => [102]],
-            'group_id' => 101,
+            'edit-tag-write'     => [2 => [101]],
+            'edit-tag-rewind'    => [2 => [102]],
+            'group_id'           => 101,
         ];
 
         $request = $this->buildRequest($params);
 
         $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->repository);
 
-        $this->assertNotEmpty($updated);
-        $this->assertCount(1, $updated);
-        $this->assertEquals([1], array_keys($updated));
+        self::assertNotEmpty($updated);
+        self::assertCount(1, $updated);
+        self::assertEquals([1], array_keys($updated));
     }
 
     public function testItDealsWithRemovedUgroups(): void
     {
         $params = [
-            'edit-branch-write' => [1 => [101, 102]],
+            'edit-branch-write'  => [1 => [101, 102]],
             'edit-branch-rewind' => [1 => [103]],
-            'edit-tag-rewind' => [2 => [102]],
-            'group_id' => 101,
+            'edit-tag-rewind'    => [2 => [102]],
+            'group_id'           => 101,
         ];
 
         $request = $this->buildRequest($params);
 
         $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->repository);
 
-        $this->assertNotEmpty($updated);
-        $this->assertCount(1, $updated);
-        $this->assertEquals([2], array_keys($updated));
+        self::assertNotEmpty($updated);
+        self::assertCount(1, $updated);
+        self::assertEquals([2], array_keys($updated));
     }
 }
