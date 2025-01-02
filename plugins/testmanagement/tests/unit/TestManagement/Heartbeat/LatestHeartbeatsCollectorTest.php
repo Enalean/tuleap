@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Heartbeat;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactFactory;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
@@ -34,23 +33,16 @@ use UserManager;
 
 final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private LatestHeartbeatsCollector $collector;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager $user_manager;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory $factory;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExecutionDao $dao;
-    /**
-     * @var GlyphFinder&\Mockery\MockInterface
-     */
-    private $glyph_finder;
+    private MockObject|UserManager $user_manager;
+    private MockObject|Tracker_ArtifactFactory $factory;
+    private MockObject|ExecutionDao $dao;
 
     protected function setUp(): void
     {
-        $this->dao          = \Mockery::mock(ExecutionDao::class);
-        $this->factory      = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->glyph_finder = \Mockery::mock(GlyphFinder::class);
-        $this->user_manager = \Mockery::mock(UserManager::class);
+        $this->dao          = $this->createMock(ExecutionDao::class);
+        $this->factory      = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->user_manager = $this->createMock(UserManager::class);
 
         $this->collector = new LatestHeartbeatsCollector(
             $this->dao,
@@ -62,12 +54,12 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotCollectAnythingWhenNoTestExecHaveBeenUpdated(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
-        $user    = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getUgroups')->once()->andReturn([]);
+        $user    = $this->createMock(\PFUser::class);
+        $user->method('getUgroups')->willReturn([]);
 
         $collection = new HeartbeatsEntryCollection($project, $user);
 
-        $this->dao->shouldReceive('searchLastTestExecUpdate')->once()->andReturn([]);
+        $this->dao->method('searchLastTestExecUpdate')->willReturn([]);
 
         $this->collector->collect($collection);
 
@@ -77,8 +69,8 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectCampaign(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
-        $user    = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getUgroups')->once()->andReturn([]);
+        $user    = $this->createMock(\PFUser::class);
+        $user->method('getUgroups')->willReturn([]);
 
         $collection = new HeartbeatsEntryCollection($project, $user);
 
@@ -92,23 +84,23 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             'use_artifact_permissions' => 1,
         ];
 
-        $this->dao->shouldReceive('searchLastTestExecUpdate')->once()->andReturn([$row_artifact]);
+        $this->dao->method('searchLastTestExecUpdate')->willReturn([$row_artifact]);
 
         $color   = TrackerColor::fromName('chrome-silver');
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getColor')->andReturn($color);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getColor')->willReturn($color);
 
-        $artifact = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastUpdateDate')->andReturn(123456789);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getXRef')->andReturn('campaing #101');
-        $artifact->shouldReceive('getTitle')->andReturn('Tuleap 12.1');
-        $artifact->shouldReceive('userCanView')->andReturnTrue();
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getLastUpdateDate')->willReturn(123456789);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getId')->willReturn(101);
+        $artifact->method('getXRef')->willReturn('campaing #101');
+        $artifact->method('getTitle')->willReturn('Tuleap 12.1');
+        $artifact->method('userCanView')->willReturn(true);
 
-        $this->factory->shouldReceive('getInstanceFromRow')->andReturn($artifact);
+        $this->factory->method('getInstanceFromRow')->willReturn($artifact);
 
-        $this->user_manager->shouldReceive('getUserById')->andReturn($user);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
         $this->collector->collect($collection);
 
