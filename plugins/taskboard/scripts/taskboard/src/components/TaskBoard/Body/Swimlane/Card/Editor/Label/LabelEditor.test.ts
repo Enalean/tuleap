@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import LabelEditor from "./LabelEditor.vue";
 import { createTaskboardLocalVue } from "../../../../../../../helpers/local-vue-for-test";
 
-async function getWrapper(): Promise<Wrapper<LabelEditor>> {
+async function getWrapper(): Promise<Wrapper<Vue>> {
     return shallowMount(LabelEditor, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
@@ -41,14 +41,14 @@ describe("LabelEditor", () => {
     it("Saves the card if user hits enter", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.findComponent({ ref: "textarea" }).trigger("keydown.enter");
+        wrapper.findComponent({ ref: "textarea_ref" }).trigger("keydown.enter");
         expect(wrapper.emitted("save")).toBeTruthy();
     });
 
     it("Does not save the card if user hits shift + enter", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.findComponent({ ref: "textarea" }).trigger("keydown.enter", { shiftKey: true });
+        wrapper.findComponent({ ref: "textarea_ref" }).trigger("keydown.enter", { shiftKey: true });
         expect(wrapper.emitted("save")).toBeFalsy();
     });
 });
