@@ -25,6 +25,7 @@
         v-bind:disabled="!add_to_backlog_information.valid"
         v-bind:title="add_to_backlog_information.title"
         data-test="add-to-backlog-program-management"
+        v-bind:selected="post_action_type && post_action_type === getPostActionType()"
     >
         {{ add_to_backlog_information.option }}
     </option>
@@ -44,8 +45,7 @@ export default {
         add_to_backlog_information() {
             if (
                 this.add_to_top_backlog_is_already_present &&
-                this.post_action_type !==
-                    EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT
+                this.post_action_type !== this.getPostActionType()
             ) {
                 return {
                     valid: false,
@@ -62,11 +62,14 @@ export default {
         add_to_top_backlog_is_already_present() {
             return (
                 this.post_actions.filter(
-                    (post_action) =>
-                        post_action.type ===
-                        EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT,
+                    (post_action) => post_action.type === this.getPostActionType(),
                 ).length > 0
             );
+        },
+    },
+    methods: {
+        getPostActionType() {
+            return EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT;
         },
     },
 };

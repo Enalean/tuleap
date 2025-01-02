@@ -29,7 +29,6 @@
                 id="workflow-transition-modal-hidden-fieldsets"
                 multiple
                 required
-                v-model="hidden_fieldset_ids"
                 v-bind:disabled="is_modal_save_running"
                 ref="workflow_transition_modal_hidden_fieldsets"
                 v-on:change="updateHiddenFieldsetsPostActionFieldsetIds"
@@ -39,6 +38,9 @@
                     v-bind:key="fieldset.field_id"
                     v-bind:value="fieldset.field_id"
                     v-bind:data-test="`fieldset_${fieldset.field_id}`"
+                    v-bind:selected="
+                        hidden_fieldset_ids && hidden_fieldset_ids.includes(fieldset.field_id)
+                    "
                 >
                     {{ fieldset.label }}
                 </option>
@@ -71,7 +73,6 @@ export default {
     },
     data() {
         return {
-            hidden_fieldset_ids: [],
             list_picker: null,
         };
     },
@@ -89,23 +90,36 @@ export default {
                     .sort((field1, field2) => compare(field1.label, field2.label));
             },
         }),
+        hidden_fieldset_ids() {
+            if (!this.post_action) {
+                return [];
+            }
+            return this.post_action.fieldset_ids;
+        },
     },
     mounted() {
-        this.hidden_fieldset_ids = this.post_action.fieldset_ids;
         this.list_picker = createListPicker(this.$refs.workflow_transition_modal_hidden_fieldsets, {
             locale: document.body.dataset.userLocale,
             is_filterable: true,
             placeholder: this.$gettext("Choose a fieldset"),
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.list_picker.destroy();
     },
     methods: {
         updateHiddenFieldsetsPostActionFieldsetIds() {
+            const select = event.target;
+            const selected_option = Array.from(select.options).filter((option) => {
+                return option.selected;
+            });
+            const values = selected_option.map((option) => {
+                return parseInt(option.value, 10);
+            });
+
             this.$store.commit("transitionModal/updateHiddenFieldsetsPostActionFieldsetIds", {
                 post_action: this.post_action,
-                fieldset_ids: this.hidden_fieldset_ids,
+                fieldset_ids: values,
             });
         },
     },

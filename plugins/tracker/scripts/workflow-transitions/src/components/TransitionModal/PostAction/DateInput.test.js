@@ -28,7 +28,7 @@ describe("DateInput", () => {
 
     beforeEach(async () => {
         wrapper = shallowMount(DateInput, {
-            propsData: { value: DATE_FIELD_VALUE.CLEAR },
+            propsData: { input_value: DATE_FIELD_VALUE.CLEAR },
             localVue: await createLocalVueForTests(),
         });
     });
@@ -39,7 +39,7 @@ describe("DateInput", () => {
     };
 
     describe("without value", () => {
-        beforeEach(() => wrapper.setProps({ value: null }));
+        beforeEach(() => wrapper.setProps({ input_value: null }));
 
         it("Shows placeholder", () => {
             expect(findSelectedOption().dataset.testType).toBe("placeholder");
@@ -47,7 +47,7 @@ describe("DateInput", () => {
     });
 
     describe('with "current" value', () => {
-        beforeEach(() => wrapper.setProps({ value: DATE_FIELD_VALUE.CURRENT }));
+        beforeEach(() => wrapper.setProps({ input_value: DATE_FIELD_VALUE.CURRENT }));
 
         it('Select "current" option', () => {
             expect(findSelectedOption().dataset.testType).toBe("current");
@@ -61,8 +61,8 @@ describe("DateInput", () => {
         });
 
         it("emits input event with corresponding value", () => {
-            expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toStrictEqual([DATE_FIELD_VALUE.CURRENT]);
+            expect(wrapper.emitted().change).toBeTruthy();
+            expect(wrapper.emitted().change[0]).toStrictEqual([DATE_FIELD_VALUE.CURRENT]);
         });
     });
 });

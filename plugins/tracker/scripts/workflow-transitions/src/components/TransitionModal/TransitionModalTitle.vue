@@ -38,22 +38,33 @@ export default {
         ...mapState("transitionModal", {
             from_state_label(state) {
                 if (state.current_transition === null) {
-                    return null;
+                    return "";
                 }
                 if (state.current_transition.from_id === null) {
                     return this.$gettext("(New artifact)");
                 }
-                return this.all_target_states.find(
+                const target = this.all_target_states.find(
                     (from_state) => from_state.id === state.current_transition.from_id,
-                ).label;
+                );
+
+                if (target === undefined) {
+                    return "";
+                }
+
+                return target.label;
             },
             to_state_label(state) {
                 if (state.current_transition === null) {
-                    return null;
+                    return "";
                 }
-                return this.all_target_states.find(
+                const target = this.all_target_states.find(
                     (to_state) => to_state.id === state.current_transition.to_id,
-                ).label;
+                );
+
+                if (target === undefined) {
+                    return "";
+                }
+                return target.label;
             },
         }),
     },

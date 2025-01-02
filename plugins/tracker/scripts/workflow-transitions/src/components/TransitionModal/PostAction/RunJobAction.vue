@@ -31,7 +31,8 @@
                 pattern="^https?://.+"
                 class="tlp-input"
                 placeholder="https://www.example.com"
-                v-model="job_url"
+                v-on:input="onInput"
+                v-bind:value="post_action.job_url"
                 data-test-type="job-url"
                 required
                 v-bind:disabled="is_modal_save_running"
@@ -82,17 +83,6 @@ export default {
         job_url_input_id() {
             return `post-action-${this.post_action.unique_id}-job-url`;
         },
-        job_url: {
-            get() {
-                return this.post_action.job_url;
-            },
-            set(job_url) {
-                this.$store.commit("transitionModal/updateRunJobPostActionJobUrl", {
-                    post_action: this.post_action,
-                    job_url,
-                });
-            },
-        },
     },
     methods: {
         configure_project_id_message() {
@@ -117,6 +107,12 @@ export default {
             );
             return this.$gettextInterpolate(translated, {
                 transition_id: this.current_transition.id,
+            });
+        },
+        onInput() {
+            this.$store.commit("transitionModal/updateRunJobPostActionJobUrl", {
+                post_action: this.post_action,
+                job_url: event.target.value,
             });
         },
     },

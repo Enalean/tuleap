@@ -26,7 +26,7 @@
             multiple
             class="tracker-workflow-transition-modal-authorized-ugroups"
             v-bind:disabled="is_modal_save_running"
-            v-model="authorized_user_group_ids"
+            v-on:change="updateUGroups"
             data-test="authorized-ugroups-select"
             required
             ref="workflow_configuration_permission"
@@ -35,6 +35,7 @@
                 v-for="user_group in user_groups"
                 v-bind:key="user_group.id"
                 v-bind:value="user_group.id"
+                v-bind:selected="authorized_user_group_ids.includes(user_group.id)"
             >
                 {{ user_group.label }}
             </option>
@@ -60,16 +61,11 @@ export default defineComponent({
             "user_groups",
             "is_modal_save_running",
         ]),
-        authorized_user_group_ids: {
-            get() {
-                if (!this.current_transition) {
-                    return [];
-                }
-                return this.current_transition.authorized_user_group_ids;
-            },
-            set(authorized_user_group_ids) {
-                this.updateAuthorizedUserGroupIds(authorized_user_group_ids);
-            },
+        authorized_user_group_ids() {
+            if (!this.current_transition) {
+                return [];
+            }
+            return this.current_transition.authorized_user_group_ids;
         },
     },
     mounted() {
@@ -81,7 +77,7 @@ export default defineComponent({
             },
         );
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.configuration_permission_list_picker.destroy();
     },
     methods: {
@@ -90,6 +86,17 @@ export default defineComponent({
                 "transitionModal/updateAuthorizedUserGroupIds",
                 authorized_user_group_ids,
             );
+        },
+        updateUGroups(event) {
+            const select = event.target;
+            const selected_option = Array.from(select.options).filter((option) => {
+                return option.selected;
+            });
+            const values = selected_option.map((option) => {
+                return option.value;
+            });
+
+            this.updateAuthorizedUserGroupIds(values);
         },
     },
 });

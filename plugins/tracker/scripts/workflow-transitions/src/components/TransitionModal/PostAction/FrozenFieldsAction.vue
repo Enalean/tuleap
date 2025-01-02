@@ -32,7 +32,6 @@
                 id="workflow-transition-modal-frozen-fields"
                 multiple
                 required
-                v-model="frozen_field_ids"
                 v-bind:disabled="is_modal_save_running"
                 data-test="frozen-fields-selector"
                 ref="workflow_transition_modal_frozen_fields"
@@ -43,6 +42,7 @@
                     v-bind:key="field.field_id"
                     v-bind:value="field.field_id"
                     v-bind:data-test="`field_${field.field_id}`"
+                    v-bind:selected="frozen_field_ids && frozen_field_ids.includes(field.field_id)"
                 >
                     {{ field.label }}
                 </option>
@@ -70,7 +70,6 @@ export default {
     },
     data() {
         return {
-            frozen_field_ids: [],
             list_picker: null,
         };
     },
@@ -80,32 +79,46 @@ export default {
         ...mapGetters(["current_workflow_field"]),
         ...mapState({
             writable_fields(state) {
-                if (state.current_tracker === null) {
+                if (state.current_tracker === null || this.current_workflow_field === null) {
                     return [];
                 }
+
                 return state.current_tracker.fields
                     .filter((field) => !fields_blacklist.includes(field.type))
                     .filter((field) => !(field.field_id === this.current_workflow_field.field_id))
                     .sort((field1, field2) => compare(field1.label, field2.label));
             },
+            frozen_field_ids() {
+                if (!this.post_action) {
+                    return [];
+                }
+                return this.post_action.field_ids;
+            },
         }),
     },
     mounted() {
-        this.frozen_field_ids = this.post_action.field_ids;
         this.list_picker = createListPicker(this.$refs.workflow_transition_modal_frozen_fields, {
             locale: document.body.dataset.userLocale,
             is_filterable: true,
             placeholder: this.$gettext("Choose a field"),
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.list_picker.destroy();
     },
     methods: {
         updateFrozenFieldsPostActionFieldIds() {
+            const select = event.target;
+            const selected_option = Array.from(select.options).filter((option) => {
+                return option.selected;
+            });
+            const values = selected_option.map((option) => {
+                return parseInt(option.value, 10);
+            });
+
             this.$store.commit("transitionModal/updateFrozenFieldsPostActionFieldIds", {
                 post_action: this.post_action,
-                field_ids: this.frozen_field_ids,
+                field_ids: values,
             });
         },
     },

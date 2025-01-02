@@ -26,7 +26,7 @@
         <div class="tlp-form-element tracker-workflow-transition-modal-action-type">
             <select
                 class="tlp-select"
-                v-model="post_action_type"
+                v-on:change="updatePostActionType"
                 v-bind:disabled="is_modal_save_running"
                 data-test="post-action-type-select"
             >
@@ -36,6 +36,7 @@
                         data-test="freeze_fields"
                         v-bind:disabled="!frozen_fields_information.valid"
                         v-bind:title="frozen_fields_information.title"
+                        v-bind:selected="post_action.type === POST_ACTION_TYPE.FROZEN_FIELDS"
                     >
                         {{ frozen_fields_information.option }}
                     </option>
@@ -44,6 +45,7 @@
                         data-test="hide_fieldsets"
                         v-bind:disabled="!hidden_fieldsets_information.valid"
                         v-bind:title="hidden_fieldsets_information.title"
+                        v-bind:selected="post_action.type === POST_ACTION_TYPE.HIDDEN_FIELDSETS"
                     >
                         {{ hidden_fieldsets_information.option }}
                     </option>
@@ -55,7 +57,10 @@
                     />
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
-                    <option v-bind:value="POST_ACTION_TYPE.RUN_JOB">
+                    <option
+                        v-bind:value="POST_ACTION_TYPE.RUN_JOB"
+                        v-bind:selected="post_action.type === POST_ACTION_TYPE.RUN_JOB"
+                    >
                         {{ $gettext("Launch a CI job") }}
                     </option>
                     <option
@@ -63,6 +68,7 @@
                         data-test="set_field"
                         v-bind:disabled="!set_field_value_information.valid"
                         v-bind:title="set_field_value_information.title"
+                        v-bind:selected="post_action.type === POST_ACTION_TYPE.SET_FIELD_VALUE"
                     >
                         {{ set_field_value_information.option }}
                     </option>
@@ -283,16 +289,8 @@ export default {
         there_are_no_applicable_fieldsets_for_hidden_fieldsets() {
             return this.hidable_fieldsets.length === 0;
         },
-        post_action_type: {
-            get() {
-                return this.post_action.type;
-            },
-            set(type) {
-                this.$store.commit("transitionModal/updatePostActionType", {
-                    post_action: this.post_action,
-                    type,
-                });
-            },
+        post_action_type() {
+            return this.post_action.type;
         },
     },
     methods: {
@@ -301,6 +299,12 @@ export default {
                 return;
             }
             this.$store.commit("transitionModal/deletePostAction", this.post_action);
+        },
+        updatePostActionType() {
+            this.$store.commit("transitionModal/updatePostActionType", {
+                post_action: this.post_action,
+                type: event.target.value,
+            });
         },
     },
 };
