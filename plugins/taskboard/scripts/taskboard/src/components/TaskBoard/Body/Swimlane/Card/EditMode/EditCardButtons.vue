@@ -25,53 +25,52 @@
         v-on:save="save"
     />
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import CancelSaveButtons from "./CancelSaveButtons.vue";
-import type { Card } from "../../../../../../type";
-import { TaskboardEvent } from "../../../../../../type";
+<script setup lang="ts">
+import { computed } from "vue";
 import EventBus from "../../../../../../helpers/event-bus";
+import { TaskboardEvent } from "../../../../../../type";
+import type { Card } from "../../../../../../type";
+import CancelSaveButtons from "./CancelSaveButtons.vue";
 
-@Component({
-    components: { CancelSaveButtons },
-})
-export default class EditCardButtons extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
+const props = defineProps<{
+    card: Card;
+}>();
 
-    get should_display_buttons(): boolean {
-        if (this.card.is_in_edit_mode) {
-            return true;
-        }
+const emit = defineEmits<{
+    (e: "editor-closed"): void;
+}>();
 
-        if (!this.card.remaining_effort) {
-            return false;
-        }
-
-        return this.card.remaining_effort.is_in_edit_mode;
+const should_display_buttons = computed((): boolean => {
+    if (props.card.is_in_edit_mode) {
+        return true;
     }
 
-    get is_action_ongoing(): boolean {
-        if (this.card.is_being_saved) {
-            return true;
-        }
-
-        if (!this.card.remaining_effort) {
-            return false;
-        }
-
-        return this.card.remaining_effort.is_being_saved;
+    if (!props.card.remaining_effort) {
+        return false;
     }
 
-    cancel(): void {
-        EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, this.card);
-        this.$emit("editor-closed");
+    return props.card.remaining_effort.is_in_edit_mode;
+});
+
+const is_action_ongoing = computed((): boolean => {
+    if (props.card.is_being_saved) {
+        return true;
     }
 
-    save(): void {
-        EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, this.card);
-        this.$emit("editor-closed");
+    if (!props.card.remaining_effort) {
+        return false;
     }
+
+    return props.card.remaining_effort.is_being_saved;
+});
+
+function cancel(): void {
+    EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, props.card);
+    emit("editor-closed");
+}
+
+function save(): void {
+    EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, props.card);
+    emit("editor-closed");
 }
 </script>

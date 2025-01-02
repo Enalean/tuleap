@@ -25,7 +25,7 @@ import EditCardButtons from "./EditCardButtons.vue";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
 import EventBus from "../../../../../../helpers/event-bus";
 
-function createWrapper(card: Card): Wrapper<EditCardButtons> {
+function createWrapper(card: Card): Wrapper<Vue> {
     return shallowMount(EditCardButtons, {
         propsData: { card },
     });
