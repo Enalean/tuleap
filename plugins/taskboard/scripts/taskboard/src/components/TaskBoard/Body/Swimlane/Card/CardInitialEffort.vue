@@ -30,26 +30,26 @@
     </span>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { Card } from "../../../../../type";
 
-@Component
-export default class CardInitialEffort extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
+const { $gettext } = useGettext();
 
-    get initial_effort_label(): string {
-        return this.$gettext("Initial effort");
-    }
+const props = defineProps<{
+    card: Card;
+}>();
 
-    get has_initial_effort(): boolean {
-        return this.card.initial_effort !== null;
-    }
+const initial_effort_label = computed((): string => {
+    return $gettext("Initial effort");
+});
 
-    get color_classname(): string {
-        return `tlp-badge-${this.card.color}`;
-    }
-}
+const has_initial_effort = computed((): boolean => {
+    return props.card.initial_effort !== null;
+});
+
+const color_classname = computed((): string => {
+    return `tlp-badge-${props.card.color}`;
+});
 </script>
