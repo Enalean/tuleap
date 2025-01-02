@@ -27,7 +27,7 @@ import type { Card } from "../../../../../../type";
 import { TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
-async function getWrapper(is_being_saved = false): Promise<Wrapper<EditRemainingEffort>> {
+async function getWrapper(is_being_saved = false): Promise<Wrapper<Vue>> {
     return shallowMount(EditRemainingEffort, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
@@ -153,7 +153,7 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         await wrapper.setData({ value: "3" });
-        expect(wrapper.classes()).toEqual(["taskboard-card-remaining-effort-input"]);
+        expect(wrapper.classes()).toStrictEqual(["taskboard-card-remaining-effort-input"]);
 
         await wrapper.setData({ value: "3.14" });
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-40");
