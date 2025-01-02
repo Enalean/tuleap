@@ -1,0 +1,29 @@
+<h3>{{# gettext }}Manage system reference patterns{{/ gettext }}</h3>
+
+<table data-test="table-test" width="100%" border="0" cellspacing="1" cellpadding="2">
+	<tbody>
+        <tr class="boxtable">
+            {{> reference-table-header }}
+            {{# is_template_project }}
+                <td class="boxtitle">{{# gettext }}Delete{{/ gettext }}</td>
+            {{/ is_template_project }}
+        </tr>
+        {{# system_references }}
+            {{> reference-pattern-row }}
+        {{/ system_references }}
+    </tbody>
+</table>
+
+<h3>{{# gettext }}Manage project reference patterns{{/ gettext }}</h3>
+
+<table data-test="table-test" width="100%" border="0" cellspacing="1" cellpadding="2">
+	<tbody>
+        <tr class="boxtable">
+            {{> reference-table-header }}
+            <td class="boxtitle">{{# gettext }}Delete{{/ gettext }}</td>
+        </tr>
+        {{# project_references }}
+            {{> reference-pattern-row }}
+        {{/ project_references }}
+    </tbody>
+</table>

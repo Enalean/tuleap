@@ -108,7 +108,7 @@ class ReferenceAdministrationViews extends Views
             $user
         );
 
-        $template_path = __DIR__ . '/../../../../templates/admin';
+        $template_path = __DIR__ . '/../../../../templates/project/admin/references';
         echo $this->renderer_factory->getRenderer($template_path)->renderToString('add-reference', $presenter);
     }
 
@@ -145,7 +145,7 @@ class ReferenceAdministrationViews extends Views
             $ref,
         );
 
-        $template_path = __DIR__ . '/../../../../templates/admin';
+        $template_path = __DIR__ . '/../../../../templates/project/admin/references';
         echo $this->renderer_factory->getRenderer($template_path)->renderToString('edit-reference', $presenter);
     }
 }

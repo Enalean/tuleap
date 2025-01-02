@@ -236,9 +236,6 @@ msgstr ""
 "명의</a> 제한된 상태를 가진 사용자가 있습니다. 현재 액세스 모드를 변경해도 상"
 "태는 변경되지 않으며 수동으로 처리해야 합니다.</p>"
 
-msgid "<i>Disabled</i>"
-msgstr "<i>비활성화</i>"
-
 msgid ""
 "<p>An outbound HTTP request has been filtered in the last 24 hours in order "
 "to prevent a possible Server Side Request Forgery (SSRF) attack. You might "
@@ -1142,9 +1139,6 @@ msgstr "사용자 그룹 삭제"
 msgid "Delete widget"
 msgstr "위젯 삭제"
 
-msgid "Delete?"
-msgstr "삭제하시겠습니까?"
-
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -1168,6 +1162,9 @@ msgstr "상세 정보"
 
 msgid "Didn't get a confirmation email? Check your spam folder."
 msgstr "확인 이메일을 받지 못하셨다면 스팸 폴더를 확인해주세요."
+
+msgid "Disabled"
+msgstr "비활성화"
 
 msgid "Disallow for all projects"
 msgstr "모든 프로젝트에 대해 허용 안 함"

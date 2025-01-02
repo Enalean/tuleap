@@ -249,9 +249,6 @@ msgstr ""
 "Changer le mode d'accès ne modifiera pas leur status, ils devront être gérés "
 "manuellement.</p>"
 
-msgid "<i>Disabled</i>"
-msgstr "<i>Inactif</i>"
-
 msgid ""
 "<p>An outbound HTTP request has been filtered in the last 24 hours in order "
 "to prevent a possible Server Side Request Forgery (SSRF) attack. You might "
@@ -1194,9 +1191,6 @@ msgstr "Supprimer un groupe utilisateurs"
 msgid "Delete widget"
 msgstr "Supprimer le widget"
 
-msgid "Delete?"
-msgstr "Détruire ?"
-
 msgid "Deleted"
 msgstr "Détruit"
 
@@ -1222,6 +1216,9 @@ msgid "Didn't get a confirmation email? Check your spam folder."
 msgstr ""
 "Vous n'avez pas reçu d'e-mail de confirmation ? Vérifiez votre dossier de "
 "courriers indésirables."
+
+msgid "Disabled"
+msgstr "Inactif"
 
 msgid "Disallow for all projects"
 msgstr "Restreindre pour tous les projets"

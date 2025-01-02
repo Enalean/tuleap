@@ -1,0 +1,23 @@
+<tr>
+    <td><a href="{{ edit_url }}" title="{{ description}}">{{ keyword }}</a></td>
+    <td>{{ description }}</td>
+    <td>{{ nature }} </td>
+    <td align="center">{{# is_enabled }}{{# gettext }}Enabled{{/ gettext }}{{/ is_enabled }}{{^ is_enabled }}<i>{{# gettext }}Disabled{{/ gettext }}</i>{{/ is_enabled }}</td>
+    {{# is_template_project }}
+        <td align="center">{{ scope }} </td>
+        <td align="center">{{ service_shortname }} </td>
+    {{/  is_template_project }}
+    {{# can_be_deleted }}
+          <td align="center">
+            <form method="post" action="{{ delete_url }}" style="margin: 0;" onsubmit="return confirm('{{ delete_reference_label }}')">
+                <input type="image" src="{{ trash_icon }}" height="16" width="16" border="0" alt="DELETE">
+                {{# csrf_token }}
+                   {{> csrf_token_input }}
+                {{/ csrf_token }}
+            </form>
+          </td>
+    {{/ can_be_deleted }}
+    {{^ can_be_deleted }}
+        <td align="center"></td>
+    {{/ can_be_deleted }}
+</tr>

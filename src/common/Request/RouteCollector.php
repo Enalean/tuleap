@@ -147,6 +147,7 @@ use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\Reference\Browse\LegacyReferenceAdministrationBrowsingRenderer;
 use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowseController;
+use Tuleap\Project\Admin\Reference\Browse\ReferencePatternPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware;
@@ -1028,17 +1029,23 @@ class RouteCollector
 
     public static function getReferencesController(): ReferenceAdministrationBrowseController
     {
+        $event_manager     = EventManager::instance();
+        $reference_manager = ReferenceManager::instance();
+        $builder           = new ReferencePatternPresenterBuilder($event_manager, $reference_manager->getAvailableNatures());
+
         return new ReferenceAdministrationBrowseController(
             \ProjectManager::instance(),
             new LegacyReferenceAdministrationBrowsingRenderer(
                 Codendi_HTMLPurifier::instance(),
-                EventManager::instance(),
-                ReferenceManager::instance()
+                $event_manager,
+                $reference_manager,
+                TemplateRendererFactory::build(),
+                $builder
             ),
             new HeaderNavigationDisplayer(),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
+                $event_manager
             ),
             new ProjectAdministratorChecker()
         );
