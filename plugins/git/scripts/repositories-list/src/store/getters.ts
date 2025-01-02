@@ -28,9 +28,15 @@ import type { Folder, FormattedGitLabRepository, Repository, State } from "../ty
 
 export const currentRepositoryList = (
     state: State,
-): Array<Repository | FormattedGitLabRepository | Folder> => [
-    ...state.repositories_for_owner[state.selected_owner_id],
-];
+): Array<Repository | FormattedGitLabRepository> => {
+    const found_repositories = state.repositories_for_owner.find(
+        (repository_for_owner) => repository_for_owner.id === state.selected_owner_id,
+    );
+    if (found_repositories === undefined) {
+        return [];
+    }
+    return found_repositories?.repositories;
+};
 
 function isGitLabRepository(
     item: Folder | Repository | FormattedGitLabRepository,
@@ -49,9 +55,11 @@ export const getGitlabRepositoriesIntegrated = (
 };
 
 export const areRepositoriesAlreadyLoadedForCurrentOwner = (state: State): boolean => {
-    return Object.prototype.hasOwnProperty.call(
-        state.repositories_for_owner,
-        state.selected_owner_id,
+    return (
+        !state.is_loading_initial &&
+        state.repositories_for_owner.some(
+            (repositories_for_owner) => repositories_for_owner.id === state.selected_owner_id,
+        )
     );
 };
 
@@ -61,10 +69,6 @@ export const isCurrentRepositoryListEmpty = (state: State): boolean =>
 export const getFilteredRepositoriesByLastUpdateDate = (
     state: State,
 ): Array<Repository | FormattedGitLabRepository | Folder> => {
-    if (!areRepositoriesAlreadyLoadedForCurrentOwner(state)) {
-        return [];
-    }
-
     return sortByLastUpdateDate(currentRepositoryList(state)).filter(
         (repository: FormattedGitLabRepository | Repository | Folder) =>
             checkRepositoryMatchQuery(repository, state.filter),
@@ -81,6 +85,7 @@ export const getFilteredRepositoriesGroupedByPath = (state: State): Folder => {
     if (!areRepositoriesAlreadyLoadedForCurrentOwner(state)) {
         return root_folder;
     }
+
     return filterAFolder(groupRepositoriesByPath(currentRepositoryList(state)), state.filter);
 };
 

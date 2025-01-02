@@ -78,7 +78,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     const state: State = {
-        repositories_for_owner: JSON.parse(repositories_owners),
+        repositories_for_owner: [
+            {
+                id: PROJECT_KEY,
+                repositories: JSON.parse(repositories_owners),
+            },
+        ],
         filter: "",
         selected_owner_id: PROJECT_KEY,
         error_message_type: ERROR_TYPE_NO_ERROR,

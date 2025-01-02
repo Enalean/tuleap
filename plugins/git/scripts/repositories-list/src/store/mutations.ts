@@ -17,37 +17,75 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../constants";
 import { formatRepository } from "../gitlab/gitlab-repository-formatter";
-import type { FormattedGitLabRepository, GitLabRepository, Repository, State } from "../type";
+import type {
+    FormattedGitLabRepository,
+    GitLabRepository,
+    RepositoriesForOwner,
+    Repository,
+    State,
+} from "../type";
 import type { Modal } from "@tuleap/tlp-modal";
+
+function checkIfUserAlreadyExistsInRepositoryList(state: State): void {
+    if (
+        !state.repositories_for_owner.some(
+            (repositories_for_owner) => repositories_for_owner.id === state.selected_owner_id,
+        )
+    ) {
+        state.repositories_for_owner.push({ id: state.selected_owner_id, repositories: [] });
+    }
+}
+
+function addUserRepositoryInList(
+    state: State,
+    repositories: Array<Repository | FormattedGitLabRepository>,
+): void {
+    state.repositories_for_owner.forEach((repositories_for_owner: RepositoriesForOwner) => {
+        if (
+            repositories_for_owner.id === state.selected_owner_id &&
+            repositories_for_owner.repositories
+        ) {
+            repositories_for_owner.repositories = repositories_for_owner.repositories
+                .concat(repositories)
+                .filter(
+                    (
+                        repository: Repository | FormattedGitLabRepository,
+                        index: number,
+                        self: Array<Repository | FormattedGitLabRepository>,
+                    ) =>
+                        index ===
+                        self.findIndex(
+                            (added_repository: Repository | FormattedGitLabRepository) =>
+                                added_repository.id === repository.id,
+                        ),
+                );
+        }
+    });
+}
 
 export default {
     setSelectedOwnerId(state: State, selected_owner_id: string | number): void {
         state.selected_owner_id = selected_owner_id;
     },
     pushRepositoriesForCurrentOwner(state: State, repositories: Array<Repository>): void {
-        if (typeof state.repositories_for_owner[state.selected_owner_id] === "undefined") {
-            Vue.set(state.repositories_for_owner, state.selected_owner_id, []);
-        }
+        checkIfUserAlreadyExistsInRepositoryList(state);
         if (repositories.length > 0) {
             repositories.forEach(extendRepository);
-            state.repositories_for_owner[state.selected_owner_id].push(...repositories);
+            addUserRepositoryInList(state, repositories);
         }
     },
     pushGitlabRepositoriesForCurrentOwner(
         state: State,
         repositories: Array<GitLabRepository>,
     ): void {
-        if (typeof state.repositories_for_owner[state.selected_owner_id] === "undefined") {
-            Vue.set(state.repositories_for_owner, state.selected_owner_id, []);
-        }
+        checkIfUserAlreadyExistsInRepositoryList(state);
         if (repositories.length > 0) {
             const repositories_formatted = repositories.map((repo: GitLabRepository) =>
                 formatRepository(repo),
             );
-            state.repositories_for_owner[state.selected_owner_id].push(...repositories_formatted);
+            addUserRepositoryInList(state, repositories_formatted);
         }
     },
     setFilter(state: State, filter: string): void {
@@ -82,12 +120,20 @@ export default {
         state.services_name_used = services_name_used;
     },
     removeRepository(state: State, repository: Repository | FormattedGitLabRepository): void {
-        const index_of_repository =
-            state.repositories_for_owner[state.selected_owner_id].indexOf(repository);
-        state.repositories_for_owner[state.selected_owner_id].splice(index_of_repository, 1);
+        state.repositories_for_owner = state.repositories_for_owner.map((repository_for_owner) => {
+            if (
+                repository_for_owner.id === state.selected_owner_id &&
+                repository_for_owner.repositories
+            ) {
+                repository_for_owner.repositories = repository_for_owner.repositories.filter(
+                    (repo) => repo.id !== repository.id,
+                );
+            }
+            return repository_for_owner;
+        });
     },
     resetRepositories(state: State): void {
-        state.repositories_for_owner = {};
+        state.repositories_for_owner = [];
     },
 };
 
