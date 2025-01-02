@@ -34,7 +34,7 @@ jest.useFakeTimers();
 async function getWrapper(
     card: Card,
     tracker: Tracker = { assigned_to_field: null } as Tracker,
-): Promise<Wrapper<CardAssignees>> {
+): Promise<Wrapper<Vue>> {
     return shallowMount(CardAssignees, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
@@ -186,7 +186,7 @@ describe("CardAssignees", () => {
 
     describe("role/tabindex/aria-label", () => {
         describe("When the card is in edit mode and assignees are updatable", () => {
-            let card: Card, tracker: Tracker, wrapper: Wrapper<CardAssignees>;
+            let card: Card, tracker: Tracker, wrapper: Wrapper<Vue>;
 
             beforeEach(async () => {
                 card = { assignees: [] as User[], is_in_edit_mode: true } as Card;
@@ -202,7 +202,7 @@ describe("CardAssignees", () => {
         });
 
         describe("When the field assigned_to is multiple, then aria-label is plural", () => {
-            let card: Card, tracker: Tracker, wrapper: Wrapper<CardAssignees>;
+            let card: Card, tracker: Tracker, wrapper: Wrapper<Vue>;
 
             beforeEach(async () => {
                 card = { assignees: [] as User[], is_in_edit_mode: true } as Card;
@@ -216,7 +216,7 @@ describe("CardAssignees", () => {
         });
 
         describe("When the card is not in edit mode or assignees are not updatable", () => {
-            let card: Card, tracker: Tracker, wrapper: Wrapper<CardAssignees>;
+            let card: Card, tracker: Tracker, wrapper: Wrapper<Vue>;
 
             beforeEach(async () => {
                 card = { assignees: [] as User[], is_in_edit_mode: false } as Card;

@@ -33,7 +33,7 @@
             v-bind:is_multiple="is_multiple"
             v-bind:users="users"
             v-model="new_assignees_ids"
-            v-if="is_in_edit_mode"
+            v-if="is_in_edit_mode_ref"
         />
         <template v-else>
             <i
@@ -53,146 +53,135 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import type { WritableComputedRef } from "vue";
+import { ref, watch, computed } from "vue";
+import { useNamespacedActions, useNamespacedGetters } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { Card, Tracker, User } from "../../../../../type";
+import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
 import UserAvatar from "./UserAvatar.vue";
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
-import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
 
-const swimlane = namespace("swimlane");
+const { $ngettext } = useGettext();
 
-@Component({
-    components: { PeoplePicker, UserAvatar },
-})
-export default class CardAssignees extends Vue {
-    @Prop({ required: true })
-    readonly value!: User[];
+const { loadPossibleAssignees } = useNamespacedActions("swimlane", ["loadPossibleAssignees"]);
 
-    @Prop({ required: true })
-    readonly card!: Card;
+const { assignable_users } = useNamespacedGetters("swimlane", ["assignable_users"]);
 
-    @Prop({ required: true })
-    readonly tracker!: Tracker;
+const props = defineProps<{
+    value: User[];
+    card: Card;
+    tracker: Tracker;
+}>();
 
-    @swimlane.Action
-    loadPossibleAssignees!: (tracker: Tracker) => void;
+const emit = defineEmits<{
+    (e: "input", user_for_people_picker: UserForPeoplePicker[]): void;
+}>();
 
-    @swimlane.Getter
-    readonly assignable_users!: (tracker: Tracker) => UserForPeoplePicker[];
+const is_in_edit_mode_ref = ref(false);
+const possible_users = ref<UserForPeoplePicker[]>([]);
+const is_loading_users = ref(false);
 
-    is_in_edit_mode = false;
-    private possible_users: UserForPeoplePicker[] = [];
-    private is_loading_users = false;
-
-    mounted(): void {
-        this.$watch(
-            () => this.card.is_in_edit_mode,
-            function (is_in_edit_mode: boolean) {
-                if (!is_in_edit_mode) {
-                    this.is_in_edit_mode = false;
-                }
-            },
-        );
-    }
-
-    get classes(): string[] {
-        if (!this.card.is_in_edit_mode) {
-            return [];
+watch(
+    () => props.card.is_in_edit_mode,
+    (is_in_edit_mode: boolean) => {
+        if (!is_in_edit_mode) {
+            is_in_edit_mode_ref.value = false;
         }
+    },
+);
 
-        const classes = ["taskboard-card-edit-mode-assignees"];
+const is_updatable = computed((): boolean => {
+    return props.tracker.assigned_to_field !== null;
+});
 
-        if (this.is_in_edit_mode) {
-            classes.push("taskboard-card-assignees-edit-mode");
-        } else if (this.is_updatable) {
-            classes.push("taskboard-card-assignees-editable");
-        }
-
-        return classes;
+const classes = computed((): string[] => {
+    if (!props.card.is_in_edit_mode) {
+        return [];
     }
 
-    get user_edit_classes(): string[] {
-        if (this.is_loading_users) {
-            return ["fa-circle-o-notch", "fa-spin", "taskboard-card-assignees-loading-icon"];
-        }
+    const classes = ["taskboard-card-edit-mode-assignees"];
 
-        if (this.card.assignees.length >= 1) {
-            return ["fa-tlp-user-pencil", "taskboard-card-assignees-edit-icon"];
-        }
-
-        return ["fa-user-plus", "taskboard-card-assignees-add-icon"];
+    if (is_in_edit_mode_ref.value) {
+        classes.push("taskboard-card-assignees-edit-mode");
+    } else if (is_updatable.value) {
+        classes.push("taskboard-card-assignees-editable");
     }
 
-    get is_user_edit_displayed(): boolean {
-        return this.card.is_in_edit_mode && this.is_updatable;
+    return classes;
+});
+
+const user_edit_classes = computed((): string[] => {
+    if (is_loading_users.value) {
+        return ["fa-circle-o-notch", "fa-spin", "taskboard-card-assignees-loading-icon"];
     }
 
-    get is_updatable(): boolean {
-        return this.tracker.assigned_to_field !== null;
+    if (props.card.assignees.length >= 1) {
+        return ["fa-tlp-user-pencil", "taskboard-card-assignees-edit-icon"];
     }
 
-    get is_multiple(): boolean {
-        return Boolean(this.tracker.assigned_to_field?.is_multiple);
+    return ["fa-user-plus", "taskboard-card-assignees-add-icon"];
+});
+
+const is_user_edit_displayed = computed((): boolean => {
+    return props.card.is_in_edit_mode && is_updatable.value;
+});
+
+const is_multiple = computed((): boolean => {
+    return Boolean(props.tracker.assigned_to_field?.is_multiple);
+});
+
+const edit_assignees_label = computed((): string => {
+    if (!is_user_edit_displayed.value) {
+        return "";
     }
 
-    get edit_assignees_label(): string {
-        if (!this.is_user_edit_displayed) {
-            return "";
-        }
+    const number = is_multiple.value ? 2 : 1;
 
-        const number = this.is_multiple ? 2 : 1;
+    return $ngettext("Edit assignee", "Edit assignees", number);
+});
 
-        return this.$ngettext("Edit assignee", "Edit assignees", number);
+const role = computed((): string => {
+    return is_user_edit_displayed.value ? "button" : "";
+});
+
+const tabindex = computed((): number => {
+    return is_user_edit_displayed.value ? 0 : -1;
+});
+
+async function editAssignees(): Promise<void> {
+    if (!props.card.is_in_edit_mode || is_in_edit_mode_ref.value) {
+        return;
     }
 
-    get role(): string {
-        return this.is_user_edit_displayed ? "button" : "";
-    }
-
-    get tabindex(): number {
-        return this.is_user_edit_displayed ? 0 : -1;
-    }
-
-    async editAssignees(): Promise<void> {
-        if (!this.card.is_in_edit_mode || this.is_in_edit_mode) {
-            return;
-        }
-
-        await this.loadUsers();
-        this.is_in_edit_mode = true;
-    }
-
-    async loadUsers(): Promise<void> {
-        this.is_loading_users = true;
-
-        await this.loadPossibleAssignees(this.tracker);
-        this.possible_users = this.assignable_users(this.tracker);
-
-        this.is_loading_users = false;
-    }
-
-    get users(): UserForPeoplePicker[] {
-        return this.possible_users.map((user): UserForPeoplePicker => {
-            const selected = this.card.assignees.some(
-                (selected_user) => selected_user.id === user.id,
-            );
-
-            return { ...user, selected };
-        });
-    }
-
-    get new_assignees_ids(): number[] {
-        return this.value.map((user) => user.id);
-    }
-
-    set new_assignees_ids(value: number[]) {
-        this.$emit(
-            "input",
-            this.users.filter((user) => value.some((id) => id === user.id)),
-        );
-    }
+    await loadUsers();
+    is_in_edit_mode_ref.value = true;
 }
+
+async function loadUsers(): Promise<void> {
+    is_loading_users.value = true;
+
+    await loadPossibleAssignees(props.tracker);
+    possible_users.value = assignable_users.value(props.tracker);
+
+    is_loading_users.value = false;
+}
+
+const users = computed((): UserForPeoplePicker[] => {
+    return possible_users.value.map((user): UserForPeoplePicker => {
+        const selected = props.card.assignees.some((selected_user) => selected_user.id === user.id);
+
+        return { ...user, selected };
+    });
+});
+
+const new_assignees_ids: WritableComputedRef<number[]> = computed({
+    get: (): number[] => props.value.map((user) => user.id),
+    set: (value: number[]) =>
+        emit(
+            "input",
+            users.value.filter((user) => value.some((id) => id === user.id)),
+        ),
+});
 </script>
