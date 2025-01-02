@@ -96,7 +96,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
         );
     }
 
-    private function getIdsUserCanView(PFUser $user, LegacyDataAccessResultInterface $dar)
+    private function getIdsUserCanView(PFUser $user, LegacyDataAccessResultInterface|array $dar)
     {
         $artifact_ids = [];
         foreach ($dar as $row) {

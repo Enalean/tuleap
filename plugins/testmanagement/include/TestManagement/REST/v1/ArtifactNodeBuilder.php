@@ -118,7 +118,7 @@ class ArtifactNodeBuilder
         return array_values($links);
     }
 
-    private function appendNodeReferenceRepresentations(array &$links, LegacyDataAccessResultInterface $dar, PFUser $user, int $id, array &$nodes, array &$artifact_ids): void
+    private function appendNodeReferenceRepresentations(array &$links, LegacyDataAccessResultInterface|array $dar, PFUser $user, int $id, array &$nodes, array &$artifact_ids): void
     {
         foreach ($this->getArtifactIdsUserCanSee($user, $dar, $links) as $id) {
             $link = new NodeReferenceRepresentation();
@@ -132,7 +132,7 @@ class ArtifactNodeBuilder
      *
      * @psalm-return list<mixed>
      */
-    private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface $dar, array $already_linked_ids): array
+    private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface|array $dar, array $already_linked_ids): array
     {
         $artifact_ids = [];
         foreach ($dar as $row) {

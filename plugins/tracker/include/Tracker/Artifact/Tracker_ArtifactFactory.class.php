@@ -371,11 +371,14 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
     }
 
     /**
-     * @return Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
+     * @return Artifact[]
      */
-    public function getLinkedArtifacts(Artifact $artifact)
+    public function getLinkedArtifacts(Artifact $artifact): array
     {
-        return $this->getDao()->getLinkedArtifacts($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
+        return array_map(
+            fn (array $artifact_row) => $this->getInstanceFromRow($artifact_row),
+            $this->getDao()->getLinkedArtifacts($artifact->getId())
+        );
     }
 
     /**
@@ -423,7 +426,11 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
     {
         $children = [];
         if (count($artifacts) > 1) {
-            foreach ($this->getDao()->getChildrenForArtifacts($this->getArtifactIds($artifacts))->instanciateWith([$this, 'getInstanceFromRow']) as $artifact) {
+            $artifacts_instances = array_map(
+                fn (array $artifact_row) => $this->getInstanceFromRow($artifact_row),
+                $this->getDao()->getChildrenForArtifacts($this->getArtifactIds($artifacts))
+            );
+            foreach ($artifacts_instances as $artifact) {
                 if ($artifact->userCanView($user)) {
                     $children[] = $artifact;
                 }

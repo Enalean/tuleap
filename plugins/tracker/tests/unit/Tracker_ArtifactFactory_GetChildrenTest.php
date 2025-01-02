@@ -99,7 +99,7 @@ class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit\TestC
             'use_artifact_permissions' => false,
         ];
 
-        $this->dao->shouldReceive('getChildrenForArtifacts')->with([11, 12])->andReturns(\TestHelper::arrayToDar($artiafct_as_dar1, $artiafct_as_dar2));
+        $this->dao->shouldReceive('getChildrenForArtifacts')->with([11, 12])->andReturns([$artiafct_as_dar1, $artiafct_as_dar2]);
 
         $child_artifact1 = \Mockery::mock(Artifact::class);
         $child_artifact1->shouldReceive('userCanView')->andReturn(true);

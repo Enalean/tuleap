@@ -620,14 +620,14 @@ class Tracker_ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    /**
+     * @deprecated
+     *
+     * @see \Tuleap\Tracker\Artifact\Dao\ArtifactDao
+     */
     public function getChildrenForArtifacts(array $artifact_ids)
     {
-        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-
-        $sql = 'SELECT child_art.*, parent_art.id as parent_id ' .
-               $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids);
-
-        return $this->retrieve($sql);
+        return (new \Tuleap\Tracker\Artifact\Dao\ArtifactDao())->getChildrenForArtifacts($artifact_ids);
     }
 
     private function getSortedFromStatementForChildrenOfArtifacts(string $artifact_ids): string
@@ -721,11 +721,8 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     /**
      * Retrieve all artifacts linked by the given one
-     *
-     * @param int $artifact_id
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
-    public function getLinkedArtifacts($artifact_id)
+    public function getLinkedArtifacts(int $artifact_id): array
     {
         return $this->getLinkedArtifactsByIds([$artifact_id]);
     }
@@ -1151,30 +1148,13 @@ class Tracker_ArtifactDao extends DataAccessObject
     }
 
     /**
-     * Return all artifacts linked by the given artifact (possible exclusion)
+     * @deprecated
      *
-     * @param array $artifact_ids Artifact ids to inspect
-     * @param array $excluded_ids Exclude those ids from the results
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
+     * @see \Tuleap\Tracker\Artifact\Dao\ArtifactDao
      */
-    public function getLinkedArtifactsByIds(array $artifact_ids, array $excluded_ids = [])
+    public function getLinkedArtifactsByIds(array $artifact_ids, array $excluded_ids = []): array
     {
-        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $exclude      = '';
-        if (count($excluded_ids) > 0) {
-            $exclude = 'AND linked_art.id NOT IN (' . $this->da->escapeIntImplode($excluded_ids) . ')';
-        }
-        $sql = "SELECT linked_art.*
-                FROM tracker_artifact parent_art
-                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
-                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
-                    INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $exclude)
-                    INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
-                WHERE parent_art.id IN ($artifact_ids)
-                    AND linked_tracker.deletion_date IS NULL";
-
-        return $this->retrieve($sql);
+        return (new \Tuleap\Tracker\Artifact\Dao\ArtifactDao())->getLinkedArtifactsByIds($artifact_ids, $excluded_ids);
     }
 
     /**

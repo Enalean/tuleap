@@ -96,7 +96,7 @@ final class MilestoneStatusCounterTest extends TestCase
             ['id' => 36, 'status' => Artifact::STATUS_OPEN],
             ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
         ));
-        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(TestHelper::emptyDar());
+        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn([]);
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals([
             Artifact::STATUS_OPEN   => 1,
@@ -113,7 +113,7 @@ final class MilestoneStatusCounterTest extends TestCase
 
         // Level -1
         $this->artifact_dao->method('getChildrenForArtifacts')->with([35, 36])->willReturn(
-            TestHelper::arrayToDar(['id' => 38], ['id' => 39], ['id' => 40])
+            [['id' => 38], ['id' => 39], ['id' => 40]]
         );
 
         $this->artifact_dao->method('getArtifactsStatusByIds')
@@ -157,7 +157,7 @@ final class MilestoneStatusCounterTest extends TestCase
         $this->artifact_dao->method('getArtifactsStatusByIds')->willReturn(
             TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN])
         );
-        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(TestHelper::emptyDar());
+        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn([]);
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals([
             Artifact::STATUS_OPEN   => 1,
@@ -189,7 +189,7 @@ final class MilestoneStatusCounterTest extends TestCase
                 TestHelper::arrayToDar(['id' => 38, 'status' => Artifact::STATUS_OPEN])
             );
         $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(
-            TestHelper::arrayToDar(['id' => 37], ['id' => 38])
+            [['id' => 37], ['id' => 38]]
         );
 
         $result = $this->counter->getStatus($this->user, 12);
