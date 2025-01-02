@@ -23,27 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsTheTextRepresentationOfTheStep(): void
     {
         $description      = 'Turn the wheel';
         $expected_results = 'The car should also turn to avoid the cliff';
         $step             = new Step(1, $description, 'text', $expected_results, 'text', 1);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact = Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn(101);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
         $expected_representation = new StepDefinitionRepresentation(
             1,
@@ -56,17 +52,15 @@ class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             1
         );
 
-        $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
-        $purifier->shouldReceive('purifyHTMLWithReferences')->with($description, 101)->andReturn($description)->once();
-        $purifier->shouldReceive('purifyHTMLWithReferences')
-            ->with($expected_results, 101)
-            ->andReturn($expected_results)
-            ->once();
+        $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
+        $purifier->expects(self::exactly(2))
+            ->method('purifyHTMLWithReferences')
+            ->willReturnCallback(static fn (string $text): string => $text);
         $representation = StepDefinitionRepresentationBuilder::build(
             $step,
             $artifact,
             $purifier,
-            Mockery::spy(ContentInterpretor::class)
+            $this->createMock(ContentInterpretor::class)
         );
         $this->assertEquals($expected_representation, $representation);
     }
@@ -77,10 +71,10 @@ class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $expected_results = '<p>The car should <strong>also</strong> turn to <strong>avoid</strong> the <i>cliff</i></p>';
         $step             = new Step(1, $description, 'html', $expected_results, 'html', 1);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact = Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn(101);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
         $expected_representation = new StepDefinitionRepresentation(
             1,
@@ -93,45 +87,42 @@ class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             1
         );
 
-        $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
-        $purifier->shouldReceive('purifyHTMLWithReferences')->with($description, 101)->andReturn($description)->once();
-        $purifier->shouldReceive('purifyHTMLWithReferences')
-            ->with($expected_results, 101)
-            ->andReturn($expected_results)
-            ->once();
+        $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
+        $purifier->expects(self::exactly(2))
+            ->method('purifyHTMLWithReferences')
+            ->willReturnCallback(static fn (string $text): string => $text);
         $representation = StepDefinitionRepresentationBuilder::build(
             $step,
             $artifact,
             $purifier,
-            Mockery::spy(ContentInterpretor::class)
+            $this->createMock(ContentInterpretor::class)
         );
         $this->assertEquals($expected_representation, $representation);
     }
 
     public function testItReturnsTheCommonmarkRepresentationOfTheStep(): void
     {
-        $commonmark_interpreter = Mockery::spy(ContentInterpretor::class);
+        $commonmark_interpreter = $this->createMock(ContentInterpretor::class);
 
         $description          = 'Turn the **wheel**';
         $expected_description = '<p>The car should <strong>also</strong> turn to <strong>avoid</strong> the <i>cliff</i></p>';
-        $commonmark_interpreter->shouldReceive('getInterpretedContentWithReferences')->with(
-            $description,
-            101
-        )->andReturn($expected_description)->once();
 
         $expected_results               = 'The car should **also** turn to **avoid** the _cliff_';
         $expected_html_expected_results = '<p>The car should <strong>also</strong> turn to <strong>avoid</strong> the <i>cliff</i></p>';
-        $commonmark_interpreter->shouldReceive('getInterpretedContentWithReferences')->with(
-            $expected_results,
-            101
-        )->andReturn($expected_html_expected_results)->once();
+
+        $commonmark_interpreter->expects(self::exactly(2))
+            ->method('getInterpretedContentWithReferences')
+            ->willReturnCallback(static fn (string $text): string => match ($text) {
+                $description => $expected_description,
+                $expected_results => $expected_html_expected_results,
+            });
 
         $step = new Step(1, $description, 'commonmark', $expected_results, 'commonmark', 1);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact = Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn(101);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
         $expected_representation = new StepDefinitionRepresentation(
             1,
@@ -143,9 +134,10 @@ class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             'The car should **also** turn to **avoid** the _cliff_',
             1
         );
-        $purifier                = \Mockery::mock(\Codendi_HTMLPurifier::class);
-        $purifier->shouldReceive('purify')->with($description)->andReturn($description)->once();
-        $purifier->shouldReceive('purify')->with($expected_results)->andReturn($expected_results)->once();
+        $purifier                = $this->createMock(\Codendi_HTMLPurifier::class);
+        $purifier->expects(self::exactly(2))
+            ->method('purify')
+            ->willReturnCallback(static fn (string $text): string => $text);
         $representation = StepDefinitionRepresentationBuilder::build(
             $step,
             $artifact,
@@ -161,18 +153,18 @@ class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $expected_results = 'The car should **also** turn to **avoid** the _cliff_';
         $step             = new Step(1, $description, 'vroom', $expected_results, 'vroom', 1);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact = Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn(101);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
         $this->expectException(StepDefinitionFormatNotFoundException::class);
-        $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
+        $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
         StepDefinitionRepresentationBuilder::build(
             $step,
             $artifact,
             $purifier,
-            Mockery::spy(ContentInterpretor::class)
+            $this->createMock(ContentInterpretor::class)
         );
     }
 }

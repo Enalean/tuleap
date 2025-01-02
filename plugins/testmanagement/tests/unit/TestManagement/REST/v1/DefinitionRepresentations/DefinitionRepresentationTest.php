@@ -23,53 +23,49 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    protected function setUp(): void
-    {
-        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->form_element_factory->shouldReceive('getSelectboxFieldByNameForUser');
-    }
-
     public function testItBuildsADescriptionWithCrossReferences(): void
     {
-        $artifact   = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact   = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker_id = 10;
-        $artifact->shouldReceive('getTrackerId')->andReturn($tracker_id);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(null);
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(107);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact->method('getTrackerId')->willReturn($tracker_id);
+        $artifact->method('getId')->willReturn(1);
+        $artifact->method('getLastChangeset')->willReturn(null);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getGroupId')->willReturn(107);
+        $artifact->method('getTracker')->willReturn($tracker);
 
         $user = UserTestBuilder::aUser()->build();
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
+        $field = $this->createMock(\Tracker_FormElement_Field_Text::class);
 
-        $value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $value->shouldReceive('getText')->andReturn('description');
-        $artifact->shouldReceive('getValue')->once()->withArgs([$field, null])->andReturn($value);
+        $value = $this->createMock(\Tracker_Artifact_ChangesetValue_Text::class);
+        $value->method('getText')->willReturn('description');
+        $artifact->expects(self::once())->method('getValue')->with($field, null)->willReturn($value);
 
-        $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_STEPS, null);
-        $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_SUMMARY, null);
-        $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_AUTOMATED_TESTS, null);
-        $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_DESCRIPTION, $field);
+        $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $form_element_factory->method('getSelectboxFieldByNameForUser');
+        $form_element_factory
+            ->expects(self::exactly(4))
+            ->method('getUsedFieldByNameForUser')
+            ->willReturnCallback(
+                static fn(int $called_tracker_id, string $called_field_name, PFUser $called_user) => match (true) {
+                    $called_tracker_id === $tracker_id && $called_field_name === DefinitionRepresentation::FIELD_STEPS && $called_user === $user,
+                    $called_tracker_id === $tracker_id && $called_field_name === DefinitionRepresentation::FIELD_SUMMARY && $called_user === $user,
+                    $called_tracker_id === $tracker_id && $called_field_name === DefinitionRepresentation::FIELD_AUTOMATED_TESTS && $called_user === $user => null,
+                    $called_tracker_id === $tracker_id && $called_field_name === DefinitionRepresentation::FIELD_DESCRIPTION && $called_user === $user => $field,
+                }
+            );
 
-        $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
-        $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn('description')->once();
-        $commonmark_interpreter = \Mockery::mock(ContentInterpretor::class);
+        $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
+        $purifier->expects(self::once())->method('purifyHTMLWithReferences')->willReturn('description');
+        $commonmark_interpreter = $this->createMock(ContentInterpretor::class);
         $priority_manager       = $this->createStub(\Tracker_Artifact_PriorityManager::class);
         $priority_manager->method('getGlobalRank')->willReturn(1);
 
@@ -78,7 +74,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             $commonmark_interpreter,
             $artifact,
             $this->createMock(ArtifactRepresentation::class),
-            $this->form_element_factory,
+            $form_element_factory,
             $priority_manager,
             $user,
             'text',
@@ -90,16 +86,5 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals([], $representation->steps);
         self::assertEquals('', $representation->requirement);
         self::assertInstanceOf(ArtifactRepresentation::class, $representation->artifact);
-    }
-
-    private function useFieldByName(int $tracker_id, $user, string $name, ?\Tracker_FormElement_Field $value): void
-    {
-        $this->form_element_factory->shouldReceive('getUsedFieldByNameForUser')->withArgs(
-            [
-                $tracker_id,
-                $name,
-                $user,
-            ]
-        )->once()->andReturn($value);
     }
 }
