@@ -72,7 +72,7 @@ class NginxCommon
         $global_settings_template = File\read($this->tuleap_base_dir . '/src/etc/nginx/tuleap-managed-global-settings.conf');
         $global_settings          = Str\replace($global_settings_template, '%hash_bucket_size%', (string) $this->hash_bucket_size_calculator->computeServerNamesHashBucketSize($server_name));
 
-        File\write($this->nginx_base_dir . '/conf.d/tuleap-managed-global-settings.conf', $global_settings, File\WriteMode::TRUNCATE);
+        File\write($this->nginx_base_dir . '/conf.d/tuleap-managed-global-settings.conf', $global_settings, File\WriteMode::Truncate);
     }
 
     private function copyTuleapDotD(): void

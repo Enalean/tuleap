@@ -61,7 +61,7 @@ final class CIDRRangesValidator implements ValueValidator
             return Option::fromValue(Fault::fromMessage(sprintf('%s is not a valid CIDR notation', $possible_cidr)));
         }
 
-        $ip_address = $cidr_parts[0];
+        $ip_address = $cidr_parts[0] ?? '';
         $netmask    = (int) $cidr_parts[1];
 
         if ($netmask <= 32 && filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {

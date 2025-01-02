@@ -47,7 +47,7 @@ final class FileWriter
         $temporary_file        = create_temporary_file($destination_directory);
 
         try {
-            write($temporary_file, $content, WriteMode::TRUNCATE);
+            write($temporary_file, $content, WriteMode::Truncate);
             change_permissions($temporary_file, $chmod);
             if (! rename($temporary_file, $file_path)) {
                 throw new \RuntimeException(sprintf('Could not move %s to %s', $temporary_file, $file_path));

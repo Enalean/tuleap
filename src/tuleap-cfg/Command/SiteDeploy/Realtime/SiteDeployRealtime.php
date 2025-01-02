@@ -44,6 +44,6 @@ final class SiteDeployRealtime
         \Psl\Filesystem\change_permissions($file, 0600);
         \Psl\Filesystem\change_owner($file, $application_user['uid']);
         \Psl\Filesystem\change_group($file, $application_user['gid']);
-        \Psl\File\write($file, 'PRIVATE_KEY=' . base64_encode(random_bytes(64)), WriteMode::TRUNCATE);
+        \Psl\File\write($file, 'PRIVATE_KEY=' . base64_encode(random_bytes(64)), WriteMode::Truncate);
     }
 }
