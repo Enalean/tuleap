@@ -31,7 +31,11 @@ import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
 
 jest.useFakeTimers();
 
-function getWrapper(swimlane_state: SwimlaneState = {} as SwimlaneState): Wrapper<AddCard> {
+type AddCardExposed = { label: string };
+
+function getWrapper(
+    swimlane_state: SwimlaneState = {} as SwimlaneState,
+): Wrapper<Vue & AddCardExposed> {
     return shallowMount(AddCard, {
         propsData: {
             column: { id: 42 } as ColumnDefinition,
@@ -88,7 +92,7 @@ describe("AddCard", () => {
         wrapper.findComponent(AddButton).vm.$emit("click");
         await wrapper.setData({ label: "Lorem ipsum" });
 
-        expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
+        expect(wrapper.vm.label).toBe("Lorem ipsum");
         wrapper.findComponent(LabelEditor).vm.$emit("save");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
@@ -100,7 +104,7 @@ describe("AddCard", () => {
         jest.spyOn(window, "scrollTo").mockImplementation();
 
         jest.runAllTimers();
-        expect(wrapper.vm.$data.label).toBe("");
+        expect(wrapper.vm.label).toBe("");
 
         expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
     });
@@ -114,7 +118,7 @@ describe("AddCard", () => {
         wrapper.findComponent(AddButton).vm.$emit("click");
         await wrapper.setData({ label: "Lorem ipsum" });
 
-        expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
+        expect(wrapper.vm.label).toBe("Lorem ipsum");
         wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
@@ -126,7 +130,7 @@ describe("AddCard", () => {
         jest.spyOn(window, "scrollTo").mockImplementation();
 
         jest.runAllTimers();
-        expect(wrapper.vm.$data.label).toBe("");
+        expect(wrapper.vm.label).toBe("");
 
         expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
     });
@@ -140,7 +144,7 @@ describe("AddCard", () => {
         wrapper.findComponent(AddButton).vm.$emit("click");
         await wrapper.setData({ label: "" });
 
-        expect(wrapper.vm.$data.label).toBe("");
+        expect(wrapper.vm.label).toBe("");
         wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();

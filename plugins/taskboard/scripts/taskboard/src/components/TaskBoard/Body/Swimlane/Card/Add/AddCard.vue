@@ -39,82 +39,75 @@
         />
     </form>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { Mutation, namespace } from "vuex-class";
-import AddButton from "./AddButton.vue";
-import LabelEditor from "../Editor/Label/LabelEditor.vue";
-import type { ColumnDefinition, Swimlane } from "../../../../../../type";
+<script setup lang="ts">
+import { ref } from "vue";
+import { useNamespacedActions, useNamespacedState, useMutations } from "vuex-composition-helpers";
 import type { NewCardPayload } from "../../../../../../store/swimlane/card/type";
+import type { ColumnDefinition, Swimlane } from "../../../../../../type";
+import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
+import AddButton from "./AddButton.vue";
 
-const swimlane = namespace("swimlane");
+const { addCard } = useNamespacedActions("swimlane", ["addCard"]);
 
-@Component({
-    components: { LabelEditor, AddButton, CancelSaveButtons },
-})
-export default class AddCard extends Vue {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const { is_card_creation_blocked_due_to_ongoing_creation } = useNamespacedState("swimlane", [
+    "is_card_creation_blocked_due_to_ongoing_creation",
+]);
 
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const { setIsACellAddingInPlace, setBacklogItemsHaveChildren, clearIsACellAddingInPlace } =
+    useMutations([
+        "setIsACellAddingInPlace",
+        "setBacklogItemsHaveChildren",
+        "clearIsACellAddingInPlace",
+    ]);
 
-    @Prop({ required: false, default: "" })
-    readonly button_label!: string;
+const props = withDefaults(
+    defineProps<{
+        column: ColumnDefinition;
+        swimlane: Swimlane;
+        button_label: string;
+    }>(),
+    {
+        button_label: "",
+    },
+);
 
-    @swimlane.Action
-    readonly addCard!: (payload: NewCardPayload) => Promise<void>;
+const is_in_add_mode = ref(false);
+const label = ref("");
 
-    @swimlane.State
-    readonly is_card_creation_blocked_due_to_ongoing_creation!: boolean;
-
-    is_in_add_mode = false;
-    label = "";
-
-    @Mutation
-    readonly setIsACellAddingInPlace!: () => void;
-
-    @Mutation
-    readonly setBacklogItemsHaveChildren!: () => void;
-
-    @Mutation
-    readonly clearIsACellAddingInPlace!: () => void;
-
-    cancel(): void {
-        if (this.is_in_add_mode) {
-            this.is_in_add_mode = false;
-            this.clearIsACellAddingInPlace();
-        }
-    }
-
-    switchToAddMode(): void {
-        this.is_in_add_mode = true;
-        this.setIsACellAddingInPlace();
-    }
-
-    save(): void {
-        if (this.label === "") {
-            return;
-        }
-
-        const payload: NewCardPayload = {
-            swimlane: this.swimlane,
-            column: this.column,
-            label: this.label,
-        };
-        this.addCard(payload);
-        //add info in state that children are defined
-        this.setBacklogItemsHaveChildren();
-        this.deferResetOfLabel();
-    }
-
-    deferResetOfLabel(): void {
-        setTimeout(() => {
-            this.label = "";
-        }, 10);
+function cancel(): void {
+    if (is_in_add_mode.value) {
+        is_in_add_mode.value = false;
+        clearIsACellAddingInPlace();
     }
 }
+
+function switchToAddMode(): void {
+    is_in_add_mode.value = true;
+    setIsACellAddingInPlace();
+}
+
+function save(): void {
+    if (label.value === "") {
+        return;
+    }
+
+    const payload: NewCardPayload = {
+        swimlane: props.swimlane,
+        column: props.column,
+        label: label.value,
+    };
+    addCard(payload);
+    //add info in state that children are defined
+    setBacklogItemsHaveChildren();
+    deferResetOfLabel();
+}
+
+function deferResetOfLabel(): void {
+    setTimeout(() => {
+        label.value = "";
+    }, 10);
+}
+
+defineExpose({ label });
 </script>
