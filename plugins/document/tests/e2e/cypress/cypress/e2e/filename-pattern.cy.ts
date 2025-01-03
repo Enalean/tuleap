@@ -77,6 +77,8 @@ describe("Document filename pattern", () => {
         uploadNewVersion("./_fixtures/cc.txt");
         uploadNewVersion("./_fixtures/dd.txt");
         uploadNewVersion("./_fixtures/ee.txt");
+        uploadNewVersion("./_fixtures/ee.txt");
+        uploadNewVersion("./_fixtures/ee.txt");
 
         cy.log("When file has several version history, then user have a show all versions link");
         cy.intercept("GET", "*/docman_files/*/versions*").as("loadVersions");
@@ -100,7 +102,7 @@ describe("Document filename pattern", () => {
         cy.get("[data-test=document-view-all-versions]").contains("View all versions");
         cy.get("[data-test=document-view-all-versions]").click();
         //
-        cy.get("[data-test=history-versions]").find("tr").should("have.length", 6);
+        cy.get("[data-test=history-versions]").find("tr").should("have.length", 8);
 
         cy.log("Filename is not displayed when not configured");
         cy.visitProjectService(no_pattern_project_unixname, "Documents");
