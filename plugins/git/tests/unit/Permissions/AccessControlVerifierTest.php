@@ -18,126 +18,102 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Permissions;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepository;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use System_Command;
+use System_Command_CommandException;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class AccessControlVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AccessControlVerifierTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Tuleap\Git\Permissions\FineGrainedRetriever
-     */
-    private $fine_grained_permissions;
-    /**
-     * @var \System_Command
-     */
-    private $system_command;
-    /**
-     * @var \PFUser
-     */
-    private $user;
-    /**
-     * @var \GitRepository
-     */
-    private $repository;
+    private FineGrainedRetriever&MockObject $fine_grained_permissions;
+    private System_Command&MockObject $system_command;
+    private PFUser&MockObject $user;
+    private GitRepository $repository;
 
     public function setUp(): void
     {
-        parent::setUp();
-        $this->fine_grained_permissions = \Mockery::mock(FineGrainedRetriever::class);
-        $this->system_command           = \Mockery::mock(\System_Command::class);
-        $this->user                     = \Mockery::mock(\PFUser::class);
-        $this->repository               = \Mockery::mock(\GitRepository::class);
+        $this->fine_grained_permissions = $this->createMock(FineGrainedRetriever::class);
+        $this->system_command           = $this->createMock(System_Command::class);
+        $this->user                     = $this->createMock(PFUser::class);
+        $this->repository               = GitRepositoryTestBuilder::aProjectRepository()
+            ->withId(1)->inProject(ProjectTestBuilder::aProject()->withUnixName('projectname')->build())
+            ->withName('Repository Name')->build();
     }
 
     public function testAUserCanWriteWhenFineGrainedPermissionsAreNotEnabled(): void
     {
-        $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(false);
+        $this->fine_grained_permissions->method('doesRepositoryUseFineGrainedPermissions')->willReturn(false);
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->shouldReceive('hasPermission')->andReturns(true);
+        $this->user->method('hasPermission')->willReturn(true);
 
-        $this->system_command->shouldReceive('exec')->never();
-
-        $this->repository->shouldReceive('getId')->andReturns(1);
-        $this->repository->shouldReceive('getProjectId')->andReturns(100);
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(false);
+        $this->system_command->expects(self::never())->method('exec');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, 'master');
-        $this->assertTrue($can_write);
+        self::assertTrue($can_write);
     }
 
     public function testAUserCanWriteWhenFineGrainedPermissionsAreEnabled(): void
     {
-        $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(true);
-        $this->system_command->shouldReceive('exec');
+        $this->fine_grained_permissions->method('doesRepositoryUseFineGrainedPermissions')->willReturn(true);
+        $this->system_command->method('exec');
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->shouldReceive('hasPermission')->never();
-        $this->user->shouldReceive('getUserName')->andReturns('username');
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('projectname');
-        $this->repository->shouldReceive('getProject')->andReturns($project);
-        $this->repository->shouldReceive('getFullName')->andReturns('Repository Name');
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(false);
+        $this->user->expects(self::never())->method('hasPermission');
+        $this->user->method('getUserName')->willReturn('username');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, 'master');
-        $this->assertTrue($can_write);
+        self::assertTrue($can_write);
     }
 
     public function testAUserCanNotWriteWhenFineGrainedPermissionsAreEnabledAndHeDoesNotHaveAccess(): void
     {
-        $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(true);
-        $this->system_command->shouldReceive('exec')->andThrow(new \System_Command_CommandException('', [], 1));
+        $this->fine_grained_permissions->method('doesRepositoryUseFineGrainedPermissions')->willReturn(true);
+        $this->system_command->method('exec')->willThrowException(new System_Command_CommandException('', [], 1));
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->shouldReceive('hasPermission')->never();
-        $this->user->shouldReceive('getUserName')->andReturns('username');
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('projectname');
-        $this->repository->shouldReceive('getProject')->andReturns($project);
-        $this->repository->shouldReceive('getFullName')->andReturns('Repository Name');
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(false);
+        $this->user->expects(self::never())->method('hasPermission');
+        $this->user->method('getUserName')->willReturn('username');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, 'master');
-        $this->assertFalse($can_write);
+        self::assertFalse($can_write);
     }
 
     public function testEmptyReferenceWhenFineGrainedPermissionsAreEnabledAreNotAccepted(): void
     {
-        $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(true);
+        $this->fine_grained_permissions->method('doesRepositoryUseFineGrainedPermissions')->willReturn(true);
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->shouldReceive('hasPermission')->never();
-
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(false);
+        $this->user->expects(self::never())->method('hasPermission');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, '');
-        $this->assertFalse($can_write);
+        self::assertFalse($can_write);
     }
 
     public function testCheckingIfAUserCanWriteToARepositoryMigratedToGerritFallbackToAVerificationHandledByGitolite(): void
     {
-        $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(false);
-        $this->system_command->shouldReceive('exec')->andThrow(new \System_Command_CommandException('', [], 1));
+        $this->fine_grained_permissions->method('doesRepositoryUseFineGrainedPermissions')->willReturn(false);
+        $this->system_command->method('exec')->willThrowException(new System_Command_CommandException('', [], 1));
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->shouldReceive('hasPermission')->never();
-        $this->user->shouldReceive('getUserName')->andReturns('not_replication_user');
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('projectname');
-        $this->repository->shouldReceive('getProject')->andReturns($project);
-        $this->repository->shouldReceive('getFullName')->andReturns('Repository Name');
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
+        $this->user->expects(self::never())->method('hasPermission');
+        $this->user->method('getUserName')->willReturn('not_replication_user');
+        $this->repository->setRemoteServerId(1);
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, 'master');
-        $this->assertFalse($can_write);
+        self::assertFalse($can_write);
     }
 }
