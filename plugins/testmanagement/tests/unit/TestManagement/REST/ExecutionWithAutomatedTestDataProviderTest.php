@@ -20,36 +20,26 @@
 
 namespace Tuleap\TestManagement\REST;
 
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestData;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestDataProvider;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExecutionDao
-     */
-    private $execution_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var ExecutionWithAutomatedTestDataProvider
-     */
-    private $execution_with_automated_test_data_provider;
+    private ExecutionDao&MockObject $execution_dao;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private ExecutionWithAutomatedTestDataProvider $execution_with_automated_test_data_provider;
 
     protected function setUp(): void
     {
-        $this->execution_dao                               = Mockery::mock(ExecutionDao::class);
-        $this->form_element_factory                        = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->execution_dao                               = $this->createMock(ExecutionDao::class);
+        $this->form_element_factory                        = $this->createMock(Tracker_FormElementFactory::class);
         $this->execution_with_automated_test_data_provider = new ExecutionWithAutomatedTestDataProvider(
             $this->execution_dao,
             $this->form_element_factory
@@ -58,22 +48,21 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetExecutionWithAutomatedTestData(): void
     {
-        $changeset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $execution = Mockery::mock(Artifact::class);
-        $execution->shouldReceive('getId')->andReturn(12);
-        $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn('automated test');
+        $changeset      = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $execution      = ArtifactTestBuilder::anArtifact(12)->build();
+        $automated_test = $this->createMock(\Tracker_Artifact_ChangesetValue_Text::class);
+        $automated_test->method('getText')->willReturn('automated test');
 
-        $definition = Mockery::mock(Artifact::class);
-        $definition->shouldReceive('getTrackerId')->andReturn(112);
-        $definition->shouldReceive('getChangeset')->andReturn($changeset);
-        $definition->shouldReceive('getValue')->andReturn($automated_test);
+        $definition = $this->createMock(Artifact::class);
+        $definition->method('getTrackerId')->willReturn(112);
+        $definition->method('getChangeset')->willReturn($changeset);
+        $definition->method('getValue')->willReturn($automated_test);
 
-        $user  = Mockery::mock(PFUser::class);
-        $field = Mockery::mock(Tracker_FormElement_Field::class);
+        $user  = $this->createMock(PFUser::class);
+        $field = $this->createMock(Tracker_FormElement_Field::class);
 
-        $this->execution_dao->shouldReceive('searchDefinitionChangesetIdForExecution')->andReturn(12);
-        $this->form_element_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
+        $this->execution_dao->method('searchDefinitionChangesetIdForExecution')->willReturn(12);
+        $this->form_element_factory->method('getUsedFieldByNameForUser')->willReturn($field);
 
         $expected_result = new ExecutionWithAutomatedTestData($execution, 'automated test');
 
@@ -88,21 +77,20 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetExecutionWithAutomatedTestDataReturnNullIfNoChangesetId(): void
     {
-        $execution = Mockery::mock(Artifact::class);
-        $execution->shouldReceive('getId')->andReturn(12);
-        $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn('automated test');
+        $execution      = ArtifactTestBuilder::anArtifact(12)->build();
+        $automated_test = $this->createMock(\Tracker_Artifact_ChangesetValue_Text::class);
+        $automated_test->method('getText')->willReturn('automated test');
 
-        $definition = Mockery::mock(Artifact::class);
-        $definition->shouldReceive('getTrackerId')->andReturn(112);
-        $definition->shouldReceive('getChangeset')->never();
-        $definition->shouldReceive('getValue')->andReturn($automated_test);
+        $definition = $this->createMock(Artifact::class);
+        $definition->method('getTrackerId')->willReturn(112);
+        $definition->expects(self::never())->method('getChangeset');
+        $definition->method('getValue')->willReturn($automated_test);
 
-        $user  = Mockery::mock(PFUser::class);
-        $field = Mockery::mock(Tracker_FormElement_Field::class);
+        $user  = $this->createMock(PFUser::class);
+        $field = $this->createMock(Tracker_FormElement_Field::class);
 
-        $this->execution_dao->shouldReceive('searchDefinitionChangesetIdForExecution')->andReturn(false);
-        $this->form_element_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
+        $this->execution_dao->method('searchDefinitionChangesetIdForExecution')->willReturn(false);
+        $this->form_element_factory->method('getUsedFieldByNameForUser')->willReturn($field);
 
         $result = $this->execution_with_automated_test_data_provider->getExecutionWithAutomatedTestData(
             $execution,
@@ -115,20 +103,19 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetExecutionWithAutomatedTestDataReturnNullIfNoField(): void
     {
-        $execution = Mockery::mock(Artifact::class);
-        $execution->shouldReceive('getId')->andReturn(12);
-        $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn('automated test');
+        $execution      = ArtifactTestBuilder::anArtifact(12)->build();
+        $automated_test = $this->createMock(\Tracker_Artifact_ChangesetValue_Text::class);
+        $automated_test->method('getText')->willReturn('automated test');
 
-        $definition = Mockery::mock(Artifact::class);
-        $definition->shouldReceive('getTrackerId')->andReturn(112);
-        $definition->shouldReceive('getChangeset')->never();
-        $definition->shouldReceive('getValue')->andReturn($automated_test);
+        $definition = $this->createMock(Artifact::class);
+        $definition->method('getTrackerId')->willReturn(112);
+        $definition->expects(self::never())->method('getChangeset');
+        $definition->method('getValue')->willReturn($automated_test);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
-        $this->execution_dao->shouldReceive('searchDefinitionChangesetIdForExecution')->andReturn(12);
-        $this->form_element_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(null);
+        $this->execution_dao->method('searchDefinitionChangesetIdForExecution')->willReturn(12);
+        $this->form_element_factory->method('getUsedFieldByNameForUser')->willReturn(null);
 
         $result = $this->execution_with_automated_test_data_provider->getExecutionWithAutomatedTestData(
             $execution,
@@ -141,21 +128,20 @@ class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetExecutionWithAutomatedTestDataReturnNullIfNoChangeset(): void
     {
-        $execution = Mockery::mock(Artifact::class);
-        $execution->shouldReceive('getId')->andReturn(12);
-        $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $automated_test->shouldReceive('getText')->andReturn('automated test');
+        $execution      = ArtifactTestBuilder::anArtifact(12)->build();
+        $automated_test = $this->createMock(\Tracker_Artifact_ChangesetValue_Text::class);
+        $automated_test->method('getText')->willReturn('automated test');
 
-        $definition = Mockery::mock(Artifact::class);
-        $definition->shouldReceive('getTrackerId')->andReturn(112);
-        $definition->shouldReceive('getChangeset')->andReturn(null);
-        $definition->shouldReceive('getValue')->andReturn($automated_test);
+        $definition = $this->createMock(Artifact::class);
+        $definition->method('getTrackerId')->willReturn(112);
+        $definition->method('getChangeset')->willReturn(null);
+        $definition->method('getValue')->willReturn($automated_test);
 
-        $user  = Mockery::mock(PFUser::class);
-        $field = Mockery::mock(Tracker_FormElement_Field::class);
+        $user  = $this->createMock(PFUser::class);
+        $field = $this->createMock(Tracker_FormElement_Field::class);
 
-        $this->execution_dao->shouldReceive('searchDefinitionChangesetIdForExecution')->andReturn(12);
-        $this->form_element_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
+        $this->execution_dao->method('searchDefinitionChangesetIdForExecution')->willReturn(12);
+        $this->form_element_factory->method('getUsedFieldByNameForUser')->willReturn($field);
 
         $result = $this->execution_with_automated_test_data_provider->getExecutionWithAutomatedTestData(
             $execution,

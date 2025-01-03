@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST;
 
-use Mockery;
-use Project;
-use Tracker;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsResultPATCHRepresentation;
 use Tuleap\TestManagement\REST\v1\ExecutionFromAutomatedTestsUpdater;
 use Tuleap\TestManagement\REST\v1\ExecutionStatusUpdater;
@@ -33,57 +33,28 @@ use Tuleap\TestManagement\REST\v1\ExtractedTestResultFromJunit;
 use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever;
 use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExecutionStatusUpdater
-     */
-    private $execution_status_updater;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExecutionChangesExtractor
-     */
-    private $execution_change_extractor;
-    /**
-     * @var ExecutionFromAutomatedTestsUpdater
-     */
-    private $execution_from_automated_test_updater;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TestsDataFromJunitExtractor
-     */
-    private $tests_data_extractor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ListOfExecutionsWithAutomatedTestDataRetriever
-     */
-    private $list_of_executions_with_automated_test_data_retriever;
+    private ExecutionStatusUpdater&MockObject $execution_status_updater;
+    private ExecutionChangesExtractor&MockObject $execution_change_extractor;
+    private ExecutionFromAutomatedTestsUpdater $execution_from_automated_test_updater;
+    private Artifact $artifact;
+    private \PFUser $user;
+    private TestsDataFromJunitExtractor&MockObject $tests_data_extractor;
+    private ListOfExecutionsWithAutomatedTestDataRetriever&MockObject $list_of_executions_with_automated_test_data_retriever;
 
     protected function setUp(): void
     {
-        $project = Mockery::mock(Project::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
+        $this->artifact = ArtifactTestBuilder::anArtifact(102)->build();
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(102);
-        $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->user = Mockery::mock(\PFUser::class);
-
-        $this->execution_status_updater                              = Mockery::mock(ExecutionStatusUpdater::class);
-        $this->execution_change_extractor                            = Mockery::mock(ExecutionChangesExtractor::class);
-        $this->tests_data_extractor                                  = Mockery::mock(TestsDataFromJunitExtractor::class);
-        $this->list_of_executions_with_automated_test_data_retriever = Mockery::mock(
+        $this->execution_status_updater                              = $this->createMock(ExecutionStatusUpdater::class);
+        $this->execution_change_extractor                            = $this->createMock(ExecutionChangesExtractor::class);
+        $this->tests_data_extractor                                  = $this->createMock(TestsDataFromJunitExtractor::class);
+        $this->list_of_executions_with_automated_test_data_retriever = $this->createMock(
             ListOfExecutionsWithAutomatedTestDataRetriever::class
         );
 
@@ -97,24 +68,24 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testUpdateExecutionFromAutomatedSuccessTestCase(): void
     {
-        $extracted_test = Mockery::mock(ExtractedTestResultFromJunit::class);
-        $execution_1    = Mockery::mock(Artifact::class);
+        $extracted_test = $this->createMock(ExtractedTestResultFromJunit::class);
+        $execution_1    = $this->createMock(Artifact::class);
 
-        $extracted_test->shouldReceive('getTime')->andReturn(5);
-        $extracted_test->shouldReceive('getStatus')->andReturn('passed');
+        $extracted_test->method('getTime')->willReturn(5);
+        $extracted_test->method('getStatus')->willReturn('passed');
         $extracted_test
-            ->shouldReceive('getResult')
-            ->andReturn(
+            ->method('getResult')
+            ->willReturn(
                 "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>"
             );
 
-        $execution_with_automated_test = Mockery::mock(ExecutionWithAutomatedTestData::class);
-        $execution_with_automated_test->shouldReceive('getAutomatedTest')->andReturn('firsttest');
-        $execution_with_automated_test->shouldReceive('getExecution')->andReturn($execution_1);
+        $execution_with_automated_test = $this->createMock(ExecutionWithAutomatedTestData::class);
+        $execution_with_automated_test->method('getAutomatedTest')->willReturn('firsttest');
+        $execution_with_automated_test->method('getExecution')->willReturn($execution_1);
 
-        $this->list_of_executions_with_automated_test_data_retriever->shouldReceive(
+        $this->list_of_executions_with_automated_test_data_retriever->method(
             'getExecutionsWithAutomatedTestData'
-        )->andReturn(
+        )->willReturn(
             [$execution_with_automated_test]
         );
 
@@ -129,28 +100,24 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
         ];
 
         $this->tests_data_extractor
-            ->shouldReceive('getTestsResultsFromJunit')
+            ->method('getTestsResultsFromJunit')
             ->with($automated_tests_results)
-            ->andReturn(['firsttest' => $extracted_test]);
+            ->willReturn(['firsttest' => $extracted_test]);
 
-        $this->execution_change_extractor->shouldReceive('getChanges')->withArgs(
-            [
-                'passed',
-                [],
-                [],
-                5,
-                "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
-                $execution_1,
-                $this->user,
-            ]
-        )->once()->andReturn(['changed']);
+        $this->execution_change_extractor->expects(self::once())->method('getChanges')->with(
+            'passed',
+            [],
+            [],
+            5,
+            "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
+            $execution_1,
+            $this->user,
+        )->willReturn(['changed']);
 
-        $this->execution_status_updater->shouldReceive('update')->withArgs(
-            [
-                $execution_1,
-                ['changed'],
-                $this->user,
-            ]
+        $this->execution_status_updater->method('update')->with(
+            $execution_1,
+            ['changed'],
+            $this->user,
         );
 
         $this->execution_from_automated_test_updater->updateExecutionFromAutomatedTests(
@@ -162,38 +129,38 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testUpdateExecutionFromAutomatedWithFailureTestCase(): void
     {
-        $extracted_test_1 = Mockery::mock(ExtractedTestResultFromJunit::class);
-        $extracted_test_2 = Mockery::mock(ExtractedTestResultFromJunit::class);
-        $execution_1      = Mockery::mock(Artifact::class);
-        $execution_2      = Mockery::mock(Artifact::class);
+        $extracted_test_1 = $this->createMock(ExtractedTestResultFromJunit::class);
+        $extracted_test_2 = $this->createMock(ExtractedTestResultFromJunit::class);
+        $execution_1      = $this->createMock(Artifact::class);
+        $execution_2      = $this->createMock(Artifact::class);
 
-        $extracted_test_1->shouldReceive('getTime')->andReturn(5);
-        $extracted_test_1->shouldReceive('getStatus')->andReturn('passed');
+        $extracted_test_1->method('getTime')->willReturn(5);
+        $extracted_test_1->method('getStatus')->willReturn('passed');
         $extracted_test_1
-            ->shouldReceive('getResult')
-            ->andReturn(
+            ->method('getResult')
+            ->willReturn(
                 "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>"
             );
 
-        $extracted_test_2->shouldReceive('getTime')->andReturn(9);
-        $extracted_test_2->shouldReceive('getStatus')->andReturn('failed');
+        $extracted_test_2->method('getTime')->willReturn(9);
+        $extracted_test_2->method('getStatus')->willReturn('failed');
         $extracted_test_2
-            ->shouldReceive('getResult')
-            ->andReturn(
+            ->method('getResult')
+            ->willReturn(
                 "Executed 'failtest' test case. Got a failure:</br><p>this is a failure</p><p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>"
             );
 
-        $execution_with_automated_test_1 = Mockery::mock(ExecutionWithAutomatedTestData::class);
-        $execution_with_automated_test_1->shouldReceive('getAutomatedTest')->andReturn('firsttest');
-        $execution_with_automated_test_1->shouldReceive('getExecution')->andReturn($execution_1);
+        $execution_with_automated_test_1 = $this->createMock(ExecutionWithAutomatedTestData::class);
+        $execution_with_automated_test_1->method('getAutomatedTest')->willReturn('firsttest');
+        $execution_with_automated_test_1->method('getExecution')->willReturn($execution_1);
 
-        $execution_with_automated_test_2 = Mockery::mock(ExecutionWithAutomatedTestData::class);
-        $execution_with_automated_test_2->shouldReceive('getAutomatedTest')->andReturn('failtest');
-        $execution_with_automated_test_2->shouldReceive('getExecution')->andReturn($execution_2);
+        $execution_with_automated_test_2 = $this->createMock(ExecutionWithAutomatedTestData::class);
+        $execution_with_automated_test_2->method('getAutomatedTest')->willReturn('failtest');
+        $execution_with_automated_test_2->method('getExecution')->willReturn($execution_2);
 
-        $this->list_of_executions_with_automated_test_data_retriever->shouldReceive(
+        $this->list_of_executions_with_automated_test_data_retriever->method(
             'getExecutionsWithAutomatedTestData'
-        )->andReturn(
+        )->willReturn(
             [$execution_with_automated_test_1, $execution_with_automated_test_2]
         );
 
@@ -211,49 +178,52 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
         ];
 
         $this->tests_data_extractor
-            ->shouldReceive('getTestsResultsFromJunit')
+            ->method('getTestsResultsFromJunit')
             ->with($automated_tests_results)
-            ->andReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
+            ->willReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
 
-        $this->execution_change_extractor->shouldReceive('getChanges')->withArgs(
-            [
-                'passed',
-                [],
-                [],
-                5,
-                "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
-                $execution_1,
-                $this->user,
-            ]
-        )->once()->andReturn(['changed']);
+        $this->execution_change_extractor
+            ->expects(self::exactly(2))
+            ->method('getChanges')
+            ->willReturnCallback(
+                fn (string $status,
+                    array $uploaded_file_ids,
+                    array $deleted_file_ids,
+                    int $time,
+                    string $results,
+                    Artifact $artifact,
+                    PFUser $user,
+                ) => match (true) {
+                    $status === 'passed'
+                    && $uploaded_file_ids === []
+                    && $deleted_file_ids === []
+                    && $time === 5
+                    && $results === "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>"
+                    && $artifact === $execution_1
+                    && $user === $this->user => ['changed'],
 
-        $this->execution_status_updater->shouldReceive('update')->withArgs(
-            [
-                $execution_1,
-                ['changed'],
-                $this->user,
-            ]
-        );
+                    $status === 'failed'
+                    && $uploaded_file_ids === []
+                    && $deleted_file_ids === []
+                    && $time === 9
+                    && $results === "Executed 'failtest' test case. Got a failure:</br><p>this is a failure</p><p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>"
+                    && $artifact === $execution_2
+                    && $user === $this->user => ['changed with failure'],
+                }
+            );
 
-        $this->execution_change_extractor->shouldReceive('getChanges')->withArgs(
-            [
-                'failed',
-                [],
-                [],
-                9,
-                "Executed 'failtest' test case. Got a failure:</br><p>this is a failure</p><p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
-                $execution_2,
-                $this->user,
-            ]
-        )->once()->andReturn(['changed with failure']);
-
-        $this->execution_status_updater->shouldReceive('update')->withArgs(
-            [
-                $execution_2,
-                ['changed with failure'],
-                $this->user,
-            ]
-        );
+        $this->execution_status_updater
+            ->expects(self::exactly(2))
+            ->method('update')
+            ->willReturnCallback(fn (
+                Artifact $execution_artifact,
+                array $changes,
+                PFUser $user,
+            ) => match (true) {
+                $execution_artifact === $execution_1 && $changes === ['changed'] && $user === $this->user,
+                    $execution_artifact === $execution_2 && $changes === ['changed with failure'] && $user === $this->user
+                => true
+            });
 
         $this->execution_from_automated_test_updater->updateExecutionFromAutomatedTests(
             $automated_tests_results,
@@ -264,20 +234,20 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testUpdateExecutionFromAutomatedShouldNotUpdateIfNoMatchingAutomatedTests(): void
     {
-        $extracted_test_1 = Mockery::mock(ExtractedTestResultFromJunit::class);
-        $extracted_test_2 = Mockery::mock(ExtractedTestResultFromJunit::class);
+        $extracted_test_1 = $this->createMock(ExtractedTestResultFromJunit::class);
+        $extracted_test_2 = $this->createMock(ExtractedTestResultFromJunit::class);
 
-        $execution_with_automated_test_1 = Mockery::mock(ExecutionWithAutomatedTestData::class);
-        $execution_with_automated_test_1->shouldReceive('getAutomatedTest')->andReturn('notfirsttest');
-        $execution_with_automated_test_1->shouldReceive('getExecution')->never();
+        $execution_with_automated_test_1 = $this->createMock(ExecutionWithAutomatedTestData::class);
+        $execution_with_automated_test_1->method('getAutomatedTest')->willReturn('notfirsttest');
+        $execution_with_automated_test_1->expects(self::never())->method('getExecution');
 
-        $execution_with_automated_test_2 = Mockery::mock(ExecutionWithAutomatedTestData::class);
-        $execution_with_automated_test_2->shouldReceive('getAutomatedTest')->andReturn('notfailtest');
-        $execution_with_automated_test_2->shouldReceive('getExecution')->never();
+        $execution_with_automated_test_2 = $this->createMock(ExecutionWithAutomatedTestData::class);
+        $execution_with_automated_test_2->method('getAutomatedTest')->willReturn('notfailtest');
+        $execution_with_automated_test_2->expects(self::never())->method('getExecution');
 
-        $this->list_of_executions_with_automated_test_data_retriever->shouldReceive(
+        $this->list_of_executions_with_automated_test_data_retriever->method(
             'getExecutionsWithAutomatedTestData'
-        )->andReturn(
+        )->willReturn(
             [$execution_with_automated_test_1, $execution_with_automated_test_2]
         );
 
@@ -295,13 +265,13 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
         ];
 
         $this->tests_data_extractor
-            ->shouldReceive('getTestsResultsFromJunit')
+            ->method('getTestsResultsFromJunit')
             ->with($automated_tests_results)
-            ->andReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
+            ->willReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
 
-        $this->execution_change_extractor->shouldReceive('getChanges')->never();
+        $this->execution_change_extractor->expects(self::never())->method('getChanges');
 
-        $this->execution_status_updater->shouldReceive('update')->never();
+        $this->execution_status_updater->expects(self::never())->method('update');
 
         $this->execution_from_automated_test_updater->updateExecutionFromAutomatedTests(
             $automated_tests_results,

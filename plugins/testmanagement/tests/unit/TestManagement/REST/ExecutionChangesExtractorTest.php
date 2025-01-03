@@ -22,51 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FormattedChangesetValueForFileFieldRetriever
-     */
-    private $formatted_changeset_value_for_file_field_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FormattedChangesetValueForIntFieldRetriever
-     */
-    private $formatted_changeset_value_for_int_field_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FormattedChangesetValueForTextFieldRetriever
-     */
-    private $formatted_changeset_value_for_text_field_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FormattedChangesetValueForListFieldRetriever
-     */
-    private $formatted_changeset_value_for_list_field_retriever;
-    /**
-     * @var ExecutionChangesExtractor
-     */
-    private $execution_changes_extractor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
+    private FormattedChangesetValueForFileFieldRetriever&MockObject $formatted_changeset_value_for_file_field_retriever;
+    private FormattedChangesetValueForIntFieldRetriever&MockObject $formatted_changeset_value_for_int_field_retriever;
+    private FormattedChangesetValueForTextFieldRetriever&MockObject $formatted_changeset_value_for_text_field_retriever;
+    private FormattedChangesetValueForListFieldRetriever&MockObject $formatted_changeset_value_for_list_field_retriever;
+    private ExecutionChangesExtractor $execution_changes_extractor;
+    private Artifact $artifact;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->user     = Mockery::mock(\PFUser::class);
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->user     = UserTestBuilder::buildWithDefaults();
 
-        $this->formatted_changeset_value_for_file_field_retriever = Mockery::mock(FormattedChangesetValueForFileFieldRetriever::class);
-        $this->formatted_changeset_value_for_int_field_retriever  = Mockery::mock(FormattedChangesetValueForIntFieldRetriever::class);
-        $this->formatted_changeset_value_for_text_field_retriever = Mockery::mock(FormattedChangesetValueForTextFieldRetriever::class);
-        $this->formatted_changeset_value_for_list_field_retriever = Mockery::mock(FormattedChangesetValueForListFieldRetriever::class);
+        $this->formatted_changeset_value_for_file_field_retriever = $this->createMock(FormattedChangesetValueForFileFieldRetriever::class);
+        $this->formatted_changeset_value_for_int_field_retriever  = $this->createMock(FormattedChangesetValueForIntFieldRetriever::class);
+        $this->formatted_changeset_value_for_text_field_retriever = $this->createMock(FormattedChangesetValueForTextFieldRetriever::class);
+        $this->formatted_changeset_value_for_list_field_retriever = $this->createMock(FormattedChangesetValueForListFieldRetriever::class);
 
         $this->execution_changes_extractor = new ExecutionChangesExtractor(
             $this->formatted_changeset_value_for_file_field_retriever,
@@ -79,21 +59,21 @@ class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetChanges(): void
     {
         $this->formatted_changeset_value_for_file_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldFile')
-            ->once()
-            ->andReturn(Mockery::mock(ArtifactValuesRepresentation::class));
+            ->expects(self::once())
+            ->method('getFormattedChangesetValueForFieldFile')
+            ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
         $this->formatted_changeset_value_for_int_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldInt')
-            ->once()
-            ->andReturn(Mockery::mock(ArtifactValuesRepresentation::class));
+            ->expects(self::once())
+            ->method('getFormattedChangesetValueForFieldInt')
+            ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
         $this->formatted_changeset_value_for_text_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldText')
-            ->once()
-            ->andReturn(Mockery::mock(ArtifactValuesRepresentation::class));
+            ->expects(self::once())
+            ->method('getFormattedChangesetValueForFieldText')
+            ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
         $this->formatted_changeset_value_for_list_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldList')
-            ->once()
-            ->andReturn(Mockery::mock(ArtifactValuesRepresentation::class));
+            ->expects(self::once())
+            ->method('getFormattedChangesetValueForFieldList')
+            ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
 
 
         $result = $this->execution_changes_extractor->getChanges(
@@ -112,19 +92,19 @@ class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetChangesShouldReturnVoidArrayIfTheirIsNoChange(): void
     {
         $this->formatted_changeset_value_for_file_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldFile')
-            ->never();
+            ->expects(self::never())
+            ->method('getFormattedChangesetValueForFieldFile');
         $this->formatted_changeset_value_for_int_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldInt')
-            ->never();
+            ->expects(self::never())
+            ->method('getFormattedChangesetValueForFieldInt');
         $this->formatted_changeset_value_for_text_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldText')
-            ->once()
-            ->andReturn(null);
+            ->expects(self::once())
+            ->method('getFormattedChangesetValueForFieldText')
+            ->willReturn(null);
         $this->formatted_changeset_value_for_list_field_retriever
-            ->shouldReceive('getFormattedChangesetValueForFieldList')
-            ->once()
-            ->andReturn(null);
+            ->expects(self::once())
+            ->method('getFormattedChangesetValueForFieldList')
+            ->willReturn(null);
 
 
         $result = $this->execution_changes_extractor->getChanges(
