@@ -18,56 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Permissions;
 
 use GitRepository;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserGroup\NameTranslator;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-class RegexpPermissionFilterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RegexpPermissionFilterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var RegexpPermissionFilter
-     */
-    private $permission_filter;
-
-    /**
-     * @var FineGrainedPermissionFactory
-     */
-    private $permission_factory;
-
-    /**
-     * @var GitRepository
-     */
-    private $repository;
-
-    /**
-     * @var FineGrainedPermissionDestructor
-     */
-    private $permission_destructor;
+    private RegexpPermissionFilter $permission_filter;
+    private FineGrainedPermissionFactory&MockObject $permission_factory;
+    private GitRepository $repository;
+    private FineGrainedPermissionDestructor&MockObject $permission_destructor;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)->build();
 
-        $this->repository = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns(1);
-
-        $this->permission_factory    = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
-        $this->permission_destructor = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionDestructor::class);
+        $this->permission_factory    = $this->createMock(FineGrainedPermissionFactory::class);
+        $this->permission_destructor = $this->createMock(FineGrainedPermissionDestructor::class);
         $this->permission_filter     = new RegexpPermissionFilter(
             $this->permission_factory,
             new PatternValidator(
                 new FineGrainedPatternValidator(),
-                \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRegexpValidator::class),
-                \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)
+                $this->createMock(FineGrainedRegexpValidator::class),
+                $this->createMock(RegexpFineGrainedRetriever::class)
             ),
             $this->permission_destructor,
-            \Mockery::spy(\Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory::class)
+            $this->createMock(DefaultFineGrainedPermissionFactory::class)
         );
     }
 
@@ -75,9 +57,9 @@ class RegexpPermissionFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $patterns = $this->buildPatterns();
 
-        $this->permission_factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturns($patterns);
-        $this->permission_factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturns([]);
-        $this->permission_destructor->shouldReceive('deleteRepositoryPermissions')->times(16);
+        $this->permission_factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn($patterns);
+        $this->permission_factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([]);
+        $this->permission_destructor->expects(self::exactly(16))->method('deleteRepositoryPermissions');
 
         $this->permission_filter->filterNonRegexpPermissions($this->repository);
     }

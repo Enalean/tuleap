@@ -18,102 +18,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Permissions;
 
 use Git;
 use GitRepository;
-use Mockery;
+use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectUGroup;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
 
-class HistoryValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HistoryValueFormatterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var GitRepository|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $repository;
-
-    /**
-     * @var GitRepository|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $migrated_repository;
-    /**
-     * @var Mockery\MockInterface&\ProjectUGroup
-     */
-    private $ugroup_01;
-    /**
-     * @var Mockery\MockInterface&\ProjectUGroup
-     */
-    private $ugroup_02;
-    /**
-     * @var Mockery\MockInterface&\ProjectUGroup
-     */
-    private $ugroup_03;
-    /**
-     * @var Mockery\MockInterface&\Project
-     */
-    private $project;
-    /**
-     * @var \PermissionsManager&Mockery\MockInterface
-     */
-    private $permissions_manager;
-    /**
-     * @var \UGroupManager&Mockery\MockInterface
-     */
-    private $ugroup_manager;
-    /**
-     * @var FineGrainedRetriever&Mockery\MockInterface
-     */
-    private $retriever;
-    /**
-     * @var DefaultFineGrainedPermissionFactory&Mockery\MockInterface
-     */
-    private $default_factory;
-    /**
-     * @var FineGrainedPermissionFactory&Mockery\MockInterface
-     */
-    private $factory;
+    private GitRepository $repository;
+    private GitRepository $migrated_repository;
+    private ProjectUGroup $ugroup_01;
+    private ProjectUGroup $ugroup_02;
+    private ProjectUGroup $ugroup_03;
+    private Project $project;
+    private PermissionsManager&MockObject $permissions_manager;
+    private FineGrainedRetriever&MockObject $retriever;
+    private DefaultFineGrainedPermissionFactory&MockObject $default_factory;
+    private FineGrainedPermissionFactory&MockObject $factory;
     private HistoryValueFormatter $formatter;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->ugroup_01 = ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('Contributors')->build();
+        $this->ugroup_02 = ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build();
+        $this->ugroup_03 = ProjectUGroupTestBuilder::aCustomUserGroup(103)->withName('Admins')->build();
 
-        $this->ugroup_01 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(101)->getMock();
-        $this->ugroup_02 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $this->ugroup_03 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(103)->getMock();
+        $this->project    = ProjectTestBuilder::aProject()->build();
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)->inProject($this->project)->build();
 
-        $this->ugroup_01->shouldReceive('getName')->andReturns('Contributors');
-        $this->ugroup_02->shouldReceive('getName')->andReturns('Developers');
-        $this->ugroup_03->shouldReceive('getName')->andReturns('Admins');
+        $this->migrated_repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)->inProject($this->project)
+            ->migratedToGerrit()->build();
 
-        $this->project    = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
-        $this->repository = Mockery::mock(GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturn(1);
-        $this->repository->shouldReceive('getProject')->andReturn($this->project);
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturnFalse();
-
-        $this->migrated_repository = Mockery::mock(GitRepository::class);
-        $this->migrated_repository->shouldReceive('getId')->andReturn(1);
-        $this->migrated_repository->shouldReceive('getProject')->andReturn($this->project);
-        $this->migrated_repository->shouldReceive('getRemoteServerId')->andReturn(1);
-        $this->migrated_repository->shouldReceive('isMigratedToGerrit')->andReturnTrue();
-
-        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
-        $this->ugroup_manager      = \Mockery::spy(\UGroupManager::class);
-        $this->retriever           = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
-        $this->default_factory     = \Mockery::spy(\Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory::class);
-        $this->factory             = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
+        $this->permissions_manager = $this->createMock(PermissionsManager::class);
+        $ugroup_manager            = $this->createMock(UGroupManager::class);
+        $this->retriever           = $this->createMock(FineGrainedRetriever::class);
+        $this->default_factory     = $this->createMock(DefaultFineGrainedPermissionFactory::class);
+        $this->factory             = $this->createMock(FineGrainedPermissionFactory::class);
 
         $this->formatter = new HistoryValueFormatter(
             $this->permissions_manager,
-            $this->ugroup_manager,
+            $ugroup_manager,
             $this->retriever,
             $this->default_factory,
             $this->factory
         );
 
-        $this->ugroup_manager->shouldReceive('getUgroupsById')->with($this->project)->andReturns([
+        $ugroup_manager->method('getUgroupsById')->with($this->project)->willReturn([
             101 => $this->ugroup_01,
             102 => $this->ugroup_02,
             103 => $this->ugroup_03,
@@ -122,11 +83,14 @@ class HistoryValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsValueWithoutFineGrainedPermissionsForRepository(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns([101]);
-
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WRITE)->andReturns([102]);
-
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WPLUS)->andReturns([103]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')
+            ->with($this->project, 1, self::anything())
+            ->willReturnCallback(static fn($project, $id, $perm) => match ($perm) {
+                Git::PERM_READ  => [101],
+                Git::PERM_WRITE => [102],
+                Git::PERM_WPLUS => [103],
+            });
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions');
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -136,12 +100,13 @@ EOS;
 
         $result = $this->formatter->formatValueForRepository($this->repository);
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
     public function testItDoesNotExportWriteAndRewindIfRepositoryIsMigratedOnGerrit(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns([101]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->willReturn([101]);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions');
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -149,16 +114,19 @@ EOS;
 
         $result = $this->formatter->formatValueForRepository($this->migrated_repository);
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
     public function testItExportsValueWithoutFineGrainedPermissionsForProject(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns([101]);
-
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WRITE)->andReturns([102]);
-
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WPLUS)->andReturns([103]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')
+            ->with($this->project, 101, self::anything())
+            ->willReturnCallback(static fn($project, $id, $perm) => match ($perm) {
+                Git::DEFAULT_PERM_READ  => [101],
+                Git::DEFAULT_PERM_WRITE => [102],
+                Git::DEFAULT_PERM_WPLUS => [103],
+            });
+        $this->retriever->method('doesProjectUseFineGrainedPermissions');
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -168,12 +136,12 @@ EOS;
 
         $result = $this->formatter->formatValueForProject($this->project);
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
     public function testItExportsValueWithFineGrainedPermissionsForRepository(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns([101]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->willReturn([101]);
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -198,20 +166,20 @@ EOS;
             []
         );
 
-        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->migrated_repository)->andReturns(true);
+        $this->retriever->method('doesRepositoryUseFineGrainedPermissions')->with($this->migrated_repository)->willReturn(true);
 
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns([1 => $branch_fine_grained_permission]);
+        $this->factory->method('getBranchesFineGrainedPermissionsForRepository')->with($this->migrated_repository)->willReturn([1 => $branch_fine_grained_permission]);
 
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns([2 => $tag_fine_grained_permission]);
+        $this->factory->method('getTagsFineGrainedPermissionsForRepository')->with($this->migrated_repository)->willReturn([2 => $tag_fine_grained_permission]);
 
         $result = $this->formatter->formatValueForRepository($this->migrated_repository);
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
     public function testItExportsValueWithFineGrainedPermissionsForProject(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns([101]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->willReturn([101]);
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -236,14 +204,14 @@ EOS;
             []
         );
 
-        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
+        $this->retriever->method('doesProjectUseFineGrainedPermissions')->with($this->project)->willReturn(true);
 
-        $this->default_factory->shouldReceive('getBranchesFineGrainedPermissionsForProject')->with($this->project)->andReturns([1 => $branch_fine_grained_permission]);
+        $this->default_factory->method('getBranchesFineGrainedPermissionsForProject')->with($this->project)->willReturn([1 => $branch_fine_grained_permission]);
 
-        $this->default_factory->shouldReceive('getTagsFineGrainedPermissionsForProject')->with($this->project)->andReturns([2 => $tag_fine_grained_permission]);
+        $this->default_factory->method('getTagsFineGrainedPermissionsForProject')->with($this->project)->willReturn([2 => $tag_fine_grained_permission]);
 
         $result = $this->formatter->formatValueForProject($this->project);
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 }
