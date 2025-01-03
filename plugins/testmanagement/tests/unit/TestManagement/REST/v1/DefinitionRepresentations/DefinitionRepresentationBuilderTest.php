@@ -280,9 +280,6 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         return $definition_artifact;
     }
 
-    /**
-     * @param Mockery\MockInterface | Artifact      $definition_artifact
-     */
     private function mockChangesetValue(
         MockObject&Artifact $definition_artifact,
         Tracker_Artifact_Changeset $changeset,
