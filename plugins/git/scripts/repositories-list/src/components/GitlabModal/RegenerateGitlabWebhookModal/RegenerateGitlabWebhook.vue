@@ -96,7 +96,7 @@ import {
     useNamespacedMutations,
     useNamespacedState,
 } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const gettext_provider = useGettext();
 
@@ -207,5 +207,5 @@ const you_are_about_to_regenerate_the_webhook_for_repository_located_at_message 
     });
 });
 
-defineExpose({ message_error_rest, repository, is_updating_webhook });
+defineExpose({ message_error_rest, repository, is_updating_webhook, disabled_button });
 </script>

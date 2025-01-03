@@ -20,13 +20,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import PullRequestBadge from "./PullRequestBadge.vue";
-import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 
 describe("PullRequestBadge", () => {
-    it("displays a badge with pull request", async () => {
+    it("displays a badge with pull request", () => {
         const wrapper = shallowMount(PullRequestBadge, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 numberPullRequest: 1,
                 repositoryId: 100,
             },

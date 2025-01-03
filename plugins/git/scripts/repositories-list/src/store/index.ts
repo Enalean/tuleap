@@ -17,22 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
+import type { Store } from "vuex";
 import mutations from "./mutations";
 import * as getters from "./getters";
 import * as actions from "./actions";
 import { createGitLabModule } from "./gitlab/module";
-import type { Store } from "vuex";
 import type { State } from "../type";
-
-Vue.use(Vuex);
 
 const gitlab = createGitLabModule();
 
-export function createStore(initialState: State): Store<State> {
-    return new Vuex.Store({
-        state: initialState,
+export function createInitializedStore(initial_state: State): Store<State> {
+    return createStore({
+        state: initial_state,
         getters,
         mutations,
         actions,

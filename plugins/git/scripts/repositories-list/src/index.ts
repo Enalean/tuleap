@@ -18,7 +18,8 @@
  *
  */
 
-import Vue from "vue";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
 import TimeAgo from "javascript-time-ago";
 import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
@@ -27,8 +28,8 @@ import App from "./components/App.vue";
 import "../themes/main.scss";
 import { setBreadcrumbSettings } from "./breadcrumb-presenter";
 import { build as buildRepositoryListPresenter } from "./repository-list-presenter";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./store";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createInitializedStore } from "./store";
 import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "./constants";
 import type { State } from "./type";
 
@@ -40,12 +41,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const locale = getDatasetItemOrThrow(document.body, "userLocale");
 
-    await initVueGettext(
-        Vue,
+    const gettext_plugin = await initVueGettext(
+        createGettext,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
-
-    Vue.config.language = locale;
 
     TimeAgo.locale(time_ago_english);
     TimeAgo.locale(time_ago_french);
@@ -101,9 +100,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         unlink_gitlab_repository: null,
     };
 
-    const AppComponent = Vue.extend(App);
-
-    new AppComponent({
-        store: createStore(state),
-    }).$mount(vue_mount_point);
+    createApp(App).use(createInitializedStore(state)).use(gettext_plugin).mount(vue_mount_point);
 });

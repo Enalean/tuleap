@@ -18,33 +18,40 @@
  *
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../../constants";
 import DisplayModeSwitcher from "./DisplayModeSwitcher.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
+import type { State } from "../../type";
 
 describe("DisplayModeSwitcher", () => {
-    async function createWrapper(display_mode: string): Promise<Wrapper<Vue>> {
+    function createWrapper(
+        display_mode: string,
+    ): VueWrapper<InstanceType<typeof DisplayModeSwitcher>> {
         return shallowMount(DisplayModeSwitcher, {
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store: createStoreMock({
-                    state: { current_display_mode: display_mode },
-                    getters: { isLoading: false },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        display_mode: display_mode,
+                    } as State,
+                    actions: {
+                        setDisplayMode: () => jest.fn(),
+                    },
                 }),
             },
         });
     }
 
-    it("displays folders sorted by path", async () => {
-        const wrapper = await createWrapper(REPOSITORIES_SORTED_BY_PATH);
+    it("displays folders sorted by path", () => {
+        const wrapper = createWrapper(REPOSITORIES_SORTED_BY_PATH);
+        jest.useFakeTimers();
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("displays folders sorted by date", async () => {
-        const wrapper = await createWrapper(REPOSITORIES_SORTED_BY_LAST_UPDATE);
+    it("displays folders sorted by date", () => {
+        const wrapper = createWrapper(REPOSITORIES_SORTED_BY_LAST_UPDATE);
+        jest.useFakeTimers();
         expect(wrapper.element).toMatchSnapshot();
     });
 });

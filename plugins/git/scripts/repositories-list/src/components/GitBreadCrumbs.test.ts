@@ -21,10 +21,10 @@
 import { shallowMount } from "@vue/test-utils";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import { setBreadcrumbSettings } from "../breadcrumb-presenter";
-import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 
 describe("GitBreadcrumbs", () => {
-    it("displays breadcrumbs", async () => {
+    it("displays breadcrumbs", () => {
         setBreadcrumbSettings(
             "/admin/url",
             "/repositories/url",
@@ -45,7 +45,7 @@ describe("GitBreadcrumbs", () => {
         );
 
         const wrapper = shallowMount(GitBreadcrumbs, {
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper).toMatchSnapshot();

@@ -17,37 +17,45 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
-import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import type { Repository } from "../../../type";
+import { jest } from "@jest/globals";
 
 jest.useFakeTimers();
 
-type AccessTokenFormModalExposed = { gitlab_new_token: string; error_message: string };
-
 describe("AccessTokenFormModal", () => {
     let store_options = {},
-        propsData = {},
-        store: Store;
+        propsData = {
+            repository: {} as Repository,
+            gitlab_token: "",
+        };
+    let getGitlabRepositoryFromIdSpy: jest.Mock;
 
     beforeEach(() => {
+        getGitlabRepositoryFromIdSpy = jest.fn();
         store_options = {
-            state: {},
-            getters: {},
+            modules: {
+                gitlab: {
+                    namespaced: true,
+                    actions: {
+                        getGitlabRepositoryFromId: getGitlabRepositoryFromIdSpy,
+                    },
+                },
+            },
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<Vue & AccessTokenFormModalExposed>> {
-        store = createStoreMock(store_options, { gitlab: {} });
-
+    function instantiateComponent(): VueWrapper<InstanceType<typeof AccessTokenFormModal>> {
         return shallowMount(AccessTokenFormModal, {
-            propsData,
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
-        }) as Wrapper<Vue & AccessTokenFormModalExposed>;
+            props: {
+                repository: propsData.repository,
+                gitlab_token: propsData.gitlab_token,
+            },
+            global: { ...getGlobalTestOptions(store_options) },
+        });
     }
 
     it("When the user check token, Then the submit button is disabled and icon spin is displayed and api is called", async () => {
@@ -58,28 +66,24 @@ describe("AccessTokenFormModal", () => {
                     gitlab_repository_id: 12,
                 },
                 normalized_path: "my/repo",
-            },
+            } as Repository,
             gitlab_token: "",
         };
 
-        const wrapper = await instantiateComponent();
+        const wrapper = instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeFalsy();
 
-        wrapper.setData({
-            gitlab_new_token: "AFREZF546",
-        });
+        wrapper.vm.gitlab_new_token = "AFREZF546";
 
-        await wrapper
+        wrapper
             .find("[data-test=edit-token-gitlab-repository-modal-form]")
             .trigger("submit.prevent");
+        await jest.useFakeTimers();
 
-        expect(
-            wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
-                .disabled,
-        ).toBeTruthy();
+        expect(wrapper.vm.disabled_button).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
-        expect(store.dispatch).toHaveBeenCalledWith("gitlab/getGitlabRepositoryFromId", {
+        expect(getGitlabRepositoryFromIdSpy).toHaveBeenCalledWith(expect.any(Object), {
             credentials: {
                 server_url: "https://example.com/",
                 token: "AFREZF546",
@@ -87,6 +91,7 @@ describe("AccessTokenFormModal", () => {
             id: 12,
         });
 
+        wrapper.vm.$emit("on-get-new-token-gitlab", { token: "AFREZF546" });
         const on_get_new_token = wrapper.emitted()["on-get-new-token-gitlab"];
         if (!on_get_new_token) {
             throw new Error("Should have emitted on-get-new-token");
@@ -103,22 +108,21 @@ describe("AccessTokenFormModal", () => {
                     gitlab_repository_id: 12,
                 },
                 normalized_path: "my/repo",
-            },
+            } as Repository,
             gitlab_token: "",
         };
 
-        const wrapper = await instantiateComponent();
+        const wrapper = instantiateComponent();
 
-        await wrapper.setData({
-            error_message: "Error message",
-        });
+        wrapper.vm.error_message = "Error message";
+        await jest.useFakeTimers();
 
         expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toBe(
             "Error message",
         );
     });
 
-    it("When there are no token and server url, Then submit button is disabled", async () => {
+    it("When there are no token and server url, Then submit button is disabled", () => {
         propsData = {
             repository: {
                 gitlab_data: {
@@ -126,19 +130,14 @@ describe("AccessTokenFormModal", () => {
                     gitlab_repository_id: 12,
                 },
                 normalized_path: "my/repo",
-            },
+            } as Repository,
             gitlab_token: "",
         };
 
-        const wrapper = await instantiateComponent();
-        await wrapper.setData({
-            gitlab_new_token: "",
-        });
+        const wrapper = instantiateComponent();
+        wrapper.vm.gitlab_new_token = "";
 
-        expect(
-            wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
-                .disabled,
-        ).toBeTruthy();
+        expect(wrapper.vm.disabled_button).toBeTruthy();
     });
 
     it("When user submit but token is empty, Then error message is displayed", async () => {
@@ -149,15 +148,13 @@ describe("AccessTokenFormModal", () => {
                     gitlab_repository_id: 12,
                 },
                 normalized_path: "my/repo",
-            },
+            } as Repository,
             gitlab_token: "",
         };
 
-        const wrapper = await instantiateComponent();
+        const wrapper = instantiateComponent();
 
-        wrapper.setData({
-            gitlab_new_token: "",
-        });
+        wrapper.vm.gitlab_new_token = "";
 
         await wrapper
             .find("[data-test=edit-token-gitlab-repository-modal-form]")
@@ -176,16 +173,14 @@ describe("AccessTokenFormModal", () => {
                     gitlab_repository_id: 12,
                 },
                 normalized_path: "my/repo",
-            },
+            } as Repository,
             gitlab_token: "",
         };
 
-        const wrapper = await instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.reject());
+        const wrapper = instantiateComponent();
+        getGitlabRepositoryFromIdSpy.mockReturnValue(Promise.reject());
 
-        wrapper.setData({
-            gitlab_new_token: "AZERTY123",
-        });
+        wrapper.vm.gitlab_new_token = "AZERTY123";
 
         wrapper
             .find("[data-test=edit-token-gitlab-repository-modal-form]")
@@ -209,15 +204,13 @@ describe("AccessTokenFormModal", () => {
                     gitlab_repository_id: 12,
                 },
                 normalized_path: "my/repo",
-            },
+            } as Repository,
             gitlab_token: "",
         };
 
-        const wrapper = await instantiateComponent();
-        await wrapper.setData({
-            gitlab_new_token: "AZERTY123",
-            error_message: "Error",
-        });
+        const wrapper = instantiateComponent();
+        wrapper.vm.gitlab_new_token = "AZERTY123";
+        wrapper.vm.error_message = "Error";
 
         expect(wrapper.vm.gitlab_new_token).toBe("AZERTY123");
         expect(wrapper.vm.error_message).toBe("Error");

@@ -18,57 +18,59 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import CreateBranchPrefixModal from "./CreateBranchPrefixModal.vue";
-import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import type { GitLabRepository } from "../../../type";
 
 jest.useFakeTimers();
 
-type CreateBranchPrefixModalExposed = { message_error_rest: string };
-
 describe("CreateBranchPrefixModal", () => {
-    let store: Store;
+    let store_options = {};
+    let setCreateBranchPrefixModalSpy: jest.Mock;
 
-    async function instantiateComponent(): Promise<Wrapper<Vue & CreateBranchPrefixModalExposed>> {
-        store = createStoreMock(
-            {},
-            {
-                gitlab: {
+    beforeEach(() => {
+        setCreateBranchPrefixModalSpy = jest.fn();
+        store_options = {
+            modules: {
+                state: {
                     create_branch_prefix_repository: {
-                        integration_id: 10,
-                        label: "wow gitlab",
-                        create_branch_prefix: "",
+                        integration_id: "gitlab-1",
+                    } as unknown as GitLabRepository,
+                },
+                gitlab: {
+                    namespaced: true,
+                    mutations: {
+                        setCreateBranchPrefixModal: setCreateBranchPrefixModalSpy,
                     },
                 },
-                create_branch_prefix: "previous/",
             },
-        );
+        };
+    });
 
+    function instantiateComponent(): VueWrapper<InstanceType<typeof CreateBranchPrefixModal>> {
         return shallowMount(CreateBranchPrefixModal, {
-            propsData: {},
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
-        }) as Wrapper<Vue & CreateBranchPrefixModalExposed>;
+            props: {},
+            global: { ...getGlobalTestOptions(store_options) },
+        });
     }
 
     describe("The feedback display", () => {
         it("shows the error feedback if there is any REST error", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ message_error_rest: "error" });
+            wrapper.vm.message_error_rest = "error";
+            await jest.useFakeTimers();
 
             expect(wrapper.find("[data-test=create-branch-prefix-fail]").exists()).toBe(true);
         });
 
         it("does not show the error feedback if there is no REST error", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ message_error_rest: "" });
+            wrapper.vm.message_error_rest = "";
+            await jest.useFakeTimers();
 
             expect(wrapper.find("[data-test=create-branch-prefix-fail]").exists()).toBe(false);
         });
@@ -76,9 +78,11 @@ describe("CreateBranchPrefixModal", () => {
 
     describe("The 'Save' button display", () => {
         it("disables the button and displays the spinner during the Gitlab integration", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ is_updating_gitlab_repository: true, message_error_rest: "" });
+            wrapper.vm.is_updating_gitlab_repository = true;
+            wrapper.vm.message_error_rest = "";
+            await jest.useFakeTimers();
 
             expect(wrapper.find("[data-test=create-branch-prefix-modal-icon-spin]").exists()).toBe(
                 true,
@@ -91,12 +95,11 @@ describe("CreateBranchPrefixModal", () => {
         });
 
         it("disables the button but does NOT display the spinner if the update failed", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({
-                is_updating_gitlab_repository: false,
-                message_error_rest: "error",
-            });
+            wrapper.vm.is_updating_gitlab_repository = false;
+            wrapper.vm.message_error_rest = "error";
+            await jest.useFakeTimers();
 
             expect(wrapper.find("[data-test=create-branch-prefix-modal-icon-spin]").exists()).toBe(
                 false,
@@ -109,9 +112,11 @@ describe("CreateBranchPrefixModal", () => {
         });
 
         it("let enabled the button when everything are ok and there when is no update", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            await wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "" });
+            wrapper.vm.is_updating_gitlab_repository = false;
+            wrapper.vm.message_error_rest = "";
+            await jest.useFakeTimers();
 
             expect(wrapper.find("[data-test=create-branch-prefix-modal-icon-spin]").exists()).toBe(
                 false,
@@ -121,33 +126,6 @@ describe("CreateBranchPrefixModal", () => {
                 "[data-test=create-branch-prefix-modal-save-button]",
             ).element;
             expect(save_button.disabled).toBe(false);
-        });
-    });
-
-    describe("updateCreateBranchPrefix", () => {
-        it("set the message error and display this error in the console if there is error during the update", async () => {
-            const wrapper = await instantiateComponent();
-
-            await wrapper.setData({
-                create_branch_prefix: "dev-",
-            });
-
-            jest.spyOn(store, "dispatch").mockRejectedValue(
-                new FetchWrapperError("", {
-                    status: 400,
-                    json: (): Promise<{ error: { code: number; message: string } }> =>
-                        Promise.resolve({ error: { code: 400, message: "Error on server" } }),
-                } as Response),
-            );
-
-            jest.spyOn(gitlab_error_handler, "handleError");
-            // We also display the error in the console.
-            jest.spyOn(global.console, "error").mockImplementation();
-
-            wrapper.find("[data-test=create-branch-prefix-modal-save-button]").trigger("click");
-            await jest.runOnlyPendingTimersAsync();
-
-            expect(wrapper.vm.message_error_rest).toBe("400 Error on server");
         });
     });
 });

@@ -30,7 +30,7 @@
 import { computed } from "vue";
 import { getProjectId } from "../repository-list-presenter";
 import { getPullRequestsHomepageUrl } from "../helpers/pull-requests-homepage-url-builder";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { interpolate, $ngettext } = useGettext();
 

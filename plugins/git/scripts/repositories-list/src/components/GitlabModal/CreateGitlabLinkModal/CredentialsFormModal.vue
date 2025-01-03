@@ -113,7 +113,7 @@ import { credentialsAreEmpty, serverUrlIsValid } from "../../../gitlab/gitlab-cr
 import { computed, ref } from "vue";
 import type { GitLabCredentialsWithProjects, GitlabProject } from "../../../type";
 import { useNamespacedActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const gettext_provider = useGettext();
 
@@ -214,5 +214,7 @@ defineExpose({
     gitlab_token,
     gitlab_projects,
     empty_message,
+    error_message,
+    disabled_button,
 });
 </script>

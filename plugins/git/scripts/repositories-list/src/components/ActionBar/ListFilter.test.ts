@@ -20,18 +20,18 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ListFilter from "./ListFilter.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 
 describe("ListFilter", () => {
-    it("displays a filter", async () => {
-        const wrapper = shallowMount(ListFilter, {
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store: createStoreMock({
-                    state: { filter: "test" },
-                }),
+    it("displays a filter", () => {
+        const store_options = {
+            mutations: {
+                setFilter: jest.fn(),
             },
+        };
+
+        const wrapper = shallowMount(ListFilter, {
+            global: { ...getGlobalTestOptions(store_options) },
         });
 
         expect(wrapper).toMatchSnapshot();

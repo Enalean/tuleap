@@ -4,17 +4,11 @@ exports[`GitBreadcrumbs displays breadcrumbs 1`] = `
 <div class="breadcrumb-container">
   <breadcrumb-privacy-stub project_flags="" privacy="[object Object]" project_public_name="Guinea Pig"></breadcrumb-privacy-stub>
   <nav class="breadcrumb">
-    <div class="breadcrumb-item breadcrumb-project"><a href="/guinea-pig/url" class="breadcrumb-link">
-        🐹 Guinea Pig
-      </a></div>
-    <div class="breadcrumb-switchable breadcrumb-item"><a href="/repositories/url" title="Repository list" class="breadcrumb-link">
-        Git repositories
-      </a>
+    <div class="breadcrumb-item breadcrumb-project"><a href="/guinea-pig/url" class="breadcrumb-link">🐹 Guinea Pig</a></div>
+    <div class="breadcrumb-switchable breadcrumb-item"><a class="breadcrumb-link" href="/repositories/url" title="Repository list">Git repositories</a>
       <div class="breadcrumb-switch-menu-container">
         <nav class="breadcrumb-switch-menu">
-          <!----> <span class="breadcrumb-dropdown-item"><a href="/fork/url" title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i>
-                            Fork repositories
-                        </a></span>
+          <!--v-if--><span class="breadcrumb-dropdown-item"><a class="breadcrumb-dropdown-link" href="/fork/url" title="Fork repositories"><i class="fas fa-code-branch fa-fw"></i> Fork repositories</a></span>
         </nav>
       </div>
     </div>

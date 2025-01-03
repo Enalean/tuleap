@@ -91,7 +91,7 @@ import { deleteIntegrationGitlab } from "../../../gitlab/gitlab-api-querier";
 import type { Repository } from "../../../type";
 import { useMutations, useNamespacedMutations, useNamespacedState } from "vuex-composition-helpers";
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const gettext_provider = useGettext();
 
@@ -200,4 +200,6 @@ const confirmUnlink = async (event: Event): Promise<void> => {
         is_loading.value = false;
     }
 };
+
+defineExpose({ repository, confirmation_message, message_error_rest, disabled_button });
 </script>

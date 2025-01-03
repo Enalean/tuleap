@@ -68,7 +68,7 @@ import type { Repository } from "../../../type";
 import { computed, ref } from "vue";
 import { handleError } from "../../../gitlab/gitlab-error-handler";
 import { useNamespacedActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const gettext_provider = useGettext();
 
@@ -153,5 +153,5 @@ const confirmEditToken = async (event: Event): Promise<void> => {
     }
 };
 
-defineExpose({ message_error_rest });
+defineExpose({ message_error_rest, disabled_button });
 </script>

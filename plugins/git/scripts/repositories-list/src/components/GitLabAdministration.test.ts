@@ -18,20 +18,29 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitLabAdministration from "./GitLabAdministration.vue";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { FormattedGitLabRepository } from "../type";
-import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 
 jest.mock("tlp");
 
 describe("GitLabAdministration", () => {
-    let repository: FormattedGitLabRepository, store: Store;
+    let repository: FormattedGitLabRepository;
+    let showDeleteGitlabRepositoryModalSpy: jest.Mock;
+    let showEditAccessTokenGitlabRepositoryModalSpy: jest.Mock;
+    let showRegenerateGitlabWebhookModalSpy: jest.Mock;
+    let showArtifactClosureModalSpy: jest.Mock;
 
-    async function instantiateComponent(): Promise<Wrapper<Vue>> {
+    beforeEach(() => {
+        showDeleteGitlabRepositoryModalSpy = jest.fn();
+        showEditAccessTokenGitlabRepositoryModalSpy = jest.fn();
+        showRegenerateGitlabWebhookModalSpy = jest.fn();
+        showArtifactClosureModalSpy = jest.fn();
+    });
+
+    function instantiateComponent(): VueWrapper<InstanceType<typeof GitLabAdministration>> {
         repository = {
             id: 1,
             normalized_path: "MyPath/MyRepo",
@@ -46,23 +55,31 @@ describe("GitLabAdministration", () => {
         } as FormattedGitLabRepository;
         const propsData = { repository, is_admin: true };
         const store_options = {
-            state: { gitlab: {} },
-            getters: {
-                isGitlabUsed: false,
-                isFolderDisplayMode: true,
+            modules: {
+                gitlab: {
+                    namespaced: true,
+                    actions: {
+                        showDeleteGitlabRepositoryModal: showDeleteGitlabRepositoryModalSpy,
+                        showEditAccessTokenGitlabRepositoryModal:
+                            showEditAccessTokenGitlabRepositoryModalSpy,
+                        showRegenerateGitlabWebhookModal: showRegenerateGitlabWebhookModalSpy,
+                        showArtifactClosureModal: showArtifactClosureModalSpy,
+                    },
+                },
             },
         };
 
-        store = createStoreMock(store_options);
         return shallowMount(GitLabAdministration, {
-            propsData,
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions(store_options) },
+            props: {
+                repository: propsData.repository,
+                is_admin: propsData.is_admin,
+            },
         });
     }
 
-    it("When user is git admin but repository comes from Gitlab, Then admin icon is displayed", async () => {
-        const wrapper = await instantiateComponent();
+    it("When user is git admin but repository comes from Gitlab, Then admin icon is displayed", () => {
+        const wrapper = instantiateComponent();
 
         expect(wrapper.find("[data-test=git-repository-card-admin-link]").exists()).toBeFalsy();
         expect(
@@ -75,44 +92,44 @@ describe("GitLabAdministration", () => {
         ).toBeTruthy();
     });
 
-    it("When repository is GitLab and user clicks to unlink, Then modal opens", async () => {
-        const wrapper = await instantiateComponent();
+    it("When repository is GitLab and user clicks to unlink, Then modal opens", () => {
+        const wrapper = instantiateComponent();
 
-        await wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
+        wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showDeleteGitlabRepositoryModal",
+        expect(showDeleteGitlabRepositoryModalSpy).toHaveBeenCalledWith(
+            expect.any(Object),
             repository,
         );
     });
 
-    it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
-        const wrapper = await instantiateComponent();
+    it("When repository is GitLab and user clicks to edit token, Then modal opens", () => {
+        const wrapper = instantiateComponent();
 
-        await wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
+        wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showEditAccessTokenGitlabRepositoryModal",
+        expect(showEditAccessTokenGitlabRepositoryModalSpy).toHaveBeenCalledWith(
+            expect.any(Object),
             repository,
         );
     });
 
-    it("When repository is GitLab and user clicks to regenerate webhook, Then modal opens", async () => {
-        const wrapper = await instantiateComponent();
+    it("When repository is GitLab and user clicks to regenerate webhook, Then modal opens", () => {
+        const wrapper = instantiateComponent();
 
-        await wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
+        wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showRegenerateGitlabWebhookModal",
+        expect(showRegenerateGitlabWebhookModalSpy).toHaveBeenCalledWith(
+            expect.any(Object),
             repository,
         );
     });
 
-    it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", async () => {
-        const wrapper = await instantiateComponent();
+    it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", () => {
+        const wrapper = instantiateComponent();
 
-        await wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
+        wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("gitlab/showArtifactClosureModal", repository);
+        expect(showArtifactClosureModalSpy).toHaveBeenCalledWith(expect.any(Object), repository);
     });
 });

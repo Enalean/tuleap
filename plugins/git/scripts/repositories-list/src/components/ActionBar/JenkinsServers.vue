@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import { createPopover } from "@tuleap/tlp-popovers";
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { JenkinsServer } from "../../type";
 
 const { interpolate, $ngettext } = useGettext();

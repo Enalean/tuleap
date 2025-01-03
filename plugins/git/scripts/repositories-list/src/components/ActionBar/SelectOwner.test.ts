@@ -20,13 +20,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SelectOwner from "./SelectOwner.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as repo_list from "../../repository-list-presenter";
 import type { RepositoryOwner } from "../../type";
-import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 
 describe("SelectOwner", () => {
-    it("displays a dropdown with user forks", async () => {
+    it("displays a dropdown with user forks", () => {
         const forks: Array<RepositoryOwner> = [
             { id: 1, display_name: "Fork A" },
             { id: 2, display_name: "Fork B" },
@@ -34,14 +33,14 @@ describe("SelectOwner", () => {
 
         jest.spyOn(repo_list, "getRepositoriesOwners").mockReturnValue(forks);
 
-        const wrapper = shallowMount(SelectOwner, {
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store: createStoreMock({
-                    state: { filter: "test" },
-                    getters: { isLoading: false },
-                }),
+        const store_options = {
+            actions: {
+                changeRepositories: jest.fn(),
             },
+        };
+
+        const wrapper = shallowMount(SelectOwner, {
+            global: { ...getGlobalTestOptions(store_options) },
         });
 
         expect(wrapper).toMatchSnapshot();

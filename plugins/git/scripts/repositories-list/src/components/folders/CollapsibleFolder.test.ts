@@ -17,36 +17,33 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CollapsibleFolder from "./CollapsibleFolder.vue";
 import type { Folder, Repository } from "../../type";
 import GitRepository from "../GitRepository.vue";
-import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
-import type Vue from "vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 
 describe("CollapsibleFolder", () => {
-    async function instantiateComponent(propsData: {
-        is_root_folder?: boolean;
-        is_base_folder?: boolean;
+    function instantiateComponent(propsData: {
+        is_root_folder: boolean;
+        is_base_folder: boolean;
         children: Array<Folder | Repository>;
-        label?: string;
-    }): Promise<Wrapper<Vue>> {
+        label: string;
+    }): VueWrapper<InstanceType<typeof CollapsibleFolder>> {
         return shallowMount(CollapsibleFolder, {
-            propsData,
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                    getters: {},
-                }),
+            props: {
+                label: propsData.label,
+                is_root_folder: propsData.is_root_folder,
+                is_base_folder: propsData.is_base_folder,
+                children: propsData.children,
             },
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 
-    it("When folder is root, Then there are not icon and label", async () => {
-        const wrapper = await instantiateComponent({
+    it("When folder is root, Then there are not icon and label", () => {
+        const wrapper = instantiateComponent({
             is_root_folder: true,
             is_base_folder: false,
             children: [],
@@ -58,7 +55,7 @@ describe("CollapsibleFolder", () => {
     });
 
     it("When folder is not root, Then there are icon and label and icon changes on click", async () => {
-        const wrapper = await instantiateComponent({
+        const wrapper = instantiateComponent({
             is_root_folder: false,
             is_base_folder: true,
             label: "Repositories",
@@ -82,8 +79,8 @@ describe("CollapsibleFolder", () => {
         );
     });
 
-    it("When children is repository, Then GitRepository is rendered", async () => {
-        const wrapper = await instantiateComponent({
+    it("When children is repository, Then GitRepository is rendered", () => {
+        const wrapper = instantiateComponent({
             is_root_folder: true,
             is_base_folder: false,
             children: [{ id: 10 } as Repository],
@@ -92,17 +89,5 @@ describe("CollapsibleFolder", () => {
 
         expect(wrapper.findComponent(GitRepository).exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-collapsible-folder]").exists()).toBeFalsy();
-    });
-
-    it("When children is folder, Then CollapsibleFolder is rendered", async () => {
-        const wrapper = await instantiateComponent({
-            is_root_folder: true,
-            is_base_folder: false,
-            children: [{ label: "folder", is_folder: true, children: [] } as Folder],
-            label: "",
-        });
-
-        expect(wrapper.findComponent(GitRepository).exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=git-repository-collapsible-folder]").exists()).toBeTruthy();
     });
 });

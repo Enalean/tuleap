@@ -5,14 +5,10 @@ exports[`JenkinsServer displays the badge and a basic popover 1`] = `
   <section class="tlp-popover git-repository-list-header-popover">
     <div class="tlp-popover-arrow"></div>
     <div class="tlp-popover-header">
-      <h1 class="tlp-popover-title">
-        Jenkins servers
-      </h1>
+      <h1 class="tlp-popover-title">Jenkins servers</h1>
     </div>
     <div class="tlp-popover-body">
-      <p>
-        Theses servers are triggered at each push in any repository of the project:
-      </p>
+      <p>Theses servers are triggered at each push in any repository of the project:</p>
       <ul>
         <li><a href="https://example.com"><code>https://example.com</code></a></li>
       </ul>

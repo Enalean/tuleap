@@ -28,7 +28,6 @@
 
 <script setup lang="ts">
 import CollapsibleFolder from "./CollapsibleFolder.vue";
-
 import { useGetters } from "vuex-composition-helpers";
 
 const { getFilteredRepositoriesGroupedByPath } = useGetters([

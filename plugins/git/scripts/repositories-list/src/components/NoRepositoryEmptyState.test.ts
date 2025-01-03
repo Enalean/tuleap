@@ -17,65 +17,53 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import NoRepositoryEmptyState from "./NoRepositoryEmptyState.vue";
 import DropdownActionButton from "./DropdownActionButton.vue";
 import * as repo_list from "../repository-list-presenter";
 import type { State } from "../type";
-import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 
 describe("NoRepositoryEmptyState", () => {
-    interface StoreOption {
-        state: State;
-        getters: {
-            areExternalUsedServices?: boolean;
-            isCurrentRepositoryListEmpty?: boolean;
-            isInitialLoadingDoneWithoutError?: boolean;
-        };
-    }
-
-    let store_options: StoreOption;
     beforeEach(() => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(true);
+    });
 
-        store_options = {
+    function instantiateComponent(
+        are_external_used_services: boolean,
+    ): VueWrapper<InstanceType<typeof NoRepositoryEmptyState>> {
+        const store_options = {
             state: {
                 is_first_load_done: true,
             } as State,
             getters: {
-                areExternalUsedServices: false,
-                isCurrentRepositoryListEmpty: true,
-                isInitialLoadingDoneWithoutError: true,
+                areExternalUsedServices: () => are_external_used_services,
+                isCurrentRepositoryListEmpty: () => true,
+                isInitialLoadingDoneWithoutError: () => true,
             },
         };
-    });
 
-    async function instantiateComponent(): Promise<Wrapper<Vue>> {
-        const store = createStoreMock(store_options);
         return shallowMount(NoRepositoryEmptyState, {
-            mocks: { $store: store },
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions(store_options) },
         });
     }
 
-    it("When there is no used externals services, Then there is a button to create a repo", async () => {
-        const wrapper = await instantiateComponent();
+    it("When there is no used externals services, Then there is a button to create a repo", () => {
+        const wrapper = instantiateComponent(false);
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeFalsy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeTruthy();
     });
 
-    it("When Gitlab is an external service, Then dropdown is displayed the action is displayed", async () => {
-        store_options.getters.areExternalUsedServices = true;
-        const wrapper = await instantiateComponent();
+    it("When Gitlab is an external service, Then dropdown is displayed the action is displayed", () => {
+        const wrapper = instantiateComponent(true);
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeTruthy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeFalsy();
     });
 
-    it("When the user is not git admin, Then there aren't any button", async () => {
+    it("When the user is not git admin, Then there aren't any button", () => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(false);
-        const wrapper = await instantiateComponent();
+        const wrapper = instantiateComponent(false);
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeFalsy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeFalsy();
     });
