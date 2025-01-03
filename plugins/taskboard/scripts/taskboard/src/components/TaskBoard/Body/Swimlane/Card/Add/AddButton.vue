@@ -35,43 +35,44 @@
     </button>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, watch, nextTick, computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class AddButton extends Vue {
-    @Prop({ required: true })
-    readonly label!: string;
+const { $gettext } = useGettext();
+const props = defineProps<{
+    label: string;
+    is_in_add_mode: boolean;
+}>();
 
-    @Prop({ required: true })
-    readonly is_in_add_mode!: boolean;
+defineEmits<{
+    (e: "click"): void;
+}>();
 
-    @Ref() readonly addButton!: HTMLElement;
+const addButton = ref<HTMLElement | null>(null);
+const is_in_add_mode_ref = ref(props.is_in_add_mode);
 
-    @Watch("is_in_add_mode")
-    onIsInAddModeChanged(is_in_add_mode: boolean): void {
-        if (!is_in_add_mode) {
-            this.focusAddButton();
-        }
+watch(is_in_add_mode_ref, (is_in_add_mode: boolean) => {
+    if (!is_in_add_mode) {
+        focusAddButton();
     }
+});
 
-    get title(): string {
-        return this.label || this.$gettext("Add new card");
-    }
+const title = computed((): string => {
+    return props.label || $gettext("Add new card");
+});
 
-    get icon_class(): string {
-        return this.label !== "" ? "fa-tlp-hierarchy-plus tlp-button-icon" : "fa-plus";
-    }
+const icon_class = computed((): string => {
+    return props.label !== "" ? "fa-tlp-hierarchy-plus tlp-button-icon" : "fa-plus";
+});
 
-    get button_class(): string {
-        return this.label === "" ? "" : "tlp-button-small taskboard-add-in-place-button-with-label";
-    }
+const button_class = computed((): string => {
+    return props.label === "" ? "" : "tlp-button-small taskboard-add-in-place-button-with-label";
+});
 
-    focusAddButton(): void {
-        this.$nextTick(() => {
-            this.addButton.focus();
-        });
-    }
+function focusAddButton(): void {
+    nextTick(() => {
+        addButton.value?.focus();
+    });
 }
 </script>
