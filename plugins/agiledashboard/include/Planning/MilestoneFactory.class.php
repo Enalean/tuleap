@@ -19,6 +19,7 @@
  */
 
 use Psr\Log\LoggerInterface;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
@@ -115,7 +116,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $artifact_factory,
             $form_element_factory,
             new AgileDashboard_Milestone_MilestoneStatusCounter(
-                new AgileDashboard_BacklogItemDao(),
+                new BacklogItemDao(),
                 new Tracker_ArtifactDao(),
                 $artifact_factory
             ),

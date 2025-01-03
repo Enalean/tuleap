@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class AgileDashboard_Milestone_MilestoneStatusCounter
@@ -28,7 +28,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
     private $artifact_factory;
 
     public function __construct(
-        AgileDashboard_BacklogItemDao $backlog_item_dao,
+        BacklogItemDao $backlog_item_dao,
         Tracker_ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
     ) {
@@ -96,10 +96,14 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
         );
     }
 
-    private function getIdsUserCanView(PFUser $user, LegacyDataAccessResultInterface|array $dar)
+    /**
+     * @param array<array{id: int}> $artifacts_rows
+     * @return int[]
+     */
+    private function getIdsUserCanView(PFUser $user, array $artifacts_rows): array
     {
         $artifact_ids = [];
-        foreach ($dar as $row) {
+        foreach ($artifacts_rows as $row) {
             $artifact = $this->artifact_factory->getArtifactById($row['id']);
             if ($artifact && $artifact->userCanView($user)) {
                 $artifact_ids[] = $row['id'];

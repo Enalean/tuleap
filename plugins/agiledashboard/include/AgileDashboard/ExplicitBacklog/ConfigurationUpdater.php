@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use AgileDashboard_BacklogItemDao;
 use Codendi_Request;
 use MilestoneReportCriterionDao;
 use PFUser;
@@ -30,6 +29,7 @@ use Planning_MilestoneFactory;
 use Planning_NoPlanningsException;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBTransactionExecutor;
@@ -52,7 +52,7 @@ class ConfigurationUpdater
     private $db_transaction_executor;
 
     /**
-     * @var AgileDashboard_BacklogItemDao
+     * @var BacklogItemDao
      */
     private $backlog_item_dao;
 
@@ -83,7 +83,7 @@ class ConfigurationUpdater
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         MilestoneReportCriterionDao $milestone_report_criterion_dao,
-        AgileDashboard_BacklogItemDao $backlog_item_dao,
+        BacklogItemDao $backlog_item_dao,
         Planning_MilestoneFactory $milestone_factory,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
@@ -144,8 +144,7 @@ class ConfigurationUpdater
             }
 
             $backlog_items_rows = $this->backlog_item_dao->getOpenUnplannedTopBacklogArtifacts(
-                $top_milestone->getPlanning()->getBacklogTrackersIds(),
-                []
+                $top_milestone->getPlanning()->getBacklogTrackersIds()
             );
 
             foreach ($backlog_items_rows as $backlog_items_row) {

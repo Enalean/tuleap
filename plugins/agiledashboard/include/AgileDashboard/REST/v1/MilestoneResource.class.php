@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
@@ -40,6 +39,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\BacklogItem\AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
@@ -147,13 +147,13 @@ class MilestoneResource extends AuthenticatedResource
         $this->milestone_factory = Planning_MilestoneFactory::build();
 
         $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $this->tracker_artifact_factory,
             $planning_factory,
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $this->tracker_artifact_factory,
             $this->milestone_factory,
             $planning_factory,

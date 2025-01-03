@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -31,7 +32,7 @@ class Cardwall_PaneBoardBuilder
     private $dao;
     private $swimline_factory;
 
-    public function __construct(Cardwall_CardInCellPresenterBuilder $presenter_builder, Tracker_ArtifactFactory $artifact_factory, AgileDashboard_BacklogItemDao $dao, Cardwall_SwimlineFactory $swimline_factory)
+    public function __construct(Cardwall_CardInCellPresenterBuilder $presenter_builder, Tracker_ArtifactFactory $artifact_factory, BacklogItemDao $dao, Cardwall_SwimlineFactory $swimline_factory)
     {
         $this->presenter_builder = $presenter_builder;
         $this->artifact_factory  = $artifact_factory;

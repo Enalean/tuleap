@@ -22,6 +22,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\VisitRetriever;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
@@ -776,7 +777,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getBacklogFactory()
     {
         return new AgileDashboard_Milestone_Backlog_BacklogFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build(),
         );
@@ -1338,7 +1339,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $form_element_factory = Tracker_FormElementFactory::instance();
 
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $this->getArtifactFactory(),
             $milestone_factory,
             $this->getPlanningFactory(),
@@ -1698,7 +1699,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return new ConfigurationUpdater(
             new ExplicitBacklogDao(),
             new MilestoneReportCriterionDao(),
-            new AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             Planning_MilestoneFactory::build(),
             new ArtifactsInExplicitBacklogDao(),
             new UnplannedArtifactsAdder(

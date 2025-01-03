@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItemDao;
 
 /**
  * I retrieve the content of the backlog
@@ -56,7 +57,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
         Planning_Milestone $milestone,
         array $item_names,
         array $descendant_trackers,
-        AgileDashboard_BacklogItemDao $item_dao,
+        BacklogItemDao $item_dao,
         $limit = null,
         $offset = null,
     ) {

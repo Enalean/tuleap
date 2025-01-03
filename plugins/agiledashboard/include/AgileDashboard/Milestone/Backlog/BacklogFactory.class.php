@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItemDao;
 
 /**
  * I build AgileDashboard_Milestone_Backlog_Backlog
@@ -30,7 +31,7 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_Milestone_Backlog_BacklogFactory
 {
-    /** @var AgileDashboard_BacklogItemDao */
+    /** @var BacklogItemDao */
     private $dao;
 
     /** @var Tracker_ArtifactFactory */
@@ -40,7 +41,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
     private $planning_factory;
 
     public function __construct(
-        AgileDashboard_BacklogItemDao $dao,
+        BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
         PlanningFactory $planning_factory,
     ) {

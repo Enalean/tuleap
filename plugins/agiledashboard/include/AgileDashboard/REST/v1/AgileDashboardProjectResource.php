@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
@@ -324,7 +325,7 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
         $milestone_factory = \Planning_MilestoneFactory::build();
 
         $backlog_factory = new \AgileDashboard_Milestone_Backlog_BacklogFactory(
-            new \AgileDashboard_BacklogItemDao(),
+            new BacklogItemDao(),
             $tracker_artifact_factory,
             $planning_factory,
         );

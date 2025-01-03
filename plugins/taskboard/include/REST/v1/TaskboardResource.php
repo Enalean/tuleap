@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1;
 
-use AgileDashboard_BacklogItemDao;
 use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Luracast\Restler\RestException;
 use PFUser;
 use Planning_ArtifactMilestone;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
@@ -54,7 +54,7 @@ class TaskboardResource extends AuthenticatedResource
      */
     private $user_manager;
     /**
-     * @var AgileDashboard_BacklogItemDao
+     * @var BacklogItemDao
      */
     private $backlog_item_dao;
     /**
@@ -65,7 +65,7 @@ class TaskboardResource extends AuthenticatedResource
     public function __construct()
     {
         $this->user_manager     = UserManager::instance();
-        $this->backlog_item_dao = new AgileDashboard_BacklogItemDao();
+        $this->backlog_item_dao = new BacklogItemDao();
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
     }
 
@@ -127,7 +127,7 @@ class TaskboardResource extends AuthenticatedResource
             $limit,
             $offset
         );
-        $total_count = (int) $this->backlog_item_dao->foundRows();
+        $total_count = $this->backlog_item_dao->foundRows();
         foreach ($backlog as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
             if (! $artifact->userCanView($user)) {
