@@ -58,40 +58,29 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import type { Swimlane, ColumnDefinition } from "../../../../type";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import type { Swimlane } from "../../../../type";
 import CardXrefLabel from "./Card/CardXrefLabel.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 
-const column_store = namespace("column");
-const swimlane_store = namespace("swimlane");
+const { $gettext } = useGettext();
 
-@Component({
-    components: { SwimlaneHeader, CardXrefLabel },
-})
-export default class CollapsedSwimlane extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const { expandSwimlane } = useNamespacedActions("swimlane", ["expandSwimlane"]);
 
-    @swimlane_store.Action
-    readonly expandSwimlane!: (swimlane: Swimlane) => void;
+const props = defineProps<{
+    swimlane: Swimlane;
+}>();
 
-    @column_store.State
-    readonly columns!: Array<ColumnDefinition>;
+const additional_classnames = computed((): string => {
+    return `tlp-swatch-${props.swimlane.card.color}`;
+});
 
-    get additional_classnames(): string {
-        return `tlp-swatch-${this.swimlane.card.color}`;
-    }
+const additional_card_classnames = computed((): string => {
+    return `taskboard-card-${props.swimlane.card.color}`;
+});
 
-    get additional_card_classnames(): string {
-        return `taskboard-card-${this.swimlane.card.color}`;
-    }
-
-    get title(): string {
-        return this.$gettext("Expand");
-    }
-}
+const title = $gettext("Expand");
 </script>

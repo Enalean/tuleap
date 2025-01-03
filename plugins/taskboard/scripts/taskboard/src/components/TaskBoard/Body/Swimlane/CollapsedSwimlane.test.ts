@@ -28,10 +28,7 @@ import type { RootState } from "../../../../store/type";
 
 type UnknowObject = Record<string, unknown>;
 
-async function wrapperFactory(
-    $store?: unknown,
-    props?: UnknowObject,
-): Promise<Wrapper<CollapsedSwimlane>> {
+async function wrapperFactory($store?: unknown, props?: UnknowObject): Promise<Wrapper<Vue>> {
     const defined_store =
         $store ??
         createStoreMock({
