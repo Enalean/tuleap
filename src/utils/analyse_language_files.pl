@@ -68,12 +68,12 @@ push @files,"$source_dir/www/projects";
 push @files,"$source_dir/www/users";
 
 
-#  remove the check on file common/error/Error_PermissionDenied.class.php
+#  remove the check on file common/error/Error_PermissionDenied.php
 # becaus eit uses a variable as base
 my $position = 0;
 chomp $position;
 foreach my $case (@files) {
-    if ($case =~/\/common\/Error\/Error_PermissionDenied.class.php/ ) {
+    if ($case =~/\/common\/Error\/Error_PermissionDenied.php/ ) {
         last;
     }
     $position++;

@@ -120,7 +120,7 @@ class StatisticsPlugin extends Plugin
     public function getPluginInfo()
     {
         if (! $this->pluginInfo instanceof StatisticsPluginInfo) {
-            include_once('StatisticsPluginInfo.class.php');
+            include_once('StatisticsPluginInfo.php');
             $this->pluginInfo = new StatisticsPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -208,7 +208,7 @@ class StatisticsPlugin extends Plugin
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_wiget_event)
     {
         if ($get_wiget_event->getName() === 'plugin_statistics_projectstatistics') {
-            include_once 'Statistics_Widget_ProjectStatistics.class.php';
+            include_once 'Statistics_Widget_ProjectStatistics.php';
             $get_wiget_event->setWidget(new Statistics_Widget_ProjectStatistics());
         }
     }

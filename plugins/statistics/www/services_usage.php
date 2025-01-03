@@ -20,10 +20,10 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ . '/../include/Statistics_ServicesUsageDao.class.php';
-require_once __DIR__ . '/../include/Statistics_Services_UsageFormatter.class.php';
-require_once __DIR__ . '/../include/Statistics_Formatter.class.php';
-require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.class.php';
+require_once __DIR__ . '/../include/Statistics_ServicesUsageDao.php';
+require_once __DIR__ . '/../include/Statistics_Services_UsageFormatter.php';
+require_once __DIR__ . '/../include/Statistics_Formatter.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.php';
 require_once __DIR__ . '/../include/CSV/CSVBuilder.php';
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 

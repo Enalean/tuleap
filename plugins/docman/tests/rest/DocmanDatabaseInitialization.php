@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest;
 
-require_once __DIR__ . '/../../../../tests/lib/DatabaseInitialisation.class.php';
+require_once __DIR__ . '/../../../../tests/lib/DatabaseInitialisation.php';
 
 use ForgeConfig;
 

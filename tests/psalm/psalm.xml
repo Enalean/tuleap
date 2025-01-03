@@ -1398,7 +1398,7 @@
         <UnusedConstructor errorLevel="suppress" />
         <UnusedProperty>
             <errorLevel type="suppress">
-                <file name="plugins/git/include/GitActions.class.php"/>
+                <file name="plugins/git/include/GitActions.php"/>
                 <file name="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php"/>
             </errorLevel>
         </UnusedProperty>

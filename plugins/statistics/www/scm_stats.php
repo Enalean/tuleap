@@ -20,8 +20,8 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ . '/../include/Statistics_Formatter.class.php';
-require_once __DIR__ . '/../include/Statistics_Formatter_Svn.class.php';
+require_once __DIR__ . '/../include/Statistics_Formatter.php';
+require_once __DIR__ . '/../include/Statistics_Formatter_Svn.php';
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
 $pluginManager = PluginManager::instance();

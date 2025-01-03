@@ -32,7 +32,7 @@ class ServiceLinkDataBuilder
     {
         if ((int) $project->getID() !== 100) {
             // NOTE: if you change link variables here, change them also below, and
-            // in src/common/Project/RegisterProjectStep_Confirmation.class.php and src/www/include/Layout.class.php
+            // in src/common/Project/RegisterProjectStep_Confirmation.php and src/www/include/Layout.class.php
             if (strstr($link, '$projectname')) {
                 // Don't check project name if not needed.
                 // When it is done here, the service bar will not appear updated on the current page
