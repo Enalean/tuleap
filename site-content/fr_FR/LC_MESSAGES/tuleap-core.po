@@ -1001,9 +1001,6 @@ msgstr "Créer"
 msgid "Create a new reference pattern"
 msgstr "Créer un nouveau modèle de référence"
 
-msgid "Create a new reference pattern."
-msgstr "Créer un nouveau modèle de référence."
-
 msgid "Create a new user"
 msgstr "Créer un nouvel utilisateur"
 
@@ -1298,8 +1295,8 @@ msgid "Editing reference patterns"
 msgstr "Éditer les modèles de référence"
 
 #, php-format
-msgid "Editing reference patterns for <B>%s</B>"
-msgstr "Edition des modèles de référence de <B>%s</B>"
+msgid "Editing reference patterns for <b>%s</b>"
+msgstr "Edition des modèles de référence de <b>%s</b>"
 
 msgid "Editing system reference patterns"
 msgstr "Éditer les modèles de référence système"

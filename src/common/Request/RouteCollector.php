@@ -145,7 +145,7 @@ use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
-use Tuleap\Project\Admin\Reference\Browse\LegacyReferenceAdministrationBrowsingRenderer;
+use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowsingRenderer;
 use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowseController;
 use Tuleap\Project\Admin\Reference\Browse\ReferencePatternPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
@@ -1035,7 +1035,7 @@ class RouteCollector
 
         return new ReferenceAdministrationBrowseController(
             \ProjectManager::instance(),
-            new LegacyReferenceAdministrationBrowsingRenderer(
+            new ReferenceAdministrationBrowsingRenderer(
                 Codendi_HTMLPurifier::instance(),
                 $event_manager,
                 $reference_manager,

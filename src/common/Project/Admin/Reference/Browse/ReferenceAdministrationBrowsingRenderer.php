@@ -22,11 +22,10 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Reference\Browse;
 
 use Codendi_HTMLPurifier;
-use Reference;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 
-class LegacyReferenceAdministrationBrowsingRenderer
+final readonly class ReferenceAdministrationBrowsingRenderer
 {
     public function __construct(
         private Codendi_HTMLPurifier $purifier,
@@ -43,28 +42,21 @@ class LegacyReferenceAdministrationBrowsingRenderer
         $is_template_project = ((int) $project_id === \Project::DEFAULT_TEMPLATE_PROJECT_ID);
 
         if ($is_template_project) {
-            print '<P><h2>' . _('Editing system reference patterns') . '</B></h2>';
+            $page_title = _('Editing system reference patterns');
         } else {
-            print '<P><h2>'
-                . sprintf(
-                    _('Editing reference patterns for <B>%s</B>'),
-                    $this->purifier->purify($project->getPublicName())
-                )
-                . '</h2>';
+            $page_title = sprintf(
+                _('Editing reference patterns for <b>%s</b>'),
+                $this->purifier->purify($project->getPublicName())
+            );
         }
-        print '
-            <P>
-            <H3>' . _('New reference pattern') . '</H3>
-            <a href="/project/admin/reference.php?view=creation&group_id=' . urlencode($this->purifier->purify($project_id)) . '">' . _('Create a new reference pattern.') . '</a>
-            <p>';
 
-        $this->displayExternalSystemReferences();
+        $create_reference_url = '/project/admin/reference.php?view=creation&group_id=' . $project_id;
 
-        /*
-         Show the references that this project is using
-        */
-        $references = $this->reference_manager->getReferencesByGroupId((int) $project_id); // References are sorted by scope first
+        $collector                            = $this->event_manager->dispatch(new ExternalSystemReferencePresentersCollector());
+        $external_system_references_presenter = $collector->getExternalSystemReferencePresenters();
 
+
+        $references         = $this->reference_manager->getReferencesByGroupId((int) $project_id);
         $references_system  = array_filter($references, function ($reference) {
             return $reference->scope === 'S';
         });
@@ -91,51 +83,20 @@ class LegacyReferenceAdministrationBrowsingRenderer
                 $references_project_pattern[] = $this->builder->buildProjectReference($ref, $is_template_project, $delete_reference_label);
             }
         }
-
-        $presenter     = new BrowseReferencePresenter($references_system_pattern, $references_project_pattern, $is_template_project);
-        $template_path = __DIR__ . '/../../../../../templates/project/admin/references';
-        echo $this->renderer_factory->getRenderer($template_path)->renderToString('browse-reference', $presenter);
-
-        $this->displayCustomReferencesWarningsIfAny($references);
-    }
-
-    /**
-     * @param Reference[] $references
-     */
-    private function displayCustomReferencesWarningsIfAny(array $references): void
-    {
         $warnings_collector_event = new ReferenceAdministrationWarningsCollectorEvent($references);
         $this->event_manager->dispatch($warnings_collector_event);
         $warning_messages = $warnings_collector_event->getWarningMessages();
 
-        if (empty($warning_messages)) {
-            return;
-        }
-
-        print '<div class="alert">';
-        foreach ($warning_messages as $warning_message) {
-            print $warning_message . '<br>';
-        }
-        print '<div/>';
-    }
-
-    private function displayExternalSystemReferences(): void
-    {
-        $collector = $this->event_manager->dispatch(new ExternalSystemReferencePresentersCollector());
-
-        $presenters = $collector->getExternalSystemReferencePresenters();
-        if (! $presenters) {
-            return;
-        }
-
-        $renderer = \TemplateRendererFactory::build()->getRenderer(
-            __DIR__ . '/../../../../../templates/project/admin/references'
+        $presenter     = new BrowseReferencePresenter(
+            $references_system_pattern,
+            $references_project_pattern,
+            $is_template_project,
+            $page_title,
+            $create_reference_url,
+            $external_system_references_presenter,
+            $warning_messages
         );
-        $renderer->renderToPage(
-            'external-system-references',
-            [
-                'external_system_references' => $presenters,
-            ]
-        );
+        $template_path = __DIR__ . '/../../../../../templates/project/admin/references';
+        echo $this->renderer_factory->getRenderer($template_path)->renderToString('browse-reference', $presenter);
     }
 }

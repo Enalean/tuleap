@@ -954,9 +954,6 @@ msgstr "생성하기"
 msgid "Create a new reference pattern"
 msgstr "새 참조 패턴 만들기"
 
-msgid "Create a new reference pattern."
-msgstr "새 참조 패턴 만들기"
-
 msgid "Create a new user"
 msgstr "새 사용자 만들기"
 
@@ -1244,8 +1241,8 @@ msgid "Editing reference patterns"
 msgstr "참조 패턴 편집"
 
 #, php-format
-msgid "Editing reference patterns for <B>%s</B>"
-msgstr "<B>%s</B>에 대한 참조 패턴 편집"
+msgid "Editing reference patterns for <b>%s</b>"
+msgstr "<b>%s</b>에 대한 참조 패턴 편집"
 
 msgid "Editing system reference patterns"
 msgstr "시스템 참조 패턴 편집"

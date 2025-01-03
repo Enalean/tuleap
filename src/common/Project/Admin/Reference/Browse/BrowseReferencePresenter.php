@@ -26,13 +26,26 @@ namespace Tuleap\Project\Admin\Reference\Browse;
 final readonly class BrowseReferencePresenter
 {
     public string $trash_icon;
+    public bool $has_external_references;
+    public bool $has_warning_messages;
 
     /**
      * @param ProjectReferencePatternPresenter[] $system_references
      * @param ProjectReferencePatternPresenter[] $project_references
+     * @param ExternalSystemReferencePresenter[] $external_system_references
+     * @param string[] $warning_messages
      */
-    public function __construct(public array $system_references, public array $project_references, public bool $is_template_project)
-    {
-        $this->trash_icon = util_get_image_theme('ic/trash.png');
+    public function __construct(
+        public array $system_references,
+        public array $project_references,
+        public bool $is_template_project,
+        public string $page_title,
+        public string $create_reference_url,
+        public array $external_system_references,
+        public array $warning_messages,
+    ) {
+        $this->trash_icon              = util_get_image_theme('ic/trash.png');
+        $this->has_external_references = count($this->external_system_references) > 0;
+        $this->has_warning_messages    = count($this->warning_messages) > 0;
     }
 }

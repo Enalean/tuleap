@@ -28,7 +28,7 @@ use CSRFSynchronizerToken;
 /**
  * @psalm-immutable
  */
-final class ProjectReferencePatternPresenter
+final readonly class ProjectReferencePatternPresenter
 {
     public function __construct(
         public string $keyword,

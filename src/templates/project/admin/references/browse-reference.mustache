@@ -1,3 +1,14 @@
+<p><h2>{{ page_title }}</h2></p>
+
+<p>
+    <h3>{{# gettext }}New reference pattern{{/ gettext }}</h3>
+    <a href="{{ create_reference_url }}">{{# gettext }}Create a new reference pattern{{/ gettext }}</a>
+<p>
+
+{{# has_external_references }}
+    {{> external-system-references }}
+{{/ has_external_references }}
+
 <h3>{{# gettext }}Manage system reference patterns{{/ gettext }}</h3>
 
 <table data-test="table-test" width="100%" border="0" cellspacing="1" cellpadding="2">
@@ -27,3 +38,9 @@
         {{/ project_references }}
     </tbody>
 </table>
+
+{{# has_warning_messages }}
+    <div class="alert">
+        {{# warning_messages }} {{ . }} {{/ warning_messages }}
+    </div>
+{{/ has_warning_messages }}

@@ -36,7 +36,7 @@ readonly class ReferenceAdministrationBrowseController implements DispatchableWi
 {
     public function __construct(
         private ProjectManager $project_manager,
-        private LegacyReferenceAdministrationBrowsingRenderer $legacy_renderer,
+        private ReferenceAdministrationBrowsingRenderer $legacy_renderer,
         private HeaderNavigationDisplayer $header_navigation_displayer,
         private ProjectAccessChecker $project_access_checker,
         private ProjectAdministratorChecker $administrator_checker,
