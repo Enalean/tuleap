@@ -22,57 +22,43 @@ declare(strict_types=1);
 
 namespace Tuleap\Mediawiki;
 
+use MediawikiDao;
 use MediawikiUserGroupsMapper;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use TestHelper;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use User_ForgeUserGroupPermissionsDao;
 
-final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MediawikiUserGroupsMapperTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private MediawikiDao&MockObject $dao;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $tuleap_user;
+    private User_ForgeUserGroupPermissionsDao&MockObject $forge_perms_dao;
 
-    /**
-     * @var \MediawikiDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\User_ForgeUserGroupPermissionsDao
-     */
-    private $forge_perms_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
-     */
-    private $project;
-
-    /**
-     * @var MediawikiUserGroupsMapper
-     */
-    private $mapper;
+    private MediawikiUserGroupsMapper $mapper;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->tuleap_user = Mockery::mock(\PFUser::class);
-        $this->tuleap_user->shouldReceive('getId')->andReturn(101);
+        $this->dao             = $this->createMock(MediawikiDao::class);
+        $this->forge_perms_dao = $this->createMock(User_ForgeUserGroupPermissionsDao::class);
 
-        $this->dao             = \Mockery::spy(\MediawikiDao::class);
-        $this->forge_perms_dao = \Mockery::spy(\User_ForgeUserGroupPermissionsDao::class);
-        $this->project         = \Mockery::spy(\Project::class);
+        $this->dao->method('resetUserGroups');
+        $this->forge_perms_dao->method('doesUserHavePermission');
 
         $this->mapper = new MediawikiUserGroupsMapper($this->dao, $this->forge_perms_dao);
     }
 
     public function testItAddsProjectMembersAsBots(): void
     {
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn([
             ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS],
         ]);
 
@@ -88,18 +74,21 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             'bureaucrat' => [],
         ];
 
-        $this->dao->shouldReceive('addMediawikiUserGroupMapping')
-            ->with($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3')
-            ->once();
+        $this->dao
+            ->expects(self::once())
+            ->method('addMediawikiUserGroupMapping')
+            ->with($project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3');
 
-        $this->dao->shouldReceive('removeMediawikiUserGroupMapping')->never();
+        $this->dao->expects(self::never())->method('removeMediawikiUserGroupMapping');
 
-        $this->mapper->saveMapping($new_mapping, $this->project);
+        $this->mapper->saveMapping($new_mapping, $project);
     }
 
     public function testItRemovesRegisteredUsersFromBot(): void
     {
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn([
             ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS],
             ['group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER],
             ['group_id' => '104', 'ugroup_id' => '3', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT],
@@ -117,18 +106,20 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             'bureaucrat' => [],
         ];
 
-        $this->dao->shouldReceive('removeMediawikiUserGroupMapping')
-            ->with($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3')
-            ->once();
+        $this->dao->expects(self::once())
+            ->method('removeMediawikiUserGroupMapping')
+            ->with($project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3');
 
-        $this->dao->shouldReceive('addMediawikiUserGroupMapping')->never();
+        $this->dao->expects(self::never())->method('addMediawikiUserGroupMapping');
 
-        $this->mapper->saveMapping($new_mapping, $this->project);
+        $this->mapper->saveMapping($new_mapping, $project);
     }
 
     public function testItIgnoresAnonymousModifications(): void
     {
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn([
             ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS],
         ]);
 
@@ -140,15 +131,17 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             'bureaucrat' => [],
         ];
 
-        $this->dao->shouldReceive('removeMediawikiUserGroupMapping')->never();
-        $this->dao->shouldReceive('addMediawikiUserGroupMapping')->never();
+        $this->dao->expects(self::never())->method('removeMediawikiUserGroupMapping');
+        $this->dao->expects(self::never())->method('addMediawikiUserGroupMapping');
 
-        $this->mapper->saveMapping($new_mapping, $this->project);
+        $this->mapper->saveMapping($new_mapping, $project);
     }
 
     public function testItIgnoresUserModifications(): void
     {
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn([
             ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS],
             ['group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER],
         ]);
@@ -161,15 +154,17 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             'bureaucrat' => [],
         ];
 
-        $this->dao->shouldReceive('removeMediawikiUserGroupMapping')->never();
-        $this->dao->shouldReceive('addMediawikiUserGroupMapping')->never();
+        $this->dao->expects(self::never())->method('removeMediawikiUserGroupMapping');
+        $this->dao->expects(self::never())->method('addMediawikiUserGroupMapping');
 
-        $this->mapper->saveMapping($new_mapping, $this->project);
+        $this->mapper->saveMapping($new_mapping, $project);
     }
 
     public function testItCallsRemoveAndAddDAOMethodsDuringSave(): void
     {
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn([
             [
                 'group_id'      => 104,
                 'ugroup_id'     => 1,
@@ -212,21 +207,22 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->dao->shouldReceive('removeMediawikiUserGroupMapping')
-            ->with($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP, 4)
-            ->once();
+        $this->dao->expects(self::exactly(2))
+            ->method('removeMediawikiUserGroupMapping')
+            ->willReturnCallback(static fn(Project $called_project, string $unchecked_mw_group_name, int $unchecked_ugroup_id) => match (true) {
+                $called_project === $project && $unchecked_mw_group_name === MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP && $unchecked_ugroup_id === 4,
+                $called_project === $project && $unchecked_mw_group_name === MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT && $unchecked_ugroup_id === 4 => true
+            });
 
-        $this->dao->shouldReceive('removeMediawikiUserGroupMapping')
-            ->with($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT, 4)
-            ->once();
+        $this->dao->expects(self::exactly(5))->method('addMediawikiUserGroupMapping');
 
-        $this->dao->shouldReceive('addMediawikiUserGroupMapping')->times(5);
-
-        $this->mapper->saveMapping($new_mapping, $this->project);
+        $this->mapper->saveMapping($new_mapping, $project);
     }
 
     public function testItReturnsTrueIfCurrentMappingEqualsDefaultOneForPublicProject(): void
     {
+        $project = ProjectTestBuilder::aProject()->build();
+
         $current_mapping =  [
             [
                 'group_id'      => 104,
@@ -255,15 +251,16 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
-        $this->project->shouldReceive('isPublic')->andReturnTrue();
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn($current_mapping);
 
-        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $is_default = $this->mapper->isDefaultMapping($project);
         $this->assertTrue($is_default);
     }
 
     public function testItReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPublicProject(): void
     {
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
+
         $current_mapping =  [
             [
                 'group_id'      => 104,
@@ -287,15 +284,16 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
-        $this->project->shouldReceive('isPublic')->andReturnTrue();
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn($current_mapping);
 
-        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $is_default = $this->mapper->isDefaultMapping($project);
         $this->assertFalse($is_default);
     }
 
     public function testItReturnsTrueIfCurrentMappingEqualsDefaultOneForPrivateProject(): void
     {
+        $project = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
+
         $current_mapping =  [
             [
                 'group_id'      => 104,
@@ -314,15 +312,16 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
-        $this->project->shouldReceive('isPublic')->andReturnFalse();
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn($current_mapping);
 
-        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $is_default = $this->mapper->isDefaultMapping($project);
         $this->assertTrue($is_default);
     }
 
     public function testItReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPrivateProject(): void
     {
+        $project = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
+
         $current_mapping =  [
             [
                 'group_id'      => 104,
@@ -336,29 +335,29 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
-        $this->project->shouldReceive('isPublic')->andReturnFalse();
+        $this->dao->method('getMediawikiUserGroupMapping')->willReturn($current_mapping);
 
-        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $is_default = $this->mapper->isDefaultMapping($project);
         $this->assertFalse($is_default);
     }
 
     public function testItReturnsRightMediawikiGroupsFromDatabase(): void
     {
-        $this->dao->shouldReceive('getMediawikiGroupsForUser')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn(\TestHelper::emptyDar());
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::buildWithDefaults();
 
-        $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn([
+        $this->dao->method('getMediawikiGroupsForUser')
+            ->with($user, $project)
+            ->willReturn(TestHelper::emptyDar());
+
+        $this->dao->method('getMediawikiGroupsMappedForUGroups')
+            ->with($user, $project)
+            ->willReturn([
                 ['real_name' => 'sysop'],
                 ['real_name' => 'bureaucrat'],
             ]);
 
-        $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
-
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
+        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($user, $project);
 
         $this->assertEquals($mediawiki_groups, [
             'added' => [
@@ -373,12 +372,14 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetsAnonymousUsersAsAnonymous(): void
     {
-        $this->tuleap_user->shouldReceive('isAnonymous')->andReturnTrue();
-        $this->dao->shouldReceive('getMediawikiGroupsForUser')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn(\TestHelper::emptyDar());
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::anAnonymousUser()->build();
 
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
+        $this->dao->method('getMediawikiGroupsForUser')
+            ->with($user, $project)
+            ->willReturn(TestHelper::emptyDar());
+
+        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($user, $project);
 
         $this->assertEquals($mediawiki_groups, [
             'added' => [
@@ -391,17 +392,18 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetsAnonymousWhenNothingIsAvailable(): void
     {
-        $this->dao->shouldReceive('getMediawikiGroupsForUser')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn(\TestHelper::emptyDar());
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::buildWithDefaults();
 
-        $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn(\TestHelper::emptyDar());
+        $this->dao->method('getMediawikiGroupsForUser')
+            ->with($user, $project)
+            ->willReturn(TestHelper::emptyDar());
 
-        $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
+        $this->dao->method('getMediawikiGroupsMappedForUGroups')
+            ->with($user, $project)
+            ->willReturn(TestHelper::emptyDar());
 
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
+        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($user, $project);
 
         $this->assertEquals($mediawiki_groups, [
             'added' => [
@@ -414,17 +416,17 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsUnconsistantMediawikiGroupsToBeDeleted(): void
     {
-        $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
-        $this->tuleap_user->shouldReceive('isMember')->with(202, 'A')->andReturnTrue();
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::buildWithDefaults();
 
-        $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn(\TestHelper::emptyDar());
+        $this->dao->method('getMediawikiGroupsMappedForUGroups')
+            ->with($user, $project)
+            ->willReturn(TestHelper::emptyDar());
 
         $groups_dar = $this->createStub(LegacyDataAccessResultInterface::class);
-        $this->dao->shouldReceive('getMediawikiGroupsForUser')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn($groups_dar);
+        $this->dao->method('getMediawikiGroupsForUser')
+            ->with($user, $project)
+            ->willReturn($groups_dar);
 
         $first_row = ['ug_group' => 'ForgeRole:forge_admin'];
         $groups_dar->method('valid')->willReturn(true, false);
@@ -432,20 +434,20 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $groups_dar->method('rewind');
         $groups_dar->method('next');
 
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
+        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($user, $project);
 
         $this->assertEquals(['ForgeRole:forge_admin'], $mediawiki_groups['removed']);
     }
 
     public function testItRevokesGroupsTheUserIsNoLongerMemberOf(): void
     {
-        $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
-        $this->tuleap_user->shouldReceive('isMember')->with(202, 'A')->andReturnTrue();
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::buildWithDefaults();
 
         $groups_dar = $this->createStub(LegacyDataAccessResultInterface::class);
-        $this->dao->shouldReceive('getMediawikiGroupsForUser')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn($groups_dar);
+        $this->dao->method('getMediawikiGroupsForUser')
+            ->with($user, $project)
+            ->willReturn($groups_dar);
 
         $first_row = ['ug_group' => 'bureaucrat'];
         $groups_dar->method('valid')->willReturn(true, false);
@@ -453,24 +455,24 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $groups_dar->method('rewind');
         $groups_dar->method('next');
 
-        $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn(\TestHelper::emptyDar());
+        $this->dao->method('getMediawikiGroupsMappedForUGroups')
+            ->with($user, $project)
+            ->willReturn(TestHelper::emptyDar());
 
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
+        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($user, $project);
 
         $this->assertEquals($mediawiki_groups['removed'], ['bureaucrat']);
     }
 
     public function testItDoesNotAddGroupsTheUserAlreadyHave(): void
     {
-        $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
-        $this->tuleap_user->shouldReceive('isMember')->with(202, 'A')->andReturnTrue();
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::buildWithDefaults();
 
         $groups_dar = $this->createStub(LegacyDataAccessResultInterface::class);
-        $this->dao->shouldReceive('getMediawikiGroupsForUser')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn($groups_dar);
+        $this->dao->method('getMediawikiGroupsForUser')
+            ->with($user, $project)
+            ->willReturn($groups_dar);
 
         $first_row = ['ug_group' => '*'];
         $groups_dar->method('valid')->willReturn(true, false);
@@ -479,9 +481,9 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $groups_dar->method('next');
 
         $mapped_dar = $this->createStub(LegacyDataAccessResultInterface::class);
-        $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
-            ->with($this->tuleap_user, $this->project)
-            ->andReturn($mapped_dar);
+        $this->dao->method('getMediawikiGroupsMappedForUGroups')
+            ->with($user, $project)
+            ->willReturn($mapped_dar);
 
         $first_row = ['real_name' => '*'];
         $mapped_dar->method('valid')->willReturn(true, false);
@@ -489,7 +491,7 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapped_dar->method('rewind');
         $mapped_dar->method('next');
 
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
+        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($user, $project);
 
         $this->assertEquals($mediawiki_groups, ['added' => [], 'removed' => []]);
     }

@@ -21,32 +21,28 @@
 namespace Tuleap\Mediawiki;
 
 use ForgeConfig;
+use MediawikiLanguageDao;
 use MediawikiLanguageManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require 'bootstrap.php';
-
-class MediawikiLanguageManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MediawikiLanguageManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private MediawikiLanguageManager $language_manager;
 
-    /** @var MediawikiLanguageManager */
-    private $language_manager;
+    private Project $project;
 
-    /** @var Project */
-    private $project;
-
-    /** @var MediawikiLanguageDao */
-    private $dao;
+    private MediawikiLanguageDao&MockObject $dao;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->dao              = \Mockery::spy(\MediawikiLanguageDao::class);
+        $this->dao              = $this->createMock(MediawikiLanguageDao::class);
         $this->language_manager = new MediawikiLanguageManager($this->dao);
-        $this->project          = \Mockery::spy(\Project::class);
+        $this->project          = ProjectTestBuilder::aProject()->withId(123)->build();
 
-        $this->project->shouldReceive('getID')->andReturn(123);
         ForgeConfig::store();
     }
 
@@ -56,53 +52,57 @@ class MediawikiLanguageManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testItReturnsProjectLanguageWhenItIsSet()
+    public function testItReturnsProjectLanguageWhenItIsSet(): void
     {
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(['language' => 'ja_JP']);
+        $this->dao->method('getUsedLanguageForProject')->willReturn(['language' => 'ja_JP']);
 
         $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'ja_JP');
     }
 
-    public function testItUsesTheSystemLangIfThereIsOnlyOneAndNoProjectLanguage()
+    public function testItUsesTheSystemLangIfThereIsOnlyOneAndNoProjectLanguage(): void
     {
         ForgeConfig::set('sys_supported_languages', 'it_IT');
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(false);
+        $this->dao->method('getUsedLanguageForProject')->willReturn(false);
+
+        $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
 
         $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
     }
 
-    public function testItUsesTheSystemLangIfThereIsOnlyOneAndNullProjectLanguage()
+    public function testItUsesTheSystemLangIfThereIsOnlyOneAndNullProjectLanguage(): void
     {
         ForgeConfig::set('sys_supported_languages', 'it_IT');
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(['language' => null]);
+        $this->dao->method('getUsedLanguageForProject')->willReturn(['language' => null]);
+
+        $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
 
         $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
     }
 
-    public function testItSavesTheSystemLangIfThereIsOnlyOneAndNoProjectLanguage()
+    public function testItSavesTheSystemLangIfThereIsOnlyOneAndNoProjectLanguage(): void
     {
         ForgeConfig::set('sys_supported_languages', 'it_IT');
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(false);
+        $this->dao->method('getUsedLanguageForProject')->willReturn(false);
 
-        $this->dao->shouldReceive('updateLanguageOption')->with(123, 'it_IT')->once();
+        $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
 
         $this->language_manager->getUsedLanguageForProject($this->project);
     }
 
-    public function testItReturnsNullIfThereAreNoProjectLanguageAndMoreThanOneSystemLanguage()
+    public function testItReturnsNullIfThereAreNoProjectLanguageAndMoreThanOneSystemLanguage(): void
     {
         ForgeConfig::set('sys_supported_languages', 'it_IT,ja_JP');
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(false);
+        $this->dao->method('getUsedLanguageForProject')->willReturn(false);
 
         $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), null);
     }
 
-    public function testItSavesNothingIfThereAreNoProjectLanguageAndMoreThanOneSystemLanguage()
+    public function testItSavesNothingIfThereAreNoProjectLanguageAndMoreThanOneSystemLanguage(): void
     {
         ForgeConfig::set('sys_supported_languages', 'it_IT,ja_JP');
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(false);
+        $this->dao->method('getUsedLanguageForProject')->willReturn(false);
 
-        $this->dao->shouldReceive('updateLanguageOption')->with(123, 'it_IT')->never();
+        $this->dao->expects(self::never())->method('updateLanguageOption')->with(123, 'it_IT');
 
         $this->language_manager->getUsedLanguageForProject($this->project);
     }
