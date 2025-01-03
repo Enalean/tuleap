@@ -95,7 +95,7 @@ class Git_Widget_UserPushes extends Widget
                         }
                         $project   = $entry['group_name'];
                         $unix_name = $hp->purify($entry['unix_group_name']);
-                        $content  .= '<fieldset class="widget-last-git-pushes-project">
+                        $content  .= '<fieldset class="widget-last-git-pushes-project" data-test="widget-last-git-pushes-project">
                             <legend id="plugin_git_user_pushes_widget_project_' . $unix_name . '" class="' . Toggler::getClassname('plugin_git_user_pushes_widget_project_' . $unix_name) . '">
                             <span title="' . dgettext('tuleap-git', 'Project') . '">
                             <b>' . $hp->purify($project) . '</b>
@@ -129,7 +129,7 @@ class Git_Widget_UserPushes extends Widget
                         $content .= '<tr class="' . html_get_alt_row_color(++$i) . '">
                                          <td>' . DateHelper::relativeDateInlineContext((int) $row['push_date'], $user) . '</td>
                                          <td>
-                                             <a href="' . $this->pluginPath . '/index.php/' . $entry['group_id'] . '/view/' . $entry['repository_id'] . '/">
+                                             <a href="' . $this->pluginPath . '/index.php/' . $entry['group_id'] . '/view/' . $entry['repository_id'] . '/" data-test="commit-direct-link">
                                              ' . $hp->purify($row['commits_number']) . '
                                              </a>
                                          </td>
