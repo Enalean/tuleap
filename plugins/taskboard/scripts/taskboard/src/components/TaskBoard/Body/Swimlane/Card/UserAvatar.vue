@@ -24,14 +24,10 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
 import type { User } from "../../../../../type";
-import { Component, Prop } from "vue-property-decorator";
 
-@Component
-export default class UserAvatar extends Vue {
-    @Prop({ required: true })
-    readonly user!: User;
-}
+defineProps<{
+    user: User;
+}>();
 </script>
