@@ -32,14 +32,17 @@ describe("Store getters", () => {
     describe("getFilteredRepositoriesByLastUpdateDate", () => {
         it("Given that the repositories are not yet loaded, then an empty array will be returned", () => {
             const state = {
-                repositories_for_owner: {
-                    101: [
-                        {
-                            label: "vuex",
-                            name: "vuex",
-                        } as Repository,
-                    ],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 101,
+                        repositories: [
+                            {
+                                label: "vuex",
+                                name: "vuex",
+                            } as Repository,
+                        ],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 101,
             } as State;
 
@@ -52,16 +55,21 @@ describe("Store getters", () => {
             const first_repo = {
                 normalized_path: "sequacious/missis",
                 last_update_date: "2019-12-08T07:58:37+01:00",
+                label: "missis",
             } as Repository;
             const last_repo = {
                 normalized_path: "putridity",
                 last_update_date: "2021-03-24T01:35:50+01:00",
+                label: "putridity",
             } as Repository;
 
             const state = {
-                repositories_for_owner: {
-                    101: [first_repo, last_repo],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 101,
+                        repositories: [first_repo, last_repo],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 101,
                 filter: "",
             } as State;
@@ -75,9 +83,12 @@ describe("Store getters", () => {
     describe("getFilteredRepositoriesGroupedByPath", () => {
         it("Given that the repositories are not yet loaded, then an empty structure will be returned", () => {
             const state = {
-                repositories_for_owner: {
-                    101: [],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 101,
+                        repositories: [],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 101,
             } as State;
 
@@ -108,13 +119,16 @@ describe("Store getters", () => {
             } as Repository;
 
             const state = {
-                repositories_for_owner: {
-                    101: [
-                        project_repository_with_path,
-                        project_repository_at_root,
-                        other_repo_with_path,
-                    ],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 101,
+                        repositories: [
+                            project_repository_with_path,
+                            project_repository_at_root,
+                            other_repo_with_path,
+                        ],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 101,
                 filter: "",
             } as State;
@@ -151,9 +165,12 @@ describe("Store getters", () => {
             } as Repository;
 
             const state = {
-                repositories_for_owner: {
-                    101: [forked_repository],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 101,
+                        repositories: [forked_repository],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 101,
                 filter: "",
             } as State;
@@ -207,9 +224,12 @@ describe("Store getters", () => {
                 normalized_path: "zannichelliaceae/kafta",
             } as Repository;
             const state = {
-                repositories_for_owner: {
-                    101: [root_repository, project_repository_with_path],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 101,
+                        repositories: [root_repository, project_repository_with_path],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 101,
                 filter: "",
             } as State;
@@ -245,13 +265,16 @@ describe("Store getters", () => {
             } as Repository;
 
             const state = {
-                repositories_for_owner: {
-                    101: [
-                        project_repository_with_path,
-                        project_repository_at_root,
-                        other_repo_with_path,
-                    ],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 101,
+                        repositories: [
+                            project_repository_with_path,
+                            project_repository_at_root,
+                            other_repo_with_path,
+                        ],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 101,
                 filter: "sol",
             } as State;
@@ -284,9 +307,11 @@ describe("Store getters", () => {
     describe("areRepositoriesAlreadyLoadedForCurrentOwner", () => {
         it("will return false when there is no 'project' key", () => {
             const state = {
-                repositories_for_owner: {} as RepositoriesForOwner,
-                selected_owner_id: PROJECT_KEY,
-            } as State;
+                repositories_for_owner: [
+                    { id: PROJECT_KEY, repositories: [] } as RepositoriesForOwner,
+                ],
+                id: PROJECT_KEY,
+            } as unknown as State;
 
             const result = getters.areRepositoriesAlreadyLoadedForCurrentOwner(state);
 
@@ -295,11 +320,14 @@ describe("Store getters", () => {
 
         it("will return true when there is a key matching the selected 'owner' user id (the person who forked repositories)", () => {
             const state = {
-                repositories_for_owner: {
-                    887: [],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 887,
+                        repositories: [],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 887,
-            } as State;
+            } as unknown as State;
 
             const result = getters.areRepositoriesAlreadyLoadedForCurrentOwner(state);
 
@@ -373,12 +401,15 @@ describe("Store getters", () => {
                 is_folder: true,
                 label: "root",
                 children: [{ label: "whulk" } as Repository],
-            } as Folder;
+            };
             const state = {
                 display_mode: REPOSITORIES_SORTED_BY_PATH,
-                repositories_for_owner: {
-                    887: [folder],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 887,
+                        repositories: [folder],
+                    } as unknown as RepositoriesForOwner,
+                ],
                 selected_owner_id: 887,
             } as State;
 
@@ -395,9 +426,12 @@ describe("Store getters", () => {
             } as Folder;
             const state = {
                 display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE,
-                repositories_for_owner: {
-                    887: [folder],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 887,
+                        repositories: [folder],
+                    } as unknown as RepositoriesForOwner,
+                ],
                 selected_owner_id: 887,
                 filter: "pro",
             } as State;
@@ -433,9 +467,12 @@ describe("Store getters", () => {
 
             const state = {
                 display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE,
-                repositories_for_owner: {
-                    887: [git_repository, gitlab_repository],
-                } as RepositoriesForOwner,
+                repositories_for_owner: [
+                    {
+                        id: 887,
+                        repositories: [git_repository, gitlab_repository],
+                    } as RepositoriesForOwner,
+                ],
                 selected_owner_id: 887,
                 filter: "",
             } as State;

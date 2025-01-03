@@ -20,7 +20,7 @@
 import type { Modal } from "@tuleap/tlp-modal";
 
 export interface State {
-    repositories_for_owner: RepositoriesForOwner;
+    repositories_for_owner: Array<RepositoriesForOwner>;
     filter: string;
     selected_owner_id: string | number;
     error_message_type: number;
@@ -37,7 +37,8 @@ export interface State {
 }
 
 export type RepositoriesForOwner = {
-    [key in number | string]: Array<Repository | FormattedGitLabRepository | Folder>;
+    id: number | string;
+    repositories: Array<Repository | FormattedGitLabRepository>;
 };
 
 export interface Repository {

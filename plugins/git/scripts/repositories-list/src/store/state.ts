@@ -20,7 +20,12 @@ import { REPOSITORIES_SORTED_BY_LAST_UPDATE, ERROR_TYPE_NO_ERROR, PROJECT_KEY } 
 import type { State } from "../type";
 
 const state: State = {
-    repositories_for_owner: {},
+    repositories_for_owner: [
+        {
+            id: PROJECT_KEY,
+            repositories: [],
+        },
+    ],
     filter: "",
     selected_owner_id: PROJECT_KEY,
     error_message_type: ERROR_TYPE_NO_ERROR,
