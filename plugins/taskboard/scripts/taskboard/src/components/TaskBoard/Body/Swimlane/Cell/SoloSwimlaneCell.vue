@@ -32,26 +32,19 @@
     </drop-container-cell>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
-import DropContainerCell from "./DropContainerCell.vue";
-import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
 import { isStatusAcceptedByColumn } from "../../../../../helpers/list-value-to-column-mapper";
+import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
+import DropContainerCell from "./DropContainerCell.vue";
 
-@Component({
-    components: { DropContainerCell, CardWithRemainingEffort },
-})
-export default class SoloSwimlaneCell extends Vue {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const props = defineProps<{
+    column: ColumnDefinition;
+    swimlane: Swimlane;
+}>();
 
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
-
-    get is_card_rendered(): boolean {
-        return isStatusAcceptedByColumn(this.swimlane.card, this.column);
-    }
-}
+const is_card_rendered = computed((): boolean => {
+    return isStatusAcceptedByColumn(props.swimlane.card, props.column);
+});
 </script>
