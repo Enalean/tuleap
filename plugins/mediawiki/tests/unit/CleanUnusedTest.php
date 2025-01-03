@@ -24,99 +24,37 @@ declare(strict_types=1);
 namespace Tuleap\Mediawiki;
 
 use Backend;
-use Logger;
+use ColinODell\PsrTestLogger\TestLogger;
 use MediawikiDao;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectManager;
-use Psr\Log\LogLevel;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|CleanUnusedDao
-     */
-    private $dao;
-
-    /**
-     * @var Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var Mockery\MockInterface|Backend
-     */
-    private $backend;
-
-    /**
-     * @var Mockery\MockInterface|MediawikiDao
-     */
-    private $media_wiki_dao;
-
-    /**
-     * @var CleanUnused
-     */
-    private $clean_unused;
-
-    /**
-     * @var Mockery\MockInterface|Logger
-     */
-    private $logger;
-
-    /**
-     * @var Mockery\MockInterface|MediawikiDataDir
-     */
-    private $data_dir;
-
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project_1;
-
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project_2;
-
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project_3;
+    private CleanUnusedDao&MockObject $dao;
+    private ProjectManager&MockObject $project_manager;
+    private Backend&MockObject $backend;
+    private MediawikiDao&MockObject $media_wiki_dao;
+    private CleanUnused $clean_unused;
+    private TestLogger $logger;
+    private MediawikiDataDir&MockObject $data_dir;
 
     public function setUp(): void
     {
-        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->initLogger();
+        $this->logger = new TestLogger();
 
-        $this->project_1 = Mockery::mock(Project::class);
-        $this->project_2 = Mockery::mock(Project::class);
-        $this->project_3 = Mockery::mock(Project::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
-        $this->project_1->shouldReceive('getID')->andReturn(101);
-        $this->project_2->shouldReceive('getID')->andReturn(102);
-        $this->project_3->shouldReceive('getID')->andReturn(103);
-
-        $this->project_1->shouldReceive('getUnixName')->andReturn('project_1');
-        $this->project_2->shouldReceive('getUnixName')->andReturn('project_2');
-        $this->project_3->shouldReceive('getUnixName')->andReturn('project_3');
-
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-
-        $this->project_manager->shouldReceive('getProject')->withArgs([101])->andReturn($this->project_1);
-        $this->project_manager->shouldReceive('getProject')->withArgs([102])->andReturn($this->project_2);
-        $this->project_manager->shouldReceive('getProject')->withArgs([103])->andReturn($this->project_3);
-
-        $this->dao = Mockery::mock(CleanUnusedDao::class);
+        $this->dao = $this->createMock(CleanUnusedDao::class);
         $this->initDao();
 
-        $this->backend        = Mockery::mock(Backend::class);
-        $this->media_wiki_dao = Mockery::mock(MediawikiDao::class);
-        $this->data_dir       = Mockery::mock(MediawikiDataDir::class);
+        $this->backend        = $this->createMock(Backend::class);
+        $this->media_wiki_dao = $this->createMock(MediawikiDao::class);
+        $this->data_dir       = $this->createMock(MediawikiDataDir::class);
 
         $this->clean_unused = new CleanUnused(
             $this->logger,
@@ -128,36 +66,40 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function initLogger(): void
+    private function assertCommonLogs(): void
     {
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Start purge', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Start purge of orphan bases', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] End purge of orphan bases', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Start purge of unused services', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Purge of unused services completed', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Purge completed', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] x database(s) deleted', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] x table(s) deleted in central DB', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] 0 directories deleted', []])->once();
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Start purge'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Start purge of orphan bases'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] End purge of orphan bases'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Start purge of unused services'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Purge of unused services completed'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Purge completed'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] x database(s) deleted'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] x table(s) deleted in central DB'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] 0 directories deleted'));
     }
 
     private function initDao(): void
     {
-        $this->dao->shouldReceive('setLogger')->once();
-        $this->dao->shouldReceive('getDeletedDatabasesCount')->andReturn('x')->once();
-        $this->dao->shouldReceive('getDeletedTablesCount')->andReturn('x')->once();
+        $this->dao->expects(self::once())->method('setLogger');
+        $this->dao->expects(self::once())->method('getDeletedDatabasesCount')->willReturn('x');
+        $this->dao->expects(self::once())->method('getDeletedTablesCount')->willReturn('x');
     }
 
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateTwoPurgeWhenEmpty(): void
     {
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Found candidate mediawiki_102', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Found candidate mediawiki_103', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Delete data dir', []])->twice();
+        $project_1 = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project_1')->build();
+        $project_2 = ProjectTestBuilder::aProject()->withId(102)->withUnixName('project_2')->build();
+        $project_3 = ProjectTestBuilder::aProject()->withId(103)->withUnixName('project_3')->build();
 
-        $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
-            ->andReturn(
+        $this->project_manager->method('getProject')->willReturnCallback(static fn (int $project_id) => match ($project_id) {
+            101 => $project_1,
+            102 => $project_2,
+            103 => $project_3,
+        });
+
+        $this->dao->method('getMediawikiDatabasesInUsedServices')
+            ->willReturn(
                 [
                     [
                         'project_id' => 101,
@@ -174,53 +116,55 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
-        $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
+        $this->dao->expects(self::once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
+        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
-        $this->project_2->shouldReceive('isTemplate')->once()->andReturnFalse();
-        $this->project_3->shouldReceive('isTemplate')->once()->andReturnFalse();
+        $this->data_dir->expects(self::exactly(2))
+            ->method('getMediawikiDir')
+            ->willReturnCallback(static fn (Project $project) => match ($project) {
+                $project_2 => 'path/to/mediawiki_102',
+                $project_3 => 'path/to/mediawiki_103',
+            });
 
-        $this->data_dir->shouldReceive('getMediawikiDir')->withArgs([$this->project_2])->once()->andReturn('path/to/mediawiki_102');
-        $this->data_dir->shouldReceive('getMediawikiDir')->withArgs([$this->project_3])->once()->andReturn('path/to/mediawiki_103');
+        $this->dao->expects(self::exactly(2))
+            ->method('desactivateService')
+            ->willReturnCallback(static fn (mixed $project_id, bool $dry_run) => match (true) {
+                $dry_run === false && ((int) $project_id === 102 || (int) $project_id === 103) => true,
+            });
 
-        $this->dao->shouldReceive('desactivateService')->once()->withArgs([102, false]);
-        $this->dao->shouldReceive('desactivateService')->once()->withArgs([103, false]);
+        $this->media_wiki_dao->expects(self::exactly(3))
+            ->method('getMediawikiPagesNumberOfAProject')
+            ->willReturnCallback(static fn (Project $project) => match ($project) {
+                $project_1 => ['result' => 2],
+                $project_2, $project_3 => ['result' => 0],
+            });
 
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_1)
-            ->once()
-            ->andReturn(
-                ['result' => 2]
-            );
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_2)
-            ->once()
-            ->andReturn(
-                ['result' => 0]
-            );
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_3)
-            ->once()
-            ->andReturn(
-                ['result' => 0]
-            );
-
-        $this->dao->shouldReceive('purge')->twice();
+        $this->dao->expects(self::exactly(2))->method('purge');
 
         $this->clean_unused->purge(false, [], true, null);
+
+        $this->assertCommonLogs();
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Found candidate mediawiki_102'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Found candidate mediawiki_103'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Delete data dir'));
     }
 
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateOnePurgeWhenEmptyWithOneTemplate(): void
     {
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Found candidate mediawiki_103', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Delete data dir', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, '[MW Purge] Project project_2 (102) is a template. Skipped.', []])->once();
+        $project_1 = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project_1')->build();
+        $project_2 = ProjectTestBuilder::aProject()->withId(102)->withUnixName('project_2')->withTypeTemplate()->build();
+        $project_3 = ProjectTestBuilder::aProject()->withId(103)->withUnixName('project_3')->build();
 
-        $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
-            ->once()
-            ->andReturn(
+        $this->project_manager->method('getProject')->willReturnCallback(static fn (int $project_id) => match ($project_id) {
+            101 => $project_1,
+            102 => $project_2,
+            103 => $project_3,
+        });
+
+        $this->dao->expects(self::once())->method('getMediawikiDatabasesInUsedServices')
+            ->willReturn(
                 [
                     [
                         'project_id' => 101,
@@ -237,46 +181,48 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
-        $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
+        $this->dao->expects(self::once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
+        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
-        $this->project_2->shouldReceive('isTemplate')->once()->andReturn(true);
-        $this->project_3->shouldReceive('isTemplate')->once()->andReturn(false);
+        $this->data_dir->expects(self::once())->method('getMediawikiDir')->with($project_3)->willReturn('path/to/mediawiki_103');
 
-        $this->data_dir->shouldReceive('getMediawikiDir')->withArgs([$this->project_3])->once()->andReturn('path/to/mediawiki_103');
+        $this->dao->expects(self::once())->method('desactivateService')->with(103, false);
 
-        $this->dao->shouldReceive('desactivateService')->once()->withArgs([103, false]);
+        $this->media_wiki_dao->expects(self::exactly(3))
+            ->method('getMediawikiPagesNumberOfAProject')
+            ->willReturnCallback(static fn (Project $project) => match ($project) {
+                $project_1 => ['result' => 2],
+                $project_2, $project_3 => ['result' => 0],
+            });
 
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_1)
-            ->once()
-            ->andReturn(['result' => 2]);
-
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_2)
-            ->once()
-            ->andReturn(['result' => 0]);
-
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_3)
-            ->once()
-            ->andReturn(['result' => 0]);
-
-        $this->dao->shouldReceive('purge')->once();
+        $this->dao->expects(self::once())->method('purge');
 
         $this->clean_unused->purge(false, [], true, null);
+
+        $this->assertCommonLogs();
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Found candidate mediawiki_103'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Delete data dir'));
+        self::assertTrue($this->logger->hasWarning('[MW Purge] Project project_2 (102) is a template. Skipped.'));
     }
 
     public function testPurgeUnusedServicesWithAGivenProjectShouldForceIt(): void
     {
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Found candidate mediawiki_103', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Start purge of used but empty mediawiki', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] End of purge of used but empty mediawiki', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Delete data dir', []])->once();
+        $project_1 = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project_1')->build();
+        $project_2 = ProjectTestBuilder::aProject()->withId(102)->withUnixName('project_2')->build();
+        $project_3 = ProjectTestBuilder::aProject()->withId(103)->withUnixName('project_3')->build();
 
-        $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')->once()->andReturn([]);
-        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()
-            ->andReturn(
+        $this->project_manager->method('getProject')->willReturnCallback(static fn (int $project_id) => match ($project_id) {
+            101 => $project_1,
+            102 => $project_2,
+            103 => $project_3,
+        });
+
+        $this->dao->expects(self::once())->method('getMediawikiDatabasesInUsedServices')->willReturn([]);
+        $this->dao->expects(self::once())
+            ->method('getMediawikiDatabaseInUnusedServices')
+            ->willReturn(
                 [
                     [
                         'project_id' => 103,
@@ -284,31 +230,42 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                 ]
             );
-        $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
+        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
         $path = 'path/to/mediawiki_103';
 
-        $this->data_dir->shouldReceive('getMediawikiDir')->withArgs([$this->project_3])->once()->andReturn($path);
-        $this->backend->shouldReceive('recurseDeleteInDir')->with($path);
+        $this->data_dir->expects(self::once())->method('getMediawikiDir')->with($project_3)->willReturn($path);
+        $this->backend->method('recurseDeleteInDir')->with($path);
 
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')->with($this->project_3)->once()->andReturn(['result' => 0]);
+        $this->media_wiki_dao->expects(self::once())
+            ->method('getMediawikiPagesNumberOfAProject')->with($project_3)->willReturn(['result' => 0]);
 
-        $this->dao->shouldReceive('purge')->once();
+        $this->dao->expects(self::once())->method('purge');
 
         $this->clean_unused->purge(false, [103], false, null);
+
+        $this->assertCommonLogs();
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Found candidate mediawiki_103'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Start purge of used but empty mediawiki'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] End of purge of used but empty mediawiki'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Delete data dir'));
     }
 
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateOnePurgeWhenEmptyWithOneTemplateWithLimit(): void
     {
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Start purge of 3 used but empty mediawiki on projects which are not defined as template', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Found candidate mediawiki_103', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, '[MW Purge] Delete data dir', []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, '[MW Purge] Project project_2 (102) is a template. Skipped.', []])->once();
+        $project_1 = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project_1')->build();
+        $project_2 = ProjectTestBuilder::aProject()->withId(102)->withUnixName('project_2')->withTypeTemplate()->build();
+        $project_3 = ProjectTestBuilder::aProject()->withId(103)->withUnixName('project_3')->build();
 
-        $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
-            ->once()
-            ->andReturn(
+        $this->project_manager->method('getProject')->willReturnCallback(static fn (int $project_id) => match ($project_id) {
+            101 => $project_1,
+            102 => $project_2,
+            103 => $project_3,
+        });
+
+        $this->dao->expects(self::once())
+            ->method('getMediawikiDatabasesInUsedServices')
+            ->willReturn(
                 [
                     [
                         'project_id' => 101,
@@ -325,33 +282,29 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
-        $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
+        $this->dao->expects(self::once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
+        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
-        $this->project_2->shouldReceive('isTemplate')->once()->andReturn(true);
-        $this->project_3->shouldReceive('isTemplate')->once()->andReturn(false);
+        $this->data_dir->expects(self::once())->method('getMediawikiDir')->with($project_3)->willReturn('path/to/mediawiki_103');
 
-        $this->data_dir->shouldReceive('getMediawikiDir')->once()->withArgs([$this->project_3])->andReturn('path/to/mediawiki_103');
+        $this->dao->expects(self::once())->method('desactivateService')->with(103, false);
 
-        $this->dao->shouldReceive('desactivateService')->once()->withArgs([103, false]);
+        $this->media_wiki_dao->expects(self::exactly(3))
+            ->method('getMediawikiPagesNumberOfAProject')
+            ->willReturnCallback(static fn (Project $project) => match ($project) {
+                $project_1 => ['result' => 2],
+                $project_2, $project_3 => ['result' => 0],
+            });
 
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_1)
-            ->once()
-            ->andReturn(['result' => 2]);
-
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_2)
-            ->once()
-            ->andReturn(['result' => 0]);
-
-        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-            ->with($this->project_3)
-            ->once()
-            ->andReturn(['result' => 0]);
-
-        $this->dao->shouldReceive('purge')->once();
+        $this->dao->expects(self::once())->method('purge');
 
         $this->clean_unused->purge(false, [], true, 3);
+
+        $this->assertCommonLogs();
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Start purge of 3 used but empty mediawiki on projects which are not defined as template'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Found candidate mediawiki_103'));
+        self::assertTrue($this->logger->hasInfo('[MW Purge] Delete data dir'));
+        self::assertTrue($this->logger->hasWarning('[MW Purge] Project project_2 (102) is a template. Skipped.'));
     }
 }
