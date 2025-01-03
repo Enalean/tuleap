@@ -21,17 +21,15 @@
 
 namespace Tuleap\Mediawiki;
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
-
+use ColinODell\PsrTestLogger\TestLogger;
 use ForgeConfig;
 use MediawikiLanguageManager;
 use MediawikiManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
-use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Mediawiki\Tests\Stub\CheckXMLMediawikiExportabilityStub;
@@ -43,56 +41,30 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use UGroupManager;
 use UserXMLExporter;
 
-class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MediawikiMaintenanceWrapper
-     */
-    private $maintenance_wrapper;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var MediawikiLanguageManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $language_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MediawikiDataDir
-     */
-    private $mediawiki_data_dir;
-
-    /**
-     * @var MediawikiManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $mediawiki_manager;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_tree;
-
-    private $zip;
-    private $fixtures_dir;
+    private MediawikiMaintenanceWrapper&MockObject $maintenance_wrapper;
+    private Project $project;
+    private MediawikiLanguageManager&MockObject $language_manager;
+    private TestLogger $logger;
+    private MediawikiDataDir&MockObject $mediawiki_data_dir;
+    private MediawikiManager&MockObject $mediawiki_manager;
+    private SimpleXMLElement $xml_tree;
+    private ZipArchive&MockObject $zip;
+    private vfsStreamDirectory $fixtures_dir;
 
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mediawiki_manager = Mockery::mock(MediawikiManager::class);
+        $this->mediawiki_manager = $this->createMock(MediawikiManager::class);
         $this->project           = ProjectTestBuilder::aProject()->build();
-        $this->language_manager  = Mockery::mock(MediawikiLanguageManager::class);
-        $this->language_manager->shouldReceive('getUsedLanguageForProject')->andReturn('fr_FR');
-        $this->maintenance_wrapper = Mockery::mock(MediawikiMaintenanceWrapper::class);
-        $this->mediawiki_data_dir  = Mockery::mock(MediawikiDataDir::class);
-        $this->logger              = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->language_manager  = $this->createMock(MediawikiLanguageManager::class);
+        $this->language_manager->method('getUsedLanguageForProject')->willReturn('fr_FR');
+        $this->maintenance_wrapper = $this->createMock(MediawikiMaintenanceWrapper::class);
+        $this->mediawiki_data_dir  = $this->createMock(MediawikiDataDir::class);
+        $this->logger              = new TestLogger();
 
         $data           = '<?xml version="1.0" encoding="UTF-8"?>
                  <projects />';
@@ -106,7 +78,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fixtures_dir = vfsStream::create($structure, $base_dir);
         chmod($this->fixtures_dir->getChild('files')->url(), '0777');
 
-        $this->zip = Mockery::mock(ZipArchive::class);
+        $this->zip = $this->createMock(ZipArchive::class);
 
         ForgeConfig::store();
         ForgeConfig::set('codendi_cache_dir', $this->fixtures_dir->url());
@@ -121,24 +93,24 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportMediawikiWhenItCannotBeExported(): void
     {
-        $this->logger->shouldReceive('info')->once();
-        $this->language_manager->shouldReceive('getUsedLanguageForProject')->never();
+        $this->language_manager->expects(self::never())->method('getUsedLanguageForProject');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withoutExportableMediawiki());
+
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testItExportsMediaWikiAttributes(): void
     {
-        $this->mediawiki_manager->shouldReceive('getReadAccessControl')->andReturn([]);
-        $this->mediawiki_manager->shouldReceive('getWriteAccessControl')->andReturn([]);
+        $this->mediawiki_manager->method('getReadAccessControl')->willReturn([]);
+        $this->mediawiki_manager->method('getWriteAccessControl')->willReturn([]);
 
-        $this->mediawiki_data_dir->shouldReceive('getMediawikiDir')->once()->andReturn(vfsStream::setup()->url());
-        $this->logger->shouldReceive('info');
+        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->shouldReceive('dumpBackupFull')->once();
-        $this->maintenance_wrapper->shouldReceive('dumpUploads')->once();
+        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
 
-        $this->zip->shouldReceive('addFile')->once();
+        $this->zip->expects(self::once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
@@ -148,29 +120,30 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($attrs['pages-backup'], 'wiki_pages.xml');
         $this->assertEquals($attrs['language'], 'fr_FR');
         $this->assertEquals($attrs['files-folder-backup'], 'files');
+
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testItExportsMediaWikiPermissions(): void
     {
-        $this->mediawiki_manager->shouldReceive('getReadAccessControl')->andReturn(
+        $this->mediawiki_manager->method('getReadAccessControl')->willReturn(
             [
                 4,
                 5,
             ]
         );
-        $this->mediawiki_manager->shouldReceive('getWriteAccessControl')->andReturn(
+        $this->mediawiki_manager->method('getWriteAccessControl')->willReturn(
             [
                 5,
             ]
         );
 
-        $this->mediawiki_data_dir->shouldReceive('getMediawikiDir')->once()->andReturn(vfsStream::setup()->url());
-        $this->logger->shouldReceive('info');
+        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->shouldReceive('dumpBackupFull')->once();
-        $this->maintenance_wrapper->shouldReceive('dumpUploads')->once();
+        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
 
-        $this->zip->shouldReceive('addFile')->once();
+        $this->zip->expects(self::once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
@@ -180,26 +153,27 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $writers = $this->xml_tree->mediawiki->{'write-access'}->ugroup;
         $this->assertEquals((string) $writers[0], 'custom');
+
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testItDoesNotExportReadPermissionsIfNoReadersAreDefined(): void
     {
-        $this->mediawiki_manager->shouldReceive('getReadAccessControl')->andReturn(
+        $this->mediawiki_manager->method('getReadAccessControl')->willReturn(
             null
         );
-        $this->mediawiki_manager->shouldReceive('getWriteAccessControl')->andReturn(
+        $this->mediawiki_manager->method('getWriteAccessControl')->willReturn(
             [
                 5,
             ]
         );
 
-        $this->mediawiki_data_dir->shouldReceive('getMediawikiDir')->once()->andReturn(vfsStream::setup()->url());
-        $this->logger->shouldReceive('info');
+        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->shouldReceive('dumpBackupFull')->once();
-        $this->maintenance_wrapper->shouldReceive('dumpUploads')->once();
+        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
 
-        $this->zip->shouldReceive('addFile')->once();
+        $this->zip->expects(self::once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
@@ -208,27 +182,28 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $writers = $this->xml_tree->mediawiki->{'write-access'}->ugroup;
         $this->assertEquals((string) $writers[0], 'custom');
+
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testItDoesNotExportWritePermissionsIfNoWritersAreDefined(): void
     {
-        $this->mediawiki_manager->shouldReceive('getReadAccessControl')->andReturn(
+        $this->mediawiki_manager->method('getReadAccessControl')->willReturn(
             [
                 4,
                 5,
             ]
         );
-        $this->mediawiki_manager->shouldReceive('getWriteAccessControl')->andReturn(
+        $this->mediawiki_manager->method('getWriteAccessControl')->willReturn(
             null
         );
 
-        $this->mediawiki_data_dir->shouldReceive('getMediawikiDir')->once()->andReturn(vfsStream::setup()->url());
-        $this->logger->shouldReceive('info');
+        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->shouldReceive('dumpBackupFull')->once();
-        $this->maintenance_wrapper->shouldReceive('dumpUploads')->once();
+        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
 
-        $this->zip->shouldReceive('addFile')->once();
+        $this->zip->expects(self::once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
@@ -238,21 +213,25 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $writers = $this->xml_tree->mediawiki->{'write-access'}->ugroup;
         $this->assertFalse(isset($writers[0]));
+
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     private function exportToXML(CheckXMLMediawikiExportability $check_xml_mediawiki_exportability): void
     {
-        $ugroup_manager = Mockery::mock(UGroupManager::class);
-        $custom_ugroup  = Mockery::mock(ProjectUGroup::class);
-        $custom_ugroup->shouldReceive('getName')->andReturn('custom');
-        $custom_ugroup->shouldReceive('getId');
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $custom_ugroup  = $this->createMock(ProjectUGroup::class);
+        $custom_ugroup->method('getName')->willReturn('custom');
+        $custom_ugroup->method('getId');
 
-        $project_admins_ugroups = Mockery::mock(ProjectUGroup::class);
-        $project_admins_ugroups->shouldReceive('getName')->andReturn('project-admins');
-        $project_admins_ugroups->shouldReceive('getId');
+        $project_admins_ugroups = $this->createMock(ProjectUGroup::class);
+        $project_admins_ugroups->method('getName')->willReturn('project-admins');
+        $project_admins_ugroups->method('getId');
 
-        $ugroup_manager->shouldReceive('getUGroup')->withArgs([$this->project, 5])->andReturn($custom_ugroup);
-        $ugroup_manager->shouldReceive('getUGroup')->withArgs([$this->project, 4])->andReturn($project_admins_ugroups);
+        $ugroup_manager->method('getUGroup')->willReturnCallback(static fn(Project $project, int $ugroup_id) => match ($ugroup_id) {
+            4 => $project_admins_ugroups,
+            5 => $custom_ugroup,
+        });
 
         $exporter = new XMLMediaWikiExporter(
             $this->mediawiki_manager,

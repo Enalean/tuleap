@@ -22,31 +22,21 @@ namespace Tuleap\Mediawiki;
 
 use Mediawiki_Migration_MediawikiMigrator;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \org\bovigo\vfs\vfsStreamDirectory
-     */
-    private $mediawiki_installation_path;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $migrator;
+    private vfsStreamDirectory $mediawiki_installation_path;
+    private MediawikiExtensionDAO&MockObject $dao;
+    private Mediawiki_Migration_MediawikiMigrator&MockObject $migrator;
 
     protected function setUp(): void
     {
         $this->mediawiki_installation_path = vfsStream::setup();
-        $this->dao                         = \Mockery::mock(MediawikiExtensionDAO::class);
-        $this->migrator                    = \Mockery::mock(Mediawiki_Migration_MediawikiMigrator::class);
+        $this->dao                         = $this->createMock(MediawikiExtensionDAO::class);
+        $this->migrator                    = $this->createMock(Mediawiki_Migration_MediawikiMigrator::class);
     }
 
     public function testPluginCanNotBeLoadedWhenUnavailable()
@@ -54,7 +44,7 @@ class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestCase
         $mediawiki_math_extension_enabler = new MediawikiMathExtensionEnabler($this->dao, $this->migrator);
 
         $is_update_running = false;
-        $project           = \Mockery::mock(\Project::class);
+        $project           = ProjectTestBuilder::aProject()->build();
 
         $can_plugin_be_loaded = $mediawiki_math_extension_enabler->canPluginBeLoaded(
             $this->mediawiki_installation_path->url(),
@@ -74,12 +64,11 @@ class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestCase
         touch($plugin_hook);
 
         $is_update_running = false;
-        $project           = \Mockery::mock(\Project::class);
+        $project           = ProjectTestBuilder::aProject()->build();
 
-        $project->shouldReceive('getID');
-        $this->dao->shouldReceive('isMathActivatedForProjectID')->andReturn(false);
-        $this->dao->shouldReceive('saveMathActivationForProjectID');
-        $this->migrator->shouldReceive('runUpdateScript');
+        $this->dao->method('isMathActivatedForProjectID')->willReturn(false);
+        $this->dao->method('saveMathActivationForProjectID');
+        $this->migrator->method('runUpdateScript');
 
         $can_plugin_be_loaded = $mediawiki_math_extension_enabler->canPluginBeLoaded(
             $this->mediawiki_installation_path->url(),
@@ -99,10 +88,10 @@ class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestCase
         touch($plugin_hook);
 
         $is_update_running = true;
-        $project           = \Mockery::mock(\Project::class);
+        $project           = ProjectTestBuilder::aProject()->build();
 
-        $this->migrator->shouldReceive('runUpdateScript')->never();
-        $this->dao->shouldReceive('saveMathActivationForProjectID')->never();
+        $this->migrator->expects(self::never())->method('runUpdateScript');
+        $this->dao->expects(self::never())->method('saveMathActivationForProjectID');
 
         $can_plugin_be_loaded = $mediawiki_math_extension_enabler->canPluginBeLoaded(
             $this->mediawiki_installation_path->url(),
