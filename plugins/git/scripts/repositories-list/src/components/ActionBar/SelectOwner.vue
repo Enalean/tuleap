@@ -33,7 +33,7 @@
             </option>
             <optgroup v-bind:label="$gettext('Users forks')">
                 <option
-                    v-for="owner in sorted_repositories_owners"
+                    v-for="owner in repositories_owners"
                     v-bind:key="owner.id"
                     v-bind:value="owner.id"
                 >
@@ -60,10 +60,8 @@ const are_there_personal_repositories = computed((): boolean => {
     return getRepositoriesOwners().length > 0;
 });
 
-const sorted_repositories_owners = computed((): ReadonlyArray<RepositoryOwner> => {
-    return getRepositoriesOwners().sort(function (user_a, user_b) {
-        return user_a.display_name.localeCompare(user_b.display_name);
-    });
+const repositories_owners = computed((): ReadonlyArray<RepositoryOwner> => {
+    return getRepositoriesOwners();
 });
 
 onMounted(() => {

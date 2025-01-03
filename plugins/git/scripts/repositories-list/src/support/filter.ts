@@ -35,8 +35,7 @@ function createHierarchy(hierarchy: Folder, path_part: string): Folder {
 export function sortByLabelAlphabetically(
     items: Array<Folder | Repository | FormattedGitLabRepository>,
 ): Array<Folder | Repository | FormattedGitLabRepository> {
-    const repository_with_labels = items.filter((repository) => "label" in repository);
-    return repository_with_labels.sort(
+    return items.sort(
         (
             a: Folder | Repository | FormattedGitLabRepository,
             b: Folder | Repository | FormattedGitLabRepository,
@@ -150,8 +149,7 @@ export function filterAChild(
 export function sortByLastUpdateDate(
     repositories: Array<Folder | Repository | FormattedGitLabRepository>,
 ): Array<Folder | Repository | FormattedGitLabRepository> {
-    const repository_with_labels = repositories.filter((repository) => "label" in repository);
-    return repository_with_labels.sort(
+    return repositories.sort(
         (
             a: Folder | Repository | FormattedGitLabRepository,
             b: Folder | Repository | FormattedGitLabRepository,
