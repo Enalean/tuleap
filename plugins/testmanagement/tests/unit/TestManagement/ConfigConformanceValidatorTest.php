@@ -20,32 +20,26 @@
 
 namespace Tuleap\TestManagement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
-use Tracker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ConfigConformanceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ConfigConformanceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ConfigConformanceValidator $validator;
 
-    /** @var ConfigConformanceValidator */
-    private $validator;
+    private Artifact $artifact_outside_of_project;
 
-    /** @var \Tuleap\Tracker\Artifact\Artifact */
-    private $artifact_outside_of_project;
+    private Artifact $execution_artifact;
 
-    /** @var \Tuleap\Tracker\Artifact\Artifact */
-    private $execution_artifact;
+    private Artifact $another_execution_artifact;
 
-    /** @var \Tuleap\Tracker\Artifact\Artifact */
-    private $another_execution_artifact;
+    private Artifact $campaign_artifact;
 
-    /** @var \Tuleap\Tracker\Artifact\Artifact */
-    private $campaign_artifact;
-
-    /** @var \Tuleap\Tracker\Artifact\Artifact */
-    private $definition_artifact;
+    private Artifact $definition_artifact;
 
     private $user_id                      = 100;
     private $project_id                   = 101;
@@ -54,68 +48,54 @@ class ConfigConformanceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $definition_tracker_id        = 666;
     private $another_project_id           = 102;
     private $another_execution_tracker_id = 666;
-    /**
-     * @var \PFUser&Mockery\MockInterface
-     */
-    private $user;
+    private \PFUser $user;
 
     public function setUp(): void
     {
         parent::setUp();
-        $project = Mockery::spy(Project::class);
-        $project->shouldReceive('getID')->andReturn($this->project_id);
+        $project = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
 
-        $another_project = Mockery::spy(Project::class);
-        $another_project->shouldReceive('getID')->andReturn($this->another_project_id);
+        $another_project = ProjectTestBuilder::aProject()->withId($this->another_project_id)->build();
 
-        $campaign_tracker = Mockery::spy(Tracker::class);
-        $campaign_tracker->shouldReceive('getId')->andReturn($this->campaign_tracker_id);
-        $campaign_tracker->shouldReceive('getProject')->andReturn($project);
+        $campaign_tracker = TrackerTestBuilder::aTracker()->withId($this->campaign_tracker_id)->withProject($project)->build();
 
-        $definition_tracker = Mockery::spy(Tracker::class);
-        $definition_tracker->shouldReceive('getId')->andReturn($this->definition_tracker_id);
-        $definition_tracker->shouldReceive('getProject')->andReturn($project);
+        $definition_tracker = TrackerTestBuilder::aTracker()->withId($this->definition_tracker_id)->withProject($project)->build();
 
-        $execution_tracker = Mockery::spy(Tracker::class);
-        $execution_tracker->shouldReceive('getId')->andReturn($this->execution_tracker_id);
-        $execution_tracker->shouldReceive('getProject')->andReturn($project);
+        $execution_tracker = TrackerTestBuilder::aTracker()->withId($this->execution_tracker_id)->withProject($project)->build();
 
-        $another_execution_tracker = Mockery::spy(Tracker::class);
-        $another_execution_tracker->shouldReceive('getId')->andReturn($this->another_execution_tracker_id);
-        $another_execution_tracker->shouldReceive('getProject')->andReturn($another_project);
+        $another_execution_tracker = TrackerTestBuilder::aTracker()->withId($this->another_execution_tracker_id)->withProject($another_project)->build();
 
-        $config = \Mockery::spy(\Tuleap\TestManagement\Config::class);
-        $config->shouldReceive('getCampaignTrackerId')->with($project)->andReturn($campaign_tracker->getId());
-        $config->shouldReceive('getTestDefinitionTrackerId')->with($project)->andReturn($definition_tracker->getId());
-        $config->shouldReceive('getTestExecutionTrackerId')->with($project)->andReturn($execution_tracker->getId());
-        $config->shouldReceive('getTestExecutionTrackerId')->with($another_project)->andReturn($another_execution_tracker->getId());
+        $config = $this->createMock(\Tuleap\TestManagement\Config::class);
+        $config->method('getCampaignTrackerId')->willReturnCallback(static fn(Project $called_project) => match ($called_project) {
+            $project => $campaign_tracker->getId(),
+            default => false,
+        });
+        $config->method('getTestDefinitionTrackerId')->with($project)->willReturn($definition_tracker->getId());
+        $config->method('getTestExecutionTrackerId')->willReturnCallback(static fn(Project $called_project) => match ($called_project) {
+            $project         => $execution_tracker->getId(),
+            $another_project => $another_execution_tracker->getId(),
+        });
 
         $this->validator = new ConfigConformanceValidator($config);
 
-        $this->user = Mockery::spy(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn($this->user_id);
+        $this->user = UserTestBuilder::aUser()->withId($this->user_id)->build();
 
-        $this->campaign_artifact           = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->definition_artifact         = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->execution_artifact          = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->another_execution_artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact_outside_of_project = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $tracker = TrackerTestBuilder::aTracker()->withId(111)->withProject($another_project)->build();
 
-        $this->campaign_artifact->shouldReceive('getTracker')->andReturn($campaign_tracker);
-        $this->campaign_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn([$this->execution_artifact]);
+        $this->campaign_artifact           = $this->createMock(Artifact::class);
+        $this->definition_artifact         = ArtifactTestBuilder::anArtifact(1)->inTracker($definition_tracker)->build();
+        $this->execution_artifact          = $this->createMock(Artifact::class);
+        $this->another_execution_artifact  = $this->createMock(Artifact::class);
+        $this->artifact_outside_of_project = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
 
-        $this->definition_artifact->shouldReceive('getTracker')->andReturn($definition_tracker);
+        $this->campaign_artifact->method('getTracker')->willReturn($campaign_tracker);
+        $this->campaign_artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([$this->execution_artifact]);
 
-        $this->execution_artifact->shouldReceive('getTracker')->andReturn($execution_tracker);
-        $this->execution_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn([]);
+        $this->execution_artifact->method('getTracker')->willReturn($execution_tracker);
+        $this->execution_artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([]);
 
-        $this->another_execution_artifact->shouldReceive('getTracker')->andReturn($another_execution_tracker);
-        $this->another_execution_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn([$this->campaign_artifact]);
-
-        $tracker = Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(111);
-        $tracker->shouldReceive('getProject')->andReturn($another_project);
-        $this->artifact_outside_of_project->shouldReceive('getTracker')->andReturn($tracker);
+        $this->another_execution_artifact->method('getTracker')->willReturn($another_execution_tracker);
+        $this->another_execution_artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([$this->campaign_artifact]);
     }
 
     public function testItReturnsFalseWhenProjectHasNoCampaignTracker()
