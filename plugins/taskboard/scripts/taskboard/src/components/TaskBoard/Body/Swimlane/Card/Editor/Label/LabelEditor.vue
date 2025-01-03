@@ -36,61 +36,66 @@
             v-bind:placeholder="$gettext('Card label…')"
             v-bind:aria-label="$gettext('Set card label')"
             v-bind:readonly="readonly"
-            ref="textarea"
+            ref="textarea_ref"
             data-test="label-editor"
             data-navigation="add-form"
         ></textarea>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { autoFocusAutoSelect } from "../../../../../../../helpers/autofocus-autoselect";
 
 const LINE_HEIGHT_IN_PX = 18;
 const TOP_AND_BOTTOM_PADDING_IN_PX = 16;
 
-@Component
-export default class LabelEditor extends Vue {
-    @Prop({ required: true })
-    readonly value!: string;
+withDefaults(
+    defineProps<{
+        value: string;
+        readonly: boolean;
+    }>(),
+    {
+        value: "",
+        readonly: false,
+    },
+);
 
-    @Prop({ required: false, default: false })
-    readonly readonly!: boolean;
+const emit = defineEmits<{
+    (e: "save"): void;
+    (e: "input", event: string): void;
+}>();
 
-    @Ref() textarea!: HTMLTextAreaElement;
-    @Ref() mirror!: HTMLTextAreaElement;
+const textarea_ref = ref();
+const mirror = ref();
+const rows = ref(1);
 
-    rows = 1;
+onMounted((): void => {
+    setTimeout(computeRows, 10);
+    autoFocusAutoSelect(textarea_ref.value);
+});
 
-    mounted(): void {
-        setTimeout(this.computeRows, 10);
-        autoFocusAutoSelect(this.textarea);
+function enter(event: KeyboardEvent): void {
+    if (!event.shiftKey) {
+        emit("save");
+    }
+}
+
+function keyup(): void {
+    computeRows();
+}
+
+function computeRows(): void {
+    rows.value = Math.ceil(
+        (mirror.value.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX,
+    );
+}
+
+function onInputEmit($event: Event): void {
+    if (!($event.target instanceof HTMLTextAreaElement)) {
+        return;
     }
 
-    enter(event: KeyboardEvent): void {
-        if (!event.shiftKey) {
-            this.$emit("save");
-        }
-    }
-
-    keyup(): void {
-        this.computeRows();
-    }
-
-    computeRows(): void {
-        this.rows = Math.ceil(
-            (this.mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX,
-        );
-    }
-
-    onInputEmit($event: Event): void {
-        if (!($event.target instanceof HTMLTextAreaElement)) {
-            return;
-        }
-
-        this.$emit("input", $event.target.value);
-    }
+    emit("input", $event.target.value);
 }
 </script>
