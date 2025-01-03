@@ -30,13 +30,13 @@
         "/include/Tracker/Semantic/Timeframe/SemanticTimeframeFromXMLBuilder.php",
         "/include/REST/v1/Workflow/PostAction/PostActionsRepresentationBuilder.php",
         "/include/Tracker/Notifications/TrackerForceNotificationsLevelCommand.php",
-        "/include/Tracker/Sample.class.php",
-        "/include/Tracker/Artifact/Tracker_Artifact_Changeset_Comment.class.php",
-        "/include/Tracker/Artifact/Tracker_Artifact_Changeset_CommentNull.class.php",
-        "/include/Tracker/Artifact/Tracker_Artifact_Changeset_Null.class.php",
-        "/include/Workflow/PostAction/Transition_PostActionFactory.class.php",
-        "/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php",
-        "/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php",
+        "/include/Tracker/Sample.php",
+        "/include/Tracker/Artifact/Tracker_Artifact_Changeset_Comment.php",
+        "/include/Tracker/Artifact/Tracker_Artifact_Changeset_CommentNull.php",
+        "/include/Tracker/Artifact/Tracker_Artifact_Changeset_Null.php",
+        "/include/Workflow/PostAction/Transition_PostActionFactory.php",
+        "/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.php",
+        "/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.php",
         "/include/Tracker/Artifact/CodeBlockFeaturesOnArtifact.php"
       ]
     }

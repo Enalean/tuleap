@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/InjectSpanPadding.class.php';
+require_once __DIR__ . '/InjectSpanPadding.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest extends InjectSpanPadding

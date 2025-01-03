@@ -23,7 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//require_once('common/tracker/ArtifactFactory.class.php');
+//require_once('common/tracker/ArtifactFactory.php');
 
 // HTTP GET arguments
 //

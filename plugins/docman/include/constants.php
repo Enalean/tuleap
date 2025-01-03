@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('DocmanConstants.class.php');
+require_once('DocmanConstants.php');
 
 define('PLUGIN_DOCMAN_BASE_DIR', dirname(__FILE__));
 

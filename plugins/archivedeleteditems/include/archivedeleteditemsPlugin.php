@@ -55,7 +55,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
     public function getPluginInfo()
     {
         if (! $this->pluginInfo instanceof \ArchiveDeletedItemsPluginInfo) {
-            require_once('ArchiveDeletedItemsPluginInfo.class.php');
+            require_once('ArchiveDeletedItemsPluginInfo.php');
             $this->pluginInfo = new ArchiveDeletedItemsPluginInfo($this);
         }
         return $this->pluginInfo;

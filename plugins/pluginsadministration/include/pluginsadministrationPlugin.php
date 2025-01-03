@@ -48,7 +48,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
     public function &getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
-            require_once('PluginsAdministrationPluginInfo.class.php');
+            require_once('PluginsAdministrationPluginInfo.php');
             $this->pluginInfo = new PluginsAdministrationPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -92,7 +92,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
 
     public function process(): void
     {
-        require_once('PluginsAdministration.class.php');
+        require_once('PluginsAdministration.php');
         $controler = new PluginsAdministration();
         $controler->process();
     }

@@ -12,7 +12,7 @@
 
 use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
-require_once MEDIAWIKI_BASE_DIR . '/MediawikiManager.class.php';
+require_once MEDIAWIKI_BASE_DIR . '/MediawikiManager.php';
 
 if (! defined('MEDIAWIKI')) {
     die(-1);

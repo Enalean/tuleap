@@ -44,8 +44,8 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 // This is a short term hack, in a longer term we should namespace tuleap HTTPRequest
 // But wait for PHP5.3 min compat.
 
-    require_once __DIR__ . '/../../../src/common/include/Codendi_Request.class.php';
-    require_once __DIR__ . '/../../../src/common/include/HTTPRequest.class.php';
+    require_once __DIR__ . '/../../../src/common/include/Codendi_Request.php';
+    require_once __DIR__ . '/../../../src/common/include/HTTPRequest.php';
     require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 /**

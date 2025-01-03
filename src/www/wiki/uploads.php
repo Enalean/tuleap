@@ -20,7 +20,7 @@
 
 
 require_once __DIR__ . '/../include/pre.php';
-require_once __DIR__ . '/../../common/wiki/lib/WikiAttachment.class.php';
+require_once __DIR__ . '/../../common/wiki/lib/WikiAttachment.php';
 
 
 $attch = new WikiAttachment();

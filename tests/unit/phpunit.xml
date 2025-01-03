@@ -36,12 +36,12 @@
             <directory suffix=".php">../../src/common/chart/</directory>
             <file>../../src/common/admin/Homepage/Controller.php</file>
             <file>../../plugins/docman/include/Docman_Sample.php</file> <!-- To investigate -->
-            <file>../../plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.class.php</file> <!-- To investigate -->
-            <file>../../plugins/ldap/include/LDAP_SearchPeople.class.php</file>
-            <file>../../plugins/mediawiki/include/MediawikiInstantiater.class.php</file>
+            <file>../../plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.php</file> <!-- To investigate -->
+            <file>../../plugins/ldap/include/LDAP_SearchPeople.php</file>
+            <file>../../plugins/mediawiki/include/MediawikiInstantiater.php</file>
             <file>../../plugins/mediawiki/include/mediawiki-init.php</file>
             <file>../../plugins/git/include/Git/Statistics/FrequenciesSample.php</file> <!-- To investigate -->
-            <file>../../plugins/git/include/GitXmlImporter.class.php</file>
+            <file>../../plugins/git/include/GitXmlImporter.php</file>
             <file>../../plugins/statistics/include/DiskUsageProjectsSearchFieldsPresenter.php</file> <!-- To investigate -->
             <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/CartifactSample.php</file> <!-- To investigate -->
             <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FiledSample.php</file> <!-- To investigate -->
@@ -49,11 +49,11 @@
             <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ForumSample.php</file> <!-- To investigate -->
             <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/OartifactSample.php</file> <!-- To investigate -->
             <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ProjectSample.php</file> <!-- To investigate -->
-            <file>../../plugins/webdav/include/BrowserPlugin.class.php</file>
+            <file>../../plugins/webdav/include/BrowserPlugin.php</file>
             <directory suffix=".php">../../plugins/webdav/include/FS/</directory>
-            <file>../../plugins/webdav/include/WebDAVTree.class.php</file>
-            <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.class.php</file>
-            <file>../../tests/lib/TuleapDbTestCase.class.php</file>
+            <file>../../plugins/webdav/include/WebDAVTree.php</file>
+            <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.php</file>
+            <file>../../tests/lib/TuleapDbTestCase.php</file>
             <file>../../src/tuleap-cfg/tuleap-cfg.php</file>
             <file>../../src/core/contact.php</file>
             <file>../../src/core/goto.php</file>

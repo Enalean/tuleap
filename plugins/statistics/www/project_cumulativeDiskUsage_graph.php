@@ -20,8 +20,8 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ . '/../include/Statistics_DiskUsageGraph.class.php';
-require_once __DIR__ . '/../include/ProjectQuotaManager.class.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageGraph.php';
+require_once __DIR__ . '/../include/ProjectQuotaManager.php';
 
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;

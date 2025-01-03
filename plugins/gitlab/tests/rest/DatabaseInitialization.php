@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\REST;
 use ForgeConfig;
 use Project;
 
-require_once __DIR__ . '/../../../../tests/lib/DatabaseInitialisation.class.php';
+require_once __DIR__ . '/../../../../tests/lib/DatabaseInitialisation.php';
 
 final class DatabaseInitialization extends \DatabaseInitialization
 {

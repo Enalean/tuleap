@@ -662,7 +662,7 @@ if ($group_id && ! $atid) {
 
 
             if (
-                $request->valid(new Valid_WhiteList('data_type', [1, 2, 3, 4, 5])) //See data_type in ArtifactField.class.php
+                $request->valid(new Valid_WhiteList('data_type', [1, 2, 3, 4, 5])) //See data_type in ArtifactField.php
                     && $request->valid(new Valid_WhiteList('display_type', ['SB', 'MB', 'TF', 'TA', 'DF']))
             ) {
                        $label          = $sanitizer->sanitize($request->getValidated('label', 'string'));
@@ -719,7 +719,7 @@ if ($group_id && ! $atid) {
             $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 if (
-                    $request->valid(new Valid_WhiteList('data_type', [1, 2, 3, 4, 5])) //See data_type in ArtifactField.class.php
+                    $request->valid(new Valid_WhiteList('data_type', [1, 2, 3, 4, 5])) //See data_type in ArtifactField.php
                     && $request->valid(new Valid_WhiteList('display_type', ['SB', 'MB', 'TF', 'TA', 'DF']))
                     && $request->valid(new Valid_String('field_name'))
                 ) {
@@ -864,7 +864,7 @@ if ($group_id && ! $atid) {
             if (! $ath->preDelete()) {
                       $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index', 'deletion_failed', $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML)));
             } else {
-                 //@see  preDeleteArtifactType @common/tracker/ArtifactTypeFactory.class.php
+                 //@see  preDeleteArtifactType @common/tracker/ArtifactTypeFactory.php
                   $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'delete_success', $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML)));
                   echo $Language->getText('tracker_admin_index', 'tracker_deleted', [$hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML), ForgeConfig::get('sys_email_admin')]);
                 $arm = new ArtifactRulesManager();

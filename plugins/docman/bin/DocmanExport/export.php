@@ -28,8 +28,8 @@
  */
 require_once __DIR__ . '/../../../../src/www/include/pre.php';
 require __DIR__ . '/../../include/docmanPlugin.php';
-require __DIR__ . '/XMLExport.class.php';
-require __DIR__ . '/Docman_ExportException.class.php';
+require __DIR__ . '/XMLExport.php';
+require __DIR__ . '/Docman_ExportException.php';
 
 
 $consoleLogger = new Log_ConsoleLogger();

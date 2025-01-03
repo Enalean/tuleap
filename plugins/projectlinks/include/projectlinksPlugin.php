@@ -64,7 +64,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
     public function getPluginInfo()
     {
         if (! ($this->pluginInfo instanceof ProjectLinksPluginInfo)) {
-            require_once('ProjectLinksPluginInfo.class.php');
+            require_once('ProjectLinksPluginInfo.php');
             $this->pluginInfo = new ProjectLinksPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -1040,7 +1040,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
      */
     public function getProjectLinksDao()
     {
-        include_once 'ProjectLinksDao.class.php';
+        include_once 'ProjectLinksDao.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
     }
 

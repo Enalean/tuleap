@@ -74,7 +74,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
     public function getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'hudsonPluginInfo')) {
-            require_once('hudsonPluginInfo.class.php');
+            require_once('hudsonPluginInfo.php');
             $this->pluginInfo = new hudsonPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -177,53 +177,53 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         switch ($get_widget_event->getName()) {
             // MY
             case 'plugin_hudson_my_jobs':
-                require_once('hudson_Widget_MyMonitoredJobs.class.php');
+                require_once('hudson_Widget_MyMonitoredJobs.php');
                 $get_widget_event->setWidget(new hudson_Widget_MyMonitoredJobs($user->getId(), $this, $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_joblastbuilds':
-                require_once('hudson_Widget_JobLastBuilds.class.php');
+                require_once('hudson_Widget_JobLastBuilds.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobLastBuilds(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_jobtestresults':
-                require_once('hudson_Widget_JobTestResults.class.php');
+                require_once('hudson_Widget_JobTestResults.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobTestResults(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_jobtesttrend':
-                require_once('hudson_Widget_JobTestTrend.class.php');
+                require_once('hudson_Widget_JobTestTrend.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobTestTrend(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_jobbuildhistory':
-                require_once('hudson_Widget_JobBuildHistory.class.php');
+                require_once('hudson_Widget_JobBuildHistory.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobBuildHistory(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
             case 'plugin_hudson_my_joblastartifacts':
-                require_once('hudson_Widget_JobLastArtifacts.class.php');
+                require_once('hudson_Widget_JobLastArtifacts.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobLastArtifacts(UserDashboardController::LEGACY_DASHBOARD_TYPE, $user->getId(), $hf, $job_builder));
                 break;
 
             // PROJECT
             case 'plugin_hudson_project_jobsoverview':
-                require_once('hudson_Widget_ProjectJobsOverview.class.php');
+                require_once('hudson_Widget_ProjectJobsOverview.php');
                 $get_widget_event->setWidget(new hudson_Widget_ProjectJobsOverview($request->get('group_id'), $this, $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_joblastbuilds':
-                require_once('hudson_Widget_JobLastBuilds.class.php');
+                require_once('hudson_Widget_JobLastBuilds.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobLastBuilds(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_jobtestresults':
-                require_once('hudson_Widget_JobTestResults.class.php');
+                require_once('hudson_Widget_JobTestResults.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobTestResults(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_jobtesttrend':
-                require_once('hudson_Widget_JobTestTrend.class.php');
+                require_once('hudson_Widget_JobTestTrend.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobTestTrend(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_jobbuildhistory':
-                require_once('hudson_Widget_JobBuildHistory.class.php');
+                require_once('hudson_Widget_JobBuildHistory.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobBuildHistory(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
             case 'plugin_hudson_project_joblastartifacts':
-                require_once('hudson_Widget_JobLastArtifacts.class.php');
+                require_once('hudson_Widget_JobLastArtifacts.php');
                 $get_widget_event->setWidget(new hudson_Widget_JobLastArtifacts(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf, $job_builder));
                 break;
         }
@@ -376,7 +376,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
 
     public function process(): void
     {
-        require_once('hudson.class.php');
+        require_once('hudson.php');
         $controler = new hudson();
         $controler->process();
     }

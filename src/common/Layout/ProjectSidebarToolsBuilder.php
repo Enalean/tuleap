@@ -134,7 +134,7 @@ class ProjectSidebarToolsBuilder
         if ($project_id == 100) {
             if (strpos($link, '$projectname') !== false) {
                 // NOTE: if you change link variables here, change them also in
-                // * src/common/Project/RegisterProjectStep_Confirmation.class.php
+                // * src/common/Project/RegisterProjectStep_Confirmation.php
                 // * @see ServicePOSTDataBuilder::substituteVariablesInLink
                 // Don't check project name if not needed.
                 // When it is done here, the service bar will not appear updated on the current page

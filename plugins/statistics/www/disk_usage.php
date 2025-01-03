@@ -31,7 +31,7 @@ use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.class.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();

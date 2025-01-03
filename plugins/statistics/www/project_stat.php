@@ -20,7 +20,7 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.class.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.php';
 
 use Tuleap\Statistics\DiskUsagePie\DiskUsagePieDisplayer;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;

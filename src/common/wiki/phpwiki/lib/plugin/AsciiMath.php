@@ -21,7 +21,7 @@ along with PhpWiki; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-require_once('lib/ASCIIMathPHP/ASCIIMathPHP.class.php');
+require_once('lib/ASCIIMathPHP/ASCIIMathPHP.php');
 
 /**
  * Render ASCII math as MathML

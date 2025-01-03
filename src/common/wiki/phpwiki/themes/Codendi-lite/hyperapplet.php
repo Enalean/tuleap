@@ -9,7 +9,7 @@
  */
 global $WikiTheme;
 ?>
-<applet code="hypergraph.applications.hexplorer.HExplorerApplet.class" align="baseline" 
+<applet code="hypergraph.applications.hexplorer.HExplorerApplet" align="baseline" 
         archive="<?php echo $WikiTheme->_finddata('hyperapplet.jar') ?>"
         width="160" height="360">
 <?php // the dynamic version: ?>

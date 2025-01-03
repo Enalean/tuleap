@@ -671,7 +671,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
 
         if (! isset($this->rootItems[$project_id])) {
-            include_once 'Docman_ItemFactory.class.php';
+            include_once 'Docman_ItemFactory.php';
             $docmanItemFactory            = new Docman_ItemFactory();
             $this->rootItems[$project_id] = $docmanItemFactory->getRoot($project_id);
         }
@@ -1063,7 +1063,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     protected function getController($controller, $request)
     {
         if (! isset($this->controller[$controller])) {
-            include_once $controller . '.class.php';
+            include_once $controller . '.php';
             $this->controller[$controller] = new $controller($this, $this->getPluginPath(), $this->getThemePath(), $request);
         } else {
             $this->controller[$controller]->setRequest($request);
