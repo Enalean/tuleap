@@ -23,49 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST;
 
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FileUploadDataProvider|Mockery\MockInterface|FileUploadDataProvider
-     */
-    private $file_upload_data_provider;
-    /**
-     * @var FormattedChangesetValueForFileFieldRetriever
-     */
-    private $formatted_changeset_value_for_field_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
+    private FileUploadDataProvider&MockObject $file_upload_data_provider;
+    private FormattedChangesetValueForFileFieldRetriever $formatted_changeset_value_for_field_retriever;
+    private Artifact $artifact;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->user     = UserTestBuilder::buildWithDefaults();
 
-        $this->user                                          = Mockery::mock(PFUser::class);
-        $this->file_upload_data_provider                     = Mockery::mock(FileUploadDataProvider::class);
+        $this->file_upload_data_provider                     = $this->createMock(FileUploadDataProvider::class);
         $this->formatted_changeset_value_for_field_retriever = new FormattedChangesetValueForFileFieldRetriever(
             $this->file_upload_data_provider
         );
@@ -73,25 +53,25 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
 
     public function testGetFormattedChangesetValueForFieldFile(): void
     {
-        $file_1 = Mockery::mock(Tracker_FileInfo::class);
-        $file_1->shouldReceive('getId')->andReturn(1);
+        $file_1 = $this->createMock(Tracker_FileInfo::class);
+        $file_1->method('getId')->willReturn(1);
 
-        $file_2 = Mockery::mock(Tracker_FileInfo::class);
-        $file_2->shouldReceive('getId')->andReturn(2);
+        $file_2 = $this->createMock(Tracker_FileInfo::class);
+        $file_2->method('getId')->willReturn(2);
 
         $files = [$file_1, $file_2];
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class);
-        $changeset_value->shouldReceive('getFiles')->andReturn($files);
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_File::class);
+        $changeset_value->method('getFiles')->willReturn($files);
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field->shouldReceive('getId')->andReturn(112);
-        $field->shouldReceive('getLastChangesetValue')->andReturn($changeset_value);
+        $field = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $field->method('getId')->willReturn(112);
+        $field->method('getLastChangesetValue')->willReturn($changeset_value);
 
-        $field_upload_data = Mockery::mock(FileUploadData::class);
-        $field_upload_data->shouldReceive('getField')->andReturn($field);
+        $field_upload_data = $this->createMock(FileUploadData::class);
+        $field_upload_data->method('getField')->willReturn($field);
 
-        $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
+        $this->file_upload_data_provider->method('getFileUploadData')->willReturn($field_upload_data);
         $uploaded_file_ids = [14];
         $deleted_file_ids  = [1];
 
@@ -106,7 +86,7 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
     {
         $field_upload_data = null;
 
-        $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
+        $this->file_upload_data_provider->method('getFileUploadData')->willReturn($field_upload_data);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -119,14 +99,14 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
     {
         $changeset_value = null;
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field->shouldReceive('getId')->andReturn(112);
-        $field->shouldReceive('getLastChangesetValue')->andReturn($changeset_value);
+        $field = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $field->method('getId')->willReturn(112);
+        $field->method('getLastChangesetValue')->willReturn($changeset_value);
 
-        $field_upload_data = Mockery::mock(FileUploadData::class);
-        $field_upload_data->shouldReceive('getField')->andReturn($field);
+        $field_upload_data = $this->createMock(FileUploadData::class);
+        $field_upload_data->method('getField')->willReturn($field);
 
-        $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
+        $this->file_upload_data_provider->method('getFileUploadData')->willReturn($field_upload_data);
 
         $uploaded_file_ids = [14];
         $deleted_file_ids  = [666];
@@ -140,17 +120,17 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
 
     public function testGetFormattedChangesetValueForFieldFileShouldReturnsOnlyNewValueIfTheirIsNoFileInChangesetValue(): void
     {
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class);
-        $changeset_value->shouldReceive('getFiles')->andReturn([]);
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_File::class);
+        $changeset_value->method('getFiles')->willReturn([]);
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field->shouldReceive('getId')->andReturn(112);
-        $field->shouldReceive('getLastChangesetValue')->andReturn($changeset_value);
+        $field = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $field->method('getId')->willReturn(112);
+        $field->method('getLastChangesetValue')->willReturn($changeset_value);
 
-        $field_upload_data = Mockery::mock(FileUploadData::class);
-        $field_upload_data->shouldReceive('getField')->andReturn($field);
+        $field_upload_data = $this->createMock(FileUploadData::class);
+        $field_upload_data->method('getField')->willReturn($field);
 
-        $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
+        $this->file_upload_data_provider->method('getFileUploadData')->willReturn($field_upload_data);
         $uploaded_file_ids = [14];
         $deleted_file_ids  = [666];
 
