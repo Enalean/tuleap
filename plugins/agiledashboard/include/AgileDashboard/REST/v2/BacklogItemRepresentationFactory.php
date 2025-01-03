@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v2;
 
-use AgileDashboard_Milestone_Backlog_IBacklogItem;
 use Cardwall_Semantic_CardFields;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use UserManager;
 
@@ -32,12 +32,12 @@ final class BacklogItemRepresentationFactory
     {
     }
 
-    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): BacklogItemRepresentation
+    public function createBacklogItemRepresentation(IBacklogItem $backlog_item): BacklogItemRepresentation
     {
         return BacklogItemRepresentation::build($backlog_item, $this->getBacklogItemCardFields($backlog_item), $this->project_background_configuration);
     }
 
-    private function getBacklogItemCardFields(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): array
+    private function getBacklogItemCardFields(IBacklogItem $backlog_item): array
     {
         $current_user         = UserManager::instance()->getCurrentUser();
         $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
@@ -59,7 +59,7 @@ final class BacklogItemRepresentationFactory
         return $card_fields;
     }
 
-    private function getCardFieldsSemantic(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): Cardwall_Semantic_CardFields
+    private function getCardFieldsSemantic(IBacklogItem $backlog_item): Cardwall_Semantic_CardFields
     {
         return Cardwall_Semantic_CardFields::load($backlog_item->getArtifact()->getTracker());
     }

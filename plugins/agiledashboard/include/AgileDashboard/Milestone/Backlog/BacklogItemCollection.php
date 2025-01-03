@@ -22,10 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
+
 class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     AgileDashboard_Milestone_Backlog_IBacklogItemCollection
 {
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItem[] */
+    /** @var IBacklogItem[] */
     private $rows = [];
 
     /** @var int[] */
@@ -47,7 +49,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
         $this->parent_item_name = $name;
     }
 
-    public function push(AgileDashboard_Milestone_Backlog_IBacklogItem $item)
+    public function push(IBacklogItem $item)
     {
         $this->rows[]             = $item;
         $this->index[$item->id()] = true;

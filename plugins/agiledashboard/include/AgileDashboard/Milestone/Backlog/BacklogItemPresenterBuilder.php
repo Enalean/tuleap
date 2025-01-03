@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BacklogItemPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -36,6 +37,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder implements Ag
 
     public function getItem(Artifact $artifact, $redirect_to_self, $is_inconsistent)
     {
-        return new AgileDashboard_BacklogItemPresenter($artifact, $redirect_to_self, $is_inconsistent);
+        return new BacklogItemPresenter($artifact, $redirect_to_self, $is_inconsistent);
     }
 }

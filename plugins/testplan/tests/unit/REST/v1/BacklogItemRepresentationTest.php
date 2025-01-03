@@ -24,6 +24,7 @@ namespace Tuleap\TestPlan\REST\v1;
 
 use PFUser;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -48,7 +49,7 @@ final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('getId')->willReturn(1);
 
         $backlog_item = $this->createMock(
-            \AgileDashboard_Milestone_Backlog_IBacklogItem::class
+            IBacklogItem::class
         );
         $backlog_item->method('getArtifact')->willReturn($artifact);
         $backlog_item->method('id')->willReturn(1);
@@ -86,7 +87,7 @@ final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('getId')->willReturn(1);
 
         $backlog_item = $this->createMock(
-            \AgileDashboard_Milestone_Backlog_IBacklogItem::class
+            IBacklogItem::class
         );
         $backlog_item->method('getArtifact')->willReturn($artifact);
         $backlog_item->method('id')->willReturn(1);
@@ -124,7 +125,7 @@ final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('getId')->willReturn(1);
 
         $backlog_item = $this->createMock(
-            \AgileDashboard_Milestone_Backlog_IBacklogItem::class
+            IBacklogItem::class
         );
         $backlog_item->method('getArtifact')->willReturn($artifact);
         $backlog_item->method('id')->willReturn(1);

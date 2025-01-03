@@ -22,106 +22,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard;
+
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogRowPresenter;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class AgileDashboard_BacklogItemPresenter implements
-    AgileDashboard_Milestone_Backlog_IBacklogItem,
-    AgileDashboard_Milestone_Backlog_BacklogRowPresenter
+final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
 {
-    /** @var Int */
-    private $id;
+    private readonly int $id;
+    private readonly string $title;
+    private readonly string $type;
+    private readonly string $url;
+    private readonly string $color;
+    private readonly string $short_type;
+    private string $status;
+    private string $normalized_status_label;
+    private ?int $initial_effort     = null;
+    private ?float $remaining_effort = null;
+    private ?Artifact $parent        = null;
+    private ?bool $has_children      = null;
 
-    /** @var String */
-    private $title;
-
-    /** @var String */
-    private $type;
-
-    /** @var String */
-    private $url;
-
-    /** @var Int */
-    private $initial_effort;
-
-    /** @var float */
-    private $remaining_effort;
-
-    /** @var String */
-    private $redirect_to_self;
-
-    /**
-     * @var String
-     */
-    private $status;
-
-    /**
-     * @var String
-     */
-    private $normalized_status_label;
-
-    /** @var String */
-    private $color;
-
-    /** @var Artifact */
-    private $artifact;
-
-    /** @var Artifact */
-    private $parent;
-
-    /** @var bool */
-    private $has_children = null;
-    /**
-     * @var bool
-     */
-    private $is_inconsistent;
-    /**
-     * @var string
-     */
-    private $short_type;
-
-    public function __construct(Artifact $artifact, $redirect_to_self, bool $is_inconsistent)
-    {
-        $this->id               = $artifact->getId();
-        $this->title            = $artifact->getTitle() ?? '';
-        $this->url              = $artifact->getUri();
-        $this->redirect_to_self = $redirect_to_self;
-        $this->artifact         = $artifact;
-        $this->type             = $this->artifact->getTracker()->getName();
-        $this->color            = $this->artifact->getTracker()->getColor()->getName();
-        $this->short_type       = $this->artifact->getTracker()->getItemName();
-        $this->is_inconsistent  = $is_inconsistent;
+    public function __construct(
+        private readonly Artifact $artifact,
+        private readonly string $redirect_to_self,
+        private readonly bool $is_inconsistent,
+    ) {
+        $this->id         = $artifact->getId();
+        $this->title      = $artifact->getTitle() ?? '';
+        $this->url        = $artifact->getUri();
+        $this->type       = $this->artifact->getTracker()->getName();
+        $this->color      = $this->artifact->getTracker()->getColor()->getName();
+        $this->short_type = $this->artifact->getTracker()->getItemName();
     }
 
-    public function setParent(Artifact $parent)
+    public function setParent(Artifact $parent): void
     {
         $this->parent = $parent;
     }
 
-    /**
-     * @return Artifact
-     */
-    public function getParent()
+    public function getParent(): ?Artifact
     {
         return $this->parent;
     }
 
-    public function setInitialEffort($value)
+    public function setInitialEffort(?int $value): void
     {
         $this->initial_effort = $value;
     }
 
-    public function getInitialEffort()
+    public function getInitialEffort(): ?int
     {
         return $this->initial_effort;
     }
 
-    public function setStatus($status, $status_semantic)
+    public function setStatus(string $status, string $status_semantic): void
     {
         $this->status                  = $status;
         $this->normalized_status_label = $status_semantic;
     }
 
-    public function id()
+    public function id(): int
     {
         return $this->id;
     }
@@ -131,48 +94,46 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->title;
     }
 
-    public function type()
+    public function type(): string
     {
         return $this->type;
     }
 
-    public function url()
+    public function url(): string
     {
         return $this->getUrlWithRedirect($this->url);
     }
 
-    public function points()
+    public function points(): ?int
     {
         return $this->initial_effort;
     }
 
-    public function parent_title()
+    public function parent_title(): ?string
     {
-        if ($this->parent) {
-            return $this->parent->getTitle();
-        }
+        return $this->parent?->getTitle();
     }
 
-    public function parent_url()
+    public function parent_url(): ?string
     {
-        if ($this->parent) {
+        if ($this->parent !== null) {
             return $this->getUrlWithRedirect($this->parent->getUri());
         }
+
+        return null;
     }
 
-    public function parent_id()
+    public function parent_id(): ?int
     {
-        if ($this->parent) {
-            return $this->parent->getId();
-        }
+        return $this->parent?->getId();
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    private function getUrlWithRedirect($url)
+    private function getUrlWithRedirect(string $url): string
     {
         if ($this->redirect_to_self) {
             return $url . '&' . $this->redirect_to_self;
@@ -180,10 +141,7 @@ class AgileDashboard_BacklogItemPresenter implements
         return $url;
     }
 
-    /**
-     * @return Artifact
-     */
-    public function getArtifact()
+    public function getArtifact(): Artifact
     {
         return $this->artifact;
     }
@@ -193,12 +151,12 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->color;
     }
 
-    public function setHasChildren($has_children)
+    public function setHasChildren(bool $has_children): void
     {
         $this->has_children = $has_children;
     }
 
-    public function hasChildren()
+    public function hasChildren(): bool
     {
         if ($this->has_children === null) {
             return $this->artifact->hasChildren();
@@ -206,35 +164,32 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->has_children;
     }
 
-    public function xRef()
+    public function xRef(): string
     {
         return $this->artifact->getXRef();
     }
 
-    /**
-     * @return bool
-     */
-    public function isInconsistent()
+    public function isInconsistent(): bool
     {
         return $this->is_inconsistent;
     }
 
-    public function getNormalizedStatusLabel()
+    public function getNormalizedStatusLabel(): string
     {
         return $this->normalized_status_label;
     }
 
-    public function isOpen()
+    public function isOpen(): bool
     {
         return $this->artifact->isOpen();
     }
 
-    public function getRemainingEffort()
+    public function getRemainingEffort(): ?float
     {
         return $this->remaining_effort;
     }
 
-    public function setRemainingEffort($value)
+    public function setRemainingEffort(?float $value): void
     {
         $this->remaining_effort = $value;
     }

@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v2;
 
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\REST\JsonCast;
@@ -127,13 +128,14 @@ class BacklogItemRepresentation
     }
 
     public static function build(
-        \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        IBacklogItem $backlog_item,
         array $card_fields,
         ProjectBackgroundConfiguration $project_background_configuration,
     ): self {
-        $parent = null;
-        if ($backlog_item->getParent()) {
-            $parent = BacklogItemParentReference::build($backlog_item->getParent(), $project_background_configuration);
+        $parent      = null;
+        $item_parent = $backlog_item->getParent();
+        if ($item_parent !== null) {
+            $parent = BacklogItemParentReference::build($item_parent, $project_background_configuration);
         }
 
         return new self(
@@ -153,7 +155,7 @@ class BacklogItemRepresentation
         );
     }
 
-    private static function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): array
+    private static function addAllowedSubItemTypes(IBacklogItem $backlog_item): array
     {
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 

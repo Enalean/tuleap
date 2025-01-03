@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\REST\JsonCast;
@@ -108,7 +109,7 @@ class BacklogItemRepresentation
     public $card_fields;
 
     public function build(
-        \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        IBacklogItem $backlog_item,
         array $card_fields,
         BackgroundColor $background_color,
         ProjectBackgroundConfiguration $project_background_configuration,
@@ -127,8 +128,9 @@ class BacklogItemRepresentation
         $this->project = new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject());
 
         $this->parent = null;
-        if ($backlog_item->getParent()) {
-            $this->parent = BacklogItemParentReference::build($backlog_item->getParent(), $project_background_configuration);
+        $item_parent  = $backlog_item->getParent();
+        if ($item_parent !== null) {
+            $this->parent = BacklogItemParentReference::build($item_parent, $project_background_configuration);
         }
 
         $this->has_children = $backlog_item->hasChildren();
@@ -142,7 +144,7 @@ class BacklogItemRepresentation
         $this->background_color_name = $background_color->getBackgroundColorName();
     }
 
-    private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
+    private function addAllowedSubItemTypes(IBacklogItem $backlog_item)
     {
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 

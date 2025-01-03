@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashBoard_Semantic_InitialEffort;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -37,6 +36,7 @@ use Tracker_Semantic_Title;
 use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
@@ -161,7 +161,7 @@ class BacklogItemResource extends AuthenticatedResource
         $semantics        = $semantic_manager->getSemantics();
 
         $artifact     = $this->updateArtifactTitleSemantic($current_user, $artifact, $semantics);
-        $backlog_item = new AgileDashboard_Milestone_Backlog_BacklogItem($artifact, false);
+        $backlog_item = new BacklogItem($artifact, false);
         $backlog_item = $this->updateBacklogItemStatusSemantic($current_user, $artifact, $backlog_item, $semantics);
 
         $initial_effort_updater = new InitialEffortSemanticUpdater();
@@ -194,7 +194,7 @@ class BacklogItemResource extends AuthenticatedResource
     private function updateBacklogItemStatusSemantic(
         PFUser $current_user,
         Artifact $artifact,
-        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
+        BacklogItem $backlog_item,
         Tracker_SemanticCollection $semantics,
     ) {
         $semantic_status = $semantics[Tracker_Semantic_Status::NAME];
@@ -216,7 +216,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function updateBacklogItemRemainingEffort(
         PFUser $current_user,
-        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
+        BacklogItem $backlog_item,
     ) {
         $backlog_item->setRemainingEffort(
             $this->remaining_effort_value_retriever->getRemainingEffortValue($current_user, $backlog_item->getArtifact())

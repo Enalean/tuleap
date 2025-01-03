@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItemPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$has_children]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$status]]></code>
-      <code><![CDATA[$status_semantic]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getInitialEffort]]></code>
-      <code><![CDATA[getNormalizedStatusLabel]]></code>
-      <code><![CDATA[getRemainingEffort]]></code>
-      <code><![CDATA[getStatus]]></code>
-      <code><![CDATA[getUrlWithRedirect]]></code>
-      <code><![CDATA[hasChildren]]></code>
-      <code><![CDATA[id]]></code>
-      <code><![CDATA[isOpen]]></code>
-      <code><![CDATA[parent_id]]></code>
-      <code><![CDATA[parent_title]]></code>
-      <code><![CDATA[parent_url]]></code>
-      <code><![CDATA[points]]></code>
-      <code><![CDATA[setHasChildren]]></code>
-      <code><![CDATA[setInitialEffort]]></code>
-      <code><![CDATA[setParent]]></code>
-      <code><![CDATA[setRemainingEffort]]></code>
-      <code><![CDATA[setStatus]]></code>
-      <code><![CDATA[type]]></code>
-      <code><![CDATA[url]]></code>
-      <code><![CDATA[xRef]]></code>
-    </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[null]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/BreadCrumbDropdown/AdministrationCrumbBuilder.php">
     <MissingReturnType>
       <code><![CDATA[build]]></code>
@@ -356,36 +320,6 @@
       <code><![CDATA[$offset]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItem.php">
-    <MissingParamType>
-      <code><![CDATA[$has_children]]></code>
-      <code><![CDATA[$status]]></code>
-      <code><![CDATA[$status_semantic]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getInitialEffort]]></code>
-      <code><![CDATA[getNormalizedStatusLabel]]></code>
-      <code><![CDATA[getRemainingEffort]]></code>
-      <code><![CDATA[getStatus]]></code>
-      <code><![CDATA[hasChildren]]></code>
-      <code><![CDATA[id]]></code>
-      <code><![CDATA[isOpen]]></code>
-      <code><![CDATA[parent_title]]></code>
-      <code><![CDATA[points]]></code>
-      <code><![CDATA[setHasChildren]]></code>
-      <code><![CDATA[setInitialEffort]]></code>
-      <code><![CDATA[setParent]]></code>
-      <code><![CDATA[setRemainingEffort]]></code>
-      <code><![CDATA[setStatus]]></code>
-      <code><![CDATA[type]]></code>
-      <code><![CDATA[xRef]]></code>
-    </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[null]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItemBuilder.php">
     <MissingParamType>
       <code><![CDATA[$is_inconsistent]]></code>
@@ -481,15 +415,6 @@
       <code><![CDATA[$redirect_to_self]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogRowPresenter.php">
-    <MissingReturnType>
-      <code><![CDATA[parent_title]]></code>
-      <code><![CDATA[parent_url]]></code>
-      <code><![CDATA[points]]></code>
-      <code><![CDATA[title]]></code>
-      <code><![CDATA[url]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/DescendantItemsCollection.php">
     <MissingParamType>
       <code><![CDATA[$mode]]></code>
@@ -549,31 +474,6 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $this->found_rows]]></code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBacklogItem.php">
-    <MissingParamType>
-      <code><![CDATA[$has_children]]></code>
-      <code><![CDATA[$status]]></code>
-      <code><![CDATA[$status_semantic]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getInitialEffort]]></code>
-      <code><![CDATA[getNormalizedStatusLabel]]></code>
-      <code><![CDATA[getParent]]></code>
-      <code><![CDATA[getRemainingEffort]]></code>
-      <code><![CDATA[getStatus]]></code>
-      <code><![CDATA[hasChildren]]></code>
-      <code><![CDATA[id]]></code>
-      <code><![CDATA[isOpen]]></code>
-      <code><![CDATA[setHasChildren]]></code>
-      <code><![CDATA[setInitialEffort]]></code>
-      <code><![CDATA[setParent]]></code>
-      <code><![CDATA[setRemainingEffort]]></code>
-      <code><![CDATA[setStatus]]></code>
-      <code><![CDATA[xRef]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBacklogItemCollection.php">
     <MissingParamType>

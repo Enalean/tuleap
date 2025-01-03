@@ -19,26 +19,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * I am a Backlog Item
  */
-interface AgileDashboard_Milestone_Backlog_IBacklogItem
+interface IBacklogItem
 {
     public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
 
-    public function setInitialEffort($value);
+    public function setInitialEffort(?int $value): void;
 
-    public function getInitialEffort();
+    public function getInitialEffort(): ?int;
 
-    public function setStatus($status, $status_semantic);
+    public function setStatus(string $status, string $status_semantic): void;
 
-    public function getStatus();
+    public function getStatus(): string;
 
-    public function setHasChildren($has_children);
+    public function setHasChildren(bool $has_children): void;
 
-    public function id();
+    public function id(): int;
 
     public function title(): string;
 
@@ -46,29 +50,23 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
 
     public function color(): string;
 
-    public function hasChildren();
+    public function hasChildren(): bool;
 
-    public function xRef();
+    public function xRef(): string;
 
-    public function getParent();
+    public function getParent(): ?Artifact;
 
-    public function setParent(Artifact $parent);
+    public function setParent(Artifact $parent): void;
 
-    /**
-     * @return Artifact
-     */
-    public function getArtifact();
+    public function getArtifact(): Artifact;
 
-    /**
-     * @return bool
-     */
-    public function isInconsistent();
+    public function isInconsistent(): bool;
 
-    public function getNormalizedStatusLabel();
+    public function getNormalizedStatusLabel(): string;
 
-    public function isOpen();
+    public function isOpen(): bool;
 
-    public function getRemainingEffort();
+    public function getRemainingEffort(): ?float;
 
-    public function setRemainingEffort($value);
+    public function setRemainingEffort(?float $value): void;
 }
