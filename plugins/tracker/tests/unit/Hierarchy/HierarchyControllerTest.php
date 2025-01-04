@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Hierarchy;
 
 use Codendi_Request;
 use EventManager;
-use Mockery;
 use Project;
 use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
@@ -38,22 +37,21 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
     public function testTrackersImplicatedInTriggersRulesCanNotBeRemovedFromTheChild(): void
     {
-        $request                  = Mockery::mock(Codendi_Request::class);
-        $hierarchical_tracker     = Mockery::mock(Tracker_Hierarchy_HierarchicalTracker::class);
-        $hierarchy_dao            = Mockery::mock(HierarchyDAO::class);
-        $trigger_rules_dao        = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
-        $artifact_links_usage_dao = Mockery::mock(ArtifactLinksUsageDao::class);
+        $request                  = $this->createMock(Codendi_Request::class);
+        $hierarchical_tracker     = $this->createMock(Tracker_Hierarchy_HierarchicalTracker::class);
+        $hierarchy_dao            = $this->createMock(HierarchyDAO::class);
+        $trigger_rules_dao        = $this->createMock(Tracker_Workflow_Trigger_RulesDao::class);
+        $artifact_links_usage_dao = $this->createMock(ArtifactLinksUsageDao::class);
         $event_manager            = $this->createMock(EventManager::class);
         $history_dao              = $this->createMock(\ProjectHistoryDao::class);
         $controller               = new HierarchyController(
             $request,
             $hierarchical_tracker,
-            Mockery::mock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
+            $this->createMock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
             $hierarchy_dao,
             $trigger_rules_dao,
             $artifact_links_usage_dao,
@@ -61,37 +59,35 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $history_dao
         );
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-        $hierarchical_tracker->shouldReceive('getProject')->andReturn($project);
-        $hierarchical_tracker->shouldReceive('getUnhierarchizedTracker')->andReturn(
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(101);
+        $hierarchical_tracker->method('getProject')->willReturn($project);
+        $hierarchical_tracker->method('getUnhierarchizedTracker')->willReturn(
             TrackerTestBuilder::aTracker()->withProject(
                 new Project(['group_id' => 101])
             )->build()
         );
 
-        $request->shouldReceive('validArray')->andReturn(true);
-        $request->shouldReceive('get')->andReturn(['147']);
-        $request->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->build());
+        $request->method('validArray')->willReturn(true);
+        $request->method('get')->willReturn(['147']);
+        $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
 
-        $hierarchical_tracker->shouldReceive('getId')->andReturn(789);
+        $hierarchical_tracker->method('getId')->willReturn(789);
 
-        $trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')
-            ->andReturn([['tracker_id' => 258]]);
-        $child_tracker = Mockery::mock(Tracker::class);
-        $child_tracker->shouldReceive('getId')->andReturn(258);
-        $hierarchical_tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
+        $trigger_rules_dao->method('searchTriggeringTrackersByTargetTrackerID')
+            ->willReturn([['tracker_id' => 258]]);
+        $child_tracker = $this->createMock(Tracker::class);
+        $child_tracker->method('getId')->willReturn(258);
+        $hierarchical_tracker->method('getChildren')->willReturn([$child_tracker]);
 
-        $artifact_links_usage_dao->shouldReceive('isProjectUsingArtifactLinkTypes')
-            ->once()
-            ->andReturnFalse();
+        $artifact_links_usage_dao->expects(self::once())->method('isProjectUsingArtifactLinkTypes')
+            ->willReturn(false);
 
-        $hierarchy_dao->shouldNotReceive('changeTrackerHierarchy');
-        $hierarchy_dao->shouldReceive('updateChildren')->with(
-            789,
-            Mockery::on(static function (array $children): bool {
-                return count($children) === 2;
-            })
+        $hierarchy_dao->expects(self::never())->method('changeTrackerHierarchy');
+        $hierarchy_dao->method('updateChildren')->willReturnCallback(
+            static fn (int $parent_id, array $child_ids) => match (true) {
+                $parent_id === 789 && count($child_ids) === 2 => true,
+            }
         );
 
         $history_dao->expects(self::once())->method('addHistory');
@@ -108,17 +104,17 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesRemoveExistingIsChildLinksIfProjectUsesArtifactLinksType(): void
     {
-        $request                  = Mockery::mock(Codendi_Request::class);
-        $hierarchical_tracker     = Mockery::mock(Tracker_Hierarchy_HierarchicalTracker::class);
-        $hierarchy_dao            = Mockery::mock(HierarchyDAO::class);
-        $trigger_rules_dao        = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
-        $artifact_links_usage_dao = Mockery::mock(ArtifactLinksUsageDao::class);
+        $request                  = $this->createMock(Codendi_Request::class);
+        $hierarchical_tracker     = $this->createMock(Tracker_Hierarchy_HierarchicalTracker::class);
+        $hierarchy_dao            = $this->createMock(HierarchyDAO::class);
+        $trigger_rules_dao        = $this->createMock(Tracker_Workflow_Trigger_RulesDao::class);
+        $artifact_links_usage_dao = $this->createMock(ArtifactLinksUsageDao::class);
         $event_manager            = $this->createMock(EventManager::class);
         $history_dao              = $this->createMock(\ProjectHistoryDao::class);
         $controller               = new HierarchyController(
             $request,
             $hierarchical_tracker,
-            Mockery::mock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
+            $this->createMock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
             $hierarchy_dao,
             $trigger_rules_dao,
             $artifact_links_usage_dao,
@@ -126,31 +122,30 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $history_dao
         );
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-        $hierarchical_tracker->shouldReceive('getProject')->andReturn($project);
-        $hierarchical_tracker->shouldReceive('getUnhierarchizedTracker')->andReturn(
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(101);
+        $hierarchical_tracker->method('getProject')->willReturn($project);
+        $hierarchical_tracker->method('getUnhierarchizedTracker')->willReturn(
             TrackerTestBuilder::aTracker()->withProject(
                 new Project(['group_id' => 101])
             )->build()
         );
 
-        $request->shouldReceive('validArray')->andReturn(true);
-        $request->shouldReceive('get')->andReturn(['147']);
-        $request->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->build());
+        $request->method('validArray')->willReturn(true);
+        $request->method('get')->willReturn(['147']);
+        $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
 
-        $hierarchical_tracker->shouldReceive('getId')->andReturn(789);
-        $hierarchical_tracker->shouldReceive('getChildren')->andReturn([]);
+        $hierarchical_tracker->method('getId')->willReturn(789);
+        $hierarchical_tracker->method('getChildren')->willReturn([]);
 
-        $trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')
-            ->andReturn([]);
+        $trigger_rules_dao->method('searchTriggeringTrackersByTargetTrackerID')
+            ->willReturn([]);
 
-        $artifact_links_usage_dao->shouldReceive('isProjectUsingArtifactLinkTypes')
-            ->once()
-            ->andReturntrue();
+        $artifact_links_usage_dao->expects(self::once())->method('isProjectUsingArtifactLinkTypes')
+            ->willReturn(true);
 
-        $hierarchy_dao->shouldReceive('changeTrackerHierarchy')->once();
-        $hierarchy_dao->shouldNotReceive('updateChildren');
+        $hierarchy_dao->expects(self::once())->method('changeTrackerHierarchy');
+        $hierarchy_dao->expects(self::never())->method('updateChildren');
 
         $history_dao->expects(self::once())->method('addHistory');
 

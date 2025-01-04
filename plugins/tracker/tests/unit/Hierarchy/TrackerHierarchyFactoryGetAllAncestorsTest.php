@@ -21,117 +21,99 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerHierarchyFactoryGetAllAncestorsTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $release;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $product;
-    /**
-     * @var \Mockery\Mock | Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $sprint;
+    private Artifact $release;
+    private Artifact $product;
+    private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
+    private PFUser $user;
+    private Artifact $sprint;
 
     protected function setUp(): void
     {
         $this->user              = new PFUser(['language_id' => 'en']);
-        $this->hierarchy_factory = Mockery::mock(Tracker_HierarchyFactory::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->hierarchy_factory = $this->getMockBuilder(Tracker_HierarchyFactory::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getParentArtifact'])
+            ->getMock();
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturnFalse();
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->sprint = Mockery::mock(Artifact::class);
-        $this->sprint->shouldReceive('getId')->andReturn(101);
-        $this->product = Mockery::mock(Artifact::class);
-        $this->product->shouldReceive('getId')->andReturn(103);
-        $this->product->shouldReceive('getTracker')->andReturn($tracker);
-        $this->release = Mockery::mock(Artifact::class);
-        $this->release->shouldReceive('getId')->andReturn(102);
-        $this->release->shouldReceive('getTracker')->andReturn($tracker);
+        $this->sprint  = ArtifactTestBuilder::anArtifact(101)->build();
+        $this->release = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
+        $this->product = ArtifactTestBuilder::anArtifact(103)->inTracker($tracker)->build();
     }
 
     public function testItReturnsEmptyArrayWhenNoAncestors(): void
     {
-        $this->getParentOfArtifact($this->sprint, null);
+        $this->hierarchy_factory->method('getParentArtifact')->willReturn(null);
 
         $this->assertEquals([], $this->hierarchy_factory->getAllAncestors($this->user, $this->sprint));
     }
 
     public function testItReturnsTheParentWhenThereIsOnlyOne(): void
     {
-        $this->getParentOfArtifact($this->sprint, $this->release);
-        $this->getParentOfArtifact($this->release, null);
+        $this->hierarchy_factory
+            ->method('getParentArtifact')
+            ->willReturnCallback(fn (PFUser $user, Artifact $artifact) => match ($artifact) {
+                $this->sprint  => $this->release,
+                $this->release => null,
+            });
 
         $this->assertEquals([$this->release], $this->hierarchy_factory->getAllAncestors($this->user, $this->sprint));
     }
 
     public function testItReturnsNothingWhenChildReferenceItselfAsParent(): void
     {
-        $this->getParentOfArtifact($this->sprint, $this->sprint);
+        $this->hierarchy_factory
+            ->method('getParentArtifact')
+            ->willReturnCallback(fn (PFUser $user, Artifact $artifact) => match ($artifact) {
+                $this->sprint => $this->sprint,
+            });
 
         $this->assertEquals([], $this->hierarchy_factory->getAllAncestors($this->user, $this->sprint));
     }
 
     public function testItReturnsParentsOnlyOnceWhenTheParentReferenceItself(): void
     {
-        $this->getParentOfArtifact($this->sprint, $this->release);
-        $this->getParentOfArtifact($this->release, $this->release);
+        $this->hierarchy_factory
+            ->method('getParentArtifact')
+            ->willReturnCallback(fn (PFUser $user, Artifact $artifact) => match ($artifact) {
+                $this->sprint  => $this->release,
+                $this->release => $this->release,
+            });
 
         $this->assertEquals([$this->release], $this->hierarchy_factory->getAllAncestors($this->user, $this->sprint));
     }
 
     public function testItReturnsParentsOnlyOnceWhenThereIsACycleBetweenParents(): void
     {
-        $this->getParentOfArtifact($this->sprint, $this->release);
-        $this->getParentOfArtifact($this->release, $this->product);
-        $this->getParentOfArtifact($this->product, $this->release);
-
-        $this->assertEquals([$this->release, $this->product], $this->hierarchy_factory->getAllAncestors($this->user, $this->sprint));
-    }
-
-    public function testItReturnsParentsOnlyOnceWhenThereIsAFullCycle(): void
-    {
-        $this->getParentOfArtifact($this->sprint, $this->release);
-        $this->getParentOfArtifact($this->release, $this->product);
-        $this->getParentOfArtifact($this->sprint, $this->product);
-        $this->getParentOfArtifact($this->product, null);
+        $this->hierarchy_factory
+            ->method('getParentArtifact')
+            ->willReturnCallback(fn (PFUser $user, Artifact $artifact) => match ($artifact) {
+                $this->sprint  => $this->release,
+                $this->release  => $this->product,
+                $this->product  => $this->release,
+            });
 
         $this->assertEquals([$this->release, $this->product], $this->hierarchy_factory->getAllAncestors($this->user, $this->sprint));
     }
 
     public function testItReturnsSeveralParents(): void
     {
-        $this->getParentOfArtifact($this->sprint, $this->release);
-        $this->getParentOfArtifact($this->release, $this->product);
-        $this->getParentOfArtifact($this->product, null);
+        $this->hierarchy_factory
+            ->method('getParentArtifact')
+            ->willReturnCallback(fn (PFUser $user, Artifact $artifact) => match ($artifact) {
+                $this->sprint  => $this->release,
+                $this->release  => $this->product,
+                $this->product  => null,
+            });
 
         $this->assertEquals([$this->release, $this->product], $this->hierarchy_factory->getAllAncestors($this->user, $this->sprint));
-    }
-
-    /**
-     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact      $artifact
-     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact|null $parent
-     */
-    private function getParentOfArtifact($artifact, $parent): void
-    {
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')
-            ->with($this->user, $artifact)->andReturn($parent);
     }
 }

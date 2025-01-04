@@ -21,55 +21,41 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HierarchyDAO
-     */
-    private $dao;
-    /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var int
-     */
-    private $artifact_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private HierarchyDAO&MockObject $dao;
+    private Tracker_HierarchyFactory $hierarchy_factory;
+    private PFUser $user;
+    private Artifact $artifact;
+    private int $artifact_id;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
     protected function setUp(): void
     {
-        $this->artifact_id = 123;
-        $this->artifact    = Mockery::spy(Artifact::class);
-        $tracker           = Mockery::mock(Tracker::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
-        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturnFalse();
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getGroupId')->willReturn(1001);
+        $tracker->method('getItemName')->willReturn('foo');
+        $tracker->method('isProjectAllowedToUseType')->willReturn(false);
 
-        $this->dao               = Mockery::mock(HierarchyDAO::class);
-        $this->artifact_factory  = Mockery::mock(Tracker_ArtifactFactory::class);
-        $child_link_retriever    = Mockery::mock(TypeIsChildLinkRetriever::class);
+        $this->artifact_id = 123;
+        $this->artifact    = ArtifactTestBuilder::anArtifact($this->artifact_id)->inTracker($tracker)->build();
+
+        $this->dao               = $this->createMock(HierarchyDAO::class);
+        $this->artifact_factory  = $this->createMock(Tracker_ArtifactFactory::class);
+        $child_link_retriever    = $this->createMock(TypeIsChildLinkRetriever::class);
         $this->hierarchy_factory = new Tracker_HierarchyFactory(
             $this->dao,
-            Mockery::mock(TrackerFactory::class),
+            $this->createMock(TrackerFactory::class),
             $this->artifact_factory,
             $child_link_retriever
         );
@@ -81,13 +67,12 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PH
     {
         $artifact_id  = 345;
         $artifact_row = ['id' => $artifact_id];
-        $artifact     = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($artifact_id);
+        $artifact     = ArtifactTestBuilder::anArtifact($artifact_id)->build();
 
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artifact_row)->andReturn(
+        $this->artifact_factory->method('getInstanceFromRow')->with($artifact_row)->willReturn(
             $artifact
         );
-        $this->dao->shouldReceive('getParentsInHierarchy')->with($this->artifact_id)->andReturn([$artifact_row]);
+        $this->dao->method('getParentsInHierarchy')->with($this->artifact_id)->willReturn([$artifact_row]);
 
         $parent = $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
         $this->assertEquals($artifact_id, $parent->getId());
@@ -95,7 +80,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PH
 
     public function testItReturnsNullWhenNoParents(): void
     {
-        $this->dao->shouldReceive('getParentsInHierarchy')->with($this->artifact_id)->andReturn([]);
+        $this->dao->method('getParentsInHierarchy')->with($this->artifact_id)->willReturn([]);
 
         $parent = $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
         $this->assertNull($parent);
@@ -105,12 +90,11 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PH
     {
         $artifact_345_row = ['id' => '345'];
         $artifact_346_row = ['id' => '346'];
-        $this->dao->shouldReceive('getParentsInHierarchy')->with($this->artifact_id)->andReturn([$artifact_345_row, $artifact_346_row]);
+        $this->dao->method('getParentsInHierarchy')->with($this->artifact_id)->willReturn([$artifact_345_row, $artifact_346_row]);
 
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')
-            ->with($artifact_345_row)->andReturn(Mockery::spy(Artifact::class));
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')
-            ->with($artifact_346_row)->andReturn(Mockery::spy(Artifact::class));
+        $this->artifact_factory
+            ->method('getInstanceFromRow')
+            ->willReturnCallback(static fn(array $row) => ArtifactTestBuilder::anArtifact((int) $row['id'])->build());
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::WARN);
 
