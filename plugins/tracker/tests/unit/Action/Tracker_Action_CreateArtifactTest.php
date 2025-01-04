@@ -20,58 +20,38 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $tracker;
-    private $formelement_factory;
-    private $action;
-    private $request;
-    /**
-     * @var int
-     */
-    private $tracker_id;
-    /**
-     * @var PFUser
-     */
-    private $current_user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $new_artifact;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $parent_tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_ArtifactLink
-     */
-    private $parent_art_link_field;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_ArtifactLink
-     */
-    private $art_link_field;
-    /**
-     * @var Tracker_Artifact_Redirect
-     */
-    private $redirect;
+    private Tracker&MockObject $tracker;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
+    private Tracker_Action_CreateArtifact $action;
+    private Codendi_Request&MockObject $request;
+    private int $tracker_id;
+    private PFUser $current_user;
+    private Artifact&MockObject $new_artifact;
+    private Tracker $parent_tracker;
+    private Tracker_FormElement_Field_ArtifactLink $parent_art_link_field;
+    private Tracker_FormElement_Field_ArtifactLink $art_link_field;
+    private Tracker_Artifact_Redirect $redirect;
 
     protected function setUp(): void
     {
-        $event_manager = \Mockery::spy(\EventManager::class);
+        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager->method('processEvent');
         EventManager::setInstance($event_manager);
 
-        $this->tracker             = \Mockery::spy(\Tracker::class);
-        $artifact_factory          = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->request             = \Mockery::spy(\Codendi_Request::class);
+        $this->tracker             = $this->createMock(\Tracker::class);
+        $artifact_factory          = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->request             = $this->createMock(\Codendi_Request::class);
 
 
         $this->action = new class (
@@ -94,15 +74,14 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->tracker_id   = 999;
         $this->current_user = new PFUser(['language_id' => 'en']);
-        $this->new_artifact = Mockery::spy(Artifact::class);
-        $this->new_artifact->shouldReceive('getId')->andReturn(123);
+        $this->new_artifact = $this->createMock(Artifact::class);
+        $this->new_artifact->method('getId')->willReturn(123);
 
-        $this->tracker->shouldReceive('getId')->andReturns($this->tracker_id);
+        $this->tracker->method('getId')->willReturn($this->tracker_id);
 
-        $this->parent_tracker = Mockery::spy(Tracker::class);
-        $this->parent_tracker->shouldReceive('getId')->andReturn(666);
-        $this->parent_art_link_field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
-        $this->art_link_field        = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->parent_tracker        = TrackerTestBuilder::aTracker()->withId(666)->build();
+        $this->parent_art_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1001)->build();
+        $this->art_link_field        = ArtifactLinkFieldBuilder::anArtifactLinkField(333)->build();
 
         $this->redirect = new Tracker_Artifact_Redirect();
     }
@@ -164,16 +143,19 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesRedirectWhenPackageIsComplete(): void
     {
-        $this->tracker->shouldReceive('getParent')->andReturns($this->parent_tracker);
-        $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->with($this->current_user, $this->parent_tracker)->andReturns($this->parent_art_link_field);
-        $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->with($this->current_user, $this->tracker)->andReturns($this->art_link_field);
-        $this->art_link_field->shouldReceive('getId')->andReturns(333);
-        $this->request->shouldReceive('get')->with('artifact')->andReturns([
+        $this->tracker->method('getParent')->willReturn($this->parent_tracker);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturnCallback(
+            fn (PFUser $user, Tracker $tracker) => match ($tracker) {
+                $this->parent_tracker => $this->parent_art_link_field,
+                $this->tracker => $this->art_link_field,
+            }
+        );
+        $this->request->method('get')->with('artifact')->willReturn([
             333 => [
                 'parent' => [(string) Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE],
             ],
         ]);
-        $this->new_artifact->shouldReceive('getAllAncestors')->with($this->current_user)->andReturns([]);
+        $this->new_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([]);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         self::assertNotEmpty($this->redirect->query_parameters);
@@ -183,10 +165,10 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesntRedirectWhenNewArtifactAlreadyHasAParent(): void
     {
-        $this->new_artifact->shouldReceive('getAllAncestors')->andReturns([Mockery::spy(Artifact::class)]);
+        $this->new_artifact->method('getAllAncestors')->willReturn([$this->createMock(Artifact::class)]);
 
-        $this->tracker->shouldReceive('getParent')->andReturns($this->parent_tracker);
-        $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->andReturns($this->parent_art_link_field);
+        $this->tracker->method('getParent')->willReturn($this->parent_tracker);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn($this->parent_art_link_field);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         $this->assertEmpty($this->redirect->query_parameters);
@@ -194,6 +176,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesntRedirectIfThereAreNoHierarchy(): void
     {
+        $this->tracker->method('getParent')->willReturn(null);
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         $this->assertEmpty($this->redirect->query_parameters);
     }
