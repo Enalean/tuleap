@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Widget;
 
 use Codendi_Request;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 use SimpleXMLElement;
 use Tracker_Report_Renderer;
@@ -33,38 +32,24 @@ use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\XML\MappingsRegistry;
 use Widget;
 
-class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private Widget&MockObject $widget;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Widget
-     */
-    private $widget;
+    private MappingsRegistry $mapping_registry;
 
-    /**
-     * @var MappingsRegistry
-     */
-    private $mapping_registry;
+    private ProjectRendererWidgetXMLImporter $importer;
 
-    /**
-     * @var ProjectRendererWidgetXMLImporter
-     */
-    private $importer;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Report_Renderer
-     */
-    private $renderer;
+    private Tracker_Report_Renderer&MockObject $renderer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->widget           = Mockery::mock(Widget::class);
+        $this->widget           = $this->createMock(Widget::class);
         $this->mapping_registry = new MappingsRegistry();
 
-        $this->renderer = Mockery::mock(Tracker_Report_Renderer::class);
+        $this->renderer = $this->createMock(Tracker_Report_Renderer::class);
 
         $this->importer = new ProjectRendererWidgetXMLImporter();
     }
@@ -81,7 +66,7 @@ class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         ');
 
         $this->mapping_registry->addReference('R1', $this->renderer);
-        $this->renderer->shouldReceive('getId')->once()->andReturn(456);
+        $this->renderer->expects(self::once())->method('getId')->willReturn(456);
 
         $this->assertWidgetCreateWithParams(456, 'Imported');
 
@@ -101,7 +86,7 @@ class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
           </widget>
         ');
 
-        $this->widget->shouldReceive('create')->never();
+        $this->widget->expects(self::never())->method('create');
 
         $this->expectException(RuntimeException::class);
 
@@ -144,25 +129,31 @@ class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function assertWidgetCreateWithDefault(): void
     {
-        $this->widget->shouldReceive('create')->once()->with(Mockery::on(function (Codendi_Request $request) {
-            $renderer_request_date = $request->get('renderer');
-            return count($renderer_request_date) > 0 &&
-                $renderer_request_date['renderer_id'] === null &&
-                $renderer_request_date['title'] === null;
-        }));
+        $this->widget
+            ->expects(self::once())
+            ->method('create')
+            ->willReturnCallback(static function (Codendi_Request $request) {
+                $renderer_request_date = $request->get('renderer');
+                return match (true) {
+                    count($renderer_request_date) > 0 &&
+                        $renderer_request_date['renderer_id'] === null &&
+                        $renderer_request_date['title'] === null => true
+                };
+            });
     }
 
     private function assertWidgetCreateWithParams(int $renderer_id, string $title): void
     {
-        $this->widget->shouldReceive('create')
-            ->once()
-            ->with(
-                Mockery::on(function (Codendi_Request $request) use ($renderer_id, $title) {
-                    $renderer_request_date = $request->get('renderer');
-                    return count($renderer_request_date) > 0 &&
+        $this->widget
+            ->expects(self::once())
+            ->method('create')
+            ->willReturnCallback(static function (Codendi_Request $request) use ($renderer_id, $title) {
+                $renderer_request_date = $request->get('renderer');
+                return match (true) {
+                    count($renderer_request_date) > 0 &&
                         $renderer_request_date['renderer_id'] === $renderer_id &&
-                        $renderer_request_date['title'] === $title;
-                })
-            );
+                        $renderer_request_date['title'] === $title => true,
+                };
+            });
     }
 }
