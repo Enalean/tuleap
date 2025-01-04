@@ -22,31 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\NewDropdown;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\NewDropdown\DataAttributePresenter;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class TrackerNewDropdownLinkPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerNewDropdownLinkPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuild(): void
     {
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'        => 102,
-                    'getSubmitUrl' => '/path/to/102',
-                    'getItemName'  => 'bug',
-                ]
-            )
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->withId(102)->withShortName('bug')->build();
 
         $builder   = new TrackerNewDropdownLinkPresenterBuilder();
         $presenter = $builder->build($tracker);
 
         self::assertEquals('New bug', $presenter->label);
-        self::assertEquals('/path/to/102', $presenter->url);
+        self::assertEquals('/plugins/tracker/?tracker=102&func=new-artifact', $presenter->url);
         self::assertEquals('fa-plus', $presenter->icon);
         self::assertCount(1, $presenter->data_attributes);
         self::assertEquals('tracker-id', $presenter->data_attributes[0]->name);
@@ -55,15 +44,7 @@ class TrackerNewDropdownLinkPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBuildWithAdditionalDataAttributes(): void
     {
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'        => 102,
-                    'getSubmitUrl' => '/path/to/102',
-                    'getItemName'  => 'bug',
-                ]
-            )
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->withId(102)->withShortName('bug')->build();
 
         $builder   = new TrackerNewDropdownLinkPresenterBuilder();
         $presenter = $builder->buildWithAdditionalDataAttributes(
@@ -72,7 +53,7 @@ class TrackerNewDropdownLinkPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         self::assertEquals('New bug', $presenter->label);
-        self::assertEquals('/path/to/102', $presenter->url);
+        self::assertEquals('/plugins/tracker/?tracker=102&func=new-artifact', $presenter->url);
         self::assertEquals('fa-plus', $presenter->icon);
         self::assertCount(2, $presenter->data_attributes);
         self::assertEquals('tracker-id', $presenter->data_attributes[0]->name);
@@ -83,23 +64,13 @@ class TrackerNewDropdownLinkPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBuildWithAdditionalUrlParameters(): void
     {
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'       => 102,
-                    'getItemName' => 'bug',
-                ]
-            )
-            ->getMock();
-        $tracker->shouldReceive('getSubmitUrlWithParameters')
-            ->with(['link-to-milestone' => '1'])
-            ->andReturn('/path/to/102?link-to-milestone=1');
+        $tracker = TrackerTestBuilder::aTracker()->withId(102)->withShortName('bug')->build();
 
         $builder   = new TrackerNewDropdownLinkPresenterBuilder();
         $presenter = $builder->buildWithAdditionalUrlParameters($tracker, ['link-to-milestone' => 1]);
 
         self::assertEquals('New bug', $presenter->label);
-        self::assertEquals('/path/to/102?link-to-milestone=1', $presenter->url);
+        self::assertEquals('/plugins/tracker/?tracker=102&func=new-artifact&link-to-milestone=1', $presenter->url);
         self::assertEquals('fa-plus', $presenter->icon);
         self::assertCount(1, $presenter->data_attributes);
         self::assertEquals('tracker-id', $presenter->data_attributes[0]->name);

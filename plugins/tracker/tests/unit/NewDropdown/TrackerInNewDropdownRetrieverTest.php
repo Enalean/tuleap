@@ -22,74 +22,54 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\NewDropdown;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use TrackerFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\PromotedTrackersRetriever;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class TrackerInNewDropdownRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerInNewDropdownRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PromotedTrackerDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var PromotedTrackersRetriever
-     */
-    private $retriever;
+    private PromotedTrackerDao&MockObject $dao;
+    private TrackerFactory&MockObject $tracker_factory;
+    private PromotedTrackersRetriever $retriever;
 
     protected function setUp(): void
     {
-        $this->dao             = Mockery::mock(PromotedTrackerDao::class);
-        $this->tracker_factory = Mockery::mock(TrackerFactory::class);
+        $this->dao             = $this->createMock(PromotedTrackerDao::class);
+        $this->tracker_factory = $this->createMock(TrackerFactory::class);
 
         $this->retriever = new PromotedTrackersRetriever($this->dao, $this->tracker_factory);
     }
 
     public function testItReturnsTrackersUserCanSubmit(): void
     {
-        $this->dao->shouldReceive('searchByProjectId')
+        $this->dao->method('searchByProjectId')
             ->with(101)
-            ->andReturn([
+            ->willReturn([
                 ['id' => 123],
                 ['id' => 124],
                 ['id' => 125],
             ]);
 
-        $tracker_123 = $this->aTracker(123, true);
-        $tracker_124 = $this->aTracker(124, false);
-        $tracker_125 = $this->aTracker(125, true);
+        $tracker_123 = TrackerTestBuilder::aTracker()->withId(123)->withUserCanSubmit(true)->build();
+        $tracker_124 = TrackerTestBuilder::aTracker()->withId(124)->withUserCanSubmit(false)->build();
+        $tracker_125 = TrackerTestBuilder::aTracker()->withId(125)->withUserCanSubmit(true)->build();
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive(['getID' => 101]);
+        $this->tracker_factory
+            ->method('getInstanceFromRow')
+            ->willReturnCallback(static fn (array $row) => match ($row) {
+                ['id' => 123] => $tracker_123,
+                ['id' => 124] => $tracker_124,
+                ['id' => 125] => $tracker_125,
+            });
 
-        $trackers = $this->retriever->getTrackers(Mockery::mock(\PFUser::class), $project);
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $trackers = $this->retriever->getTrackers($this->createMock(\PFUser::class), $project);
         $this->assertContains($tracker_123, $trackers);
         $this->assertNotContains($tracker_124, $trackers);
         $this->assertContains($tracker_125, $trackers);
-    }
-
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker
-     */
-    private function aTracker(int $id, bool $user_can_submit_artifact)
-    {
-        $tracker = Mockery::mock(\Tracker::class);
-
-        $tracker->shouldReceive(['getId' => $id, 'userCanSubmitArtifact' => $user_can_submit_artifact]);
-
-        $this->tracker_factory
-            ->shouldReceive('getInstanceFromRow')
-            ->with(['id' => $id])
-            ->andReturn($tracker);
-
-        return $tracker;
     }
 }

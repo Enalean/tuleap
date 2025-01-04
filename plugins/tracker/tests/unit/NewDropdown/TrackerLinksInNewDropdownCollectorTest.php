@@ -22,84 +22,67 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\NewDropdown;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\NewDropdown\DataAttributePresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
 
 final class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCollectsLinksForTrackers(): void
     {
-        $bug_tracker   = Mockery::mock(\Tracker::class)
-            ->shouldReceive([
-                'getId' => 102,
-                'getItemName' => 'bug',
-                'getSubmitUrl' => '/path/to/submit/bugs',
-            ])
-            ->getMock();
-        $story_tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive([
-                'getId' => 103,
-                'getItemName' => 'story',
-                'getSubmitUrl' => '/path/to/submit/story',
-            ])
-            ->getMock();
+        $bug_tracker   = TrackerTestBuilder::aTracker()->withId(102)->build();
+        $story_tracker = TrackerTestBuilder::aTracker()->withId(103)->build();
 
         $retriever = RetrievePromotedTrackersStub::withTrackers($bug_tracker, $story_tracker);
 
-        $links_collector = Mockery::spy(NewDropdownProjectLinksCollector::class);
-        $links_collector
-            ->shouldReceive('addCurrentProjectLink')
-            ->twice();
+        $links_collector = new NewDropdownProjectLinksCollector(
+            UserTestBuilder::buildWithDefaults(),
+            ProjectTestBuilder::aProject()->build(),
+            null,
+        );
+
+        self::assertSame([], $links_collector->getCurrentProjectLinks());
 
         $collector = new TrackerLinksInNewDropdownCollector($retriever, new TrackerNewDropdownLinkPresenterBuilder());
         $collector->collect($links_collector);
+
+        $links = $links_collector->getCurrentProjectLinks();
+        self::assertCount(2, $links);
+        self::assertSame('/plugins/tracker/?tracker=102&func=new-artifact', $links[0]->url);
+        self::assertSame('/plugins/tracker/?tracker=103&func=new-artifact', $links[1]->url);
     }
 
     public function testItOmitsTrackersThatAreAlreadyInTheCurrentContextSection(): void
     {
-        $bug_tracker   = Mockery::mock(\Tracker::class)
-            ->shouldReceive([
-                'getId' => 102,
-                'getItemName' => 'bug',
-                'getSubmitUrl' => '/path/to/submit/bugs',
-            ])
-            ->getMock();
-        $story_tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive([
-                'getId' => 103,
-                'getItemName' => 'story',
-                'getSubmitUrl' => '/path/to/submit/story',
-            ])
-            ->getMock();
+        $bug_tracker   = TrackerTestBuilder::aTracker()->withId(102)->build();
+        $story_tracker = TrackerTestBuilder::aTracker()->withId(103)->build();
 
         $retriever = RetrievePromotedTrackersStub::withTrackers($bug_tracker, $story_tracker);
 
-        $links_collector = Mockery::spy(NewDropdownProjectLinksCollector::class);
-        $links_collector
-            ->shouldReceive('addCurrentProjectLink')
-            ->once();
+        $links_collector = new NewDropdownProjectLinksCollector(
+            UserTestBuilder::buildWithDefaults(),
+            ProjectTestBuilder::aProject()->build(),
+            new NewDropdownLinkSectionPresenter('section label', [
+                new \Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter(
+                    '/path/to/submit/story',
+                    'New story',
+                    'fa-plus',
+                    [new DataAttributePresenter('tracker-id', '103')],
+                ),
+            ]),
+        );
 
-        $current_context_section = new NewDropdownLinkSectionPresenter('section label', [
-            new \Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter(
-                '/path/to/submit/story',
-                'New story',
-                'fa-plus',
-                [new DataAttributePresenter('tracker-id', '103')],
-            ),
-        ]);
-
-        $links_collector
-            ->shouldReceive('getCurrentContextSection')
-            ->once()
-            ->andReturn($current_context_section);
+        self::assertSame([], $links_collector->getCurrentProjectLinks());
 
         $collector = new TrackerLinksInNewDropdownCollector($retriever, new TrackerNewDropdownLinkPresenterBuilder());
         $collector->collect($links_collector);
+
+        $links = $links_collector->getCurrentProjectLinks();
+        self::assertCount(1, $links);
+        self::assertSame('/plugins/tracker/?tracker=102&func=new-artifact', $links[0]->url);
     }
 }
