@@ -20,78 +20,98 @@
 
 namespace Tuleap\Tracker\Admin;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ArtifactLinksUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Project
-     */
-    private $template;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinksUsageDao
-     */
-    private $dao;
-    /**
-     * @var ArtifactLinksUsageDuplicator
-     */
-    private $duplicator;
+    private ArtifactLinksUsageDao&MockObject $dao;
+    private ArtifactLinksUsageDuplicator $duplicator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao        = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
+        $this->dao        = $this->createMock(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->duplicator = new ArtifactLinksUsageDuplicator($this->dao);
-
-        $this->template = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
-        $this->project  = \Mockery::spy(\Project::class, ['getID' => 102, 'getUserName' => false, 'isPublic' => false]);
     }
 
     public function testItActivatesTheArtifactLinkTypesIfTemplateAlreadyUseThem(): void
     {
-        $this->dao->shouldReceive('isProjectUsingArtifactLinkTypes')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('duplicate')->with(101, 102)->once();
+        $template = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withAccessPrivate()
+            ->withUsedService('plugin_tracker')
+            ->build();
+        $project  = ProjectTestBuilder::aProject()
+            ->withId(102)
+            ->withAccessPrivate()
+            ->withUsedService('plugin_tracker')
+            ->build();
 
-        $this->duplicator->duplicate($this->template, $this->project);
+        $this->dao->method('isProjectUsingArtifactLinkTypes')->with(101)->willReturn(true);
+        $this->dao->expects(self::once())->method('duplicate')->with(101, 102);
+
+        $this->duplicator->duplicate($template, $project);
     }
 
     public function testItActivatesTheArtifactLinkTypesIfTemplateDoesNotUseTrackerServiceAndNewProjectUseIt(): void
     {
-        $this->dao->shouldReceive('isProjectUsingArtifactLinkTypes')->with(101)->andReturns(false);
-        $this->template->shouldReceive('usesService')->with('plugin_tracker')->andReturns(false);
-        $this->project->shouldReceive('usesService')->with('plugin_tracker')->andReturns(true);
+        $template = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withAccessPrivate()
+            ->withoutServices()
+            ->build();
+        $project  = ProjectTestBuilder::aProject()
+            ->withId(102)
+            ->withAccessPrivate()
+            ->withUsedService('plugin_tracker')
+            ->build();
 
-        $this->dao->shouldReceive('duplicate')->with(101, 102)->once();
+        $this->dao->method('isProjectUsingArtifactLinkTypes')->with(101)->willReturn(false);
 
-        $this->duplicator->duplicate($this->template, $this->project);
+        $this->dao->expects(self::once())->method('duplicate')->with(101, 102);
+
+        $this->duplicator->duplicate($template, $project);
     }
 
     public function testItDoesNotActivateTheArtifactLinkTypesIfTemplateDoesNotUseIt(): void
     {
-        $this->dao->shouldReceive('isProjectUsingArtifactLinkTypes')->with(101)->andReturns(false);
-        $this->template->shouldReceive('usesService')->with('plugin_tracker')->andReturns(true);
-        $this->project->shouldReceive('usesService')->with('plugin_tracker')->andReturns(true);
+        $template = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withAccessPrivate()
+            ->withUsedService('plugin_tracker')
+            ->build();
+        $project  = ProjectTestBuilder::aProject()
+            ->withId(102)
+            ->withAccessPrivate()
+            ->withUsedService('plugin_tracker')
+            ->build();
 
-        $this->dao->shouldReceive('duplicate')->with(101, 102)->never();
+        $this->dao->method('isProjectUsingArtifactLinkTypes')->with(101)->willReturn(false);
 
-        $this->duplicator->duplicate($this->template, $this->project);
+        $this->dao->expects(self::never())->method('duplicate')->with(101, 102);
+
+        $this->duplicator->duplicate($template, $project);
     }
 
     public function testItDoesNotActivateTheArtifactLinkTypesIfTemplateAndNewProjectDoesNotUseTheService(): void
     {
-        $this->dao->shouldReceive('isProjectUsingArtifactLinkTypes')->with(101)->andReturns(false);
-        $this->template->shouldReceive('usesService')->with('plugin_tracker')->andReturns(false);
-        $this->project->shouldReceive('usesService')->with('plugin_tracker')->andReturns(false);
+        $template = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withAccessPrivate()
+            ->withoutServices()
+            ->build();
+        $project  = ProjectTestBuilder::aProject()
+            ->withId(102)
+            ->withAccessPrivate()
+            ->withoutServices()
+            ->build();
 
-        $this->dao->shouldReceive('duplicate')->with(101, 102)->never();
+        $this->dao->method('isProjectUsingArtifactLinkTypes')->with(101)->willReturn(false);
 
-        $this->duplicator->duplicate($this->template, $this->project);
+        $this->dao->expects(self::never())->method('duplicate')->with(101, 102);
+
+        $this->duplicator->duplicate($template, $project);
     }
 }

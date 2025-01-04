@@ -23,30 +23,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReferenceManager;
+use TrackerFactory;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
-class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TrackerGeneralSettingsChecker
-     */
-    private $checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
+    private TrackerGeneralSettingsChecker $checker;
+    private ReferenceManager&MockObject $reference_manager;
+    private TrackerFactory&MockObject $tracker_factory;
 
     protected function setUp(): void
     {
-        $this->tracker_factory   = \Mockery::mock(\TrackerFactory::class);
-        $this->reference_manager = \Mockery::mock(\ReferenceManager::class);
+        $this->tracker_factory   = $this->createMock(\TrackerFactory::class);
+        $this->reference_manager = $this->createMock(\ReferenceManager::class);
         $this->checker           = new TrackerGeneralSettingsChecker($this->tracker_factory, $this->reference_manager);
     }
 
@@ -80,11 +71,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $validated_tracker_color = 'inca-silver';
         $validated_short_name    = 'bugs_renamed';
 
-        $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
+        $this->tracker_factory->method('isNameExists')->willReturn(false);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
 
-        $this->reference_manager->shouldReceive('checkKeyword')->andReturn(true);
-        $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(false);
+        $this->reference_manager->method('checkKeyword')->willReturn(true);
+        $this->reference_manager->method('_isKeywordExists')->willReturn(false);
 
         $this->checker->check(
             $project_id,
@@ -170,7 +161,7 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $validated_tracker_color = 'inca-silver';
         $validated_short_name    = 'bugs';
 
-        $this->tracker_factory->shouldReceive('isNameExists')->andReturn(true);
+        $this->tracker_factory->method('isNameExists')->willReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker name New bugs is already used. Please use another one.');
 
@@ -193,7 +184,7 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $validated_tracker_color = 'inca-silver';
         $validated_short_name    = '+++bugs+++';
 
-        $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
+        $this->tracker_factory->method('isNameExists')->willReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage(
             'Invalid short name: +++bugs+++. Please use only alphanumerical characters or an unreserved reference.'
@@ -218,8 +209,8 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $validated_tracker_color = 'inca-silver';
         $validated_short_name    = 'new_bugs';
 
-        $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(true);
+        $this->tracker_factory->method('isNameExists')->willReturn(false);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker short name new_bugs is already used. Please use another one.');
 
@@ -242,10 +233,10 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $validated_tracker_color = 'inca-silver';
         $validated_short_name    = 'new-bugs';
 
-        $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
+        $this->tracker_factory->method('isNameExists')->willReturn(false);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
 
-        $this->reference_manager->shouldReceive('checkKeyword')->andReturn(false);
+        $this->reference_manager->method('checkKeyword')->willReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage(
             'Invalid short name: new-bugs. Please use only alphanumerical characters or an unreserved reference.'
@@ -270,11 +261,11 @@ class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $validated_tracker_color = 'inca-silver';
         $validated_short_name    = 'new_bugs';
 
-        $this->tracker_factory->shouldReceive('isNameExists')->andReturn(false);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
+        $this->tracker_factory->method('isNameExists')->willReturn(false);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
 
-        $this->reference_manager->shouldReceive('checkKeyword')->andReturn(true);
-        $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(true);
+        $this->reference_manager->method('checkKeyword')->willReturn(true);
+        $this->reference_manager->method('_isKeywordExists')->willReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker short name new_bugs is already used. Please use another one.');
 

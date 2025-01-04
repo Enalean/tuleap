@@ -22,63 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use CSRFSynchronizerToken;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectHistoryDao;
 use ProjectManager;
 use TrackerFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
 
-class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PromotedTrackerDao
-     */
-    private $in_new_dropdown_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CSRFSynchronizerTokenProvider
-     */
-    private $token_provider;
-    /**
-     * @var PromoteTrackersController
-     */
-    private $controller;
-    /**
-     * @var \CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $csrf;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectHistoryDao
-     */
-    private $history_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GlobalAdminPermissionsChecker
-     */
-    private $perms_checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private TrackerFactory&MockObject $tracker_factory;
+    private PromotedTrackerDao&MockObject $in_new_dropdown_dao;
+    private CSRFSynchronizerTokenProvider&MockObject $token_provider;
+    private PromoteTrackersController $controller;
+    private CSRFSynchronizerToken&MockObject $csrf;
+    private ProjectHistoryDao&MockObject $history_dao;
+    private GlobalAdminPermissionsChecker&MockObject $perms_checker;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $project_manager           = Mockery::mock(ProjectManager::class);
-        $this->perms_checker       = Mockery::mock(GlobalAdminPermissionsChecker::class);
-        $this->tracker_factory     = Mockery::mock(TrackerFactory::class);
-        $this->in_new_dropdown_dao = Mockery::mock(PromotedTrackerDao::class);
-        $this->token_provider      = Mockery::mock(CSRFSynchronizerTokenProvider::class);
-        $this->history_dao         = Mockery::mock(\ProjectHistoryDao::class);
+        $project_manager           = $this->createMock(ProjectManager::class);
+        $this->perms_checker       = $this->createMock(GlobalAdminPermissionsChecker::class);
+        $this->tracker_factory     = $this->createMock(TrackerFactory::class);
+        $this->in_new_dropdown_dao = $this->createMock(PromotedTrackerDao::class);
+        $this->token_provider      = $this->createMock(CSRFSynchronizerTokenProvider::class);
+        $this->history_dao         = $this->createMock(\ProjectHistoryDao::class);
 
         $this->controller = new PromoteTrackersController(
             $project_manager,
@@ -90,30 +68,28 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $project = Mockery::mock(\Project::class)
-            ->shouldReceive(['getID' => 102])
-            ->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $project_manager->shouldReceive('getProject')->with('102')->andReturn($project);
+        $project_manager->method('getProject')->with('102')->willReturn($project);
 
-        $this->csrf = Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->token_provider->shouldReceive('getCSRF')->andReturn($this->csrf);
+        $this->csrf = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->token_provider->method('getCSRF')->willReturn($this->csrf);
     }
 
     public function testItRaisesExceptionIfUserHasNoRights(): void
     {
         $this->perms_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
-            ->once()
-            ->andReturn(false);
+            ->expects($this->once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -121,19 +97,19 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfTrackerDoesNotExists(): void
     {
         $this->perms_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
-            ->once()
-            ->andReturn(true);
+            ->expects($this->once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->willReturn(true);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects($this->once())
+            ->method('check');
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->expects($this->once())
+            ->method('getTrackerById')
             ->with(13)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(ForbiddenException::class);
 
@@ -142,7 +118,7 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withParam('tracker_id', '13')
                 ->withUser($this->user)
                 ->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -150,22 +126,20 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfTrackerIsDeleted(): void
     {
         $this->perms_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
-            ->once()
-            ->andReturn(true);
+            ->expects($this->once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->willReturn(true);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects($this->once())
+            ->method('check');
 
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive(['isDeleted' => true])
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->withDeletionDate(1234567890)->build();
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->expects($this->once())
+            ->method('getTrackerById')
             ->with(13)
-            ->once()
-            ->andReturn($tracker);
+            ->willReturn($tracker);
 
         $this->expectException(ForbiddenException::class);
 
@@ -174,7 +148,7 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withParam('tracker_id', '13')
                 ->withUser($this->user)
                 ->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -182,22 +156,19 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfTrackerBelongsToAnotherProject(): void
     {
         $this->perms_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
-            ->once()
-            ->andReturn(true);
+            ->expects($this->once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->willReturn(true);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects($this->once())
+            ->method('check');
 
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive(['isDeleted' => false, 'getGroupId' => 101])
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->build();
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->method('getTrackerById')
             ->with(13)
-            ->once()
-            ->andReturn($tracker);
+            ->willReturn($tracker);
 
         $this->expectException(ForbiddenException::class);
 
@@ -206,7 +177,7 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withParam('tracker_id', '13')
                 ->withUser($this->user)
                 ->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -214,35 +185,36 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItPromotesTheTracker(): void
     {
         $this->perms_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
-            ->once()
-            ->andReturn(true);
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->willReturn(true);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects($this->once())
+            ->method('check');
 
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive(['isDeleted' => false, 'getGroupId' => 102, 'getId' => 13, 'getName' => 'Bugs'])
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(102)->build())
+            ->withId(13)
+            ->build();
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->expects($this->once())
+            ->method('getTrackerById')
             ->with(13)
-            ->once()
-            ->andReturn($tracker);
+            ->willReturn($tracker);
 
         $this->in_new_dropdown_dao
-            ->shouldReceive('insert')
-            ->with(13)
-            ->once();
+            ->expects($this->once())
+            ->method('insert')
+            ->with(13);
 
         $this->history_dao
-            ->shouldReceive('groupAddHistory')
-            ->once();
+            ->expects($this->once())
+            ->method('groupAddHistory');
 
-        $layout = Mockery::mock(BaseLayout::class);
-        $layout->shouldReceive('addFeedback');
-        $layout->shouldReceive('redirect');
+        $layout = $this->createMock(BaseLayout::class);
+        $layout->method('addFeedback');
+        $layout->method('redirect');
 
         $this->controller->process(
             HTTPRequestBuilder::get()
@@ -258,35 +230,36 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesPromotion(): void
     {
         $this->perms_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
-            ->once()
-            ->andReturn(true);
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->willReturn(true);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects($this->once())
+            ->method('check');
 
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive(['isDeleted' => false, 'getGroupId' => 102, 'getId' => 13, 'getName' => 'Bugs'])
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(102)->build())
+            ->withId(13)
+            ->build();
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->expects(self::once())
+            ->method('getTrackerById')
             ->with(13)
-            ->once()
-            ->andReturn($tracker);
+            ->willReturn($tracker);
 
         $this->in_new_dropdown_dao
-            ->shouldReceive('delete')
-            ->with(13)
-            ->once();
+            ->expects($this->once())
+            ->method('delete')
+            ->with(13);
 
         $this->history_dao
-            ->shouldReceive('groupAddHistory')
-            ->once();
+            ->expects($this->once())
+            ->method('groupAddHistory');
 
-        $layout = Mockery::mock(BaseLayout::class);
-        $layout->shouldReceive('addFeedback');
-        $layout->shouldReceive('redirect');
+        $layout = $this->createMock(BaseLayout::class);
+        $layout->method('addFeedback');
+        $layout->method('redirect');
 
         $this->controller->process(
             HTTPRequestBuilder::get()
