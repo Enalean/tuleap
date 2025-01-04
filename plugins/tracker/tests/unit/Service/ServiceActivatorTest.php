@@ -20,193 +20,208 @@
 
 namespace Tuleap\Tracker\Service;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use Service;
+use ServiceManager;
+use TrackerV3;
 use Tuleap\Project\ProjectCreationData;
+use Tuleap\Service\ServiceCreator;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ServiceActivatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private ServiceActivator $activator;
-    /**
-     * @var \Project&\Mockery\MockInterface
-     */
-    private $template;
-    private $tracker_core_service;
-    private $tracker_plugin_service;
+    private Project $template;
+    private Service&MockObject $tracker_core_service;
+    private Service&MockObject $tracker_plugin_service;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectCreationData
-     */
-    private $project_creation_data;
-    private $tracker_v3;
-    private $service_manager;
-    private $service_creator;
+    private ProjectCreationData&MockObject $project_creation_data;
+    private TrackerV3&MockObject $tracker_v3;
+    private ServiceManager&MockObject $service_manager;
+    private ServiceCreator&MockObject $service_creator;
     private array $params;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->tracker_v3      = \Mockery::spy(\TrackerV3::class);
-        $this->service_manager = \Mockery::spy(\ServiceManager::class);
-        $this->service_creator = \Mockery::spy(\Tuleap\Service\ServiceCreator::class);
+        $this->tracker_v3      = $this->createMock(TrackerV3::class);
+        $this->service_manager = $this->createMock(ServiceManager::class);
+        $this->service_creator = $this->createMock(ServiceCreator::class);
         $this->activator       = new ServiceActivator($this->service_manager, $this->tracker_v3, $this->service_creator);
 
-        $this->template              = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
-        $this->project_creation_data = \Mockery::spy(ProjectCreationData::class);
+        $this->template              = ProjectTestBuilder::aProject()->withId(101)->withAccessPrivate()->build();
+        $this->project_creation_data = $this->createMock(ProjectCreationData::class);
 
         $this->params = [
             'template'              => $this->template,
             'project_creation_data' => $this->project_creation_data,
         ];
 
-        $this->tracker_core_service   = \Mockery::mock(Service::class, ['getId' => 101]);
-        $this->tracker_plugin_service = \Mockery::mock(Service::class, ['getId' => 106]);
+        $this->tracker_core_service   = $this->createMock(Service::class);
+        $this->tracker_plugin_service = $this->createMock(Service::class);
 
-        $this->tracker_core_service->shouldReceive('getShortName')->andReturns('tracker');
-        $this->tracker_plugin_service->shouldReceive('getShortName')->andReturns('plugin_tracker');
+        $this->tracker_core_service->method('getId')->willReturn(101);
+        $this->tracker_plugin_service->method('getId')->willReturn(106);
+
+        $this->tracker_core_service->method('getShortName')->willReturn('tracker');
+        $this->tracker_plugin_service->method('getShortName')->willReturn('plugin_tracker');
     }
 
     public function testItActivatesPluginInsteadOfLegacyService(): void
     {
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($this->template)->willReturn([$this->tracker_core_service, $this->tracker_plugin_service]);
 
-        $this->tracker_v3->shouldReceive('available')->andReturns(true);
-        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(true);
-        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
-        $this->project_creation_data->shouldReceive('projectShouldInheritFromTemplate')->andReturns(true);
+        $this->tracker_v3->method('available')->willReturn(true);
+        $this->tracker_core_service->method('isUsed')->willReturn(true);
+        $this->tracker_plugin_service->method('isUsed')->willReturn(false);
+        $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->project_creation_data->shouldReceive('unsetProjectServiceUsage')->with(101)->once();
-        $this->project_creation_data->shouldReceive('forceServiceUsage')->with(106)->once();
+        $this->project_creation_data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
+        $this->project_creation_data->expects(self::once())->method('forceServiceUsage')->with(106);
 
         $this->activator->unuseLegacyService($this->params);
     }
 
     public function testItActivatesOnlyPluginWhenBothServicesAreActivatedIntoTemplate(): void
     {
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($this->template)->willReturn([$this->tracker_core_service, $this->tracker_plugin_service]);
 
-        $this->tracker_v3->shouldReceive('available')->andReturns(true);
-        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(true);
-        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(true);
-        $this->project_creation_data->shouldReceive('projectShouldInheritFromTemplate')->andReturns(true);
+        $this->tracker_v3->method('available')->willReturn(true);
+        $this->tracker_core_service->method('isUsed')->willReturn(true);
+        $this->tracker_plugin_service->method('isUsed')->willReturn(true);
+        $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->project_creation_data->shouldReceive('unsetProjectServiceUsage')->with(101)->once();
-        $this->project_creation_data->shouldReceive('forceServiceUsage')->with(106)->once();
+        $this->project_creation_data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
+        $this->project_creation_data->expects(self::once())->method('forceServiceUsage')->with(106);
 
         $this->activator->unuseLegacyService($this->params);
     }
 
     public function testItDoesNotActivatePluginIfBothSVNServicesAreNotActivatedIntoTemplate(): void
     {
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($this->template)->willReturn([$this->tracker_core_service, $this->tracker_plugin_service]);
 
-        $this->tracker_v3->shouldReceive('available')->andReturns(true);
-        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(false);
-        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
-        $this->project_creation_data->shouldReceive('projectShouldInheritFromTemplate')->andReturns(true);
+        $this->tracker_v3->method('available')->willReturn(true);
+        $this->tracker_core_service->method('isUsed')->willReturn(false);
+        $this->tracker_plugin_service->method('isUsed')->willReturn(false);
+        $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->project_creation_data->shouldReceive('unsetProjectServiceUsage')->with(101)->once();
-        $this->project_creation_data->shouldReceive('forceServiceUsage')->never();
+        $this->project_creation_data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
+        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
 
     public function testItDoesNothingIfServicesAreNotInheritedFromTemplate(): void
     {
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($this->template)->willReturn([$this->tracker_core_service, $this->tracker_plugin_service]);
 
-        $this->tracker_v3->shouldReceive('available')->andReturns(true);
-        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(false);
-        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
-        $this->project_creation_data->shouldReceive('projectShouldInheritFromTemplate')->andReturns(false);
+        $this->tracker_v3->method('available')->willReturn(true);
+        $this->tracker_core_service->method('isUsed')->willReturn(false);
+        $this->tracker_plugin_service->method('isUsed')->willReturn(false);
+        $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(false);
 
-        $this->project_creation_data->shouldReceive('unsetProjectServiceUsage')->never();
-        $this->project_creation_data->shouldReceive('forceServiceUsage')->never();
+        $this->project_creation_data->expects(self::never())->method('unsetProjectServiceUsage');
+        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
 
     public function testItDoesNothingIfTrackerV3AreNotAvailable(): void
     {
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($this->template)->willReturn([$this->tracker_core_service, $this->tracker_plugin_service]);
 
-        $this->tracker_v3->shouldReceive('available')->andReturns(false);
+        $this->tracker_v3->method('available')->willReturn(false);
 
-        $this->project_creation_data->shouldReceive('unsetProjectServiceUsage')->never();
-        $this->project_creation_data->shouldReceive('forceServiceUsage')->never();
+        $this->project_creation_data->expects(self::never())->method('unsetProjectServiceUsage');
+        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
+        $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(false);
 
         $this->activator->unuseLegacyService($this->params);
     }
 
     public function testItCreatesThePluginServiceIfNotAvailableInTemplate(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUserName' => false, 'isPublic' => false]);
+        $project = ProjectTestBuilder::aProject()->withId(106)->withAccessPrivate()->build();
         $legacy  = [Service::TRACKERV3 => false];
 
-        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(false);
-        $this->tracker_core_service->shouldReceive('isActive')->andReturn(false);
-        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
-        $this->tracker_plugin_service->shouldReceive('isActive')->andReturn(false);
+        $this->tracker_core_service->method('isUsed')->willReturn(false);
+        $this->tracker_core_service->method('isActive')->willReturn(false);
+        $this->tracker_plugin_service->method('isUsed')->willReturn(false);
+        $this->tracker_plugin_service->method('isActive')->willReturn(false);
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($project)->andReturns([]);
+        $this->service_manager
+            ->method('getListOfAllowedServicesForProject')
+            ->willReturnCallback(fn (Project $project) => match ($project) {
+                $this->template => [$this->tracker_core_service, $this->tracker_plugin_service],
+                $project        => [],
+            });
 
-        $this->service_creator->shouldReceive('createService')->once();
+        $this->service_creator->expects(self::once())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
 
     public function testItDoesNotCreateServiceIfPreviouslyCreated(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUserName' => false, 'isPublic' => false]);
+        $project = ProjectTestBuilder::aProject()->withId(106)->withAccessPrivate()->build();
         $legacy  = [Service::TRACKERV3 => false];
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($project)->andReturns([$this->tracker_plugin_service]);
+        $this->service_manager
+            ->method('getListOfAllowedServicesForProject')
+            ->willReturnCallback(fn (Project $project) => match ($project) {
+                $this->template => [$this->tracker_core_service, $this->tracker_plugin_service],
+                $project        => [$this->tracker_plugin_service],
+            });
 
-        $this->service_creator->shouldReceive('createService')->never();
+        $this->service_creator->expects(self::never())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
 
     public function testItDoesNotCreateServiceIfLegacyMustBeUsed(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUserName' => false, 'isPublic' => false]);
+        $project = ProjectTestBuilder::aProject()->withId(106)->withAccessPrivate()->build();
         $legacy  = [Service::TRACKERV3 => true];
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($project)->andReturns([]);
+        $this->service_manager
+            ->method('getListOfAllowedServicesForProject')
+            ->willReturnCallback(fn (Project $project) => match ($project) {
+                $this->template => [$this->tracker_core_service, $this->tracker_plugin_service],
+                $project        => [],
+            });
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($project)->willReturn([]);
 
-        $this->service_creator->shouldReceive('createService')->never();
+        $this->service_creator->expects(self::never())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
 
     public function testItUnsetsLegacyServiceEvenIfItsTheOnlyTrackerServiceInTemplate(): void
     {
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($this->template)->willReturn([$this->tracker_core_service]);
 
-        $this->tracker_v3->shouldReceive('available')->andReturns(true);
-        $this->project_creation_data->shouldReceive('projectShouldInheritFromTemplate')->andReturns(true);
+        $this->tracker_v3->method('available')->willReturn(true);
+        $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->project_creation_data->shouldReceive('unsetProjectServiceUsage')->with(101)->once();
-        $this->project_creation_data->shouldReceive('forceServiceUsage')->never();
+        $this->project_creation_data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
+        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
 
     public function testItDoesNothingIfTrackerPluginIsTheOnlyTrackerServiceInTemplate(): void
     {
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_plugin_service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($this->template)->willReturn([$this->tracker_plugin_service]);
 
-        $this->tracker_v3->shouldReceive('available')->andReturns(true);
-        $this->project_creation_data->shouldReceive('projectShouldInheritFromTemplate')->andReturns(true);
+        $this->tracker_v3->method('available')->willReturn(true);
+        $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->project_creation_data->shouldReceive('unsetProjectServiceUsage')->never();
-        $this->project_creation_data->shouldReceive('forceServiceUsage')->never();
+        $this->project_creation_data->expects(self::never())->method('unsetProjectServiceUsage');
+        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
