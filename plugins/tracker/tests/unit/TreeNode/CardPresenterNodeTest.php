@@ -18,18 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class Tracker_TreeNode_CardPresenterNodeTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_TreeNode_CardPresenterNodeTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItCopiesAllPropertiesOfTheGivenNode(): void
     {
         $node_1 = new TreeNode([], 1);
         $node_2 = new TreeNode([], 2);
 
-        $data['artifact'] = Mockery::mock(Artifact::class);
+        $data['artifact'] = ArtifactTestBuilder::anArtifact(101)->build();
         $tree_node        = new TreeNode($data, 3);
         $tree_node->setChildren([$node_1, $node_2]);
         $tree_node->setObject($data['artifact']);
@@ -44,13 +42,13 @@ class Tracker_TreeNode_CardPresenterNodeTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItHoldsTheGivenPresenter(): void
     {
-        $presenter      = Mockery::mock(Tracker_CardPresenter::class);
+        $presenter      = $this->createMock(Tracker_CardPresenter::class);
         $presenter_node = new Tracker_TreeNode_CardPresenterNode(new TreeNode(), $presenter);
         $this->assertEquals($presenter_node->getCardPresenter(), $presenter);
     }
 
     private function newNode(TreeNode $tree_node): Tracker_TreeNode_CardPresenterNode
     {
-        return new Tracker_TreeNode_CardPresenterNode($tree_node, Mockery::mock(Tracker_CardPresenter::class));
+        return new Tracker_TreeNode_CardPresenterNode($tree_node, $this->createMock(Tracker_CardPresenter::class));
     }
 }
