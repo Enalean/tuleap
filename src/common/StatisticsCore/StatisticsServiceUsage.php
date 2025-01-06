@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\SVN\Statistic;
+declare(strict_types=1);
 
-use Tuleap\StatisticsCore\FormatStatisticsServiceUsage;
+namespace Tuleap\StatisticsCore;
 
-class ServiceUsageCollector
+final class StatisticsServiceUsage implements \Tuleap\Event\Dispatchable
 {
-    /**
-     * @var ServiceUsageDao
-     */
-    private $dao;
-
-    public function __construct(ServiceUsageDao $dao)
-    {
-        $this->dao = $dao;
-    }
-
-    public function collect(FormatStatisticsServiceUsage $formatter, $start_date, $end_date)
-    {
-        $formatter->buildDatas(
-            $this->dao->searchWriteOperationsByProject($start_date, $end_date),
-            dgettext('tuleap-svn', 'SVN with multiple repositories activities')
-        );
+    public function __construct(
+        public readonly FormatStatisticsServiceUsage $csv_exporter,
+        public readonly string $start_date,
+        public readonly string $end_date,
+    ) {
     }
 }

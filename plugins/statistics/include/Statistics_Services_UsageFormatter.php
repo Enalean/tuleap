@@ -20,7 +20,9 @@
  */
 require_once 'Statistics_Formatter.php';
 
-class Statistics_Services_UsageFormatter
+use Tuleap\StatisticsCore\FormatStatisticsServiceUsage;
+
+class Statistics_Services_UsageFormatter implements FormatStatisticsServiceUsage
 {
     /** @var array */
     private $datas;
@@ -59,7 +61,7 @@ class Statistics_Services_UsageFormatter
      * Build CSV datas from SQL queries results to export them in a file
      * @param array|\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $query_result
      */
-    public function buildDatas($query_result, string $title)
+    public function buildDatas($query_result, string $title): array
     {
         $this->initiateDatas($query_result);
         $this->title[] = $title;

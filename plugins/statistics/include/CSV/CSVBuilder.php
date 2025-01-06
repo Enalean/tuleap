@@ -30,6 +30,7 @@ use Statistics_ServicesUsageDao;
 use TroveCatDao;
 use TroveCatFactory;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
+use Tuleap\StatisticsCore\StatisticsServiceUsage;
 
 class CSVBuilder
 {
