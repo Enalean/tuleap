@@ -27,6 +27,7 @@ import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 vi.mock("@tuleap/tlp-dropdown");
 vi.mock("@/helpers/move-dropdownmenu-in-document-body");
@@ -48,14 +49,34 @@ describe("SectionDropdown", () => {
     }
 
     describe("when the user is allowed to edit the section", () => {
-        it("should display a dropdown menu with a delete item", () => {
+        it.each([
+            ["artifact", ArtifactSectionFactory],
+            ["freetext", FreetextSectionFactory],
+        ])("should display a dropdown menu with a delete item for %s section", (name, factory) => {
+            const wrapper = getWrapper(SectionEditorStub.withEditableSection(), factory.create());
+
+            expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=delete]").exists()).toBe(true);
+        });
+
+        it("should display a dropdown menu with a 'go to artifact' item for artifact section", () => {
             const wrapper = getWrapper(
                 SectionEditorStub.withEditableSection(),
                 ArtifactSectionFactory.create(),
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
-            expect(wrapper.find("[data-test=delete]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=go-to-artifact]").exists()).toBe(true);
+        });
+
+        it("should display a dropdown menu with not a 'go to artifact' item for freetext section", () => {
+            const wrapper = getWrapper(
+                SectionEditorStub.withEditableSection(),
+                FreetextSectionFactory.create(),
+            );
+
+            expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=go-to-artifact]").exists()).toBe(false);
         });
     });
 

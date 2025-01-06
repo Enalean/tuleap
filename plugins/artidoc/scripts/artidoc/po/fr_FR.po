@@ -170,6 +170,9 @@ msgstr "Recharger la page"
 msgid "Remove"
 msgstr "Enlever"
 
+msgid "Remove the section from this document."
+msgstr "Supprimer la section de ce document."
+
 msgid ""
 "Remove the section from this document. Corresponding artifact won't be "
 "deleted."
