@@ -20,39 +20,30 @@
 
 namespace Tuleap\Tracker\Webhook;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var WebhookXMLExporter
-     */
-    private $exporter;
-    /**
-     * @var WebhookFactory&\Mockery\MockInterface
-     */
-    private $webhook_factory;
-    /**
-     * @var \Tracker&\Mockery\MockInterface
-     */
-    private $tracker;
+    private WebhookXMLExporter $exporter;
+    private WebhookFactory&MockObject $webhook_factory;
+    private Tracker $tracker;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->webhook_factory = \Mockery::mock(WebhookFactory::class);
+        $this->webhook_factory = $this->createMock(WebhookFactory::class);
         $this->exporter        = new WebhookXMLExporter($this->webhook_factory);
 
-        $this->tracker = \Mockery::mock(\Tracker::class);
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
     }
 
     public function testItDoesNothingIfNoWebhookDefinedForTracker()
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
-        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->with($this->tracker)->once()->andReturn([]);
+        $this->webhook_factory->expects(self::once())->method('getWebhooksForTracker')->with($this->tracker)->willReturn([]);
 
         $this->exporter->exportTrackerWebhooksInXML($xml, $this->tracker);
 
@@ -62,7 +53,7 @@ class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportWebhooksDefinedForTracker()
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
-        $this->webhook_factory->shouldReceive('getWebhooksForTracker')->with($this->tracker)->once()->andReturn([
+        $this->webhook_factory->expects(self::once())->method('getWebhooksForTracker')->with($this->tracker)->willReturn([
             new Webhook(1, 1, 'https://example.com/01'),
             new Webhook(2, 1, 'https://example.com/02'),
         ]);

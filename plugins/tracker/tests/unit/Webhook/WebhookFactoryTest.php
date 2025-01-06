@@ -20,12 +20,8 @@
 
 namespace Tuleap\Tracker\Webhook;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class WebhookFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var WebhookFactory
      */
@@ -35,10 +31,10 @@ class WebhookFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->factory = new WebhookFactory(\Mockery::mock(WebhookDao::class));
+        $this->factory = new WebhookFactory($this->createMock(WebhookDao::class));
     }
 
-    public function testItCreatesWebhookObjectsFromXMLContent()
+    public function testItCreatesWebhookObjectsFromXMLContent(): void
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
 <webhooks>
