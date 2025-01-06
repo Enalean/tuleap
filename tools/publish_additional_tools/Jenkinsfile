@@ -19,6 +19,11 @@ pipeline {
                 script {
                     actions = load 'sources/tests/actions.groovy'
                     withCredentials([
+                        string(credentialsId: 'tailscale-auth-key', variable: 'TAILSCALE_AUTH_KEY')
+                    ]) {
+                        sh 'sudo tailscale up --accept-dns=false --auth-key="\$TAILSCALE_AUTH_KEY"'
+                    }
+                    withCredentials([
                             usernamePassword(credentialsId: 'vault-role-tuleap-additional-tools-signing', passwordVariable: 'VAULT_SECRET_ID', usernameVariable: 'VAULT_ROLE_ID')
                         ]) {
                             sh '''
@@ -28,12 +33,14 @@ pipeline {
                                 --run 'vault write -field=token auth/approle/login role_id=\$VAULT_ROLE_ID secret_id=\$VAULT_SECRET_ID > ~/.vault-token'
                             '''
                     }
-                    actions.runInsideNixShell('sources/tools/publish_additional_tools/build-additional-tools.sh', 'dev')
+                    dir ('sources') {
+                        actions.runInsideNixShell('tools/publish_additional_tools/build-additional-tools.sh', 'dev')
+                    }
                 }
             }
             post {
                 success {
-                    archiveArtifacts allowEmptyArchive: false, artifacts: 'result-additional-tools/'
+                    archiveArtifacts allowEmptyArchive: false, artifacts: 'sources/result-additional-tools/'
                 }
             }
         }
