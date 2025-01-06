@@ -29,7 +29,13 @@
             <i class="fa-solid fa-ellipsis-vertical fa-fw" role="img"></i>
         </button>
         <div ref="menu" class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
-            <a v-bind:href="artifact_url" class="tlp-dropdown-menu-item" role="menuitem">
+            <a
+                v-bind:href="artifact_url"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+                v-if="isSectionBasedOnArtifact(section)"
+                data-test="go-to-artifact"
+            >
                 <i
                     class="tlp-dropdown-menu-item-icon fa-solid fa-fw fa-arrow-right"
                     aria-hidden="true"
@@ -37,7 +43,11 @@
                 {{ $gettext("Go to artifact") }}
             </a>
             <template v-if="is_section_editable">
-                <span class="tlp-dropdown-menu-separator" role="separator"></span>
+                <span
+                    class="tlp-dropdown-menu-separator"
+                    role="separator"
+                    v-if="isSectionBasedOnArtifact(section)"
+                ></span>
                 <button
                     type="button"
                     v-on:click="onDelete"
@@ -61,7 +71,11 @@
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
+import {
+    isSectionBasedOnArtifact,
+    isPendingArtifactSection,
+    isArtifactSection,
+} from "@/helpers/artidoc-section.type";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { computed, ref, watch } from "vue";
@@ -85,9 +99,9 @@ const artifact_url = computed(() =>
 const trigger = ref<HTMLElement | null>(null);
 const menu = ref<HTMLElement | null>(null);
 
-const remove_title = $gettext(
-    "Remove the section from this document. Corresponding artifact won't be deleted.",
-);
+const remove_title = isSectionBasedOnArtifact(props.section)
+    ? $gettext("Remove the section from this document. Corresponding artifact won't be deleted.")
+    : $gettext("Remove the section from this document.");
 const trigger_title = $gettext("Open contextual menu");
 
 let dropdown: Dropdown | null = null;

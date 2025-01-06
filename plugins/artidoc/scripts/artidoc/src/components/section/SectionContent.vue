@@ -23,7 +23,7 @@
             <section-dropdown
                 v-bind:editor="editor"
                 v-bind:section="section"
-                v-if="!is_sections_loading && isSectionBasedOnArtifact(section)"
+                v-if="!is_sections_loading"
             />
         </div>
 
@@ -64,11 +64,7 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import {
-    isSectionBasedOnArtifact,
-    isPendingArtifactSection,
-    isArtifactSection,
-} from "@/helpers/artidoc-section.type";
+import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
 import SectionHeader from "./header/SectionHeader.vue";
 import SectionDescription from "./description/SectionDescription.vue";
 import { useSectionEditor } from "@/composables/useSectionEditor";
