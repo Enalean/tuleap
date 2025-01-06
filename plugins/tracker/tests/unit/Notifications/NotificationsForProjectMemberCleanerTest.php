@@ -20,14 +20,13 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $project;
-    private $user;
+    private Project $project;
     private $emails_to_notify_manager;
     private $users_to_notify_dao;
     private $unreadable_tracker;
@@ -40,27 +39,19 @@ class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUnit\Test
     protected function setUp(): void
     {
         parent::setUp();
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
-        $this->user    = \Mockery::spy(\PFUser::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->withAccessPrivate()->build();
 
-        $this->user->shouldReceive('getId')->andReturns(107);
-        $this->user->shouldReceive('getEmail')->andReturns('jdoe@example.com');
-        $this->user->shouldReceive('getUserName')->andReturns('jdoe');
+        $this->emails_to_notify_manager = $this->createMock(\Tracker_NotificationsManager::class);
+        $this->factory                  = $this->createMock(\TrackerFactory::class);
+        $this->unreadable_tracker       = $this->createMock(\Tracker::class);
+        $this->readable_tracker         = $this->createMock(\Tracker::class);
 
-        $this->emails_to_notify_manager = \Mockery::spy(\Tracker_NotificationsManager::class);
-        $this->factory                  = \Mockery::spy(\TrackerFactory::class);
-        $this->unreadable_tracker       = \Mockery::spy(\Tracker::class);
-        $this->readable_tracker         = \Mockery::spy(\Tracker::class);
+        $this->unreadable_tracker->method('getId')->willReturn(1);
+        $this->readable_tracker->method('getId')->willReturn(2);
 
-        $this->unreadable_tracker->shouldReceive('getId')->andReturns(1);
-        $this->readable_tracker->shouldReceive('getId')->andReturns(2);
+        $this->factory->method('getTrackersByGroupId')->with(101)->willReturn([$this->unreadable_tracker, $this->readable_tracker]);
 
-        $this->unreadable_tracker->shouldReceive('userCanView')->with($this->user)->andReturns(false);
-        $this->readable_tracker->shouldReceive('userCanView')->with($this->user)->andReturns(true);
-
-        $this->factory->shouldReceive('getTrackersByGroupId')->with(101)->andReturns([$this->unreadable_tracker, $this->readable_tracker]);
-
-        $this->users_to_notify_dao = \Mockery::spy(\Tuleap\Tracker\Notifications\UsersToNotifyDao::class);
+        $this->users_to_notify_dao = $this->createMock(\Tuleap\Tracker\Notifications\UsersToNotifyDao::class);
 
         $this->cleaner = new NotificationsForProjectMemberCleaner(
             $this->factory,
@@ -71,24 +62,40 @@ class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItDoesNotRemoveAnythingIfUserIsStillMemberOfTheProject(): void
     {
-        $this->user->shouldReceive('isMember')->with($this->project->getID())->andReturns(true);
+        $user = UserTestBuilder::aUser()
+            ->withoutSiteAdministrator()
+            ->withMemberOf($this->project)
+            ->build();
 
-        $this->emails_to_notify_manager->shouldReceive('removeAddressByTrackerId')->never();
-        $this->users_to_notify_dao->shouldReceive('deleteByTrackerIdAndUserId')->never();
+        $this->unreadable_tracker->method('userCanView')->with($user)->willReturn(false);
+        $this->readable_tracker->method('userCanView')->with($user)->willReturn(true);
 
-        $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
+        $this->emails_to_notify_manager->expects(self::never())->method('removeAddressByTrackerId');
+        $this->users_to_notify_dao->expects(self::never())->method('deleteByTrackerIdAndUserId');
+
+        $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $user);
     }
 
     public function testItRemovesNotificationForTrackersTheUserCannotAccess(): void
     {
-        $this->user->shouldReceive('isMember')->with($this->project)->andReturns(false);
+        $user = UserTestBuilder::aUser()
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->build();
 
-        $this->emails_to_notify_manager->shouldReceive('removeAddressByTrackerId')->with($this->unreadable_tracker->getId(), $this->user)
-            ->once();
+        $this->unreadable_tracker->method('userCanView')->with($user)->willReturn(false);
+        $this->readable_tracker->method('userCanView')->with($user)->willReturn(true);
 
-        $this->users_to_notify_dao->shouldReceive('deleteByTrackerIdAndUserId')->with($this->unreadable_tracker->getId(), $this->user->getId())
-            ->once();
+        $this->emails_to_notify_manager
+            ->expects(self::once())
+            ->method('removeAddressByTrackerId')
+            ->with($this->unreadable_tracker->getId(), $user);
 
-        $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
+        $this->users_to_notify_dao
+            ->expects(self::once())
+            ->method('deleteByTrackerIdAndUserId')
+            ->with($this->unreadable_tracker->getId(), $user->getId());
+
+        $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $user);
     }
 }

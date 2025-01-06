@@ -20,21 +20,17 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class GlobalNotificationSubscribersFilterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GlobalNotificationSubscribersFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testUnsubscribedUsersAreFiltered()
+    public function testUnsubscribedUsersAreFiltered(): void
     {
-        $unsubscriber_notification_dao = \Mockery::mock(UnsubscribersNotificationDAO::class);
-        $unsubscriber_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerID')
-            ->andReturn([101, 102]);
+        $unsubscriber_notification_dao = $this->createMock(UnsubscribersNotificationDAO::class);
+        $unsubscriber_notification_dao->method('searchUserIDHavingUnsubcribedFromNotificationByTrackerID')
+            ->willReturn([101, 102]);
 
-        $tracker = \Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId');
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
         $subscribers_filter = new GlobalNotificationSubscribersFilter($unsubscriber_notification_dao);
         $filtered_user_ids  = $subscribers_filter->filterInvalidUserIDs($tracker, ['105', '102']);

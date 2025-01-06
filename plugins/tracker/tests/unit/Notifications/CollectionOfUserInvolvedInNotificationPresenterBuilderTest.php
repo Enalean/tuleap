@@ -20,45 +20,39 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserManager;
 
-class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     protected function tearDown(): void
     {
         \UserHelper::clearInstance();
     }
 
-    public function testPresentersAreRetrievedSortedAlphabetically()
+    public function testPresentersAreRetrievedSortedAlphabetically(): void
     {
-        $users_to_notify_dao            = \Mockery::mock(UsersToNotifyDao::class);
-        $unsubscribers_notification_dao = \Mockery::mock(UnsubscribersNotificationDAO::class);
+        $users_to_notify_dao            = $this->createMock(UsersToNotifyDao::class);
+        $unsubscribers_notification_dao = $this->createMock(UnsubscribersNotificationDAO::class);
         $user_rows                      = [
             ['user_id' => 200, 'user_name' => 'username1', 'realname' => 'Realname1'],
             ['user_id' => 102, 'user_name' => 'username2', 'realname' => 'Realname2'],
         ];
-        $unsubscribers_notification_dao->shouldReceive(
+        $unsubscribers_notification_dao->method(
             'searchUsersUnsubcribedFromNotificationByTrackerID'
-        )->andReturns($user_rows);
+        )->willReturn($user_rows);
 
-        $user1 = \Mockery::mock(\PFUser::class);
-        $user1->shouldReceive('getAvatarUrl');
-        $user2 = \Mockery::mock(\PFUser::class);
-        $user2->shouldReceive('getAvatarUrl');
-        $user_manager = \Mockery::mock(UserManager::class);
+        $user1 = $this->createMock(\PFUser::class);
+        $user1->method('getAvatarUrl');
+        $user2 = $this->createMock(\PFUser::class);
+        $user2->method('getAvatarUrl');
+        $user_manager = $this->createMock(UserManager::class);
         $user_manager
-            ->shouldReceive('getUserById')
-            ->with(200)
-            ->once()
-            ->andReturn($user1);
-        $user_manager
-            ->shouldReceive('getUserById')
-            ->with(102)
-            ->once()
-            ->andReturn($user2);
+            ->expects($this->exactly(2))
+            ->method('getUserById')
+            ->willReturnCallback(static fn (int $id) => match ($id) {
+                200 => $user1,
+                102 => $user2,
+            });
 
         $builder = new CollectionOfUserInvolvedInNotificationPresenterBuilder(
             $users_to_notify_dao,
@@ -66,14 +60,14 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap
             $user_manager
         );
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns(101);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(101);
 
-        $user_helper = \Mockery::mock(\UserHelper::class);
+        $user_helper = $this->createMock(\UserHelper::class);
         \UserHelper::setInstance($user_helper);
         $user1_display_name = 'username1 (Realname1)';
         $user2_display_name = 'username2 (Realname2)';
-        $user_helper->shouldReceive('getDisplayName')->andReturn($user2_display_name, $user1_display_name);
+        $user_helper->method('getDisplayName')->willReturn($user2_display_name, $user1_display_name);
 
         $presenters = $builder->getCollectionOfNotificationUnsubscribersPresenter($tracker);
 

@@ -20,46 +20,40 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use ProjectUGroup;
-use Tracker;
 use Tracker_GlobalNotification;
 use TrackerFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private Tracker_GlobalNotification $notification;
 
-    /** @var Tracker_GlobalNotification */
-    private $notification;
-
-    /** @var GlobalNotificationsEmailRetriever */
-    private $retriever;
+    private GlobalNotificationsEmailRetriever $retriever;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $project         = \Mockery::spy(\Project::class, ['getID' => false, 'getUserName' => false, 'isPublic' => false]);
-        $tracker         = Mockery::mock(Tracker::class)->shouldReceive('getId')->andReturn(10)->getMock();
-        $tracker_factory = \Mockery::spy(\TrackerFactory::class);
+        $project         = ProjectTestBuilder::aProject()->build();
+        $tracker         = TrackerTestBuilder::aTracker()->withId(10)->withProject($project)->build();
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
 
         TrackerFactory::setInstance($tracker_factory);
-        $tracker_factory->shouldReceive('getTrackerById')->with(10)->andReturns($tracker);
-        $tracker->shouldReceive('getProject')->andReturns($project);
+        $tracker_factory->method('getTrackerById')->with(10)->willReturn($tracker);
 
         $this->notification = $this->buildNotification();
 
-        $notified_users_dao = \Mockery::spy(\Tuleap\Tracker\Notifications\UsersToNotifyDao::class);
-        $notified_users_dao->shouldReceive('searchUsersByNotificationId')->with(1)->andReturns(\TestHelper::arrayToDar(['email' => 'andrew@example.com'], ['email' => 'smith@example.com']));
-        $notified_ugroups_dao = \Mockery::spy(\Tuleap\Tracker\Notifications\UgroupsToNotifyDao::class);
-        $notified_ugroups_dao->shouldReceive('searchUgroupsByNotificationId')->with(1)->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 104, 'name' => 'Developers']));
+        $notified_users_dao = $this->createMock(\Tuleap\Tracker\Notifications\UsersToNotifyDao::class);
+        $notified_users_dao->method('searchUsersByNotificationId')->with(1)->willReturn(\TestHelper::arrayToDar(['email' => 'andrew@example.com'], ['email' => 'smith@example.com']));
+        $notified_ugroups_dao = $this->createMock(\Tuleap\Tracker\Notifications\UgroupsToNotifyDao::class);
+        $notified_ugroups_dao->method('searchUgroupsByNotificationId')->with(1)->willReturn(\TestHelper::arrayToDar(['ugroup_id' => 104, 'name' => 'Developers']));
 
-        $developers = Mockery::mock(ProjectUGroup::class);
-        $developers->shouldReceive('getMembers')
-            ->andReturn(
+        $developers = $this->createMock(ProjectUGroup::class);
+        $developers->method('getMembers')
+            ->willReturn(
                 [
                     new PFUser([
                         'language_id' => 'en',
@@ -82,8 +76,8 @@ class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
                 ]
             );
 
-        $ugroup_manager = \Mockery::spy(\UGroupManager::class);
-        $ugroup_manager->shouldReceive('getUGroup')->with($project, 104)->andReturns($developers);
+        $ugroup_manager = $this->createMock(\UGroupManager::class);
+        $ugroup_manager->method('getUGroup')->with($project, 104)->willReturn($developers);
 
         $addresses_builder = new GlobalNotificationsAddressesBuilder();
 
@@ -98,12 +92,12 @@ class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private function buildNotification(): Tracker_GlobalNotification
     {
-        $notifcation = Mockery::mock(Tracker_GlobalNotification::class);
-        $notifcation->shouldReceive('getId')->andReturn(1);
-        $notifcation->shouldReceive('getTrackerId')->andReturn(10);
-        $notifcation->shouldReceive('getAddresses')->andReturn('jdoe@example.com,smith@example.com');
-        $notifcation->shouldReceive('isAllUpdates')->andReturnTrue();
-        $notifcation->shouldReceive('isCheckPermissions')->andReturnFalse();
+        $notifcation = $this->createMock(Tracker_GlobalNotification::class);
+        $notifcation->method('getId')->willReturn(1);
+        $notifcation->method('getTrackerId')->willReturn(10);
+        $notifcation->method('getAddresses')->willReturn('jdoe@example.com,smith@example.com');
+        $notifcation->method('isAllUpdates')->willReturn(true);
+        $notifcation->method('isCheckPermissions')->willReturn(false);
 
         return $notifcation;
     }
