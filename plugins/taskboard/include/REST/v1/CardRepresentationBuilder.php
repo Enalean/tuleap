@@ -100,7 +100,7 @@ final readonly class CardRepresentationBuilder
     {
         $initial_effort_field = \AgileDashBoard_Semantic_InitialEffort::load($artifact->getTracker())->getField();
 
-        if (! $initial_effort_field) {
+        if ($initial_effort_field === null || ! $initial_effort_field->userCanRead($user)) {
             return null;
         }
 
@@ -111,13 +111,13 @@ final readonly class CardRepresentationBuilder
         }
 
         if ($last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
-            return $this->getListFieldFirstValue($user, $last_changeset_value);
+            return $this->getListFieldFirstValue($last_changeset_value);
         }
 
         return $last_changeset_value->getValue();
     }
 
-    private function getListFieldFirstValue(PFUser $user, \Tracker_Artifact_ChangesetValue_List $value_list)
+    private function getListFieldFirstValue(\Tracker_Artifact_ChangesetValue_List $value_list)
     {
         $list_values = $value_list->getListValues();
 
