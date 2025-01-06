@@ -17,34 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 final class Tracker_Hierarchy_HierarchicalTrackerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Hierarchy_HierarchicalTracker
-     */
-    private $hierarchical_tracker;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $child;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
+    private Tracker_Hierarchy_HierarchicalTracker $hierarchical_tracker;
+    private Tracker $child;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {
         $project_id = 110;
-        $project    = Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturns($project_id);
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(1);
-        $this->tracker->shouldReceive('getProject')->andReturn($project);
-        $this->child = Mockery::mock(Tracker::class);
-        $this->child->shouldReceive('getId')->andReturn(2);
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $this->child   = TrackerTestBuilder::aTracker()->withId(2)->build();
 
         $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, [$this->child]);
     }
@@ -66,7 +55,7 @@ final class Tracker_Hierarchy_HierarchicalTrackerTest extends \Tuleap\Test\PHPUn
 
     public function testNotHasChild(): void
     {
-        $not_child = Mockery::mock(Tracker::class);
+        $not_child = TrackerTestBuilder::aTracker()->withId(3)->build();
         $this->assertFalse($this->hierarchical_tracker->hasChild($not_child));
     }
 

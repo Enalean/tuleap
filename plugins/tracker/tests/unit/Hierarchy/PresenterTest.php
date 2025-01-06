@@ -18,26 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Hierarchy_PresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testGetPossibleChildrenReturnsAttributesForSelect(): void
     {
-        $story = Mockery::mock(Tracker::class);
-        $story->shouldReceive('getId')->andReturn(1);
-        $story->shouldReceive('getName')->andReturn('Stories');
-        $task = Mockery::mock(Tracker::class);
-        $task->shouldReceive('getId')->andReturn(2);
-        $task->shouldReceive('getName')->andReturn('Tasks');
+        $story = TrackerTestBuilder::aTracker()->withId(1)->withName('Stories')->build();
+        $task  = TrackerTestBuilder::aTracker()->withId(2)->withName('Tasks')->build();
 
         $possible_children = [1 => $story, 2 => $task];
 
-        $tracker = \Mockery::spy(\Tracker_Hierarchy_HierarchicalTracker::class);
-        $tracker->shouldReceive('getUnhierarchizedTracker')->andReturns(Mockery::spy(Tracker::class));
-        $tracker->shouldReceive('hasChild')->with($possible_children[1])->andReturnFalse();
-        $tracker->shouldReceive('hasChild')->with($possible_children[2])->andReturnTrue();
+        $tracker = new Tracker_Hierarchy_HierarchicalTracker(
+            TrackerTestBuilder::aTracker()->withId(3)->build(),
+            [2 => $task],
+        );
 
         $presenter = new Tracker_Hierarchy_Presenter(
             $tracker,
