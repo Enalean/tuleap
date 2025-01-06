@@ -18,86 +18,75 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Psr\Log\LogLevel;
+use ColinODell\PsrTestLogger\TestLogger;
+use Psr\Log\LoggerInterface;
 
 final class MigrationLoggerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $migration_logger;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Psr\Log\LoggerInterface
-     */
-    private $mail_logger;
-
-    /**
-     * @var \Psr\Log\LoggerInterface|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $backend_logger;
+    private LoggerInterface $migration_logger;
+    private TestLogger $mail_logger;
+    private TestLogger $backend_logger;
 
     protected function setUp(): void
     {
-        $this->backend_logger   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->mail_logger      = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->backend_logger   = new TestLogger();
+        $this->mail_logger      = new TestLogger();
         $this->migration_logger = new Tracker_Migration_MigrationLogger($this->backend_logger, $this->mail_logger);
     }
 
     public function testItLogsErrorsInMailLogger(): void
     {
-        $this->mail_logger->shouldReceive('error')->with('bla', [])->once();
-
         $this->migration_logger->error('bla');
+
+        self::assertTrue($this->mail_logger->hasError('bla'));
     }
 
     public function testItLogsErrorsInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::ERROR, 'bla', [])->once();
-
         $this->migration_logger->error('bla');
+
+        self::assertTrue($this->backend_logger->hasError('bla'));
     }
 
     public function testItLogsWarningsInMailLogger(): void
     {
-        $this->mail_logger->shouldReceive('warning')->with('bla', [])->once();
-
         $this->migration_logger->warning('bla');
+
+        self::assertTrue($this->mail_logger->hasWarning('bla'));
     }
 
     public function testItLogsWarningsInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::WARNING, 'bla', [])->once();
-
         $this->migration_logger->warning('bla');
+
+        self::assertTrue($this->backend_logger->hasWarning('bla'));
     }
 
     public function testItDoesntLogsInfoInMailLogger(): void
     {
-        $this->mail_logger->shouldReceive('info')->never();
-
         $this->migration_logger->info('bla');
+
+        self::assertFalse($this->mail_logger->hasInfoRecords());
     }
 
     public function testItLogsInfoInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::INFO, 'bla', [])->once();
-
         $this->migration_logger->info('bla');
+
+        self::assertTrue($this->backend_logger->hasInfo('bla'));
     }
 
     public function testItDoesntLogsDebugInMailLogger(): void
     {
-        $this->mail_logger->shouldReceive('debug', [])->never();
-
         $this->migration_logger->debug('bla');
+
+        self::assertFalse($this->mail_logger->hasDebugRecords());
     }
 
     public function testItLogsDebugInBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->with(LogLevel::DEBUG, 'bla', [])->once();
-
         $this->migration_logger->debug('bla');
+
+        self::assertTrue($this->backend_logger->hasDebug('bla'));
     }
 }
