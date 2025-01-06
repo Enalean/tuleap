@@ -50,6 +50,12 @@ import {
 } from "../../constants";
 import OverviewThreads from "./OverviewThreads.vue";
 
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
+
 async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
     await wrapper.setProps({
         pull_request_info: {

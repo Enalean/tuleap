@@ -20,7 +20,11 @@
 @use "../vendor/at/css/atwho.min";
 
 .atwho-view > ul > li {
-    font-size: 0.9em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 14px;
+    gap: 5px;
 
     > .user-avatar {
         width: 30px;

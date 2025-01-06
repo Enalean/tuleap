@@ -20,6 +20,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/gettext": "workspace:*",
+    "@tuleap/mention": "workspace:^",
     "@tuleap/option": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",

@@ -21,6 +21,12 @@ import { describe, it, expect, vi } from "vitest";
 import type { HostElement } from "./NewCommentForm";
 import { form_height_descriptor } from "./NewCommentForm";
 
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
+
 describe("NewCommentForm", () => {
     it("should execute the post_rendering_callback each time the component height changes", () => {
         vi.useFakeTimers();

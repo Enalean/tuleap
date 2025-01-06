@@ -31,9 +31,9 @@ import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescrip
 import { DescriptionAuthorStub } from "../../tests/stubs/DescriptionAuthorStub";
 import { ControlPullRequestDescriptionCommentStub } from "../../tests/stubs/ControlPullRequestDescriptionCommentStub";
 
-vi.mock("@tuleap/tooltip", () => ({
-    loadTooltips: (): void => {
-        // do nothing
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
     },
 }));
 

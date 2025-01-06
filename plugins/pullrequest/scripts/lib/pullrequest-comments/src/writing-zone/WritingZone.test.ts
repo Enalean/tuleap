@@ -27,6 +27,12 @@ import { getWritingZoneElement, isWritingZoneElement } from "./WritingZone";
 import type { InternalWritingZone } from "./WritingZone";
 import "@tuleap/commonmark-popover/commonmark-popover-stub";
 
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
+
 type ElementNeedingAWritingZone = ElementContainingAWritingZone<{
     _some_attribute: never;
 }>;

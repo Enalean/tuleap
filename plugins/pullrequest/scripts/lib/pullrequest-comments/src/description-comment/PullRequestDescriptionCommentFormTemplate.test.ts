@@ -32,6 +32,12 @@ import {
     TAG as WRITING_ZONE_TAG_NAME,
 } from "../writing-zone/WritingZone";
 
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
+
 const project_id = 105;
 
 describe("PullRequestDescriptionCommentFormTemplate", () => {

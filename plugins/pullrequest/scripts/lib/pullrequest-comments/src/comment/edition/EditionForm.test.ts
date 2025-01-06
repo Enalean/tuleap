@@ -22,6 +22,12 @@ import { ControlEditionFormStub } from "../../../tests/stubs/ControlEditionFormS
 import type { InternalEditionForm } from "./EditionForm";
 import { after_render_once_descriptor } from "./EditionForm";
 
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
+
 describe("EditionForm", () => {
     it("When the EditionForm has been rendered once, Then its controller should initialize it", () => {
         const controller = ControlEditionFormStub();
