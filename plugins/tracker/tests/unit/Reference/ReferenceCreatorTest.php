@@ -20,83 +20,74 @@
 
 namespace Tuleap\Tracker\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use ServiceManager;
+use trackerPlugin;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ReferenceCreator
-     */
-    private $creator;
-    /**
-     * @var \ServiceManager&\Mockery\MockInterface
-     */
-    private $service_manager;
-    /**
-     * @var \TrackerV3&\Mockery\MockInterface
-     */
-    private $tv3;
-    /**
-     * @var \ReferenceDao&\Mockery\MockInterface
-     */
-    private $reference_dao;
-    /**
-     * @var \Project&\Mockery\MockInterface
-     */
-    private $project;
+    private ReferenceCreator $creator;
+    private ServiceManager&MockObject $service_manager;
+    private \TrackerV3&MockObject $tv3;
+    private \ReferenceDao&MockObject $reference_dao;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->service_manager = \Mockery::spy(\ServiceManager::class);
-        $this->tv3             = \Mockery::spy(\TrackerV3::class);
-        $this->reference_dao   = \Mockery::spy(\ReferenceDao::class);
+        $this->service_manager = $this->createMock(\ServiceManager::class);
+        $this->tv3             = $this->createMock(\TrackerV3::class);
+        $this->reference_dao   = $this->createMock(\ReferenceDao::class);
 
         $this->creator = new ReferenceCreator(
             $this->service_manager,
             $this->tv3,
             $this->reference_dao
         );
-
-        $this->project = \Mockery::spy(\Project::class);
     }
 
-    public function testItDoesNotCreateFromLegacyReferenceIsTV3AreNotAvailable()
+    public function testItDoesNotCreateFromLegacyReferenceIsTV3AreNotAvailable(): void
     {
-        $this->tv3->shouldReceive('available')->andReturns(false);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $this->reference_dao->shouldReceive('getSystemReferenceByNatureAndKeyword')->never();
-        $this->reference_dao->shouldReceive('create_ref_group')->never();
+        $this->tv3->method('available')->willReturn(false);
 
-        $this->creator->insertArtifactsReferencesFromLegacy($this->project);
+        $this->reference_dao->expects(self::never())->method('getSystemReferenceByNatureAndKeyword');
+        $this->reference_dao->expects(self::never())->method('create_ref_group');
+
+        $this->creator->insertArtifactsReferencesFromLegacy($project);
     }
 
-    public function testItCreatesArtAndArtifactsReferencesFromLegacyArtifactReferences()
+    public function testItCreatesArtAndArtifactsReferencesFromLegacyArtifactReferences(): void
     {
-        $this->project->shouldReceive([
-            'usesService' => true,
-            'getID'       => 101,
-        ]);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withUsedService(trackerPlugin::SERVICE_SHORTNAME)
+            ->build();
 
-        $this->tv3->shouldReceive('available')->andReturns(true);
+        $this->tv3->method('available')->willReturn(true);
 
-        $service = \Mockery::spy(\Service::class);
-        $service->shouldReceive('getShortName')->andReturns('plugin_tracker');
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->project)->andReturns(
+        $service = $this->createMock(\Service::class);
+        $service->method('getShortName')->willReturn('plugin_tracker');
+        $this->service_manager->method('getListOfAllowedServicesForProject')->with($project)->willReturn(
             [$service]
         );
 
-        $this->reference_dao->shouldReceive('getSystemReferenceByNatureAndKeyword')
-            ->with('art', 'artifact')->once()->andReturns(['id' => 1]);
-        $this->reference_dao->shouldReceive('getSystemReferenceByNatureAndKeyword')
-            ->with('artifact', 'artifact')->once()->andReturns(['id' => 2]);
+        $this->reference_dao
+            ->expects(self::exactly(2))
+            ->method('getSystemReferenceByNatureAndKeyword')
+            ->willReturnCallback(static fn (string $keyword, string $nature) => match (true) {
+                $keyword === 'art' && $nature === 'artifact' => ['id' => 1],
+                $keyword === 'artifact' && $nature === 'artifact' => ['id' => 2],
+            });
 
-        $this->reference_dao->shouldReceive('create_ref_group')->with(1, true, 101)->once();
-        $this->reference_dao->shouldReceive('create_ref_group')->with(2, true, 101)->once();
+        $this->reference_dao->expects(self::exactly(2))
+            ->method('create_ref_group')
+            ->willReturnCallback(static fn (int $refid, bool $is_active, mixed $group_id) => match (true) {
+                ($refid === 1 || $refid === 2) && $is_active && (int) $group_id === 101 => true,
+            });
 
-        $this->creator->insertArtifactsReferencesFromLegacy($this->project);
+        $this->creator->insertArtifactsReferencesFromLegacy($project);
     }
 }
