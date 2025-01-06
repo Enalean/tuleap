@@ -46,6 +46,7 @@
             v-bind:position="AT_THE_END"
         />
         <add-existing-section-modal />
+        <remove-freetext-section-modal />
     </div>
 </template>
 
@@ -60,6 +61,7 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
+import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
 
 const { sections, insertSection } = strictInject(SECTIONS_STORE);
 

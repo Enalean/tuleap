@@ -28,6 +28,7 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
 
 vi.mock("@tuleap/tlp-dropdown");
 vi.mock("@/helpers/move-dropdownmenu-in-document-body");
@@ -43,6 +44,7 @@ describe("SectionDropdown", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]: true,
+                    [REMOVE_FREETEXT_SECTION_MODAL.valueOf()]: true,
                 },
             },
         });
