@@ -1,19 +1,13 @@
-<h3>{{# gettext }}External system references{{/ gettext }}</h3>
-<table width="100%">
-    <thead>
-        <tr>
-            <td>{{# gettext }}Keyword{{/ gettext }}</td>
-            <td>{{# gettext }}Description{{/ gettext }}</td>
-            <td>{{# gettext }}Nature{{/ gettext }}</td>
-        </tr>
-    </thead>
-    <tbody>
-        {{# external_system_references }}
-            <tr>
-                <td>{{ keyword }}</td>
-                <td>{{ description }}</td>
-                <td>{{ nature }}</td>
-            </tr>
-        {{/ external_system_references }}
-    </tbody>
-</table>
+{{# external_system_references }}
+    <tr>
+        <td>{{ keyword }}</td>
+        <td>{{ description }}</td>
+        <td>{{ nature }}</td>
+        <td><i class="fas fa-check"></i></td>
+        <td></td>
+        {{# is_template_project }}
+            <td></td>
+            <td></td>
+        {{/ is_template_project }}
+    </tr>
+{{/ external_system_references }}

@@ -1160,9 +1160,6 @@ msgstr "상세 정보"
 msgid "Didn't get a confirmation email? Check your spam folder."
 msgstr "확인 이메일을 받지 못하셨다면 스팸 폴더를 확인해주세요."
 
-msgid "Disabled"
-msgstr "비활성화"
-
 msgid "Disallow for all projects"
 msgstr "모든 프로젝트에 대해 허용 안 함"
 
@@ -1241,8 +1238,8 @@ msgid "Editing reference patterns"
 msgstr "참조 패턴 편집"
 
 #, php-format
-msgid "Editing reference patterns for <b>%s</b>"
-msgstr "<b>%s</b>에 대한 참조 패턴 편집"
+msgid "Editing reference patterns for %s"
+msgstr "%s에 대한 참조 패턴 편집"
 
 msgid "Editing system reference patterns"
 msgstr "시스템 참조 패턴 편집"
@@ -1385,8 +1382,8 @@ msgstr "내보내기"
 msgid "Export project structure"
 msgstr "프로젝트 구조 내보내기"
 
-msgid "External system references"
-msgstr "외부 시스템 참조"
+msgid "External references"
+msgstr ""
 
 msgid "FRS"
 msgstr "FRS"
@@ -1889,11 +1886,8 @@ msgstr "모든 플러그인 관리"
 msgid "Manage help links"
 msgstr "도움말 링크 관리"
 
-msgid "Manage project reference patterns"
-msgstr "프로젝트 참조 패턴 관리"
-
-msgid "Manage system reference patterns"
-msgstr "시스템 참조 패턴 관리"
+msgid "Manage references"
+msgstr ""
 
 #, php-format
 msgid "Mandatory categories where missing: %s"
@@ -2088,12 +2082,15 @@ msgstr "새 비밀번호"
 msgid "New personal access key"
 msgstr "새 개인 액세스 키"
 
+msgid "New project reference"
+msgstr ""
+
 #, php-format
 msgid "New project registered: %s"
 msgstr "새 프로젝트가 등록됨: %s"
 
-msgid "New reference pattern"
-msgstr "새 참조 패턴"
+msgid "New system reference"
+msgstr ""
 
 msgid "New user"
 msgstr "신규 사용자"
@@ -2656,6 +2653,9 @@ msgstr "프로젝트 공개 범위를 공개(제한됨)로 설정했습니다."
 
 msgid "Project privacy set to public."
 msgstr "프로젝트 공개 범위를 공개로 설정했습니다."
+
+msgid "Project references"
+msgstr ""
 
 msgid "Project registration is disabled"
 msgstr "프로젝트 등록이 비활성화되었습니다."
@@ -3275,6 +3275,9 @@ msgstr "시스템 그룹"
 msgid "System reference pattern deleted"
 msgstr "시스템 참조 패턴 삭제됨"
 
+msgid "System references"
+msgstr ""
+
 msgid "Tab"
 msgstr "탭"
 
@@ -3569,8 +3572,14 @@ msgstr ""
 "이 프로젝트의 이름을 변경하는 이벤트가 이미 등록되어 있습니다. <a href=\"/"
 "admin/system_events/\">시스템 이벤트 모니터</a>를 확인하십시오."
 
+msgid "There is no project references"
+msgstr ""
+
 msgid "There is no registered passkeys"
 msgstr "등록된 패스키가 없습니다."
+
+msgid "There is no system references"
+msgstr ""
 
 msgid "There is no users group bound to this one."
 msgstr "이 그룹에 바인딩된 사용자 그룹이 없습니다."

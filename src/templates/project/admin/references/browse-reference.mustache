@@ -1,46 +1,91 @@
-<p><h2>{{ page_title }}</h2></p>
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <div class="tlp-pane-title">
+                    {{# gettext }}Manage references{{/ gettext }}
+                </div>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-table-actions">
+                    <div class="tlp-table-actions">
+                        <a href="{{ create_reference_url }}" class="tlp-button-primary tlp-table-actions-element">
+                            <i class="tlp-button-icon fa fa-plus"></i>
+                            {{^ is_template_project }}
+                                {{# gettext }}New project reference{{/ gettext }}
+                            {{/ is_template_project }}
+                            {{# is_template_project }}
+                                {{# gettext }}New system reference{{/ gettext }}
+                            {{/ is_template_project }}
+                        </a>
+                    </div>
+                </div>
 
-<p>
-    <h3>{{# gettext }}New reference pattern{{/ gettext }}</h3>
-    <a href="{{ create_reference_url }}">{{# gettext }}Create a new reference pattern{{/ gettext }}</a>
-<p>
-
-{{# has_external_references }}
-    {{> external-system-references }}
-{{/ has_external_references }}
-
-<h3>{{# gettext }}Manage system reference patterns{{/ gettext }}</h3>
-
-<table data-test="table-test" width="100%" border="0" cellspacing="1" cellpadding="2">
-	<tbody>
-        <tr class="boxtable">
-            {{> reference-table-header }}
-            {{# is_template_project }}
-                <td class="boxtitle">{{# gettext }}Delete{{/ gettext }}</td>
-            {{/ is_template_project }}
-        </tr>
-        {{# system_references }}
-            {{> reference-pattern-row }}
-        {{/ system_references }}
-    </tbody>
-</table>
-
-<h3>{{# gettext }}Manage project reference patterns{{/ gettext }}</h3>
-
-<table data-test="table-test" width="100%" border="0" cellspacing="1" cellpadding="2">
-	<tbody>
-        <tr class="boxtable">
-            {{> reference-table-header }}
-            <td class="boxtitle">{{# gettext }}Delete{{/ gettext }}</td>
-        </tr>
-        {{# project_references }}
-            {{> reference-pattern-row }}
-        {{/ project_references }}
-    </tbody>
-</table>
+                <table data-test="table-test" class="tlp-table">
+                    <thead>
+                        {{# is_template_project }}
+                            <th>{{# gettext }}Reference ID{{/ gettext }}</th>
+                        {{/ is_template_project }}
+                        {{^ is_template_project }}
+                            <th>{{# gettext }}Keyword{{/ gettext }}</th>
+                        {{/ is_template_project }}
+                        <th>{{# gettext }}Description{{/ gettext }}</th>
+                        <th>{{# gettext }}Nature{{/ gettext }}</th>
+                        <th>{{# gettext }}Status{{/ gettext }}</th>
+                        {{# is_template_project }}
+                            <th>{{# gettext }}Scope{{/ gettext }}</th>
+                            <th>{{# gettext }}Bound to service{{/ gettext }}</th>
+                        {{/ is_template_project }}
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tlp-table-cell-section" colspan="8"> {{# gettext }}Project references{{/ gettext }}</td>
+                        </tr>
+                        {{^ has_project_references }}
+                            <tr>
+                                <td colspan="8" class="tlp-table-cell-empty">
+                                    {{# gettext }}There is no project references{{/ gettext }}
+                                </td>
+                            </tr>
+                        {{/ has_project_references }}
+                        {{# has_project_references }}
+                            {{# project_references }}
+                                {{> reference-pattern-row }}
+                            {{/ project_references }}
+                        {{/ has_project_references }}
+                        <tr>
+                            <td class="tlp-table-cell-section" colspan="8"> {{# gettext }}System references{{/ gettext }}</td>
+                        </tr>
+                        {{^ has_system_references }}
+                            <tr>
+                                <td colspan="8" class="tlp-table-cell-empty">
+                                    {{# gettext }}There is no system references{{/ gettext }}
+                                </td>
+                            </tr>
+                        {{/ has_system_references }}
+                        {{# has_system_references }}
+                            {{# system_references }}
+                                {{> reference-pattern-row }}
+                            {{/ system_references }}
+                        {{/ has_system_references }}
+                        {{# has_external_references }}
+                            <tr>
+                                <td class="tlp-table-cell-section" colspan="8"> {{# gettext }}External references{{/ gettext }}</td>
+                            </tr>
+                            {{# has_external_references }}
+                                {{> external-system-references }}
+                            {{/ has_external_references }}
+                        {{/ has_external_references }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>
 
 {{# has_warning_messages }}
-    <div class="alert">
+    <div class="tlp-alert-warning">
         {{# warning_messages }} {{ . }} {{/ warning_messages }}
     </div>
 {{/ has_warning_messages }}

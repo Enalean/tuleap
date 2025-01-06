@@ -45,7 +45,7 @@ final readonly class ReferenceAdministrationBrowsingRenderer
             $page_title = _('Editing system reference patterns');
         } else {
             $page_title = sprintf(
-                _('Editing reference patterns for <b>%s</b>'),
+                _('Editing reference patterns for %s'),
                 $this->purifier->purify($project->getPublicName())
             );
         }
