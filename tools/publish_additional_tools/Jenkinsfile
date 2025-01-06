@@ -1,0 +1,41 @@
+#!/usr/bin/env groovy
+
+def actions
+
+pipeline {
+    agent {
+        label 'agent-one-time-use'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & sign') {
+            steps {
+                script {
+                    actions = load 'sources/tests/actions.groovy'
+                    withCredentials([
+                            usernamePassword(credentialsId: 'vault-role-tuleap-additional-tools-signing', passwordVariable: 'VAULT_SECRET_ID', usernameVariable: 'VAULT_ROLE_ID')
+                        ]) {
+                            sh '''
+                            set -e
+                            export VAULT_ADDR=https://vault.enalean.com
+                            NIXPKGS_ALLOW_UNFREE=1 nix-shell -I nixpkgs=./sources/tools/utils/nix/pinned-nixpkgs.nix -p vault-bin \
+                                --run 'vault write -field=token auth/approle/login role_id=\$VAULT_ROLE_ID secret_id=\$VAULT_SECRET_ID > ~/.vault-token'
+                            '''
+                    }
+                    actions.runInsideNixShell('sources/tools/publish_additional_tools/build-additional-tools.sh', 'dev')
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts allowEmptyArchive: false, artifacts: 'result-additional-tools/'
+                }
+            }
+        }
+    }
+}

@@ -193,3 +193,20 @@ To release a new version, you need to:
 
 5.  Trigger the [pipeline to publish your new version to the npmjs.com
     registry](https://ci.tuleap.org/jenkins/job/Publish_JS_libraries/job/Main_Tuleap_repository/)
+
+## Release an additional tool developed in the main Tuleap repository
+
+This section is only useful if you want to release a new version of an additional Tuleap tool developed in the [main Tuleap
+repository](https://tuleap.net/plugins/git/tuleap/tuleap/stable).
+
+Additional Tuleap tools are tools that are not part of the usual Tuleap packages.
+
+Only a Tuleap integrator can trigger a release.
+
+Additional tools can be released using either a Tuleap version tag or, if needed, a specific tag dedicated the additional
+tools:
+
+        $ git tag -s -m 'Tuleap additional tools v<VERSION>' tuleap_additional_tools_<VERSION>
+        $ git push stable tuleap_additional_tools_<VERSION>
+
+When you are ready, trigger [the build pipeline](https://ci.tuleap.org/jenkins/job/Tuleap%20Additional%20Tools/job/Build%20Additional%20Tuleap%20Tools/build).
