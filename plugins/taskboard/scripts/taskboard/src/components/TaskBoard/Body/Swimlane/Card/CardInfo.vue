@@ -25,33 +25,24 @@
     </div>
 </template>
 
-<script lang="ts">
-import CardAssignees from "./CardAssignees.vue";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import type { WritableComputedRef } from "vue";
+import { computed } from "vue";
 import type { Card, Tracker, User } from "../../../../../type";
+import CardAssignees from "./CardAssignees.vue";
 
-@Component({
-    components: {
-        CardAssignees,
-    },
-})
-export default class CardInfo extends Vue {
-    @Prop({ required: true })
-    readonly value!: User[];
+const props = defineProps<{
+    value: User[];
+    card: Card;
+    tracker: Tracker;
+}>();
 
-    @Prop({ required: true })
-    readonly card!: Card;
+const emit = defineEmits<{
+    (e: "input", value: User[]): void;
+}>();
 
-    @Prop({ required: true })
-    readonly tracker!: Tracker;
-
-    get new_assignees(): User[] {
-        return this.value;
-    }
-
-    set new_assignees(value) {
-        this.$emit("input", value);
-    }
-}
+const new_assignees: WritableComputedRef<User[]> = computed({
+    get: (): User[] => props.value,
+    set: (value: User[]) => emit("input", value),
+});
 </script>
