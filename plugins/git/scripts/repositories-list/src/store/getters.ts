@@ -64,7 +64,7 @@ export const areRepositoriesAlreadyLoadedForCurrentOwner = (state: State): boole
 };
 
 export const isCurrentRepositoryListEmpty = (state: State): boolean =>
-    areRepositoriesAlreadyLoadedForCurrentOwner(state) && currentRepositoryList(state).length === 0;
+    currentRepositoryList(state).length === 0;
 
 export const getFilteredRepositoriesByLastUpdateDate = (
     state: State,
@@ -75,17 +75,7 @@ export const getFilteredRepositoriesByLastUpdateDate = (
     );
 };
 
-const root_folder: Folder = {
-    is_folder: true,
-    label: "root",
-    children: [],
-};
-
 export const getFilteredRepositoriesGroupedByPath = (state: State): Folder => {
-    if (!areRepositoriesAlreadyLoadedForCurrentOwner(state)) {
-        return root_folder;
-    }
-
     return filterAFolder(groupRepositoriesByPath(currentRepositoryList(state)), state.filter);
 };
 

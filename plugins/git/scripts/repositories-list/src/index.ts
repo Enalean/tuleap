@@ -31,7 +31,7 @@ import { build as buildRepositoryListPresenter } from "./repository-list-present
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createInitializedStore } from "./store";
 import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "./constants";
-import type { State } from "./type";
+import type { RepositoryOwner, State } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-repository-list");
@@ -72,7 +72,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10),
         Boolean(vue_mount_point.dataset.isAdmin),
         locale,
-        JSON.parse(repositories_owners),
+        JSON.parse(repositories_owners).sort(function (
+            user_a: RepositoryOwner,
+            user_b: RepositoryOwner,
+        ) {
+            return user_a.display_name.localeCompare(user_b.display_name);
+        }),
         JSON.parse(getDatasetItemOrThrow(vue_mount_point, "externalPlugins")),
     );
 
@@ -80,7 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         repositories_for_owner: [
             {
                 id: PROJECT_KEY,
-                repositories: JSON.parse(repositories_owners),
+                repositories: [],
             },
         ],
         filter: "",
