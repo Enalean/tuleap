@@ -42,55 +42,39 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useNamespacedState } from "vuex-composition-helpers";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
-
+import type { IterationLabels, ProgramIncrement } from "../../../store/configuration";
 import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
 
-import type { IterationLabels, ProgramIncrement } from "../../../store/configuration";
+const { interpolate, $gettext } = useGettext();
 
-const configuration = namespace("configuration");
+const { iterations_labels, iteration_tracker_id, program_increment } = useNamespacedState<{
+    iterations_labels: IterationLabels;
+    iteration_tracker_id: number;
+    program_increment: ProgramIncrement;
+}>("configuration", ["iterations_labels", "iteration_tracker_id", "program_increment"]);
 
-@Component({
-    components: {
-        SvgPlannedIterationsEmptyState,
-    },
-})
-export default class PlannedIterationsSectionEmptyState extends Vue {
-    @configuration.State
-    readonly iterations_labels!: IterationLabels;
+const planned_iterations_empty_state_text = computed((): string => {
+    return iterations_labels.value.sub_label === ""
+        ? $gettext("There is no iteration yet.")
+        : interpolate($gettext("There is no %{ iteration_label } yet."), {
+              iteration_label: iterations_labels.value.sub_label,
+          });
+});
 
-    @configuration.State
-    readonly iteration_tracker_id!: number;
+const create_the_first_iteration_text = computed((): string => {
+    return iterations_labels.value.sub_label === ""
+        ? $gettext("Create the first iteration")
+        : interpolate($gettext("Create the first %{ iteration_label }"), {
+              iteration_label: iterations_labels.value.sub_label,
+          });
+});
 
-    @configuration.State
-    readonly program_increment!: ProgramIncrement;
-
-    get planned_iterations_empty_state_text(): string {
-        if (this.iterations_labels.sub_label.length === 0) {
-            return this.$gettext("There is no iteration yet.");
-        }
-
-        return this.$gettextInterpolate(this.$gettext("There is no %{ iteration_label } yet."), {
-            iteration_label: this.iterations_labels.sub_label,
-        });
-    }
-
-    get create_the_first_iteration_text(): string {
-        if (this.iterations_labels.sub_label.length === 0) {
-            return this.$gettext("Create the first iteration");
-        }
-
-        return this.$gettextInterpolate(this.$gettext("Create the first %{ iteration_label }"), {
-            iteration_label: this.iterations_labels.sub_label,
-        });
-    }
-
-    get create_iteration_url(): string {
-        return buildIterationCreationUrl(this.program_increment.id, this.iteration_tracker_id);
-    }
-}
+const create_iteration_url = computed((): string => {
+    return buildIterationCreationUrl(program_increment.value.id, iteration_tracker_id.value);
+});
 </script>
