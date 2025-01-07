@@ -31,25 +31,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref } from "vue";
 import type { Card } from "../../../../../type";
 import ParentCard from "./ParentCard.vue";
 import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
 import EditCardButtons from "./EditMode/EditCardButtons.vue";
 
-@Component({
-    components: { EditCardButtons, ParentCard, ParentCardRemainingEffort },
-})
-export default class CardWithRemainingEffort extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
+defineProps<{
+    card: Card;
+}>();
 
-    @Ref() readonly cardWithRemainingEffort!: HTMLElement;
+const cardWithRemainingEffort = ref();
 
-    focusCard(): void {
-        this.cardWithRemainingEffort.focus();
-    }
+function focusCard(): void {
+    cardWithRemainingEffort.value.focus();
 }
 </script>
