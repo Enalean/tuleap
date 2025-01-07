@@ -18,7 +18,7 @@
 -
 -->
 <template>
-    <div class="tlp-dropdown" v-if="!is_pending">
+    <div class="tlp-dropdown" v-if="can_dropdown_be_displayed">
         <button
             type="button"
             v-bind:title="trigger_title"
@@ -105,6 +105,12 @@ const remove_title = isSectionBasedOnArtifact(props.section)
 const trigger_title = $gettext("Open contextual menu");
 
 let dropdown: Dropdown | null = null;
+
+const can_dropdown_be_displayed = computed(
+    () =>
+        is_pending.value === false &&
+        (isSectionBasedOnArtifact(props.section) || is_section_editable.value),
+);
 
 watch(trigger, () => {
     if (dropdown === null && trigger.value && menu.value) {
