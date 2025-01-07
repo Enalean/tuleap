@@ -90,7 +90,8 @@ function configureProgram(program_project_name: string, team_project_name: strin
     cy.wait("@linkTeamToProgram");
 
     cy.log("Edit configuration");
-    cy.get("[data-test=admin-program-increment-label]").should("be.visible").type("Foo");
+    cy.get("[data-test=admin-program-increment-label]").should("be.visible");
+    cy.get("[data-test=admin-program-increment-label]").type("Foo");
     cy.get("[data-test=admin-program-increment-sub-label]").type("Bar{enter}");
 
     cy.log("Check configuration is applied");
