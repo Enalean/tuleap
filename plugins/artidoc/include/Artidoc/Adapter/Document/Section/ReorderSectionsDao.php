@@ -41,7 +41,9 @@ final class ReorderSectionsDao extends DataAccessObject implements ReorderSectio
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $order): Ok|Err {
             $current_order = array_values($db->col(
                 'SELECT id
-                FROM plugin_artidoc_document
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
                 WHERE item_id = ?
                 ORDER BY `rank`',
                 0,
@@ -82,7 +84,9 @@ final class ReorderSectionsDao extends DataAccessObject implements ReorderSectio
             }
 
             $sql = <<<EOS
-                UPDATE plugin_artidoc_document
+                UPDATE plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
                 SET `rank` = CASE $when ELSE `rank` END
                 WHERE item_id = ?
                 EOS;

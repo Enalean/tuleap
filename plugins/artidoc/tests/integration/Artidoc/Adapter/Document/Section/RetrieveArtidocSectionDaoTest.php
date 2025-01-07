@@ -73,59 +73,94 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
             ]
         );
 
-        $db->insertMany('plugin_artidoc_document', [
+        $section_1_id = $identifier_factory->buildIdentifier()->getBytes();
+        $section_2_id = $identifier_factory->buildIdentifier()->getBytes();
+        $section_3_id = $identifier_factory->buildIdentifier()->getBytes();
+        $section_4_id = $identifier_factory->buildIdentifier()->getBytes();
+        $section_5_id = $identifier_factory->buildIdentifier()->getBytes();
+        $section_6_id = $identifier_factory->buildIdentifier()->getBytes();
+        $section_7_id = $identifier_factory->buildIdentifier()->getBytes();
+        $section_8_id = $identifier_factory->buildIdentifier()->getBytes();
+
+        $db->insertMany('plugin_artidoc_section', [
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
+                'id'          => $section_1_id,
                 'item_id'     => $this->artidoc_101->document->getId(),
+            ],
+            [
+                'id'          => $section_2_id,
+                'item_id'     => $this->artidoc_102->document->getId(),
+            ],
+            [
+                'id'          => $section_3_id,
+                'item_id'     => $this->artidoc_102->document->getId(),
+            ],
+            [
+                'id'          => $section_4_id,
+                'item_id'     => $this->artidoc_102->document->getId(),
+            ],
+            [
+                'id'          => $section_5_id,
+                'item_id'     => $this->artidoc_102->document->getId(),
+            ],
+            [
+                'id'          => $section_6_id,
+                'item_id'     => $this->artidoc_101->document->getId(),
+            ],
+            [
+                'id'          => $section_7_id,
+                'item_id'     => $this->artidoc_101->document->getId(),
+            ],
+            [
+                'id'          => $section_8_id,
+                'item_id'     => $this->artidoc_101->document->getId(),
+            ],
+        ]);
+        $db->insertMany('plugin_artidoc_section_version', [
+            [
+                'section_id'  => $section_1_id,
                 'artifact_id' => 1001,
                 'freetext_id' => null,
                 'rank'        => 1,
             ],
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
+                'section_id'  => $section_2_id,
                 'artifact_id' => null,
                 'freetext_id' => $introduction_id,
                 'rank'        => 1,
             ],
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
+                'section_id'  => $section_3_id,
                 'artifact_id' => null,
                 'freetext_id' => $requirements_id,
                 'rank'        => 2,
             ],
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
+                'section_id'  => $section_4_id,
                 'artifact_id' => 1001,
                 'freetext_id' => null,
                 'rank'        => 4,
             ],
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_102->document->getId(),
+                'section_id'  => $section_5_id,
                 'artifact_id' => 2001,
                 'freetext_id' => null,
                 'rank'        => 3,
             ],
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_101->document->getId(),
+                'section_id'  => $section_6_id,
                 'artifact_id' => 1003,
                 'freetext_id' => null,
                 'rank'        => 3,
             ],
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_101->document->getId(),
+                'section_id'  => $section_7_id,
                 'artifact_id' => 1002,
                 'freetext_id' => null,
                 'rank'        => 2,
             ],
             [
-                'id'          => $identifier_factory->buildIdentifier()->getBytes(),
-                'item_id'     => $this->artidoc_101->document->getId(),
+                'section_id'  => $section_8_id,
                 'artifact_id' => 1004,
                 'freetext_id' => null,
                 'rank'        => 4,
@@ -176,7 +211,15 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
         $dao = new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $artidoc->document->getId());
+        $db->run(
+            <<<EOS
+            DELETE section, section_version
+            FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id) WHERE item_id = ?
+            EOS,
+            $artidoc->document->getId(),
+        );
 
         foreach ($content as $content_to_insert) {
             $dao->saveSectionAtTheEnd($artidoc, $content_to_insert);

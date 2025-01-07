@@ -53,7 +53,15 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao = new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_artidoc_document WHERE item_id = ?', $artidoc->document->getId());
+        $db->run(
+            <<<EOS
+            DELETE section, section_version
+            FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id) WHERE item_id = ?
+            EOS,
+            $artidoc->document->getId(),
+        );
 
         foreach ($content as $content_to_insert) {
             $dao->saveSectionAtTheEnd($artidoc, $content_to_insert);

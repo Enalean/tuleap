@@ -51,7 +51,13 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
             $item_id = $artidoc->document->getId();
 
             $rank = $this->getDB()->cell(
-                'SELECT max(`rank`) + 1 FROM plugin_artidoc_document WHERE item_id = ?',
+                <<<EOS
+                SELECT max(`rank`) + 1
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
+                WHERE item_id = ?
+                EOS,
                 $item_id,
             ) ?: 0;
 
@@ -65,7 +71,13 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
             $item_id = $artidoc->document->getId();
 
             $rank = $this->getDB()->cell(
-                'SELECT `rank` FROM plugin_artidoc_document WHERE id = ? AND item_id = ?',
+                <<<EOS
+                SELECT `rank`
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
+                WHERE id = ? AND item_id = ?
+                EOS,
                 $sibling_section_id->getBytes(),
                 $item_id,
             );
@@ -76,7 +88,9 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
 
             $db->run(
                 <<<EOS
-                UPDATE plugin_artidoc_document
+                UPDATE plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
                 SET `rank` = `rank` + 1
                 WHERE item_id = ? AND `rank` >= ?
                 EOS,
@@ -112,7 +126,9 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
             $db->cell(
                 <<<EOL
                 SELECT id
-                FROM plugin_artidoc_document
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
                 WHERE item_id = ? AND artifact_id = ?
                 EOL,
                 $item_id,
@@ -123,15 +139,23 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
         }
 
         $id = $this->section_identifier_factory->buildIdentifier();
+
+        $section_id = $id->getBytes();
         $db->insert(
-            'plugin_artidoc_document',
+            'plugin_artidoc_section',
             [
-                'id' => $id->getBytes(),
+                'id'      => $section_id,
                 'item_id' => $item_id,
+            ]
+        );
+        $db->insert(
+            'plugin_artidoc_section_version',
+            [
+                'section_id'  => $section_id,
                 'artifact_id' => $artifact_id,
                 'freetext_id' => null,
-                'rank' => $rank,
-            ],
+                'rank'        => $rank,
+            ]
         );
 
         return Result::ok($id);
@@ -153,15 +177,23 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
         );
 
         $id = $this->section_identifier_factory->buildIdentifier();
+
+        $section_id = $id->getBytes();
         $db->insert(
-            'plugin_artidoc_document',
+            'plugin_artidoc_section',
             [
-                'id' => $id->getBytes(),
+                'id'      => $section_id,
                 'item_id' => $item_id,
+            ]
+        );
+        $db->insert(
+            'plugin_artidoc_section_version',
+            [
+                'section_id'  => $section_id,
                 'artifact_id' => null,
                 'freetext_id' => $freetext_id,
-                'rank' => $rank,
-            ],
+                'rank'        => $rank,
+            ]
         );
 
         return Result::ok($id);
