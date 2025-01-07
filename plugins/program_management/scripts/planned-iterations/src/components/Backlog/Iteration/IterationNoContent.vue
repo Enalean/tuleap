@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg
         width="44"
         height="44"
@@ -34,3 +34,4 @@
         />
     </svg>
 </template>
+<script setup lang="ts"></script>
