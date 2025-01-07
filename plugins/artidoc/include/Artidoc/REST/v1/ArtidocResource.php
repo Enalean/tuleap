@@ -63,8 +63,8 @@ use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSectionsRetriever;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSectionsRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\SectionCreator;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -194,10 +194,10 @@ final class ArtidocResource extends AuthenticatedResource
 
         $user = UserManager::instance()->getCurrentUser();
 
-        return $this->getPaginatedRawSectionsRetriever($user)
-            ->retrievePaginatedRawSections($id, $limit, $offset)
-            ->andThen(fn (PaginatedRawSections $raw_sections) =>
-                $this->getRepresentationTransformer($user)->getRepresentation($raw_sections, $user))->match(
+        return $this->getPaginatedRetrievedSectionsRetriever($user)
+            ->retrievePaginatedRetrievedSections($id, $limit, $offset)
+            ->andThen(fn (PaginatedRetrievedSections $retrieved_sections) =>
+                $this->getRepresentationTransformer($user)->getRepresentation($retrieved_sections, $user))->match(
                     function (PaginatedArtidocSectionRepresentationCollection $collection) use ($limit, $offset) {
                         Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
                         return $collection->sections;
@@ -433,7 +433,7 @@ final class ArtidocResource extends AuthenticatedResource
             );
     }
 
-    private function getPaginatedRawSectionsRetriever(\PFUser $user): PaginatedRawSectionsRetriever
+    private function getPaginatedRetrievedSectionsRetriever(\PFUser $user): PaginatedRetrievedSectionsRetriever
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
         if (! $plugin) {
@@ -451,7 +451,7 @@ final class ArtidocResource extends AuthenticatedResource
             ),
         );
 
-        return new PaginatedRawSectionsRetriever($retriever, $dao);
+        return new PaginatedRetrievedSectionsRetriever($retriever, $dao);
     }
 
     /**
@@ -562,9 +562,9 @@ final class ArtidocResource extends AuthenticatedResource
         );
     }
 
-    private function getRepresentationTransformer(\PFUser $user): RawSectionsToRepresentationTransformer
+    private function getRepresentationTransformer(\PFUser $user): RetrievedSectionsToRepresentationTransformer
     {
-        return new RawSectionsToRepresentationTransformer(
+        return new RetrievedSectionsToRepresentationTransformer(
             $this->getSectionRepresentationBuilder(),
             new RequiredSectionInformationCollector(
                 $user,

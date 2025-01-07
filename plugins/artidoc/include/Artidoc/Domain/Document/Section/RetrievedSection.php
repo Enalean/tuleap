@@ -25,12 +25,12 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
-final readonly class RawSection
+final readonly class RetrievedSection
 {
     private function __construct(
         public SectionIdentifier $id,
         public int $item_id,
-        public RawSectionContent $content,
+        public RetrievedSectionContent $content,
         public int $rank,
     ) {
     }
@@ -43,7 +43,7 @@ final readonly class RawSection
         return new self(
             $row['id'],
             $row['item_id'],
-            RawSectionContent::fromArtifact($row['artifact_id']),
+            RetrievedSectionContent::fromArtifact($row['artifact_id']),
             $row['rank'],
         );
     }
@@ -56,7 +56,7 @@ final readonly class RawSection
         return new self(
             $row['id'],
             $row['item_id'],
-            RawSectionContent::fromFreetext($row['freetext_id'], $row['freetext_title'], $row['freetext_description']),
+            RetrievedSectionContent::fromFreetext($row['freetext_id'], $row['freetext_title'], $row['freetext_description']),
             $row['rank'],
         );
     }

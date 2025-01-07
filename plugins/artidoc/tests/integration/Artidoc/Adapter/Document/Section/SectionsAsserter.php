@@ -25,8 +25,8 @@ namespace Tuleap\Artidoc\Adapter\Document\Section;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\NeverThrow\Result;
 use function PHPUnit\Framework\assertSame;
 
@@ -47,20 +47,20 @@ final readonly class SectionsAsserter
             new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()),
         );
 
-        $paginated_raw_sections = $dao->searchPaginatedRawSections($artidoc, 50, 0);
+        $paginated_retrieved_sections = $dao->searchPaginatedRetrievedSections($artidoc, 50, 0);
 
-        assertSame(count($expected_content), $paginated_raw_sections->total);
+        assertSame(count($expected_content), $paginated_retrieved_sections->total);
         assertSame($expected_content, array_map(
             self::getContentForAssertion(...),
-            $paginated_raw_sections->rows,
+            $paginated_retrieved_sections->rows,
         ));
     }
 
-    private static function getContentForAssertion(RawSection $raw_section): int|string|null
+    private static function getContentForAssertion(RetrievedSection $retrieved_sections): int|string|null
     {
-        return $raw_section->content->apply(
+        return $retrieved_sections->content->apply(
             static fn (int $id) => Result::ok($id),
-            static fn (RawSectionContentFreetext $freetext) => Result::ok($freetext->content->title),
+            static fn (RetrievedSectionContentFreetext $freetext) => Result::ok($freetext->content->title),
         )->unwrapOr(null);
     }
 }

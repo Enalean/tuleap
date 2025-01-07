@@ -28,9 +28,9 @@ use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFact
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -48,7 +48,7 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
         $this->artidoc_103 = new ArtidocWithContext(new ArtidocDocument(['item_id' => 103]));
     }
 
-    public function testSearchPaginatedRawSectionsById(): void
+    public function testSearchPaginatedRetrievedSectionsById(): void
     {
         $identifier_factory = $this->getSectionIdentifierFactory();
 
@@ -134,39 +134,39 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
 
         $dao = new RetrieveArtidocSectionDao($identifier_factory, $this->getFreetextIdentifierFactory());
 
-        self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->total);
+        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_101, 50, 0)->total);
         self::assertSame(
             [1001, 1002, 1003, 1004],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_101, 50, 0)->rows,
             ),
         );
 
-        self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->total);
+        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_101, 2, 1)->total);
         self::assertSame(
             [1002, 1003],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_101, 2, 1)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_101, 2, 1)->rows,
             ),
         );
 
-        self::assertSame(4, $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->total);
+        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_102, 50, 0)->total);
         self::assertSame(
             ['Introduction', 'Requirements', 2001, 1001],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_102, 50, 0)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_102, 50, 0)->rows,
             )
         );
 
-        self::assertSame(0, $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->total);
+        self::assertSame(0, $dao->searchPaginatedRetrievedSections($this->artidoc_103, 50, 0)->total);
         self::assertSame(
             [],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRawSections($this->artidoc_103, 50, 0)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_103, 50, 0)->rows,
             ),
         );
     }
@@ -196,11 +196,11 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
         $dao = $this->getDao();
 
         $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
-        $rows = $dao->searchPaginatedRawSections($this->artidoc_101, 50, 0)->rows;
+        $rows = $dao->searchPaginatedRetrievedSections($this->artidoc_101, 50, 0)->rows;
 
         foreach ($rows as $row) {
             $dao->searchSectionById($row->id)->match(
-                function (RawSection $section) use ($row) {
+                function (RetrievedSection $section) use ($row) {
                     self::assertNotNull($section);
                     self::assertSame($row->id->toString(), $section->id->toString());
                     self::assertSame(
@@ -241,11 +241,11 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
         return new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
     }
 
-    private function getContentForAssertion(RawSection $raw_section): int|string|null
+    private function getContentForAssertion(RetrievedSection $retrieved_sections): int|string|null
     {
-        return $raw_section->content->apply(
+        return $retrieved_sections->content->apply(
             static fn (int $id) => Result::ok($id),
-            static fn (RawSectionContentFreetext $freetext) => Result::ok($freetext->content->title),
+            static fn (RetrievedSectionContentFreetext $freetext) => Result::ok($freetext->content->title),
         )->unwrapOr(null);
     }
 }

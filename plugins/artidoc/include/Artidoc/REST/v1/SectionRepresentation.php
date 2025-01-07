@@ -22,7 +22,7 @@ namespace Tuleap\Artidoc\REST\v1;
 
 /**
  * This empty interface is necessary to make psalm happy since
- * it does not like the union type return on RawSectionContent::apply()
+ * it does not like the union type return on RetrievedSectionContent::apply()
  * @psalm-immutable
  */
 interface SectionRepresentation

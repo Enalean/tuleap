@@ -32,7 +32,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Fault;
@@ -54,11 +54,11 @@ final class UpdateFreetextContentDaoTest extends TestIntegrationTestCase
 
         $search = new RetrieveArtidocSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
 
-        $paginated_raw_sections = $search->searchPaginatedRawSections($artidoc, 1, 0);
-        self::assertCount(1, $paginated_raw_sections->rows);
-        self::assertTrue(Result::isOk($paginated_raw_sections->rows[0]->content->apply(
+        $paginated_retrieved_sections = $search->searchPaginatedRetrievedSections($artidoc, 1, 0);
+        self::assertCount(1, $paginated_retrieved_sections->rows);
+        self::assertTrue(Result::isOk($paginated_retrieved_sections->rows[0]->content->apply(
             static fn () => Result::err(Fault::fromMessage('Should get freetext, not an artifact section')),
-            static function (RawSectionContentFreetext $freetext) use ($artidoc) {
+            static function (RetrievedSectionContentFreetext $freetext) use ($artidoc) {
                 $dao = new UpdateFreetextContentDao();
 
                 $dao->updateFreetextContent($freetext->id, new FreetextContent('Introduction', ''));

@@ -39,7 +39,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\Domain\Document\Section\EmptyTitleFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Domain\Document\Section\SectionRetriever;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -105,7 +105,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         return $this->getSectionRetriever($user, $collector)
             ->retrieveSectionUserCanRead($section_id)
-            ->andThen(fn(RawSection $section) =>
+            ->andThen(fn(RetrievedSection $section) =>
                 $this->getSectionRepresentationBuilder()->getSectionRepresentation($section, $collector, $user))->match(
                     fn(SectionRepresentation $representation) => $representation,
                     function (Fault $fault) {

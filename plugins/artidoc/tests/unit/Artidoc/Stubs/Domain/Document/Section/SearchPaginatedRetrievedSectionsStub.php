@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
-use Tuleap\Artidoc\Domain\Document\Section\SearchPaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
+use Tuleap\Artidoc\Domain\Document\Section\SearchPaginatedRetrievedSections;
 
-final readonly class SearchPaginatedRawSectionsStub implements SearchPaginatedRawSections
+final readonly class SearchPaginatedRetrievedSectionsStub implements SearchPaginatedRetrievedSections
 {
-    private function __construct(private ?PaginatedRawSections $sections)
+    private function __construct(private ?PaginatedRetrievedSections $sections)
     {
     }
 
-    public static function withSections(PaginatedRawSections $sections): self
+    public static function withSections(PaginatedRetrievedSections $sections): self
     {
         return new self($sections);
     }
@@ -42,10 +42,10 @@ final readonly class SearchPaginatedRawSectionsStub implements SearchPaginatedRa
         return new self(null);
     }
 
-    public function searchPaginatedRawSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRawSections
+    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRetrievedSections
     {
         if ($this->sections === null) {
-            throw new \Exception('Unexpected call to searchPaginatedRawSectionsById()');
+            throw new \Exception('Unexpected call to searchPaginatedRetrievedSectionsById()');
         }
 
         return $this->sections;

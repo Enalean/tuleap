@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 /**
@@ -37,9 +37,9 @@ final readonly class FreetextSectionRepresentation implements SectionRepresentat
     ) {
     }
 
-    public static function fromRawSectionContentFreetext(
+    public static function fromRetrievedSectionContentFreetext(
         SectionIdentifier $section_identifier,
-        RawSectionContentFreetext $freetext,
+        RetrievedSectionContentFreetext $freetext,
     ): self {
         return new self(
             $section_identifier->toString(),

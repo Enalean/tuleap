@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Domain\Document\Section\RetrieveSection;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -36,8 +36,8 @@ use Tuleap\NeverThrow\Result;
 final readonly class RetrieveSectionStub implements RetrieveSection
 {
     /**
-     * @param Ok<RawSection>|Err<Fault> $read
-     * @param Ok<RawSection>|Err<Fault> $write
+     * @param Ok<RetrievedSection>|Err<Fault> $read
+     * @param Ok<RetrievedSection>|Err<Fault> $write
      */
     private function __construct(private Ok|Err $read, private Ok|Err $write)
     {
@@ -50,14 +50,14 @@ final readonly class RetrieveSectionStub implements RetrieveSection
         return new self($err, $err);
     }
 
-    public static function witMatchingSectionUserCanRead(RawSection $section): self
+    public static function witMatchingSectionUserCanRead(RetrievedSection $section): self
     {
         $err = Result::err(Fault::fromMessage('No matching section found'));
 
         return new self(Result::ok($section), $err);
     }
 
-    public static function witMatchingSectionUserCanWrite(RawSection $section): self
+    public static function witMatchingSectionUserCanWrite(RetrievedSection $section): self
     {
         $ok = Result::ok($section);
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\UpdateFreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
@@ -49,9 +49,9 @@ final readonly class SectionUpdater
 
         return $this->retriever
             ->retrieveSectionUserCanWrite($section_identifier)
-            ->andThen(fn (RawSection $section) => $section->content->apply(
+            ->andThen(fn (RetrievedSection $section) => $section->content->apply(
                 $this->updateArtifactSection(...),
-                fn (RawSectionContentFreetext $freetext) => $this->updateFreetextSection($freetext, $title, $description),
+                fn (RetrievedSectionContentFreetext $freetext) => $this->updateFreetextSection($freetext, $title, $description),
             ));
     }
 
@@ -66,7 +66,7 @@ final readonly class SectionUpdater
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function updateFreetextSection(RawSectionContentFreetext $freetext, string $title, string $description): Ok|Err
+    private function updateFreetextSection(RetrievedSectionContentFreetext $freetext, string $title, string $description): Ok|Err
     {
         $this->update_freetext->updateFreetextContent($freetext->id, new FreetextContent($title, $description));
 

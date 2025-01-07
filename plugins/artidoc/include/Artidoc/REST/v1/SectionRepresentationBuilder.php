@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -42,7 +42,7 @@ final readonly class SectionRepresentationBuilder
      * @return Ok<SectionRepresentation>|Err<Fault>
      */
     public function getSectionRepresentation(
-        RawSection $section,
+        RetrievedSection $section,
         RequiredSectionInformationCollector $collector,
         \PFUser $user,
     ): Ok|Err {
@@ -59,7 +59,7 @@ final readonly class SectionRepresentationBuilder
                         $user,
                     )
                 ),
-            fn (RawSectionContentFreetext $freetext) => Result::ok(
+            fn (RetrievedSectionContentFreetext $freetext) => Result::ok(
                 $this->getSectionRepresentationForFreetext($section->id, $freetext),
             )
         );
@@ -67,9 +67,9 @@ final readonly class SectionRepresentationBuilder
 
     private function getSectionRepresentationForFreetext(
         SectionIdentifier $section_identifier,
-        RawSectionContentFreetext $freetext,
+        RetrievedSectionContentFreetext $freetext,
     ): SectionRepresentation {
-        return FreetextSectionRepresentation::fromRawSectionContentFreetext(
+        return FreetextSectionRepresentation::fromRetrievedSectionContentFreetext(
             $section_identifier,
             $freetext,
         );

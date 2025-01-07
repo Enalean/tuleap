@@ -18,17 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\REST\v1;
+declare(strict_types=1);
 
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+namespace Tuleap\Artidoc\Domain\Document\Section\Freetext;
 
-interface TransformRawSectionsToRepresentation
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class RetrievedSectionContentFreetext
 {
-    /**
-     * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
-     */
-    public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err;
+    public function __construct(
+        public FreetextIdentifier $id,
+        public FreetextContent $content,
+    ) {
+    }
 }

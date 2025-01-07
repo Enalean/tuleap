@@ -18,20 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-namespace Tuleap\Artidoc\Domain\Document\Section\Freetext;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
-
-/**
- * @psalm-immutable
- */
-final readonly class RawSectionContentFreetext
+interface SearchPaginatedRetrievedSections
 {
-    public function __construct(
-        public FreetextIdentifier $id,
-        public FreetextContent $content,
-    ) {
-    }
+    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRetrievedSections;
 }

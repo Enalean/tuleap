@@ -24,18 +24,18 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\RawSectionContentFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
-final readonly class RawSectionContent
+final readonly class RetrievedSectionContent
 {
     /**
      * @param Option<int> $artifact_id
-     * @param Option<RawSectionContentFreetext> $freetext
+     * @param Option<RetrievedSectionContentFreetext> $freetext
      */
     private function __construct(
         private Option $artifact_id,
@@ -47,7 +47,7 @@ final readonly class RawSectionContent
     {
         return new self(
             Option::fromValue($artifact_id),
-            Option::nothing(RawSectionContentFreetext::class),
+            Option::nothing(RetrievedSectionContentFreetext::class),
         );
     }
 
@@ -56,7 +56,7 @@ final readonly class RawSectionContent
         return new self(
             Option::nothing(\Psl\Type\int()),
             Option::fromValue(
-                new RawSectionContentFreetext(
+                new RetrievedSectionContentFreetext(
                     $id,
                     new FreetextContent($title, $description),
                 ),
@@ -68,7 +68,7 @@ final readonly class RawSectionContent
      * @template TArtifactReturn
      * @template TFreetextReturn
      * @psalm-param callable(int): (Ok<TArtifactReturn>|Err<Fault>) $artifact_callback
-     * @psalm-param callable(RawSectionContentFreetext): (Ok<TFreetextReturn>|Err<Fault>)    $freetext_callback
+     * @psalm-param callable(RetrievedSectionContentFreetext): (Ok<TFreetextReturn>|Err<Fault>)    $freetext_callback
      * @return Ok<TArtifactReturn>|Ok<TFreetextReturn>|Err<Fault>
      */
     public function apply(callable $artifact_callback, callable $freetext_callback): Ok|Err

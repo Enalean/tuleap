@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
@@ -36,7 +36,7 @@ final class SearchOneSectionStub implements SearchOneSection
     {
     }
 
-    public static function withResults(RawSection $row): self
+    public static function withResults(RetrievedSection $row): self
     {
         return new self(Result::ok($row));
     }

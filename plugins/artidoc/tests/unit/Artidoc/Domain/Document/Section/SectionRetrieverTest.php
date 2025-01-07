@@ -51,7 +51,7 @@ final class SectionRetrieverTest extends TestCase
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $builder = new SectionRetriever(
-            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
+            SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),
             RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
@@ -80,7 +80,7 @@ final class SectionRetrieverTest extends TestCase
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $builder = new SectionRetriever(
-            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
+            SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
@@ -125,7 +125,7 @@ final class SectionRetrieverTest extends TestCase
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
 
         $builder = new SectionRetriever(
-            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
+            SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),
             RetrieveArtidocWithContextStub::withoutDocument(),
             $collector,
         );
@@ -144,7 +144,7 @@ final class SectionRetrieverTest extends TestCase
         $collector = CollectRequiredSectionInformationStub::withoutRequiredInformation();
 
         $builder = new SectionRetriever(
-            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
+            SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),
             RetrieveArtidocWithContextStub::withDocumentUserCanRead(
                 new ArtidocWithContext(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
@@ -162,9 +162,9 @@ final class SectionRetrieverTest extends TestCase
         self::assertTrue($collector->isCalled());
     }
 
-    private function getMatchingRawSection(): RawSection
+    private function getMatchingRetrievedSection(): RetrievedSection
     {
-        return RawSection::fromArtifact([
+        return RetrievedSection::fromArtifact([
             'id' => SectionIdentifierStub::create(),
             'item_id' => self::ITEM_ID,
             'artifact_id' => self::ARTIFACT_ID,
