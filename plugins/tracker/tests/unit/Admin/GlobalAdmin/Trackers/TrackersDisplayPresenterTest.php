@@ -23,23 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
 use CSRFSynchronizerToken;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class TrackersDisplayPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItSortsAlphabeticallyTheTrackers(): void
     {
         $story = new TrackerPresenter(1001, 'story', 'User Story', '', false, '/path/to/story', '/path/to/del', true, '');
         $bug   = new TrackerPresenter(1002, 'bug', 'Bugs', '', false, '/path/to/bug', '/path/to/del', true, '');
 
         $presenter = new TrackersDisplayPresenter(
-            Mockery::mock(Project::class)->shouldReceive(['getID' => 123, 'getUnixNameLowerCase' => 'acme-project'])->getMock(),
+            ProjectTestBuilder::aProject()->build(),
             [$story, $bug],
-            Mockery::mock(CSRFSynchronizerToken::class),
+            $this->createMock(CSRFSynchronizerToken::class),
             true,
         );
 

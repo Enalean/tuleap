@@ -22,44 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\GlobalAdmin;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use User_ForgeUserGroupPermission;
 
-class GlobalAdminPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GlobalAdminPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDoesUserHaveTrackerGlobalAdminRightsOnProject(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(42)->build();
 
-        $super_user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => false, 'isSuperUser' => true])
-            ->getMock();
+        $super_user = UserTestBuilder::aUser()
+            ->withoutMemberOfProjects()
+            ->withSiteAdministrator()
+            ->build();
 
-        $project_admin = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => true, 'isSuperUser' => false])
-            ->getMock();
+        $project_admin = UserTestBuilder::aUser()
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $project_member = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => false, 'isSuperUser' => false])
-            ->getMock();
+        $project_member = UserTestBuilder::aUser()
+            ->withMemberOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $user_with_special_rights = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => false, 'isSuperUser' => false])
-            ->getMock();
+        $user_with_special_rights = UserTestBuilder::aUser()
+            ->withoutMemberOfProjects()
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $forge_user_group_permissions_manager = Mockery::mock(\User_ForgeUserGroupPermissionsManager::class);
+        $forge_user_group_permissions_manager = $this->createMock(\User_ForgeUserGroupPermissionsManager::class);
         $forge_user_group_permissions_manager
-            ->shouldReceive('doesUserHavePermission')
-            ->with($project_member, Mockery::type(TrackerAdminAllProjects::class))
-            ->andReturnFalse();
-        $forge_user_group_permissions_manager
-            ->shouldReceive('doesUserHavePermission')
-            ->with($user_with_special_rights, Mockery::type(TrackerAdminAllProjects::class))
-            ->andReturnTrue();
+            ->method('doesUserHavePermission')
+            ->willReturnCallback(static fn(\PFUser $user, User_ForgeUserGroupPermission $permission) => match (true) {
+                $user === $project_member && $permission instanceof TrackerAdminAllProjects => false,
+                $user === $user_with_special_rights && $permission instanceof TrackerAdminAllProjects => true,
+            });
 
         $checker = new GlobalAdminPermissionsChecker($forge_user_group_permissions_manager);
 
@@ -73,31 +73,33 @@ class GlobalAdminPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(42)->withStatusCreatingFromArchive()->build();
 
-        $super_user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => false, 'isSuperUser' => true])
-            ->getMock();
+        $super_user = UserTestBuilder::aUser()
+            ->withoutMemberOfProjects()
+            ->withSiteAdministrator()
+            ->build();
 
-        $project_admin = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => true, 'isSuperUser' => false])
-            ->getMock();
+        $project_admin = UserTestBuilder::aUser()
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $project_member = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => false, 'isSuperUser' => false])
-            ->getMock();
+        $project_member = UserTestBuilder::aUser()
+            ->withMemberOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $user_with_special_rights = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isAdmin' => false, 'isSuperUser' => false])
-            ->getMock();
+        $user_with_special_rights = UserTestBuilder::aUser()
+            ->withoutMemberOfProjects()
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $forge_user_group_permissions_manager = Mockery::mock(\User_ForgeUserGroupPermissionsManager::class);
+        $forge_user_group_permissions_manager = $this->createMock(\User_ForgeUserGroupPermissionsManager::class);
         $forge_user_group_permissions_manager
-            ->shouldReceive('doesUserHavePermission')
-            ->with($project_member, Mockery::type(TrackerAdminAllProjects::class))
-            ->andReturnFalse();
-        $forge_user_group_permissions_manager
-            ->shouldReceive('doesUserHavePermission')
-            ->with($user_with_special_rights, Mockery::type(TrackerAdminAllProjects::class))
-            ->andReturnTrue();
+            ->method('doesUserHavePermission')
+            ->willReturnCallback(static fn(\PFUser $user, User_ForgeUserGroupPermission $permission) => match (true) {
+                $user === $project_member && $permission instanceof TrackerAdminAllProjects => false,
+                $user === $user_with_special_rights && $permission instanceof TrackerAdminAllProjects => true,
+            });
 
         $checker = new GlobalAdminPermissionsChecker($forge_user_group_permissions_manager);
 
@@ -109,27 +111,19 @@ class GlobalAdminPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesUserHaveTrackerGlobalAdminRightsOnTheWholePlatform(): void
     {
-        $super_user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isSuperUser' => true])
-            ->getMock();
+        $super_user = UserTestBuilder::buildSiteAdministrator();
 
-        $regular_user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isSuperUser' => false])
-            ->getMock();
+        $regular_user = UserTestBuilder::anActiveUser()->build();
 
-        $user_with_special_rights = Mockery::mock(\PFUser::class)
-            ->shouldReceive(['isSuperUser' => false])
-            ->getMock();
+        $user_with_special_rights = UserTestBuilder::anActiveUser()->build();
 
-        $forge_user_group_permissions_manager = Mockery::mock(\User_ForgeUserGroupPermissionsManager::class);
+        $forge_user_group_permissions_manager = $this->createMock(\User_ForgeUserGroupPermissionsManager::class);
         $forge_user_group_permissions_manager
-            ->shouldReceive('doesUserHavePermission')
-            ->with($regular_user, Mockery::type(TrackerAdminAllProjects::class))
-            ->andReturnFalse();
-        $forge_user_group_permissions_manager
-            ->shouldReceive('doesUserHavePermission')
-            ->with($user_with_special_rights, Mockery::type(TrackerAdminAllProjects::class))
-            ->andReturnTrue();
+            ->method('doesUserHavePermission')
+            ->willReturnCallback(static fn(\PFUser $user, User_ForgeUserGroupPermission $permission) => match (true) {
+                $user === $regular_user && $permission instanceof TrackerAdminAllProjects => false,
+                $user === $user_with_special_rights && $permission instanceof TrackerAdminAllProjects => true,
+            });
 
         $checker = new GlobalAdminPermissionsChecker($forge_user_group_permissions_manager);
 

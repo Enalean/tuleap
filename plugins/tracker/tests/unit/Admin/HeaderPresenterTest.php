@@ -20,50 +20,34 @@
 
 namespace Tuleap\Tracker\Admin;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenter;
 
-class HeaderPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HeaderPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(101);
-        $this->tracker->shouldReceive('getName')->andReturn('Tracker 01');
-    }
-
     public function testItSetsTheActiveTabBasedOnCurrentItem()
     {
-        $presenter = new HeaderPresenter($this->tracker, 'editformElements', [], new WorkflowMenuPresenter([]));
+        $tracker = TrackerTestBuilder::aTracker()->build();
+
+        $presenter = new HeaderPresenter($tracker, 'editformElements', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_fields_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'dependencies', [], new WorkflowMenuPresenter([]));
+        $presenter = new HeaderPresenter($tracker, 'dependencies', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_fields_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editsemantic', [], new WorkflowMenuPresenter([]));
+        $presenter = new HeaderPresenter($tracker, 'editsemantic', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_semantics_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editperms', [], new WorkflowMenuPresenter([]));
+        $presenter = new HeaderPresenter($tracker, 'editperms', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_permissions_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editworkflow', [], new WorkflowMenuPresenter([]));
+        $presenter = new HeaderPresenter($tracker, 'editworkflow', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_workflow_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editnotifications', [], new WorkflowMenuPresenter([]));
+        $presenter = new HeaderPresenter($tracker, 'editnotifications', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_notification_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'other', [], new WorkflowMenuPresenter([]));
+        $presenter = new HeaderPresenter($tracker, 'other', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_other_tab_active);
     }
 }
