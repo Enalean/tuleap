@@ -52,14 +52,16 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
             <<<EOS
             SELECT section.id,
                    section.item_id,
-                   section.artifact_id,
+                   section_version.artifact_id,
                    freetext.id AS freetext_id,
                    freetext.title AS freetext_title,
                    freetext.description AS freetext_description,
-                   section.`rank`
-            FROM plugin_artidoc_document AS section
+                   section_version.`rank`
+            FROM plugin_artidoc_section AS section
+                INNER JOIN plugin_artidoc_section_version AS section_version
+                    ON (section.id = section_version.section_id)
                 LEFT JOIN plugin_artidoc_section_freetext AS freetext
-                    ON (section.freetext_id = freetext.id)
+                    ON (section_version.freetext_id = freetext.id)
             WHERE section.id = ?
             EOS,
             $section_id->getBytes(),
@@ -104,16 +106,18 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
                 <<<EOS
                 SELECT section.id,
                    section.item_id,
-                   section.artifact_id,
+                   section_version.artifact_id,
                    freetext.id AS freetext_id,
                    freetext.title AS freetext_title,
                    freetext.description AS freetext_description,
-                   section.`rank`
-                FROM plugin_artidoc_document AS section
-                LEFT JOIN plugin_artidoc_section_freetext AS freetext
-                    ON (section.freetext_id = freetext.id)
+                   section_version.`rank`
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
+                    LEFT JOIN plugin_artidoc_section_freetext AS freetext
+                        ON (section_version.freetext_id = freetext.id)
                 WHERE section.item_id = ?
-                ORDER BY section.`rank`
+                ORDER BY section_version.`rank`
                 LIMIT ? OFFSET ?
                 EOS,
                 $item_id,
@@ -121,7 +125,16 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
                 $offset,
             );
 
-            $total = $db->cell('SELECT COUNT(*) FROM plugin_artidoc_document WHERE item_id = ?', $item_id);
+            $total = $db->cell(
+                <<<EOS
+                SELECT COUNT(*)
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
+                WHERE item_id = ?
+                EOS,
+                $item_id,
+            );
 
             return new PaginatedRawSections(
                 $artidoc,

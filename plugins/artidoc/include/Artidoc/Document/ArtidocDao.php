@@ -41,18 +41,27 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
         $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($source_id, $target_id) {
             $rows = $db->run(
                 'SELECT artifact_id, freetext_id, `rank`
-                FROM plugin_artidoc_document
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
                 WHERE item_id = ?',
                 $source_id
             );
 
             foreach ($rows as $row) {
                 if ($row['artifact_id'] !== null) {
+                    $section_id = $this->section_identifier_factory->buildIdentifier()->getBytes();
                     $db->insert(
-                        'plugin_artidoc_document',
+                        'plugin_artidoc_section',
                         [
-                            'id'          => $this->section_identifier_factory->buildIdentifier()->getBytes(),
-                            'item_id'     => $target_id,
+                            'id'      => $section_id,
+                            'item_id' => $target_id,
+                        ]
+                    );
+                    $db->insert(
+                        'plugin_artidoc_section_version',
+                        [
+                            'section_id'  => $section_id,
                             'artifact_id' => $row['artifact_id'],
                             'freetext_id' => null,
                             'rank'        => $row['rank'],
@@ -72,11 +81,18 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
                             'description' => $freetext['description'],
                         ]
                     );
+                    $section_id = $this->section_identifier_factory->buildIdentifier()->getBytes();
                     $db->insert(
-                        'plugin_artidoc_document',
+                        'plugin_artidoc_section',
                         [
-                            'id'          => $this->section_identifier_factory->buildIdentifier()->getBytes(),
-                            'item_id'     => $target_id,
+                            'id'      => $section_id,
+                            'item_id' => $target_id,
+                        ]
+                    );
+                    $db->insert(
+                        'plugin_artidoc_section_version',
+                        [
+                            'section_id'  => $section_id,
                             'artifact_id' => null,
                             'freetext_id' => $freetext_id,
                             'rank'        => $row['rank'],
@@ -123,11 +139,15 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
 
     public function deleteSectionsByArtifactId(int $artifact_id): void
     {
-        $this->getDB()->delete(
-            'plugin_artidoc_document',
-            [
-                'artifact_id' => $artifact_id,
-            ]
+        $this->getDB()->run(
+            <<<EOS
+            DELETE section, section_version
+            FROM plugin_artidoc_section AS section
+                INNER JOIN plugin_artidoc_section_version AS section_version
+                    ON (section.id = section_version.section_id)
+            WHERE artifact_id = ?
+            EOS,
+            $artifact_id,
         );
     }
 }
