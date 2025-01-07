@@ -64,7 +64,7 @@ final class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.C
     public $report_graphic_id;
     public $allowedForProject;
 
-    public function __construct(int $id)
+    public function __construct(?int $id)
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
