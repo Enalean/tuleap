@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
@@ -55,8 +57,8 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                     $this->createMock(PlanningPermissionsManager::class),
                     $this->createMock(Tuleap\AgileDashboard\Planning\ScrumPlanningFilter::class),
                     $this->createMock(Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever::class),
-                    $this->createMock(Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class),
-                    $this->createMock(Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder::class),
+                    new AgileDashboardCrumbBuilder(),
+                    new AdministrationCrumbBuilder(),
                     $this->createMock(CountElementsModeChecker::class),
                     $this->createMock(DBTransactionExecutor::class),
                     $this->createMock(ArtifactsInExplicitBacklogDao::class),

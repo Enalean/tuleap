@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/BreadCrumbDropdown/AdministrationCrumbBuilder.php">
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/BreadCrumbDropdown/AgileDashboardCrumbBuilder.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getID()]]></code>
-    </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/BreadCrumbDropdown/MilestoneCrumbBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin_path]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addSiblingsSection]]></code>
-      <code><![CDATA[getArtifactUrl]]></code>
-      <code><![CDATA[getOverviewUrl]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ConfigurationDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -28994,7 +28974,6 @@
     <MissingReturnType>
       <code><![CDATA[addDefaultValuesForTitle]]></code>
       <code><![CDATA[addValuesFromQueryResultForTitle]]></code>
-      <code><![CDATA[buildDatas]]></code>
       <code><![CDATA[canAddValueFromQuery]]></code>
       <code><![CDATA[initiateDatas]]></code>
     </MissingReturnType>

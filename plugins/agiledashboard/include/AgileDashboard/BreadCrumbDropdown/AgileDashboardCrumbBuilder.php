@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use PFUser;
@@ -29,13 +31,9 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
-class AgileDashboardCrumbBuilder
+final class AgileDashboardCrumbBuilder
 {
-    /**
-     *
-     * @return BreadCrumb
-     */
-    public function build(PFUser $user, Project $project)
+    public function build(PFUser $user, Project $project): BreadCrumb
     {
         $label = dgettext('tuleap-agiledashboard', 'Backlog');
 
@@ -46,7 +44,7 @@ class AgileDashboardCrumbBuilder
             )
         );
 
-        if ($user->isAdmin($project->getID())) {
+        if ($user->isAdmin((int) $project->getID())) {
             $this->addAdministrationLink($project, $agile_breadcrumb);
         }
 
@@ -56,12 +54,10 @@ class AgileDashboardCrumbBuilder
     private function addAdministrationLink(Project $project, BreadCrumb $agile_breadcrumb): void
     {
         $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'group_id' => $project->getID(),
-                    'action'   => 'admin',
-                ]
-            );
+                     http_build_query([
+                         'group_id' => $project->getID(),
+                         'action'   => 'admin',
+                     ]);
 
         $link = new BreadCrumbLink(
             $GLOBALS['Language']->getText('global', 'Administration'),
