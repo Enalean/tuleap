@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Backlog\Backlog;
 
 use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
-use AgileDashboard_Milestone_Backlog_IBacklogItem;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class BacklogItemPresenterCollectionTest extends TestCase
@@ -41,7 +41,7 @@ final class BacklogItemPresenterCollectionTest extends TestCase
     public function testItReturnsTrueWhenItemBelongsToCollection(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $item       = $this->createMock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
+        $item       = $this->createMock(IBacklogItem::class);
         $item->method('id')->willReturn(5);
         $collection->push($item);
         self::assertTrue($collection->containsId(5));
@@ -50,7 +50,7 @@ final class BacklogItemPresenterCollectionTest extends TestCase
     public function testItReturnsFalseWhenItemDoesntBelongToCollection(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $item       = $this->createMock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
+        $item       = $this->createMock(IBacklogItem::class);
         $item->method('id')->willReturn(5);
         $collection->push($item);
         self::assertFalse($collection->containsId(2));

@@ -24,6 +24,7 @@
 
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
@@ -506,10 +507,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
     }
 
-    protected function setInitialEffort(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, $semantics_per_artifact)
+    protected function setInitialEffort(IBacklogItem $backlog_item, $semantics_per_artifact)
     {
         if (isset($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME])) {
-            $backlog_item->setInitialEffort($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
+            $backlog_item->setInitialEffort((int) $semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
         }
     }
 
@@ -547,7 +548,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Planning_Milestone $milestone,
         Artifact $artifact,
         array $semantics,
-        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        IBacklogItem $backlog_item,
         PFUser $user,
     ) {
         $artifact_id = $artifact->getId();
@@ -567,7 +568,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Planning_Milestone $milestone,
         Artifact $artifact,
         array $semantics,
-        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        IBacklogItem $backlog_item,
         PFUser $user,
     ) {
         $this->setInitialEffort($backlog_item, $semantics[$artifact->getId() ?? 0]);

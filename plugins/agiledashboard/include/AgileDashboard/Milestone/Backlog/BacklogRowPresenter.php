@@ -22,15 +22,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+interface BacklogRowPresenter
 {
-    public function title();
+    public function title(): string;
 
-    public function url();
+    public function url(): string;
 
-    public function points();
+    public function points(): ?int;
 
-    public function parent_title();
+    public function parent_title(): ?string;
 
-    public function parent_url();
+    public function parent_url(): ?string;
 }

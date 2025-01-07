@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem;
 
-use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashBoard_Semantic_InitialEffort;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -45,7 +45,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
     private InitialEffortSemanticUpdater $updater;
     private PFUser $user;
     private Artifact&MockObject $artifact;
-    private AgileDashboard_Milestone_Backlog_BacklogItem&MockObject $backlog_item;
+    private BacklogItem&MockObject $backlog_item;
     private AgileDashBoard_Semantic_InitialEffort&MockObject $semantic_initial_effort;
     private Tracker_Artifact_Changeset $last_changeset;
 
@@ -55,7 +55,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
 
         $this->user                    = UserTestBuilder::buildWithDefaults();
         $this->artifact                = $this->createMock(Artifact::class);
-        $this->backlog_item            = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItem::class);
+        $this->backlog_item            = $this->createMock(BacklogItem::class);
         $this->semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
         $this->last_changeset          = ChangesetTestBuilder::aChangeset(1)->ofArtifact($this->artifact)->build();
 

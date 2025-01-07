@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
+
 /**
  * First class collection of Backlog Items
  */
@@ -28,7 +30,7 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection extends Iterat
 
     public function setParentItemName($name);
 
-    public function push(AgileDashboard_Milestone_Backlog_IBacklogItem $item);
+    public function push(IBacklogItem $item);
 
     public function containsId($id);
 

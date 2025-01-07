@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\REST\v1;
 
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
@@ -58,7 +59,7 @@ class BacklogItemRepresentation
      */
     public $can_add_a_test;
 
-    public function __construct(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, \PFUser $user)
+    public function __construct(IBacklogItem $backlog_item, \PFUser $user)
     {
         $this->id         = JsonCast::toInt($backlog_item->id());
         $this->label      = $backlog_item->title();

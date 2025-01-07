@@ -20,19 +20,19 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem;
 
-use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashBoard_Semantic_InitialEffort;
 use PFUser;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_Selectbox;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 
 class InitialEffortSemanticUpdater
 {
     public function updateBacklogItemInitialEffortSemantic(
         PFUser $current_user,
-        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
+        BacklogItem $backlog_item,
         AgileDashBoard_Semantic_InitialEffort $semantic_initial_effort,
-    ): AgileDashboard_Milestone_Backlog_BacklogItem {
+    ): BacklogItem {
         $artifact = $backlog_item->getArtifact();
 
         $initial_effort_field = $semantic_initial_effort->getField();

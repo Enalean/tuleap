@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_BacklogItemPresenter;
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
@@ -36,6 +35,7 @@ use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\BacklogItemPresenter;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -52,8 +52,8 @@ final class MilestoneResourceValidatorTest extends TestCase
     private Planning_Milestone $milestone;
     private Tracker_ArtifactFactory&MockObject $tracker_artifact_factory;
     private PlanningFactory&MockObject $planning_factory;
-    private AgileDashboard_BacklogItemPresenter&MockObject $todo_item;
-    private AgileDashboard_BacklogItemPresenter&MockObject $unplanned_item;
+    private BacklogItemPresenter $todo_item;
+    private BacklogItemPresenter $unplanned_item;
     private AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo_collection;
     private AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $unplanned_collection;
     /**
@@ -87,11 +87,8 @@ final class MilestoneResourceValidatorTest extends TestCase
             ->inTracker(TrackerTestBuilder::aTracker()->withId(666)->build())
             ->build();
 
-        $this->unplanned_item = $this->createMock(AgileDashboard_BacklogItemPresenter::class);
-        $this->unplanned_item->method('id')->willReturn(102);
-
-        $this->todo_item = $this->createMock(AgileDashboard_BacklogItemPresenter::class);
-        $this->todo_item->method('id')->willReturn(174);
+        $this->unplanned_item = new BacklogItemPresenter($this->artifact1, '', false);
+        $this->todo_item      = new BacklogItemPresenter($this->artifact2, '', false);
 
         $this->unplanned_collection     = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $done_collection                = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();

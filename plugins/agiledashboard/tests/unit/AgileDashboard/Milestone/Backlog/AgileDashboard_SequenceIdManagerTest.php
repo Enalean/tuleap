@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
@@ -58,9 +57,9 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
     private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog_2;
     private PFUser $user;
     private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&MockObject $backlog_item_collection_factory;
-    private AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item_1;
-    private AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item_2;
-    private AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item_3;
+    private BacklogItem $backlog_item_1;
+    private BacklogItem $backlog_item_2;
+    private BacklogItem $backlog_item_3;
     private AgileDashboard_Milestone_Backlog_BacklogItemCollection $items_collection;
 
     protected function setUp(): void
@@ -102,9 +101,9 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $this->artifact_5 = ArtifactTestBuilder::anArtifact($artifact_id_5)->build();
         $this->artifact_6 = ArtifactTestBuilder::anArtifact($this->artifact_id_6)->build();
 
-        $this->backlog_item_1 = new AgileDashboard_Milestone_Backlog_BacklogItem($this->artifact_1, false);
-        $this->backlog_item_2 = new AgileDashboard_Milestone_Backlog_BacklogItem($this->artifact_2, false);
-        $this->backlog_item_3 = new AgileDashboard_Milestone_Backlog_BacklogItem($this->artifact_3, false);
+        $this->backlog_item_1 = new BacklogItem($this->artifact_1, false);
+        $this->backlog_item_2 = new BacklogItem($this->artifact_2, false);
+        $this->backlog_item_3 = new BacklogItem($this->artifact_3, false);
 
         $this->items_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
     }
