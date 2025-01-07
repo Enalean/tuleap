@@ -47,32 +47,23 @@
     </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ErrorState } from "../../store/error/type";
+import GlobalAppErrorIllustration from "./GlobalAppErrorIllustration.vue";
 
-const error = namespace("error");
-@Component({
-    components: {
-        "global-app-error-illustration": (): Promise<Record<string, unknown>> =>
-            import(
-                /* webpackChunkName: "taskboard-global-app-error-illustration" */ "./GlobalAppErrorIllustration.vue"
-            ),
-    },
-})
-export default class GlobalAppError extends Vue {
-    @error.State
-    readonly global_error_message!: string;
+const { global_error_message } = useNamespacedState<Pick<ErrorState, "global_error_message">>(
+    "error",
+    ["global_error_message"],
+);
 
-    is_more_shown = false;
+const is_more_shown = ref(false);
 
-    reloadPage(): void {
-        window.location.reload();
-    }
-
-    get has_more_details(): boolean {
-        return this.global_error_message.length > 0;
-    }
+function reloadPage(): void {
+    window.location.reload();
 }
+const has_more_details = computed((): boolean => {
+    return global_error_message.value.length > 0;
+});
 </script>

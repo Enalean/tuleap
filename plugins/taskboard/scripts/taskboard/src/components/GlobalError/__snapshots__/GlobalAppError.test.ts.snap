@@ -7,7 +7,7 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
   <div
     class="empty-state-illustration"
   >
-    <!---->
+    <global-app-error-illustration-stub />
   </div>
    
   <h1
