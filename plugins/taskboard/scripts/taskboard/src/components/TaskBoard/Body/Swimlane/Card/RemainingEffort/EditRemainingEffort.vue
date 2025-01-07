@@ -27,126 +27,122 @@
         v-on:keyup.enter="save"
         pattern="[0-9]*(\.[0-9]+)?"
         v-bind:aria-label="$gettext('New remaining effort')"
+        ref="input_element"
     />
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { useNamespacedActions, useNamespacedMutations } from "vuex-composition-helpers";
 import type { Card } from "../../../../../../type";
 import { TaskboardEvent } from "../../../../../../type";
-import { namespace } from "vuex-class";
 import type { NewRemainingEffortPayload } from "../../../../../../store/swimlane/card/type";
 import EventBus from "../../../../../../helpers/event-bus";
 import { autoFocusAutoSelect } from "../../../../../../helpers/autofocus-autoselect";
 
-const swimlane = namespace("swimlane");
+const { saveRemainingEffort } = useNamespacedActions("swimlane", ["saveRemainingEffort"]);
+const { removeRemainingEffortFromEditMode } = useNamespacedMutations("swimlane", [
+    "removeRemainingEffortFromEditMode",
+]);
 
 const MINIMAL_WIDTH_IN_PX = 30;
 const MAXIMAL_WIDTH_IN_PX = 60;
 const NB_PX_PER_CHAR = 10;
 
-@Component
-export default class EditRemainingEffort extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
+const props = defineProps<{
+    card: Card;
+}>();
 
-    @swimlane.Action
-    readonly saveRemainingEffort!: (
-        new_remaining_effort: NewRemainingEffortPayload,
-    ) => Promise<void>;
+const emit = defineEmits<{
+    (e: "editor-closed"): void;
+}>();
 
-    @swimlane.Mutation
-    readonly removeRemainingEffortFromEditMode!: (card: Card) => void;
+const value = ref("");
+const input_element = ref();
 
-    value = "";
+const classes = computed((): Array<string> => {
+    let width = NB_PX_PER_CHAR * value.value.length;
 
-    get classes(): Array<string> {
-        let width = NB_PX_PER_CHAR * this.value.length;
-
-        if (width <= MINIMAL_WIDTH_IN_PX) {
-            return [];
-        } else if (width > MAXIMAL_WIDTH_IN_PX) {
-            width = MAXIMAL_WIDTH_IN_PX;
-        }
-
-        return [`taskboard-card-remaining-effort-input-width-${width}`];
+    if (width <= MINIMAL_WIDTH_IN_PX) {
+        return [];
+    } else if (width > MAXIMAL_WIDTH_IN_PX) {
+        width = MAXIMAL_WIDTH_IN_PX;
     }
 
-    mounted(): void {
-        this.initValue();
+    return [`taskboard-card-remaining-effort-input-width-${width}`];
+});
 
-        const input = this.$el;
-        if (!(input instanceof HTMLInputElement)) {
-            throw new Error("The component is not a HTML input");
-        }
-        autoFocusAutoSelect(input);
+onMounted((): void => {
+    initValue();
 
-        EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
-        EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, this.saveButtonCallback);
+    if (!(input_element.value instanceof HTMLInputElement)) {
+        throw new Error("The component is not a HTML input");
+    }
+    autoFocusAutoSelect(input_element.value);
+
+    EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, cancelButtonCallback);
+    EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, saveButtonCallback);
+});
+
+onBeforeUnmount((): void => {
+    EventBus.$off(TaskboardEvent.CANCEL_CARD_EDITION, cancelButtonCallback);
+    EventBus.$off(TaskboardEvent.SAVE_CARD_EDITION, saveButtonCallback);
+});
+
+function initValue(): void {
+    if (props.card.remaining_effort) {
+        value.value = String(props.card.remaining_effort.value);
+    }
+}
+
+function cancelButtonCallback(card: Card): void {
+    if (card.id === props.card.id) {
+        cancel();
+    }
+}
+
+function saveButtonCallback(card: Card): void {
+    if (card.id === props.card.id) {
+        save();
+    }
+}
+
+function cancel(): void {
+    removeRemainingEffortFromEditMode(props.card);
+}
+
+function save(keyup_event?: KeyboardEvent): void {
+    if (!(input_element.value instanceof HTMLInputElement)) {
+        throw new Error("The component is not a HTML input");
+    }
+    if (!input_element.value.checkValidity()) {
+        // force :invalid pseudo-class
+        input_element.value.blur();
+        input_element.value.focus();
+        return;
     }
 
-    beforeDestroy(): void {
-        EventBus.$off(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
-        EventBus.$off(TaskboardEvent.SAVE_CARD_EDITION, this.saveButtonCallback);
+    if (!props.card.remaining_effort) {
+        return;
     }
 
-    initValue(): void {
-        if (this.card.remaining_effort) {
-            this.value = String(this.card.remaining_effort.value);
-        }
+    if (props.card.remaining_effort.is_being_saved) {
+        return;
     }
 
-    cancelButtonCallback(card: Card): void {
-        if (card.id === this.card.id) {
-            this.cancel();
-        }
+    const value = Number.parseFloat(input_element.value.value);
+    if (value === props.card.remaining_effort.value) {
+        cancel();
+        return;
     }
 
-    saveButtonCallback(card: Card): void {
-        if (card.id === this.card.id) {
-            this.save();
-        }
-    }
+    const new_remaining_effort: NewRemainingEffortPayload = { card: props.card, value };
+    saveRemainingEffort(new_remaining_effort);
 
-    cancel(): void {
-        this.removeRemainingEffortFromEditMode(this.card);
-    }
+    emit("editor-closed");
 
-    save(keyup_event?: KeyboardEvent): void {
-        const input = this.$el;
-        if (!(input instanceof HTMLInputElement)) {
-            throw new Error("The component is not a HTML input");
-        }
-        if (!input.checkValidity()) {
-            // force :invalid pseudo-class
-            input.blur();
-            input.focus();
-            return;
-        }
-
-        if (!this.card.remaining_effort) {
-            return;
-        }
-
-        if (this.card.remaining_effort.is_being_saved) {
-            return;
-        }
-
-        const value = Number.parseFloat(input.value);
-        if (value === this.card.remaining_effort.value) {
-            this.cancel();
-            return;
-        }
-
-        const new_remaining_effort: NewRemainingEffortPayload = { card: this.card, value };
-        this.saveRemainingEffort(new_remaining_effort);
-
-        this.$emit("editor-closed");
-
-        if (keyup_event) {
-            keyup_event.stopPropagation();
-        }
+    if (keyup_event) {
+        keyup_event.stopPropagation();
     }
 }
 </script>
