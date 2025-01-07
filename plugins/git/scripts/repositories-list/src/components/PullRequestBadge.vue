@@ -21,7 +21,7 @@
     <a
         v-bind:href="pullrequest_url()"
         class="git-pullrequest-badge-link"
-        v-if="numberPullRequest > 0"
+        v-if="number_pull_request > 0"
     >
         <span class="tlp-badge-primary">{{ pull_requests }}</span>
     </a>
@@ -35,23 +35,23 @@ import { useGettext } from "vue3-gettext";
 const { interpolate, $ngettext } = useGettext();
 
 const props = defineProps<{
-    numberPullRequest: number;
-    repositoryId: number;
+    number_pull_request: number;
+    repository_id: number;
 }>();
 
 const pullrequest_url = (): string => {
-    return String(getPullRequestsHomepageUrl(location, getProjectId(), props.repositoryId));
+    return String(getPullRequestsHomepageUrl(location, getProjectId(), props.repository_id));
 };
 
 const pull_requests = computed(() => {
-    const nb = props.numberPullRequest;
+    const nb = props.number_pull_request;
     return interpolate(
         $ngettext(
-            "%{ numberPullRequest } pull request",
-            "%{ numberPullRequest } pull requests",
+            "%{ number_pull_request } pull request",
+            "%{ number_pull_request } pull requests",
             nb,
         ),
-        { numberPullRequest: nb },
+        { number_pull_request: nb },
     );
 });
 </script>

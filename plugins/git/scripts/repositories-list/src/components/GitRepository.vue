@@ -49,8 +49,8 @@
                     <div class="git-repository-links-spacer"></div>
                     <pull-request-badge
                         v-if="!isGitlabRepository(props.repository)"
-                        v-bind:number-pull-request="number_pull_requests()"
-                        v-bind:repository-id="Number(repository.id)"
+                        v-bind:number_pull_request="number_pull_requests()"
+                        v-bind:repository_id="Number(repository.id)"
                     />
                     <div class="git-repository-card-last-update">
                         <i class="far fa-clock git-repository-card-last-update-icon"></i>
