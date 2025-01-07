@@ -33,7 +33,6 @@ use ForgeConfig;
 use FRSFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
-use MailManager;
 use ProjectHistoryDao;
 use ProjectManager;
 use ReferenceManager;
@@ -633,7 +632,6 @@ class RouteCollector
             EventManager::instance(),
             TemplateRendererFactory::build(),
             DisplayNotificationsController::getCSRFToken(),
-            new MailManager(),
         );
     }
 
@@ -642,7 +640,6 @@ class RouteCollector
         return new UpdateNotificationsPreferences(
             DisplayNotificationsController::getCSRFToken(),
             \UserManager::instance(),
-            EventManager::instance(),
         );
     }
 

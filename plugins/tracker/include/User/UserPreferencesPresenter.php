@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,19 +16,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account;
+namespace Tuleap\Tracker\User;
+
+use Codendi_Mail_Interface;
+use CSRFSynchronizerToken;
 
 /**
  * @psalm-immutable
  */
-final class NotificationsOnOwnActionsPresenter
+final readonly class UserPreferencesPresenter
 {
-    public function __construct(public string $name, public string $label, public bool $wants_notifications)
-    {
+    public bool $email_format_html;
+    public bool $email_format_text;
+
+    public function __construct(
+        public CSRFSynchronizerToken $csrf_token,
+        public bool $wants_notifications,
+        public string $form_post_uri,
+        string $mail_format_preference,
+    ) {
+        $this->email_format_html = $mail_format_preference === Codendi_Mail_Interface::FORMAT_HTML;
+        $this->email_format_text = $mail_format_preference !== Codendi_Mail_Interface::FORMAT_HTML;
     }
 }

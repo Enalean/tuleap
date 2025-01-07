@@ -25,7 +25,8 @@ namespace Tuleap\Test\Builders;
 
 final class LayoutInspector
 {
-    private $feedbacks = [];
+    /** @var list<array{level:string, message:string}> */
+    private array $feedbacks = [];
 
     public function setRedirectUrl(string $redirect_url): never
     {
@@ -41,7 +42,7 @@ final class LayoutInspector
     }
 
     /**
-     * @return array{level:string, message:string}
+     * @return list<array{level:string, message:string}>
      */
     public function getFeedback(): array
     {

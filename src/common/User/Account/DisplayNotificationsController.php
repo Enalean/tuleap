@@ -25,7 +25,6 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 use HTTPRequest;
-use MailManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
@@ -34,50 +33,32 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-final class DisplayNotificationsController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final readonly class DisplayNotificationsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public const URL = '/account/notifications';
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var MailManager
-     */
-    private $mail_manager;
+
+    private TemplateRenderer $renderer;
 
     public function __construct(
-        EventDispatcherInterface $dispatcher,
+        private EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
-        CSRFSynchronizerToken $csrf_token,
-        MailManager $mail_manager,
+        private CSRFSynchronizerToken $csrf_token,
     ) {
-        $this->dispatcher   = $dispatcher;
-        $this->csrf_token   = $csrf_token;
-        $this->renderer     = $renderer_factory->getRenderer(__DIR__ . '/templates');
-        $this->mail_manager = $mail_manager;
+        $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/templates');
     }
 
     /**
      * @inheritDoc
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
             throw new ForbiddenException();
         }
 
-        $tabs                         = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        $notifications_on_own_actions = $this->dispatcher->dispatch(new NotificationsOnOwnActionsCollection($user));
+        $tabs     = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
+        $sections = $this->dispatcher->dispatch(new NotificationsSectionsCollector($user));
 
         (new UserPreferencesHeader())->display(_('Notifications'), $layout);
         $this->renderer->renderToPage(
@@ -85,9 +66,9 @@ final class DisplayNotificationsController implements DispatchableWithRequest, D
             new NotificationsPresenter(
                 $this->csrf_token,
                 $tabs,
-                $notifications_on_own_actions,
-                $user,
-                $this->mail_manager->getMailPreferencesByUser($user),
+                $user->getMailSiteUpdates() === 1,
+                $user->getMailVA() === 1,
+                $sections->get(),
             )
         );
         $layout->footer([]);

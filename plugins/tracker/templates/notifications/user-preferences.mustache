@@ -1,0 +1,53 @@
+<form class="tlp-pane-container" action="{{ form_post_uri }}" method="POST">
+    <div class="tlp-pane-header">
+        <h1 class="tlp-pane-title">
+            <i class="tlp-pane-title-icon fa-fw fa-solid fa-tlp-tracker-circle" aria-hidden="true"></i>{{# dgettext }} tuleap-tracker | Trackers {{/ dgettext }}
+        </h1>
+    </div>
+
+    <section class="tlp-pane-section">
+        <div class="tlp-form-element">
+            <label class="tlp-label">{{# dgettext }} tuleap-tracker | Tracker email format {{/ dgettext }}</label>
+            <label class="tlp-label tlp-radio">
+                <input
+                    type="radio"
+                    name="email_format"
+                    value="html"
+                    data-test="user-prefs-html-format"
+                    {{# email_format_html }}checked{{/ email_format_html }}
+                >
+                {{# dgettext }} tuleap-tracker | HTML {{/ dgettext }}
+            </label>
+            <label class="tlp-label tlp-radio">
+                <input
+                    type="radio"
+                    name="email_format"
+                    value="text"
+                    data-test="user-prefs-text-format"
+                    {{# email_format_text }}checked{{/ email_format_text }}
+                >
+                {{# dgettext }} tuleap-tracker | Text {{/ dgettext }}
+            </label>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input
+                    type="checkbox"
+                    name="user_notifications_own_actions_tracker"
+                    value="1"
+                    {{# wants_notifications }}checked{{/ wants_notifications }}
+                >
+                {{# dgettext }} tuleap-tracker | Receive emails for actions I do on the platform {{/ dgettext }}
+            </label>
+        </div>
+
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <button type="submit" class="tlp-button-primary">
+            <i class="far fa-save tlp-button-icon"></i>{{# dgettext }} tuleap-tracker | Save notifications changes {{/ dgettext }}
+        </button>
+    </section>
+</form>
