@@ -6,5 +6,6 @@ in pkgs.symlinkJoin {
   name = "rpm-additional-packages";
   paths = builtins.map importPath [
     ../../plugins/dynamic_credentials/additional-packages/vault-tuleap-plugin/package.nix
+    ../utils/vault-gpg-plugin-rpm-compat/package.nix
   ];
 }
