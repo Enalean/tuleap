@@ -22,26 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
 
-class CrossReferenceGitOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceGitOrganizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCollectsOrganizeableGitCrossReferencesToMoveThemInTheirSection(): void
     {
-        $collector = Mockery::mock(OrganizeableGitCrossReferencesAndTheContributorsCollector::class);
-        $enhancer  = Mockery::mock(CrossReferenceGitEnhancer::class);
+        $collector = $this->createMock(OrganizeableGitCrossReferencesAndTheContributorsCollector::class);
+        $enhancer  = $this->createMock(CrossReferenceGitEnhancer::class);
 
         $ref         = CrossReferencePresenterBuilder::get(1)->withType('git_commit')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git_commit')->build();
 
-        $user                = Mockery::mock(\PFUser::class);
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class, ['getCurrentUser' => $user]);
+        $user                = UserTestBuilder::buildWithDefaults();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
 
         $contributors_email_collection = new UserEmailCollection();
 
@@ -63,50 +62,27 @@ class CrossReferenceGitOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'Leeloominaï Lekatariba Lamina-Tchaï Ekbat De Sebat',
             1234567890,
         );
-        $collector
-            ->shouldReceive('collectOrganizeableGitCrossReferencesAndTheContributorsCollection')
+        $collector->expects(self::once())->method('collectOrganizeableGitCrossReferencesAndTheContributorsCollection')
             ->with($by_nature_organizer)
-            ->once()
-            ->andReturn(
-                new OrganizeableGitCrossReferencesAndTheContributors(
-                    [
-                        new CommitDetailsCrossReferenceInformation($commit_details_for_ref, $ref, 'a'),
-                        new CommitDetailsCrossReferenceInformation($commit_details_for_another_ref, $another_ref, 'b'),
-                    ],
-                    $contributors_email_collection,
-                )
-            );
+            ->willReturn(new OrganizeableGitCrossReferencesAndTheContributors([
+                new CommitDetailsCrossReferenceInformation($commit_details_for_ref, $ref, 'a'),
+                new CommitDetailsCrossReferenceInformation($commit_details_for_another_ref, $another_ref, 'b'),
+            ], $contributors_email_collection));
 
-        $enhanced_ref = $ref->withTitle('Another bites to dust', null);
-        $enhancer
-            ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
-            ->with(
-                $ref,
-                $commit_details_for_ref,
-                $user,
-                $contributors_email_collection
-            )
-            ->andReturn($enhanced_ref);
-
+        $enhanced_ref         = $ref->withTitle('Another bites to dust', null);
         $enhanced_another_ref = $another_ref->withTitle('Everything you create, you use to destroy', null);
-        $enhancer
-            ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
-            ->with(
-                $another_ref,
-                $commit_details_for_another_ref,
-                $user,
-                $contributors_email_collection
-            )
-            ->andReturn($enhanced_another_ref);
+        $enhancer->method('getCrossReferencePresenterWithCommitInformation')
+            ->with(self::anything(), self::anything(), $user, $contributors_email_collection)
+            ->willReturnCallback(static fn($reference) => match ($reference) {
+                $ref         => $enhanced_ref,
+                $another_ref => $enhanced_another_ref,
+            });
 
-        $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->with($enhanced_ref, 'a')
-            ->once();
-        $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->with($enhanced_another_ref, 'b')
-            ->once();
+        $by_nature_organizer->expects(self::exactly(2))->method('moveCrossReferenceToSection')
+            ->with(
+                self::callback(static fn($reference) => $reference === $enhanced_ref || $reference === $enhanced_another_ref),
+                self::callback(static fn($label) => $label === 'a' || $label === 'b'),
+            );
 
         $organizer = new CrossReferenceGitOrganizer($collector, $enhancer);
         $organizer->organizeGitReferences($by_nature_organizer);
