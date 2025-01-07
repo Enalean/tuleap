@@ -22,79 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
 use UserManager;
 
-class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceByNatureOrganizer
-     */
-    private $by_nature_organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitDetailsCrossReferenceInformationBuilder
-     */
-    private $information_builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var OrganizeableGitCrossReferencesAndTheContributorsCollector
-     */
-    private $collector;
+    private PFUser $user;
+    private CrossReferenceByNatureOrganizer&MockObject $by_nature_organizer;
+    private CommitDetailsCrossReferenceInformationBuilder&MockObject $information_builder;
+    private UserManager&MockObject $user_manager;
+    private OrganizeableGitCrossReferencesAndTheContributorsCollector $collector;
 
     protected function setUp(): void
     {
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->by_nature_organizer = Mockery::mock(
-            CrossReferenceByNatureOrganizer::class,
-            ['getCurrentUser' => $this->user]
-        );
+        $this->by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $this->by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
 
-        $this->information_builder = Mockery::mock(CommitDetailsCrossReferenceInformationBuilder::class);
-        $this->user_manager        = Mockery::mock(UserManager::class);
+        $this->information_builder = $this->createMock(CommitDetailsCrossReferenceInformationBuilder::class);
+        $this->user_manager        = $this->createMock(UserManager::class);
 
-        $this->collector = new OrganizeableGitCrossReferencesAndTheContributorsCollector(
-            $this->information_builder,
-            $this->user_manager,
-        );
+        $this->collector = new OrganizeableGitCrossReferencesAndTheContributorsCollector($this->information_builder, $this->user_manager);
     }
 
     public function testItIgnoresCrossReferencesItDoesNotKnow(): void
     {
-        $this->by_nature_organizer
-            ->shouldReceive('getCrossReferencePresenters')
-            ->andReturn(
-                [
-                    CrossReferencePresenterBuilder::get(1)->withType('tracker')->build(),
-                ]
-            );
+        $this->by_nature_organizer->method('getCrossReferencePresenters')
+            ->willReturn([CrossReferencePresenterBuilder::get(1)->withType('tracker')->build()]);
 
-        $this->by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $this->by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->never();
+        $this->by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $this->by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
 
-        $this->user_manager
-            ->shouldReceive('getUserCollectionByEmails')
-            ->with([])
-            ->andReturn(new UserEmailCollection());
+        $this->user_manager->method('getUserCollectionByEmails')->with([])->willReturn(new UserEmailCollection());
 
-        $collection = $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection(
-            $this->by_nature_organizer,
-        );
+        $collection = $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection($this->by_nature_organizer);
 
         self::assertEmpty($collection->getOrganizeableCrossReferencesInformationCollection());
     }
@@ -103,29 +72,16 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tul
     {
         $ref = CrossReferencePresenterBuilder::get(1)->withType('git_commit')->build();
 
-        $this->by_nature_organizer
-            ->shouldReceive('getCrossReferencePresenters')
-            ->andReturn([$ref]);
+        $this->by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$ref]);
 
-        $this->information_builder
-            ->shouldReceive('getCommitDetailsCrossReferenceInformation')
-            ->with($this->user, $ref)
-            ->andReturnNull();
+        $this->information_builder->method('getCommitDetailsCrossReferenceInformation')->with($this->user, $ref)->willReturn(null);
 
-        $this->by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $this->by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+        $this->by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $this->by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($ref);
 
-        $this->user_manager
-            ->shouldReceive('getUserCollectionByEmails')
-            ->with([])
-            ->andReturn(new UserEmailCollection());
+        $this->user_manager->method('getUserCollectionByEmails')->with([])->willReturn(new UserEmailCollection());
 
-        $collection = $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection(
-            $this->by_nature_organizer,
-        );
+        $collection = $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection($this->by_nature_organizer);
 
         self::assertEmpty($collection->getOrganizeableCrossReferencesInformationCollection());
     }
@@ -135,11 +91,9 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tul
         $ref         = CrossReferencePresenterBuilder::get(1)->withType('git_commit')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git_commit')->build();
 
-        $this->by_nature_organizer
-            ->shouldReceive('getCrossReferencePresenters')
-            ->andReturn([$ref, $another_ref]);
+        $this->by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$ref, $another_ref]);
 
-        $information = new CommitDetailsCrossReferenceInformation(
+        $information         = new CommitDetailsCrossReferenceInformation(
             new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
@@ -152,11 +106,6 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tul
             $ref,
             '',
         );
-        $this->information_builder
-            ->shouldReceive('getCommitDetailsCrossReferenceInformation')
-            ->with($this->user, $ref)
-            ->andReturn($information);
-
         $another_information = new CommitDetailsCrossReferenceInformation(
             new CommitDetails(
                 'a2b3c4d5e6f7g8h9i1',
@@ -170,24 +119,21 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tul
             $another_ref,
             '',
         );
-        $this->information_builder
-            ->shouldReceive('getCommitDetailsCrossReferenceInformation')
-            ->with($this->user, $another_ref)
-            ->andReturn($another_information);
+        $this->information_builder->method('getCommitDetailsCrossReferenceInformation')->with($this->user, self::anything())
+            ->willReturnCallback(static fn($user, $reference) => match ($reference) {
+                $ref         => $information,
+                $another_ref => $another_information,
+            });
 
-        $this->by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->never();
+        $this->by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
 
-        $leeloo = Mockery::mock(PFUser::class, ['getEmail' => 'leeloo@example.com']);
-        $korben = Mockery::mock(PFUser::class, ['getEmail' => 'korben@example.com']);
+        $leeloo = UserTestBuilder::aUser()->withEmail('leeloo@example.com')->build();
+        $korben = UserTestBuilder::aUser()->withEmail('korben@example.com')->build();
 
-        $this->user_manager
-            ->shouldReceive('getUserCollectionByEmails')
-            ->with(['korben@example.com', 'leeloo@example.com'])
-            ->andReturn(new UserEmailCollection($leeloo, $korben));
+        $this->user_manager->method('getUserCollectionByEmails')->with(['korben@example.com', 'leeloo@example.com'])
+            ->willReturn(new UserEmailCollection($leeloo, $korben));
 
-        $collection = $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection(
-            $this->by_nature_organizer,
-        );
+        $collection = $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection($this->by_nature_organizer);
 
         self::assertEquals(
             [$information, $another_information],
@@ -208,11 +154,9 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tul
         $ref         = CrossReferencePresenterBuilder::get(1)->withType('git_commit')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git_commit')->build();
 
-        $this->by_nature_organizer
-            ->shouldReceive('getCrossReferencePresenters')
-            ->andReturn([$ref, $another_ref]);
+        $this->by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$ref, $another_ref]);
 
-        $information = new CommitDetailsCrossReferenceInformation(
+        $information         = new CommitDetailsCrossReferenceInformation(
             new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 "What's the use in saving life when you see what you do with it?",
@@ -225,11 +169,6 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tul
             $ref,
             '',
         );
-        $this->information_builder
-            ->shouldReceive('getCommitDetailsCrossReferenceInformation')
-            ->with($this->user, $ref)
-            ->andReturn($information);
-
         $another_information = new CommitDetailsCrossReferenceInformation(
             new CommitDetails(
                 'a2b3c4d5e6f7g8h9i1',
@@ -243,22 +182,18 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tul
             $ref,
             '',
         );
-        $this->information_builder
-            ->shouldReceive('getCommitDetailsCrossReferenceInformation')
-            ->with($this->user, $another_ref)
-            ->andReturn($another_information);
+        $this->information_builder->method('getCommitDetailsCrossReferenceInformation')->with($this->user, self::anything())
+            ->willReturnCallback(static fn($user, $reference) => match ($reference) {
+                $ref         => $information,
+                $another_ref => $another_information,
+            });
 
-        $this->by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->never();
+        $this->by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
 
-        $leeloo = Mockery::mock(PFUser::class, ['getEmail' => 'leeloo@example.com']);
+        $leeloo = UserTestBuilder::aUser()->withEmail('leeloo@example.com')->build();
 
-        $this->user_manager
-            ->shouldReceive('getUserCollectionByEmails')
-            ->with(['leeloo@example.com'])
-            ->andReturn(new UserEmailCollection($leeloo));
+        $this->user_manager->method('getUserCollectionByEmails')->with(['leeloo@example.com'])->willReturn(new UserEmailCollection($leeloo));
 
-        $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection(
-            $this->by_nature_organizer,
-        );
+        $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection($this->by_nature_organizer);
     }
 }
