@@ -43,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { useNamespacedState } from "vuex-composition-helpers";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
@@ -58,23 +57,22 @@ const { iterations_labels, iteration_tracker_id, program_increment } = useNamesp
     program_increment: ProgramIncrement;
 }>("configuration", ["iterations_labels", "iteration_tracker_id", "program_increment"]);
 
-const planned_iterations_empty_state_text = computed((): string => {
-    return iterations_labels.value.sub_label === ""
+const planned_iterations_empty_state_text =
+    iterations_labels.value.sub_label === ""
         ? $gettext("There is no iteration yet.")
         : interpolate($gettext("There is no %{ iteration_label } yet."), {
               iteration_label: iterations_labels.value.sub_label,
           });
-});
 
-const create_the_first_iteration_text = computed((): string => {
-    return iterations_labels.value.sub_label === ""
+const create_the_first_iteration_text =
+    iterations_labels.value.sub_label === ""
         ? $gettext("Create the first iteration")
         : interpolate($gettext("Create the first %{ iteration_label }"), {
               iteration_label: iterations_labels.value.sub_label,
           });
-});
 
-const create_iteration_url = computed((): string => {
-    return buildIterationCreationUrl(program_increment.value.id, iteration_tracker_id.value);
-});
+const create_iteration_url = buildIterationCreationUrl(
+    program_increment.value.id,
+    iteration_tracker_id.value,
+);
 </script>

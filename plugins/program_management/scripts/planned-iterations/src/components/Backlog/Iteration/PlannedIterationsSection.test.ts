@@ -33,9 +33,7 @@ import BacklogElementSkeleton from "./../../BacklogElementSkeleton.vue";
 jest.useFakeTimers();
 
 describe("PlannedIterationsSection", () => {
-    async function getWrapper(
-        iterations_labels: IterationLabels,
-    ): Promise<Wrapper<PlannedIterationsSection>> {
+    async function getWrapper(iterations_labels: IterationLabels): Promise<Wrapper<Vue>> {
         return shallowMount(PlannedIterationsSection, {
             localVue: await createPlanIterationsLocalVue(),
             mocks: {
