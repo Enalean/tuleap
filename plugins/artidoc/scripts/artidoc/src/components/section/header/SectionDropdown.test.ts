@@ -69,7 +69,7 @@ describe("SectionDropdown", () => {
             expect(wrapper.find("[data-test=go-to-artifact]").exists()).toBe(true);
         });
 
-        it("should display a dropdown menu with not a 'go to artifact' item for freetext section", () => {
+        it("should display a dropdown menu without a 'go to artifact' item for freetext section", () => {
             const wrapper = getWrapper(
                 SectionEditorStub.withEditableSection(),
                 FreetextSectionFactory.create(),
@@ -80,7 +80,7 @@ describe("SectionDropdown", () => {
         });
     });
 
-    describe("when the user is not allowed to edit the section", () => {
+    describe("when the user is not allowed to edit the artifact section", () => {
         it("should hide delete menu item", () => {
             const wrapper = getWrapper(
                 SectionEditorStub.withoutEditableSection(),
@@ -89,6 +89,17 @@ describe("SectionDropdown", () => {
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
             expect(wrapper.find("[data-test=delete]").exists()).toBe(false);
+        });
+    });
+
+    describe("when the user is not allowed to edit the freetext section", () => {
+        it("should not display the dropdown menu at all", () => {
+            const wrapper = getWrapper(
+                SectionEditorStub.withoutEditableSection(),
+                FreetextSectionFactory.create(),
+            );
+
+            expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);
         });
     });
 
