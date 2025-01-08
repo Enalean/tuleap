@@ -23,8 +23,8 @@
         class="tlp-form-element roadmap-gantt-control"
         v-bind:class="{ 'tlp-form-element-disabled': is_form_element_disabled }"
     >
-        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id" v-translate>
-            Links
+        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id">
+            {{ $gettext("Links") }}
         </label>
         <select
             class="tlp-select tlp-select-small tlp-select-adjusted"
@@ -37,10 +37,9 @@
             <option
                 v-bind:value="NONE_SPECIALVALUE"
                 v-bind:selected="value === null"
-                v-translate
                 data-test="option-none"
             >
-                None
+                {{ $gettext("None") }}
             </option>
             <option
                 v-for="nature of sorted_natures"

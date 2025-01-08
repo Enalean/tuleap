@@ -34,7 +34,7 @@
             data-test="button"
         >
             <i class="fas fa-check tlp-button-icon" aria-hidden="true"></i>
-            <translate>Ok, got it</translate>
+            <span>{{ $gettext("Ok, got it") }}</span>
         </button>
     </div>
 </template>

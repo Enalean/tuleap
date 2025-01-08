@@ -23,8 +23,8 @@
         class="tlp-form-element roadmap-gantt-control"
         v-bind:class="{ 'tlp-form-element-disabled': is_disabled }"
     >
-        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id" v-translate>
-            Timescale
+        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id">
+            {{ $gettext("Timescale") }}
         </label>
         <select
             class="tlp-select tlp-select-small tlp-select-adjusted"
@@ -33,19 +33,14 @@
             data-test="select-timescale"
             v-bind:disabled="is_disabled"
         >
-            <option value="week" v-bind:selected="value === 'week'" data-test="week" v-translate>
-                Week
+            <option value="week" v-bind:selected="value === 'week'" data-test="week">
+                {{ $gettext("Week") }}
             </option>
-            <option value="month" v-bind:selected="value === 'month'" data-test="month" v-translate>
-                Month
+            <option value="month" v-bind:selected="value === 'month'" data-test="month">
+                {{ $gettext("Month") }}
             </option>
-            <option
-                value="quarter"
-                v-bind:selected="value === 'quarter'"
-                data-test="quarter"
-                v-translate
-            >
-                Quarter
+            <option value="quarter" v-bind:selected="value === 'quarter'" data-test="quarter">
+                {{ $gettext("Quarter") }}
             </option>
         </select>
     </div>

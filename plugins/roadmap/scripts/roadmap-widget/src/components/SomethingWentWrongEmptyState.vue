@@ -51,8 +51,12 @@
                 fill="var(--tlp-illustration-yellow, #FBE484)"
             />
         </svg>
-        <p class="empty-state-text" v-translate>Oops, something went wrong.</p>
-        <p class="empty-state-text" v-if="message">{{ message }}</p>
+        <p class="empty-state-text">
+            {{ $gettext("Oops, something went wrong.") }}
+        </p>
+        <p class="empty-state-text" v-if="message">
+            {{ message }}
+        </p>
     </section>
 </template>
 
