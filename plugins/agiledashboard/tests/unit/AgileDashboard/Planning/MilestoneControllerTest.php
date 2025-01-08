@@ -24,75 +24,95 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
+use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_MilestoneController;
 use Planning_MilestoneFactory;
 use Planning_MilestonePaneFactory;
+use Planning_VirtualTopMilestone;
 use ProjectManager;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class MilestoneControllerTest extends TestCase
 {
-    private string $plugin_path;
-    private Planning_Milestone&MockObject $product;
-    private Planning_Milestone&MockObject $release;
-    private Planning_Milestone&MockObject $sprint;
-    private Planning_Milestone&MockObject $nomilestone;
-    private Planning_MilestoneFactory $milestone_factory;
+    use GlobalLanguageMock;
+
+    private Planning_Milestone $product;
+    private Planning_Milestone $release;
+    private Planning_Milestone $sprint;
+    private Planning_Milestone $nomilestone;
+    private Planning_MilestoneFactory&MockObject $milestone_factory;
+    private Planning_MilestonePaneFactory&MockObject $pane_factory;
     private Planning_MilestoneController $milestone_controller;
-    private AgileDashboardCrumbBuilder&MockObject $agile_dashboard_crumb_builder;
-    private MilestoneCrumbBuilder&MockObject $milestone_crumb_builder;
     private BreadCrumb $service_breadcrumb;
     private BreadCrumb $top_backlog_breadcrumb;
 
     public function setUp(): void
     {
-        $this->plugin_path       = '/plugin/path';
+        $GLOBALS['Language']->method('getText')->willReturn(self::returnCallback(static fn(string $domain, string $text) => $text));
+
         $this->milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
         $project_manager         = $this->createMock(ProjectManager::class);
+        $project                 = ProjectTestBuilder::aProject()->withId(102)->build();
+        $project_manager->method('getProject')->with(102)->willReturn($project);
 
-        $this->product = $this->createMock(Planning_Milestone::class);
-        $this->release = $this->createMock(Planning_Milestone::class);
-        $this->sprint  = $this->createMock(Planning_Milestone::class);
-        $this->sprint->method('getArtifact')->willReturn(true);
+        $planning      = PlanningBuilder::aPlanning(102)->build();
+        $this->product = new Planning_ArtifactMilestone(
+            $project,
+            $planning,
+            ArtifactTestBuilder::anArtifact(1)->withTitle('Product X')->build(),
+        );
+        $this->release = new Planning_ArtifactMilestone(
+            $project,
+            $planning,
+            ArtifactTestBuilder::anArtifact(2)->withTitle('Release 1.0')->build(),
+        );
+        $this->sprint  = new Planning_ArtifactMilestone(
+            $project,
+            $planning,
+            ArtifactTestBuilder::anArtifact(3)->withTitle('Sprint 1')->build(),
+        );
 
-        $this->nomilestone = $this->createMock(Planning_Milestone::class);
-        $this->nomilestone->method('getArtifact')->willReturn(null);
+        $this->nomilestone = new Planning_VirtualTopMilestone($project, $planning);
 
-        $current_user = UserTestBuilder::buildWithDefaults();
-        $request      = new Codendi_Request([
+        $request = new Codendi_Request([
             'group_id'    => 102,
             'planning_id' => 102,
         ]);
-        $request->setCurrentUser($current_user);
+        $request->setCurrentUser(UserTestBuilder::anActiveUser()->withMemberOf($project)->build());
 
-        $project = ProjectTestBuilder::aProject()->withId(102)->build();
-        $project_manager->method('getProject')->with(102)->willReturn($project);
-
-        $this->agile_dashboard_crumb_builder = $this->createMock(AgileDashboardCrumbBuilder::class);
-        $this->milestone_crumb_builder       = $this->createMock(MilestoneCrumbBuilder::class);
-
-        $this->service_breadcrumb     = new BreadCrumb(new BreadCrumbLink('Backlog', '/fake_url'));
+        $this->pane_factory           = $this->createMock(Planning_MilestonePaneFactory::class);
+        $this->service_breadcrumb     = new BreadCrumb(new BreadCrumbLink('Backlog', '/plugins/agiledashboard/?group_id=102&action=show-top&pane=topplanning-v2'));
         $this->top_backlog_breadcrumb = new BreadCrumb(new BreadCrumbLink('Top backlog', '/fake_url'));
 
         $this->milestone_controller = new Planning_MilestoneController(
             $request,
             $this->milestone_factory,
             $project_manager,
-            $this->createMock(Planning_MilestonePaneFactory::class),
+            $this->pane_factory,
             $this->createMock(VisitRecorder::class),
             new AllBreadCrumbsForMilestoneBuilder(
-                $this->agile_dashboard_crumb_builder,
-                $this->milestone_crumb_builder,
+                new AgileDashboardCrumbBuilder(),
+                new MilestoneCrumbBuilder(
+                    '/plugin/path',
+                    $this->pane_factory,
+                    $this->milestone_factory,
+                ),
             ),
             $this->createMock(HeaderOptionsProvider::class),
         );
@@ -101,8 +121,6 @@ final class MilestoneControllerTest extends TestCase
     public function testItHasOnlyTheServiceBreadCrumbsWhenThereIsNoMilestone(): void
     {
         $this->milestone_factory->method('getBareMilestone')->willReturn($this->nomilestone);
-        $this->agile_dashboard_crumb_builder->method('build')->willReturn($this->service_breadcrumb);
-        $this->milestone_crumb_builder->expects(self::never())->method('build');
 
         $breadcrumbs = $this->milestone_controller->getBreadcrumbs();
 
@@ -113,18 +131,25 @@ final class MilestoneControllerTest extends TestCase
 
     public function testItIncludesBreadcrumbsForParentMilestones(): void
     {
-        $product_breadcrumb = new BreadCrumb(new BreadCrumbLink('Product X', 'fake_url'));
-        $release_breadcrumb = new BreadCrumb(new BreadCrumbLink('Release 1.0', 'fake_url'));
-        $sprint_breadcrumb  = new BreadCrumb(new BreadCrumbLink('Sprint 1', 'fake_url'));
+        $product_breadcrumb = new BreadCrumb(new BreadCrumbLink('Product X', '/plugin/path/?planning_id=34&pane=details&action=show&group_id=102&aid=1'));
+        $release_breadcrumb = new BreadCrumb(new BreadCrumbLink('Release 1.0', '/plugin/path/?planning_id=34&pane=details&action=show&group_id=102&aid=2'));
+        $sprint_breadcrumb  = new BreadCrumb(new BreadCrumbLink('Sprint 1', '/plugin/path/?planning_id=34&pane=details&action=show&group_id=102&aid=3'));
 
-        $this->sprint->method('getAncestors')->willReturn([$this->release, $this->product]);
+        $product_breadcrumb->getSubItems()->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection(
+            [new BreadCrumbLink('Artifact', '/plugins/tracker/?aid=1')]
+        )));
+        $release_breadcrumb->getSubItems()->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection(
+            [new BreadCrumbLink('Artifact', '/plugins/tracker/?aid=2')]
+        )));
+        $sprint_breadcrumb->getSubItems()->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection(
+            [new BreadCrumbLink('Artifact', '/plugins/tracker/?aid=3')]
+        )));
+
+        $this->sprint->setAncestors([$this->release, $this->product]);
         $this->milestone_factory->method('getBareMilestone')->willReturn($this->sprint);
-        $this->agile_dashboard_crumb_builder->method('build')->willReturn($this->service_breadcrumb);
-        $this->milestone_crumb_builder->method('build')->willReturnOnConsecutiveCalls(
-            $product_breadcrumb,
-            $release_breadcrumb,
-            $sprint_breadcrumb
-        );
+        $this->milestone_factory->expects(self::exactly(3))->method('addMilestoneAncestors');
+        $this->milestone_factory->method('getPaginatedSiblingMilestones')->willReturn(new PaginatedMilestones([], 0));
+        $this->pane_factory->expects(self::exactly(3))->method('getListOfPaneInfo')->willReturn([]);
 
         $breadcrumbs = $this->milestone_controller->getBreadcrumbs();
 

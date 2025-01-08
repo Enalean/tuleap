@@ -18,23 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use Project;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
-class AdministrationCrumbBuilder
+final class AdministrationCrumbBuilder
 {
-    public function build(Project $project)
+    public function build(Project $project): BreadCrumb
     {
         $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'group_id' => $project->getID(),
-                    'action'   => 'admin',
-                ]
-            );
+                     http_build_query([
+                         'group_id' => $project->getID(),
+                         'action'   => 'admin',
+                     ]);
 
         return new BreadCrumb(
             new BreadCrumbLink(

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use PFUser;
@@ -34,32 +36,16 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
-class MilestoneCrumbBuilder
+final readonly class MilestoneCrumbBuilder
 {
-    /** @var string */
-    private $plugin_path;
-
-    /** @var Planning_MilestonePaneFactory */
-    private $pane_factory;
-
-    /** @var Planning_MilestoneFactory */
-    private $milestone_factory;
-
     public function __construct(
-        $plugin_path,
-        Planning_MilestonePaneFactory $pane_factory,
-        Planning_MilestoneFactory $milestone_factory,
+        private string $plugin_path,
+        private Planning_MilestonePaneFactory $pane_factory,
+        private Planning_MilestoneFactory $milestone_factory,
     ) {
-        $this->plugin_path       = $plugin_path;
-        $this->pane_factory      = $pane_factory;
-        $this->milestone_factory = $milestone_factory;
     }
 
-    /**
-     *
-     * @return BreadCrumb
-     */
-    public function build(PFUser $user, Planning_Milestone $milestone)
+    public function build(PFUser $user, Planning_Milestone $milestone): BreadCrumb
     {
         $this->milestone_factory->addMilestoneAncestors($user, $milestone);
         $milestone_breadcrumb = new BreadCrumb(
@@ -73,33 +59,24 @@ class MilestoneCrumbBuilder
         return $milestone_breadcrumb;
     }
 
-    private function getOverviewUrl(Planning_Milestone $milestone)
+    private function getOverviewUrl(Planning_Milestone $milestone): string
     {
         return $this->plugin_path . '/?' .
-            http_build_query(
-                [
-                    'planning_id' => $milestone->getPlanningId(),
-                    'pane'        => DetailsPaneInfo::IDENTIFIER,
-                    'action'      => 'show',
-                    'group_id'    => $milestone->getGroupId(),
-                    'aid'         => $milestone->getArtifactId(),
-                ]
-            );
+               http_build_query([
+                   'planning_id' => $milestone->getPlanningId(),
+                   'pane'        => DetailsPaneInfo::IDENTIFIER,
+                   'action'      => 'show',
+                   'group_id'    => $milestone->getGroupId(),
+                   'aid'         => $milestone->getArtifactId(),
+               ]);
     }
 
-    private function getArtifactUrl(Planning_Milestone $milestone)
+    private function getArtifactUrl(Planning_Milestone $milestone): string
     {
-        return '/plugins/tracker/?' .
-            http_build_query(
-                ['aid' => $milestone->getArtifactId()]
-            );
+        return '/plugins/tracker/?' . http_build_query(['aid' => $milestone->getArtifactId()]);
     }
 
-    /**
-     *
-     * @return BreadCrumbSubItems
-     */
-    private function getSubItems(PFUser $user, Planning_Milestone $milestone)
+    private function getSubItems(PFUser $user, Planning_Milestone $milestone): BreadCrumbSubItems
     {
         $sub_items = new BreadCrumbSubItems();
         $this->addDefaultSection($milestone, $sub_items, $user);
@@ -129,7 +106,7 @@ class MilestoneCrumbBuilder
         );
     }
 
-    private function addSiblingsSection(PFUser $user, Planning_Milestone $milestone, BreadCrumbSubItems $sub_items)
+    private function addSiblingsSection(PFUser $user, Planning_Milestone $milestone, BreadCrumbSubItems $sub_items): void
     {
         $links = $this->getFirstTenOpenSiblings($user, $milestone);
 
@@ -149,10 +126,9 @@ class MilestoneCrumbBuilder
     }
 
     /**
-     *
-     * @return array
+     * @return list<BreadCrumbLink>
      */
-    private function getFirstTenOpenSiblings(PFUser $user, Planning_Milestone $milestone)
+    private function getFirstTenOpenSiblings(PFUser $user, Planning_Milestone $milestone): array
     {
         $links   = [];
         $limit   = 10;
