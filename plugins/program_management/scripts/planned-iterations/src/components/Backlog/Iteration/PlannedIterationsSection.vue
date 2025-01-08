@@ -35,23 +35,21 @@
                 >
                     <i aria-hidden="true" class="fas fa-plus tlp-button-icon"></i>
                     {{
-                        $gettextInterpolate($gettext("New %{ iteration_sub_label }"), {
-                            iteration_sub_label: iterations_labels.sub_label,
-                        })
+                        gettext_provider.interpolate(
+                            gettext_provider.$gettext("New %{ iteration_sub_label }"),
+                            { iteration_sub_label: iterations_labels.sub_label },
+                        )
                     }}
                 </button>
             </div>
         </form>
         <backlog-element-skeleton v-if="is_loading" />
-        <template v-if="!is_loading && !has_error">
-            <planned-iterations-section-empty-state v-if="has_iterations === false" />
-            <iteration-card
-                v-else
-                v-for="iteration in iterations"
-                v-bind:key="iteration.id"
-                v-bind:iteration="iteration"
-            />
-        </template>
+        <planned-iterations-section-empty-state v-if="show_empty_state" />
+        <iteration-card
+            v-for="iteration in iterations"
+            v-bind:key="iteration.id"
+            v-bind:iteration="iteration"
+        />
         <div
             class="tlp-alert-danger iteration-fetch-error"
             v-if="has_error"
@@ -62,74 +60,60 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-
-import { namespace } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useNamespacedState } from "vuex-composition-helpers";
 import { getIncrementIterations } from "../../../helpers/increment-iterations-retriever";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
-
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 import IterationCard from "./IterationCard.vue";
-
 import type { Iteration } from "../../../type";
 import type { IterationLabels, ProgramIncrement } from "../../../store/configuration";
 
-const configuration = namespace("configuration");
+const gettext_provider = useGettext();
 
-@Component({
-    components: {
-        PlannedIterationsSectionEmptyState,
-        IterationCard,
-        BacklogElementSkeleton,
-    },
-})
-export default class PlannedIterationsSection extends Vue {
-    @configuration.State
-    readonly iterations_labels!: IterationLabels;
+const { iterations_labels, iteration_tracker_id, program_increment } = useNamespacedState<{
+    iterations_labels: IterationLabels;
+    iteration_tracker_id: number;
+    program_increment: ProgramIncrement;
+}>("configuration", ["iterations_labels", "iteration_tracker_id", "program_increment"]);
 
-    @configuration.State
-    readonly program_increment!: ProgramIncrement;
+const iterations = ref<Iteration[]>([]);
+const error_message = ref("");
+const has_error = ref(false);
+const is_loading = ref(false);
 
-    @configuration.State
-    readonly iteration_tracker_id!: number;
-
-    iterations: Array<Iteration> = [];
-    error_message = "";
-    has_error = false;
-    is_loading = false;
-
-    async mounted(): Promise<void> {
-        try {
-            this.is_loading = true;
-            this.iterations = await getIncrementIterations(this.program_increment.id);
-        } catch (e) {
-            this.has_error = true;
-            this.error_message = this.buildErrorMessage();
-        } finally {
-            this.is_loading = false;
-        }
+onMounted(async () => {
+    try {
+        is_loading.value = true;
+        iterations.value = await getIncrementIterations(program_increment.value.id);
+    } catch (e) {
+        has_error.value = true;
+        error_message.value = buildErrorMessage();
+    } finally {
+        is_loading.value = false;
     }
+});
 
-    buildErrorMessage(): string {
-        if (this.iterations_labels.label.length === 0) {
-            return this.$gettext("The retrieval of iterations has failed");
-        }
-
-        return this.$gettextInterpolate(
-            this.$gettext("The retrieval of %{ iteration_label } has failed"),
-            { iteration_label: this.iterations_labels.label },
-        );
-    }
-
-    get has_iterations(): boolean {
-        return this.iterations.length > 0;
-    }
-
-    get create_iteration_url(): string {
-        return buildIterationCreationUrl(this.program_increment.id, this.iteration_tracker_id);
-    }
+function buildErrorMessage(): string {
+    return iterations_labels.value.label === ""
+        ? gettext_provider.$gettext("The retrieval of iterations has failed")
+        : gettext_provider.interpolate(
+              gettext_provider.$gettext("The retrieval of %{ iteration_label } has failed"),
+              {
+                  iteration_label: iterations_labels.value.label,
+              },
+          );
 }
+
+const show_empty_state = computed((): boolean => {
+    return !is_loading.value && !has_error.value && iterations.value.length === 0;
+});
+
+const create_iteration_url = buildIterationCreationUrl(
+    program_increment.value.id,
+    iteration_tracker_id.value,
+);
 </script>
