@@ -19,6 +19,8 @@
  */
 
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
+use Tuleap\AgileDashboard\ConfigurationManager;
+use Tuleap\AgileDashboard\ConfigurationDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
@@ -223,13 +225,10 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         return Planning_MilestoneFactory::build();
     }
 
-    /**
-     * @return AgileDashboard_ConfigurationManager
-     */
-    private function getConfigurationManager()
+    private function getConfigurationManager(): ConfigurationManager
     {
-        return new AgileDashboard_ConfigurationManager(
-            new AgileDashboard_ConfigurationDao(),
+        return new ConfigurationManager(
+            new ConfigurationDao(),
             EventManager::instance(),
             new MilestonesInSidebarDao(),
             new MilestonesInSidebarDao(),

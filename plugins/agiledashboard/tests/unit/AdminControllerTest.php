@@ -25,12 +25,15 @@ use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\Milestone\Sidebar\DuplicateMilestonesInSidebarConfig;
+use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,7 +41,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private const PROJECT_ID = 123;
     private \Codendi_Request & Stub $request;
-    private \AgileDashboard_ConfigurationManager & MockObject $config_manager;
+    private ConfigurationDao&MockObject $configuration_dao;
     private \EventManager & Stub $event_manager;
     private CountElementsModeChecker & Stub $count_element_mode_checker;
     private \PFUser $user;
@@ -46,7 +49,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->request                    = $this->createStub(\Codendi_Request::class);
-        $this->config_manager             = $this->createMock(\AgileDashboard_ConfigurationManager::class);
+        $this->configuration_dao          = $this->createMock(ConfigurationDao::class);
         $this->event_manager              = $this->createStub(\EventManager::class);
         $this->count_element_mode_checker = $this->createStub(CountElementsModeChecker::class);
 
@@ -64,7 +67,12 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $controller = new AdminController(
             $this->request,
-            $this->config_manager,
+            new ConfigurationManager(
+                $this->configuration_dao,
+                EventDispatcherStub::withIdentityCallback(),
+                $this->createMock(DuplicateMilestonesInSidebarConfig::class),
+                $this->createMock(UpdateMilestonesInSidebarConfig::class),
+            ),
             $this->event_manager,
             new AgileDashboardCrumbBuilder(),
             new AdministrationCrumbBuilder(),
@@ -88,7 +96,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $GLOBALS['Language']->method('getText')->willReturn('Permission denied');
 
-        $this->config_manager->expects(self::never())->method('updateConfiguration');
+        $this->configuration_dao->expects(self::never())->method('updateConfiguration');
 
         $this->update();
     }

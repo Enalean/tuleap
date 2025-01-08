@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\ServiceAdministration;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 
@@ -30,7 +31,7 @@ class ScrumConfigurationUpdater
 
     public function __construct(
         private readonly \Codendi_Request $request,
-        private readonly \AgileDashboard_ConfigurationManager $config_manager,
+        private readonly ConfigurationManager $config_manager,
         private readonly ConfigurationUpdater $configuration_updater,
         private readonly EventDispatcherInterface $event_dispatcher,
         private readonly CheckMilestonesInSidebar $milestones_in_sidebar,
@@ -60,7 +61,7 @@ class ScrumConfigurationUpdater
         $this->configuration_updater->updateScrumConfiguration($this->request);
     }
 
-    private function getActivatedScrum(): bool|string
+    private function getActivatedScrum(): bool
     {
         $project = $this->request->getProject();
 

@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard;
 
-use AgileDashboard_ConfigurationManager;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
@@ -54,8 +53,7 @@ use Tuleap\Request\ForbiddenException;
 
 class AdminController extends BaseController
 {
-    /** @var AgileDashboard_ConfigurationManager */
-    private $config_manager;
+    private ConfigurationManager $config_manager;
 
     /** @var EventManager */
     private $event_manager;
@@ -85,7 +83,7 @@ class AdminController extends BaseController
 
     public function __construct(
         Codendi_Request $request,
-        AgileDashboard_ConfigurationManager $config_manager,
+        ConfigurationManager $config_manager,
         EventManager $event_manager,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,

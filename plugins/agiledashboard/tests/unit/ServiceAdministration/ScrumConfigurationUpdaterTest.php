@@ -24,8 +24,12 @@ namespace Tuleap\AgileDashboard\ServiceAdministration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\AgileDashboard\BlockScrumAccess;
+use Tuleap\AgileDashboard\ConfigurationDao;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
+use Tuleap\AgileDashboard\Milestone\Sidebar\DuplicateMilestonesInSidebarConfig;
+use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use Tuleap\Event\Dispatchable;
 use Tuleap\GlobalResponseMock;
@@ -42,7 +46,8 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private ConfigurationResponse & MockObject $response;
     private EventDispatcherStub $event_dispatcher;
     private ConfigurationUpdater & MockObject $explicit_backlog_updater;
-    private \AgileDashboard_ConfigurationManager & MockObject $config_manager;
+    private ConfigurationDao&MockObject $configuration_dao;
+    private UpdateMilestonesInSidebarConfig&MockObject $update_sidebar_config;
     private \Project $project;
 
     protected function setUp(): void
@@ -53,7 +58,8 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
 
         $this->explicit_backlog_updater = $this->createMock(ConfigurationUpdater::class);
-        $this->config_manager           = $this->createMock(\AgileDashboard_ConfigurationManager::class);
+        $this->configuration_dao        = $this->createMock(ConfigurationDao::class);
+        $this->update_sidebar_config    = $this->createMock(UpdateMilestonesInSidebarConfig::class);
     }
 
     private function update(
@@ -62,7 +68,12 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $configuration_updater = new ScrumConfigurationUpdater(
             $request,
-            $this->config_manager,
+            new ConfigurationManager(
+                $this->configuration_dao,
+                EventDispatcherStub::withIdentityCallback(),
+                $this->createMock(DuplicateMilestonesInSidebarConfig::class),
+                $this->update_sidebar_config,
+            ),
             $this->explicit_backlog_updater,
             $this->event_dispatcher,
             $milestones_in_sidebar,
@@ -118,12 +129,18 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
             'activate-scrum' => '1',
         ])->build();
-        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->configuration_dao->method('isScrumActivated')->willReturn(true);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
-        $this->config_manager
+        $this->configuration_dao
             ->expects(self::once())
             ->method('updateConfiguration')
-            ->with(self::PROJECT_ID, '1', $existing_config);
+            ->with(self::PROJECT_ID, true);
+
+        if ($existing_config) {
+            $this->update_sidebar_config->expects(self::once())->method('activateMilestonesInSidebar');
+        } else {
+            $this->update_sidebar_config->expects(self::once())->method('deactivateMilestonesInSidebar');
+        }
 
         $this->update(
             $request,
@@ -134,26 +151,31 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @testWith ["0", false, false]
-     *           ["0", true, false]
-     *           ["1", false, true]
-     *           ["1", true, true]
+     * @testWith ["0", false]
+     *           ["0", true]
+     *           ["1", false]
+     *           ["1", true]
      */
     public function testItUpdatesSidebarConfigAccordinglyToRequest(
         string $submitted_value,
         bool $existing_config,
-        bool $expected,
     ): void {
         $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
-            'activate-scrum' => '1',
+            'activate-scrum'                         => '1',
             'should-sidebar-display-last-milestones' => $submitted_value,
         ])->build();
-        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->configuration_dao->method('isScrumActivated')->willReturn(true);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
-        $this->config_manager
+        $this->configuration_dao
             ->expects(self::once())
             ->method('updateConfiguration')
-            ->with(self::PROJECT_ID, '1', $expected);
+            ->with(self::PROJECT_ID, true);
+
+        if ($submitted_value === '0') {
+            $this->update_sidebar_config->expects(self::once())->method('deactivateMilestonesInSidebar');
+        } else {
+            $this->update_sidebar_config->expects(self::once())->method('activateMilestonesInSidebar');
+        }
 
         $this->update(
             $request,

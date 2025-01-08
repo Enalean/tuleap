@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\AgileDashboard_XMLController;
 use Tuleap\AgileDashboard\AgileDashboardServiceHomepageUrlBuilder;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
@@ -71,7 +72,7 @@ class AgileDashboardRouter
         private readonly MilestoneControllerFactory $milestone_controller_factory,
         private readonly ProjectManager $project_manager,
         private readonly AgileDashboard_XMLFullStructureExporter $xml_exporter,
-        private readonly AgileDashboard_ConfigurationManager $config_manager,
+        private readonly ConfigurationManager $config_manager,
         private readonly PlanningPermissionsManager $planning_permissions_manager,
         private readonly ScrumPlanningFilter $planning_filter,
         private readonly AgileDashboardJSONPermissionsRetriever $permissions_retriever,

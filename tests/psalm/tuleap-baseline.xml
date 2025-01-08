@@ -1,38 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/ConfigurationDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$scrum_is_activated]]></code>
-      <code><![CDATA[$template_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[duplicate]]></code>
-      <code><![CDATA[isScrumActivated]]></code>
-      <code><![CDATA[updateConfiguration]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ConfigurationManager.php">
-    <MissingParamType>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$scrum_is_activated]]></code>
-      <code><![CDATA[$template_id]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Event/GetAdditionalScrumAdminPaneContent.php">
     <MissingParamType>
       <code><![CDATA[$content]]></code>
