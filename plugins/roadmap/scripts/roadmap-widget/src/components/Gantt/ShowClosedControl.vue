@@ -20,8 +20,8 @@
 
 <template>
     <div class="tlp-form-element roadmap-gantt-control roadmap-gantt-control-mini-switch">
-        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id" v-translate>
-            Show closed items
+        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id">
+            {{ $gettext("Show closed items") }}
         </label>
 
         <div class="tlp-switch tlp-switch-mini">
@@ -33,7 +33,9 @@
                 v-on:change="toggleClosedElements(is_checked)"
                 data-test="input"
             />
-            <label v-bind:for="id" class="tlp-switch-button" v-translate>Show closed items</label>
+            <label v-bind:for="id" class="tlp-switch-button">{{
+                $gettext("Show closed items")
+            }}</label>
         </div>
     </div>
 </template>

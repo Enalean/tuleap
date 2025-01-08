@@ -48,8 +48,8 @@
             />
         </svg>
         <p class="empty-state-text">
-            <translate>There is no data to show.</translate>
-            <translate v-if="should_invite_to_come_back">Please come back later.</translate>
+            <span> {{ $gettext("There is no data to show.") }}</span>
+            <span v-if="should_invite_to_come_back">{{ $gettext("Please come back later.") }}</span>
         </p>
     </section>
 </template>
