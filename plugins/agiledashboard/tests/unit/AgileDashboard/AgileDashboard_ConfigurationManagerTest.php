@@ -20,27 +20,24 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\ConfigurationManager;
+use Tuleap\AgileDashboard\ConfigurationDao;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\DuplicateMilestonesInSidebarConfigStub;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\UpdateMilestonesInSidebarConfigStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testScrumCanBeInAEnabledState(): void
     {
-        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
-        $config_dao->method('isScrumActivated')->willReturn(new \Tuleap\FakeDataAccessResult(['scrum' => '1']));
-        $event_dispatcher = new class implements \Psr\EventDispatcher\EventDispatcherInterface {
-            public function dispatch(object $event)
-            {
-                return $event;
-            }
-        };
+        $config_dao = $this->createMock(ConfigurationDao::class);
+        $config_dao->method('isScrumActivated')->willReturn(true);
 
-        $configuration_manager = new AgileDashboard_ConfigurationManager(
+        $configuration_manager = new ConfigurationManager(
             $config_dao,
-            $event_dispatcher,
+            EventDispatcherStub::withIdentityCallback(),
             DuplicateMilestonesInSidebarConfigStub::build(),
             UpdateMilestonesInSidebarConfigStub::build(),
         );
@@ -50,7 +47,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
     public function testScrumIsConsideredDisabledWhenItsAccessIsBlocked(): void
     {
-        $config_dao       = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao       = $this->createMock(ConfigurationDao::class);
         $event_dispatcher = new class implements \Psr\EventDispatcher\EventDispatcherInterface {
             public function dispatch(object $event)
             {
@@ -61,7 +58,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             }
         };
 
-        $configuration_manager = new AgileDashboard_ConfigurationManager(
+        $configuration_manager = new ConfigurationManager(
             $config_dao,
             $event_dispatcher,
             DuplicateMilestonesInSidebarConfigStub::build(),
@@ -73,14 +70,14 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
     public function testDuplicateProjectConfiguration(): void
     {
-        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao = $this->createMock(ConfigurationDao::class);
         $config_dao->expects(self::once())->method('duplicate');
 
         $milestones_in_sidebar_config_duplicator = DuplicateMilestonesInSidebarConfigStub::build();
 
-        $configuration_manager = new AgileDashboard_ConfigurationManager(
+        $configuration_manager = new ConfigurationManager(
             $config_dao,
-            \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
+            EventDispatcherStub::withIdentityCallback(),
             $milestones_in_sidebar_config_duplicator,
             UpdateMilestonesInSidebarConfigStub::build(),
         );
@@ -92,15 +89,15 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
     public function testUpdateConfigurationWithMilestoneInSidebar(): void
     {
-        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao = $this->createMock(ConfigurationDao::class);
         $config_dao->expects(self::once())->method('updateConfiguration');
 
 
         $milestones_in_sidebar_config = UpdateMilestonesInSidebarConfigStub::build();
 
-        $configuration_manager = new AgileDashboard_ConfigurationManager(
+        $configuration_manager = new ConfigurationManager(
             $config_dao,
-            \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
+            EventDispatcherStub::withIdentityCallback(),
             DuplicateMilestonesInSidebarConfigStub::build(),
             $milestones_in_sidebar_config,
         );
@@ -113,15 +110,15 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
     public function testUpdateConfigurationWithoutMilestoneInSidebar(): void
     {
-        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao = $this->createMock(ConfigurationDao::class);
         $config_dao->expects(self::once())->method('updateConfiguration');
 
 
         $milestones_in_sidebar_config = UpdateMilestonesInSidebarConfigStub::build();
 
-        $configuration_manager = new AgileDashboard_ConfigurationManager(
+        $configuration_manager = new ConfigurationManager(
             $config_dao,
-            \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
+            EventDispatcherStub::withIdentityCallback(),
             DuplicateMilestonesInSidebarConfigStub::build(),
             $milestones_in_sidebar_config,
         );

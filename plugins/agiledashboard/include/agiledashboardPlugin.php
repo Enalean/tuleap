@@ -22,6 +22,8 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\VisitRetriever;
+use Tuleap\AgileDashboard\ConfigurationManager;
+use Tuleap\AgileDashboard\ConfigurationDao;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
@@ -394,12 +396,12 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @return AgileDashboard_ConfigurationManager
+     * @return ConfigurationManager
      */
     private function getConfigurationManager()
     {
-        return new AgileDashboard_ConfigurationManager(
-            new AgileDashboard_ConfigurationDao(),
+        return new ConfigurationManager(
+            new ConfigurationDao(),
             EventManager::instance(),
             new MilestonesInSidebarDao(),
             new MilestonesInSidebarDao(),

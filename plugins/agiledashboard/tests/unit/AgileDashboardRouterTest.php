@@ -18,15 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ConfigurationDao;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\Milestone\Sidebar\DuplicateMilestonesInSidebarConfig;
+use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -53,7 +58,12 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                     $this->milestone_controller_factory,
                     $this->createMock(ProjectManager::class),
                     $this->createMock(AgileDashboard_XMLFullStructureExporter::class),
-                    $this->createMock(AgileDashboard_ConfigurationManager::class),
+                    new ConfigurationManager(
+                        $this->createMock(ConfigurationDao::class),
+                        EventDispatcherStub::withIdentityCallback(),
+                        $this->createMock(DuplicateMilestonesInSidebarConfig::class),
+                        $this->createMock(UpdateMilestonesInSidebarConfig::class),
+                    ),
                     $this->createMock(PlanningPermissionsManager::class),
                     $this->createMock(Tuleap\AgileDashboard\Planning\ScrumPlanningFilter::class),
                     $this->createMock(Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever::class),

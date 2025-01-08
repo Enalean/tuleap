@@ -23,14 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Scrum;
 
-use AgileDashboard_ConfigurationManager;
 use EventManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_PlanningAdminPresenter;
 use PlanningFactory;
 use Tuleap\AgileDashboard\AdminScrumPresenter;
+use Tuleap\AgileDashboard\ConfigurationDao;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Sidebar\DuplicateMilestonesInSidebarConfig;
+use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
@@ -38,6 +41,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ScrumPresenterBuilderTest extends TestCase
@@ -47,18 +51,23 @@ final class ScrumPresenterBuilderTest extends TestCase
     private ScrumPresenterBuilder $scrum_presenter_builder;
     private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
     private PlanningFactory&MockObject $planning_factory;
-    private AgileDashboard_ConfigurationManager&MockObject $config_manager;
+    private ConfigurationDao&MockObject $configuration_dao;
 
     protected function setUp(): void
     {
-        $this->config_manager               = $this->createMock(AgileDashboard_ConfigurationManager::class);
+        $this->configuration_dao            = $this->createMock(ConfigurationDao::class);
         $event_manager                      = $this->createMock(EventManager::class);
         $this->planning_factory             = $this->createMock(PlanningFactory::class);
         $this->explicit_backlog_dao         = $this->createMock(ExplicitBacklogDao::class);
         $add_to_top_backlog_post_action_dao = $this->createMock(AddToTopBacklogPostActionDao::class);
 
         $this->scrum_presenter_builder = new ScrumPresenterBuilder(
-            $this->config_manager,
+            new ConfigurationManager(
+                $this->configuration_dao,
+                EventDispatcherStub::withIdentityCallback(),
+                $this->createMock(DuplicateMilestonesInSidebarConfig::class),
+                $this->createMock(UpdateMilestonesInSidebarConfig::class),
+            ),
             $event_manager,
             $this->planning_factory,
             $this->explicit_backlog_dao,
@@ -81,7 +90,7 @@ final class ScrumPresenterBuilderTest extends TestCase
 
         $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn(false);
 
-        $this->config_manager->expects(self::once())->method('scrumIsActivatedForProject')->willReturn(false);
+        $this->configuration_dao->expects(self::once())->method('isScrumActivated')->willReturn(false);
 
         $planning = PlanningBuilder::aPlanning(101)->withId(42)->build();
         $this->planning_factory->expects(self::once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);
@@ -133,7 +142,7 @@ final class ScrumPresenterBuilderTest extends TestCase
             ->build();
         $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn($planning);
 
-        $this->config_manager->expects(self::once())->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->configuration_dao->expects(self::once())->method('isScrumActivated')->willReturn(true);
 
         $this->planning_factory->expects(self::once())->method('getAvailablePlanningTrackers')->willReturn([]);
         $this->planning_factory->expects(self::once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);

@@ -18,42 +18,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_ConfigurationDao extends DataAccessObject
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard;
+
+use Tuleap\DB\DataAccessObject;
+
+class ConfigurationDao extends DataAccessObject
 {
-    public function updateConfiguration(
-        $project_id,
-        $scrum_is_activated,
-    ) {
-        $project_id         = $this->da->escapeInt($project_id);
-        $scrum_is_activated = $this->da->escapeInt($scrum_is_activated);
+    public function updateConfiguration(int $project_id, bool $scrum_is_activated): void
+    {
+        $sql = <<<SQL
+        REPLACE INTO plugin_agiledashboard_configuration (project_id, scrum)
+            VALUES (?, ?)
+        SQL;
 
-        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, scrum)
-                VALUES ($project_id, $scrum_is_activated)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $scrum_is_activated);
     }
 
-    public function duplicate($project_id, $template_id)
+    public function duplicate(int $project_id, int $template_id): void
     {
-        $project_id  = $this->da->escapeInt($project_id);
-        $template_id = $this->da->escapeInt($template_id);
+        $sql = <<<SQL
+        INSERT INTO plugin_agiledashboard_configuration (project_id, scrum)
+            SELECT ?, scrum
+            FROM plugin_agiledashboard_configuration
+            WHERE project_id = ?
+        SQL;
 
-        $sql = "INSERT INTO plugin_agiledashboard_configuration (project_id, scrum)
-                SELECT $project_id, scrum
-                FROM plugin_agiledashboard_configuration
-                WHERE project_id = $template_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $template_id);
     }
 
-    public function isScrumActivated($project_id)
+    public function isScrumActivated(int $project_id): bool
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $sql = <<<SQL
+        SELECT scrum
+        FROM plugin_agiledashboard_configuration
+        WHERE project_id = ?
+        SQL;
 
-        $sql = "SELECT scrum
-                FROM plugin_agiledashboard_configuration
-                WHERE project_id = $project_id";
-
-        return $this->retrieve($sql);
+        return $this->getDB()->single($sql, [$project_id]) !== 0;
     }
 }

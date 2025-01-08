@@ -19,17 +19,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\AgileDashboard\BlockScrumAccess;
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard;
+
+use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\Milestone\Sidebar\DuplicateMilestonesInSidebarConfig;
 use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
 
-class AgileDashboard_ConfigurationManager
+final readonly class ConfigurationManager
 {
     public function __construct(
-        private readonly AgileDashboard_ConfigurationDao $dao,
-        private readonly Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
-        private readonly DuplicateMilestonesInSidebarConfig $milestones_in_sidebar_config_duplicator,
-        private readonly UpdateMilestonesInSidebarConfig $milestones_in_sidebar_config,
+        private ConfigurationDao $dao,
+        private EventDispatcherInterface $event_dispatcher,
+        private DuplicateMilestonesInSidebarConfig $milestones_in_sidebar_config_duplicator,
+        private UpdateMilestonesInSidebarConfig $milestones_in_sidebar_config,
     ) {
     }
 
@@ -40,17 +45,12 @@ class AgileDashboard_ConfigurationManager
         if (! $block_scrum_access->isScrumAccessEnabled()) {
             return false;
         }
-        $row = $this->dao->isScrumActivated($project->getID())->getRow();
-        if ($row) {
-            return $row['scrum'];
-        }
-
-        return true;
+        return $this->dao->isScrumActivated((int) $project->getID());
     }
 
     public function updateConfiguration(
-        $project_id,
-        $scrum_is_activated,
+        int $project_id,
+        bool $scrum_is_activated,
         bool $should_sidebar_display_last_milestones,
     ): void {
         $this->dao->updateConfiguration(
@@ -59,11 +59,11 @@ class AgileDashboard_ConfigurationManager
         );
 
         $should_sidebar_display_last_milestones
-            ? $this->milestones_in_sidebar_config->activateMilestonesInSidebar((int) $project_id)
-            : $this->milestones_in_sidebar_config->deactivateMilestonesInSidebar((int) $project_id);
+            ? $this->milestones_in_sidebar_config->activateMilestonesInSidebar($project_id)
+            : $this->milestones_in_sidebar_config->deactivateMilestonesInSidebar($project_id);
     }
 
-    public function duplicate($project_id, $template_id): void
+    public function duplicate(int $project_id, int $template_id): void
     {
         $this->dao->duplicate($project_id, $template_id);
         $this->milestones_in_sidebar_config_duplicator->duplicate($project_id, $template_id);

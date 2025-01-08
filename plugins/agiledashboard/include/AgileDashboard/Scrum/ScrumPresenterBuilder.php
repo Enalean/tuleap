@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Scrum;
 
-use AgileDashboard_ConfigurationManager;
 use EventManager;
 use PFUser;
 use Planning;
@@ -32,6 +31,7 @@ use Planning_PlanningOutOfHierarchyAdminPresenter;
 use PlanningFactory;
 use Project;
 use Tuleap\AgileDashboard\AdminScrumPresenter;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -45,10 +45,7 @@ class ScrumPresenterBuilder
      * @var PlanningFactory
      */
     private $planning_factory;
-    /**
-     * @var AgileDashboard_ConfigurationManager
-     */
-    private $config_manager;
+    private ConfigurationManager $config_manager;
     /**
      * @var EventManager
      */
@@ -64,7 +61,7 @@ class ScrumPresenterBuilder
     private $add_to_top_backlog_post_action_dao;
 
     public function __construct(
-        AgileDashboard_ConfigurationManager $config_manager,
+        ConfigurationManager $config_manager,
         EventManager $event_manager,
         PlanningFactory $planning_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
