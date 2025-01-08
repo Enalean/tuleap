@@ -27,8 +27,8 @@ describe("PullRequestBadge", () => {
         const wrapper = shallowMount(PullRequestBadge, {
             global: { ...getGlobalTestOptions({}) },
             props: {
-                numberPullRequest: 1,
-                repositoryId: 100,
+                number_pull_request: 1,
+                repository_id: 100,
             },
         });
 
