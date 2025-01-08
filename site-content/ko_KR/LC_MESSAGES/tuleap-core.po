@@ -1257,9 +1257,6 @@ msgstr "이메일 %s은 유효하지 않습니다."
 msgid "Email address"
 msgstr "이메일 주소"
 
-msgid "Email format preference successfully updated"
-msgstr "이메일 형식 설정이 성공적으로 업데이트 되었습니다."
-
 msgid "Email is already validated"
 msgstr "이메일이 이미 인증되었습니다."
 
@@ -1413,11 +1410,6 @@ msgstr "이름으로 필터링"
 msgid "Flat"
 msgstr "플랫"
 
-msgid ""
-"For all other services, you will receive an email when you are in the "
-"notification list"
-msgstr "다른 모든 서비스의 경우 알림 목록에 있으면 이메일을 받게 됩니다."
-
 msgid "Forbidden"
 msgstr "금지됨"
 
@@ -1532,9 +1524,6 @@ msgstr "그룹 멤버"
 
 msgid "Groups"
 msgstr "그룹"
-
-msgid "HTML"
-msgstr "HTML"
 
 msgid "HTML tags will display in your post as text"
 msgstr "HTML 태그는 게시물에 텍스트로 표시됩니다."
@@ -2787,9 +2776,6 @@ msgstr "추가 커뮤니티 메일 수신"
 msgid "Receive emails about site updates, including security notices"
 msgstr "보안 알림을 포함한 사이트 업데이트에 대한 이메일 수신"
 
-msgid "Receive emails for actions I do on the platform:"
-msgstr "플랫폼에서 수행하는 작업에 대한 이메일 수신:"
-
 msgid "Recently"
 msgstr "최근"
 
@@ -3864,9 +3850,6 @@ msgstr "도구"
 
 msgid "Trace and Track all types of activities."
 msgstr "모든 유형의 활동을 추적하고 감시합니다."
-
-msgid "Tracker email format"
-msgstr "트래커 이메일 형식"
 
 msgid "Trackers"
 msgstr "트래커"

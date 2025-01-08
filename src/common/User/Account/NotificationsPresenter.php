@@ -23,66 +23,22 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use Codendi_Mail_Interface;
 use CSRFSynchronizerToken;
 
-final class NotificationsPresenter
+/**
+ * @psalm-immutable
+ */
+final readonly class NotificationsPresenter
 {
     /**
-     * @var bool
-     * @psalm-readonly
+     * @param list<string> $additional_sections
      */
-    public $site_email_updates_checked = false;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $site_email_community_checked = false;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $email_format_html;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $email_format_text;
-
-    /**
-     * @psalm-readonly
-     */
-    public bool $has_notifications_on_own_actions;
-
     public function __construct(
-        /**
-         * @readonly
-         */
         public CSRFSynchronizerToken $csrf_token,
-        /**
-         * @readonly
-         */
         public AccountTabPresenterCollection $tabs,
-        /**
-         * @readonly
-         */
-        public NotificationsOnOwnActionsCollection $notification_on_own_actions,
-        \PFUser $user,
-        string $mail_format_preference,
+        public bool $site_email_updates_checked,
+        public bool $site_email_community_checked,
+        public array $additional_sections,
     ) {
-        if ($user->getMailSiteUpdates()) {
-            $this->site_email_updates_checked = true;
-        }
-        if ($user->getMailVA()) {
-            $this->site_email_community_checked = true;
-        }
-        if ($mail_format_preference === Codendi_Mail_Interface::FORMAT_HTML) {
-            $this->email_format_html = true;
-            $this->email_format_text = false;
-        } else {
-            $this->email_format_html = false;
-            $this->email_format_text = true;
-        }
-        $this->has_notifications_on_own_actions = count($this->notification_on_own_actions) > 0;
     }
 }

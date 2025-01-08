@@ -1286,9 +1286,6 @@ msgstr "O email %s é inválido"
 msgid "Email address"
 msgstr "Endereço de email"
 
-msgid "Email format preference successfully updated"
-msgstr "Preferência de formato de email atualizado com sucesso"
-
 msgid "Email is already validated"
 msgstr "Email já está validado"
 
@@ -1445,11 +1442,6 @@ msgstr "Filtrar por nome"
 msgid "Flat"
 msgstr "Simples"
 
-msgid ""
-"For all other services, you will receive an email when you are in the "
-"notification list"
-msgstr ""
-
 msgid "Forbidden"
 msgstr "Proibido"
 
@@ -1564,9 +1556,6 @@ msgstr "Membros do grupo"
 
 msgid "Groups"
 msgstr "Grupos"
-
-msgid "HTML"
-msgstr "HTML"
 
 msgid "HTML tags will display in your post as text"
 msgstr "As tags HTML serão exibidas no seu post como texto"
@@ -2847,9 +2836,6 @@ msgid "Receive emails about site updates, including security notices"
 msgstr ""
 "Receber emails sobre atualizações no site, incluindo avisos de segurança"
 
-msgid "Receive emails for actions I do on the platform:"
-msgstr "Receber email a cada ação realizada por mim na plataforma:"
-
 msgid "Recently"
 msgstr "Recentemente"
 
@@ -3951,9 +3937,6 @@ msgstr "Ferramentas"
 
 msgid "Trace and Track all types of activities."
 msgstr "Rastreie e acompanhe todos os tipos de atividades."
-
-msgid "Tracker email format"
-msgstr "Formato de email do tracker"
 
 msgid "Trackers"
 msgstr "Trackers"

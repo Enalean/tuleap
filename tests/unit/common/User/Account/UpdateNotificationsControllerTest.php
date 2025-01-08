@@ -51,7 +51,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->user_manager = $this->createMock(UserManager::class);
         $this->csrf_token   = $this->createMock(CSRFSynchronizerToken::class);
-        $this->controller   = new UpdateNotificationsPreferences($this->csrf_token, $this->user_manager, new \EventManager());
+        $this->controller   = new UpdateNotificationsPreferences($this->csrf_token, $this->user_manager);
     }
 
     public function testItCannotUpdateWhenUserIsAnonymous(): void

@@ -1480,6 +1480,9 @@ msgstr ""
 msgid "Group fields in a set"
 msgstr ""
 
+msgid "HTML"
+msgstr ""
+
 msgid "Hidden fieldsets:"
 msgstr ""
 
@@ -1967,6 +1970,9 @@ msgstr ""
 msgid "Not allowed to delete non-empty field set."
 msgstr ""
 
+msgid "Nothing has changed"
+msgstr ""
+
 msgid "Notification settings"
 msgstr ""
 
@@ -1978,6 +1984,9 @@ msgstr ""
 
 msgid "Notifications"
 msgstr "Notificações"
+
+msgid "Notifications preferences successfully updated"
+msgstr ""
 
 msgid "Notified people"
 msgstr ""
@@ -2262,6 +2271,9 @@ msgid ""
 "artifact(s)"
 msgstr ""
 
+msgid "Receive emails for actions I do on the platform"
+msgstr ""
+
 msgid "Receive notifications for this artifact"
 msgstr ""
 
@@ -2407,6 +2419,9 @@ msgid "Save done values"
 msgstr ""
 
 msgid "Save new report"
+msgstr ""
+
+msgid "Save notifications changes"
 msgstr ""
 
 msgid "Save open values"
@@ -3657,6 +3672,9 @@ msgid "Tracker deleted"
 msgstr ""
 
 msgid "Tracker does not exist"
+msgstr ""
+
+msgid "Tracker email format"
 msgstr ""
 
 msgid "Tracker global administration"

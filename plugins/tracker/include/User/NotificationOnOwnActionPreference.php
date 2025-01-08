@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\User;
-
-use Tuleap\User\Account\NotificationsOnOwnActionsPresenter;
 
 final class NotificationOnOwnActionPreference
 {
@@ -59,14 +57,5 @@ final class NotificationOnOwnActionPreference
     public static function updateUserDoesNotWantNotification(\PFUser $user): void
     {
         $user->setPreference(self::PREFERENCE_NAME, self::VALUE_NO_NOTIF);
-    }
-
-    public static function getPresenter(\PFUser $user): NotificationsOnOwnActionsPresenter
-    {
-        return new NotificationsOnOwnActionsPresenter(
-            self::PREFERENCE_NAME,
-            dgettext('tuleap-tracker', 'Tracker'),
-            self::userWantsNotification($user)
-        );
     }
 }

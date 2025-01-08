@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,27 +16,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
+use PFUser;
 use Tuleap\Event\Dispatchable;
 
-final class NotificationsOnOwnActionsUpdate implements Dispatchable
+final class NotificationsSectionsCollector implements Dispatchable
 {
-    public const NAME = 'notificationsOnOwnActionsUpdate';
-
-    public bool $something_has_changed = false;
+    /**
+     * @var list<string>
+     */
+    private array $sections = [];
 
     public function __construct(
-        public \PFUser $user,
-        /**
-         * @readonly
-         */
-        public \HTTPRequest $request,
+        public readonly PFUser $current_user,
     ) {
+    }
+
+    public function add(string $section): void
+    {
+        $this->sections[] = $section;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function get(): array
+    {
+        return $this->sections;
     }
 }

@@ -1311,9 +1311,6 @@ msgstr "L'email %s n'est valide"
 msgid "Email address"
 msgstr "Adresse e-mail"
 
-msgid "Email format preference successfully updated"
-msgstr "La préférence de format de courriel a été mise à jour"
-
 msgid "Email is already validated"
 msgstr "L'email est déjà validé"
 
@@ -1472,13 +1469,6 @@ msgstr "Filtrer par nom"
 msgid "Flat"
 msgstr "A plat"
 
-msgid ""
-"For all other services, you will receive an email when you are in the "
-"notification list"
-msgstr ""
-"Pour tous les autres services, vous recevrez un courrier électronique "
-"lorsque vous êtes dans la liste de notification"
-
 msgid "Forbidden"
 msgstr "Interdit"
 
@@ -1595,9 +1585,6 @@ msgstr "Membres du groupe"
 
 msgid "Groups"
 msgstr "Groupes"
-
-msgid "HTML"
-msgstr "HTML"
 
 msgid "HTML tags will display in your post as text"
 msgstr ""
@@ -2895,17 +2882,12 @@ msgid "Receive Email about Site Updates"
 msgstr "Recevoir du courrier électronique à propos des mises à jour du site"
 
 msgid "Receive additional community mailing"
-msgstr ""
-"Recevoir du courrier électronique supplémentaire au sujet de la communauté"
+msgstr "Recevoir du courriel supplémentaire au sujet de la communauté"
 
 msgid "Receive emails about site updates, including security notices"
 msgstr ""
-"Recevoir du courrier électronique à propos des mises à jour du site mais "
-"également des informations relatives à la sécurité"
-
-msgid "Receive emails for actions I do on the platform:"
-msgstr ""
-"Recevoir du courrier électronique pour les actions dont je suis à l'origine :"
+"Recevoir du courriel à propos des mises à jour du site mais également des "
+"informations relatives à la sécurité"
 
 msgid "Recently"
 msgstr "Récemment"
@@ -4019,9 +4001,6 @@ msgstr "Outils"
 
 msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
-
-msgid "Tracker email format"
-msgstr "Format des notifications de l'outil de suivi"
 
 msgid "Trackers"
 msgstr "Outils de suivi"

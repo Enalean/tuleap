@@ -268,6 +268,8 @@ use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
+use Tuleap\Tracker\User\UserPreferencesPostController;
+use Tuleap\Tracker\User\UserPreferencesPresenter;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
 use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
@@ -290,8 +292,7 @@ use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
-use Tuleap\User\Account\NotificationsOnOwnActionsCollection;
-use Tuleap\User\Account\NotificationsOnOwnActionsUpdate;
+use Tuleap\User\Account\NotificationsSectionsCollector;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
@@ -423,9 +424,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
         $this->addHook(IssuesTemplateDashboardDefinition::NAME);
-
-        $this->addHook(NotificationsOnOwnActionsCollection::NAME);
-        $this->addHook(NotificationsOnOwnActionsUpdate::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2210,6 +2208,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $r->post('/notifications/{id:\d+}/', $this->getRouteHandler('routePostNotifications'));
             $r->get('/notifications/my/{id:\d+}/', $this->getRouteHandler('routeGetNotificationsMy'));
             $r->post('/notifications/my/{id:\d+}/', $this->getRouteHandler('routePostNotificationsMy'));
+            $r->post('/notifications/user', $this->getRouteHandler('routePostNotificationsUser'));
 
             $r->get(ByFieldController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
             $r->get(ByGroupController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));
@@ -2803,19 +2802,27 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         (new \Tuleap\Tracker\Search\IndexArtifactDAO())->markExistingArtifactsAsPending();
     }
 
-    public function notificationsOnOwnActionsCollection(NotificationsOnOwnActionsCollection $notifications_on_own_actions_collection): void
+    #[ListeningToEventClass]
+    public function notificationsSectionsCollector(NotificationsSectionsCollector $collector): void
     {
-        $notifications_on_own_actions_collection->add(
-            NotificationOnOwnActionPreference::getPresenter($notifications_on_own_actions_collection->user)
+        $collector->add(
+            TemplateRendererFactory::build()
+                ->getRenderer(__DIR__ . '/../templates/notifications')
+                ->renderToString('user-preferences', new UserPreferencesPresenter(
+                    UserPreferencesPostController::getCSRFToken(),
+                    NotificationOnOwnActionPreference::userWantsNotification($collector->current_user),
+                    UserPreferencesPostController::URL,
+                    (new MailManager())->getMailPreferencesByUser($collector->current_user),
+                ))
         );
     }
 
-    public function notificationsOnOwnActionsUpdate(NotificationsOnOwnActionsUpdate $event): void
+    public function routePostNotificationsUser(): DispatchableWithRequest
     {
-        $something_changed = NotificationOnOwnActionPreference::updatePreference($event->request, $event->user);
-        if ($something_changed) {
-            $event->something_has_changed = true;
-        }
+        return new UserPreferencesPostController(
+            UserManager::instance(),
+            UserPreferencesPostController::getCSRFToken(),
+        );
     }
 
     #[ListeningToEventClass]

@@ -1665,6 +1665,9 @@ msgstr "Champs regroupés dans une colonne"
 msgid "Group fields in a set"
 msgstr "Marque un groupe de champs"
 
+msgid "HTML"
+msgstr "HTML"
+
 msgid "Hidden fieldsets:"
 msgstr "Groupes de champs cachés:"
 
@@ -2044,7 +2047,7 @@ msgstr "Modifier la réponse type"
 
 #, php-format
 msgid "Move action is not enabled for tracker %s"
-msgstr "L'outil de suivi %s n'autorise pas l'action de déplacement."
+msgstr "L'outil de suivi %s n'autorise pas l'action de déplacement"
 
 msgid "Move artifacts"
 msgstr "Déplacement d'artéfacts"
@@ -2203,6 +2206,9 @@ msgstr "Impossible de supprimer un groupe de champs utilisé dans le workflow."
 msgid "Not allowed to delete non-empty field set."
 msgstr "Impossible de supprimer un groupe de champs non vide."
 
+msgid "Nothing has changed"
+msgstr "Rien n'a changé"
+
 msgid "Notification settings"
 msgstr "Options de notification"
 
@@ -2214,6 +2220,9 @@ msgstr "Notification enregistrée avec succès."
 
 msgid "Notifications"
 msgstr "Notifications"
+
+msgid "Notifications preferences successfully updated"
+msgstr "Préférences de notifications modifiées avec succès"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
@@ -2547,6 +2556,9 @@ msgstr ""
 "Prêt à importer %1$s artéfact(s)&nbsp;: %2$s artéfact(s) nouveau(x) , %3$s "
 "artéfact(s) existant(s)"
 
+msgid "Receive emails for actions I do on the platform"
+msgstr "Recevoir du courriel pour les actions dont je suis à l'origine"
+
 msgid "Receive notifications for this artifact"
 msgstr "Recevoir les notifications de cet artéfact"
 
@@ -2696,6 +2708,9 @@ msgstr "Sauvegarder les valeurs finies"
 
 msgid "Save new report"
 msgstr "Enregistrer"
+
+msgid "Save notifications changes"
+msgstr "Sauvegarder les changements de notifications"
 
 msgid "Save open values"
 msgstr "Sauvegarder les valeurs ouvertes"
@@ -3635,22 +3650,22 @@ msgid ""
 "The semantic %stimeframe%s and %stitle%s are requested to activate this "
 "setting."
 msgstr ""
-"Les sémantiques %splage de temps%s et %stitre%s sont requises pour activer "
-"la fonctionnalité."
+"Les sémantiques %stimeframe%s et %stitle%s sont requises pour activer la "
+"fonctionnalité."
 
 msgid ""
 "The semantic %stimeframe%s cannot be inherited from another tracker to "
 "activate this setting."
 msgstr ""
-"La sémantique %splage de temps%s ne peut pas être héritée d'un autre outil "
-"de suivi pour activer la fonctionnalité."
+"La sémantique %stimeframe%s ne peut pas être héritée d'un autre outil de "
+"suivi pour activer la fonctionnalité."
 
 msgid "The semantic %stimeframe%s is requested to activate this setting."
 msgstr ""
-"La sémantique %splage de temps%s est requise pour activer la fonctionnalité."
+"La sémantique %stimeframe%s est requise pour activer la fonctionnalité."
 
 msgid "The semantic %stitle%s is requested to activate this setting."
-msgstr "La sémantique %stitre%s est requise pour activer la fonctionnalité."
+msgstr "La sémantique %stitle%s est requise pour activer la fonctionnalité."
 
 msgid ""
 "The semantic done cannot be defined because the semantic status is not "
@@ -4105,7 +4120,7 @@ msgstr "Outil de suivi"
 
 #, php-format
 msgid "Tracker #%d new children: %s (previous children: %s)"
-msgstr "outil de suivi #%d nouveaux enfants: %s (enfant précédents: %s)"
+msgstr "Outil de suivi #%d nouveaux enfants: %s (enfant précédents: %s)"
 
 #, php-format
 msgid "Tracker %1$s not duplicated"
@@ -4172,6 +4187,9 @@ msgstr "Outil de suivi supprimé"
 
 msgid "Tracker does not exist"
 msgstr "L'outil de suivi n'existe pas"
+
+msgid "Tracker email format"
+msgstr "Format du courriel pour les outils de suivi"
 
 msgid "Tracker global administration"
 msgstr "Administration globale des outils de suivi"
