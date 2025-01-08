@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import SoloSwimlaneCell from "./SoloSwimlaneCell.vue";
 import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
 
-function createWrapper(column: ColumnDefinition, swimlane: Swimlane): Wrapper<SoloSwimlaneCell> {
+function createWrapper(column: ColumnDefinition, swimlane: Swimlane): Wrapper<Vue> {
     return shallowMount(SoloSwimlaneCell, {
         propsData: { column, swimlane },
     });
