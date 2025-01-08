@@ -18,6 +18,11 @@
   -
   -->
 
-<template functional>
+<template>
     <input class="tlp-input" type="text" />
 </template>
+<script>
+export default {
+    name: "PlaceholderInput",
+};
+</script>

@@ -20,11 +20,10 @@
 import { shallowMount } from "@vue/test-utils";
 
 import TransitionDeleter from "./TransitionDeleter.vue";
-import { createLocalVueForTests } from "../support/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 describe("TransitionDeleter", () => {
-    let store, transition, deleteTransition, is_transition_updated;
+    let transition, deleteTransition, is_transition_updated;
 
     beforeEach(() => {
         transition = {
@@ -35,23 +34,23 @@ describe("TransitionDeleter", () => {
         is_transition_updated = false;
     });
 
-    const getWrapper = async (
+    const getWrapper = (
         is_operation_running,
-        is_workflow_advanced,
-        current_workflow_transitions,
+        is_workflow_advanced_value,
+        current_workflow_transitions_value,
     ) => {
-        const store_options = {
-            state: { is_operation_running },
-            getters: { current_workflow_transitions, is_workflow_advanced },
-        };
-
-        store = createStoreMock(store_options, {});
-
         return shallowMount(TransitionDeleter, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        is_operation_running,
+                    },
+                    getters: {
+                        current_workflow_transitions: () => current_workflow_transitions_value,
+                        is_workflow_advanced: () => is_workflow_advanced_value,
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
             propsData: {
                 transition,
                 deleteTransition,
@@ -60,40 +59,38 @@ describe("TransitionDeleter", () => {
         });
     };
 
-    afterEach(() => store.reset());
-
-    it("given workflow is advanced, then confirmation is always needed", async () => {
-        const wrapper = await getWrapper(false, true, []);
+    it("given workflow is advanced, then confirmation is always needed", () => {
+        const wrapper = getWrapper(false, true, []);
 
         expect(
             wrapper.find("[data-test=delete-transition-without-confirmation]").exists(),
         ).toBeFalsy();
     });
 
-    it("given workflow is in simple mode and given there are many transition, then confirmation is NOT needed", async () => {
+    it("given workflow is in simple mode and given there are many transition, then confirmation is NOT needed", () => {
         const transitions = [transition, { from_id: 35, to_id: 83 }];
-        const wrapper = await getWrapper(false, false, transitions);
+        const wrapper = getWrapper(false, false, transitions);
         expect(
             wrapper.find("[data-test=delete-transition-without-confirmation]").exists(),
         ).toBeTruthy();
     });
 
-    it("given workflow is in simple mode and given it's the last transition, then confirmation is needed", async () => {
+    it("given workflow is in simple mode and given it's the last transition, then confirmation is needed", () => {
         const transitions = [transition];
-        const wrapper = await getWrapper(false, false, transitions);
+        const wrapper = getWrapper(false, false, transitions);
         expect(
             wrapper.find("[data-test=delete-transition-without-confirmation]").exists(),
         ).toBeFalsy();
     });
 
-    it("given there is no other operation running, then we can remove the transition", async () => {
-        const wrapper = await getWrapper(false, false, []);
+    it("given there is no other operation running, then we can remove the transition", () => {
+        const wrapper = getWrapper(false, false, []);
         wrapper.get("[data-test=delete-transition-without-confirmation]").trigger("click");
         expect(deleteTransition).toHaveBeenCalled();
     });
 
-    it("given there is another operation running, then transition is not removed", async () => {
-        const wrapper = await getWrapper(true, false, []);
+    it("given there is another operation running, then transition is not removed", () => {
+        const wrapper = getWrapper(true, false, []);
         wrapper.get("[data-test=delete-transition-without-confirmation]").trigger("click");
         expect(deleteTransition).not.toHaveBeenCalled();
     });

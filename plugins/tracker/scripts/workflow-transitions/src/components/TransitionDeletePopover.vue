@@ -106,7 +106,7 @@ export default {
             this.createPopoverIfNotExists();
         }
     },
-    beforeDestroy() {
+    unmounted() {
         this.destroyPopoverIfExists();
     },
     methods: {

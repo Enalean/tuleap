@@ -17,22 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVueForTests } from "../../../support/local-vue.js";
 import EmptyPostAction from "./EmptyPostAction.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests.js";
 
 describe(`EmptyPostAction`, () => {
+    let addPostActionMock = jest.fn();
     it(`When I click on the "Add action" button,
-        it will commit a mutation to create a new post action`, async () => {
-        const store = createStoreMock({});
+        it will commit a mutation to create a new post action`, () => {
         const wrapper = shallowMount(EmptyPostAction, {
-            localVue: await createLocalVueForTests(),
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            namespaced: true,
+                            mutations: {
+                                addPostAction: addPostActionMock,
+                            },
+                        },
+                    },
+                }),
+            },
         });
 
         const add_action_button = wrapper.get("[data-test=add-post-action]");
         add_action_button.trigger("click");
 
-        expect(store.commit).toHaveBeenCalledWith("transitionModal/addPostAction");
+        expect(addPostActionMock).toHaveBeenCalled();
     });
 });

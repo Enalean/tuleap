@@ -20,13 +20,11 @@
 import { mount } from "@vue/test-utils";
 
 import FrozenFieldsAction from "./FrozenFieldsAction.vue";
-import { createLocalVueForTests } from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as list_picker from "@tuleap/list-picker";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests.js";
 
 describe("FrozenFieldsAction", () => {
-    let store;
     const date_field_id = 43;
     const date_field = create("field", { field_id: date_field_id, type: "date" });
     const int_field_id = 44;
@@ -35,68 +33,77 @@ describe("FrozenFieldsAction", () => {
     const float_field = create("field", { field_id: float_field_id, type: "float" });
     const status_field_id = 46;
     const status_field = create("field", { field_id: status_field_id, type: "sb" });
-    let wrapper;
+    let post_actions_value;
+    let current_tracker;
+    let is_modal_save_running;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         jest.spyOn(list_picker, "createListPicker").mockImplementation();
 
-        const current_tracker = {
+        current_tracker = {
             fields: [date_field, int_field, float_field, status_field],
         };
 
-        const store_options = {
-            state: {
-                transitionModal: {
-                    current_transition: create("transition"),
-                    is_modal_save_running: false,
-                },
-                current_tracker: current_tracker,
-            },
-            getters: {
-                "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
-                "transitionModal/post_actions": [],
-                current_workflow_field: status_field,
-                is_workflow_advanced: false,
-                "transitionModal/is_agile_dashboard_used": false,
-                "transitionModal/is_program_management_used": false,
-            },
-        };
+        post_actions_value = [];
+        current_tracker = null;
+        is_modal_save_running = false;
+    });
 
-        store = createStoreMock(store_options);
-
-        wrapper = mount(FrozenFieldsAction, {
-            mocks: { $store: store },
+    function instantiateComponent() {
+        return mount(FrozenFieldsAction, {
             propsData: { post_action: create("post_action", "presented") },
-            localVue: await createLocalVueForTests(),
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        current_tracker,
+                    },
+                    getters: {
+                        current_workflow_field: () => status_field,
+                        is_workflow_advanced: () => false,
+                    },
+                    modules: {
+                        transitionModal: {
+                            state: {
+                                current_transition: create("transition"),
+                                is_modal_save_running,
+                            },
+                            getters: {
+                                set_value_action_fields: () => [date_field, int_field, float_field],
+                                post_actions: () => post_actions_value,
+                                is_agile_dashboard_used: () => false,
+                                is_program_management_used: () => false,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
+    }
+
+    it("disables the option when no fields are available", () => {
+        current_tracker = null;
+        const wrapper = instantiateComponent();
+
+        expect(wrapper.get("[data-test=freeze_fields]").attributes().disabled).toBe("");
     });
 
-    afterEach(() => store.reset());
+    it("disables the option when post-action is already used", () => {
+        post_actions_value = [create("post_action", { type: "frozen_fields" })];
+        const wrapper = instantiateComponent();
 
-    it("disables the option when no fields are available", async () => {
-        store.state.current_tracker = null;
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.get("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();
-    });
-
-    it("disables the option when post-action is already used", async () => {
-        store.getters["transitionModal/post_actions"] = [
-            create("post_action", { type: "frozen_fields" }),
-        ];
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.get("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();
+        expect(wrapper.get("[data-test=freeze_fields]").attributes().disabled).toBe("");
     });
 
     it("should not show the status field as available", () => {
+        const wrapper = instantiateComponent();
         expect(wrapper.find(`[data-test=field_${status_field_id}]`).exists()).toBeFalsy();
     });
 
-    it(`when the modal is saving, it will disable the fields select`, async () => {
-        store.state.transitionModal.is_modal_save_running = true;
-        await wrapper.vm.$nextTick();
+    it(`when the modal is saving, it will disable the fields select`, () => {
+        is_modal_save_running = true;
+        const wrapper = instantiateComponent();
         const fields_select = wrapper.get("[data-test=frozen-fields-selector]");
-        expect(fields_select.attributes("disabled")).toBeTruthy();
+        expect(fields_select.attributes("disabled")).toBe("");
     });
 });

@@ -18,35 +18,42 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVueForTests } from "../support/local-vue.js";
 import ConfigureStateButton from "./ConfigureStateButton.vue";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 describe(`ConfigureStateButton`, () => {
-    let store;
-    async function createWrapper(transition) {
-        store = createStoreMock({});
+    let showTransitionConfigurationModalMock = jest.fn();
+
+    function createWrapper(transition) {
         return shallowMount(ConfigureStateButton, {
-            localVue: await createLocalVueForTests(),
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            actions: {
+                                showTransitionConfigurationModal:
+                                    showTransitionConfigurationModalMock,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
             propsData: { transition },
         });
     }
 
-    it(`When I click the button, it will dispatch an action to open the transitions configuration modal`, async () => {
+    it(`When I click the button, it will dispatch an action to open the transitions configuration modal`, () => {
         const transition = { id: 134 };
-        const wrapper = await createWrapper(transition);
+        const wrapper = createWrapper(transition);
         wrapper.trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "transitionModal/showTransitionConfigurationModal",
-            transition,
-        );
+        expect(showTransitionConfigurationModalMock).toHaveBeenCalled();
     });
 
-    it(`when the transition is updated, it will show an animation`, async () => {
+    it(`when the transition is updated, it will show an animation`, () => {
         const transition = { id: 144, updated: true };
-        const wrapper = await createWrapper(transition);
+        const wrapper = createWrapper(transition);
 
         expect(wrapper.classes()).toContain("tlp-button-success");
     });

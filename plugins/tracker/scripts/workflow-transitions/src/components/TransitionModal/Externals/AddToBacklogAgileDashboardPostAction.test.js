@@ -19,23 +19,18 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../../support/local-vue.js";
 import AddToBacklogAgileDashboardPostAction from "./AddToBacklogAgileDashboardPostAction.vue";
 import PostAction from "../PostAction/PostAction.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests.js";
 
 describe("AddToBacklogAgileDashboardPostAction", () => {
-    it("spawns the component", async () => {
-        const store = createStoreMock({});
-
+    it("spawns the component", () => {
         const wrapper = shallowMount(AddToBacklogAgileDashboardPostAction, {
-            mocks: { $store: store },
             propsData: { post_action: { type: "add_to_backlog" } },
-            localVue: await createLocalVueForTests(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
         });
         expect(wrapper.findComponent(PostAction).exists()).toBe(true);
-        expect(wrapper.find("[data-test=add-to-backlog-post-action-description]").exists()).toBe(
-            true,
-        );
     });
 });

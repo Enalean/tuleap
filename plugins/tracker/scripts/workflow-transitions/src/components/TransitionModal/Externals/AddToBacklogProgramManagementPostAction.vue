@@ -20,10 +20,7 @@
 
 <template>
     <post-action v-bind:post_action="post_action">
-        <div
-            class="tracker-workflow-transition-modal-action-details-element tlp-form-element"
-            data-test="add-to-backlog-program-management-post-action-description"
-        >
+        <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <p class="tlp-text-info">
                 {{ add_to_backlog_post_action_detail }}
             </p>

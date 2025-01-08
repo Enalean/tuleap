@@ -21,40 +21,32 @@
 import { shallowMount } from "@vue/test-utils";
 
 import NotEmptyFieldsSelect from "./NotEmptyFieldsSelect.vue";
-import { createLocalVueForTests } from "../../support/local-vue.js";
-import module_options from "../../store/transition-modal/module.js";
 import { create } from "../../support/factories.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as list_picker from "@tuleap/list-picker";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe("NotEmptyFieldsSelect", () => {
-    let store;
-
-    async function getWrapper(state_store) {
-        let state = state_store;
-        if (state_store === null) {
-            state = module_options.state;
-        }
-
-        const { mutations, actions } = module_options;
-        const store_options = {
-            state: {
-                current_tracker: null,
-                transitionModal: state,
-            },
-            getters: {
-                "transitionModal/is_transition_from_new_artifact": false,
-            },
-            mutations,
-            actions,
-        };
-        store = createStoreMock(store_options);
-
+    function getWrapper(state, fields) {
         return shallowMount(NotEmptyFieldsSelect, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            namespaced: true,
+                            state,
+                        },
+                    },
+                    state: {
+                        current_tracker: {
+                            fields,
+                        },
+                    },
+                    getters: {
+                        current_workflow_transitions: () => [],
+                        is_transition_from_new_artifact: () => false,
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
         });
     }
 
@@ -64,8 +56,8 @@ describe("NotEmptyFieldsSelect", () => {
 
     describe("writable_fields", () => {
         describe("when no current tracker", () => {
-            it("returns empty array", async () => {
-                const wrapper = await getWrapper(null);
+            it("returns empty array", () => {
+                const wrapper = getWrapper(null, []);
 
                 const all_options = wrapper
                     .get("[data-test=not-empty-field-select]")
@@ -75,28 +67,22 @@ describe("NotEmptyFieldsSelect", () => {
         });
 
         describe("with a current tracker", () => {
-            let wrapper;
             const valid_field = create("field", { type: "valid", label: "valid" });
             const invalid_field = create("field", { type: "burndown", label: "invalid" });
+            const current_tracker_fields = {
+                fields: [invalid_field, valid_field],
+            };
 
-            beforeEach(async () => {
-                wrapper = await getWrapper(null);
-                store.state.current_tracker = {
-                    fields: [invalid_field, valid_field],
-                };
-            });
             it("returns valid fields", () => {
+                const wrapper = getWrapper({ current_tracker_fields }, [valid_field]);
                 const all_options = wrapper
                     .get("[data-test=not-empty-field-select]")
                     .findAll("option");
                 expect(all_options).toHaveLength(1);
-                expect(all_options.at(0)).toMatchInlineSnapshot(`
-<option value="0">
-  valid
-</option>
-`);
+                expect(all_options.at(0)).toMatchInlineSnapshot(`<option value="0">valid</option>`);
             });
             it("does not return invalid fields", () => {
+                const wrapper = getWrapper({ current_tracker_fields }, [valid_field]);
                 const all_options = wrapper
                     .get("[data-test=not-empty-field-select]")
                     .findAll("option");
@@ -104,32 +90,28 @@ describe("NotEmptyFieldsSelect", () => {
             });
 
             describe("which fields are not sorted", () => {
-                beforeEach(() => {
-                    store.state.current_tracker.fields = [
+                it("returns fields sorted by natural order", () => {
+                    const fields = [
                         create("field", { type: "valid", label: "second" }),
                         create("field", { type: "valid", label: "First" }),
                         create("field", { type: "valid", label: "Third" }),
                     ];
-                });
-                it("returns fields sorted by natural order", () => {
+                    const current_tracker_fields = {
+                        fields: fields,
+                    };
+                    const wrapper = getWrapper({ current_tracker_fields }, fields);
                     const all_options = wrapper
                         .get("[data-test=not-empty-field-select]")
                         .findAll("option");
-                    expect(all_options.at(0)).toMatchInlineSnapshot(`
-<option value="3">
-  First
-</option>
-`);
-                    expect(all_options.at(1)).toMatchInlineSnapshot(`
-<option value="2">
-  second
-</option>
-`);
-                    expect(all_options.at(2)).toMatchInlineSnapshot(`
-<option value="4">
-  Third
-</option>
-`);
+                    expect(all_options.at(0)).toMatchInlineSnapshot(
+                        `<option value="3">First</option>`,
+                    );
+                    expect(all_options.at(1)).toMatchInlineSnapshot(
+                        `<option value="2">second</option>`,
+                    );
+                    expect(all_options.at(2)).toMatchInlineSnapshot(
+                        `<option value="4">Third</option>`,
+                    );
                 });
             });
         });
@@ -137,8 +119,8 @@ describe("NotEmptyFieldsSelect", () => {
 
     describe("not_empty_field_ids", () => {
         describe("when no current transition", () => {
-            it("returns empty array", async () => {
-                const wrapper = await getWrapper(null);
+            it("returns empty array", () => {
+                const wrapper = getWrapper(null, []);
                 const all_options = wrapper
                     .get("[data-test=not-empty-field-select]")
                     .findAll("option");
@@ -148,14 +130,14 @@ describe("NotEmptyFieldsSelect", () => {
 
         describe("with a current transition", () => {
             const not_empty_field_ids = [1, 2];
-            it("returns transition empty field ids", async () => {
+            it("returns transition empty field ids", () => {
                 const state = {
                     current_transition: {
                         not_empty_field_ids,
                         authorized_user_group_ids: [],
                     },
                 };
-                const wrapper = await getWrapper(state);
+                const wrapper = getWrapper(state, []);
                 const all_options = wrapper
                     .get("[data-test=not-empty-field-select]")
                     .findAll("option");
@@ -166,16 +148,16 @@ describe("NotEmptyFieldsSelect", () => {
 
     describe(`when the modal is saving`, () => {
         let wrapper;
-        beforeEach(async () => {
+        beforeEach(() => {
             const state = {
                 is_modal_save_running: true,
             };
-            wrapper = await getWrapper(state);
+            wrapper = getWrapper(state, []);
         });
 
         it(`will disable the "Not empty fields" select`, () => {
             const not_empty_field_select = wrapper.get("[data-test=not-empty-field-select]");
-            expect(not_empty_field_select.attributes("disabled")).toBe("disabled");
+            expect(not_empty_field_select.attributes("disabled")).toBe("");
         });
     });
 });

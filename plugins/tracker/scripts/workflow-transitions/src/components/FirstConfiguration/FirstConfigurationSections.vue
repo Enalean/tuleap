@@ -46,7 +46,8 @@
                     id="workflow-field"
                     class="tlp-select tlp-select-adjusted"
                     name="field"
-                    v-model="selected_field"
+                    v-bind:value="selected_field"
+                    v-on:change="updateSelectedField"
                     required
                     v-bind:disabled="is_operation_running"
                     data-test="list-fields"
@@ -55,7 +56,7 @@
                     <option
                         v-for="field in selectbox_fields"
                         v-bind:key="field.id"
-                        v-bind:value="field"
+                        v-bind:value="field.id"
                     >
                         {{ field.label }}
                     </option>
@@ -101,12 +102,17 @@ export default {
 
     methods: {
         createWorkflowTransitions() {
-            this.$store.dispatch("createWorkflowTransitions", this.selected_field.id).then(() => {
-                const feedback_box = document.getElementById("feedback");
-                while (feedback_box.firstChild) {
-                    feedback_box.removeChild(feedback_box.firstChild);
-                }
-            });
+            this.$store
+                .dispatch("createWorkflowTransitions", Number.parseInt(this.selected_field, 10))
+                .then(() => {
+                    const feedback_box = document.getElementById("feedback");
+                    while (feedback_box.firstChild) {
+                        feedback_box.removeChild(feedback_box.firstChild);
+                    }
+                });
+        },
+        updateSelectedField(event) {
+            this.selected_field = event.target.value;
         },
     },
 };

@@ -18,8 +18,12 @@
   -->
 
 <template>
-    <section class="tlp-pane-section" data-test="tracker-workflow-matrix">
-        <table v-if="has_field_values" class="tlp-table tracker-workflow-transition-table">
+    <section class="tlp-pane-section">
+        <table
+            v-if="has_field_values"
+            class="tlp-table tracker-workflow-transition-table"
+            data-test="tracker-workflow-matrix"
+        >
             <thead>
                 <tr>
                     <th></th>

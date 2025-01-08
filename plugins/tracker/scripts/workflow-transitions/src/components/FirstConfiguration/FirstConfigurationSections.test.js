@@ -19,41 +19,32 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
-import { createLocalVueForTests } from "../../support/local-vue.js";
-import store_options from "../../store/index.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe("FirstConfigurationSections", () => {
-    let store;
-
-    beforeEach(() => {
-        store = createStoreMock(store_options);
-    });
-
-    const getWrapper = async () => {
+    const getWrapper = () => {
         return shallowMount(FirstConfigurationSections, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        is_operation_running: true,
+                    },
+                    getters: {
+                        selectbox_fields: () => [],
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
         });
     };
-
-    afterEach(() => store.reset());
 
     const create_workflow_selector = '[data-test="create-workflow"]';
 
     describe("When an operation is running", () => {
-        beforeEach(() => {
-            store.state.is_operation_running = true;
-        });
-
-        it("the submit button will be disabled", async () => {
-            const wrapper = await getWrapper();
+        it("the submit button will be disabled", () => {
+            const wrapper = getWrapper();
             const create_workflow_button = wrapper.get(create_workflow_selector);
-            expect(create_workflow_button.attributes("disabled")).toBe("disabled");
+            expect(create_workflow_button.attributes("disabled")).toBe("");
         });
     });
 });

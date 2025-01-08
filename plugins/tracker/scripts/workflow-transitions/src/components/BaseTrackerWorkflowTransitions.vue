@@ -40,11 +40,14 @@
                     </div>
                     <template v-if="is_tracker_available">
                         <template v-if="is_base_field_configured">
-                            <header-section />
-                            <transitions-matrix-section />
+                            <header-section data-test="header-section" />
+                            <transitions-matrix-section data-test="transition-matrix-section" />
                         </template>
                         <first-configuration-sections v-else-if="has_selectbox_fields" />
-                        <first-configuration-impossible-warning v-else />
+                        <first-configuration-impossible-warning
+                            data-test="configuration-impossible-warning"
+                            v-else
+                        />
                     </template>
                     <section class="tlp-pane-section" v-else>
                         <div

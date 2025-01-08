@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-card tracker-workflow-transition-modal-action-card">
         <div class="tlp-form-element tracker-workflow-transition-modal-action-type">
             <select class="tlp-select tlp-skeleton-field" disabled></select>
@@ -33,3 +33,8 @@
         </div>
     </div>
 </template>
+<script>
+export default {
+    name: "PostActionSkeleton",
+};
+</script>

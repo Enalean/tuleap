@@ -21,13 +21,10 @@
 import { mount } from "@vue/test-utils";
 
 import SetValueAction from "./SetValueAction.vue";
-import DateInput from "./DateInput.vue";
-import FloatInput from "./FloatInput.vue";
-import IntInput from "./IntInput.vue";
-import { createLocalVueForTests } from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import { DATE_FIELD } from "@tuleap/plugin-tracker-constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests.js";
+import DateInput from "./DateInput.vue";
 
 describe("SetValueAction", () => {
     let store;
@@ -38,43 +35,50 @@ describe("SetValueAction", () => {
     const float_field_id = 45;
     const float_field = create("field", { field_id: float_field_id, type: "float" });
 
-    let wrapper;
+    let current_tracker;
+    let set_value_action_fields_value;
 
-    beforeEach(async () => {
-        const current_tracker = {
+    beforeEach(() => {
+        current_tracker = {
             fields: [date_field, int_field, float_field],
         };
-
-        const store_options = {
-            state: {
-                transitionModal: {
-                    current_transition: create("transition"),
-                    is_modal_save_running: false,
-                },
-                current_tracker: current_tracker,
-            },
-            getters: {
-                "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
-                "transitionModal/post_actions": [],
-                current_workflow_field: create("field", { field_id: 455, type: "sb" }),
-                is_workflow_advanced: false,
-                "transitionModal/is_agile_dashboard_used": false,
-                "transitionModal/is_program_management_used": false,
-            },
-        };
-
-        store = createStoreMock(store_options);
-
-        wrapper = mount(SetValueAction, {
-            mocks: { $store: store },
-            propsData: { post_action: create("post_action", "presented") },
-            localVue: await createLocalVueForTests(),
-        });
+        set_value_action_fields_value = [date_field, int_field, float_field];
     });
 
-    afterEach(() => store.reset());
+    function instantiateComponent(post_action) {
+        return mount(SetValueAction, {
+            mocks: { $store: store },
+            propsData: { post_action },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        current_tracker,
+                    },
+                    getters: {
+                        current_transition: () => create("transition"),
+                        is_modal_save_running: () => false,
+                        current_workflow_field: () =>
+                            create("field", { field_id: 455, type: "sb" }),
+                        is_workflow_advanced: () => false,
+                    },
+                    modules: {
+                        transitionModal: {
+                            getters: {
+                                set_value_action_fields: () => set_value_action_fields_value,
+                                post_actions: () => [],
+                                is_agile_dashboard_used: () => false,
+                                is_program_management_used: () => false,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
+        });
+    }
 
     it("Shows date field in date fields group", () => {
+        const wrapper = instantiateComponent(create("post_action", "presented"));
         const date_group_selector = `optgroup[data-test-type="${DATE_FIELD}-group"]`;
         const date_select_group = wrapper.get(date_group_selector);
         expect(date_select_group.find('[data-test-type="field_43"]').exists()).toBeTruthy();
@@ -86,25 +90,22 @@ describe("SetValueAction", () => {
                 ...date_field,
                 disabled: true,
             };
-            store.getters["transitionModal/set_value_action_fields"] = [
-                used_date_field,
-                int_field,
-                float_field,
-            ];
+            set_value_action_fields_value = [used_date_field, int_field, float_field];
         });
 
         it("shows a disabled option", () => {
+            const wrapper = instantiateComponent(create("post_action", "presented"));
             const date_field_option = wrapper.get('[data-test-type="field_43"]');
-            expect(date_field_option.attributes().disabled).toBeTruthy();
+            expect(date_field_option.attributes().disabled).toBe("");
         });
     });
 
     describe("when there are no valid fields", () => {
-        it("disables the option", async () => {
-            store.getters["transitionModal/set_value_action_fields"] = [];
-            await wrapper.vm.$nextTick();
+        it("disables the option", () => {
+            set_value_action_fields_value = [];
+            const wrapper = instantiateComponent(create("post_action", "presented"));
 
-            expect(wrapper.get("[data-test=set_field]").attributes("disabled")).toBeTruthy();
+            expect(wrapper.get("[data-test=set_field]").attributes("disabled")).toBe("");
         });
     });
 
@@ -115,14 +116,16 @@ describe("SetValueAction", () => {
             field_id: date_field_id,
             value: "current",
         });
-        beforeEach(() => wrapper.setProps({ post_action }));
 
         it("select corresponding date field", () => {
+            const wrapper = instantiateComponent(post_action);
             expect(wrapper.vm.post_action_field).toBe(date_field);
         });
 
         it("shows post action value", () => {
+            const wrapper = instantiateComponent(post_action);
             expect(wrapper.findComponent(DateInput).props().input_value).toBe("current");
+            expect(wrapper.vm.value).toBe("current");
         });
     });
 
@@ -133,11 +136,11 @@ describe("SetValueAction", () => {
             field_id: int_field_id,
             value: 200,
         });
-        beforeEach(() => wrapper.setProps({ post_action }));
 
         it("shows value of action", () => {
+            const wrapper = instantiateComponent(post_action);
             expect(wrapper.vm.post_action_field).toBe(int_field);
-            expect(wrapper.findComponent(IntInput).props().input_value).toBe(200);
+            expect(wrapper.vm.value).toBe(200);
         });
     });
 
@@ -148,11 +151,11 @@ describe("SetValueAction", () => {
             field_id: float_field_id,
             value: 12.34,
         });
-        beforeEach(() => wrapper.setProps({ post_action }));
 
         it("shows value of action", () => {
+            const wrapper = instantiateComponent(post_action);
             expect(wrapper.vm.post_action_field).toBe(float_field);
-            expect(wrapper.findComponent(FloatInput).props().input_value).toBe(12.34);
+            expect(wrapper.vm.value).toBe(12.34);
         });
     });
 });

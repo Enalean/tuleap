@@ -42,7 +42,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import { createListPicker } from "@tuleap/list-picker";

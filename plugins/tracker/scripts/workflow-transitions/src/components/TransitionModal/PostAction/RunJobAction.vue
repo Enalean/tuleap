@@ -33,9 +33,9 @@
                 placeholder="https://www.example.com"
                 v-on:input="onInput"
                 v-bind:value="post_action.job_url"
-                data-test-type="job-url"
                 required
                 v-bind:disabled="is_modal_save_running"
+                data-test="run-job-input"
             />
             <p class="tlp-text-info">
                 {{

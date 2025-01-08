@@ -67,7 +67,7 @@ export default {
             .trigger("change")
             .on("change", this.onChange);
     },
-    destroyed() {
+    unmounted() {
         this.select2_control.off().select2("destroy");
     },
     methods: {
