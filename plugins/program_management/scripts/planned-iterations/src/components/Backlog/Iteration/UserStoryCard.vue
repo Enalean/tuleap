@@ -62,35 +62,27 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { useNamespacedState } from "vuex-composition-helpers";
 import {
     getAccessibilityClasses,
     showAccessibilityPattern,
 } from "../../../helpers/accessibility-helper";
-
 import type { UserStory } from "../../../type";
 
-const configuration = namespace("configuration");
+const { is_accessibility_mode_enabled } = useNamespacedState<{
+    is_accessibility_mode_enabled: boolean;
+}>("configuration", ["is_accessibility_mode_enabled"]);
 
-@Component
-export default class UserStoryCard extends Vue {
-    @Prop({ required: true })
-    readonly user_story!: UserStory;
+const props = defineProps<{ user_story: UserStory }>();
 
-    @configuration.State
-    readonly is_accessibility_mode_enabled!: boolean;
+const additional_classnames = getAccessibilityClasses(
+    props.user_story,
+    is_accessibility_mode_enabled.value,
+).join(" ");
 
-    get additional_classnames(): string {
-        return getAccessibilityClasses(this.user_story, this.is_accessibility_mode_enabled).join(
-            " ",
-        );
-    }
-
-    get show_accessibility(): boolean {
-        return showAccessibilityPattern(this.user_story, this.is_accessibility_mode_enabled);
-    }
-}
+const show_accessibility = showAccessibilityPattern(
+    props.user_story,
+    is_accessibility_mode_enabled.value,
+);
 </script>

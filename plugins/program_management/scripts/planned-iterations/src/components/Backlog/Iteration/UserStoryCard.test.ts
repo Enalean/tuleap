@@ -27,9 +27,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Feature } from "../../../type";
 
 describe("UserStoryCard", () => {
-    async function getWrapper(
-        is_accessibility_mode_enabled: boolean,
-    ): Promise<Wrapper<UserStoryCard>> {
+    async function getWrapper(is_accessibility_mode_enabled: boolean): Promise<Wrapper<Vue>> {
         return shallowMount(UserStoryCard, {
             localVue: await createPlanIterationsLocalVue(),
             propsData: {
