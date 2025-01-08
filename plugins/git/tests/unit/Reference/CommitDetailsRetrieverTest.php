@@ -22,48 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Head;
 use Tuleap\Git\GitPHP\Tag;
-use Tuleap\User\UserEmailCollection;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CommitDetailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommitDetailsRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsCommitDetailsFromDb(): void
     {
-        $dao = Mockery::mock(
-            CommitDetailsCacheDao::class,
-            [
-                'searchCommitDetails' => [
-                    'title'           => 'Add foo to stuff',
-                    'first_branch'    => 'dev-feature',
-                    'first_tag'       => 'v1.2.0',
-                    'author_email'    => 'jdoe@example.com',
-                    'author_name'     => 'John Doe',
-                    'committer_epoch' => 1234567890,
-                ],
-            ],
-        );
+        $dao = $this->createMock(CommitDetailsCacheDao::class);
+        $dao->method('searchCommitDetails')->willReturn([
+            'title'           => 'Add foo to stuff',
+            'first_branch'    => 'dev-feature',
+            'first_tag'       => 'v1.2.0',
+            'author_email'    => 'jdoe@example.com',
+            'author_name'     => 'John Doe',
+            'committer_epoch' => 1234567890,
+        ]);
 
-        $john_doe     = Mockery::mock(\PFUser::class, ['getEmail' => 'jdoe@example.com']);
-        $user_manager = Mockery::mock(
-            \UserManager::class,
-            [
-                'getUserCollectionByEmails' => new UserEmailCollection($john_doe),
-            ]
-        );
+        $retriever = new CommitDetailsRetriever($dao);
 
-        $retriever = new CommitDetailsRetriever($dao, $user_manager);
-
-        $commit_details = $retriever->retrieveCommitDetails(
-            Mockery::mock(GitRepository::class, ['getId' => 1]),
-            Mockery::mock(Commit::class, ['GetHash' => '1a2b3c4d5e6f7g8h9i']),
-        );
+        $commit = $this->createMock(Commit::class);
+        $commit->method('GetHash')->willReturn('1a2b3c4d5e6f7g8h9i');
+        $commit_details = $retriever->retrieveCommitDetails(GitRepositoryTestBuilder::aProjectRepository()->withId(1)->build(), $commit);
 
         self::assertEquals('Add foo to stuff', $commit_details->getTitle());
         self::assertEquals('dev-feature', $commit_details->getFirstBranch());
@@ -75,61 +58,40 @@ class CommitDetailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIfNotFoundInDbItReturnsCommitDetailsFromCommitAndCacheTheInformationInDb(): void
     {
-        $dao = Mockery::mock(
-            CommitDetailsCacheDao::class,
-            [
-                'searchCommitDetails' => [],
-            ],
-        );
-        $dao->shouldReceive('saveCommitDetails')
-            ->with(
-                1,
-                '1a2b3c4d5e6f7g8h9i',
-                'Add foo to stuff',
-                'jdoe@example.com',
-                'John Doe',
-                1023456789,
-                'neo@example.com',
-                'Thomas A. Anderson',
-                1234567890,
-                'dev-feature',
-                'v1.2.0',
-            )
-            ->once();
-
-        $john_doe     = Mockery::mock(\PFUser::class, ['getEmail' => 'jdoe@example.com']);
-        $user_manager = Mockery::mock(
-            \UserManager::class,
-            [
-                'getUserCollectionByEmails' => new UserEmailCollection($john_doe),
-            ]
+        $dao = $this->createMock(CommitDetailsCacheDao::class);
+        $dao->method('searchCommitDetails')->willReturn([]);
+        $dao->expects(self::once())->method('saveCommitDetails')->with(
+            1,
+            '1a2b3c4d5e6f7g8h9i',
+            'Add foo to stuff',
+            'jdoe@example.com',
+            'John Doe',
+            1023456789,
+            'neo@example.com',
+            'Thomas A. Anderson',
+            1234567890,
+            'dev-feature',
+            'v1.2.0',
         );
 
-        $retriever = new CommitDetailsRetriever($dao, $user_manager);
+        $retriever = new CommitDetailsRetriever($dao);
 
-        $commit_details = $retriever->retrieveCommitDetails(
-            Mockery::mock(GitRepository::class, ['getId' => 1]),
-            Mockery::mock(
-                Commit::class,
-                [
-                    'GetHash'           => '1a2b3c4d5e6f7g8h9i',
-                    'GetTitle'          => 'Add foo to stuff',
-                    'GetAuthorEmail'    => 'jdoe@example.com',
-                    'GetAuthorName'     => 'John Doe',
-                    'GetAuthorEpoch'    => '1023456789',
-                    'GetCommitterEmail' => 'neo@example.com',
-                    'GetCommitterName'  => 'Thomas A. Anderson',
-                    'GetCommitterEpoch' => '1234567890',
-                    'GetHeads'          => [
-                        Mockery::mock(Head::class)->shouldReceive(['GetName' => 'dev-feature'])->getMock(),
-                    ],
-                    'GetTags'           => [
-                        Mockery::mock(Tag::class)->shouldReceive(['GetName' => 'v1.2.0'])->getMock(),
-                    ],
-
-                ]
-            ),
-        );
+        $commit = $this->createMock(Commit::class);
+        $commit->method('GetHash')->willReturn('1a2b3c4d5e6f7g8h9i');
+        $commit->method('GetTitle')->willReturn('Add foo to stuff');
+        $commit->method('GetAuthorEmail')->willReturn('jdoe@example.com');
+        $commit->method('GetAuthorName')->willReturn('John Doe');
+        $commit->method('GetAuthorEpoch')->willReturn('1023456789');
+        $commit->method('GetCommitterEmail')->willReturn('neo@example.com');
+        $commit->method('GetCommitterName')->willReturn('Thomas A. Anderson');
+        $commit->method('GetCommitterEpoch')->willReturn('1234567890');
+        $head = $this->createMock(Head::class);
+        $head->method('GetName')->willReturn('dev-feature');
+        $commit->method('GetHeads')->willReturn([$head]);
+        $tag = $this->createMock(Tag::class);
+        $tag->method('GetName')->willReturn('v1.2.0');
+        $commit->method('GetTags')->willReturn([$tag]);
+        $commit_details = $retriever->retrieveCommitDetails(GitRepositoryTestBuilder::aProjectRepository()->withId(1)->build(), $commit);
 
         self::assertEquals('Add foo to stuff', $commit_details->getTitle());
         self::assertEquals('dev-feature', $commit_details->getFirstBranch());
@@ -141,30 +103,17 @@ class CommitDetailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIfNotFoundInDbItReturnsNullIfCommitDoesNotHaveATitleBecauseInThatCaseWeAssumeThatTheCommitDoesNotExistInTheRepository(): void
     {
-        $dao = Mockery::mock(
-            CommitDetailsCacheDao::class,
-            [
-                'searchCommitDetails' => [],
-            ],
-        );
-        $dao->shouldReceive('saveCommitDetails')
-            ->never();
+        $dao = $this->createMock(CommitDetailsCacheDao::class);
+        $dao->method('searchCommitDetails')->willReturn([]);
+        $dao->expects(self::never())->method('saveCommitDetails');
 
-        $retriever = new CommitDetailsRetriever($dao, Mockery::mock(\UserManager::class));
+        $retriever = new CommitDetailsRetriever($dao);
 
-        self::assertNull(
-            $retriever->retrieveCommitDetails(
-                Mockery::mock(GitRepository::class, ['getId' => 1]),
-                Mockery::mock(
-                    Commit::class,
-                    [
-                        'GetHash'  => '1a2b3c4d5e6f7g8h9i',
-                        'GetTitle' => null,
-                        'GetHeads' => null,
-                        'GetTags'  => null,
-                    ]
-                ),
-            )
-        );
+        $commit = $this->createMock(Commit::class);
+        $commit->method('GetHash')->willReturn('1a2b3c4d5e6f7g8h9i');
+        $commit->method('GetTitle')->willReturn(null);
+        $commit->method('GetHeads')->willReturn(null);
+        $commit->method('GetTags')->willReturn(null);
+        self::assertNull($retriever->retrieveCommitDetails(GitRepositoryTestBuilder::aProjectRepository()->withId(1)->build(), $commit));
     }
 }
