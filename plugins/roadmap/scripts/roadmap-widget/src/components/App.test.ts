@@ -35,7 +35,7 @@ describe("App", () => {
     async function mountComponent(
         tasks: TasksState = {} as TasksState,
         root: RootState = {} as RootState,
-    ): Promise<Wrapper<App>> {
+    ): Promise<Wrapper<Vue>> {
         return shallowMount(App, {
             propsData: {
                 roadmap_id: 123,
