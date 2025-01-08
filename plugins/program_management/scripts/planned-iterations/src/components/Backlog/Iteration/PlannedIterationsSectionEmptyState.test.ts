@@ -28,9 +28,7 @@ import type { Wrapper } from "@vue/test-utils";
 import type { IterationLabels } from "../../../store/configuration";
 
 describe("PlannedIterationsSectionEmptyState", () => {
-    async function getWrapper(
-        iterations_labels: IterationLabels,
-    ): Promise<Wrapper<PlannedIterationsSectionEmptyState>> {
+    async function getWrapper(iterations_labels: IterationLabels): Promise<Wrapper<Vue>> {
         return shallowMount(PlannedIterationsSectionEmptyState, {
             localVue: await createPlanIterationsLocalVue(),
             mocks: {
