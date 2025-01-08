@@ -148,9 +148,9 @@ final class SectionUpdaterTest extends TestCase
         self::assertFalse($update->isCalled());
     }
 
-    private function getMatchingArtifactSection(): RawSection
+    private function getMatchingArtifactSection(): RetrievedSection
     {
-        return RawSection::fromArtifact([
+        return RetrievedSection::fromArtifact([
             'id'          => SectionIdentifierStub::create(),
             'item_id'     => self::ITEM_ID,
             'artifact_id' => self::ARTIFACT_ID,
@@ -158,9 +158,9 @@ final class SectionUpdaterTest extends TestCase
         ]);
     }
 
-    private function getMatchingFreetextSection(): RawSection
+    private function getMatchingFreetextSection(): RetrievedSection
     {
-        return RawSection::fromFreetext([
+        return RetrievedSection::fromFreetext([
             'id'                   => SectionIdentifierStub::create(),
             'freetext_id'          => FreetextIdentifierStub::create(),
             'item_id'              => self::ITEM_ID,

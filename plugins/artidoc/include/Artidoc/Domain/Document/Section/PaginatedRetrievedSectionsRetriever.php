@@ -23,13 +23,30 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-final readonly class PaginatedRawSections
+final readonly class PaginatedRetrievedSectionsRetriever
 {
+    public function __construct(
+        private RetrieveArtidocWithContext $retrieve_artidoc,
+        private SearchPaginatedRetrievedSections $search,
+    ) {
+    }
+
     /**
-     * @param list<RawSection> $rows
+     * @return Ok<PaginatedRetrievedSections>|Err<Fault>
      */
-    public function __construct(public ArtidocWithContext $artidoc, public array $rows, public int $total)
+    public function retrievePaginatedRetrievedSections(int $id, int $limit, int $offset): Ok|Err
     {
+        return $this->retrieve_artidoc
+            ->retrieveArtidocUserCanRead($id)
+            ->map(fn (ArtidocWithContext $artidoc) => $this->search->searchPaginatedRetrievedSections(
+                $artidoc,
+                $limit,
+                $offset,
+            ));
     }
 }

@@ -43,9 +43,9 @@ final class SectionRetriever implements RetrieveSection
     {
         return $this->search_section->searchSectionById($id)
             ->match(
-                fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($raw_section->item_id)
-                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collectRequiredSectionInformation($artidoc, $raw_section))
-                    ->map(static fn() => $raw_section),
+                fn (RetrievedSection $retrieved_section) => $this->retrieve_artidoc->retrieveArtidocUserCanRead($retrieved_section->item_id)
+                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collectRequiredSectionInformation($artidoc, $retrieved_section))
+                    ->map(static fn() => $retrieved_section),
                 static fn (Fault $fault) => Result::err($fault),
             );
     }
@@ -54,16 +54,16 @@ final class SectionRetriever implements RetrieveSection
     {
         return $this->search_section->searchSectionById($id)
             ->match(
-                fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanWrite($raw_section->item_id)
-                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collectRequiredSectionInformation($artidoc, $raw_section))
-                    ->map(static fn() => $raw_section),
+                fn (RetrievedSection $retrieved_section) => $this->retrieve_artidoc->retrieveArtidocUserCanWrite($retrieved_section->item_id)
+                    ->andThen(fn (ArtidocWithContext $artidoc) => $this->collectRequiredSectionInformation($artidoc, $retrieved_section))
+                    ->map(static fn() => $retrieved_section),
                 static fn (Fault $fault) => Result::err($fault),
             );
     }
 
-    private function collectRequiredSectionInformation(ArtidocWithContext $artidoc, RawSection $raw_section): Ok|Err
+    private function collectRequiredSectionInformation(ArtidocWithContext $artidoc, RetrievedSection $retrieved_section): Ok|Err
     {
-        return $raw_section->content->apply(
+        return $retrieved_section->content->apply(
             fn (int $artifact_id) => $this->collect_required_section_information->collectRequiredSectionInformation($artidoc, $artifact_id),
             static fn () => Result::ok(null),
         );

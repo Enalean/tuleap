@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\REST\v1\PaginatedArtidocSectionRepresentationCollection;
-use Tuleap\Artidoc\REST\v1\TransformRawSectionsToRepresentation;
+use Tuleap\Artidoc\REST\v1\TransformRetrievedSectionsToRepresentation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class TransformRawSectionsToRepresentationStub implements TransformRawSectionsToRepresentation
+final class TransformRetrievedSectionsToRepresentationStub implements TransformRetrievedSectionsToRepresentation
 {
     /**
      * @param Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault> $result
@@ -54,7 +54,7 @@ final class TransformRawSectionsToRepresentationStub implements TransformRawSect
         return new self(null);
     }
 
-    public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
+    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err
     {
         if ($this->result === null) {
             throw new \Exception('Unexpected call to getRepresentation()');

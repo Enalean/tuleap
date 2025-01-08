@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final readonly class RawSectionsToRepresentationTransformer implements TransformRawSectionsToRepresentation
+final readonly class RetrievedSectionsToRepresentationTransformer implements TransformRetrievedSectionsToRepresentation
 {
     public function __construct(
         private SectionRepresentationBuilder $section_representation_builder,
@@ -37,12 +37,12 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     ) {
     }
 
-    public function getRepresentation(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
+    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err
     {
-        return $this->collectRequiredSectionInformationForAllSections($raw_sections)
-            ->andThen(function () use ($raw_sections, $user) {
+        return $this->collectRequiredSectionInformationForAllSections($retrieved_sections)
+            ->andThen(function () use ($retrieved_sections, $user) {
                 $representations = [];
-                foreach ($raw_sections->rows as $section) {
+                foreach ($retrieved_sections->rows as $section) {
                     $result = $this->section_representation_builder
                         ->getSectionRepresentation($section, $this->required_section_information_collector, $user);
 
@@ -57,20 +57,20 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
                     );
                 }
 
-                return Result::ok(new PaginatedArtidocSectionRepresentationCollection($representations, $raw_sections->total));
+                return Result::ok(new PaginatedArtidocSectionRepresentationCollection($representations, $retrieved_sections->total));
             });
     }
 
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function collectRequiredSectionInformationForAllSections(PaginatedRawSections $raw_sections): Ok|Err
+    private function collectRequiredSectionInformationForAllSections(PaginatedRetrievedSections $retrieved_sections): Ok|Err
     {
-        foreach ($raw_sections->rows as $section) {
+        foreach ($retrieved_sections->rows as $section) {
             $result = $section->content->apply(
-                function (int $artifact_id) use ($raw_sections) {
+                function (int $artifact_id) use ($retrieved_sections) {
                     return $this->required_section_information_collector
-                        ->collectRequiredSectionInformation($raw_sections->artidoc, $artifact_id);
+                        ->collectRequiredSectionInformation($retrieved_sections->artidoc, $artifact_id);
                 },
                 static fn () => Result::ok(null),
             );

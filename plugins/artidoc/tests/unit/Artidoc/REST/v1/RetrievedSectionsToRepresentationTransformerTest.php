@@ -33,9 +33,9 @@ use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRawSections;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\RawSection;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Result;
@@ -56,7 +56,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
-final class RawSectionsToRepresentationTransformerTest extends TestCase
+final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 {
     private Tracker $tracker;
     private Tracker_Semantic_Title&MockObject $semantic_title;
@@ -196,7 +196,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getFileValue($file, $art4),
             });
 
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -206,13 +206,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                    RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                    RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                    RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -284,7 +284,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art1->getLastChangeset() => $this->getFileValue($file, $art1),
             });
 
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -294,10 +294,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromFreetext([
+                    RetrievedSection::fromFreetext([
                         'freetext_title'       => 'Requirements',
                         'freetext_description' => 'Lorem ipsum',
                         'freetext_id'          => FreetextIdentifierStub::create(),
@@ -305,7 +305,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                         'item_id'              => 101,
                         'rank'                 => 0,
                     ]),
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
                 ],
                 10,
             ),
@@ -360,7 +360,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
         $file->method('getRESTValue')->willReturn(null);
 
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -370,10 +370,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                 ],
                 10,
             ),
@@ -420,7 +420,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
         $editor_builder->method('getDataAttributes')->willReturn([]);
 
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -430,10 +430,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                 ],
                 10,
             ),
@@ -508,7 +508,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
         $editor_builder->method('getDataAttributes')->willReturn([]);
 
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -518,13 +518,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                    RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                    RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                    RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -585,7 +585,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -595,13 +595,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                    RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                    RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                    RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -642,7 +642,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -652,13 +652,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                    RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                    RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                    RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -707,7 +707,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -717,13 +717,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                    RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                    RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                    RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -772,7 +772,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -782,13 +782,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                    RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                    RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                    RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -835,7 +835,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -845,13 +845,13 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [
-                    RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                    RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                    RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                    RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -869,7 +869,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder($file_upload_provider),
             ),
@@ -879,7 +879,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             ),
         );
         $result      = $transformer->getRepresentation(
-            new PaginatedRawSections(
+            new PaginatedRetrievedSections(
                 new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
                 [],
                 10,

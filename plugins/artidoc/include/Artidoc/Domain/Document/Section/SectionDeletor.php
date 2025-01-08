@@ -44,7 +44,7 @@ final class SectionDeletor
     public function deleteSection(SectionIdentifier $id): Ok|Err
     {
         return $this->search_section->searchSectionById($id)
-            ->andThen(fn (RawSection $raw_section) => $this->retrieve_artidoc->retrieveArtidocUserCanWrite($raw_section->item_id))
+            ->andThen(fn (RetrievedSection $retrieved_section) => $this->retrieve_artidoc->retrieveArtidocUserCanWrite($retrieved_section->item_id))
             ->andThen(fn () => $this->delete($id));
     }
 

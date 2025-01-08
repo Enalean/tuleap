@@ -26,11 +26,11 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
-use Tuleap\Artidoc\Stubs\Domain\Document\Section\SearchPaginatedRawSectionsStub;
+use Tuleap\Artidoc\Stubs\Domain\Document\Section\SearchPaginatedRetrievedSectionsStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class PaginatedRawSectionsRetrieverTest extends TestCase
+final class PaginatedRetrievedSectionsRetrieverTest extends TestCase
 {
     public function testHappyPath(): void
     {
@@ -38,35 +38,35 @@ final class PaginatedRawSectionsRetrieverTest extends TestCase
             new ArtidocDocument(['item_id' => 123]),
         );
 
-        $sections = new PaginatedRawSections(
+        $sections = new PaginatedRetrievedSections(
             $document,
             [
-                RawSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
-                RawSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
-                RawSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
-                RawSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
+                RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
             ],
             10,
         );
 
-        $retriever = new PaginatedRawSectionsRetriever(
+        $retriever = new PaginatedRetrievedSectionsRetriever(
             RetrieveArtidocWithContextStub::withDocumentUserCanRead($document),
-            SearchPaginatedRawSectionsStub::withSections($sections),
+            SearchPaginatedRetrievedSectionsStub::withSections($sections),
         );
 
-        $result = $retriever->retrievePaginatedRawSections(123, 4, 0);
+        $result = $retriever->retrievePaginatedRetrievedSections(123, 4, 0);
         self::assertTrue(Result::isOk($result));
         self::assertSame($sections, $result->value);
     }
 
     public function testFaultWhenArtidocDocumentCannotBeRetrieved(): void
     {
-        $retriever = new PaginatedRawSectionsRetriever(
+        $retriever = new PaginatedRetrievedSectionsRetriever(
             RetrieveArtidocWithContextStub::withoutDocument(),
-            SearchPaginatedRawSectionsStub::shouldNotBeCalled(),
+            SearchPaginatedRetrievedSectionsStub::shouldNotBeCalled(),
         );
 
-        $result = $retriever->retrievePaginatedRawSections(123, 4, 0);
+        $result = $retriever->retrievePaginatedRetrievedSections(123, 4, 0);
         self::assertTrue(Result::isErr($result));
     }
 }

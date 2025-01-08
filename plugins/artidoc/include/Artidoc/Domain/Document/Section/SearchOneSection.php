@@ -28,7 +28,7 @@ use Tuleap\NeverThrow\Ok;
 interface SearchOneSection
 {
     /**
-     * @return Ok<RawSection>|Err<Fault>
+     * @return Ok<RetrievedSection>|Err<Fault>
      */
     public function searchSectionById(SectionIdentifier $section_id): Ok|Err;
 }

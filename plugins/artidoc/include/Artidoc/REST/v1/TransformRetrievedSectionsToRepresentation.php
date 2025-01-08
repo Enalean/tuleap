@@ -18,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Domain\Document\Section;
+namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-interface SearchPaginatedRawSections
+interface TransformRetrievedSectionsToRepresentation
 {
-    public function searchPaginatedRawSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRawSections;
+    /**
+     * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
+     */
+    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err;
 }

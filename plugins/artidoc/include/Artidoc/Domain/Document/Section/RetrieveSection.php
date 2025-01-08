@@ -28,12 +28,12 @@ use Tuleap\NeverThrow\Ok;
 interface RetrieveSection
 {
     /**
-     * @return Ok<RawSection>|Err<Fault>
+     * @return Ok<RetrievedSection>|Err<Fault>
      */
     public function retrieveSectionUserCanRead(SectionIdentifier $id): Ok|Err;
 
     /**
-     * @return Ok<RawSection>|Err<Fault>
+     * @return Ok<RetrievedSection>|Err<Fault>
      */
     public function retrieveSectionUserCanWrite(SectionIdentifier $id): Ok|Err;
 }
