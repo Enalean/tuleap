@@ -58,6 +58,7 @@ function getCard(
     definition: Card = {
         background_color: "",
         is_in_edit_mode: false,
+        label: "label",
     } as Card,
 ): Card {
     return {
@@ -77,7 +78,7 @@ describe("BaseCard", () => {
 
     it("adds accessibility class if user needs it and card has a background color", async () => {
         const wrapper = await getWrapper(
-            getCard({ background_color: "fiesta-red" } as Card),
+            getCard({ background_color: "fiesta-red", label: "label" } as Card),
             {},
             true,
         );
@@ -107,19 +108,23 @@ describe("BaseCard", () => {
         });
 
         it("Given the card is in read mode, then it doesn't add additional class", async () => {
-            const wrapper = await getWrapper(getCard({ is_in_edit_mode: false } as Card));
+            const wrapper = await getWrapper(
+                getCard({ is_in_edit_mode: false, label: "label" } as Card),
+            );
 
             expect(wrapper.classes("taskboard-card-edit-mode")).toBe(false);
         });
 
         it("Given the card is in edit mode, then it adds necessary class", async () => {
-            const wrapper = await getWrapper(getCard({ is_in_edit_mode: true } as Card));
+            const wrapper = await getWrapper(
+                getCard({ is_in_edit_mode: true, label: "label" } as Card),
+            );
 
             expect(wrapper.classes("taskboard-card-edit-mode")).toBe(true);
         });
 
         it("Given the card is in read mode, when user clicks on the trigger pencil, then it toggles its edit mode", async () => {
-            const card = getCard({ is_in_edit_mode: false } as Card);
+            const card = getCard({ is_in_edit_mode: false, label: "label" } as Card);
             const wrapper = await getWrapper(card);
 
             wrapper.get("[data-test=card-edit-button]").trigger("click");
@@ -131,7 +136,7 @@ describe("BaseCard", () => {
         });
 
         it("Given the card is in edit mode, when user clicks on it, then it does nothing", async () => {
-            const card = getCard({ is_in_edit_mode: true } as Card);
+            const card = getCard({ is_in_edit_mode: true, label: "label" } as Card);
             const wrapper = await getWrapper(card);
 
             wrapper.get("[data-test=card-edit-button]").trigger("click");
@@ -162,14 +167,16 @@ describe("BaseCard", () => {
         it(`Given the user has the permission to edit the card title
             And the card is being saved
             Then it won't display the card as editable`, async () => {
-            const wrapper = await getWrapper(getCard({ is_being_saved: true } as Card));
+            const wrapper = await getWrapper(
+                getCard({ is_being_saved: true, label: "label" } as Card),
+            );
 
             expect(wrapper.find(".taskboard-card-edit-trigger").exists()).toBe(false);
             expect(wrapper.classes("taskboard-card-editable")).toBe(false);
         });
 
         it(`Cancels the edition of the card if user clicks on cancel button (that is outside of this component)`, async () => {
-            const card = getCard({ is_in_edit_mode: true } as Card);
+            const card = getCard({ is_in_edit_mode: true, label: "label" } as Card);
             const wrapper = await getWrapper(card);
 
             EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
@@ -268,6 +275,7 @@ describe("BaseCard", () => {
                 is_in_edit_mode: true,
                 is_being_saved: true,
                 is_just_saved: true,
+                label: "label",
             } as Card);
             const wrapper = await getWrapper(card);
 
@@ -281,6 +289,7 @@ describe("BaseCard", () => {
                 is_in_edit_mode: false,
                 is_being_saved: true,
                 is_just_saved: true,
+                label: "label",
             } as Card);
             const wrapper = await getWrapper(card);
 
@@ -294,6 +303,7 @@ describe("BaseCard", () => {
                 is_in_edit_mode: false,
                 is_being_saved: false,
                 is_just_saved: true,
+                label: "label",
             } as Card);
             const wrapper = await getWrapper(card);
 
@@ -307,6 +317,7 @@ describe("BaseCard", () => {
                 is_in_edit_mode: false,
                 is_being_saved: false,
                 is_just_saved: true,
+                label: "label",
             } as Card);
 
             jest.useFakeTimers();
@@ -322,7 +333,7 @@ describe("BaseCard", () => {
         });
 
         it("emits an `editor-closed` event after cancelling", async () => {
-            const card = getCard({ is_in_edit_mode: true } as Card);
+            const card = getCard({ is_in_edit_mode: true, label: "label" } as Card);
             const wrapper = await getWrapper(card);
 
             EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
