@@ -18,48 +18,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\RemoteServer\Gerrit;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Git_RemoteServer_GerritServer;
+use Git_RemoteServer_GerritServerFactory;
+use PasswordHandler;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ReplicationHTTPUserAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReplicationHTTPUserAuthenticatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var \PasswordHandler
-     */
-    private $password_handler;
-
-    /**
-     * @var \Git_RemoteServer_GerritServerFactory
-     */
-    private $server_factory;
-    /**
-     * @var \Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator&\Mockery\MockInterface
-     */
-    private $user_validator;
+    private PasswordHandler&MockObject $password_handler;
+    private Git_RemoteServer_GerritServerFactory&MockObject $server_factory;
+    private HttpUserValidator&MockObject $user_validator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->password_handler = \Mockery::spy(\PasswordHandler::class);
-        $this->server_factory   = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->user_validator   = \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator::class);
+        $this->password_handler = $this->createMock(PasswordHandler::class);
+        $this->server_factory   = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->user_validator   = $this->createMock(HttpUserValidator::class);
     }
 
     public function testItRejectsNonSpecificLogin(): void
     {
-        $repository                     = \Mockery::spy(\GitRepository::class);
+        $repository                     = GitRepositoryTestBuilder::aProjectRepository()->build();
         $replication_user_authenticator = new ReplicationHTTPUserAuthenticator(
             $this->password_handler,
             $this->server_factory,
             $this->user_validator
         );
+        $this->user_validator->method('isLoginAnHTTPUserLogin');
 
         $this->expectException('User_InvalidPasswordException');
         $replication_user_authenticator->authenticate($repository, 'login', new ConcealedString('password'));
@@ -68,37 +64,39 @@ class ReplicationHTTPUserAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAcceptsSpecificLogin(): void
     {
         $user_login                     = 'forge__gerrit_1';
-        $repository                     = \Mockery::spy(\GitRepository::class);
-        $gerrit_server                  = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $repository                     = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $gerrit_server                  = $this->createMock(Git_RemoteServer_GerritServer::class);
         $replication_user_authenticator = new ReplicationHTTPUserAuthenticator(
             $this->password_handler,
             $this->server_factory,
             $this->user_validator
         );
-        $gerrit_server->shouldReceive('getGenericUserName')->andReturns($user_login);
-        $gerrit_server->shouldReceive('getReplicationPassword')->andReturns('hashpassword');
-        $this->server_factory->shouldReceive('getServerById')->andReturns($gerrit_server);
-        $this->password_handler->shouldReceive('verifyHashPassword')->andReturns(true);
-        $this->user_validator->shouldReceive('isLoginAnHTTPUserLogin')->andReturns(true);
+        $gerrit_server->method('getGenericUserName')->willReturn($user_login);
+        $gerrit_server->method('getReplicationPassword')->willReturn('hashpassword');
+        $this->server_factory->method('getServerById')->willReturn($gerrit_server);
+        $this->password_handler->method('verifyHashPassword')->willReturn(true);
+        $this->password_handler->method('isPasswordNeedRehash');
+        $this->user_validator->method('isLoginAnHTTPUserLogin')->willReturn(true);
 
         $replication_http_user = $replication_user_authenticator->authenticate($repository, $user_login, new ConcealedString('password'));
-        $this->assertEquals($user_login, $replication_http_user->getUserName());
+        self::assertEquals($user_login, $replication_http_user->getUserName());
     }
 
     public function testItRejectsInvalidPassword(): void
     {
         $user_login                     = 'forge__gerrit_1';
         $user_password                  = new ConcealedString('password');
-        $repository                     = \Mockery::spy(\GitRepository::class);
-        $gerrit_server                  = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $repository                     = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $gerrit_server                  = $this->createMock(Git_RemoteServer_GerritServer::class);
         $replication_user_authenticator = new ReplicationHTTPUserAuthenticator(
             $this->password_handler,
             $this->server_factory,
             $this->user_validator
         );
-        $gerrit_server->shouldReceive('getGenericUserName')->andReturns($user_login);
-        $this->server_factory->shouldReceive('getServerById')->andReturns($gerrit_server);
-        $this->password_handler->shouldReceive('verifyHashPassword')->andReturns(false);
+        $gerrit_server->method('getGenericUserName')->willReturn($user_login);
+        $this->server_factory->method('getServerById')->willReturn($gerrit_server);
+        $this->password_handler->method('verifyHashPassword')->willReturn(false);
+        $this->user_validator->method('isLoginAnHTTPUserLogin');
 
         $this->expectException('User_InvalidPasswordException');
         $replication_user_authenticator->authenticate($repository, $user_login, $user_password);
