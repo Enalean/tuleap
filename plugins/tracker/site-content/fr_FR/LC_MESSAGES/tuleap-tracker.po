@@ -1605,6 +1605,13 @@ msgstr "Flottant"
 msgid "Follow-ups"
 msgstr "Commentaires"
 
+msgid ""
+"For instance, when you create an artifact or add a comment. %s(Historical "
+"Tuleap behavior with high traffic).%s"
+msgstr ""
+"Par exemple, quand vous créez un artéfact ou ajoutez un commentaire. "
+"%s(Comportement historique de Tuleap ayant un fort trafic)%s"
+
 msgid "Force cache regeneration"
 msgstr "Reconstruire le cache"
 
@@ -2556,8 +2563,8 @@ msgstr ""
 "Prêt à importer %1$s artéfact(s)&nbsp;: %2$s artéfact(s) nouveau(x) , %3$s "
 "artéfact(s) existant(s)"
 
-msgid "Receive emails for actions I do on the platform"
-msgstr "Recevoir du courriel pour les actions dont je suis à l'origine"
+msgid "Receive email when you are the author of a change"
+msgstr "Recevoir un courriel quand vous êtes l'auteur d'un changement."
 
 msgid "Receive notifications for this artifact"
 msgstr "Recevoir les notifications de cet artéfact"
