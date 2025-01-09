@@ -978,6 +978,11 @@ msgid_plural "Current artifact children satisfy the following conditions:"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid ""
+"Currently, you will be notified only if you are creator of an artifact, "
+"assignee or if you have specific configuration for a tracker."
+msgstr ""
+
 msgid "Custom columns based on..."
 msgstr ""
 
@@ -1419,6 +1424,11 @@ msgid "Float"
 msgstr ""
 
 msgid "Follow-ups"
+msgstr ""
+
+msgid ""
+"For all updates after you made a change on an artifact (comment, change "
+"values...)"
 msgstr ""
 
 msgid ""
@@ -2276,7 +2286,7 @@ msgid ""
 "artifact(s)"
 msgstr ""
 
-msgid "Receive email when you are the author of a change"
+msgid "Receive emails:"
 msgstr ""
 
 msgid "Receive notifications for this artifact"
@@ -4031,6 +4041,9 @@ msgid ""
 "calendar (Outlook, Google Calendar, etc.)."
 msgstr ""
 
+msgid "When you are the author of a change"
+msgstr ""
+
 msgid "When you use @ to mention someone, they will get an email notification."
 msgstr ""
 
@@ -4281,6 +4294,11 @@ msgstr ""
 msgid ""
 "You should set a <a href=\"%1$s\">%2$s semantic</a> before defining "
 "'assigned to group' permission"
+msgstr ""
+
+msgid ""
+"You will be notified for any changes if you make a comment or change a value "
+"in an artifact."
 msgstr ""
 
 msgid "You will no-longer receive notifications for this artifact"

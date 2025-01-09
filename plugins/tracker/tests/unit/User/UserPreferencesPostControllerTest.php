@@ -61,22 +61,17 @@ final class UserPreferencesPostControllerTest extends TestCase
 
     public function testItAppliesChanges(): void
     {
-        $user = $this->createMock(PFUser::class);
-        $user->method('isAnonymous')->willReturn(false);
-        $user->method('getPreference')->willReturnCallback(static fn(string $pref) => match ($pref) {
-            NotificationOnOwnActionPreference::PREFERENCE_NAME => '1',
-            Codendi_Mail_Interface::PREF_FORMAT                => 'text',
-        });
-        $user->method('setPreference')->withConsecutive(
-            [NotificationOnOwnActionPreference::PREFERENCE_NAME, '0'],
-            [Codendi_Mail_Interface::PREF_FORMAT, 'html'],
-        );
+        $user = UserTestBuilder::anActiveUser()->build();
+        $user->setPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME, '1');
+        $user->setPreference(NotificationOnAllUpdatesPreference::PREFERENCE_NAME, '1');
+        $user->setPreference(Codendi_Mail_Interface::PREF_FORMAT, 'text');
 
         $inspector = new LayoutInspector();
         $this->expectExceptionObject(new LayoutInspectorRedirection(DisplayNotificationsController::URL));
         $this->processRequest(
             HTTPRequestBuilder::get()
                 ->withParam(NotificationOnOwnActionPreference::PREFERENCE_NAME, '0')
+                ->withParam(NotificationOnAllUpdatesPreference::PREFERENCE_NAME, '0')
                 ->withParam(Codendi_Mail_Interface::PREF_FORMAT, 'html')
                 ->build(),
             $inspector,
@@ -88,22 +83,24 @@ final class UserPreferencesPostControllerTest extends TestCase
             'level'   => Feedback::INFO,
             'message' => 'Notifications preferences successfully updated',
         ], $feedbacks[0]);
+        self::assertSame('0', $user->getPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME));
+        self::assertSame('0', $user->getPreference(NotificationOnAllUpdatesPreference::PREFERENCE_NAME));
+        self::assertSame('html', $user->getPreference(Codendi_Mail_Interface::PREF_FORMAT));
     }
 
     public function testItDoesNotApplyChanges(): void
     {
-        $user = $this->createMock(PFUser::class);
-        $user->method('isAnonymous')->willReturn(false);
-        $user->method('getPreference')->willReturnCallback(static fn(string $pref) => match ($pref) {
-            NotificationOnOwnActionPreference::PREFERENCE_NAME => '0',
-            Codendi_Mail_Interface::PREF_FORMAT                => 'html',
-        });
+        $user = UserTestBuilder::anActiveUser()->build();
+        $user->setPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME, '0');
+        $user->setPreference(NotificationOnAllUpdatesPreference::PREFERENCE_NAME, '0');
+        $user->setPreference(Codendi_Mail_Interface::PREF_FORMAT, 'html');
 
         $inspector = new LayoutInspector();
         $this->expectExceptionObject(new LayoutInspectorRedirection(DisplayNotificationsController::URL));
         $this->processRequest(
             HTTPRequestBuilder::get()
                 ->withParam(NotificationOnOwnActionPreference::PREFERENCE_NAME, '0')
+                ->withParam(NotificationOnAllUpdatesPreference::PREFERENCE_NAME, '0')
                 ->withParam(Codendi_Mail_Interface::PREF_FORMAT, 'html')
                 ->build(),
             $inspector,
@@ -115,5 +112,8 @@ final class UserPreferencesPostControllerTest extends TestCase
             'level'   => Feedback::INFO,
             'message' => 'Nothing has changed',
         ], $feedbacks[0]);
+        self::assertSame('0', $user->getPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME));
+        self::assertSame('0', $user->getPreference(NotificationOnAllUpdatesPreference::PREFERENCE_NAME));
+        self::assertSame('html', $user->getPreference(Codendi_Mail_Interface::PREF_FORMAT));
     }
 }
