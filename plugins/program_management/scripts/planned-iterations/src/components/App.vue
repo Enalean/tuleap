@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <breadcrumb />
+        <app-breadcrumb />
         <h1 class="planned-iterations-title-header" data-test="app-header-title">
             {{ program_increment.title }}
             <small class="planned-iterations-title-header-dates" v-if="are_dates_displayed">
@@ -39,7 +39,7 @@ import type { ProgramIncrement } from "../store/configuration";
 import Vue from "vue";
 import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import Breadcrumb from "./Breadcrumb.vue";
+import AppBreadcrumb from "./AppBreadcrumb.vue";
 import IterationsToBePlannedSection from "./Backlog/ToBePlanned/IterationsToBePlannedSection.vue";
 import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSection.vue";
 
@@ -47,7 +47,7 @@ const configuration = namespace("configuration");
 
 @Component({
     components: {
-        Breadcrumb,
+        AppBreadcrumb,
         IterationsToBePlannedSection,
         PlannedIterationsSection,
     },

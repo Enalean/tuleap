@@ -20,13 +20,13 @@
 import type { Wrapper } from "@vue/test-utils";
 
 import { shallowMount } from "@vue/test-utils";
-import Breadcrumb from "./Breadcrumb.vue";
+import AppBreadcrumb from "./AppBreadcrumb.vue";
 import { createPlanIterationsLocalVue } from "../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
-describe("Breadcrumb", () => {
-    async function getWrapper(is_program_admin: boolean): Promise<Wrapper<Breadcrumb>> {
-        return shallowMount(Breadcrumb, {
+describe("AppBreadcrumb", () => {
+    async function getWrapper(is_program_admin: boolean): Promise<Wrapper<Vue>> {
+        return shallowMount(AppBreadcrumb, {
             localVue: await createPlanIterationsLocalVue(),
             mocks: {
                 $store: createStoreMock({
