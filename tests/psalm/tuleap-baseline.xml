@@ -1,37 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/Event/GetAdditionalScrumAdminPaneContent.php">
-    <MissingParamType>
-      <code><![CDATA[$content]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$additional_content]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[addContent]]></code>
-      <code><![CDATA[getAdditionalContent]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/ArtifactsInExplicitBacklogDao.php">
-    <MissingReturnType>
-      <code><![CDATA[cleanUpDirectlyPlannedItemsInArtifact]]></code>
-      <code><![CDATA[getAllArtifactNotInTopBacklogInTracker]]></code>
-      <code><![CDATA[getAllTopBacklogItemsForProjectSortedByRank]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/CreateTrackerFromXMLChecker.php">
     <TypeDoesNotContainType>
       <code><![CDATA[! isset($xml->agiledashboard)]]></code>
       <code><![CDATA[! isset($xml->agiledashboard->admin)]]></code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/DirectArtifactLinkCleaner.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-    </DeprecatedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $milestone_artifact->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedArtifactsAdder.php">
     <RedundantCastGivenDocblockType>
@@ -49587,8 +49560,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$project_with_tracker_administration]]></code>
@@ -60450,11 +60421,6 @@
       <code><![CDATA[buildSelf]]></code>
       <code><![CDATA[getUrlToSelf]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/User/Account/NotificationsOnOwnActionsCollection.php">
-    <MissingTemplateParam>
-      <code><![CDATA[\Iterator]]></code>
-    </MissingTemplateParam>
   </file>
   <file src="src/common/User/Account/PasswordPreUpdateEvent.php">
     <MissingPropertyType>
@@ -77986,11 +77952,6 @@
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getListValueById]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="tests/lib/Builders/LayoutInspector.php">
-    <MissingPropertyType>
-      <code><![CDATA[$feedbacks]]></code>
-    </MissingPropertyType>
   </file>
   <file src="tests/lib/Builders/ProjectTestBuilder.php">
     <MissingPropertyType>

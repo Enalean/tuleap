@@ -18,22 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Event;
 
 use Tuleap\Event\Dispatchable;
 
-class GetAdditionalScrumAdminPaneContent implements Dispatchable
+final class GetAdditionalScrumAdminPaneContent implements Dispatchable
 {
     public const NAME = 'additional_scrum_admin_pane_content';
 
-    private $additional_content = '';
+    private string $additional_content = '';
 
-    public function getAdditionalContent()
+    public function getAdditionalContent(): string
     {
         return $this->additional_content;
     }
 
-    public function addContent($content)
+    public function addContent(string $content): void
     {
         $this->additional_content .= $content;
     }

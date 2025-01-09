@@ -26,32 +26,16 @@ use PFUser;
 use Planning_MilestoneFactory;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 
-class DirectArtifactLinkCleaner
+final readonly class DirectArtifactLinkCleaner
 {
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
     public function __construct(
-        Planning_MilestoneFactory $milestone_factory,
-        ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private Planning_MilestoneFactory $milestone_factory,
+        private ExplicitBacklogDao $explicit_backlog_dao,
+        private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private RetrieveAnArtifactLinkField $artifact_link_field_retriever,
     ) {
-        $this->milestone_factory                 = $milestone_factory;
-        $this->explicit_backlog_dao              = $explicit_backlog_dao;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
     }
 
     public function cleanDirectlyMadeArtifactLinks(
@@ -73,7 +57,7 @@ class DirectArtifactLinkCleaner
             return;
         }
 
-        $milestone_artifact_link_field = $milestone_artifact->getAnArtifactLinkField($user);
+        $milestone_artifact_link_field = $this->artifact_link_field_retriever->getAnArtifactLinkField($user, $milestone_artifact->getTracker());
         if ($milestone_artifact_link_field === null) {
             return;
         }
@@ -92,7 +76,7 @@ class DirectArtifactLinkCleaner
         $linked_artifact_ids = $last_changeset_value->getArtifactIds();
         if (count($linked_artifact_ids) > 0) {
             $this->artifacts_in_explicit_backlog_dao->cleanUpDirectlyPlannedItemsInArtifact(
-                (int) $milestone_artifact->getId(),
+                $milestone_artifact->getId(),
                 $linked_artifact_ids
             );
         }
