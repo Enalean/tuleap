@@ -33,10 +33,13 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveAnArtifactLinkFieldStub;
 
 class DirectArtifactLinkCleanerTest extends TestCase
 {
@@ -56,18 +59,22 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);
         $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
 
-        $this->cleaner = new DirectArtifactLinkCleaner(
-            $this->milestone_factory,
-            $this->explicit_backlog_dao,
-            $this->artifacts_in_explicit_backlog_dao
-        );
-
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
             ->build();
 
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
         $this->user     = UserTestBuilder::buildWithDefaults();
+    }
+
+    private function buildCleaner(RetrieveAnArtifactLinkField $artifact_link_field_retriever): void
+    {
+        $this->cleaner = new DirectArtifactLinkCleaner(
+            $this->milestone_factory,
+            $this->explicit_backlog_dao,
+            $this->artifacts_in_explicit_backlog_dao,
+            $artifact_link_field_retriever,
+        );
     }
 
     public function testItDoesNothingIfProjectDoesNotUseExplicitBacklogMangement(): void
@@ -77,6 +84,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
+        $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withoutAnArtifactLinkField());
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $this->artifact,
             $this->user
@@ -93,6 +101,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
+        $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withoutAnArtifactLinkField());
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $this->artifact,
             $this->user
@@ -109,11 +118,10 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getAnArtifactLinkField')
-            ->willReturn(null);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
+        $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withoutAnArtifactLinkField());
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $artifact,
             $this->user
@@ -130,13 +138,12 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getAnArtifactLinkField')
-            ->willReturn($this->createMock(Tracker_FormElement_Field_ArtifactLink::class));
         $artifact->expects(self::once())->method('getLastChangeset')
             ->willReturn(null);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
+        $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField(ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build()));
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $artifact,
             $this->user
@@ -157,8 +164,6 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getAnArtifactLinkField')
-            ->willReturn($artifact_link_field);
         $artifact->expects(self::once())->method('getLastChangeset')
             ->willReturn($changeset);
 
@@ -166,6 +171,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
+        $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField($artifact_link_field));
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $artifact,
             $this->user
@@ -189,13 +195,12 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn(458);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getAnArtifactLinkField')
-            ->willReturn($artifact_link_field);
         $artifact->expects(self::once())->method('getLastChangeset')
             ->willReturn($changeset);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
+        $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField($artifact_link_field));
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $artifact,
             $this->user
@@ -223,14 +228,13 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn(458);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getAnArtifactLinkField')
-            ->willReturn($artifact_link_field);
         $artifact->expects(self::once())->method('getLastChangeset')
             ->willReturn($changeset);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('cleanUpDirectlyPlannedItemsInArtifact')
             ->with(458, [450, 452]);
 
+        $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField($artifact_link_field));
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
             $artifact,
             $this->user

@@ -1069,7 +1069,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $cleaner  = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
-            new ArtifactsInExplicitBacklogDao()
+            new ArtifactsInExplicitBacklogDao(),
+            Tracker_FormElementFactory::instance(),
         );
 
         $cleaner->cleanDirectlyMadeArtifactLinks($artifact, $this->getCurrentUser());
@@ -1081,7 +1082,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $cleaner  = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
-            new ArtifactsInExplicitBacklogDao()
+            new ArtifactsInExplicitBacklogDao(),
+            Tracker_FormElementFactory::instance(),
         );
 
         $cleaner->cleanDirectlyMadeArtifactLinks($artifact, $event->getUser());

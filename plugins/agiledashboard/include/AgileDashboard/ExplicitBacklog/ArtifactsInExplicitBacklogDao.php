@@ -56,7 +56,10 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
         return $this->getDB()->run($sql, $project_id, $limit, $offset);
     }
 
-    public function getAllTopBacklogItemsForProjectSortedByRank(int $project_id)
+    /**
+     * @return list<array{artifact_id: int}>
+     */
+    public function getAllTopBacklogItemsForProjectSortedByRank(int $project_id): array
     {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
                 FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
@@ -68,7 +71,10 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
         return $this->getDB()->run($sql, $project_id);
     }
 
-    public function getAllArtifactNotInTopBacklogInTracker(int $tracker_id)
+    /**
+     * @return list<array{artifact_id: int}>
+     */
+    public function getAllArtifactNotInTopBacklogInTracker(int $tracker_id): array
     {
         $sql = 'SELECT tracker_artifact.id as artifact_id
                 FROM tracker_artifact
@@ -163,7 +169,7 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
     public function cleanUpDirectlyPlannedItemsInArtifact(
         int $milestone_artifact_id,
         array $linked_artifact_ids,
-    ) {
+    ): void {
         $where_condition = EasyStatement::open()
             ->in('plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id IN (?*)', $linked_artifact_ids)
             ->andWith('tracker_artifact.id = ?');
