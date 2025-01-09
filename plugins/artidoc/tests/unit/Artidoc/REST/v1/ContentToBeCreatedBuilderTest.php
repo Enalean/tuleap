@@ -33,7 +33,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 {
     public function testItThrowsWhenArtifactAndContentAreBothProvided(): void
     {
-        $section = new ArtidocPOSTSectionRepresentation(
+        $section = new ArtidocSectionPOSTRepresentation(
             new ArtidocPOSTSectionArtifactRepresentation(101),
             null,
             new POSTContentSectionRepresentation('title', 'description', 'freetext')
@@ -46,7 +46,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
     public function testItThrowsWhenArtifactAndContentAreBothAbsent(): void
     {
-        $section = new ArtidocPOSTSectionRepresentation(null, null, null);
+        $section = new ArtidocSectionPOSTRepresentation(null, null, null);
         $this->expectException(RestException::class);
         $this->expectExceptionMessage('No artifact id or section content provided');
 
@@ -56,7 +56,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
     public function testHappyPatchForArtifact(): void
     {
         $id      = 101;
-        $section = new ArtidocPOSTSectionRepresentation(
+        $section = new ArtidocSectionPOSTRepresentation(
             new ArtidocPOSTSectionArtifactRepresentation($id),
             null,
             null
@@ -77,7 +77,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
     public function testHappyPatchForFreetext(): void
     {
-        $section = new ArtidocPOSTSectionRepresentation(
+        $section = new ArtidocSectionPOSTRepresentation(
             null,
             null,
             new POSTContentSectionRepresentation('title', 'description', 'freetext')

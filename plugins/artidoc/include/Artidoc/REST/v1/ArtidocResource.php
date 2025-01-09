@@ -33,14 +33,11 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
-use Tuleap\Artidoc\Adapter\Document\Section\AlreadyExistingSectionWithSameArtifactFault;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\ReorderSectionsDao;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
-use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
-use Tuleap\Artidoc\Adapter\Document\Section\UnableToFindSiblingSectionFault;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -61,12 +58,8 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSectionsRetriever;
-use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
-use Tuleap\Artidoc\Domain\Document\Section\SectionCreator;
 use Tuleap\Artidoc\Domain\Document\Section\SectionRetriever;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -79,7 +72,6 @@ use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -290,101 +282,6 @@ final class ArtidocResource extends AuthenticatedResource
     }
 
     /**
-     * Create section
-     *
-     * Create one section in an artidoc document.
-     *
-     * <p>Example payload, to create a section based on artifact #123. The new section will be placed before its sibling:</p>
-     * <pre>
-     * {<br>
-     * &nbsp;&nbsp;"artifact": { "id": 123 },<br>
-     * &nbsp;&nbsp;"position": { "before": "550e8400-e29b-41d4-a716-446655440000" },<br>
-     * }
-     * </pre>
-     *
-     * <p>Another example, if you want to put the section at the end of the document:</p>
-     * <pre>
-     * {<br>
-     * &nbsp;&nbsp;"artifact": { "id": 123 },<br>
-     * &nbsp;&nbsp;"position": null,<br>
-     * }
-     * </pre>
-     *
-     *  <p>Example payload, to create a section based on free text. The new section will be placed before its sibling:</p>
-     *  <pre>
-     *  {<br>
-     *  &nbsp;&nbsp;"content": { "title": "My title", "description": "My freetext description", type: "freetext" },<br>
-     *  &nbsp;&nbsp;"position": { "before": "550e8400-e29b-41d4-a716-446655440000" },<br>
-     *  }
-     *  </pre>
-     *
-     * @url    POST {id}/sections
-     * @access hybrid
-     *
-     * @param int $id Id of the document
-     * @param ArtidocPOSTSectionRepresentation $section {@from body}
-     *
-     * @status 200
-     * @throws RestException
-     */
-    public function postSection(int $id, ArtidocPOSTSectionRepresentation $section): SectionRepresentation
-    {
-        $this->checkAccess();
-
-        $user = UserManager::instance()->getCurrentUser();
-
-        $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
-
-        $collector = new RequiredSectionInformationCollector(
-            $user,
-            new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance())
-        );
-
-        try {
-            $before_section_id = $section->position
-                ? Option::fromValue($identifier_factory->buildFromHexadecimalString($section->position->before))
-                : Option::nothing(SectionIdentifier::class);
-        } catch (InvalidSectionIdentifierStringException) {
-            throw new RestException(400, 'Sibling section id is invalid');
-        }
-
-        return $this->getSectionCreator($user, $collector)
-            ->create($id, $before_section_id, ContentToBeCreatedBuilder::buildFromRepresentation($section))
-            ->andThen(
-                fn (SectionIdentifier $section_identifier) =>
-                $this->getSectionRetriever($user, $collector)
-                    ->retrieveSectionUserCanRead($section_identifier)
-            )->andThen(
-                fn (RetrievedSection $section) =>
-                $this->getSectionRepresentationBuilder()
-                    ->getSectionRepresentation($section, $collector, $user)
-            )
-            ->match(
-                static function (SectionRepresentation $representation) {
-                    return $representation;
-                },
-                static function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
-                    throw match (true) {
-                        $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
-                            403,
-                            dgettext('tuleap-artidoc', "You don't have permission to write the document.")
-                        ),
-                        $fault instanceof AlreadyExistingSectionWithSameArtifactFault => new I18NRestException(
-                            400,
-                            dgettext('tuleap-artidoc', 'There is already an existing section with the same artifact in the document.')
-                        ),
-                        $fault instanceof UnableToFindSiblingSectionFault => new I18NRestException(
-                            400,
-                            dgettext('tuleap-artidoc', 'We were unable to insert the new section at the required position. The sibling section does not exist, maybe it has been deleted by someone else while you were editing the document?')
-                        ),
-                        default => new RestException(404, (string) $fault),
-                    };
-                }
-            );
-    }
-
-    /**
      * @url OPTIONS {id}/configuration
      */
     public function optionsConfiguration(int $id): void
@@ -466,59 +363,6 @@ final class ArtidocResource extends AuthenticatedResource
         );
 
         return new PaginatedRetrievedSectionsRetriever($retriever, $dao);
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function getSectionCreator(\PFUser $user, CollectRequiredSectionInformation $collector): SectionCreator
-    {
-        $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
-        if (! $plugin) {
-            throw new RestException(404);
-        }
-
-        $uuid_factory       = new DatabaseUUIDV7Factory();
-        $identifier_factory = new UUIDSectionIdentifierFactory($uuid_factory);
-        $dao                = new SaveSectionDao($identifier_factory, new UUIDFreetextIdentifierFactory($uuid_factory));
-        $retriever          = new ArtidocWithContextRetriever(
-            new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
-            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
-            new ArtidocWithContextDecorator(
-                \ProjectManager::instance(),
-                new DocumentServiceFromAllowedProjectRetriever($plugin),
-            ),
-        );
-
-        return new SectionCreator(
-            $retriever,
-            $dao,
-            $collector,
-        );
-    }
-
-    private function getRepresentationBuilder(): ArtifactSectionRepresentationBuilder
-    {
-        $form_element_factory = \Tracker_FormElementFactory::instance();
-
-        return new ArtifactSectionRepresentationBuilder(
-            new FileUploadDataProvider(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            \TransitionFactory::instance(),
-                            new SimpleWorkflowDao()
-                        ),
-                        new TransitionExtractor()
-                    ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        $form_element_factory,
-                    )
-                ),
-                $form_element_factory,
-            )
-        );
     }
 
     /**

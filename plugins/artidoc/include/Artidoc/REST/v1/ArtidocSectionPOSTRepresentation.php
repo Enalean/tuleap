@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 /**
  * @psalm-immutable
  */
-final class ArtidocPOSTSectionRepresentation
+final class ArtidocSectionPOSTRepresentation
 {
     /**
      * @var \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionArtifactRepresentation | null The artifact representation {@type \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionArtifactRepresentation} {@required false}

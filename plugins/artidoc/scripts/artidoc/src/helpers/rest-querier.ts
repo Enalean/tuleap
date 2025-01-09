@@ -147,10 +147,13 @@ export function createSection(
     artifact_id: number,
     position: PositionForSection,
 ): ResultAsync<ArtidocSection, Fault> {
-    return postJSON<ArtidocSection>(uri`/api/artidoc/${document_id}/sections`, {
-        artifact: { id: artifact_id },
-        position,
-        content: null,
+    return postJSON<ArtidocSection>(uri`/api/artidoc_sections`, {
+        artidoc_id: document_id,
+        section: {
+            artifact: { id: artifact_id },
+            position,
+            content: null,
+        },
     }).map(injectDisplayTitle);
 }
 

@@ -79,7 +79,7 @@ describe("Artidoc", () => {
                 cy.visit(url);
             });
 
-        cy.intercept("POST", "/api/artidoc/*/sections").as("postSections");
+        cy.intercept("POST", "/api/artidoc_sections").as("postSections");
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
             cy.log("User with write rights should see a form to enter a new section");
             fillInSectionTitleAndDescription(requirements[0]);
@@ -179,7 +179,7 @@ function fillInSectionTitleAndDescription({
     description: string;
 }): void {
     cy.intercept("*/artifacts").as("createArtifact");
-    cy.intercept("*/artidoc/*/sections").as("addSection");
+    cy.intercept("*/artidoc_sections").as("addSection");
 
     getSectionTitle().type(title);
     getSectionDescription().type(description);

@@ -31,7 +31,7 @@ use Tuleap\Artidoc\Domain\Document\Section\SectionContentToBeCreated;
  */
 final class ContentToBeCreatedBuilder
 {
-    public static function buildFromRepresentation(ArtidocPOSTSectionRepresentation $section): SectionContentToBeCreated
+    public static function buildFromRepresentation(ArtidocSectionPOSTRepresentation $section): SectionContentToBeCreated
     {
         if ($section->artifact !== null && $section->content !== null) {
             throw new RestException(400, dgettext('tuleap-artidoc', "The properties 'artifact' and 'content' can not be used at the same time"));
