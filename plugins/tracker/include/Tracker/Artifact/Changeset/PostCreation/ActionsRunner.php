@@ -70,6 +70,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -91,6 +92,7 @@ use Tuleap\Webhook\Emitter as WebhookEmitter;
 use UGroupManager;
 use UserHelper;
 use UserManager;
+use UserPreferencesDao;
 
 class ActionsRunner
 {
@@ -155,6 +157,7 @@ class ActionsRunner
                         new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO(),
+                    new NotificationOnAllUpdatesRetriever(new UserPreferencesDao())
                 ),
                 Tracker_Artifact_MailGateway_RecipientFactory::build(),
                 new MailGatewayConfig(

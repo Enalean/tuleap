@@ -35,15 +35,20 @@ class UserTestBuilder
     private array $project_ugroups       = [];
     private ?array $all_projects         = [];
 
+    private function __construct(
+        private StoreUserPreferenceStub $preferences_store,
+    ) {
+    }
+
     public static function aUser(): self
     {
-        return new self();
+        return new self(new StoreUserPreferenceStub());
     }
 
     public static function aRandomActiveUser(): self
     {
         $rand_id = random_int(0, PHP_INT_MAX);
-        return (new self())
+        return (new self(new StoreUserPreferenceStub()))
             ->withStatus(\PFUser::STATUS_ACTIVE)
             ->withoutSiteAdministrator()
             ->withoutMemberOfProjects()
@@ -55,7 +60,7 @@ class UserTestBuilder
 
     public static function anActiveUser(): self
     {
-        return (new self())
+        return (new self(new StoreUserPreferenceStub()))
             ->withId(10001)
             ->withStatus(\PFUser::STATUS_ACTIVE)
             ->withoutSiteAdministrator()
@@ -64,7 +69,7 @@ class UserTestBuilder
 
     public static function aRestrictedUser(): self
     {
-        return (new self())
+        return (new self(new StoreUserPreferenceStub()))
             ->withId(10001)
             ->withStatus(\PFUser::STATUS_RESTRICTED)
             ->withoutSiteAdministrator()
@@ -73,7 +78,7 @@ class UserTestBuilder
 
     public static function anAnonymousUser(): self
     {
-        return (new self())
+        return (new self(new StoreUserPreferenceStub()))
             ->withId(0)
             ->withoutSiteAdministrator()
             ->withoutMemberOfProjects();
@@ -226,6 +231,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withPreferencesStore(StoreUserPreferenceStub $store): self
+    {
+        $this->preferences_store = $store;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);
@@ -249,7 +260,7 @@ class UserTestBuilder
         if ($this->all_projects !== null) {
             $user->setAllProjects($this->all_projects);
         }
-        $user->preferencesdao = new StoreUserPreferenceStub();
+        $user->preferencesdao = $this->preferences_store;
         return $user;
     }
 

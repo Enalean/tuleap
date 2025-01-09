@@ -34,7 +34,7 @@ use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatHaveUnsubscr
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
-use Tuleap\Tracker\User\NotificationOnAllUpdatesPreference;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use UserManager;
 
 class RecipientsManager
@@ -49,6 +49,7 @@ class RecipientsManager
         private readonly UnsubscribersNotificationDAO $unsubscribers_notification_dao,
         private readonly UserNotificationSettingsRetriever $notification_settings_retriever,
         private readonly UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
+        private readonly NotificationOnAllUpdatesRetriever $notification_on_all_updates_retriever,
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
@@ -87,8 +88,7 @@ class RecipientsManager
                 if ($user === null) {
                     return false;
                 }
-
-                return NotificationOnAllUpdatesPreference::userWantsNotification($user);
+                return $this->notification_on_all_updates_retriever->retrieve($user)->enabled;
             },
         ));
         $recipients = array_values(array_unique($recipients));

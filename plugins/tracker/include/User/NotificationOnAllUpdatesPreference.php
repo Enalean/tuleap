@@ -22,38 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\User;
 
-use PFUser;
-
-final class NotificationOnAllUpdatesPreference
+/**
+ * @psalm-immutable
+ */
+final readonly class NotificationOnAllUpdatesPreference
 {
-    public const PREFERENCE_NAME = 'user_notifications_all_updates_tracker';
-    public const VALUE_NO_NOTIF  = '0';
-    public const VALUE_NOTIF     = '1';
-
-    public static function userWantsNotification(PFUser $user): bool
+    public function __construct(public bool $enabled)
     {
-        return $user->getPreference(self::PREFERENCE_NAME) !== self::VALUE_NO_NOTIF;
     }
 
-    public static function updatePreference(bool $notifications_on_all_updates, PFUser $user): bool
+    public function hasChanged(self $other): bool
     {
-        if (self::userWantsNotification($user) && ! $notifications_on_all_updates) {
-            self::updateUserDoesNotWantNotification($user);
-            return true;
-        } elseif ($notifications_on_all_updates) {
-            self::updateUserWantsNotifications($user);
-            return true;
-        }
-        return false;
-    }
-
-    private static function updateUserWantsNotifications(PFUser $user): void
-    {
-        $user->setPreference(self::PREFERENCE_NAME, self::VALUE_NOTIF);
-    }
-
-    private static function updateUserDoesNotWantNotification(PFUser $user): void
-    {
-        $user->setPreference(self::PREFERENCE_NAME, self::VALUE_NO_NOTIF);
+        return $this->enabled !== $other->enabled;
     }
 }

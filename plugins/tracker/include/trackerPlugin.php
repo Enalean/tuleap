@@ -267,7 +267,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\ServiceActivator;
-use Tuleap\Tracker\User\NotificationOnAllUpdatesPreference;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
 use Tuleap\Tracker\User\UserPreferencesPostController;
 use Tuleap\Tracker\User\UserPreferencesPresenter;
@@ -2470,6 +2470,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new InvolvedNotificationDao()
                 ),
                 new UserNotificationOnlyStatusChangeDAO(),
+                new NotificationOnAllUpdatesRetriever(new UserPreferencesDao())
             ),
             new UserNotificationSettingsDAO()
         );
@@ -2812,8 +2813,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 ->renderToString('user-preferences', new UserPreferencesPresenter(
                     UserPreferencesPostController::getCSRFToken(),
                     NotificationOnOwnActionPreference::userWantsNotification($collector->current_user),
-                    NotificationOnAllUpdatesPreference::userWantsNotification($collector->current_user),
                     UserPreferencesPostController::URL,
+                    (new NotificationOnAllUpdatesRetriever(new UserPreferencesDao()))->retrieve($collector->current_user),
                     (new MailManager())->getMailPreferencesByUser($collector->current_user),
                 ))
         );
@@ -2821,9 +2822,14 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function routePostNotificationsUser(): DispatchableWithRequest
     {
+        $user_preferences_dao = new UserPreferencesDao();
         return new UserPreferencesPostController(
             UserManager::instance(),
             UserPreferencesPostController::getCSRFToken(),
+            new \Tuleap\Tracker\User\NotificationOnAllUpdatesSaver(
+                new NotificationOnAllUpdatesRetriever($user_preferences_dao),
+                $user_preferences_dao
+            )
         );
     }
 

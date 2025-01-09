@@ -116,6 +116,7 @@ use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerIsInvalidException;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -133,7 +134,7 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Exporter\TrackerStructureXMLExporter;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
-class Tracker implements Tracker_Dispatchable_Interface
+class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const PERMISSION_ADMIN          = 'PLUGIN_TRACKER_ADMIN';
     public const PERMISSION_FULL           = 'PLUGIN_TRACKER_ACCESS_FULL';
@@ -1761,6 +1762,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO(),
+                    new NotificationOnAllUpdatesRetriever(new UserPreferencesDao())
                 ),
                 new UserNotificationSettingsDAO()
             )
@@ -2202,7 +2204,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $fields;
     }
 
-    private function _getCSVSeparator($current_user)
+    private function _getCSVSeparator($current_user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
@@ -2224,7 +2226,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $separator;
     }
 
-    private function _getCSVDateformat($current_user)
+    private function _getCSVDateformat($current_user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();

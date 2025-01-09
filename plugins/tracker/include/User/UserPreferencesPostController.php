@@ -40,6 +40,7 @@ final readonly class UserPreferencesPostController implements DispatchableWithRe
     public function __construct(
         private ProvideCurrentUser $current_user_provider,
         private CSRFSynchronizerTokenInterface $csrf_synchronizer_token,
+        private NotificationOnAllUpdatesSaver $all_updates_saver,
     ) {
     }
 
@@ -56,9 +57,9 @@ final readonly class UserPreferencesPostController implements DispatchableWithRe
             $request->get(NotificationOnOwnActionPreference::PREFERENCE_NAME) === NotificationOnOwnActionPreference::VALUE_NOTIF,
             $current_user,
         );
-        $has_changed = NotificationOnAllUpdatesPreference::updatePreference(
-            $request->get(NotificationOnAllUpdatesPreference::PREFERENCE_NAME) === NotificationOnAllUpdatesPreference::VALUE_NOTIF,
-            $current_user,
+        $has_changed = $this->all_updates_saver->save(
+            new NotificationOnAllUpdatesPreference($request->get('user_notifications_all_updates_tracker') === '1'),
+            $current_user
         ) || $has_changed;
 
         if ($request->exist('email_format')) {
