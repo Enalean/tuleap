@@ -33,25 +33,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Card } from "../../../../../type";
 
-@Component
-export default class CardXrefLabel extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
+const props = defineProps<{
+    card: Card;
+    label: string;
+}>();
 
-    @Prop({ required: true })
-    readonly label!: string;
-
-    get additional_classnames(): string {
-        if (this.card.background_color) {
-            return `tlp-swatch-${this.card.background_color}`;
-        }
-
-        return `tlp-swatch-${this.card.color}`;
+const additional_classnames = computed((): string => {
+    if (props.card.background_color) {
+        return `tlp-swatch-${props.card.background_color}`;
     }
-}
+
+    return `tlp-swatch-${props.card.color}`;
+});
 </script>
