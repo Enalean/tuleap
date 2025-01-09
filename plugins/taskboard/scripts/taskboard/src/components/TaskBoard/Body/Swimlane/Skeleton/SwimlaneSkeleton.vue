@@ -34,20 +34,15 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import type { ColumnDefinition } from "../../../../../type";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
+import { useStore } from "vuex-composition-helpers";
+import { computed } from "vue";
+import type { ColumnDefinition } from "../../../../../type";
 
-const column = namespace("column");
+const store = useStore();
 
-@Component({
-    components: { ColumnsSkeleton },
-})
-export default class SwimlaneSkeleton extends Vue {
-    @column.State
-    readonly columns!: Array<ColumnDefinition>;
-}
+const columns = computed((): ColumnDefinition[] => {
+    return store.state.column.columns;
+});
 </script>
