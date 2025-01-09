@@ -60,13 +60,6 @@
     </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-
-@Component
-export default class SomethingWentWrongEmptyState extends Vue {
-    @Prop({ required: true })
-    readonly message!: string;
-}
+<script setup lang="ts">
+defineProps<{ message: string }>();
 </script>
