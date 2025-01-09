@@ -166,7 +166,7 @@ describe("User preferences", () => {
             newUserSession();
             cy.visit("/account/notifications");
             cy.get("[data-test=user-prefs-text-format]").click();
-            cy.get("[data-test=user-prefs-update-notification]").click();
+            cy.get("[data-test=user-prefs-update-tracker-notifications]").click();
 
             cy.visit("/account/notifications");
             cy.get("[data-test=user-prefs-text-format]").should("have.checked", "checked");
