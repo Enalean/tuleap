@@ -65,7 +65,9 @@ use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierSt
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSectionsRetriever;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Domain\Document\Section\SectionCreator;
+use Tuleap\Artidoc\Domain\Document\Section\SectionRetriever;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
@@ -308,6 +310,14 @@ final class ArtidocResource extends AuthenticatedResource
      * }
      * </pre>
      *
+     *  <p>Example payload, to create a section based on free text. The new section will be placed before its sibling:</p>
+     *  <pre>
+     *  {<br>
+     *  &nbsp;&nbsp;"content": { "title": "My title", "description": "My freetext description", type: "freetext" },<br>
+     *  &nbsp;&nbsp;"position": { "before": "550e8400-e29b-41d4-a716-446655440000" },<br>
+     *  }
+     *  </pre>
+     *
      * @url    POST {id}/sections
      * @access hybrid
      *
@@ -317,7 +327,7 @@ final class ArtidocResource extends AuthenticatedResource
      * @status 200
      * @throws RestException
      */
-    public function postSection(int $id, ArtidocPOSTSectionRepresentation $section): ArtifactSectionRepresentation
+    public function postSection(int $id, ArtidocPOSTSectionRepresentation $section): SectionRepresentation
     {
         $this->checkAccess();
 
@@ -339,14 +349,18 @@ final class ArtidocResource extends AuthenticatedResource
         }
 
         return $this->getSectionCreator($user, $collector)
-            ->create($id, $section->artifact->id, $before_section_id)
-            ->andThen(function (SectionIdentifier $section_identifier) use ($collector, $section) {
-                return $collector->getCollectedRequiredSectionInformation($section->artifact->id)
-                    ->map(fn(RequiredArtifactInformation $info) => new SectionWrapper($section_identifier, $info));
-            })
-            ->map(fn (SectionWrapper $created) => $this->getRepresentationBuilder()->build($created->required_info, $created->section_identifier, $user))
+            ->create($id, $before_section_id, ContentToBeCreatedBuilder::buildFromRepresentation($section))
+            ->andThen(
+                fn (SectionIdentifier $section_identifier) =>
+                $this->getSectionRetriever($user, $collector)
+                    ->retrieveSectionUserCanRead($section_identifier)
+            )->andThen(
+                fn (RetrievedSection $section) =>
+                $this->getSectionRepresentationBuilder()
+                    ->getSectionRepresentation($section, $collector, $user)
+            )
             ->match(
-                static function (ArtifactSectionRepresentation $representation) {
+                static function (SectionRepresentation $representation) {
                     return $representation;
                 },
                 static function (Fault $fault) {
@@ -605,5 +619,26 @@ final class ArtidocResource extends AuthenticatedResource
     private function getSectionOrderBuilder(): SectionOrderBuilder
     {
         return (new SectionOrderBuilder(new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory())));
+    }
+
+    private function getSectionRetriever(\PFUser $user, CollectRequiredSectionInformation $collector): SectionRetriever
+    {
+        $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
+        if (! $plugin) {
+            throw new RestException(404);
+        }
+
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        $dao          = new RetrieveArtidocSectionDao(new UUIDSectionIdentifierFactory($uuid_factory), new UUIDFreetextIdentifierFactory($uuid_factory));
+        $retriever    = new ArtidocWithContextRetriever(
+            new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
+            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($plugin),
+            ),
+        );
+
+        return new SectionRetriever($dao, $retriever, $collector);
     }
 }

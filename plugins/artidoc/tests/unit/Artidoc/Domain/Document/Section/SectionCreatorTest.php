@@ -69,8 +69,8 @@ final class SectionCreatorTest extends TestCase
 
         $result = $creator->create(
             1,
-            101,
             Option::nothing(SectionIdentifier::class),
+            SectionContentToBeCreated::fromArtifact(101)
         );
 
         self::assertTrue(Result::isOk($result));
@@ -97,14 +97,41 @@ final class SectionCreatorTest extends TestCase
 
         $result = $creator->create(
             1,
-            101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            SectionContentToBeCreated::fromArtifact(101)
         );
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($saver->isSaved(1));
         self::assertTrue($collector->isCalled());
         self::assertSame(101, $saver->getSavedBeforeForId(1)->artifact_id->unwrapOr(null));
+        self::assertSame(self::NEW_SECTION_ID, $result->value->toString());
+    }
+
+    public function testHappyPathFreeTextContent(): void
+    {
+        $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
+
+        $creator = new SectionCreator(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
+                new ArtidocWithContext(
+                    new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
+                ),
+            ),
+            $saver,
+            $collector,
+        );
+
+        $result = $creator->create(
+            1,
+            Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            SectionContentToBeCreated::fromFreetext('my title', 'my description'),
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertTrue($saver->isSaved(1));
+        self::assertFalse($collector->isCalled());
         self::assertSame(self::NEW_SECTION_ID, $result->value->toString());
     }
 
@@ -125,8 +152,8 @@ final class SectionCreatorTest extends TestCase
 
         $result = $creator->create(
             1,
-            101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            SectionContentToBeCreated::fromArtifact(101)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -164,10 +191,10 @@ final class SectionCreatorTest extends TestCase
 
         $result = $creator->create(
             1,
-            $artifact_id,
             $before_section_id === null
                 ? Option::nothing(SectionIdentifier::class)
-            : Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID))
+            : Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            SectionContentToBeCreated::fromArtifact($artifact_id)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -192,8 +219,8 @@ final class SectionCreatorTest extends TestCase
 
         $result = $creator->create(
             1,
-            101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            SectionContentToBeCreated::fromArtifact(101)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -213,8 +240,8 @@ final class SectionCreatorTest extends TestCase
 
         $result = $creator->create(
             1,
-            101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            SectionContentToBeCreated::fromArtifact(101)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -238,8 +265,8 @@ final class SectionCreatorTest extends TestCase
 
         $result = $creator->create(
             1,
-            101,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            SectionContentToBeCreated::fromArtifact(101)
         );
 
         self::assertTrue(Result::isErr($result));

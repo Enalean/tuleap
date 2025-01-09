@@ -277,6 +277,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                     $this->stream_factory->createStream(json_encode([
                         'artifact' => ['id' => $section_id],
                         'position' => null,
+                        'content' => null,
                     ], JSON_THROW_ON_ERROR))
                 ),
                 DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
@@ -304,6 +305,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                 $this->stream_factory->createStream(json_encode([
                     'artifact' => ['id' => $section_3_art_id],
                     'position' => null,
+                    'content' => null,
                 ], JSON_THROW_ON_ERROR))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
@@ -322,18 +324,21 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $new_section_id = json_decode($section_3_post_response->getBody()->getContents(), null, 512, JSON_THROW_ON_ERROR)->id;
 
         // before another section
-        $post_response = $this->getResponse(
+        $section_4_post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artidoc/' . $artidoc_id . '/sections')->withBody(
                 $this->stream_factory->createStream(json_encode([
                     'artifact' => ['id' => $section_4_art_id],
                     'position' => [
                         'before' => $new_section_id,
                     ],
+                    'content' => null,
                 ], JSON_THROW_ON_ERROR))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        self::assertSame(200, $post_response->getStatusCode());
+        self::assertSame(200, $section_4_post_response->getStatusCode());
+
+        $new_section_id = json_decode($section_4_post_response->getBody()->getContents(), null, 512, JSON_THROW_ON_ERROR)->id;
 
         $this->assertSectionsMatchArtifactIdsForDocument(
             $artidoc_id,
@@ -342,6 +347,33 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             $section_4_art_id,
             $section_3_art_id,
         );
+
+        // with a free text
+        $post_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+                $this->stream_factory->createStream(json_encode([
+                    'position' => [
+                        'before' => $new_section_id,
+                    ],
+                    'content' => [
+                        'title' => 'My freetext title',
+                        'description' => 'My freetext description',
+                        'type' => 'freetext',
+                    ],
+                ], JSON_THROW_ON_ERROR))
+            ),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(200, $post_response->getStatusCode());
+        json_decode($post_response->getBody()->getContents(), null, 512, JSON_THROW_ON_ERROR)->id;
+
+        $document_content = $this->getArtidocSections($artidoc_id);
+        self::assertContains('My freetext title', array_map(
+            static function (array $section) {
+                return $section['title'] ?? null;
+            },
+            $document_content
+        ));
     }
 
     /**

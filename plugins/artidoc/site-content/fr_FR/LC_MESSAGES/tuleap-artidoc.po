@@ -37,6 +37,9 @@ msgstr "Le tracker fourni n'a pas de sémantique description."
 msgid "Given tracker does not have a semantic title."
 msgstr "Le tracker fourni n'a pas de sémantique titre."
 
+msgid "No artifact id or section content provided"
+msgstr "Aucun id d'artéfact ou de contenu de section n'a été fourni"
+
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
@@ -48,6 +51,12 @@ msgid "The ids is invalid. Expected an array of one section identifier."
 msgstr ""
 "Le paramètre ids n'est pas valide. Un tableau d'un identifiant de section "
 "est attendu."
+
+msgid ""
+"The properties 'artifact' and 'content' can not be used at the same time"
+msgstr ""
+"Les propriétés 'artifact' et 'content' ne peuvent pas être utilisées en même "
+"temps"
 
 msgid "The section being moved does not belong to the document."
 msgstr "La section à déplacer n'appartient pas au document."
