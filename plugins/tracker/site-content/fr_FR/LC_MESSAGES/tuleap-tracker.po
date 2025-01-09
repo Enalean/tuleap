@@ -4936,6 +4936,12 @@ msgstr ""
 "pas été actualisées."
 
 msgid ""
+"Your %1$suser preferences%2$s can change the notifications you will receive."
+msgstr ""
+"Vos %1$spréférences utilisateur%2$s peuvent changer les notifications que "
+"vous recevrez."
+
+msgid ""
 "Your file is not encoded in UTF-8, we are not able to parse it safely. "
 "Please save it with UTF-8 encoding before uploading it."
 msgstr ""
