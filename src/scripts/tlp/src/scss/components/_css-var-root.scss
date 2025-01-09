@@ -338,6 +338,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-large-spacing: #{$tlp-large-spacing};
     --tlp-x-large-spacing: #{$tlp-x-large-spacing};
     --tlp-jumbo-spacing: #{$tlp-jumbo-spacing};
+    --tlp-code-line-height: 1.375rem;
 
     // illustrations
     --tlp-illustration-main-color: #{color.mix($tlp-main-color, common.$tlp-white-color, 53%)};

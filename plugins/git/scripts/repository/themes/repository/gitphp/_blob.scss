@@ -71,7 +71,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
     width: 100%;
     background: var(--tlp-white-color);
     font-family: var(--tlp-font-family-mono);
-    line-height: 1.5;
+    line-height: var(--tlp-code-line-height);
 }
 
 .git-repository-blob-file-code,
@@ -87,7 +87,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
     padding: 5px 0;
     border-right: 1px solid var(--tlp-neutral-light-color);
     background: var(--tlp-background-color-lighter-50);
-    line-height: 1.5;
+    line-height: var(--tlp-code-line-height);
     text-align: right;
     vertical-align: top;
 }
@@ -119,7 +119,6 @@ $above-highlight-line: 2;
     background: none;
     color: var(--tlp-typo-default-text-color);
     font-family: var(--tlp-font-family-mono);
-    line-height: 1.5;
 
     &[class*="language-"] {
         margin: 0;
