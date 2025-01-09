@@ -22,50 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Git_ReferenceManager;
+use GitRepository;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use ProjectManager;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommitDetailsCrossReferenceInformationBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Git_ReferenceManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $git_reference_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitProvider
-     */
-    private $commit_provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitDetailsRetriever
-     */
-    private $details_retriever;
-    /**
-     * @var CommitDetailsCrossReferenceInformationBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
+    private Git_ReferenceManager&MockObject $git_reference_manager;
+    private CommitProvider&MockObject $commit_provider;
+    private CommitDetailsRetriever&MockObject $details_retriever;
+    private CommitDetailsCrossReferenceInformationBuilder $builder;
+    private Project $project;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->user    = Mockery::mock(\PFUser::class);
-        $this->project = Mockery::mock(Project::class, ['getUnixNameLowerCase' => 'acme']);
+        $this->user    = UserTestBuilder::buildWithDefaults();
+        $this->project = ProjectTestBuilder::aProject()->withUnixName('acme')->build();
 
-        $project_manager             = Mockery::mock(\ProjectManager::class, ['getProject' => $this->project]);
-        $this->git_reference_manager = Mockery::mock(\Git_ReferenceManager::class);
-        $this->commit_provider       = Mockery::mock(CommitProvider::class);
-        $this->details_retriever     = Mockery::mock(CommitDetailsRetriever::class);
+        $project_manager             = $this->createMock(ProjectManager::class);
+        $this->git_reference_manager = $this->createMock(Git_ReferenceManager::class);
+        $this->commit_provider       = $this->createMock(CommitProvider::class);
+        $this->details_retriever     = $this->createMock(CommitDetailsRetriever::class);
+        $project_manager->method('getProject')->willReturn($this->project);
 
         $this->builder = new CommitDetailsCrossReferenceInformationBuilder(
             $project_manager,
@@ -78,9 +65,9 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHP
     public function testItReturnsNullIfNoRepositoryCanBeFound(): void
     {
         $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
+            ->method('getCommitInfoFromReferenceValue')
             ->with($this->project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn(new CommitInfoFromReferenceValue(null, '1a2b3c4d5e'));
+            ->willReturn(new CommitInfoFromReferenceValue(null, '1a2b3c4d5e'));
 
         $ref = CrossReferencePresenterBuilder::get(1)
             ->withType('git_commit')
@@ -93,14 +80,14 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHP
 
     public function testItReturnsNullIfUserCannotReadRepository(): void
     {
-        $repository = Mockery::mock(\GitRepository::class)
-            ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => false])
-            ->getMock();
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getFullName')->willReturn('cloudy/stable');
+        $repository->method('userCanRead')->willReturn(false);
 
         $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
+            ->method('getCommitInfoFromReferenceValue')
             ->with($this->project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
+            ->willReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
 
         $ref = CrossReferencePresenterBuilder::get(1)
             ->withType('git_commit')
@@ -113,14 +100,14 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHP
 
     public function testItReturnsNullIfCommitCannotBeInstantiatedByGitPHP(): void
     {
-        $repository = Mockery::mock(\GitRepository::class)
-            ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => true])
-            ->getMock();
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getFullName')->willReturn('cloudy/stable');
+        $repository->method('userCanRead')->willReturn(true);
 
         $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
+            ->method('getCommitInfoFromReferenceValue')
             ->with($this->project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
+            ->willReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
 
         $ref = CrossReferencePresenterBuilder::get(1)
             ->withType('git_commit')
@@ -129,23 +116,23 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHP
             ->build();
 
         $this->commit_provider
-            ->shouldReceive('getCommit')
+            ->method('getCommit')
             ->with($repository, '1a2b3c4d5e')
-            ->andReturnNull();
+            ->willReturn(null);
 
         self::assertNull($this->builder->getCommitDetailsCrossReferenceInformation($this->user, $ref));
     }
 
     public function testItReturnsNullIfCommitCannotBeFoundInTheRepository(): void
     {
-        $repository = Mockery::mock(\GitRepository::class)
-            ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => true])
-            ->getMock();
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getFullName')->willReturn('cloudy/stable');
+        $repository->method('userCanRead')->willReturn(true);
 
         $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
+            ->method('getCommitInfoFromReferenceValue')
             ->with($this->project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
+            ->willReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
 
         $ref = CrossReferencePresenterBuilder::get(1)
             ->withType('git_commit')
@@ -153,39 +140,30 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHP
             ->withProjectId(1)
             ->build();
 
-        $commit = Mockery::mock(Commit::class);
+        $commit = $this->createMock(Commit::class);
         $this->commit_provider
-            ->shouldReceive('getCommit')
+            ->method('getCommit')
             ->with($repository, '1a2b3c4d5e')
-            ->andReturn($commit);
+            ->willReturn($commit);
 
-        $commit_details = new CommitDetails(
-            '1a2b3c4d5e6f7g8h9i',
-            'Add foo to stuff',
-            '',
-            '',
-            'jdoe@example.com',
-            'John Doe',
-            1234567890
-        );
         $this->details_retriever
-            ->shouldReceive('retrieveCommitDetails')
+            ->method('retrieveCommitDetails')
             ->with($repository, $commit)
-            ->andReturnNull();
+            ->willReturn(null);
 
         self::assertNull($this->builder->getCommitDetailsCrossReferenceInformation($this->user, $ref));
     }
 
     public function testItReturnsInformation(): void
     {
-        $repository = Mockery::mock(\GitRepository::class)
-            ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => true])
-            ->getMock();
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getFullName')->willReturn('cloudy/stable');
+        $repository->method('userCanRead')->willReturn(true);
 
         $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
+            ->method('getCommitInfoFromReferenceValue')
             ->with($this->project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
+            ->willReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
 
         $ref = CrossReferencePresenterBuilder::get(1)
             ->withType('git_commit')
@@ -193,11 +171,11 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHP
             ->withProjectId(1)
             ->build();
 
-        $commit = Mockery::mock(Commit::class);
+        $commit = $this->createMock(Commit::class);
         $this->commit_provider
-            ->shouldReceive('getCommit')
+            ->method('getCommit')
             ->with($repository, '1a2b3c4d5e')
-            ->andReturn($commit);
+            ->willReturn($commit);
 
         $commit_details = new CommitDetails(
             '1a2b3c4d5e6f7g8h9i',
@@ -209,9 +187,9 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHP
             1234567890
         );
         $this->details_retriever
-            ->shouldReceive('retrieveCommitDetails')
+            ->method('retrieveCommitDetails')
             ->with($repository, $commit)
-            ->andReturn($commit_details);
+            ->willReturn($commit_details);
 
         $information = $this->builder->getCommitDetailsCrossReferenceInformation($this->user, $ref);
 
