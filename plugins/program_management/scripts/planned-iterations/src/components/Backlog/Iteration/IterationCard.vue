@@ -79,50 +79,40 @@
             v-if="is_open"
             data-test="planned-iteration-content"
         >
-            <iteration-user-story-list v-bind:iteration="iteration" v-if="is_open" />
+            <iteration-user-story-list v-bind:iteration="iteration" />
         </section>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import { buildIterationEditionUrl } from "../../../helpers/create-new-iteration-link-builder";
-
 import IterationUserStoryList from "./IterationUserStoryList.vue";
-
 import type { Iteration } from "../../../type";
 import type { ProgramIncrement } from "../../../store/configuration";
 
-const configuration = namespace("configuration");
+const props = defineProps<{
+    iteration: Iteration;
+}>();
 
-@Component({
-    components: { IterationUserStoryList },
-})
-export default class IterationCard extends Vue {
-    @Prop({ required: true })
-    readonly iteration!: Iteration;
+const { program_increment, user_locale } = useNamespacedState<{
+    program_increment: ProgramIncrement;
+    user_locale: string;
+}>("configuration", ["program_increment", "user_locale"]);
 
-    @configuration.State
-    readonly program_increment!: ProgramIncrement;
+const is_open = ref(false);
 
-    @configuration.State
-    readonly user_locale!: string;
-
-    is_open = false;
-
-    formatDate(date: string): string {
-        return formatDateYearMonthDay(this.user_locale, date);
-    }
-
-    toggleIsOpen(): void {
-        this.is_open = !this.is_open;
-    }
-
-    get edition_url(): string {
-        return buildIterationEditionUrl(this.iteration.id, this.program_increment.id);
-    }
+function formatDate(date: string): string {
+    return formatDateYearMonthDay(user_locale.value, date);
 }
+
+function toggleIsOpen(): void {
+    is_open.value = !is_open.value;
+}
+
+const edition_url = computed((): string =>
+    buildIterationEditionUrl(props.iteration.id, program_increment.value.id),
+);
 </script>
