@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\RemoteServer;
 
 use Git_RemoteServer_Dao;
@@ -27,50 +29,38 @@ use Git_RemoteServer_NotFoundException;
 use Git_SystemEventManager;
 use GitDao;
 use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
-class GerritServerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GerritServerFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $server_id       = 1;
-    private $host            = 'g.tuleap.net';
-    private $ssh_port        = 32915;
-    private $http_port       = 8080;
-    private $login           = 'chuck';
-    private $identity_file   = '/home/chuck/.ssh/id_rsa';
-    private $replication_key = 'ssh-rsa blablabla john@cake.do';
-    private $use_ssl         = false;
-    private $gerrit_version  = '2.5';
-    private $http_password   = 'azerty';
-
-    private $alternate_server_id      = 2;
-    private $alternate_host           = 'h.tuleap.net';
-    private $alternate_gerrit_version = '2.8+';
-    /** @var Git_SystemEventManager */
-    private $system_event_manager;
-    /** @var Git_RemoteServer_GerritServer */
-    private $main_gerrit_server;
-    /** @var Git_RemoteServer_GerritServerFactory */
-    private $factory;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    private $dar_1;
-    private $dar_2;
-    /**
-     * @var Git_RemoteServer_Dao&\Mockery\MockInterface
-     */
-    private $dao;
+    private int $server_id                   = 1;
+    private string $host                     = 'g.tuleap.net';
+    private int $ssh_port                    = 32915;
+    private int $http_port                   = 8080;
+    private string $login                    = 'chuck';
+    private string $identity_file            = '/home/chuck/.ssh/id_rsa';
+    private string $replication_key          = 'ssh-rsa blablabla john@cake.do';
+    private bool $use_ssl                    = false;
+    private string $gerrit_version           = '2.5';
+    private string $http_password            = 'azerty';
+    private int $alternate_server_id         = 2;
+    private string $alternate_host           = 'h.tuleap.net';
+    private string $alternate_gerrit_version = '2.8+';
+    private Git_SystemEventManager&MockObject $system_event_manager;
+    private Git_RemoteServer_GerritServer $main_gerrit_server;
+    private Git_RemoteServer_GerritServerFactory $factory;
+    private ProjectManager&MockObject $project_manager;
+    private array $dar_1;
+    private array $dar_2;
+    private Git_RemoteServer_Dao&MockObject $dao;
     private Git_RemoteServer_GerritServer $alternate_gerrit_server;
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->dar_1 = [
             'id'                   => $this->server_id,
             'host'                 => $this->host,
@@ -98,15 +88,14 @@ class GerritServerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'replication_password' => '',
         ];
 
-        $git_dao                    = Mockery::mock(GitDao::class);
-        $this->dao                  = \Mockery::spy(Git_RemoteServer_Dao::class);
-        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
+        $git_dao                    = $this->createMock(GitDao::class);
+        $this->dao                  = $this->createMock(Git_RemoteServer_Dao::class);
+        $this->system_event_manager = $this->createMock(Git_SystemEventManager::class);
 
-        $this->dao->shouldReceive('searchAll')->andReturns([$this->dar_1, $this->dar_2]);
-        $this->dao->shouldReceive('getById')->with($this->server_id)->andReturns($this->dar_1);
-        $this->dao->shouldReceive('getById')->andReturns([]);
+        $this->dao->method('searchAll')->willReturn([$this->dar_1, $this->dar_2]);
+        $this->dao->method('getById')->willReturnCallback(fn($id) => $id === $this->server_id ? $this->dar_1 : []);
 
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $this->system_event_manager, $this->project_manager);
 
@@ -136,117 +125,127 @@ class GerritServerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->http_password,
             ''
         );
-        $git_dao->shouldReceive('isRemoteServerUsed')->with($this->server_id)->andReturns(true);
-        $git_dao->shouldReceive('isRemoteServerUsed')->with($this->alternate_server_id)->andReturns(false);
+        $git_dao->method('isRemoteServerUsed')->willReturnCallback(fn($id) => match ($id) {
+            $this->server_id           => true,
+            $this->alternate_server_id => false,
+        });
     }
 
-    private function buildMockedRepository(int $remote_server_id): GitRepository
+    private function buildGitRepository(int $remote_server_id): GitRepository
     {
-        $repositrory = Mockery::mock(GitRepository::class);
-        $repositrory->shouldReceive('getRemoteServerId')->andReturn($remote_server_id);
-
-        return $repositrory;
+        return GitRepositoryTestBuilder::aProjectRepository()->migratedToGerrit($remote_server_id)->build();
     }
 
     public function testItThrowsAnExceptionIfThereIsNoSuchServer(): void
     {
         $unexisting_server_id = 34;
-        $repo                 = $this->buildMockedRepository($unexisting_server_id);
+        $repo                 = $this->buildGitRepository($unexisting_server_id);
         try {
             $this->factory->getServer($repo);
-            $this->fail('Should have thrown GerritServerNotFoundException');
+            self::fail('Should have thrown GerritServerNotFoundException');
         } catch (Git_RemoteServer_NotFoundException $e) {
-            $this->assertEquals("No server found with the id: $unexisting_server_id", $e->getMessage());
+            self::assertEquals("No server found with the id: $unexisting_server_id", $e->getMessage());
         }
     }
 
     public function testItReturnsAGerritServer(): void
     {
-        $repo   = $this->buildMockedRepository($this->server_id);
+        $repo   = $this->buildGitRepository($this->server_id);
         $server = $this->factory->getServer($repo);
 
-        $this->assertInstanceOf(Git_RemoteServer_GerritServer::class, $server);
+        self::assertInstanceOf(Git_RemoteServer_GerritServer::class, $server);
     }
 
     public function testItGetsAllServers(): void
     {
         $servers = $this->factory->getServers();
-        $this->assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->server_id]);
-        $this->assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->alternate_server_id]);
+        self::assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->server_id]);
+        self::assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->alternate_server_id]);
     }
 
     public function testItGetsAllServersForAGivenProject(): void
     {
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
-        $project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(458)->getMock();
-        $this->dao->shouldReceive('searchAllByProjectId')->with(458)->andReturn([$this->dar_1])->once();
+        $this->project_manager->method('getChildProjects')->willReturn([]);
+        $project = ProjectTestBuilder::aProject()->withId(458)->build();
+        $this->dao->expects(self::once())->method('searchAllByProjectId')->with(458)->willReturn([$this->dar_1]);
         $servers = $this->factory->getServersForProject($project);
-        $this->assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->server_id]);
+        self::assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->server_id]);
     }
 
     public function testItReturnsChildServers(): void
     {
-        $parent = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
-        $child1 = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
-        $child2 = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
+        $parent = ProjectTestBuilder::aProject()->withId(369)->withAccessPrivate()->build();
+        $child1 = ProjectTestBuilder::aProject()->withId(933)->withAccessPrivate()->build();
+        $child2 = ProjectTestBuilder::aProject()->withId(934)->withAccessPrivate()->build();
 
-        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child1, $child2]);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
+        $this->project_manager->method('getChildProjects')->willReturnCallback(fn($id) => match ((int) $id) {
+            369     => [$child1, $child2],
+            default => [],
+        });
 
-        $this->dao->shouldReceive('searchAllByProjectId')->with(933)->andReturns([$this->dar_1]);
-        $this->dao->shouldReceive('searchAllByProjectId')->with(934)->andReturns([$this->dar_2]);
-        $this->dao->shouldReceive('searchAllByProjectId')->andReturns([]);
+        $this->dao->method('searchAllByProjectId')->willReturnCallback(fn($id) => match ((int) $id) {
+            933     => [$this->dar_1],
+            934     => [$this->dar_2],
+            default => [],
+        });
 
         $servers = $this->factory->getServersForProject($parent);
-        $this->assertCount(2, $servers);
-        $this->assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->server_id]);
-        $this->assertEquals($this->server_id, $servers[$this->server_id]->getId());
-        $this->assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->alternate_server_id]);
-        $this->assertEquals($this->alternate_server_id, $servers[$this->alternate_server_id]->getId());
+        self::assertCount(2, $servers);
+        self::assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->server_id]);
+        self::assertEquals($this->server_id, $servers[$this->server_id]->getId());
+        self::assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->alternate_server_id]);
+        self::assertEquals($this->alternate_server_id, $servers[$this->alternate_server_id]->getId());
     }
 
     public function testItReturnsAllProjectChildren(): void
     {
-        $parent     = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
-        $child1     = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
-        $child2     = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
-        $grandchild = \Mockery::spy(\Project::class, ['getID' => 96, 'getUnixName' => false, 'isPublic' => false]);
+        $parent     = ProjectTestBuilder::aProject()->withId(369)->withAccessPrivate()->build();
+        $child1     = ProjectTestBuilder::aProject()->withId(933)->withAccessPrivate()->build();
+        $child2     = ProjectTestBuilder::aProject()->withId(934)->withAccessPrivate()->build();
+        $grandchild = ProjectTestBuilder::aProject()->withId(96)->withAccessPrivate()->build();
 
-        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child1, $child2]);
-        $this->project_manager->shouldReceive('getChildProjects')->with(933)->andReturns([$grandchild]);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
+        $this->project_manager->method('getChildProjects')->willReturnCallback(fn($id) => match ((int) $id) {
+            369     => [$child1, $child2],
+            933     => [$grandchild],
+            default => [],
+        });
 
-        $this->dao->shouldReceive('searchAllByProjectId')->andReturn([])->times(4);
+        $this->dao->expects(self::exactly(4))->method('searchAllByProjectId')->willReturn([]);
 
         $this->factory->getServersForProject($parent);
     }
 
     public function testItReturnsOnlyOneServerEvenWhenThereAreSeveral(): void
     {
-        $parent = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
-        $child  = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
+        $parent = ProjectTestBuilder::aProject()->withId(369)->withAccessPrivate()->build();
+        $child  = ProjectTestBuilder::aProject()->withId(933)->withAccessPrivate()->build();
 
-        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child]);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
-
-        $this->dao->shouldReceive('searchAllByProjectId')->with(369)->andReturns([$this->dar_1]);
-        $this->dao->shouldReceive('searchAllByProjectId')->with(933)->andReturns([$this->dar_1]);
+        $this->project_manager->method('getChildProjects')->willReturnCallback(fn($id) => match ((int) $id) {
+            369     => [$child],
+            default => [],
+        });
+        $this->dao->method('searchAllByProjectId')->willReturnCallback(fn($id) => match ((int) $id) {
+            369, 933 => [$this->dar_1],
+        });
 
         $servers = $this->factory->getServersForProject($parent);
-        $this->assertCount(1, $servers);
+        self::assertCount(1, $servers);
     }
 
     public function testItSavesAnExistingServer(): void
     {
         $this->main_gerrit_server->setLogin('new_login');
-        $this->dao->shouldReceive('save')->with($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl, $this->gerrit_version, $this->http_password)->once();
+        $this->dao->expects(self::once())->method('save')
+            ->with($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl, $this->gerrit_version, $this->http_password);
+        $this->system_event_manager->method('queueGerritReplicationKeyUpdate');
         $this->factory->save($this->main_gerrit_server);
     }
 
     public function testItTriggersKeyUpdateEventOnSave(): void
     {
         $this->main_gerrit_server->setLogin('new_login');
-        $this->system_event_manager->shouldReceive('queueGerritReplicationKeyUpdate')->with($this->main_gerrit_server)->once();
+        $this->system_event_manager->expects(self::once())->method('queueGerritReplicationKeyUpdate')->with($this->main_gerrit_server);
+        $this->dao->method('save');
         $this->factory->save($this->main_gerrit_server);
     }
 
@@ -265,26 +264,29 @@ class GerritServerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->http_password,
             ''
         );
-        $this->dao->shouldReceive('save')->andReturns(113);
+        $this->dao->method('save')->willReturn(113);
+        $this->system_event_manager->method('queueGerritReplicationKeyUpdate');
         $this->factory->save($new_server);
-        $this->assertEquals(113, $new_server->getId());
+        self::assertEquals(113, $new_server->getId());
     }
 
     public function testItDeletesAnExistingServer(): void
     {
-        $this->dao->shouldReceive('delete')->with($this->alternate_server_id)->once();
+        $this->dao->expects(self::once())->method('delete')->with($this->alternate_server_id);
+        $this->system_event_manager->method('queueGerritReplicationKeyUpdate');
         $this->factory->delete($this->alternate_gerrit_server);
     }
 
     public function testItTriggersKeyUpdateEventOnDelete(): void
     {
-        $this->system_event_manager->shouldReceive('queueGerritReplicationKeyUpdate')->with($this->alternate_gerrit_server)->once();
+        $this->system_event_manager->expects(self::once())->method('queueGerritReplicationKeyUpdate')->with($this->alternate_gerrit_server);
+        $this->dao->method('delete');
         $this->factory->delete($this->alternate_gerrit_server);
     }
 
     public function testItDoesNotDeleteUsedServer(): void
     {
-        $this->dao->shouldReceive('delete')->with($this->server_id)->never();
+        $this->dao->expects(self::never())->method('delete')->with($this->server_id);
         $this->factory->delete($this->main_gerrit_server);
     }
 }
