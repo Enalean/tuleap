@@ -86,67 +86,57 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { Styles } from "../helpers/styles";
 import { TimePeriodMonth } from "../helpers/time-period-month";
 import { DateTime } from "luxon";
 
-@Component
-export default class LoadingState extends Vue {
-    override $refs!: {
-        time_period: HTMLDivElement;
-    };
+const time_period = ref<Element | undefined>();
 
-    time_units: DateTime[] = [];
+let time_units: DateTime[] = [];
 
-    private observer: ResizeObserver | null = null;
+let observer: ResizeObserver | null = null;
 
-    mounted(): void {
-        this.observer = new ResizeObserver(this.adjustTimePeriod);
-        this.observer.observe(this.$refs.time_period);
+onMounted(() => {
+    observer = new ResizeObserver(adjustTimePeriod);
+    if (time_period.value) {
+        observer.observe(time_period.value);
     }
+});
 
-    beforeDestroy(): void {
-        if (this.observer) {
-            this.observer.disconnect();
+function adjustTimePeriod(entries: ResizeObserverEntry[]): void {
+    for (const entry of entries) {
+        if (entry.target !== time_period.value) {
+            continue;
         }
-    }
 
-    adjustTimePeriod(entries: ResizeObserverEntry[]): void {
-        for (const entry of entries) {
-            if (entry.target !== this.$refs.time_period) {
-                continue;
-            }
+        const nb = Math.ceil(entry.contentRect.width / Styles.TIME_UNIT_WIDTH_IN_PX) - 1;
 
-            const nb = Math.ceil(entry.contentRect.width / Styles.TIME_UNIT_WIDTH_IN_PX) - 1;
-
-            const time_period = TimePeriodMonth.getDummyTimePeriod(DateTime.now());
-            this.time_units = time_period.additionalUnits(nb);
-        }
-    }
-
-    randomStyleLeft(): string {
-        const left = this.getRandomInt(
-            40,
-            (this.time_units.length - 3) * Styles.TIME_UNIT_WIDTH_IN_PX,
-        );
-
-        return `left: ${left}px;`;
-    }
-
-    randomStyleWidth(): string {
-        const width = this.getRandomInt(
-            30,
-            (this.time_units.length * Styles.TIME_UNIT_WIDTH_IN_PX) / 3,
-        );
-
-        return `width: ${width}px;`;
-    }
-
-    getRandomInt(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min) + min);
+        const dummy_time_period = TimePeriodMonth.getDummyTimePeriod(DateTime.now());
+        time_units = dummy_time_period.additionalUnits(nb);
     }
 }
+
+function randomStyleLeft(): string {
+    const left = getRandomInt(40, (time_units.length - 3) * Styles.TIME_UNIT_WIDTH_IN_PX);
+
+    return `left: ${left}px;`;
+}
+
+function randomStyleWidth(): string {
+    const width = getRandomInt(30, (time_units.length * Styles.TIME_UNIT_WIDTH_IN_PX) / 3);
+
+    return `width: ${width}px;`;
+}
+
+function getRandomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+onBeforeUnmount(() => {
+    if (observer) {
+        observer.disconnect();
+    }
+});
 </script>
