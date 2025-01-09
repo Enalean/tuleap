@@ -29,66 +29,53 @@
             {{ error_message }}
         </div>
         <user-story-card
-            v-else
             v-for="user_story in user_stories"
             v-bind:key="user_story.id"
             v-bind:user_story="user_story"
-            v-bind:iteration="iteration"
         />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Getter } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useActions, useGetters } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import IterationNoContent from "./IterationNoContent.vue";
 import UserStoryCard from "./UserStoryCard.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
+import type { Iteration, UserStory } from "../../../type";
 
-import type { UserStory, Iteration } from "../../../type";
+const { $gettext } = useGettext();
 
-@Component({
-    components: {
-        IterationNoContent,
-        UserStoryCard,
-        BacklogElementSkeleton,
-    },
-})
-export default class IterationUserStoryList extends Vue {
-    @Prop({ required: true })
-    readonly iteration!: Iteration;
+const props = defineProps<{ iteration: Iteration }>();
 
-    @Getter
-    readonly hasIterationContentInStore!: (iteration: Iteration) => boolean;
+const { hasIterationContentInStore, getIterationContentFromStore } = useGetters<{
+    hasIterationContentInStore: () => (iteration: Iteration) => boolean;
+    getIterationContentFromStore: () => (iteration: Iteration) => ReadonlyArray<UserStory>;
+}>(["hasIterationContentInStore", "getIterationContentFromStore"]);
 
-    @Getter
-    readonly getIterationContentFromStore!: (iteration: Iteration) => UserStory[];
+const { fetchIterationContent } = useActions(["fetchIterationContent"]);
 
-    user_stories: UserStory[] = [];
-    is_loading = false;
-    has_error = false;
-    error_message = "";
+const user_stories = ref<ReadonlyArray<UserStory>>([]);
+const is_loading = ref(false);
+const has_error = ref(false);
+const error_message = ref("");
+const has_user_stories = computed((): boolean => user_stories.value.length > 0);
 
-    async mounted(): Promise<void> {
-        if (this.hasIterationContentInStore(this.iteration)) {
-            this.user_stories = this.getIterationContentFromStore(this.iteration);
-            return;
-        }
-
-        try {
-            this.is_loading = true;
-            this.user_stories = await this.$store.dispatch("fetchIterationContent", this.iteration);
-        } catch (e) {
-            this.has_error = true;
-            this.error_message = this.$gettext("An error has occurred loading content");
-        } finally {
-            this.is_loading = false;
-        }
+onMounted(async () => {
+    if (hasIterationContentInStore.value(props.iteration)) {
+        user_stories.value = getIterationContentFromStore.value(props.iteration);
+        return;
     }
 
-    get has_user_stories(): boolean {
-        return this.user_stories.length > 0;
+    try {
+        is_loading.value = true;
+        user_stories.value = await fetchIterationContent(props.iteration);
+    } catch (e) {
+        has_error.value = true;
+        error_message.value = $gettext("An error has occurred loading content");
+    } finally {
+        is_loading.value = false;
     }
-}
+});
 </script>
