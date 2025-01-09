@@ -18,20 +18,18 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
-
 import IterationCard from "./IterationCard.vue";
-
-import type { Wrapper } from "@vue/test-utils";
 import type { Iteration } from "../../../type";
 
 describe("IterationCard", () => {
     let iteration: Iteration;
 
-    async function getWrapper(): Promise<Wrapper<IterationCard>> {
+    async function getWrapper(): Promise<Wrapper<Vue>> {
         return shallowMount(IterationCard, {
             mocks: {
                 $store: createStoreMock({
