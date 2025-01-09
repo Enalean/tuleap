@@ -20,7 +20,10 @@
 
 <template>
     <div>
-        <no-data-to-show-empty-state v-if="should_display_empty_state" />
+        <no-data-to-show-empty-state
+            v-if="should_display_empty_state"
+            v-bind:should_invite_to_come_back="true"
+        />
         <something-went-wrong-empty-state
             v-else-if="should_display_error_state"
             v-bind:message="error_message"
