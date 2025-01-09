@@ -34,6 +34,10 @@ msgstr ""
 "Une erreur est survenue lors de la création d'une section à partir de "
 "l'artéfact existant %{ xref } : %{ details }"
 
+msgid "An error occurred while removing the freetext section."
+msgstr ""
+"Une erreur est survenue lors de la suppression de la section de texte libre."
+
 msgid "An error occurred while removing the section."
 msgstr "Une erreur est survenue lors de la suppression de la section."
 
@@ -49,6 +53,9 @@ msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
 msgid "An error occurred while trying to update the section."
 msgstr "Une erreur est survenue lors de la mise à jour de la section."
+
+msgid "Are you sure you want to delete this freetext section?"
+msgstr "Êtes vous sûr de vouloir supprimer cette section de texte libre ?"
 
 msgid "Artidoc allows composition of a document based on artifacts."
 msgstr "Artidoc permet la composition d'un document basé sur des artéfacts."
@@ -170,6 +177,12 @@ msgstr "Recharger la page"
 msgid "Remove"
 msgstr "Enlever"
 
+msgid "Remove a freetext section"
+msgstr "Supprimer une section de texte libre"
+
+msgid "Remove section"
+msgstr "Supprimer la section"
+
 msgid "Remove the section from this document."
 msgstr "Supprimer la section de ce document."
 
@@ -198,6 +211,9 @@ msgid "The document is being edited. Please save your work beforehand."
 msgstr ""
 "Le document est en cours d'édition. Veuillez au préalable sauvegarder votre "
 "travail."
+
+msgid "The removal of a freetext section is definitive"
+msgstr "La suppression d'une section de texte libre est définitive"
 
 msgid ""
 "The section you are trying to update does not exist or you don't have "

@@ -50,6 +50,10 @@ import {
 } from "@/composables/useOpenAddExistingSectionModalBus";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+import {
+    REMOVE_FREETEXT_SECTION_MODAL,
+    useRemoveFreetextSectionModal,
+} from "@/composables/useRemoveFreetextSectionModal";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -87,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore());
     app.provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus());
+    app.provide(REMOVE_FREETEXT_SECTION_MODAL, useRemoveFreetextSectionModal());
     app.provide(DOCUMENT_ID, item_id);
     app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
     app.provide(
