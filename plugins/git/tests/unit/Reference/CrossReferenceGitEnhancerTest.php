@@ -22,55 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
+use UserHelper;
 
-class CrossReferenceGitEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceGitEnhancerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var CrossReferenceGitEnhancer
-     */
-    private $enhancer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Commit
-     */
-    private $commit;
+    private UserHelper&MockObject $user_helper;
+    private CrossReferenceGitEnhancer $enhancer;
+    private PFUser $user;
+    private Commit&MockObject $commit;
 
     protected function setUp(): void
     {
-        $this->user_helper = Mockery::mock(\UserHelper::class);
+        $this->user_helper = $this->createMock(UserHelper::class);
 
         $this->enhancer = new CrossReferenceGitEnhancer(
             $this->user_helper,
             new TlpRelativeDatePresenterBuilder(),
         );
 
-        $this->user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getPreference' => 'relative_first-absolute_tooltip',
-                    'getLocale'     => 'en_US',
-                ]
-            )
-            ->getMock();
+        $this->user = $this->createMock(PFUser::class);
+        $this->user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $this->user->method('getLocale')->willReturn('en_US');
 
-        $this->commit = Mockery::mock(Commit::class);
+        $this->commit = $this->createMock(Commit::class);
 
         $GLOBALS['Language']
             ->method('getText')
@@ -192,20 +177,15 @@ class CrossReferenceGitEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $author = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getEmail'     => 'jdoe@example.com',
-                    'hasAvatar'    => true,
-                    'getAvatarUrl' => '/path/to/avatar',
-                ]
-            )
-            ->getMock();
+        $author = UserTestBuilder::aUser()
+            ->withEmail('jdoe@example.com')
+            ->withAvatarUrl('/path/to/avatar')
+            ->build();
 
         $this->user_helper
-            ->shouldReceive('getDisplayNameFromUser')
+            ->method('getDisplayNameFromUser')
             ->with($author)
-            ->andReturn('John Doe');
+            ->willReturn('John Doe');
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -233,20 +213,15 @@ class CrossReferenceGitEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $author = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getEmail'     => 'jdoe@example.com',
-                    'hasAvatar'    => true,
-                    'getAvatarUrl' => '/path/to/avatar',
-                ]
-            )
-            ->getMock();
+        $author = UserTestBuilder::aUser()
+            ->withEmail('jdoe@example.com')
+            ->withAvatarUrl('/path/to/avatar')
+            ->build();
 
         $this->user_helper
-            ->shouldReceive('getDisplayNameFromUser')
+            ->method('getDisplayNameFromUser')
             ->with($author)
-            ->andReturn('John Doe');
+            ->willReturn('John Doe');
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -272,9 +247,7 @@ class CrossReferenceGitEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit
-            ->shouldReceive('GetAuthorName')
-            ->andReturn('Korben Dallas');
+        $this->commit->method('GetAuthorName')->willReturn('Korben Dallas');
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
