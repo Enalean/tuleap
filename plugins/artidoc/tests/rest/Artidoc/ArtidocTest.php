@@ -222,7 +222,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc_sections/' . $uuid));
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame(['OPTIONS', 'GET', 'PUT', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertSame(['OPTIONS', 'GET', 'PUT', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -273,12 +273,18 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     {
         foreach ($section_ids as $section_id) {
             $post_response = $this->getResponse(
-                $this->request_factory->createRequest('POST', 'artidoc/' . $artidoc_id . '/sections')->withBody(
-                    $this->stream_factory->createStream(json_encode([
-                        'artifact' => ['id' => $section_id],
-                        'position' => null,
-                        'content' => null,
-                    ], JSON_THROW_ON_ERROR))
+                $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
+                    $this->stream_factory->createStream(json_encode(
+                        [
+                            'artidoc_id' => $artidoc_id,
+                            'section' => [
+                                'artifact' => ['id' => $section_id],
+                                'position' => null,
+                                'content' => null,
+                            ],
+                        ],
+                        JSON_THROW_ON_ERROR
+                    ))
                 ),
                 DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
             );
@@ -301,11 +307,14 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         // at the end
         $section_3_post_response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+            $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
                 $this->stream_factory->createStream(json_encode([
-                    'artifact' => ['id' => $section_3_art_id],
-                    'position' => null,
-                    'content' => null,
+                    'artidoc_id' => $artidoc_id,
+                    'section' => [
+                        'artifact' => ['id' => $section_3_art_id],
+                        'position' => null,
+                        'content' => null,
+                    ],
                 ], JSON_THROW_ON_ERROR))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
@@ -325,13 +334,16 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         // before another section
         $section_4_post_response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+            $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
                 $this->stream_factory->createStream(json_encode([
-                    'artifact' => ['id' => $section_4_art_id],
-                    'position' => [
-                        'before' => $new_section_id,
+                    'artidoc_id' => $artidoc_id,
+                    'section' => [
+                        'artifact' => ['id' => $section_4_art_id],
+                        'position' => [
+                            'before' => $new_section_id,
+                        ],
+                        'content' => null,
                     ],
-                    'content' => null,
                 ], JSON_THROW_ON_ERROR))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
@@ -350,15 +362,18 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         // with a free text
         $post_response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'artidoc/' . $artidoc_id . '/sections')->withBody(
+            $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
                 $this->stream_factory->createStream(json_encode([
-                    'position' => [
-                        'before' => $new_section_id,
-                    ],
-                    'content' => [
-                        'title' => 'My freetext title',
-                        'description' => 'My freetext description',
-                        'type' => 'freetext',
+                    'artidoc_id' => $artidoc_id,
+                    'section' => [
+                        'position' => [
+                            'before' => $new_section_id,
+                        ],
+                        'content' => [
+                            'title' => 'My freetext title',
+                            'description' => 'My freetext description',
+                            'type' => 'freetext',
+                        ],
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
