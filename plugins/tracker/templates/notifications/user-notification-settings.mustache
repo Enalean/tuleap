@@ -9,6 +9,7 @@
         </p>
     {{/ are_global_notifications_suspended }}
     {{^ are_global_notifications_suspended }}
+        <p class="text-info">{{# dgettext }}tuleap-tracker | Your %1$suser preferences%2$s can change the notifications you will receive. | <a href="/account/notifications"> | </a>{{/ dgettext }}</p>
         <p>
             {{# dgettext }} tuleap-tracker | You can choose the notification mode you wish for this tracker. {{/ dgettext }}
         </p>

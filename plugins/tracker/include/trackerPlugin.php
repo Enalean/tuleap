@@ -1998,7 +1998,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function routeGetNotificationsMy(): NotificationsUserSettingsDisplayController
     {
         return new NotificationsUserSettingsDisplayController(
-            TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/notifications/'),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/notifications/'),
             $this->getTrackerFactory(),
             new TrackerManager(),
             new UserNotificationSettingsRetriever(

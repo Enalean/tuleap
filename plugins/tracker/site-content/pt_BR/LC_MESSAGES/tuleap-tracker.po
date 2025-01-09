@@ -4293,6 +4293,10 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Your %1$suser preferences%2$s can change the notifications you will receive."
+msgstr ""
+
+msgid ""
 "Your file is not encoded in UTF-8, we are not able to parse it safely. "
 "Please save it with UTF-8 encoding before uploading it."
 msgstr ""
