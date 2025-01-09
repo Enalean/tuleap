@@ -52,7 +52,14 @@ final readonly class UserPreferencesPostController implements DispatchableWithRe
             throw new NotFoundException();
         }
 
-        $has_changed = NotificationOnOwnActionPreference::updatePreference($request, $current_user);
+        $has_changed = NotificationOnOwnActionPreference::updatePreference(
+            $request->get(NotificationOnOwnActionPreference::PREFERENCE_NAME) === NotificationOnOwnActionPreference::VALUE_NOTIF,
+            $current_user,
+        );
+        $has_changed = NotificationOnAllUpdatesPreference::updatePreference(
+            $request->get(NotificationOnAllUpdatesPreference::PREFERENCE_NAME) === NotificationOnAllUpdatesPreference::VALUE_NOTIF,
+            $current_user,
+        ) || $has_changed;
 
         if ($request->exist('email_format')) {
             $format_email = $request->get('email_format') === Codendi_Mail_Interface::FORMAT_HTML ? Codendi_Mail_Interface::FORMAT_HTML : Codendi_Mail_Interface::FORMAT_TEXT;

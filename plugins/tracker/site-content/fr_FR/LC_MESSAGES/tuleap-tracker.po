@@ -1120,6 +1120,14 @@ msgstr[0] "Les enfants de l'artéfact courant satisfont la condition suivante :"
 msgstr[1] ""
 "Les enfants de l'artéfact courant satisfont les conditions suivantes :"
 
+msgid ""
+"Currently, you will be notified only if you are creator of an artifact, "
+"assignee or if you have specific configuration for a tracker."
+msgstr ""
+"Actuellement, vous serez notifié seulement si vous êtes le créateur de "
+"l'artéfact, y êtes assigné ou si vous avez une configuration spécifique pour "
+"l'outil de suivi."
+
 msgid "Custom columns based on..."
 msgstr "Colonnes basées sur…"
 
@@ -1604,6 +1612,13 @@ msgstr "Flottant"
 
 msgid "Follow-ups"
 msgstr "Commentaires"
+
+msgid ""
+"For all updates after you made a change on an artifact (comment, change "
+"values...)"
+msgstr ""
+"Pour toutes les mises à jour après que vous ayez effectué un changement sur "
+"un artéfact (commentaire, changement de valeurs...)"
 
 msgid ""
 "For instance, when you create an artifact or add a comment. %s(Historical "
@@ -2563,8 +2578,8 @@ msgstr ""
 "Prêt à importer %1$s artéfact(s)&nbsp;: %2$s artéfact(s) nouveau(x) , %3$s "
 "artéfact(s) existant(s)"
 
-msgid "Receive email when you are the author of a change"
-msgstr "Recevoir un courriel quand vous êtes l'auteur d'un changement."
+msgid "Receive emails:"
+msgstr "Recevoir du courriel :"
 
 msgid "Receive notifications for this artifact"
 msgstr "Recevoir les notifications de cet artéfact"
@@ -3870,7 +3885,7 @@ msgstr "Permet de choisir plusieurs valeurs"
 
 #, php-format
 msgid "The value '%s' doesn't exist for the list field '%s'."
-msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
+msgstr "La valeur '%s' n'existe pas pour le champ liste ‘%s’."
 
 msgid "Then the tracker field"
 msgstr "Alors le champ"
@@ -4593,6 +4608,9 @@ msgstr ""
 "email pour les artifacts comprennent les informations nécessaires pour "
 "ajouter l’évènement à un calendrier (Outlook, Google Calendar, etc.)."
 
+msgid "When you are the author of a change"
+msgstr "Quand vous êtes l'auteur d'un changement"
+
 msgid "When you use @ to mention someone, they will get an email notification."
 msgstr ""
 "Lorsque vous utilisez @ pour mentionner quelqu'un, cette personne recevra un "
@@ -4737,7 +4755,7 @@ msgid ""
 "You can use: %s, parenthesis. Autocomplete is activated with Ctrl + Space."
 msgstr ""
 "Vous pouvez utiliser : %s,  parenthèses. Ctrl + Espace active "
-"l’autocomplétion."
+"l'autocomplétion."
 
 msgid ""
 "You can't add values in this semantic because all possible values are "
@@ -4922,6 +4940,13 @@ msgid ""
 msgstr ""
 "Vous devez définir la <a href=\"%1$s\">sémantique %2$s</a> afin de pouvoir "
 "definir la permission 'confiés au groupe'"
+
+msgid ""
+"You will be notified for any changes if you make a comment or change a value "
+"in an artifact."
+msgstr ""
+"Vous serez notifié pour tous les changements si vous écrivez un commentaire "
+"ou changez une valeur dans un artéfact."
 
 msgid "You will no-longer receive notifications for this artifact"
 msgstr "Vous êtes désinscrit des notifications de cet artéfact"

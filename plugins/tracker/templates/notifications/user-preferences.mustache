@@ -1,7 +1,8 @@
 <form class="tlp-pane-container" action="{{ form_post_uri }}" method="POST">
     <div class="tlp-pane-header">
         <h1 class="tlp-pane-title">
-            <i class="tlp-pane-title-icon fa-fw fa-solid fa-tlp-tracker-circle" aria-hidden="true"></i>{{# dgettext }} tuleap-tracker | Trackers {{/ dgettext }}
+            <i class="tlp-pane-title-icon fa-fw fa-solid fa-tlp-tracker-circle" aria-hidden="true"></i>{{# dgettext }}
+            tuleap-tracker | Trackers {{/ dgettext }}
         </h1>
     </div>
 
@@ -30,6 +31,7 @@
             </label>
         </div>
 
+        <label class="tlp-label">{{# dgettext }} tuleap-tracker | Receive emails: {{/ dgettext }}</label>
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
                 <input
@@ -38,13 +40,34 @@
                     value="1"
                     {{# wants_notifications }}checked{{/ wants_notifications }}
                 >
-                {{# dgettext }} tuleap-tracker | Receive email when you are the author of a change {{/ dgettext }}
+                {{# dgettext }} tuleap-tracker | When you are the author of a change {{/ dgettext }}
             </label>
             <p class="tlp-text-info">{{# dgettext }} tuleap-tracker |
                 For instance, when you create an artifact or add a comment. %s(Historical Tuleap behavior with high traffic).%s |
                 <i> |
                 </i>
             {{/ dgettext }}</p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input
+                    type="checkbox"
+                    name="user_notifications_all_updates_tracker"
+                    value="1"
+                    {{# wants_all_updates_after_change }}checked{{/ wants_all_updates_after_change }}
+                >
+                {{# dgettext }}tuleap-tracker | For all updates after you made a change on an artifact (comment, change values...) {{/ dgettext }}
+            </label>
+            {{# wants_all_updates_after_change }}
+                <p class="tlp-text-info">{{# dgettext }} tuleap-tracker |
+                    You will be notified for any changes if you make a comment or change a value in an artifact.
+                {{/ dgettext }}</p>
+            {{/ wants_all_updates_after_change }}
+            {{^ wants_all_updates_after_change }}
+                <p class="tlp-text-info">{{# dgettext }} tuleap-tracker |
+                    Currently, you will be notified only if you are creator of an artifact, assignee or if you have specific configuration for a tracker.
+                {{/ dgettext }}</p>
+            {{/wants_all_updates_after_change}}
         </div>
 
         {{# csrf_token }}

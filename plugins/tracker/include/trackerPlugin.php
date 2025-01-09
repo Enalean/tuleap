@@ -267,6 +267,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesPreference;
 use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
 use Tuleap\Tracker\User\UserPreferencesPostController;
 use Tuleap\Tracker\User\UserPreferencesPresenter;
@@ -2811,6 +2812,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 ->renderToString('user-preferences', new UserPreferencesPresenter(
                     UserPreferencesPostController::getCSRFToken(),
                     NotificationOnOwnActionPreference::userWantsNotification($collector->current_user),
+                    NotificationOnAllUpdatesPreference::userWantsNotification($collector->current_user),
                     UserPreferencesPostController::URL,
                     (new MailManager())->getMailPreferencesByUser($collector->current_user),
                 ))

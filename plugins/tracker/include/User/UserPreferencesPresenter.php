@@ -36,6 +36,7 @@ final readonly class UserPreferencesPresenter
     public function __construct(
         public CSRFSynchronizerToken $csrf_token,
         public bool $wants_notifications,
+        public bool $wants_all_updates_after_change,
         public string $form_post_uri,
         string $mail_format_preference,
     ) {
