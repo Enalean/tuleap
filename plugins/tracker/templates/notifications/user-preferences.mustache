@@ -38,8 +38,13 @@
                     value="1"
                     {{# wants_notifications }}checked{{/ wants_notifications }}
                 >
-                {{# dgettext }} tuleap-tracker | Receive emails for actions I do on the platform {{/ dgettext }}
+                {{# dgettext }} tuleap-tracker | Receive email when you are the author of a change {{/ dgettext }}
             </label>
+            <p class="tlp-text-info">{{# dgettext }} tuleap-tracker |
+                For instance, when you create an artifact or add a comment. %s(Historical Tuleap behavior with high traffic).%s |
+                <i> |
+                </i>
+            {{/ dgettext }}</p>
         </div>
 
         {{# csrf_token }}
