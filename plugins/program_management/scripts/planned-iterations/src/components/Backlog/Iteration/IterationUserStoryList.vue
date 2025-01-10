@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="planned-iteration-content-items" data-test="iteration-user-story-list">
+    <div class="planned-iteration-content-items">
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
         <iteration-no-content
             v-if="!has_user_stories && !is_loading && !has_error"

@@ -22,7 +22,6 @@
         <h2 class="planned-iterations-section-title">
             {{ $gettext("To be planned by the Teams") }}
         </h2>
-
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
         <div
             v-if="has_error"
@@ -31,19 +30,16 @@
         >
             {{ error_message }}
         </div>
-
         <div
             v-if="!is_loading && !has_error && user_stories.length === 0"
             class="empty-state-page"
             data-test="no-unplanned-elements-empty-state"
         >
             <p class="empty-state-text">
-                {{ $gettext("There is no unplanned element") }}
+                {{ gettext_provider.$gettext("There is no unplanned element") }}
             </p>
         </div>
-
         <user-story-card
-            v-else
             v-for="user_story in user_stories"
             v-bind:key="user_story.id"
             v-bind:user_story="user_story"
@@ -51,45 +47,38 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { retrieveUnplannedElements } from "../../../helpers/increment-unplanned-elements-retriever";
-
 import UserStoryCard from "../Iteration/UserStoryCard.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
-
 import type { UserStory } from "../../../type";
 import type { ProgramIncrement } from "../../../store/configuration";
 
-const configuration = namespace("configuration");
+const gettext_provider = useGettext();
 
-@Component({
-    components: {
-        UserStoryCard,
-        BacklogElementSkeleton,
-    },
-})
-export default class IterationsToBePlannedSection extends Vue {
-    @configuration.State
-    readonly program_increment!: ProgramIncrement;
+const { program_increment } = useNamespacedState<{
+    program_increment: ProgramIncrement;
+}>("configuration", ["program_increment"]);
 
-    user_stories: UserStory[] = [];
-    is_loading = false;
-    has_error = false;
-    error_message = "";
+const user_stories = ref<ReadonlyArray<UserStory>>([]);
+const is_loading = ref(false);
+const has_error = ref(false);
+const error_message = ref("");
 
-    async mounted(): Promise<void> {
-        try {
-            this.is_loading = true;
-            this.user_stories = await retrieveUnplannedElements(this.program_increment.id);
-        } catch (e) {
-            this.has_error = true;
-            this.error_message = this.$gettext("An error occurred loading unplanned elements");
-        } finally {
-            this.is_loading = false;
-        }
+onMounted(async () => {
+    try {
+        is_loading.value = true;
+        user_stories.value = await retrieveUnplannedElements(program_increment.value.id);
+    } catch (e) {
+        has_error.value = true;
+        error_message.value = gettext_provider.$gettext(
+            "An error occurred loading unplanned elements",
+        );
+    } finally {
+        is_loading.value = false;
     }
-}
+});
 </script>
