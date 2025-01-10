@@ -31,7 +31,7 @@ import type { Wrapper } from "@vue/test-utils";
 jest.useFakeTimers();
 
 describe("IterationsToBePlannedSection", () => {
-    async function getWrapper(): Promise<Wrapper<IterationsToBePlannedSection>> {
+    async function getWrapper(): Promise<Wrapper<Vue>> {
         return shallowMount(IterationsToBePlannedSection, {
             localVue: await createPlanIterationsLocalVue(),
             mocks: {
