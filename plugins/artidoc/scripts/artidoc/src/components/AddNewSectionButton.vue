@@ -37,7 +37,15 @@
             <button
                 type="button"
                 class="tlp-dropdown-menu-item"
-                v-on:click="addNewSection"
+                v-on:click="addNewFreetextSection"
+                data-test="add-freetext-section"
+            >
+                {{ $gettext("Add freetext") }}
+            </button>
+            <button
+                type="button"
+                class="tlp-dropdown-menu-item"
+                v-on:click="addNewArtifactSection"
                 data-test="add-new-section"
             >
                 {{ add_new_requirement_label }}
@@ -66,6 +74,7 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 const props = defineProps<{
     position: PositionForSection;
@@ -142,7 +151,7 @@ function openConfigurationModalBeforeInsertingExistingSection(): void {
     configuration_bus.openModal(openAddExistingSectionModal);
 }
 
-function addNewSection(): void {
+function addNewArtifactSection(): void {
     dropdown?.hide();
     if (!is_tracker_with_submittable_section.value) {
         openConfigurationModalBeforeInsertingNewSection();
@@ -150,6 +159,12 @@ function addNewSection(): void {
     }
 
     insertNewSection();
+}
+
+function addNewFreetextSection(): void {
+    dropdown?.hide();
+
+    props.insert_section_callback(FreetextSectionFactory.pending(), props.position);
 }
 
 function openConfigurationModalBeforeInsertingNewSection(): void {

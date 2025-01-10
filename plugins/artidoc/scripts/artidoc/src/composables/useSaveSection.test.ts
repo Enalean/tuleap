@@ -49,7 +49,7 @@ describe("useSaveSection", () => {
             updateCurrentSection: vi.fn(),
             closeEditor: vi.fn(),
             setEditMode: vi.fn(),
-            replacePendingByArtifactSection: vi.fn(),
+            replacePendingSection: vi.fn(),
             getSectionPositionForSave: vi.fn(),
             mergeArtifactAttachments: vi.fn(),
         };

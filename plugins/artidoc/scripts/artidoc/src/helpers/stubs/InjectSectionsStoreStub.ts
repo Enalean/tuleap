@@ -32,9 +32,9 @@ const resultasync_noop = (): ResultAsync<boolean, Fault> => okAsync(true);
 
 export const InjectedSectionsStoreStub = {
     withLoadedSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
-        replacePendingByArtifactSection: noop,
+        replacePendingSection: noop,
         getSectionPositionForSave: () => null,
-        insertPendingArtifactSectionForEmptyDocument: noop,
+        insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
         loadSections: promised_noop,
@@ -46,9 +46,9 @@ export const InjectedSectionsStoreStub = {
         ),
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
-        replacePendingByArtifactSection: noop,
+        replacePendingSection: noop,
         getSectionPositionForSave: () => null,
-        insertPendingArtifactSectionForEmptyDocument: noop,
+        insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
         loadSections: promised_noop,
@@ -60,9 +60,9 @@ export const InjectedSectionsStoreStub = {
         ),
     }),
     withSectionsInError: (): SectionsStore => ({
-        replacePendingByArtifactSection: noop,
+        replacePendingSection: noop,
         getSectionPositionForSave: () => null,
-        insertPendingArtifactSectionForEmptyDocument: noop,
+        insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
         loadSections: promised_noop,
@@ -72,9 +72,9 @@ export const InjectedSectionsStoreStub = {
         saved_sections: computed(() => undefined),
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
-        replacePendingByArtifactSection: noop,
+        replacePendingSection: noop,
         getSectionPositionForSave: () => null,
-        insertPendingArtifactSectionForEmptyDocument: noop,
+        insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
         loadSections,
@@ -84,9 +84,9 @@ export const InjectedSectionsStoreStub = {
         saved_sections: computed(() => []),
     }),
     withMockedInsertPendingArtifactSectionForEmptyDocument: (
-        insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void,
+        insertPendingSectionForEmptyDocument: (tracker: Tracker | null) => void,
     ): SectionsStore => ({
         ...InjectedSectionsStoreStub.withLoadedSections([]),
-        insertPendingArtifactSectionForEmptyDocument,
+        insertPendingSectionForEmptyDocument,
     }),
 };

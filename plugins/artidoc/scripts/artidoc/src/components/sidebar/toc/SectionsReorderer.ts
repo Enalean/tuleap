@@ -22,8 +22,8 @@ import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
-import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.type";
-import type { ArtifactSection, FreetextSection } from "@/helpers/artidoc-section.type";
+import { isPendingSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { reorderSections } from "@/helpers/rest-querier";
 import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/useSectionsStore";
 import { CannotReorderSectionsFault } from "@/stores/CannotReorderSectionsFault";
@@ -48,16 +48,14 @@ export type SectionsReorderer = {
 export const buildSectionsReorderer = (
     sections: Ref<StoredArtidocSection[] | undefined>,
 ): SectionsReorderer => {
-    function getNextArtifacOrFreetextSection(
-        start: number,
-    ): Option<ArtifactSection | FreetextSection> {
+    function getNextArtifactOrFreetextSection(start: number): Option<ArtidocSection> {
         if (sections.value === undefined) {
             return Option.nothing();
         }
 
         for (let i = start; i < sections.value.length; i++) {
             const next_section = sections.value[i];
-            if (isArtifactSection(next_section) || isFreetextSection(next_section)) {
+            if (!isPendingSection(next_section)) {
                 return Option.fromValue(next_section);
             }
         }
@@ -65,16 +63,14 @@ export const buildSectionsReorderer = (
         return Option.nothing();
     }
 
-    function getPreviousArtifactOrFreetextSection(
-        start: number,
-    ): Option<ArtifactSection | FreetextSection> {
+    function getPreviousArtifactOrFreetextSection(start: number): Option<ArtidocSection> {
         if (sections.value === undefined) {
             return Option.nothing();
         }
 
         for (let i = start; i >= 0; i--) {
             const previous_section = sections.value[i];
-            if (isArtifactSection(previous_section) || isFreetextSection(previous_section)) {
+            if (!isPendingSection(previous_section)) {
                 return Option.fromValue(previous_section);
             }
         }
@@ -87,11 +83,11 @@ export const buildSectionsReorderer = (
         document_id: number,
         section: StoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
-        if (!isArtifactSection(section) && !isFreetextSection(section)) {
+        if (isPendingSection(section)) {
             return okAsync(null);
         }
 
-        const next_section = getNextArtifacOrFreetextSection(moved_section_index).unwrapOr(null);
+        const next_section = getNextArtifactOrFreetextSection(moved_section_index).unwrapOr(null);
         if (!next_section) {
             return okAsync(null);
         }
@@ -104,7 +100,7 @@ export const buildSectionsReorderer = (
         document_id: number,
         section: StoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
-        if (!isArtifactSection(section) && !isFreetextSection(section)) {
+        if (isPendingSection(section)) {
             return okAsync(null);
         }
 
