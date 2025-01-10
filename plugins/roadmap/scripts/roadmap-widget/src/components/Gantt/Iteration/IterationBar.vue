@@ -28,63 +28,54 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import type { Iteration, IterationLevel, Row, TimePeriod } from "../../../type";
+<script setup lang="ts">
+import { computed } from "vue";
+import type { Iteration, IterationLevel, Row } from "../../../type";
 import { getLeftForDate } from "../../../helpers/left-postion";
-import { namespace } from "vuex-class";
 import { Styles } from "../../../helpers/styles";
+import { useNamespacedGetters, useStore } from "vuex-composition-helpers";
+import type { TimeperiodGetters } from "../../../store/timeperiod/type";
 
-const tasks = namespace("tasks");
-const iterations = namespace("iterations");
-const timeperiod = namespace("timeperiod");
+const props = defineProps<{
+    level: IterationLevel;
+    iteration: Iteration;
+}>();
 
-@Component
-export default class IterationBar extends Vue {
-    @Prop({ required: true })
-    readonly level!: IterationLevel;
+const store = useStore();
 
-    @Prop({ required: true })
-    readonly iteration!: Iteration;
+const { time_period } = useNamespacedGetters<Pick<TimeperiodGetters, "time_period">>("timeperiod", [
+    "time_period",
+]);
 
-    @timeperiod.Getter
-    private readonly time_period!: TimePeriod;
+const rows = computed((): Row[] => store.getters["tasks/rows"]);
+const lvl2_iterations = computed((): Iteration[] => store.state.iterations.lvl2_iterations);
 
-    @iterations.State
-    private readonly lvl2_iterations!: Iteration[];
+const nb_visible_rows = computed((): number => {
+    return rows.value.filter((row: Row) => row.is_shown).length;
+});
 
-    @tasks.Getter
-    private readonly rows!: Row[];
-
-    get style(): string {
-        const left = getLeftForDate(this.iteration.start, this.time_period);
-
-        const task_end_date_plus_one_day = this.iteration.end.plus({ day: 1 });
-        const width = getLeftForDate(task_end_date_plus_one_day, this.time_period) - left;
-
-        const height =
-            this.nb_ribbons_to_take_into_account * Styles.ITERATION_HEIGHT_IN_PX +
-            this.nb_visible_rows * Styles.TASK_HEIGHT_IN_PX -
-            Styles.MARGIN_BETWEEN_ITERATIONS_IN_PX;
-
-        return `left: ${left}px; width: ${width}px; height: ${height}px;`;
-    }
-
-    get nb_visible_rows(): number {
-        return this.rows.filter((row) => row.is_shown).length;
-    }
-
-    get nb_ribbons_to_take_into_account(): number {
-        if (this.level === 2) {
-            return 1;
-        }
-
-        if (this.lvl2_iterations.length > 0) {
-            return 2;
-        }
-
+const nb_ribbons_to_take_into_account = computed((): number => {
+    if (props.level === 2) {
         return 1;
     }
-}
+    if (lvl2_iterations.value.length > 0) {
+        return 2;
+    }
+
+    return 1;
+});
+
+const style = computed((): string => {
+    const left = getLeftForDate(props.iteration.start, time_period.value);
+
+    const task_end_date_plus_one_day = props.iteration.end.plus({ day: 1 });
+    const width = getLeftForDate(task_end_date_plus_one_day, time_period.value) - left;
+
+    const height =
+        nb_ribbons_to_take_into_account.value * Styles.ITERATION_HEIGHT_IN_PX +
+        nb_visible_rows.value * Styles.TASK_HEIGHT_IN_PX -
+        Styles.MARGIN_BETWEEN_ITERATIONS_IN_PX;
+
+    return `left: ${left}px; width: ${width}px; height: ${height}px;`;
+});
 </script>

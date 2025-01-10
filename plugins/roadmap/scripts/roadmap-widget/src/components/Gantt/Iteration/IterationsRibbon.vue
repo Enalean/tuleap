@@ -33,30 +33,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import BackgroundGrid from "../Task/BackgroundGrid.vue";
-import type { Iteration, IterationLevel, TimePeriod } from "../../../type";
-import { namespace } from "vuex-class";
+import type { Iteration, IterationLevel } from "../../../type";
 import IterationBar from "./IterationBar.vue";
+import { useNamespacedGetters } from "vuex-composition-helpers";
+import type { TimeperiodGetters } from "../../../store/timeperiod/type";
 
-const timeperiod = namespace("timeperiod");
+defineProps<{
+    nb_additional_units: number;
+    level: IterationLevel;
+    iterations: Iteration[];
+}>();
 
-@Component({
-    components: { IterationBar, BackgroundGrid },
-})
-export default class IterationsRibbon extends Vue {
-    @timeperiod.Getter
-    readonly time_period!: TimePeriod;
-
-    @Prop({ required: true })
-    readonly nb_additional_units!: number;
-
-    @Prop({ required: true })
-    readonly level!: IterationLevel;
-
-    @Prop({ required: true })
-    readonly iterations!: Iteration[];
-}
+const { time_period } = useNamespacedGetters<Pick<TimeperiodGetters, "time_period">>("timeperiod", [
+    "time_period",
+]);
 </script>

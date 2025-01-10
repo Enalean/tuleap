@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Task } from "../../type";
+import type { Row, Task } from "../../type";
 
 export interface SetSubtasksPayload {
     readonly task: Task;
@@ -27,3 +27,7 @@ export interface SetSubtasksPayload {
 export interface TasksState {
     tasks: Task[];
 }
+
+export type TaskGetters = {
+    rows: Row[];
+};

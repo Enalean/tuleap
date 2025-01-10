@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TimeScale } from "../../type";
+import type { TimePeriod, TimeScale } from "../../type";
 
 export interface TimeperiodState {
     timescale: TimeScale;
 }
+
+export type TimeperiodGetters = {
+    time_period: TimePeriod;
+};

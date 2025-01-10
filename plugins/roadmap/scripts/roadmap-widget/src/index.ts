@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             continue;
         }
 
-        const roadmap_id = vue_mount_point.dataset.roadmapId;
+        const roadmap_id = Number(vue_mount_point.dataset.roadmapId);
         if (!roadmap_id) {
             continue;
         }
