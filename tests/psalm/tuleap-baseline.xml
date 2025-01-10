@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/CreateTrackerFromXMLChecker.php">
-    <TypeDoesNotContainType>
-      <code><![CDATA[! isset($xml->agiledashboard)]]></code>
-      <code><![CDATA[! isset($xml->agiledashboard->admin)]]></code>
-    </TypeDoesNotContainType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedArtifactsAdder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedCriterionOptionsProvider.php">
-    <MissingParamType>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$milestone_id]]></code>
-      <code><![CDATA[$selected_option_id]]></code>
-      <code><![CDATA[$selected_option_id]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedReportCriterionChecker.php">
-    <MissingReturnType>
-      <code><![CDATA[getValueId]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedReportCriterionMatchingIdsRetriever.php">
-    <MissingClosureReturnType>
-      <code><![CDATA[function (array $item) {]]></code>
-    </MissingClosureReturnType>
-    <RedundantCast>
-      <code><![CDATA[(int) $tracker->getId()]]></code>
-    </RedundantCast>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/XMLExporter.php">
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
@@ -573,9 +541,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
-    <MissingReturnType>
-      <code><![CDATA[getSelectedOptionId]]></code>
-    </MissingReturnType>
     <NullableReturnStatement>
       <code><![CDATA[null]]></code>
     </NullableReturnStatement>

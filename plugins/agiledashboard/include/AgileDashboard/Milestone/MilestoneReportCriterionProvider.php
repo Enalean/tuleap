@@ -88,12 +88,12 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider
         return $criterion;
     }
 
-    private function getSelectedOptionId()
+    private function getSelectedOptionId(): string
     {
         if ($this->unplanned_report_criterion_checker->isUnplannedValueSelected()) {
             return self::UNPLANNED;
         }
 
-        return $this->milestone_provider->getMilestoneId();
+        return (string) $this->milestone_provider->getMilestoneId();
     }
 }

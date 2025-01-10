@@ -86,10 +86,11 @@ class CreateTrackerFromXMLChecker
 
     private function willExplicitBacklogBeUsedInProject(SimpleXMLElement $xml): bool
     {
-        if (! isset($xml->agiledashboard) || ! isset($xml->agiledashboard->admin)) {
+        $is_used = $xml->agiledashboard->admin->scrum->explicit_backlog['is_used'] ?? null;
+        if ($is_used === null) {
             return false;
         }
 
-        return PHPCast::toBoolean($xml->agiledashboard->admin->scrum->explicit_backlog['is_used']);
+        return PHPCast::toBoolean($is_used);
     }
 }
