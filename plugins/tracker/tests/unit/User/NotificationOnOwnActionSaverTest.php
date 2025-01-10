@@ -26,9 +26,9 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 
-final class NotificationOnAllUpdatesSaverTest extends TestCase
+final class NotificationOnOwnActionSaverTest extends TestCase
 {
-    private const USER_ID = 164;
+    private const USER_ID = 241;
     private StoreUserPreferenceStub $store_preference;
 
     protected function setUp(): void
@@ -36,10 +36,10 @@ final class NotificationOnAllUpdatesSaverTest extends TestCase
         $this->store_preference = new StoreUserPreferenceStub();
     }
 
-    private function save(NotificationOnAllUpdatesPreference $preference): bool
+    private function save(NotificationOnOwnActionPreference $preference): bool
     {
-        $saver = new NotificationOnAllUpdatesSaver(
-            new NotificationOnAllUpdatesRetriever($this->store_preference),
+        $saver = new NotificationOnOwnActionSaver(
+            new NotificationOnOwnActionRetriever($this->store_preference),
             $this->store_preference
         );
         return $saver->save($preference, UserTestBuilder::buildWithId(self::USER_ID));
@@ -47,10 +47,10 @@ final class NotificationOnAllUpdatesSaverTest extends TestCase
 
     private function generateChanges(): iterable
     {
-        yield 'Enabled → Disabled' => [true, false, true, NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF];
-        yield 'Disabled → Enabled' => [false, true, true, NotificationOnAllUpdatesSaver::VALUE_NOTIF];
-        yield 'Disabled → Disabled' => [false, false, false, NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF];
-        yield 'Enabled → Enabled' => [true, true, false, NotificationOnAllUpdatesSaver::VALUE_NOTIF];
+        yield 'Enabled → Disabled' => [true, false, true, NotificationOnOwnActionSaver::VALUE_NO_NOTIF];
+        yield 'Disabled → Enabled' => [false, true, true, NotificationOnOwnActionSaver::VALUE_NOTIF];
+        yield 'Disabled → Disabled' => [false, false, false, NotificationOnOwnActionSaver::VALUE_NO_NOTIF];
+        yield 'Enabled → Enabled' => [true, true, false, NotificationOnOwnActionSaver::VALUE_NOTIF];
     }
 
     /**
@@ -62,21 +62,19 @@ final class NotificationOnAllUpdatesSaverTest extends TestCase
         bool $expected_change,
         string $expected_new_stored_value,
     ): void {
-        $stored_value = $stored_preference ? NotificationOnAllUpdatesSaver::VALUE_NOTIF : NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF;
-        $this->store_preference->set(self::USER_ID, NotificationOnAllUpdatesSaver::PREFERENCE_NAME, $stored_value);
+        $stored_value = $stored_preference ? NotificationOnOwnActionSaver::VALUE_NOTIF : NotificationOnOwnActionSaver::VALUE_NO_NOTIF;
+        $this->store_preference->set(self::USER_ID, NotificationOnOwnActionSaver::PREFERENCE_NAME, $stored_value);
 
-        $changed = $this->save(new NotificationOnAllUpdatesPreference($new_preference));
+        $changed = $this->save(new NotificationOnOwnActionPreference($new_preference));
         self::assertSame($expected_change, $changed);
-        $row = $this->store_preference->search(self::USER_ID, NotificationOnAllUpdatesSaver::PREFERENCE_NAME);
+        $row = $this->store_preference->search(self::USER_ID, NotificationOnOwnActionSaver::PREFERENCE_NAME);
         self::assertSame($expected_new_stored_value, $row['preference_value']);
     }
 
     public function testItDefaultsToEnabledWhenNothingIsSaved(): void
     {
-        $changed = $this->save(new NotificationOnAllUpdatesPreference(true));
+        $changed = $this->save(new NotificationOnOwnActionPreference(true));
         self::assertFalse($changed);
-        self::assertEmpty(
-            $this->store_preference->search(self::USER_ID, NotificationOnAllUpdatesSaver::PREFERENCE_NAME)
-        );
+        self::assertEmpty($this->store_preference->search(self::USER_ID, NotificationOnOwnActionSaver::PREFERENCE_NAME));
     }
 }

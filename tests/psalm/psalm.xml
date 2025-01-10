@@ -1211,7 +1211,6 @@
             <file name="plugins/tracker/tests/unit/Tracker_URLTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker_UgroupMappingBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/TreeNode/CardPresenterNodeTest.php"/>
-            <file name="plugins/tracker/tests/unit/User/NotificationOnOwnActionPreferenceTest.php"/>
             <file name="plugins/tracker/tests/unit/Webhook/ArtifactPayloadBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Webhook/WebhookFactoryTest.php"/>
             <file name="plugins/tracker/tests/unit/Webhook/WebhookXMLExporterTest.php"/>

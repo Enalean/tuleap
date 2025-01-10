@@ -117,6 +117,7 @@ use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
+use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -1727,6 +1728,9 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
         $user_to_notify_dao             = new UsersToNotifyDao();
         $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
         $unsubscribers_notification_dao = new UnsubscribersNotificationDAO();
+        $only_status_change_dao         = new UserNotificationOnlyStatusChangeDAO();
+        $user_notification_settings_dao = new UserNotificationSettingsDAO();
+        $user_preferences_dao           = new UserPreferencesDao();
         $user_manager                   = UserManager::instance();
         $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
@@ -1742,7 +1746,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            new UserNotificationSettingsDAO(),
+            $user_notification_settings_dao,
             new GlobalNotificationsAddressesBuilder(),
             $user_manager,
             new UGroupManager(),
@@ -1757,14 +1761,15 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                     $unsubscribers_notification_dao,
                     new UserNotificationSettingsRetriever(
                         new Tracker_GlobalNotificationDao(),
-                        new UnsubscribersNotificationDAO(),
-                        new UserNotificationOnlyStatusChangeDAO(),
+                        $unsubscribers_notification_dao,
+                        $only_status_change_dao,
                         new InvolvedNotificationDao()
                     ),
-                    new UserNotificationOnlyStatusChangeDAO(),
-                    new NotificationOnAllUpdatesRetriever(new UserPreferencesDao())
+                    $only_status_change_dao,
+                    new NotificationOnAllUpdatesRetriever($user_preferences_dao),
+                    new NotificationOnOwnActionRetriever($user_preferences_dao)
                 ),
-                new UserNotificationSettingsDAO()
+                $user_notification_settings_dao
             )
         );
     }
