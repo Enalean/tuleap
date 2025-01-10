@@ -34,23 +34,21 @@ use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatHaveUnsubscr
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesPreference;
 use UserManager;
 
 class RecipientsManager
 {
-    /**
-     * @var RecipientRemovalStrategy[]
-     */
-    private array $recipient_removal_strategies;
-
-    private ArtifactStatusChangeDetector $status_change_detector;
+    /** @var list<RecipientRemovalStrategy> */
+    private readonly array $recipient_removal_strategies;
+    private readonly ArtifactStatusChangeDetector $status_change_detector;
 
     public function __construct(
-        private Tracker_FormElementFactory $form_element_factory,
-        private UserManager $user_manager,
-        private UnsubscribersNotificationDAO $unsubscribers_notification_dao,
-        private UserNotificationSettingsRetriever $notification_settings_retriever,
-        private UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
+        private readonly Tracker_FormElementFactory $form_element_factory,
+        private readonly UserManager $user_manager,
+        private readonly UnsubscribersNotificationDAO $unsubscribers_notification_dao,
+        private readonly UserNotificationSettingsRetriever $notification_settings_retriever,
+        private readonly UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
@@ -82,7 +80,17 @@ class RecipientsManager
         }
 
         // 2 Get from the commentators
-        $recipients = array_merge($recipients, $changeset->getArtifact()->getCommentators());
+        $recipients = array_merge($recipients, array_filter(
+            $changeset->getArtifact()->getCommentators(),
+            function (string $commentator) {
+                $user = $this->getUserFromRecipientName($commentator);
+                if ($user === null) {
+                    return false;
+                }
+
+                return NotificationOnAllUpdatesPreference::userWantsNotification($user);
+            },
+        ));
         $recipients = array_values(array_unique($recipients));
 
         //now force check perms for all this people
