@@ -11,7 +11,7 @@
         }
     },
     "require": {
-        "php-di/php-di": "^6.0"
+        "php-di/php-di": "^7.0"
     },
     "config": {
         "sort-packages": true
