@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a2c571531d5c6c2bc1db88082b32690",
+    "content-hash": "4271db4733321b2618fb7b55ccc138f0",
     "packages": [
         {
             "name": "php-mime-mail-parser/php-mime-mail-parser",
-            "version": "8.0.2",
+            "version": "9.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mime-mail-parser/php-mime-mail-parser.git",
-                "reference": "f922907123625d940adbba7be403a2e620d0a8e5"
+                "reference": "e26eb593f689a59fd3bf13983f0bf2c700419672"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/f922907123625d940adbba7be403a2e620d0a8e5",
-                "reference": "f922907123625d940adbba7be403a2e620d0a8e5",
+                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/e26eb593f689a59fd3bf13983f0bf2c700419672",
+                "reference": "e26eb593f689a59fd3bf13983f0bf2c700419672",
                 "shasum": ""
             },
             "require": {
@@ -30,7 +30,7 @@
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.2",
-                "phpunit/phpunit": "^9.3",
+                "phpunit/phpunit": "^9.6.22",
                 "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
@@ -87,9 +87,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/issues",
-                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/8.0.2"
+                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/9.0.1"
             },
-            "time": "2023-08-23T13:29:02+00:00"
+            "time": "2024-12-07T23:47:47+00:00"
         },
         {
             "name": "spatie/enum",
