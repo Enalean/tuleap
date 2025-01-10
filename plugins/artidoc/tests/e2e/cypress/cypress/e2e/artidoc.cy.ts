@@ -154,6 +154,19 @@ describe("Artidoc", () => {
         cy.get("[data-test=artidoc-section]:last-child").within(() => {
             getSectionTitle().should("contain.text", "Performance Requirement");
         });
+
+        cy.reload();
+        cy.log("Users should be able to delete a section");
+        cy.get("[data-test=artidoc-section]").should("have.length", 3);
+        cy.get("[data-test=artidoc-dropdown-trigger]").first().click({ force: true });
+        cy.get("[data-test=delete]").first().click({ force: true });
+        cy.get("[data-test=artidoc-section]").should("have.length", 2);
+        cy.get("[data-test=artidoc-section]:first-child").within(() => {
+            getSectionTitle().should("contain.text", "Functional Requirement");
+        });
+        cy.get("[data-test=artidoc-section]:last-child").within(() => {
+            getSectionTitle().should("contain.text", "Security Requirement (edited)");
+        });
     });
 });
 
