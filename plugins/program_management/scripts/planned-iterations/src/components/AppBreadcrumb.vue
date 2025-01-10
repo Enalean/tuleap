@@ -69,55 +69,26 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from "vue";
 import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
-import type { ProgramIncrement, Program } from "../store/configuration";
-
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component } from "vue-property-decorator";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import { useNamespacedState, useStore } from "vuex-composition-helpers";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
+import type { Program, ProgramIncrement } from "../store/configuration";
 
-const configuration = namespace("configuration");
+const store = useStore();
 
-@Component({
-    components: {
-        BreadcrumbPrivacy,
-    },
-})
-export default class Breadcrumb extends Vue {
-    @configuration.State
-    readonly program!: Program;
+const program_flags = computed((): ProjectFlag[] => store.state.configuration.program_flags);
+const { program, program_privacy, is_program_admin, program_increment } = useNamespacedState<{
+    program: Program;
+    program_privacy: ProjectPrivacy;
+    is_program_admin: boolean;
+    program_increment: ProgramIncrement;
+}>("configuration", ["program", "program_privacy", "is_program_admin", "program_increment"]);
 
-    @configuration.State
-    readonly program_privacy!: ProjectPrivacy;
-
-    @configuration.State
-    readonly program_flags!: Array<ProjectFlag>;
-
-    @configuration.State
-    readonly is_program_admin!: boolean;
-
-    @configuration.State
-    readonly program_increment!: ProgramIncrement;
-
-    get program_url(): string {
-        return `/projects/${encodeURIComponent(this.program.program_shortname)}`;
-    }
-
-    get plugin_url(): string {
-        return `/program_management/${encodeURIComponent(this.program.program_shortname)}`;
-    }
-
-    get plan_iterations_url(): string {
-        return `/program_management/${encodeURIComponent(
-            this.program.program_shortname,
-        )}/increments/${encodeURIComponent(this.program_increment.id)}/plan`;
-    }
-
-    get plugin_administration_url(): string {
-        return `/program_management/admin/${encodeURIComponent(this.program.program_shortname)}`;
-    }
-}
+const program_url = `/projects/${encodeURIComponent(program.value.program_shortname)}`;
+const plugin_url = `/program_management/${encodeURIComponent(program.value.program_shortname)}`;
+const plan_iterations_url = `/program_management/${encodeURIComponent(program.value.program_shortname)}/increments/${encodeURIComponent(program_increment.value.id)}/plan`;
+const plugin_administration_url = `/program_management/admin/${encodeURIComponent(program.value.program_shortname)}`;
 </script>

@@ -24,7 +24,7 @@ import App from "./App.vue";
 import { createPlanIterationsLocalVue } from "../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import IterationsToBePlannedSection from "./Backlog/ToBePlanned/IterationsToBePlannedSection.vue";
-import Breadcrumb from "./Breadcrumb.vue";
+import AppBreadcrumb from "./AppBreadcrumb.vue";
 import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSection.vue";
 
 describe("App", () => {
@@ -56,7 +56,7 @@ describe("App", () => {
         expect(header_title.text()).toContain("Mating");
         expect(header_title.text()).toContain("Oct 01 – Oct 31");
 
-        expect(wrapper.findComponent(Breadcrumb).exists()).toBe(true);
+        expect(wrapper.findComponent(AppBreadcrumb).exists()).toBe(true);
         expect(wrapper.findComponent(IterationsToBePlannedSection).exists()).toBe(true);
         expect(wrapper.findComponent(PlannedIterationsSection).exists()).toBe(true);
     });
