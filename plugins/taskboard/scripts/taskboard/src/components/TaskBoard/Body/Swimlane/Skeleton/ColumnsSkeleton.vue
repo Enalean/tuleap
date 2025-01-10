@@ -21,26 +21,23 @@
 <template>
     <div class="taskboard-cell" v-bind:class="classes">
         <template v-if="!column.is_collapsed">
-            <card-skeleton v-for="i in nb_skeletons" v-bind:key="i" />
+            <card-skeleton v-for="i in useSkeletons(column_index)" v-bind:key="i" />
         </template>
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Mixins, Prop } from "vue-property-decorator";
-import SkeletonMixin from "./skeleton-mixin";
+<script setup lang="ts">
 import CardSkeleton from "./CardSkeleton.vue";
 import type { ColumnDefinition } from "../../../../../type";
+import { useSkeletons } from "./skeleton-composable";
+import { computed } from "vue";
 
-@Component({
-    components: { CardSkeleton },
-})
-export default class ColumnsSkeleton extends Mixins(SkeletonMixin) {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const props = defineProps<{
+    column: ColumnDefinition;
+    column_index: number;
+}>();
 
-    get classes(): string {
-        return this.column.is_collapsed ? "taskboard-cell-collapsed" : "";
-    }
-}
+const classes = computed((): string => {
+    return props.column.is_collapsed ? "taskboard-cell-collapsed" : "";
+});
 </script>
