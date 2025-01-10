@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Tests\Builders;
 
+use GitDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class GitRepositoryTestBuilder
@@ -31,6 +32,7 @@ final class GitRepositoryTestBuilder
     private string $name      = 'unfederal_dictation';
     private \Project $project;
     private ?int $migrated_to_gerrit = null;
+    private string $backend_type     = GitDao::BACKEND_GITOLITE;
     private ?\GitRepository $parent_repository;
 
     private function __construct(?\GitRepository $parent_repository)
@@ -81,6 +83,7 @@ final class GitRepositoryTestBuilder
         $repository->setNamespace($this->namespace);
         $repository->setName($this->name);
         $repository->setRemoteServerId($this->migrated_to_gerrit);
+        $repository->setBackendType($this->backend_type);
 
         if ($this->parent_repository) {
             $repository->setParent($this->parent_repository);
