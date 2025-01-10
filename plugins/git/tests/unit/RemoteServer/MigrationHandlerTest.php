@@ -19,56 +19,53 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\RemoteServer;
 
+use Git_Backend_Gitolite;
+use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
+use Git_RemoteServer_GerritServer;
+use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_NotFoundException;
 use Git_SystemEventManager;
 use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectHistoryDao;
+use ProjectManager;
+use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
+use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MigrationHandlerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_SystemEventManager
-     */
-    protected $git_system_event_manager;
-
-    /**
-     * @var MigrationHandler
-     */
-    protected $handler;
-
-    protected $server_factory;
-    protected $driver_factory;
-    /**
-     * @var \Git_Driver_Gerrit_ProjectCreatorStatus|(\Git_Driver_Gerrit_ProjectCreatorStatus&Mockery\LegacyMockInterface)|(\Git_Driver_Gerrit_ProjectCreatorStatus&Mockery\MockInterface)|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private \Git_Driver_Gerrit_ProjectCreatorStatus|Mockery\LegacyMockInterface|Mockery\MockInterface $project_creator_status;
-    /**
-     * @var \ProjectManager&Mockery\MockInterface
-     */
-    private $project_manager;
-    /**
-     * @var \PFUser&Mockery\MockInterface
-     */
-    private $user;
-    private GitRepository $server;
+    private Git_SystemEventManager&MockObject $git_system_event_manager;
+    private MigrationHandler $handler;
+    private Git_RemoteServer_GerritServerFactory&MockObject $server_factory;
+    private Git_Driver_Gerrit_GerritDriverFactory&MockObject $driver_factory;
+    private Git_Driver_Gerrit_ProjectCreatorStatus&MockObject $project_creator_status;
+    private ProjectManager&MockObject $project_manager;
+    private PFUser $user;
+    private GitRepository $repository;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->server_factory           = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->driver_factory           = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class);
-        $project_history_dao            = \Mockery::spy(\ProjectHistoryDao::class);
-        $this->project_creator_status   = \Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class);
-        $this->project_manager          = \Mockery::spy(\ProjectManager::class);
+        $this->git_system_event_manager = $this->createMock(Git_SystemEventManager::class);
+        $this->server_factory           = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->driver_factory           = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $project_history_dao            = $this->createMock(ProjectHistoryDao::class);
+        $this->project_creator_status   = $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class);
+        $this->project_manager          = $this->createMock(ProjectManager::class);
 
         $this->handler = new MigrationHandler(
             $this->git_system_event_manager,
@@ -79,238 +76,253 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_manager
         );
 
-        $this->user   = \Mockery::spy(\PFUser::class);
-        $this->server = $this->buildMockedRepository(1);
-    }
-
-    private function buildMockedRepository(int $id): GitRepository
-    {
-        $repositrory = Mockery::mock(GitRepository::class);
-        $repositrory->shouldReceive('getId')->andReturn($id);
-
-        return $repositrory;
+        $this->user       = UserTestBuilder::buildWithDefaults();
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)->build();
+        $project_history_dao->method('groupAddHistory');
     }
 
     public function testItThrowsAnExceptionIfRepositoryCannotBeMigrated(): void
     {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(false)->getMock();
-        $this->project_manager->shouldReceive('getParentProject')->andReturns(null);
-        $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->migratedToGerrit()->build();
+        $this->project_manager->method('getParentProject')->willReturn(null);
 
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException');
-        $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
+        $this->expectException(RepositoryCannotBeMigratedException::class);
+        $this->git_system_event_manager->expects(self::never())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
     public function testItThrowsAnExceptionIfRepositoryIsAlreadyInQueueForMigration(): void
     {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
-        $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->build();
 
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->project_creator_status->shouldReceive('getStatus')->andReturns('QUEUE');
+        $this->project_creator_status->method('getStatus')->willReturn(Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE);
 
-        $this->expectException('Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException');
-        $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
+        $this->expectException(RepositoryAlreadyInQueueForMigrationException::class);
+        $this->git_system_event_manager->expects(self::never())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
     public function testItThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer(): void
     {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
-        $this->project_manager->shouldReceive('getParentProject')->andReturns(null);
-        $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->build();
+        $this->project_manager->method('getParentProject')->willReturn(null);
 
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([]);
+        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getAvailableServersForProject')->willReturn([]);
+        $this->project_creator_status->method('getStatus');
 
-        $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException');
-        $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
+        $this->expectException(RepositoryCannotBeMigratedOnRestrictedGerritServerException::class);
+        $this->git_system_event_manager->expects(self::never())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
     public function testItThrowsAnExceptionIfParentProjectIsNotActive(): void
     {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
-        $project    = \Mockery::spy(Project::class);
-        $this->project_manager->shouldReceive('getParentProject')->andReturns($project);
-        $project->shouldReceive('isActive')->andReturns(false);
-        $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->build();
+        $project    = ProjectTestBuilder::aProject()->withStatusSuspended()->build();
+        $this->project_manager->method('getParentProject')->willReturn($project);
 
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([]);
+        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getAvailableServersForProject')->willReturn([]);
+        $this->project_creator_status->method('getStatus');
 
-        $this->expectException('Tuleap\Git\Exceptions\RepositoryNotMigratedException');
-        $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
+        $this->expectException(RepositoryNotMigratedException::class);
+        $this->git_system_event_manager->expects(self::never())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
     public function testItMigratesRepositoryWhenParentIsActive(): void
     {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
-        $project    = \Mockery::spy(Project::class);
-        $this->project_manager->shouldReceive('getParentProject')->andReturns($project);
-        $project->shouldReceive('isActive')->andReturns(true);
-        $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->build();
+        $project    = ProjectTestBuilder::aProject()->build();
+        $this->project_manager->method('getParentProject')->willReturn($project);
 
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([1 => $this->server]);
+        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getAvailableServersForProject')->willReturn([1 => $this->repository]);
+        $this->project_creator_status->method('getStatus');
 
-        $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->once();
+        $this->git_system_event_manager->expects(self::once())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
     public function testItMigratesRepository(): void
     {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
-        $this->project_manager->shouldReceive('getParentProject')->andReturns(null);
-        $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->build();
+        $this->project_manager->method('getParentProject')->willReturn(null);
 
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([1 => $this->server]);
+        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getAvailableServersForProject')->willReturn([1 => $this->repository]);
+        $this->project_creator_status->method('getStatus');
 
-        $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->once();
+        $this->git_system_event_manager->expects(self::once())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
     public function testItDoesNothingWhenServerDoesNotExist(): void
     {
-        $repository         = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
+        $repository         = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->build();
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->shouldReceive('getServerById')->andThrows(new Git_RemoteServer_NotFoundException($remote_server_id));
+        $this->server_factory->method('getServerById')->willThrowException(new Git_RemoteServer_NotFoundException($remote_server_id));
+        $this->project_creator_status->method('getStatus');
+        $this->project_manager->method('getParentProject');
 
-        $this->expectException('Git_RemoteServer_NotFoundException');
-        $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
+        $this->expectException(Git_RemoteServer_NotFoundException::class);
+        $this->git_system_event_manager->expects(self::never())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
     public function testItThrowsAnExceptionIfRepositoryIsNotMigrated(): void
     {
-        $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(false)->getMock();
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('isMigratedToGerrit')->willReturn(false);
         $disconnect_option = '';
 
-        $this->expectException('Tuleap\Git\Exceptions\RepositoryNotMigratedException');
+        $this->server_factory->method('getServerById');
+
+        $this->expectException(RepositoryNotMigratedException::class);
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
     public function testItDisconnectsWithoutOptionsIfTheRemoteServerDoesNotExist(): void
     {
-        $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
-        $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
+        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend->method('disconnectFromGerrit')->willReturn(true);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('isMigratedToGerrit')->willReturn(true);
+        $repository->method('getBackend')->willReturn($backend);
+        $repository->method('getRemoteServerId');
         $disconnect_option = '';
 
-        $repository->shouldReceive('getBackend')->andReturns($backend);
-
-        $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->once();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectDeletion')->never();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectReadOnly')->never();
+        $this->server_factory->method('getServerById');
+        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectDeletion');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
     public function testItDisconnectsWithtEmptyOption(): void
     {
-        $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
-        $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
-        $server            = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $driver            = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend->method('disconnectFromGerrit')->willReturn(true);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('isMigratedToGerrit')->willReturn(true);
+        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createMock(Git_Driver_Gerrit::class);
         $disconnect_option = '';
 
-        $repository->shouldReceive('getBackend')->andReturns($backend);
-        $this->server_factory->shouldReceive('getServerById')->andReturns($server);
-        $this->driver_factory->shouldReceive('getDriver')->with($server)->andReturns($driver);
+        $repository->method('getBackend')->willReturn($backend);
+        $repository->method('getRemoteServerId');
+        $driver->method('isDeletePluginEnabled');
+        $this->server_factory->method('getServerById')->willReturn($server);
+        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->once();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectDeletion')->never();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectReadOnly')->never();
+        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectDeletion');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
     public function testItDisconnectsWithtReadOnlyOption(): void
     {
-        $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
-        $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
-        $server            = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $driver            = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend->method('disconnectFromGerrit')->willReturn(true);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('isMigratedToGerrit')->willReturn(true);
+        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createMock(Git_Driver_Gerrit::class);
         $disconnect_option = 'read-only';
 
-        $repository->shouldReceive('getBackend')->andReturns($backend);
-        $this->server_factory->shouldReceive('getServerById')->andReturns($server);
-        $this->driver_factory->shouldReceive('getDriver')->with($server)->andReturns($driver);
+        $repository->method('getBackend')->willReturn($backend);
+        $repository->method('getRemoteServerId');
+        $repository->method('getName');
+        $repository->method('getProjectId');
+        $driver->method('isDeletePluginEnabled');
+        $this->server_factory->method('getServerById')->willReturn($server);
+        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->once();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectDeletion')->never();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectReadOnly')->once();
+        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectDeletion');
+        $this->git_system_event_manager->expects(self::once())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
     public function testItDisconnectsWithtDeleteOption(): void
     {
-        $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
-        $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
-        $server            = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $driver            = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend->method('disconnectFromGerrit')->willReturn(true);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('isMigratedToGerrit')->willReturn(true);
+        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createMock(Git_Driver_Gerrit::class);
         $disconnect_option = 'delete';
 
-        $driver->shouldReceive('isDeletePluginEnabled')->with($server)->andReturns(true);
-        $repository->shouldReceive('getBackend')->andReturns($backend);
-        $this->server_factory->shouldReceive('getServerById')->andReturns($server);
-        $this->driver_factory->shouldReceive('getDriver')->with($server)->andReturns($driver);
+        $driver->method('isDeletePluginEnabled')->with($server)->willReturn(true);
+        $repository->method('getBackend')->willReturn($backend);
+        $repository->method('getRemoteServerId');
+        $repository->method('getName');
+        $repository->method('getProjectId');
+        $this->server_factory->method('getServerById')->willReturn($server);
+        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->once();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectDeletion')->once();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectReadOnly')->never();
+        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects(self::once())->method('queueRemoteProjectDeletion');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
     public function testItThrowsAnExceptionIfDeletePluginNotInstalled(): void
     {
-        $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
-        $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
-        $server            = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $driver            = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend->method('disconnectFromGerrit')->willReturn(true);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('isMigratedToGerrit')->willReturn(true);
+        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createMock(Git_Driver_Gerrit::class);
         $disconnect_option = 'delete';
 
-        $driver->shouldReceive('isDeletePluginEnabled')->with($server)->andReturns(false);
-        $repository->shouldReceive('getBackend')->andReturns($backend);
-        $this->server_factory->shouldReceive('getServerById')->andReturns($server);
-        $this->driver_factory->shouldReceive('getDriver')->with($server)->andReturns($driver);
+        $driver->method('isDeletePluginEnabled')->with($server)->willReturn(false);
+        $repository->method('getBackend')->willReturn($backend);
+        $repository->method('getRemoteServerId');
+        $this->server_factory->method('getServerById')->willReturn($server);
+        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->never();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectDeletion')->never();
-        $this->git_system_event_manager->shouldReceive('queueRemoteProjectReadOnly')->never();
+        $this->git_system_event_manager->expects(self::never())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectDeletion');
+        $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectReadOnly');
 
-        $this->expectException('Tuleap\Git\Exceptions\DeletePluginNotInstalledException');
+        $this->expectException(DeletePluginNotInstalledException::class);
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
