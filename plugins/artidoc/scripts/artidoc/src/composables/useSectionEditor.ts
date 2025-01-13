@@ -23,6 +23,7 @@ import {
     isFreetextSection,
     isArtifactSection,
     isPendingArtifactSection,
+    isPendingSection,
 } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -89,13 +90,9 @@ export function useSectionEditor(
             0 !== current_section.value.attachments?.field_id
         );
     });
-    const {
-        getSectionPositionForSave,
-        replacePendingByArtifactSection,
-        removeSection,
-        updateSection,
-    } = strictInject(SECTIONS_STORE);
-    const is_section_in_edit_mode = ref(isPendingArtifactSection(current_section.value));
+    const { getSectionPositionForSave, replacePendingSection, removeSection, updateSection } =
+        strictInject(SECTIONS_STORE);
+    const is_section_in_edit_mode = ref(isPendingSection(current_section.value));
     const is_section_editable = computed(() => {
         if (
             isPendingArtifactSection(current_section.value) ||
@@ -150,7 +147,7 @@ export function useSectionEditor(
         updateCurrentSection,
         closeEditor,
         setEditMode,
-        replacePendingByArtifactSection,
+        replacePendingSection,
         getSectionPositionForSave,
         mergeArtifactAttachments,
     });
@@ -171,7 +168,8 @@ export function useSectionEditor(
     function cancelEditor(tracker: Tracker | null): void {
         closeEditor();
         cancelSectionUploads(current_section.value.id);
-        if (isPendingArtifactSection(current_section.value)) {
+
+        if (isPendingSection(current_section.value)) {
             editors_collection.removeEditor(current_section.value);
             removeSection(current_section.value, tracker);
         }

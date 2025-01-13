@@ -19,13 +19,16 @@
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import {
+    isPendingSection,
     isArtifactSection,
     isFreetextSection,
     isPendingArtifactSection,
+    isPendingFreetextSection,
     isSectionBasedOnArtifact,
 } from "@/helpers/artidoc-section.type";
 import {
-    createSection,
+    createArtifactSection,
+    createFreetextSection,
     getSection,
     postArtifact,
     putArtifact,
@@ -69,7 +72,7 @@ export default function useSaveSection(
         updateCurrentSection: (new_value: ArtidocSection) => void;
         closeEditor: () => void;
         setEditMode: (new_value: boolean) => void;
-        replacePendingByArtifactSection: SectionsStore["replacePendingByArtifactSection"];
+        replacePendingSection: SectionsStore["replacePendingSection"];
         getSectionPositionForSave: SectionsStore["getSectionPositionForSave"];
         mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"];
     },
@@ -174,8 +177,8 @@ export default function useSaveSection(
 
         saveSection(section, { description: new_value.description, title: new_value.title }).match(
             (artidoc_section: ArtidocSection) => {
-                if (isPendingArtifactSection(section) && isArtifactSection(artidoc_section)) {
-                    callbacks.replacePendingByArtifactSection(section, artidoc_section);
+                if (isPendingSection(section)) {
+                    callbacks.replacePendingSection(section, artidoc_section);
                 } else if (
                     isArtifactSection(artidoc_section) ||
                     isFreetextSection(artidoc_section)
@@ -215,7 +218,20 @@ export default function useSaveSection(
                 section.description.field_id,
                 merged_attachments,
             ).andThen(({ id }) =>
-                createSection(document_id, id, callbacks.getSectionPositionForSave(section)),
+                createArtifactSection(
+                    document_id,
+                    id,
+                    callbacks.getSectionPositionForSave(section),
+                ),
+            );
+        }
+
+        if (isPendingFreetextSection(section)) {
+            return createFreetextSection(
+                document_id,
+                new_value.title,
+                new_value.description,
+                callbacks.getSectionPositionForSave(section),
             );
         }
 

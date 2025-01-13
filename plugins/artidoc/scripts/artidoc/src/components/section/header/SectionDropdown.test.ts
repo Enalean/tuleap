@@ -115,4 +115,15 @@ describe("SectionDropdown", () => {
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);
         });
     });
+
+    describe("when the section is a pending freetext section", () => {
+        it("should not display the dropdown", () => {
+            const wrapper = getWrapper(
+                SectionEditorStub.withEditableSection(),
+                FreetextSectionFactory.pending(),
+            );
+
+            expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);
+        });
+    });
 });

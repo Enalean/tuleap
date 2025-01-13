@@ -34,6 +34,7 @@ import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artid
 import type { Tracker } from "@/stores/configuration-store";
 import type { PositionForSection } from "@/stores/useSectionsStore";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 export function putConfiguration(
     document_id: number,
@@ -142,17 +143,32 @@ export function reorderSections(
     );
 }
 
-export function createSection(
-    document_id: number,
+export function createArtifactSection(
+    artidoc_id: number,
     artifact_id: number,
     position: PositionForSection,
 ): ResultAsync<ArtidocSection, Fault> {
     return postJSON<ArtidocSection>(uri`/api/artidoc_sections`, {
-        artidoc_id: document_id,
+        artidoc_id,
         section: {
             artifact: { id: artifact_id },
             position,
             content: null,
+        },
+    }).map(injectDisplayTitle);
+}
+
+export function createFreetextSection(
+    artidoc_id: number,
+    title: string,
+    description: string,
+    position: PositionForSection,
+): ResultAsync<ArtidocSection, Fault> {
+    return postJSON<ArtidocSection>(uri`/api/v1/artidoc_sections`, {
+        artidoc_id,
+        section: {
+            content: { title, description, type: "freetext" },
+            position,
         },
     }).map(injectDisplayTitle);
 }
@@ -194,10 +210,10 @@ const turndown_service = new TurndownService({ emDelimiter: "*" });
 
 function injectDisplayTitle(section: ArtidocSection): ArtidocSection {
     if (isFreetextSection(section)) {
-        return {
+        return FreetextSectionFactory.override({
             ...section,
             display_title: section.title,
-        };
+        });
     }
 
     const title = section.title;

@@ -23,10 +23,16 @@ import { v4 as uuidv4 } from "uuid";
 const FreetextSectionFactory = {
     create: (): FreetextSection => ({
         id: uuidv4(),
-        display_title: "Introduction section",
-        title: "Introduction section",
-        description: "Original Submission",
+        display_title: "",
+        title: "",
+        description: "",
         attachments: null,
+        is_pending: false,
+    }),
+
+    pending: (): FreetextSection => ({
+        ...FreetextSectionFactory.create(),
+        is_pending: true,
     }),
 
     override: (overrides: Partial<FreetextSection>): FreetextSection => ({

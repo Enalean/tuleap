@@ -80,7 +80,7 @@ import { useGettext } from "vue3-gettext";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import {
     isSectionBasedOnArtifact,
-    isPendingArtifactSection,
+    isPendingSection,
     isArtifactSection,
 } from "@/helpers/artidoc-section.type";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
@@ -102,7 +102,7 @@ const props = defineProps<{
 
 const { deleteSection } = props.editor.editor_actions;
 const is_section_editable = props.editor.editor_state.is_section_editable;
-const is_pending = computed(() => isPendingArtifactSection(props.section));
+const is_pending = computed(() => isPendingSection(props.section));
 const artifact_url = computed(() =>
     isArtifactSection(props.section) ? `/plugins/tracker/?aid=${props.section.artifact.id}` : "",
 );

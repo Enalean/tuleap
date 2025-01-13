@@ -64,6 +64,7 @@ export type FreetextSection = {
     display_title: string;
     description: string;
     attachments: null;
+    is_pending: boolean;
 };
 
 export type SectionBasedOnArtifact = {
@@ -93,10 +94,26 @@ export type PendingArtifactSection = SectionBasedOnArtifact & {
     tracker: Tracker;
 };
 
+export type PendingFreetextSection = FreetextSection & {
+    is_pending: true;
+};
+
 export function isPendingArtifactSection(
     section: ArtidocSection,
 ): section is PendingArtifactSection {
     return "tracker" in section;
+}
+
+export function isPendingFreetextSection(
+    section: ArtidocSection,
+): section is PendingFreetextSection {
+    return "is_pending" in section && section.is_pending;
+}
+
+export function isPendingSection(
+    section: ArtidocSection,
+): section is PendingFreetextSection | PendingArtifactSection {
+    return isPendingArtifactSection(section) || isPendingFreetextSection(section);
 }
 
 export function isArtifactSection(section: ArtidocSection): section is ArtifactSection {

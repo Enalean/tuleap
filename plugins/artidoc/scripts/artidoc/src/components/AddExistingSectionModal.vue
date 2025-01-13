@@ -84,7 +84,7 @@ import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { LazyAutocompleter } from "@tuleap/lazybox/src/LazyAutocompleterElement";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { createSection } from "@/helpers/rest-querier";
+import { createArtifactSection } from "@/helpers/rest-querier";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { PositionForSection } from "@/stores/useSectionsStore";
 import { AT_THE_END } from "@/stores/useSectionsStore";
@@ -237,7 +237,7 @@ function closeModal(): void {
 function onSubmit(event: Event): void {
     event.preventDefault();
     if (selected.value && sections.value) {
-        createSection(
+        createArtifactSection(
             documentId,
             selected.value.id,
             getInsertionPositionExcludingPendingSections(add_position, sections.value),

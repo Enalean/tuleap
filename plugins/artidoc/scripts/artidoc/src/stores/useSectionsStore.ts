@@ -23,12 +23,12 @@ import { okAsync } from "neverthrow";
 import {
     isArtifactSection,
     isFreetextSection,
-    isPendingArtifactSection,
+    isPendingSection,
 } from "@/helpers/artidoc-section.type";
 import type {
     ArtidocSection,
     PendingArtifactSection,
-    ArtifactSection,
+    PendingFreetextSection,
 } from "@/helpers/artidoc-section.type";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { deleteSection, getAllSections } from "@/helpers/rest-querier";
@@ -39,6 +39,7 @@ import type { ResultAsync } from "neverthrow";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractArtifactAndFreetextSectionsFromArtidocSections } from "@/helpers/extract-artifact-and-freetext-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 
@@ -57,11 +58,11 @@ export interface SectionsStore {
         section: ArtidocSection,
         tracker: Tracker | null,
     ) => ResultAsync<boolean, Fault>;
-    insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void;
+    insertPendingSectionForEmptyDocument: (tracker: Tracker | null) => void;
     getSectionPositionForSave: (section: ArtidocSection) => PositionForSection;
-    replacePendingByArtifactSection: (
-        pending: PendingArtifactSection,
-        section: ArtifactSection,
+    replacePendingSection: (
+        pending: PendingArtifactSection | PendingFreetextSection,
+        section: ArtidocSection,
     ) => void;
 }
 
@@ -98,7 +99,7 @@ export function useSectionsStore(): SectionsStore {
                 sections.value = [...artidoc_sections].map(injectInternalId);
 
                 if (sections.value.length === 0 && can_user_edit_document) {
-                    insertPendingArtifactSectionForEmptyDocument(tracker);
+                    insertPendingSectionForEmptyDocument(tracker);
                 }
 
                 return okAsync(true);
@@ -160,15 +161,7 @@ export function useSectionsStore(): SectionsStore {
         }
     }
 
-    function insertPendingArtifactSectionForEmptyDocument(tracker: Tracker | null): void {
-        if (!tracker) {
-            return;
-        }
-
-        if (!isTrackerWithSubmittableSection(tracker)) {
-            return;
-        }
-
+    function insertPendingSectionForEmptyDocument(tracker: Tracker | null): void {
         if (sections.value === undefined) {
             return;
         }
@@ -176,9 +169,12 @@ export function useSectionsStore(): SectionsStore {
             return;
         }
 
-        sections.value.push(
-            injectInternalId(PendingArtifactSectionFactory.overrideFromTracker(tracker)),
-        );
+        const is_configured_tracker_valid = tracker && isTrackerWithSubmittableSection(tracker);
+        const section = is_configured_tracker_valid
+            ? injectInternalId(PendingArtifactSectionFactory.overrideFromTracker(tracker))
+            : injectInternalId(FreetextSectionFactory.pending());
+
+        sections.value.push(section);
     }
 
     function removeSection(
@@ -194,10 +190,10 @@ export function useSectionsStore(): SectionsStore {
             return okAsync(true);
         }
 
-        if (isPendingArtifactSection(section)) {
+        if (isPendingSection(section)) {
             sections.value.splice(index, 1);
 
-            insertPendingArtifactSectionForEmptyDocument(tracker);
+            insertPendingSectionForEmptyDocument(tracker);
 
             return okAsync(true);
         }
@@ -209,7 +205,7 @@ export function useSectionsStore(): SectionsStore {
 
             sections.value.splice(index, 1);
 
-            insertPendingArtifactSectionForEmptyDocument(tracker);
+            insertPendingSectionForEmptyDocument(tracker);
 
             return okAsync(true);
         });
@@ -230,7 +226,7 @@ export function useSectionsStore(): SectionsStore {
         }
 
         for (let i = index + 1; i < sections.value.length; i++) {
-            if (!isPendingArtifactSection(sections.value[i])) {
+            if (!isPendingSection(sections.value[i])) {
                 return { before: sections.value[i].id };
             }
         }
@@ -238,9 +234,9 @@ export function useSectionsStore(): SectionsStore {
         return null;
     }
 
-    function replacePendingByArtifactSection(
-        pending: PendingArtifactSection,
-        section: ArtifactSection,
+    function replacePendingSection(
+        pending: PendingArtifactSection | PendingFreetextSection,
+        section: ArtidocSection,
     ): void {
         if (sections.value === undefined) {
             return;
@@ -265,8 +261,8 @@ export function useSectionsStore(): SectionsStore {
         updateSection,
         insertSection,
         removeSection,
-        insertPendingArtifactSectionForEmptyDocument,
+        insertPendingSectionForEmptyDocument,
         getSectionPositionForSave,
-        replacePendingByArtifactSection,
+        replacePendingSection,
     };
 }

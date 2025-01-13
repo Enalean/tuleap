@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "Add freetext"
+msgstr "Ajouter du texte libre"
+
 msgid "Add new %{tracker_label}"
 msgstr "Créer un(e) %{tracker_label}"
 

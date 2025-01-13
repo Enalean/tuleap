@@ -39,6 +39,7 @@ describe("SectionsReorderer", () => {
     let stored_section1: StoredArtidocSection;
     let stored_section2: StoredArtidocSection;
     let stored_section3: StoredArtidocSection;
+    let stored_section4: StoredArtidocSection;
     let reorder: MockInstance;
 
     beforeEach(() => {
@@ -48,9 +49,21 @@ describe("SectionsReorderer", () => {
         );
         stored_section2 = injectInternalId(ArtifactSectionFactory.override({ display_title: "C" }));
         stored_section3 = injectInternalId(ArtifactSectionFactory.override({ display_title: "D" }));
+        stored_section4 = injectInternalId(
+            FreetextSectionFactory.override({
+                ...FreetextSectionFactory.pending(),
+                display_title: "E",
+            }),
+        );
 
         reorder = vi.spyOn(rest, "reorderSections").mockReturnValue(okAsync({} as Response));
-        sections = ref([stored_section0, stored_section1, stored_section2, stored_section3]);
+        sections = ref([
+            stored_section0,
+            stored_section1,
+            stored_section2,
+            stored_section3,
+            stored_section4,
+        ]);
         reorderer = buildSectionsReorderer(sections);
     });
 
@@ -63,6 +76,7 @@ describe("SectionsReorderer", () => {
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
             expect(reorder).not.toHaveBeenCalled();
         });
@@ -74,6 +88,20 @@ describe("SectionsReorderer", () => {
                 "B",
                 "A",
                 "C",
+                "D",
+                "E",
+            ]);
+            expect(reorder).not.toHaveBeenCalled();
+        });
+
+        it("should move a pending freetext section up", async () => {
+            await reorderer.moveSectionUp(101, stored_section4);
+
+            expect(sections.value.map((section) => section.display_title)).toStrictEqual([
+                "A",
+                "B",
+                "C",
+                "E",
                 "D",
             ]);
             expect(reorder).not.toHaveBeenCalled();
@@ -87,6 +115,7 @@ describe("SectionsReorderer", () => {
                 "C",
                 "B",
                 "D",
+                "E",
             ]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
@@ -105,6 +134,7 @@ describe("SectionsReorderer", () => {
                 "A",
                 "B",
                 "D",
+                "E",
             ]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
@@ -129,19 +159,21 @@ describe("SectionsReorderer", () => {
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
         });
     });
 
     describe("moveSectionDown", () => {
         it("should do nothing if the section is already at the bottom", async () => {
-            await reorderer.moveSectionDown(101, stored_section3);
+            await reorderer.moveSectionDown(101, stored_section4);
 
             expect(sections.value.map((section) => section.display_title)).toStrictEqual([
                 "A",
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
             expect(reorder).not.toHaveBeenCalled();
         });
@@ -154,6 +186,21 @@ describe("SectionsReorderer", () => {
                 "C",
                 "B",
                 "D",
+                "E",
+            ]);
+            expect(reorder).not.toHaveBeenCalled();
+        });
+
+        it("should move a pending freetext section down", async () => {
+            await reorderer.moveSectionUp(101, stored_section4);
+            await reorderer.moveSectionDown(101, stored_section4);
+
+            expect(sections.value.map((section) => section.display_title)).toStrictEqual([
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
             ]);
             expect(reorder).not.toHaveBeenCalled();
         });
@@ -166,6 +213,7 @@ describe("SectionsReorderer", () => {
                 "A",
                 "C",
                 "D",
+                "E",
             ]);
             expect(reorder).not.toHaveBeenCalled();
         });
@@ -179,6 +227,7 @@ describe("SectionsReorderer", () => {
                 "C",
                 "A",
                 "D",
+                "E",
             ]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
@@ -203,6 +252,7 @@ describe("SectionsReorderer", () => {
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
         });
     });
@@ -216,6 +266,7 @@ describe("SectionsReorderer", () => {
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
             expect(reorder).not.toHaveBeenCalled();
         });
@@ -228,6 +279,7 @@ describe("SectionsReorderer", () => {
                 "C",
                 "B",
                 "D",
+                "E",
             ]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
@@ -235,6 +287,19 @@ describe("SectionsReorderer", () => {
                 "before",
                 stored_section3.id,
             );
+        });
+
+        it("should move a section before a pending freetext section", async () => {
+            await reorderer.moveSectionBefore(101, stored_section2, stored_section4);
+
+            expect(sections.value.map((section) => section.display_title)).toStrictEqual([
+                "A",
+                "B",
+                "D",
+                "C",
+                "E",
+            ]);
+            expect(reorder).not.toHaveBeenCalled();
         });
 
         it("should move a section before an artifact section", async () => {
@@ -245,6 +310,7 @@ describe("SectionsReorderer", () => {
                 "A",
                 "B",
                 "D",
+                "E",
             ]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
@@ -262,6 +328,7 @@ describe("SectionsReorderer", () => {
                 "A",
                 "C",
                 "D",
+                "E",
             ]);
 
             expect(reorder).toHaveBeenCalledOnce();
@@ -288,19 +355,21 @@ describe("SectionsReorderer", () => {
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
         });
     });
 
     describe("moveSectionAtTheEnd", () => {
         it("should do nothing if the section is moved at the same place", async () => {
-            await reorderer.moveSectionAtTheEnd(101, stored_section3);
+            await reorderer.moveSectionAtTheEnd(101, stored_section4);
 
             expect(sections.value.map((section) => section.display_title)).toStrictEqual([
                 "A",
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
             expect(reorder).not.toHaveBeenCalled();
         });
@@ -312,7 +381,22 @@ describe("SectionsReorderer", () => {
                 "A",
                 "C",
                 "D",
+                "E",
                 "B",
+            ]);
+            expect(reorder).not.toHaveBeenCalled();
+        });
+
+        it("should move a pending freetext section at the end", async () => {
+            await reorderer.moveSectionBefore(101, stored_section4, stored_section0);
+            await reorderer.moveSectionAtTheEnd(101, stored_section4);
+
+            expect(sections.value.map((section) => section.display_title)).toStrictEqual([
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
             ]);
             expect(reorder).not.toHaveBeenCalled();
         });
@@ -324,6 +408,7 @@ describe("SectionsReorderer", () => {
                 "B",
                 "C",
                 "D",
+                "E",
                 "A",
             ]);
             expect(reorder).toHaveBeenCalledWith(
@@ -349,6 +434,7 @@ describe("SectionsReorderer", () => {
                 "B",
                 "C",
                 "D",
+                "E",
             ]);
         });
     });

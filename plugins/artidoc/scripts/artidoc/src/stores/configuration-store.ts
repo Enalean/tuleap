@@ -108,7 +108,7 @@ export function initConfigurationStore(
         putConfiguration(document_id, new_selected_tracker.id).match(
             () => {
                 currently_selected_tracker.value = new_selected_tracker;
-                sections_store.insertPendingArtifactSectionForEmptyDocument(new_selected_tracker);
+                sections_store.insertPendingSectionForEmptyDocument(new_selected_tracker);
                 is_saving.value = false;
                 is_success.value = true;
             },

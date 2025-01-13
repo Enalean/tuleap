@@ -79,7 +79,9 @@ describe("TableOfContents", () => {
             section_2 = ArtifactSectionFactory.override({
                 artifact: { ...default_section.artifact, id: 2 },
             });
-            freetext_section = FreetextSectionFactory.create();
+            freetext_section = FreetextSectionFactory.override({
+                display_title: "Freetext section",
+            });
 
             wrapper = getWrapper(true);
         });
@@ -129,7 +131,7 @@ describe("TableOfContents", () => {
             expect(list).toHaveLength(3);
             expect(list[0].find("a").text()).toBe("Technologies section");
             expect(list[1].find("a").text()).toBe("Technologies section");
-            expect(list[2].find("a").text()).toBe("Introduction section");
+            expect(list[2].find("a").text()).toBe("Freetext section");
         });
 
         it("should have an url to redirect to the section", () => {

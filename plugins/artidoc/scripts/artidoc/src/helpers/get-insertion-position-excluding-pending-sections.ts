@@ -20,7 +20,7 @@
 import type { InternalArtidocSectionId, PositionForSection } from "@/stores/useSectionsStore";
 import { AT_THE_END } from "@/stores/useSectionsStore";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isArtifactSection } from "@/helpers/artidoc-section.type";
+import { isPendingSection } from "@/helpers/artidoc-section.type";
 
 export function getInsertionPositionExcludingPendingSections(
     add_position: PositionForSection,
@@ -37,7 +37,7 @@ export function getInsertionPositionExcludingPendingSections(
 
     let before: string | null = null;
     for (let i = index; i < sections.length; i++) {
-        if (isArtifactSection(sections[i])) {
+        if (!isPendingSection(sections[i])) {
             before = sections[i].id;
             break;
         }

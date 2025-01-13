@@ -23,6 +23,7 @@ import { AT_THE_END } from "@/stores/useSectionsStore";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("get-insertion-position-excluding-pending-sections", () => {
     it("should return at the end, if section is asked to be put at the end", () => {
@@ -59,9 +60,27 @@ describe("get-insertion-position-excluding-pending-sections", () => {
         ).toStrictEqual({ before: artifact_section.id });
     });
 
-    it("should return at the end, if there is only pending artifact sections", () => {
+    it("should skip pending freetext section, so that backend can insert the section next to an already saved section", () => {
+        const pending1 = FreetextSectionFactory.pending();
+        const pending2 = FreetextSectionFactory.pending();
+        const pending3 = FreetextSectionFactory.pending();
+        const artifact_section = FreetextSectionFactory.create();
+
+        const sections = [
+            injectInternalId(pending1),
+            injectInternalId(pending2),
+            injectInternalId(artifact_section),
+            injectInternalId(pending3),
+        ];
+
+        expect(
+            getInsertionPositionExcludingPendingSections({ before: pending1.id }, sections),
+        ).toStrictEqual({ before: artifact_section.id });
+    });
+
+    it("should return at the end, if there is only pending sections", () => {
         const pending1 = PendingArtifactSectionFactory.create();
-        const pending2 = PendingArtifactSectionFactory.create();
+        const pending2 = FreetextSectionFactory.pending();
         const pending3 = PendingArtifactSectionFactory.create();
 
         const sections = [
