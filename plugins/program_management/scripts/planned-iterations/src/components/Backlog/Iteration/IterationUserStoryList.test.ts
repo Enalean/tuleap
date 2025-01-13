@@ -18,44 +18,43 @@
  *
  */
 
+import { nextTick } from "vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
-
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import IterationUserStoryList from "./IterationUserStoryList.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
 import UserStoryCard from "./UserStoryCard.vue";
-
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import type { UserStory } from "../../../type";
+import type { Iteration, UserStory } from "../../../type";
 
 jest.useFakeTimers();
 
+type CachedContentChecker = () => boolean;
+type CachedContentGetter = () => ReadonlyArray<UserStory>;
+
 describe("IterationUserStoryList", () => {
-    it("Displays the empty state when no user story is found", async () => {
-        const store: Store = createStoreMock({
+    function getWrapper(
+        resultOfFetch: Promise<UserStory[]>,
+    ): VueWrapper<InstanceType<typeof IterationUserStoryList>> {
+        const store_options = {
             getters: {
-                hasIterationContentInStore: () => false,
-                getIterationContentFromStore: () => [],
+                hasIterationContentInStore: (): CachedContentChecker => () => false,
+                getIterationContentFromStore: (): CachedContentGetter => () => [],
             },
+            actions: {
+                fetchIterationContent: () => resultOfFetch,
+            },
+        };
+        return shallowMount(IterationUserStoryList, {
+            global: { ...getGlobalTestOptions(store_options) },
+            props: { iteration: { id: 666 } as Iteration },
         });
+    }
 
-        jest.spyOn(store, "dispatch").mockResolvedValue([]);
+    it("Displays the empty state when no user story is found", async () => {
+        const wrapper = getWrapper(Promise.resolve([]));
 
-        const wrapper = shallowMount(IterationUserStoryList, {
-            localVue: await createPlanIterationsLocalVue(),
-            propsData: {
-                iteration: {
-                    id: 666,
-                },
-            },
-            mocks: {
-                $store: store,
-            },
-        });
-
-        await wrapper.vm.$nextTick();
-
+        await nextTick();
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
         await jest.runOnlyPendingTimersAsync();
@@ -66,33 +65,15 @@ describe("IterationUserStoryList", () => {
     });
 
     it("Displays the user stories", async () => {
-        const store: Store = createStoreMock({
-            getters: {
-                hasIterationContentInStore: () => false,
-                getIterationContentFromStore: () => [],
-            },
-        });
+        const wrapper = getWrapper(
+            Promise.resolve([
+                { id: 1201 } as UserStory,
+                { id: 1202 } as UserStory,
+                { id: 1203 } as UserStory,
+            ]),
+        );
 
-        jest.spyOn(store, "dispatch").mockResolvedValue([
-            { id: 1201 } as UserStory,
-            { id: 1202 } as UserStory,
-            { id: 1203 } as UserStory,
-        ]);
-
-        const wrapper = shallowMount(IterationUserStoryList, {
-            localVue: await createPlanIterationsLocalVue(),
-            propsData: {
-                iteration: {
-                    id: 666,
-                },
-            },
-            mocks: {
-                $store: store,
-            },
-        });
-
-        await wrapper.vm.$nextTick();
-
+        await nextTick();
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
         await jest.runOnlyPendingTimersAsync();
@@ -106,26 +87,7 @@ describe("IterationUserStoryList", () => {
     });
 
     it("displays an error message when the loading of the iteration content has failed", async () => {
-        const store: Store = createStoreMock({
-            getters: {
-                hasIterationContentInStore: () => false,
-                getIterationContentFromStore: () => [],
-            },
-        });
-
-        jest.spyOn(store, "dispatch").mockRejectedValue("Nope");
-
-        const wrapper = shallowMount(IterationUserStoryList, {
-            localVue: await createPlanIterationsLocalVue(),
-            propsData: {
-                iteration: {
-                    id: 666,
-                },
-            },
-            mocks: {
-                $store: store,
-            },
-        });
+        const wrapper = getWrapper(Promise.reject("Nope"));
 
         await jest.runOnlyPendingTimersAsync();
 
@@ -135,33 +97,26 @@ describe("IterationUserStoryList", () => {
     });
 
     it("should not query the API when content is already stored", async () => {
-        const store: Store = createStoreMock({
-            getters: {
-                hasIterationContentInStore: () => true,
-                getIterationContentFromStore: () => [
-                    { id: 1201 } as UserStory,
-                    { id: 1202 } as UserStory,
-                    { id: 1203 } as UserStory,
-                ],
-            },
-        });
-
-        jest.spyOn(store, "dispatch").mockRejectedValue("Nope");
-
         const wrapper = shallowMount(IterationUserStoryList, {
-            localVue: await createPlanIterationsLocalVue(),
-            propsData: {
-                iteration: {
-                    id: 666,
-                },
+            global: {
+                ...getGlobalTestOptions({
+                    getters: {
+                        hasIterationContentInStore: (): CachedContentChecker => () => true,
+                        getIterationContentFromStore: (): CachedContentGetter => () => [
+                            { id: 1201 } as UserStory,
+                            { id: 1202 } as UserStory,
+                            { id: 1203 } as UserStory,
+                        ],
+                    },
+                    actions: {
+                        fetchIterationContent: () => Promise.reject("Nope"),
+                    },
+                }),
             },
-            mocks: {
-                $store: store,
-            },
+            props: { iteration: { id: 666 } as Iteration },
         });
 
-        await wrapper.vm.$nextTick();
-
+        await nextTick();
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
 
         await jest.runOnlyPendingTimersAsync();

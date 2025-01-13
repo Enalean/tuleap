@@ -71,8 +71,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
-import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
+import { BreadcrumbPrivacy } from "@tuleap/vue3-breadcrumb-privacy";
 import { useNamespacedState, useStore } from "vuex-composition-helpers";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import type { Program, ProgramIncrement } from "../store/configuration";

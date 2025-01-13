@@ -36,7 +36,7 @@
             data-test="no-unplanned-elements-empty-state"
         >
             <p class="empty-state-text">
-                {{ gettext_provider.$gettext("There is no unplanned element") }}
+                {{ $gettext("There is no unplanned element") }}
             </p>
         </div>
         <user-story-card
@@ -50,14 +50,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { retrieveUnplannedElements } from "../../../helpers/increment-unplanned-elements-retriever";
 import UserStoryCard from "../Iteration/UserStoryCard.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
 import type { UserStory } from "../../../type";
 import type { ProgramIncrement } from "../../../store/configuration";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const { program_increment } = useNamespacedState<{
     program_increment: ProgramIncrement;
@@ -74,9 +74,7 @@ onMounted(async () => {
         user_stories.value = await retrieveUnplannedElements(program_increment.value.id);
     } catch (e) {
         has_error.value = true;
-        error_message.value = gettext_provider.$gettext(
-            "An error occurred loading unplanned elements",
-        );
+        error_message.value = $gettext("An error occurred loading unplanned elements");
     } finally {
         is_loading.value = false;
     }

@@ -4,7 +4,9 @@
         "program_management": {
             "src": "scripts/program_management/src",
             "po": "scripts/program_management/po"
-        },
+        }
+    },
+    "gettext-vue3": {
         "planned_iterations": {
             "src": "scripts/planned-iterations/src",
             "po": "scripts/planned-iterations/po"

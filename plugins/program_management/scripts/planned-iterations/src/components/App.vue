@@ -18,18 +18,16 @@
   -->
 
 <template>
-    <div>
-        <app-breadcrumb />
-        <h1 class="planned-iterations-title-header" data-test="app-header-title">
-            {{ program_increment.title }}
-            <small class="planned-iterations-title-header-dates" v-if="are_dates_displayed">
-                {{ program_increment.start_date }} – {{ program_increment.end_date }}
-            </small>
-        </h1>
-        <div class="iterations-backlog">
-            <iterations-to-be-planned-section />
-            <planned-iterations-section />
-        </div>
+    <app-breadcrumb />
+    <h1 class="planned-iterations-title-header" data-test="app-header-title">
+        {{ program_increment.title }}
+        <small class="planned-iterations-title-header-dates" v-if="are_dates_displayed">
+            {{ program_increment.start_date }} – {{ program_increment.end_date }}
+        </small>
+    </h1>
+    <div class="iterations-backlog">
+        <iterations-to-be-planned-section />
+        <planned-iterations-section />
     </div>
 </template>
 

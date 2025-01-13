@@ -17,25 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 import state_defaults from "./state-defaults";
-
 import * as actions from "./actions";
 import * as mutations from "./mutations";
 import * as getters from "./getters";
 import { createConfigurationModule } from "./configuration";
-
 import type { Store } from "vuex";
 import type { State } from "../type";
 import type { ConfigurationState } from "./configuration";
 
-Vue.use(Vuex);
-
-export function createStore(configuration_state: ConfigurationState): Store<State> {
+export function createInitializedStore(configuration_state: ConfigurationState): Store<State> {
     const configuration = createConfigurationModule(configuration_state);
 
-    return new Vuex.Store({
+    return createStore({
         state: { ...state_defaults },
         actions,
         mutations,

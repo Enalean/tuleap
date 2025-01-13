@@ -18,14 +18,14 @@
  */
 
 import type { Module } from "vuex";
-import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
 import type { State } from "../../type";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 export interface ConfigurationState {
     readonly program: Program;
     readonly program_privacy: ProjectPrivacy;
-    readonly program_flags: Array<ProjectFlag>;
+    readonly program_flags: ProjectFlag[];
     readonly is_program_admin: boolean;
     readonly program_increment: ProgramIncrement;
     readonly iterations_labels: IterationLabels;

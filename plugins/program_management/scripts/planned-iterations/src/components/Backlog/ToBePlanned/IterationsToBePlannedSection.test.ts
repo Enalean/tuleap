@@ -17,31 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { nextTick } from "vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import * as retriever from "../../../helpers/increment-unplanned-elements-retriever";
-
 import BacklogElementSkeleton from "./../../BacklogElementSkeleton.vue";
 import IterationsToBePlannedSection from "./IterationsToBePlannedSection.vue";
 import UserStoryCard from "../Iteration/UserStoryCard.vue";
 
-import type { Wrapper } from "@vue/test-utils";
-
 jest.useFakeTimers();
 
 describe("IterationsToBePlannedSection", () => {
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper<InstanceType<typeof IterationsToBePlannedSection>> {
         return shallowMount(IterationsToBePlannedSection, {
-            localVue: await createPlanIterationsLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            program_increment: {
-                                id: 666,
-                                title: "Mating",
-                            },
+                            namespaced: true,
+                            state: { program_increment: { id: 666, label: "Mating" } },
                         },
                     },
                 }),
@@ -52,8 +47,9 @@ describe("IterationsToBePlannedSection", () => {
     it("should display its placeholder when there is no iteration in the increment", async () => {
         jest.spyOn(retriever, "retrieveUnplannedElements").mockResolvedValue([]);
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
+        await nextTick();
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
         await jest.runOnlyPendingTimersAsync();
@@ -84,8 +80,9 @@ describe("IterationsToBePlannedSection", () => {
             },
         ]);
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
+        await nextTick();
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
         await jest.runOnlyPendingTimersAsync();
@@ -101,8 +98,9 @@ describe("IterationsToBePlannedSection", () => {
     it("should display an error when the retrieval has failed", async () => {
         jest.spyOn(retriever, "retrieveUnplannedElements").mockRejectedValue("Nope");
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
+        await nextTick();
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
         await jest.runOnlyPendingTimersAsync();
