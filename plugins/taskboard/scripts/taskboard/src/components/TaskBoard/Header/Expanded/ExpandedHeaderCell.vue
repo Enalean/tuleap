@@ -18,38 +18,40 @@
   -
   -->
 <template>
-    <div class="taskboard-header" v-bind:class="classes">
+    <div class="taskboard-header" v-bind:class="getClasses()">
         <collapse-button v-bind:column="column" />
         <span class="taskboard-header-label" data-test="label">{{ column.label }}</span>
         <cards-in-column-count v-bind:column="column" />
-        <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="column.color" />
+        <wrong-color-popover v-if="shouldPopoverBeDisplayed" v-bind:color="column.color" />
     </div>
 </template>
-<script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+<script setup lang="ts">
 import WrongColorPopover from "./WrongColorPopover.vue";
-import { namespace } from "vuex-class";
 import CollapseButton from "./CollapseButton.vue";
 import CardsInColumnCount from "./CardsInColumnCount.vue";
-import HeaderCellMixin from "../header-cell-mixin";
-
-const user = namespace("user");
+import type { ColumnDefinition } from "../../../../type";
+import { useHeaderCell } from "../header-cell-composable";
+import { computed } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { UserState } from "../../../../store/user/type";
 
 const DEFAULT_COLOR = "#F8F8F8";
 
-@Component({
-    components: { CardsInColumnCount, CollapseButton, WrongColorPopover },
-})
-export default class ExpandedHeaderCell extends Mixins(HeaderCellMixin) {
-    @user.State
-    readonly user_is_admin!: boolean;
+const props = defineProps<{
+    column: ColumnDefinition;
+}>();
 
-    get is_default_color(): boolean {
-        return this.column.color === DEFAULT_COLOR;
-    }
+const { isRgbColor, getClasses } = useHeaderCell(props.column);
 
-    get should_popover_be_displayed(): boolean {
-        return this.user_is_admin && this.is_rgb_color && !this.is_default_color;
-    }
-}
+const { user_is_admin } = useNamespacedState<Pick<UserState, "user_is_admin">>("user", [
+    "user_is_admin",
+]);
+
+const isDefaultColor = computed((): boolean => {
+    return props.column.color === DEFAULT_COLOR;
+});
+
+const shouldPopoverBeDisplayed = computed((): boolean => {
+    return user_is_admin.value && isRgbColor() && !isDefaultColor.value;
+});
 </script>

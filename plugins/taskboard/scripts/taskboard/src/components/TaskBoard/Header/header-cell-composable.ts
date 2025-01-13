@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,32 +15,39 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
 import type { ColumnDefinition } from "../../../type";
 
-@Component
-export default class HeaderCellMixin extends Vue {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+export interface HeaderCellClasses {
+    getClasses: () => string;
+    classesAsArray: () => string[];
+    isRgbColor: () => boolean;
+}
 
-    get classes(): string {
-        return this.classes_as_array.join(" ");
-    }
-
-    get classes_as_array(): string[] {
+export function useHeaderCell(column: ColumnDefinition): HeaderCellClasses {
+    function classesAsArray(): string[] {
         const classes = [];
 
-        if (!this.is_rgb_color && this.column.color) {
-            classes.push("tlp-swatch-" + this.column.color);
+        if (!isRgbColor() && column.color) {
+            classes.push("tlp-swatch-" + column.color);
         }
 
         return classes;
     }
 
-    get is_rgb_color(): boolean {
-        return this.column.color.charAt(0) === "#";
+    function getClasses(): string {
+        return classesAsArray().join(" ");
     }
+
+    function isRgbColor(): boolean {
+        return column.color.charAt(0) === "#";
+    }
+
+    return {
+        getClasses,
+        classesAsArray,
+        isRgbColor,
+    };
 }

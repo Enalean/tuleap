@@ -18,30 +18,29 @@
   -
   -->
 <template>
-    <div class="taskboard-header taskboard-header-collapsed" v-bind:class="classes">
+    <div class="taskboard-header taskboard-header-collapsed" v-bind:class="classes()">
         <expand-button v-bind:column="column" />
         <collapsed-label v-bind:column="column" />
     </div>
 </template>
-<script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+<script setup lang="ts">
 import ExpandButton from "./ExpandButton.vue";
-import HeaderCellMixin from "../header-cell-mixin";
-import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 import CollapsedLabel from "./CollapsedLabel.vue";
+import { useHeaderCell } from "../header-cell-composable";
+import type { ColumnDefinition } from "../../../../type";
 
-@Component({
-    components: { CollapsedLabel, CardsInColumnCount, ExpandButton },
-})
-export default class CollapsedHeaderCell extends Mixins(HeaderCellMixin) {
-    override get classes(): string {
-        const classes = [...this.classes_as_array];
+const props = defineProps<{
+    column: ColumnDefinition;
+}>();
 
-        if (this.column.has_hover) {
-            classes.push("taskboard-header-collapsed-show-label");
-        }
+const { classesAsArray } = useHeaderCell(props.column);
+function classes(): string {
+    const classes = [...classesAsArray()];
 
-        return classes.join(" ");
+    if (props.column.has_hover) {
+        classes.push("taskboard-header-collapsed-show-label");
     }
+
+    return classes.join(" ");
 }
 </script>
