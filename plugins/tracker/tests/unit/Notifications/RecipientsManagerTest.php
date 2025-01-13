@@ -34,11 +34,13 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetCommentTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use UserManager;
 
 /**
@@ -66,6 +68,7 @@ final class RecipientsManagerTest extends TestCase
             $this->unsubscribers_notification_dao,
             $notification_settings_retriever,
             $this->user_status_change_only_dao,
+            new NotificationOnAllUpdatesRetriever(new StoreUserPreferenceStub())
         );
 
         $this->user_manager->method('getUserByUserName')->willReturnCallback(static fn(string $username) => match ($username) {

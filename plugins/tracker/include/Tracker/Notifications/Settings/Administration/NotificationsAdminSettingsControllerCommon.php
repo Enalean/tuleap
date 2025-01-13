@@ -37,9 +37,11 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use UGroupDao;
 use UGroupManager;
 use UserManager;
+use UserPreferencesDao;
 
 trait NotificationsAdminSettingsControllerCommon
 {
@@ -106,6 +108,7 @@ trait NotificationsAdminSettingsControllerCommon
                         new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO(),
+                    new NotificationOnAllUpdatesRetriever(new UserPreferencesDao())
                 ),
                 new UserNotificationSettingsDAO()
             )

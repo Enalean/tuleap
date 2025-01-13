@@ -36,7 +36,7 @@ final class StoreUserPreferenceStub implements StoreUserPreference
 
     public function set(int $user_id, string $preference_name, string $preference_value): void
     {
-        $this->preferences[$user_id][$preference_name] = $preference_value;
+        $this->preferences[$user_id][$preference_name] = ['preference_value' => $preference_value];
     }
 
     public function delete(int $user_id, string $preference_name): void

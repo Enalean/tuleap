@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,25 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\Tracker\User;
 
-interface StoreUserPreference
+use Tuleap\User\StoreUserPreference;
+
+final readonly class NotificationOnAllUpdatesRetriever
 {
-    /**
-     * @return array{ preference_value: string } | []
-     */
-    public function search(int $user_id, string $preference_name): array;
+    public function __construct(private StoreUserPreference $dao)
+    {
+    }
 
-    public function set(int $user_id, string $preference_name, string $preference_value): void;
-
-    public function delete(int $user_id, string $preference_name): void;
-
-    public function deleteByPreferenceNameAndValue(string $preference_name, string $preference_value): void;
-
-    public function deletePreferenceForAllUsers(string $preference_name): void;
+    public function retrieve(\PFUser $user): NotificationOnAllUpdatesPreference
+    {
+        $row        = $this->dao->search((int) $user->getId(), NotificationOnAllUpdatesSaver::PREFERENCE_NAME);
+        $preference = $row['preference_value'] ?? null;
+        return new NotificationOnAllUpdatesPreference($preference !== NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF);
+    }
 }
