@@ -59,6 +59,7 @@ define<NewCommentForm>({
     writing_zone_controller: (host, controller: ControlWritingZone | undefined) =>
         controller ??
         WritingZoneController({
+            unsaved_content: host.presenter.comment_content,
             document,
             project_id: Number(host.controller.getProjectId()),
             focus_writing_zone_when_connected: host.controller.shouldFocusWritingZoneOnceRendered(),

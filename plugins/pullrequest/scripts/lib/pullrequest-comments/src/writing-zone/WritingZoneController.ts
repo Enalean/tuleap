@@ -36,6 +36,7 @@ export type ControlWritingZone = {
 };
 
 export type WritingZoneConfig = {
+    unsaved_content?: string;
     document: Document;
     project_id: number;
     focus_writing_zone_when_connected?: boolean;
@@ -65,20 +66,18 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         }
     };
 
-    let unsaved_content = "";
-
     return {
         initWritingZone: (): WritingZonePresenter => {
             const presenter = WritingZonePresenter.buildInitial(config.project_id);
-            if (unsaved_content) {
-                return WritingZonePresenter.buildWithContent(presenter, unsaved_content);
+            if (config.unsaved_content) {
+                return WritingZonePresenter.buildWithContent(presenter, config.unsaved_content);
             }
 
             return presenter;
         },
 
         onTextareaInput: (host: HostElement): void => {
-            unsaved_content = host.textarea.value;
+            config.unsaved_content = host.textarea.value;
 
             dispatch(host, "writing-zone-input", {
                 detail: {
