@@ -30,17 +30,19 @@ use CSRFSynchronizerToken;
  */
 final readonly class UserPreferencesPresenter
 {
+    public bool $wants_notifications;
     public bool $wants_all_updates_after_change;
     public bool $email_format_html;
     public bool $email_format_text;
 
     public function __construct(
         public CSRFSynchronizerToken $csrf_token,
-        public bool $wants_notifications,
         public string $form_post_uri,
+        NotificationOnOwnActionPreference $own_action_preference,
         NotificationOnAllUpdatesPreference $all_updates_preference,
         string $mail_format_preference,
     ) {
+        $this->wants_notifications            = $own_action_preference->enabled;
         $this->wants_all_updates_after_change = $all_updates_preference->enabled;
         $this->email_format_html              = $mail_format_preference === Codendi_Mail_Interface::FORMAT_HTML;
         $this->email_format_text              = $mail_format_preference !== Codendi_Mail_Interface::FORMAT_HTML;

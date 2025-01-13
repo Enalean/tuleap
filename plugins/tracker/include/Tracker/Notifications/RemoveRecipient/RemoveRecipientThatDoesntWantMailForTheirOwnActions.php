@@ -27,10 +27,14 @@ use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Notifications\RecipientRemovalStrategy;
-use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
+use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 
-final class RemoveRecipientThatDoesntWantMailForTheirOwnActions implements RecipientRemovalStrategy
+final readonly class RemoveRecipientThatDoesntWantMailForTheirOwnActions implements RecipientRemovalStrategy
 {
+    public function __construct(private NotificationOnOwnActionRetriever $preference_retriever)
+    {
+    }
+
     /**
      * @psalm-param array<string, Recipient> $recipients
      *
@@ -46,8 +50,8 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActions implements Recip
             if ($changeset->getSubmitter()->getId() !== $recipient->user->getId()) {
                 continue;
             }
-            if (! NotificationOnOwnActionPreference::userWantsNotification($recipient->user)) {
-                $logger->debug(self::class . ' remove ' . $recipient->user->getUserName() . ' and ' . $recipient->user->getEmail() . ', they does not want to receive email for their own actions');
+            if (! $this->preference_retriever->retrieve($recipient->user)->enabled) {
+                $logger->debug(self::class . ' remove ' . $recipient->user->getUserName() . ' and ' . $recipient->user->getEmail() . ', they do not want to receive email for their own actions');
                 unset($recipients[$key], $recipients[$recipient->user->getEmail()]);
             }
             break; // There is only one submitter once we are done with them, useless to continue

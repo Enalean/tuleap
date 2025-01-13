@@ -268,7 +268,7 @@ use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
-use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
+use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\UserPreferencesPostController;
 use Tuleap\Tracker\User\UserPreferencesPresenter;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
@@ -2458,19 +2458,23 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
      */
     private function getForceUsageUpdater()
     {
+        $unsubscribers_notification_dao = new UnsubscribersNotificationDAO();
+        $user_preferences_dao           = new UserPreferencesDao();
+        $only_status_change_dao         = new UserNotificationOnlyStatusChangeDAO();
         return new NotificationsForceUsageUpdater(
             new RecipientsManager(
                 Tracker_FormElementFactory::instance(),
                 UserManager::instance(),
-                new UnsubscribersNotificationDAO(),
+                $unsubscribers_notification_dao,
                 new UserNotificationSettingsRetriever(
                     new Tracker_GlobalNotificationDao(),
-                    new UnsubscribersNotificationDAO(),
-                    new UserNotificationOnlyStatusChangeDAO(),
+                    $unsubscribers_notification_dao,
+                    $only_status_change_dao,
                     new InvolvedNotificationDao()
                 ),
-                new UserNotificationOnlyStatusChangeDAO(),
-                new NotificationOnAllUpdatesRetriever(new UserPreferencesDao())
+                $only_status_change_dao,
+                new NotificationOnAllUpdatesRetriever($user_preferences_dao),
+                new NotificationOnOwnActionRetriever($user_preferences_dao)
             ),
             new UserNotificationSettingsDAO()
         );
@@ -2807,14 +2811,15 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     #[ListeningToEventClass]
     public function notificationsSectionsCollector(NotificationsSectionsCollector $collector): void
     {
+        $preferences_dao = new UserPreferencesDao();
         $collector->add(
             TemplateRendererFactory::build()
                 ->getRenderer(__DIR__ . '/../templates/notifications')
                 ->renderToString('user-preferences', new UserPreferencesPresenter(
                     UserPreferencesPostController::getCSRFToken(),
-                    NotificationOnOwnActionPreference::userWantsNotification($collector->current_user),
                     UserPreferencesPostController::URL,
-                    (new NotificationOnAllUpdatesRetriever(new UserPreferencesDao()))->retrieve($collector->current_user),
+                    (new NotificationOnOwnActionRetriever($preferences_dao))->retrieve($collector->current_user),
+                    (new NotificationOnAllUpdatesRetriever($preferences_dao))->retrieve($collector->current_user),
                     (new MailManager())->getMailPreferencesByUser($collector->current_user),
                 ))
         );
@@ -2826,6 +2831,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return new UserPreferencesPostController(
             UserManager::instance(),
             UserPreferencesPostController::getCSRFToken(),
+            new \Tuleap\Tracker\User\NotificationOnOwnActionSaver(
+                new NotificationOnOwnActionRetriever($user_preferences_dao),
+                $user_preferences_dao
+            ),
             new \Tuleap\Tracker\User\NotificationOnAllUpdatesSaver(
                 new NotificationOnAllUpdatesRetriever($user_preferences_dao),
                 $user_preferences_dao

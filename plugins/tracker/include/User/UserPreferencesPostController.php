@@ -40,6 +40,7 @@ final readonly class UserPreferencesPostController implements DispatchableWithRe
     public function __construct(
         private ProvideCurrentUser $current_user_provider,
         private CSRFSynchronizerTokenInterface $csrf_synchronizer_token,
+        private NotificationOnOwnActionSaver $own_action_saver,
         private NotificationOnAllUpdatesSaver $all_updates_saver,
     ) {
     }
@@ -53,9 +54,9 @@ final readonly class UserPreferencesPostController implements DispatchableWithRe
             throw new NotFoundException();
         }
 
-        $has_changed = NotificationOnOwnActionPreference::updatePreference(
-            $request->get(NotificationOnOwnActionPreference::PREFERENCE_NAME) === NotificationOnOwnActionPreference::VALUE_NOTIF,
-            $current_user,
+        $has_changed = $this->own_action_saver->save(
+            new NotificationOnOwnActionPreference($request->get('user_notifications_own_actions_tracker') === '1'),
+            $current_user
         );
         $has_changed = $this->all_updates_saver->save(
             new NotificationOnAllUpdatesPreference($request->get('user_notifications_all_updates_tracker') === '1'),

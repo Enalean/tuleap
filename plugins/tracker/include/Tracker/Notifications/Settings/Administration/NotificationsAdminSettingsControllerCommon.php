@@ -38,6 +38,7 @@ use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
+use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use UGroupDao;
 use UGroupManager;
 use UserManager;
@@ -74,6 +75,8 @@ trait NotificationsAdminSettingsControllerCommon
         $user_to_notify_dao             = new UsersToNotifyDao();
         $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
         $unsubscribers_notification_dao = new UnsubscribersNotificationDAO();
+        $only_status_change_dao         = new UserNotificationOnlyStatusChangeDAO();
+        $user_preferences_dao           = new UserPreferencesDao();
         $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
             new CollectionOfUserInvolvedInNotificationPresenterBuilder(
@@ -100,15 +103,16 @@ trait NotificationsAdminSettingsControllerCommon
                 new RecipientsManager(
                     \Tracker_FormElementFactory::instance(),
                     $user_manager,
-                    new UnsubscribersNotificationDAO(),
+                    $unsubscribers_notification_dao,
                     new UserNotificationSettingsRetriever(
                         new \Tracker_GlobalNotificationDao(),
-                        new UnsubscribersNotificationDAO(),
-                        new UserNotificationOnlyStatusChangeDAO(),
+                        $unsubscribers_notification_dao,
+                        $only_status_change_dao,
                         new InvolvedNotificationDao()
                     ),
-                    new UserNotificationOnlyStatusChangeDAO(),
-                    new NotificationOnAllUpdatesRetriever(new UserPreferencesDao())
+                    $only_status_change_dao,
+                    new NotificationOnAllUpdatesRetriever($user_preferences_dao),
+                    new NotificationOnOwnActionRetriever($user_preferences_dao)
                 ),
                 new UserNotificationSettingsDAO()
             )

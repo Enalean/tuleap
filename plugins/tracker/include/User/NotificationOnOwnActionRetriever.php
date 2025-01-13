@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,24 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\User;
 
-/**
- * @psalm-immutable
- */
-final readonly class NotificationOnOwnActionPreference
+use Tuleap\User\StoreUserPreference;
+
+final readonly class NotificationOnOwnActionRetriever
 {
-    public function __construct(public bool $enabled)
+    public function __construct(private StoreUserPreference $dao)
     {
     }
 
-    public function hasChanged(self $other): bool
+    public function retrieve(\PFUser $user): NotificationOnOwnActionPreference
     {
-        return $this->enabled !== $other->enabled;
+        $row   = $this->dao->search((int) $user->getId(), NotificationOnOwnActionSaver::PREFERENCE_NAME);
+        $value = $row['preference_value'] ?? null;
+        return new NotificationOnOwnActionPreference($value !== NotificationOnOwnActionSaver::VALUE_NO_NOTIF);
     }
 }

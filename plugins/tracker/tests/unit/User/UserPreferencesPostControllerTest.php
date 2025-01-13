@@ -52,6 +52,10 @@ final class UserPreferencesPostControllerTest extends TestCase
         $controller = new UserPreferencesPostController(
             ProvideAndRetrieveUserStub::build($user),
             CSRFSynchronizerTokenStub::buildSelf(),
+            new NotificationOnOwnActionSaver(
+                new NotificationOnOwnActionRetriever($this->preferences_store),
+                $this->preferences_store,
+            ),
             new NotificationOnAllUpdatesSaver(
                 new NotificationOnAllUpdatesRetriever($this->preferences_store),
                 $this->preferences_store,
@@ -77,7 +81,7 @@ final class UserPreferencesPostControllerTest extends TestCase
     public function testItAppliesChanges(): void
     {
         $user = UserTestBuilder::anActiveUser()->withPreferencesStore($this->preferences_store)->build();
-        $user->setPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME, '1');
+        $user->setPreference(NotificationOnOwnActionSaver::PREFERENCE_NAME, NotificationOnOwnActionSaver::VALUE_NOTIF);
         $user->setPreference(NotificationOnAllUpdatesSaver::PREFERENCE_NAME, NotificationOnAllUpdatesSaver::VALUE_NOTIF);
         $user->setPreference(Codendi_Mail_Interface::PREF_FORMAT, 'text');
 
@@ -85,7 +89,7 @@ final class UserPreferencesPostControllerTest extends TestCase
         $this->expectExceptionObject(new LayoutInspectorRedirection(DisplayNotificationsController::URL));
         $this->processRequest(
             HTTPRequestBuilder::get()
-                ->withParam(NotificationOnOwnActionPreference::PREFERENCE_NAME, '0')
+                ->withParam('user_notifications_own_actions_tracker', '0')
                 ->withParam('user_notifications_all_updates_tracker', '0')
                 ->withParam(Codendi_Mail_Interface::PREF_FORMAT, 'html')
                 ->build(),
@@ -98,7 +102,7 @@ final class UserPreferencesPostControllerTest extends TestCase
             'level'   => Feedback::INFO,
             'message' => 'Notifications preferences successfully updated',
         ], $feedbacks[0]);
-        self::assertSame('0', $user->getPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME));
+        self::assertSame(NotificationOnOwnActionSaver::VALUE_NO_NOTIF, $user->getPreference(NotificationOnOwnActionSaver::PREFERENCE_NAME));
         self::assertSame(NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF, $user->getPreference(NotificationOnAllUpdatesSaver::PREFERENCE_NAME));
         self::assertSame('html', $user->getPreference(Codendi_Mail_Interface::PREF_FORMAT));
     }
@@ -106,7 +110,7 @@ final class UserPreferencesPostControllerTest extends TestCase
     public function testItWarnsWhenNoChange(): void
     {
         $user = UserTestBuilder::anActiveUser()->withPreferencesStore($this->preferences_store)->build();
-        $user->setPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME, '0');
+        $user->setPreference(NotificationOnOwnActionSaver::PREFERENCE_NAME, NotificationOnOwnActionSaver::VALUE_NO_NOTIF);
         $user->setPreference(NotificationOnAllUpdatesSaver::PREFERENCE_NAME, NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF);
         $user->setPreference(Codendi_Mail_Interface::PREF_FORMAT, 'html');
 
@@ -114,7 +118,7 @@ final class UserPreferencesPostControllerTest extends TestCase
         $this->expectExceptionObject(new LayoutInspectorRedirection(DisplayNotificationsController::URL));
         $this->processRequest(
             HTTPRequestBuilder::get()
-                ->withParam(NotificationOnOwnActionPreference::PREFERENCE_NAME, '0')
+                ->withParam('user_notifications_own_actions_tracker', '0')
                 ->withParam('user_notifications_all_updates_tracker', '0')
                 ->withParam(Codendi_Mail_Interface::PREF_FORMAT, 'html')
                 ->build(),
@@ -127,7 +131,7 @@ final class UserPreferencesPostControllerTest extends TestCase
             'level'   => Feedback::INFO,
             'message' => 'Nothing has changed',
         ], $feedbacks[0]);
-        self::assertSame('0', $user->getPreference(NotificationOnOwnActionPreference::PREFERENCE_NAME));
+        self::assertSame(NotificationOnOwnActionSaver::VALUE_NO_NOTIF, $user->getPreference(NotificationOnOwnActionSaver::PREFERENCE_NAME));
         self::assertSame(NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF, $user->getPreference(NotificationOnAllUpdatesSaver::PREFERENCE_NAME));
         self::assertSame('html', $user->getPreference(Codendi_Mail_Interface::PREF_FORMAT));
     }

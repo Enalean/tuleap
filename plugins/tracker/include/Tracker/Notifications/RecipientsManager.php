@@ -35,6 +35,7 @@ use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCre
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
+use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use UserManager;
 
 class RecipientsManager
@@ -50,11 +51,12 @@ class RecipientsManager
         private readonly UserNotificationSettingsRetriever $notification_settings_retriever,
         private readonly UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
         private readonly NotificationOnAllUpdatesRetriever $notification_on_all_updates_retriever,
+        NotificationOnOwnActionRetriever $notification_on_own_action_retriever,
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
             new RemoveRecipientThatAreTechnicalUsers(),
-            new RemoveRecipientThatDoesntWantMailForTheirOwnActions(),
+            new RemoveRecipientThatDoesntWantMailForTheirOwnActions($notification_on_own_action_retriever),
             new RemoveRecipientThatCannotReadAnything(),
             new RemoveRecipientThatHaveUnsubscribedFromNotification($this->unsubscribers_notification_dao),
             new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this->user_status_change_only_dao, $this->status_change_detector),
