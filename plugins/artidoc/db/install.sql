@@ -31,3 +31,16 @@ CREATE TABLE plugin_artidoc_document_tracker
     item_id    INT(11) UNSIGNED NOT NULL PRIMARY KEY,
     tracker_id INT(11)          NOT NULL
 ) ENGINE = InnoDB;
+
+
+DROP TABLE IF EXISTS plugin_artidoc_section_upload;
+CREATE TABLE plugin_artidoc_section_upload
+(
+    id              BINARY(16)   NOT NULL PRIMARY KEY,
+    file_name       VARCHAR(255) NOT NULL DEFAULT '',
+    file_size       BIGINT       NOT NULL DEFAULT 0,
+    user_id         INT          NOT NULL,
+    expiration_date INT UNSIGNED NOT NULL,
+    item_id         INT UNSIGNED NOT NULL,
+    INDEX idx_date (expiration_date)
+) ENGINE = InnoDB;

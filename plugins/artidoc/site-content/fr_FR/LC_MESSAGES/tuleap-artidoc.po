@@ -52,6 +52,14 @@ msgstr ""
 "Le paramètre ids n'est pas valide. Un tableau d'un identifiant de section "
 "est attendu."
 
+#, php-format
+msgid ""
+"The maximum allowed size for a file is %1$s bytes, you requested the "
+"creation of a file of %2$s bytes."
+msgstr ""
+"La taille maximum autorisée pour un fichier est %1$s octets, vous demandez "
+"la création d'un fichier de %2$s octets."
+
 msgid ""
 "The properties 'artifact' and 'content' can not be used at the same time"
 msgstr ""
@@ -77,6 +85,9 @@ msgid ""
 "There is already an existing section with the same artifact in the document."
 msgstr ""
 "Il y a déjà une section existante avec le même artéfact dans le document."
+
+msgid "This file is already being uploaded."
+msgstr "Ce fichier est déjà en cours de téléversement."
 
 msgid "Title of the section cannot be empty."
 msgstr "Le titre de la section ne peut pas être vide."
