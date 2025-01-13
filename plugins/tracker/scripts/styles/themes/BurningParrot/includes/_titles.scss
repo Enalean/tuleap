@@ -19,6 +19,7 @@
 
 @use "./semantics";
 
-.tracker-administration-title {
+.tracker-administration-title,
+.user-notifications-title {
     margin: var(--tlp-medium-spacing) 0 var(--tlp-title-spacing);
 }

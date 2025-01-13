@@ -18,49 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Notifications\Settings;
 
+use CSRFSynchronizerToken;
+use Feedback;
 use HTTPRequest;
 use TemplateRenderer;
 use Tracker;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 
-class NotificationsUserSettingsDisplayController implements DispatchableWithRequest
+final readonly class NotificationsUserSettingsDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var TrackerManager
-     */
-    private $tracker_manager;
-    /**
-     * @var UserNotificationSettingsRetriever
-     */
-    private $user_notification_settings_retriever;
-
     public function __construct(
-        TemplateRenderer $template_renderer,
-        TrackerFactory $tracker_factory,
-        TrackerManager $tracker_manager,
-        UserNotificationSettingsRetriever $user_notification_settings_retriever,
+        private TemplateRenderer $template_renderer,
+        private TrackerFactory $tracker_factory,
+        private TrackerManager $tracker_manager,
+        private UserNotificationSettingsRetriever $user_notification_settings_retriever,
     ) {
-        $this->template_renderer                    = $template_renderer;
-        $this->tracker_factory                      = $tracker_factory;
-        $this->tracker_manager                      = $tracker_manager;
-        $this->user_notification_settings_retriever = $user_notification_settings_retriever;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['id']);
         if ($tracker === null) {
@@ -69,8 +53,8 @@ class NotificationsUserSettingsDisplayController implements DispatchableWithRequ
 
         $current_user = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {
-            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
+            $layout->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
+            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
         $user_notification_settings = $this->user_notification_settings_retriever->getUserNotificationSettings(
@@ -80,21 +64,22 @@ class NotificationsUserSettingsDisplayController implements DispatchableWithRequ
 
         $current_uri = $request->getFromServer('REQUEST_URI');
 
+        $title = dgettext('tuleap-tracker', 'Email Notifications Settings');
         $tracker->displayHeader(
             $this->tracker_manager,
-            dgettext('tuleap-tracker', 'Email Notifications Settings'),
-            [
-                ['title' => dgettext('tuleap-tracker', 'Email Notifications Settings'), 'url' => $current_uri],
-            ],
+            $title,
+            [['title' => $title, 'url' => $current_uri]],
         );
 
         $this->template_renderer->renderToPage(
             'user-notification-settings',
             new UserNotificationSettingsPresenter(
-                new \CSRFSynchronizerToken($current_uri),
+                new CSRFSynchronizerToken($current_uri),
                 $user_notification_settings,
                 $tracker->getNotificationsLevel() === Tracker::NOTIFICATIONS_LEVEL_DISABLED
             )
         );
+
+        $this->tracker_manager->displayFooter($tracker->getProject());
     }
 }
