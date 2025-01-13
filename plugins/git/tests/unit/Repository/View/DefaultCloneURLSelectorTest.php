@@ -18,103 +18,89 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Repository\View;
 
-require_once __DIR__ . '/../../../bootstrap.php';
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class DefaultCloneURLSelectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DefaultCloneURLSelectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var DefaultCloneURLSelector
-     */
-    private $selector;
-    /**
-     * @var CloneURLs | Mockery\MockInterface
-     */
-    private $clone_urls;
-    /**
-     * @var \PFUser | Mockery\MockInterface
-     */
-    private $current_user;
+    private DefaultCloneURLSelector $selector;
+    private CloneURLs&MockObject $clone_urls;
 
     protected function setUp(): void
     {
-        $this->selector     = new DefaultCloneURLSelector();
-        $this->clone_urls   = Mockery::mock(CloneURLs::class);
-        $this->current_user = Mockery::mock(\PFUser::class);
+        $this->selector   = new DefaultCloneURLSelector();
+        $this->clone_urls = $this->createMock(CloneURLs::class);
     }
 
-    public function testSelectReturnsGerritUrlFirst()
+    public function testSelectReturnsGerritUrlFirst(): void
     {
-        $this->clone_urls->shouldReceive('hasGerritUrl')->andReturnTrue();
+        $this->clone_urls->method('hasGerritUrl')->willReturn(true);
         $gerrit_url = 'ssh://gerrit_username@gerrit.example.com/repo';
-        $this->clone_urls->shouldReceive('getGerritUrl')->andReturn($gerrit_url);
-        $this->current_user->shouldReceive('isAnonymous')->andReturnFalse();
+        $this->clone_urls->method('getGerritUrl')->willReturn($gerrit_url);
 
-        $result = $this->selector->select($this->clone_urls, $this->current_user);
+        $result = $this->selector->select($this->clone_urls, UserTestBuilder::anActiveUser()->build());
 
-        $this->assertEquals($gerrit_url, $result->getUrl());
+        self::assertEquals($gerrit_url, $result->getUrl());
     }
 
-    public function testSelectReturnsSshUrlWhenNoGerrit()
+    public function testSelectReturnsSshUrlWhenNoGerrit(): void
     {
-        $this->clone_urls->shouldReceive('hasGerritUrl')->andReturnFalse();
-        $this->clone_urls->shouldReceive('hasSshUrl')->andReturnTrue();
+        $this->clone_urls->method('hasGerritUrl')->willReturn(false);
+        $this->clone_urls->method('hasSshUrl')->willReturn(true);
         $ssh_url = 'ssh://nikko.com/archfelon/untellable';
-        $this->clone_urls->shouldReceive('getSshUrl')->andReturn($ssh_url);
-        $this->current_user->shouldReceive('isAnonymous')->andReturnFalse();
+        $this->clone_urls->method('getSshUrl')->willReturn($ssh_url);
 
-        $result = $this->selector->select($this->clone_urls, $this->current_user);
+        $result = $this->selector->select($this->clone_urls, UserTestBuilder::anActiveUser()->build());
 
-        $this->assertEquals($ssh_url, $result->getUrl());
+        self::assertEquals($ssh_url, $result->getUrl());
     }
 
-    public function testSelectReturnsHttpsUrlWhenNoSsh()
+    public function testSelectReturnsHttpsUrlWhenNoSsh(): void
     {
-        $this->clone_urls->shouldReceive('hasGerritUrl', 'hasSshUrl')->andReturnFalse();
-        $this->clone_urls->shouldReceive('hasHttpsUrl')->andReturnTrue();
+        $this->clone_urls->method('hasGerritUrl')->willReturn(false);
+        $this->clone_urls->method('hasSshUrl')->willReturn(false);
+        $this->clone_urls->method('hasHttpsUrl')->willReturn(true);
         $https_url = 'http://bataan.com/percher/equiproportionality';
-        $this->clone_urls->shouldReceive('getHttpsUrl')->andReturn($https_url);
-        $this->current_user->shouldReceive('isAnonymous')->andReturnFalse();
+        $this->clone_urls->method('getHttpsUrl')->willReturn($https_url);
 
-        $result = $this->selector->select($this->clone_urls, $this->current_user);
+        $result = $this->selector->select($this->clone_urls, UserTestBuilder::anActiveUser()->build());
 
-        $this->assertEquals($https_url, $result->getUrl());
+        self::assertEquals($https_url, $result->getUrl());
     }
 
-    public function testSelectReturnsHttpsWhenAnonymousUser()
+    public function testSelectReturnsHttpsWhenAnonymousUser(): void
     {
-        $this->clone_urls->shouldReceive('hasGerritUrl', 'hasSshUrl')->andReturnFalse();
-        $this->clone_urls->shouldReceive('hasHttpsUrl')->andReturnTrue();
+        $this->clone_urls->method('hasGerritUrl')->willReturn(false);
+        $this->clone_urls->method('hasSshUrl')->willReturn(false);
+        $this->clone_urls->method('hasHttpsUrl')->willReturn(true);
         $https_url = 'http://bataan.com/percher/equiproportionality';
-        $this->clone_urls->shouldReceive('getHttpsUrl')->andReturn($https_url);
-        $this->current_user->shouldReceive('isAnonymous')->andReturnTrue();
+        $this->clone_urls->method('getHttpsUrl')->willReturn($https_url);
 
-        $result = $this->selector->select($this->clone_urls, $this->current_user);
+        $result = $this->selector->select($this->clone_urls, UserTestBuilder::anAnonymousUser()->build());
 
-        $this->assertEquals($https_url, $result->getUrl());
+        self::assertEquals($https_url, $result->getUrl());
     }
 
-    public function testSelectThrowsWhenNoURL()
+    public function testSelectThrowsWhenNoURL(): void
     {
-        $this->clone_urls->shouldReceive('hasGerritUrl', 'hasSshUrl', 'hasHttpsUrl')->andReturnFalse();
-        $this->current_user->shouldReceive('isAnonymous')->andReturnFalse();
+        $this->clone_urls->method('hasGerritUrl')->willReturn(false);
+        $this->clone_urls->method('hasSshUrl')->willReturn(false);
+        $this->clone_urls->method('hasHttpsUrl')->willReturn(false);
 
         $this->expectException(NoCloneURLException::class);
-        $this->selector->select($this->clone_urls, $this->current_user);
+        $this->selector->select($this->clone_urls, UserTestBuilder::anActiveUser()->build());
     }
 
-    public function testSelectThrowsWhenAnonymousUserAndNoHttps()
+    public function testSelectThrowsWhenAnonymousUserAndNoHttps(): void
     {
-        $this->clone_urls->shouldReceive('hasHttpsUrl')->andReturnFalse();
-        $this->current_user->shouldReceive('isAnonymous')->andReturnTrue();
+        $this->clone_urls->method('hasHttpsUrl')->willReturn(false);
 
         $this->expectException(NoCloneURLException::class);
-        $this->selector->select($this->clone_urls, $this->current_user);
+        $this->selector->select($this->clone_urls, UserTestBuilder::anAnonymousUser()->build());
     }
 }

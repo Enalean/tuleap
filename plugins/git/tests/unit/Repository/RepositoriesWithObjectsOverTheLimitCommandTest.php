@@ -22,20 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Repository;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class RepositoriesWithObjectsOverTheLimitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RepositoriesWithObjectsOverTheLimitCommandTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $repository_factory;
-    private $repository_objects_size_retriever;
+    private GitRepositoryFactory&MockObject $repository_factory;
+    private GitRepositoryObjectsSizeRetriever&MockObject $repository_objects_size_retriever;
 
     protected function setUp(): void
     {
-        $this->repository_factory                = \Mockery::mock(\GitRepositoryFactory::class);
-        $this->repository_objects_size_retriever = \Mockery::mock(GitRepositoryObjectsSizeRetriever::class);
+        $this->repository_factory                = $this->createMock(GitRepositoryFactory::class);
+        $this->repository_objects_size_retriever = $this->createMock(GitRepositoryObjectsSizeRetriever::class);
     }
 
     public function testRepositoryOverTheLimitIsListed(): void
@@ -46,43 +49,31 @@ final class RepositoriesWithObjectsOverTheLimitCommandTest extends \Tuleap\Test\
         );
         $command_tester = new CommandTester($command);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(2000);
-        $repository->shouldReceive('getFullname')->andReturns('repository_name');
-        $repository->shouldReceive('getProjectId')->andReturns(1000);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('project_name');
-        $repository->shouldReceive('getProject')->andReturns($project);
-        $this->repository_factory->shouldReceive('getAllRepositoriesWithActivityInTheLast2Months')->andReturns([
-            $repository,
-        ]);
+        $project    = ProjectTestBuilder::aProject()->withId(1000)->withUnixName('project_name')->build();
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->withId(2000)->withName('repository_name')->inProject($project)->build();
+        $this->repository_factory->method('getAllRepositoriesWithActivityInTheLast2Months')->willReturn([$repository]);
         $repository_with_largest_object_size = new LargestObjectSizeGitRepository($repository, PHP_INT_MAX);
-        $this->repository_objects_size_retriever->shouldReceive('getLargestObjectSize')->andReturns(
-            $repository_with_largest_object_size
-        );
+        $this->repository_objects_size_retriever->method('getLargestObjectSize')->willReturn($repository_with_largest_object_size);
 
         $command_tester->execute([]);
         $text_table = $command_tester->getDisplay();
-        $this->assertStringContainsString('2000', $text_table);
-        $this->assertStringContainsString('repository_name', $text_table);
-        $this->assertStringContainsString('1000', $text_table);
-        $this->assertStringContainsString('project_name', $text_table);
-        $this->assertStringContainsString((string) PHP_INT_MAX, $text_table);
+        self::assertStringContainsString('2000', $text_table);
+        self::assertStringContainsString('repository_name', $text_table);
+        self::assertStringContainsString('1000', $text_table);
+        self::assertStringContainsString('project_name', $text_table);
+        self::assertStringContainsString((string) PHP_INT_MAX, $text_table);
 
         $command_tester->execute(['--format' => 'json'], ['capture_stderr_separately' => true]);
         $json_output = json_decode($command_tester->getDisplay(), true);
-        $this->assertEqualsCanonicalizing(
+        self::assertEqualsCanonicalizing([
             [
-                [
-                    'project_id'       => 1000,
-                    'project_unixname' => 'project_name',
-                    'repository_id'    => 2000,
-                    'repository_name'  => 'repository_name',
-                    'object_size'      => PHP_INT_MAX,
-                ],
+                'project_id'       => 1000,
+                'project_unixname' => 'project_name',
+                'repository_id'    => 2000,
+                'repository_name'  => 'repository_name',
+                'object_size'      => PHP_INT_MAX,
             ],
-            $json_output
-        );
+        ], $json_output);
     }
 
     public function testUnknownFormatIsRejected(): void
@@ -93,9 +84,9 @@ final class RepositoriesWithObjectsOverTheLimitCommandTest extends \Tuleap\Test\
         );
         $command_tester = new CommandTester($command);
 
-        $this->repository_factory->shouldReceive('getAllRepositoriesWithActivityInTheLast2Months')->andReturns([]);
+        $this->repository_factory->method('getAllRepositoriesWithActivityInTheLast2Months')->willReturn([]);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $command_tester->execute(['--format' => 'aaaaaaa']);
     }
 }
