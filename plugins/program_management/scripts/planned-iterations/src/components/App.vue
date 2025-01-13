@@ -33,34 +33,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import type { ProgramIncrement } from "../store/configuration";
-
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
 import AppBreadcrumb from "./AppBreadcrumb.vue";
 import IterationsToBePlannedSection from "./Backlog/ToBePlanned/IterationsToBePlannedSection.vue";
 import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSection.vue";
+import type { ProgramIncrement } from "../store/configuration";
 
-const configuration = namespace("configuration");
+const { program_increment } = useNamespacedState<{
+    program_increment: ProgramIncrement;
+}>("configuration", ["program_increment"]);
 
-@Component({
-    components: {
-        AppBreadcrumb,
-        IterationsToBePlannedSection,
-        PlannedIterationsSection,
-    },
-})
-export default class App extends Vue {
-    @configuration.State
-    readonly program_increment!: ProgramIncrement;
-
-    get are_dates_displayed(): boolean {
-        return (
-            this.program_increment.start_date.length > 0 &&
-            this.program_increment.end_date.length > 0
-        );
-    }
-}
+const are_dates_displayed = computed(
+    (): boolean =>
+        program_increment.value.start_date !== "" && program_increment.value.end_date !== "",
+);
 </script>

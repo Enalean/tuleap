@@ -28,7 +28,7 @@ import AppBreadcrumb from "./AppBreadcrumb.vue";
 import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSection.vue";
 
 describe("App", () => {
-    async function createWrapper(): Promise<Wrapper<App>> {
+    async function createWrapper(): Promise<Wrapper<Vue>> {
         return shallowMount(App, {
             mocks: {
                 $store: createStoreMock({
