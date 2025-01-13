@@ -22,21 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Repository;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class LargestObjectSizeGitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LargestObjectSizeGitRepositoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testExpectedValuesAreRetrieved(): void
     {
-        $repository = \Mockery::mock(\GitRepository::class);
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->build();
         $size       = 12;
 
         $repository_with_largest_object_size = new LargestObjectSizeGitRepository($repository, $size);
 
-        $this->assertSame($repository, $repository_with_largest_object_size->getRepository());
-        $this->assertSame($size, $repository_with_largest_object_size->getLargestObjectSize());
+        self::assertSame($repository, $repository_with_largest_object_size->getRepository());
+        self::assertSame($size, $repository_with_largest_object_size->getLargestObjectSize());
     }
 
     /**
@@ -45,11 +44,11 @@ final class LargestObjectSizeGitRepositoryTest extends \Tuleap\Test\PHPUnit\Test
     public function testVerifyIfARepositoryIsOverTheLimit(int $size, bool $is_over_the_limit): void
     {
         $repository_with_largest_object_size = new LargestObjectSizeGitRepository(
-            \Mockery::mock(\GitRepository::class),
+            GitRepositoryTestBuilder::aProjectRepository()->build(),
             $size
         );
 
-        $this->assertSame($is_over_the_limit, $repository_with_largest_object_size->isOverTheObjectSizeLimit());
+        self::assertSame($is_over_the_limit, $repository_with_largest_object_size->isOverTheObjectSizeLimit());
     }
 
     public static function providerObjectSize(): array
