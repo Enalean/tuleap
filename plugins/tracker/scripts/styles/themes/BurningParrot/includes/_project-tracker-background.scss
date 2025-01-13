@@ -22,6 +22,7 @@
 
 .project-with-background {
     .trackers-homepage-title,
+    .user-notifications-title,
     .tracker-administration-title {
         @include project-background.title-header-typography;
 
@@ -46,6 +47,11 @@ body {
     );
     @include project-background.apply-background(
         ".trackers-homepage-title",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
+    @include project-background.apply-background(
+        ".user-notifications-title",
         global-variables.$sidebar-expanded-width,
         global-variables.$sidebar-collapsed-width
     );
