@@ -20,13 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Upload\Section\File;
+namespace Tuleap\Artidoc\Stubs\Upload\Section\File;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\Artidoc\Upload\Section\File\RemoveExpirationDate;
+use Tuleap\Tus\Identifier\FileIdentifier;
 
-final readonly class UploadedFileWithArtidoc
+final class RemoveExpirationDateStub implements RemoveExpirationDate
 {
-    public function __construct(public UploadFileInformation $file, public Artidoc $artidoc)
+    private bool $called = false;
+
+    private function __construct()
     {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function removeExpirationDate(FileIdentifier $id): void
+    {
+        $this->called = true;
+    }
+
+    public function isCalled(): bool
+    {
+        return $this->called;
     }
 }

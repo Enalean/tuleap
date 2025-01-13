@@ -31,7 +31,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Tus\Identifier\FileIdentifier;
 use Tuleap\Tus\Identifier\FileIdentifierFactory;
 
-class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, SearchFileUpload, DeleteFileUpload, SearchExpiredUploads, DeleteExpiredFiles, SearchUploadedFile
+class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, DeleteFileUpload, SearchExpiredUploads, DeleteExpiredFiles, SearchUpload, SearchNotExpiredOngoingUpload, RemoveExpirationDate
 {
     public function __construct(private FileIdentifierFactory $identifier_factory)
     {
@@ -93,17 +93,6 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Searc
         ]);
     }
 
-    public function searchFileOngoingUploadById(FileIdentifier $id): ?array
-    {
-        $row = $this->getDB()->row('SELECT * FROM plugin_artidoc_section_upload WHERE id = ?', $id->getBytes());
-
-        if (! empty($row)) {
-            $row['id'] = $this->identifier_factory->buildFromBytesData($row['id']);
-        }
-
-        return $row;
-    }
-
     public function searchExpiredUploads(\DateTimeImmutable $current_time): array
     {
         /**
@@ -125,16 +114,40 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Searc
         );
     }
 
-    public function searchUploadedFile(FileIdentifier $id): Ok|Err
+    public function searchUpload(FileIdentifier $id): Ok|Err
     {
-        $row = $this->getDB()->row('SELECT * FROM plugin_artidoc_section_upload WHERE id = ?', $id->getBytes());
+        $row = $this->getDB()->row(
+            'SELECT * FROM plugin_artidoc_section_upload WHERE id = ?',
+            $id->getBytes(),
+        );
 
-        if (empty($row)) {
+        return $this->toUploadFileInformation($row);
+    }
+
+    public function searchNotExpiredOngoingUpload(FileIdentifier $id, int $user_id, \DateTimeImmutable $current_time): Ok|Err
+    {
+        $row = $this->getDB()->row(
+            'SELECT * FROM plugin_artidoc_section_upload WHERE id = ? AND user_id = ? AND expiration_date > ?',
+            $id->getBytes(),
+            $user_id,
+            $current_time->getTimestamp(),
+        );
+
+        return $this->toUploadFileInformation($row);
+    }
+
+    /**
+     * @param null | array{id: string, item_id: int, file_size: int, file_name: string} $row
+     * @return Ok<UploadFileInformation>|Err<Fault>
+     */
+    private function toUploadFileInformation(?array $row): Ok|Err
+    {
+        if ($row === null) {
             return Result::err(Fault::fromMessage('Unable to find uploaded file'));
         }
 
         return Result::ok(
-            new UploadedFileInformation(
+            new UploadFileInformation(
                 $row['item_id'],
                 $this->identifier_factory->buildFromBytesData($row['id']),
                 $row['file_name'],
@@ -148,6 +161,14 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Searc
         $this->getDB()->run(
             'DELETE FROM plugin_artidoc_section_upload WHERE expiration_date <= ?',
             $current_time->getTimestamp()
+        );
+    }
+
+    public function removeExpirationDate(FileIdentifier $id): void
+    {
+        $this->getDB()->run(
+            'UPDATE plugin_artidoc_section_upload SET expiration_date = NULL WHERE id = ?',
+            $id->getBytes(),
         );
     }
 }

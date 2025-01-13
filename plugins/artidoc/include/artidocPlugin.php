@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIden
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\ArtidocAttachmentController;
 use Tuleap\Artidoc\ArtidocController;
+use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
@@ -38,8 +39,16 @@ use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
+use Tuleap\Artidoc\Upload\Section\File\FileToUpload;
 use Tuleap\Artidoc\Upload\Section\File\FileUploadCleaner;
 use Tuleap\Artidoc\Upload\Section\File\OngoingUploadDao;
+use Tuleap\Artidoc\Upload\Section\File\Tus\ArtidocFileBeingUploadedLocker;
+use Tuleap\Artidoc\Upload\Section\File\Tus\ArtidocFileBeingUploadedWriter;
+use Tuleap\Artidoc\Upload\Section\File\Tus\FileBeingUploadedInformationProvider;
+use Tuleap\Artidoc\Upload\Section\File\Tus\FileDataStore;
+use Tuleap\Artidoc\Upload\Section\File\Tus\FileUploadCanceler;
+use Tuleap\Artidoc\Upload\Section\File\Tus\FileUploadFinisher;
+use Tuleap\Artidoc\Upload\Section\File\UploadedFileWithArtidocRetriever;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -72,6 +81,8 @@ use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -82,6 +93,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
+use Tuleap\Upload\NextGen\FileUploadController;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -125,6 +137,12 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             $r->get('/{id:\w+}[/]', $this->getRouteHandler('routeController'));
         });
 
+        $event->getRouteCollector()->addRoute(
+            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
+            FileToUpload::ROUTE_PREFIX . '/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}',
+            [self::class, 'routeUploadSectionsFile'],
+        );
+
         $event->getRouteCollector()->get(
             ArtidocAttachmentController::ROUTE_PREFIX . '/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[-{filename:.*}]',
             $this->getRouteHandler('routeAttachmentController'),
@@ -152,7 +170,46 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             ),
             new SapiStreamEmitter(),
             new SessionWriteCloseMiddleware(),
-            new TuleapRESTCORSMiddleware()
+            new TuleapRESTCORSMiddleware(),
+        );
+    }
+
+    public function routeUploadSectionsFile(): DispatchableWithRequest
+    {
+        $identifier_factory      = new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory());
+        $file_ongoing_upload_dao = new OngoingUploadDao($identifier_factory);
+        $current_user            = new RESTCurrentUserMiddleware(
+            \Tuleap\REST\UserManager::build(),
+            new BasicAuthentication(),
+        );
+
+        return FileUploadController::build(
+            new FileDataStore(
+                new FileBeingUploadedInformationProvider(
+                    new UploadedFileWithArtidocRetriever(
+                        new ArtidocWithContextRetrieverBuilder(
+                            new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
+                            new ArtidocWithContextDecorator(
+                                ProjectManager::instance(),
+                                new DocumentServiceFromAllowedProjectRetriever($this),
+                            ),
+                        ),
+                    ),
+                    $identifier_factory,
+                    $file_ongoing_upload_dao,
+                    $current_user,
+                ),
+                new ArtidocFileBeingUploadedWriter($file_ongoing_upload_dao, DBFactory::getMainTuleapDBConnection()),
+                new FileUploadFinisher(
+                    $file_ongoing_upload_dao,
+                ),
+                new FileUploadCanceler(
+                    $file_ongoing_upload_dao,
+                    $file_ongoing_upload_dao,
+                ),
+                new ArtidocFileBeingUploadedLocker($file_ongoing_upload_dao),
+            ),
+            $current_user,
         );
     }
 

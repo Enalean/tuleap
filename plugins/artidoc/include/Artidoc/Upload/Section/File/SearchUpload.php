@@ -18,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\Tus\Identifier\FileIdentifier;
 
-final readonly class UploadedFileWithArtidoc
+interface SearchUpload
 {
-    public function __construct(public UploadFileInformation $file, public Artidoc $artidoc)
-    {
-    }
+    /**
+     * @return Ok<UploadFileInformation>|Err<Fault>
+     */
+    public function searchUpload(FileIdentifier $id): Ok|Err;
 }

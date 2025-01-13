@@ -51,21 +51,15 @@ final class OngoingUploadDaoTest extends TestIntegrationTestCase
 
         $id = $dao->saveFileOnGoingUpload($file_to_upload);
 
-        $row = $dao->searchFileOngoingUploadById($id);
-        self::assertNotNull($row);
-        self::assertSame($file_to_upload->artidoc_id, $row['item_id']);
-        self::assertSame($file_to_upload->name, $row['file_name']);
-        self::assertSame($file_to_upload->size, $row['file_size']);
-        self::assertSame($file_to_upload->user_id, $row['user_id']);
-
-        $uploaded_file = $dao->searchUploadedFile($id);
+        $uploaded_file = $dao->searchUpload($id);
         self::assertTrue(Result::isOk($uploaded_file));
+        self::assertSame($file_to_upload->artidoc_id, $uploaded_file->value->artidoc_id);
+        self::assertSame($file_to_upload->name, $uploaded_file->value->getName());
+        self::assertSame($file_to_upload->size, $uploaded_file->value->getLength());
 
         $dao->deleteById($id);
 
-        $row = $dao->searchFileOngoingUploadById($id);
-        self::assertNull($row);
-        $uploaded_file = $dao->searchUploadedFile($id);
+        $uploaded_file = $dao->searchUpload($id);
         self::assertTrue(Result::isErr($uploaded_file));
     }
 
@@ -89,18 +83,66 @@ final class OngoingUploadDaoTest extends TestIntegrationTestCase
 
         $id = $dao->saveFileOnGoingUpload($file_to_upload);
 
-        self::assertNotNull($dao->searchFileOngoingUploadById($id));
+        self::assertTrue(Result::isOk($dao->searchUpload($id)));
 
         self::assertEmpty($dao->searchExpiredUploads($now));
         $dao->deleteExpiredFiles($now);
 
-        self::assertNotNull($dao->searchFileOngoingUploadById($id));
+        self::assertTrue(Result::isOk($dao->searchUpload($id)));
 
         self::assertNotEmpty($dao->searchExpiredUploads($time_to_cleanup));
         $dao->deleteExpiredFiles($time_to_cleanup);
 
-        self::assertNull($dao->searchFileOngoingUploadById($id));
+        self::assertTrue(Result::isErr($dao->searchUpload($id)));
         self::assertEmpty($dao->searchExpiredUploads($time_to_cleanup));
+    }
+
+    public function testRemoveExpirationDate(): void
+    {
+        $now              = new \DateTimeImmutable();
+        $expiration       = $now->add(new \DateInterval('P1D'));
+        $after_expiration = $expiration->add(new \DateInterval('P1D'));
+
+        $dao = new OngoingUploadDao(
+            new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()),
+        );
+
+        $empty_to_upload = InsertFileToUpload::fromComponents(
+            new ArtidocDocument(['item_id' => 101]),
+            'filename.png',
+            0,
+            UserTestBuilder::aUser()->withId(self::USER_ID)->build(),
+            null,
+        );
+        $file_to_upload  = InsertFileToUpload::fromComponents(
+            new ArtidocDocument(['item_id' => 101]),
+            'filename.png',
+            123,
+            UserTestBuilder::aUser()->withId(self::USER_ID)->build(),
+            $expiration,
+        );
+
+        $empty_id = $dao->saveFileOnGoingUpload($empty_to_upload);
+        $file_id  = $dao->saveFileOnGoingUpload($file_to_upload);
+
+        self::assertTrue(Result::isOk($dao->searchUpload($empty_id)));
+        self::assertTrue(Result::isErr($dao->searchNotExpiredOngoingUpload($empty_id, self::USER_ID, $now)));
+        self::assertTrue(Result::isErr($dao->searchNotExpiredOngoingUpload($empty_id, self::USER_ID, $after_expiration)));
+
+        self::assertTrue(Result::isOk($dao->searchUpload($file_id)));
+        self::assertTrue(Result::isOk($dao->searchNotExpiredOngoingUpload($file_id, self::USER_ID, $now)));
+        self::assertTrue(Result::isErr($dao->searchNotExpiredOngoingUpload($file_id, self::USER_ID, $after_expiration)));
+
+        $dao->removeExpirationDate($empty_id);
+        $dao->removeExpirationDate($file_id);
+
+        self::assertTrue(Result::isOk($dao->searchUpload($empty_id)));
+        self::assertTrue(Result::isErr($dao->searchNotExpiredOngoingUpload($empty_id, self::USER_ID, $now)));
+        self::assertTrue(Result::isErr($dao->searchNotExpiredOngoingUpload($empty_id, self::USER_ID, $after_expiration)));
+
+        self::assertTrue(Result::isOk($dao->searchUpload($file_id)));
+        self::assertTrue(Result::isErr($dao->searchNotExpiredOngoingUpload($file_id, self::USER_ID, $now)));
+        self::assertTrue(Result::isErr($dao->searchNotExpiredOngoingUpload($file_id, self::USER_ID, $after_expiration)));
     }
 
     public function testSearchFileOngoingUploadByItemIdNameAndExpirationDate(): void

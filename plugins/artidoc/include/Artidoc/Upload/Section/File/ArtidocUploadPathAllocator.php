@@ -44,7 +44,7 @@ final readonly class ArtidocUploadPathAllocator implements PathAllocator
         return new self($artidoc->getId());
     }
 
-    public static function fromExpiredFileInformation(ExpiredFileInformation $file_information): self
+    public static function fromFileInformation(UploadFileInformation|ExpiredFileInformation $file_information): self
     {
         return new self($file_information->artidoc_id);
     }
