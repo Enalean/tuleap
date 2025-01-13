@@ -59,7 +59,7 @@ class AgileDashboard_FirstScrumCreator
         }
 
         $already_existing_tracker = $this->getAlreadyExistingTracker($project);
-        if ($already_existing_tracker) {
+        if ($already_existing_tracker !== null) {
             return NewFeedback::warn(
                 sprintf(
                     dgettext(

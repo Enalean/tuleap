@@ -52,7 +52,7 @@ class XMLExporter
             return;
         }
 
-        $agiledashboard_node->addChild('admin')->addChild('scrum')->addChild('explicit_backlog')->addAttribute('is_used', '1');
+        $agiledashboard_node->addChild('admin')?->addChild('scrum')?->addChild('explicit_backlog')?->addAttribute('is_used', '1');
     }
 
     public function exportExplicitBacklogContent(Project $project, SimpleXMLElement $agiledashboard_node): void
@@ -68,8 +68,8 @@ class XMLExporter
 
         $top_backlog_node = $agiledashboard_node->addChild('top_backlog');
         foreach ($artifact_ids as $artifact_id) {
-            $artifact_node = $top_backlog_node->addChild('artifact');
-            $artifact_node->addAttribute('artifact_id', (string) $artifact_id['artifact_id']);
+            $artifact_node = $top_backlog_node?->addChild('artifact');
+            $artifact_node?->addAttribute('artifact_id', (string) $artifact_id['artifact_id']);
         }
     }
 }
