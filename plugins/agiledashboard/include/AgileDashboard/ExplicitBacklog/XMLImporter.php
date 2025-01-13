@@ -62,10 +62,8 @@ class XMLImporter
 
     public function importConfiguration(SimpleXMLElement $xml, Project $project): void
     {
-        if (
-            ! isset($xml->admin) ||
-            PHPCast::toBoolean($xml->admin->scrum->explicit_backlog['is_used']) === true
-        ) {
+        $is_used = $xml->admin->scrum->explicit_backlog['is_used'] ?? null;
+        if ($is_used === null || PHPCast::toBoolean($is_used) === true) {
             $this->explicit_backlog_dao->setProjectIsUsingExplicitBacklog((int) $project->getID());
         }
     }
@@ -77,7 +75,7 @@ class XMLImporter
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         LoggerInterface $logger,
     ): void {
-        if (! isset($xml->top_backlog)) {
+        if ($xml->top_backlog->count() === 0) {
             return;
         }
 

@@ -1,42 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/XMLExporter.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-      <code><![CDATA[addChild]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/XMLImporter.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$xml->admin->scrum->explicit_backlog['is_used']]]></code>
-    </PossiblyNullArgument>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! isset($xml->admin)]]></code>
-      <code><![CDATA[isset($xml->top_backlog)]]></code>
-    </TypeDoesNotContainType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FieldPriorityAugmenter.php">
-    <MissingParamType>
-      <code><![CDATA[$additional_criteria]]></code>
-      <code><![CDATA[$additional_criteria]]></code>
-      <code><![CDATA[$additional_criteria]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getAugmentedDataForFieldPriority]]></code>
-      <code><![CDATA[getMilestoneFromCriteria]]></code>
-      <code><![CDATA[getSequenceIdForFieldPriority]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FirstScrumCreator.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$already_existing_tracker]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
       <code><![CDATA[fetchArtifactValue]]></code>
@@ -649,16 +612,8 @@
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/SelectedMilestoneProvider.php">
     <MissingReturnType>
-      <code><![CDATA[getMilestone]]></code>
       <code><![CDATA[getMilestoneId]]></code>
-      <code><![CDATA[loadMilestone]]></code>
     </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$this->milestone_factory->getBareMilestoneByArtifactId(
-            $this->user,
-            $this->additional_criteria[self::FIELD_NAME]->getValue()
-        )]]></code>
-    </PossiblyNullPropertyAssignmentValue>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $this->milestone->getArtifactId()]]></code>
     </RiskyTruthyFalsyComparison>
@@ -1410,8 +1365,6 @@
       <code><![CDATA[$milestone_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getArtifactPosition]]></code>
-      <code><![CDATA[getSequenceId]]></code>
       <code><![CDATA[loadBacklogForMilestoneIfNeeded]]></code>
       <code><![CDATA[loadTopBacklog]]></code>
       <code><![CDATA[storeBacklogArtifacts]]></code>
