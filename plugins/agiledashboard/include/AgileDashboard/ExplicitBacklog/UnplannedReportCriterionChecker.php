@@ -40,7 +40,7 @@ class UnplannedReportCriterionChecker
         return $this->getValueId() !== null;
     }
 
-    private function getValueId()
+    private function getValueId(): ?bool
     {
         if (! isset($this->additional_criteria[AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME])) {
             return null;

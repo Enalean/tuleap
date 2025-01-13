@@ -57,7 +57,7 @@ class UnplannedArtifactsAdder
      */
     public function addArtifactToTopBacklog(Artifact $artifact): void
     {
-        $artifact_id = (int) $artifact->getId();
+        $artifact_id = $artifact->getId();
         $project_id  = (int) $artifact->getTracker()->getGroupId();
 
         $this->addArtifactToTopBacklogFromIds($artifact_id, $project_id);

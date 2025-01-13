@@ -69,7 +69,7 @@ class UnplannedReportCriterionMatchingIdsRetriever
         $matching_ids = [];
         $project      = $tracker->getProject();
         $project_id   = (int) $project->getID();
-        $tracker_id   = (int) $tracker->getId();
+        $tracker_id   = $tracker->getId();
 
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
             throw new ProjectNotUsingExplicitBacklogException();
@@ -82,23 +82,28 @@ class UnplannedReportCriterionMatchingIdsRetriever
             );
 
             if ($artifact !== null) {
-                $matching_ids[(int) $unplanned_artifact_id] = true;
+                $matching_ids[$unplanned_artifact_id] = true;
             }
         }
 
         return $matching_ids;
     }
 
+    /**
+     * @param list<array{artifact_id: int}> $result
+     * @return list<int>
+     */
     private function extractArtifactIdsFromResult(array $result): array
     {
         return array_map(
-            function (array $item) {
-                return $item['artifact_id'];
-            },
+            static fn(array $item): int => $item['artifact_id'],
             $result
         );
     }
 
+    /**
+     * @return list<int>
+     */
     private function getUnplannedArtifactIds(int $tracker_id, int $project_id): array
     {
         $artifacts_not_in_top_backlog = $this->artifacts_in_explicit_backlog_dao->getAllArtifactNotInTopBacklogInTracker(
@@ -113,6 +118,6 @@ class UnplannedReportCriterionMatchingIdsRetriever
         $artifact_ids_not_in_top_backlog = $this->extractArtifactIdsFromResult($artifacts_not_in_top_backlog);
         $artifact_ids_planned            = $this->extractArtifactIdsFromResult($artifacts_planned);
 
-        return array_diff($artifact_ids_not_in_top_backlog, $artifact_ids_planned);
+        return array_values(array_diff($artifact_ids_not_in_top_backlog, $artifact_ids_planned));
     }
 }

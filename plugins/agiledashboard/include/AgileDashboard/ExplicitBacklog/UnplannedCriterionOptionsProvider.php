@@ -38,7 +38,7 @@ class UnplannedCriterionOptionsProvider
         $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
-    public function formatUnplannedAsSelectboxOption(Project $project, $selected_option_id): string
+    public function formatUnplannedAsSelectboxOption(Project $project, string $selected_option_id): string
     {
         if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID())) {
             return '';
@@ -46,20 +46,19 @@ class UnplannedCriterionOptionsProvider
 
         return $this->getOptionForSelectBox(
             $selected_option_id,
-            self::UNPLANNED_IDENTIFIER,
             dgettext('tuleap-agiledashboard', 'Unplanned')
         );
     }
 
-    private function getOptionForSelectBox($selected_option_id, $milestone_id, $label): string
+    private function getOptionForSelectBox(string $selected_option_id, string $label): string
     {
         $selected = '';
 
-        if ($selected_option_id == $milestone_id) {
+        if ($selected_option_id === self::UNPLANNED_IDENTIFIER) {
             $selected = 'selected="selected"';
         }
 
-        $option  = '<option value="' . $milestone_id . '" ' . $selected . '>';
+        $option  = '<option value="' . self::UNPLANNED_IDENTIFIER . '" ' . $selected . '>';
         $option .= $label;
         $option .= '</option>';
 
