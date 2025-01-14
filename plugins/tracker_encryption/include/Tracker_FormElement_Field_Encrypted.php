@@ -196,14 +196,11 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     {
     }
 
-    /**
-     * @return string
-     */
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = [],
-    ) {
+        array $submitted_values = [],
+    ): string {
         $html = '';
         if (
             is_array($submitted_values)

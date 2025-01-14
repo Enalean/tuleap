@@ -165,14 +165,12 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
-     *
-     * @return string
      */
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
-    ) {
+    ): string {
         assert($value instanceof Tracker_Artifact_ChangesetValue_List);
         $selected_values = $value ? $value->getListValues() : [];
         if (is_array($submitted_values) && isset($submitted_values[$this->id])) {

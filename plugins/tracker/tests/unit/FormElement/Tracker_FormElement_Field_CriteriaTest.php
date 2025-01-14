@@ -25,16 +25,11 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
-use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_FieldVisitor;
 use Tracker_Report;
 use Tracker_Report_Criteria;
-use Tuleap\Option\Option;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
-use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -55,119 +50,7 @@ class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         parent::setUp();
 
-        $this->field = new class extends Tracker_FormElement_Field {
-            public function __construct()
-            {
-                parent::__construct(
-                    1,
-                    1,
-                    0,
-                    'test_field',
-                    'Test Field',
-                    '',
-                    true,
-                    'P',
-                    false,
-                    null,
-                    1
-                );
-            }
-
-            public function accept(Tracker_FormElement_FieldVisitor $visitor)
-            {
-            }
-
-            public static function getFactoryLabel()
-            {
-            }
-
-            public static function getFactoryDescription()
-            {
-            }
-
-            public static function getFactoryIconUseIt()
-            {
-            }
-
-            public static function getFactoryIconCreate()
-            {
-            }
-
-            protected function fetchAdminFormElement()
-            {
-            }
-
-            public function getRESTAvailableValues()
-            {
-            }
-
-            public function fetchCriteriaValue($criteria)
-            {
-            }
-
-            public function fetchRawValue($value)
-            {
-            }
-
-            public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
-            {
-                return Option::nothing(ParametrizedFromWhere::class);
-            }
-
-            protected function getCriteriaDao()
-            {
-            }
-
-            protected function fetchArtifactValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
-            {
-            }
-
-            public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
-            {
-            }
-
-            protected function fetchSubmitValue(array $submitted_values)
-            {
-            }
-
-            protected function fetchSubmitValueMasschange()
-            {
-            }
-
-            protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
-            {
-            }
-
-            protected function getValueDao()
-            {
-            }
-
-            public function fetchRawValueFromChangeset($changeset)
-            {
-            }
-
-            protected function validate(Artifact $artifact, $value)
-            {
-            }
-
-            protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue, CreatedFileURLMapping $url_mapping)
-            {
-            }
-
-            public function getChangesetValue($changeset, $value_id, $has_changed)
-            {
-            }
-
-            public function fetchChangesetValue(
-                int $artifact_id,
-                int $changeset_id,
-                mixed $value,
-                ?\Tracker_Report $report = null,
-                ?int $from_aid = null,
-            ): string {
-                return '';
-            }
-        };
+        $this->field = TextFieldBuilder::aTextField(1)->build();
 
         $this->criteria = Mockery::mock(Tracker_Report_Criteria::class);
     }

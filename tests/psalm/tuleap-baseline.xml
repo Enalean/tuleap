@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchArtifactValue]]></code>
       <code><![CDATA[fetchCSVChangesetValue]]></code>
       <code><![CDATA[fetchCriteriaValue]]></code>
       <code><![CDATA[fetchMailArtifactValue]]></code>

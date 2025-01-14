@@ -135,7 +135,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
-    ) {
+    ): string {
         return '<div class="alert">'
             . dgettext(
                 'tuleap-testmanagement',

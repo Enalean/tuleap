@@ -116,7 +116,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
-    ) {
+    ): string {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
     }
 

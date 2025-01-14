@@ -158,14 +158,12 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
      * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
-     *
-     * @return string
      */
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
-    ) {
+    ): string {
         $html = '';
         if (isset($submitted_values[$this->getId()])) {
             $value = $submitted_values[$this->getId()];
