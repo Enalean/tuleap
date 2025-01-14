@@ -17,9 +17,10 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-card tlp-skeleton-card" id="element-skeleton">
         <span class="tlp-skeleton-text element-skeleton-xref"></span>
         <span class="tlp-skeleton-text element-skeleton-title"></span>
     </div>
 </template>
+<script setup lang="ts"></script>
