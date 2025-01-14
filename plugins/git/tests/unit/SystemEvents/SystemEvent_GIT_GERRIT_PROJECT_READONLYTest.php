@@ -19,28 +19,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once __DIR__ . '/../bootstrap.php';
+declare(strict_types=1);
 
-class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git\SystemEvents;
+
+use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_RemoteServer_GerritServer;
+use Git_RemoteServer_GerritServerFactory;
+use GitRepositoryFactory;
+use SystemEvent_GIT_GERRIT_PROJECT_READONLY;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItMakesGerritProjectReadOnly(): void
     {
-        $repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $server_factory     = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $driver             = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $driver_factory     = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($driver)->getMock();
-        $repository         = \Mockery::spy(\GitRepository::class);
-        $forge_project      = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('projname')->getMock();
-        $server             = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $server_factory     = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $driver             = $this->createMock(Git_Driver_Gerrit::class);
+        $driver_factory     = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $forge_project      = ProjectTestBuilder::aProject()->withUnixName('projname')->build();
+        $repository         = GitRepositoryTestBuilder::aProjectRepository()->inProject($forge_project)->withName('repo_01')->build();
+        $server             = $this->createMock(Git_RemoteServer_GerritServer::class);
 
-        $repository->shouldReceive('getProject')->andReturns($forge_project);
-        $repository->shouldReceive('getName')->andReturns('repo_01');
-        $server_factory->shouldReceive('getServerById')->andReturns($server);
-        $repository_factory->shouldReceive('getRepositoryById')->andReturns($repository);
+        $driver_factory->method('getDriver')->willReturn($driver);
+        $server_factory->method('getServerById')->willReturn($server);
+        $repository_factory->method('getRepositoryById')->willReturn($repository);
 
-        $event = \Mockery::mock(\SystemEvent_GIT_GERRIT_PROJECT_READONLY::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $event = $this->createPartialMock(SystemEvent_GIT_GERRIT_PROJECT_READONLY::class, ['getParametersAsArray']);
         $event->injectDependencies(
             $repository_factory,
             $server_factory,
@@ -49,12 +58,9 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends \Tuleap\Test\PHPUnit\T
 
         $repository_id    = 154;
         $remote_server_id = 33;
-        $event->shouldReceive('getParametersAsArray')->andReturns([
-            $repository_id,
-            $remote_server_id,
-        ]);
+        $event->method('getParametersAsArray')->willReturn([$repository_id, $remote_server_id]);
 
-        $driver->shouldReceive('makeGerritProjectReadOnly')->with($server, 'projname/repo_01')->once();
+        $driver->expects(self::once())->method('makeGerritProjectReadOnly')->with($server, 'projname/repo_01');
 
         $event->process();
     }

@@ -22,72 +22,59 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_REPO_FORKTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-    private $old_repository;
-    private $new_repository;
-    private $old_repository_id = 115;
-    private $new_repository_id = 123;
-    /**
-     * @var Git_Backend_Gitolite&\Mockery\MockInterface
-     */
-    private $backend;
-    /**
-     * @var \Mockery\MockInterface&SystemEvent_GIT_REPO_FORK
-     */
-    private $event;
-    /**
-     * @var GitRepositoryFactory&\Mockery\MockInterface
-     */
-    private $repository_factory;
+namespace Tuleap\Git\SystemEvents;
+
+use Git_Backend_Gitolite;
+use GitRepository;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use SystemEvent;
+use SystemEvent_GIT_REPO_FORK;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class SystemEvent_GIT_REPO_FORKTest extends TestCase
+{
+    private GitRepository&MockObject $old_repository;
+    private GitRepository $new_repository;
+    private int $old_repository_id = 115;
+    private int $new_repository_id = 123;
+    private Git_Backend_Gitolite&MockObject $backend;
+    private SystemEvent_GIT_REPO_FORK&MockObject $event;
+    private GitRepositoryFactory&MockObject $repository_factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->backend = $this->createMock(Git_Backend_Gitolite::class);
 
-        $this->backend = \Mockery::spy(\Git_Backend_Gitolite::class);
+        $this->old_repository = $this->createMock(GitRepository::class);
+        $this->old_repository->method('getBackend')->willReturn($this->backend);
 
-        $this->old_repository = \Mockery::spy(\GitRepository::class);
-        $this->old_repository->shouldReceive('getBackend')->andReturns($this->backend);
+        $this->new_repository     = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $this->repository_factory = $this->createMock(GitRepositoryFactory::class);
 
-        $this->new_repository     = \Mockery::spy(\GitRepository::class);
-        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-
-        $this->event = \Mockery::mock(\SystemEvent_GIT_REPO_FORK::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->event = $this->createPartialMock(SystemEvent_GIT_REPO_FORK::class, ['done', 'warning']);
         $this->event->setParameters($this->old_repository_id . SystemEvent::PARAMETER_SEPARATOR . $this->new_repository_id);
         $this->event->injectDependencies($this->repository_factory);
     }
 
-    public function testItGetsTheRepositoryIdsFromTheFactory(): void
-    {
-        $this->expectNotToPerformAssertions();
-        $this->repository_factory->shouldReceive('getRepositoryById')->with($this->old_repository_id)->andReturns($this->old_repository);
-        $this->repository_factory->shouldReceive('getRepositoryById')->with($this->new_repository_id)->andReturns($this->new_repository);
-        $this->event->process();
-    }
-
     public function testItDelegatesToBackendRepositoryCreation(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryById')->with($this->old_repository_id)->andReturns($this->old_repository);
-        $this->repository_factory->shouldReceive('getRepositoryById')->with($this->new_repository_id)->andReturns($this->new_repository);
-        $this->backend->shouldReceive('forkOnFilesystem')->with(\Mockery::any(), $this->new_repository)->once();
-        $this->event->process();
-    }
-
-    public function testItMarksTheEventAsDone(): void
-    {
-        $this->repository_factory->shouldReceive('getRepositoryById')->with($this->old_repository_id)->andReturns($this->old_repository);
-        $this->repository_factory->shouldReceive('getRepositoryById')->with($this->new_repository_id)->andReturns($this->new_repository);
-        $this->event->shouldReceive('done')->once();
+        $this->repository_factory->method('getRepositoryById')->willReturnCallback(fn(int $id) => match ($id) {
+            $this->old_repository_id => $this->old_repository,
+            $this->new_repository_id => $this->new_repository,
+        });
+        $this->backend->expects(self::once())->method('forkOnFilesystem')->with(self::anything(), $this->new_repository);
+        $this->event->expects(self::once())->method('done');
         $this->event->process();
     }
 
     public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
-        $this->event->shouldReceive('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?')->once();
+        $this->repository_factory->method('getRepositoryById')->willReturn(null);
+        $this->event->expects(self::once())->method('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?');
         $this->event->process();
     }
 }

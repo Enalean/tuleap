@@ -22,28 +22,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Git\SystemEvents;
+
+use Git_Gitolite_SSHKeyDumper;
+use Git_RemoteServer_Gerrit_ReplicationSSHKey;
+use Git_RemoteServer_GerritServer;
+use Git_RemoteServer_GerritServerFactory;
+use Git_RemoteServer_NotFoundException;
+use PHPUnit\Framework\MockObject\MockObject;
+use SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /** @var SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP */
-    private $event;
-    /** @var Git_RemoteServer_GerritServerFactory */
-    private $gerrit_server_factory;
-    /** @var Git_Gitolite_SSHKeyDumper */
-    private $ssh_key_dumper;
+    private SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP&MockObject $event;
+    private Git_RemoteServer_GerritServerFactory&MockObject $gerrit_server_factory;
+    private Git_Gitolite_SSHKeyDumper&MockObject $ssh_key_dumper;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->ssh_key_dumper        = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
-        $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->event                 = \Mockery::mock(\SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->ssh_key_dumper        = $this->createMock(Git_Gitolite_SSHKeyDumper::class);
+        $this->gerrit_server_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->event                 = $this->createPartialMock(SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::class, ['done', 'error']);
         $this->event->injectDependencies($this->gerrit_server_factory, $this->ssh_key_dumper);
     }
 
@@ -52,11 +55,15 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
-        $this->gerrit_server_factory->shouldReceive('getServerById')
+        $gerrit_server = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $gerrit_server->method('getId')->willReturn($gerrit_server_id);
+        $gerrit_server->method('getReplicationKey');
+        $this->ssh_key_dumper->method('dumpSSHKeys');
+        $this->gerrit_server_factory->expects(self::once())->method('getServerById')
             ->with($gerrit_server_id)
-            ->once()
-            ->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
+            ->willReturn($gerrit_server);
 
+        $this->event->method('error');
         $this->event->process();
     }
 
@@ -65,11 +72,6 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
-        $replication_key = 'ssh-rsa blablabla';
-        $use_ssl         = false;
-        $gerrit_version  = '2.5';
-        $http_password   = 'ikshjdshg';
-
         $gerrit_server = new Git_RemoteServer_GerritServer(
             $gerrit_server_id,
             '$host',
@@ -77,22 +79,22 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
             '$http_port',
             '$login',
             '$identity_file',
-            $replication_key,
-            $use_ssl,
-            $gerrit_version,
-            $http_password,
+            'ssh-rsa blablabla',
+            false,
+            '2.5',
+            'ikshjdshg',
             ''
         );
-        $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns($gerrit_server);
+        $this->gerrit_server_factory->method('getServerById')->willReturn($gerrit_server);
 
-        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->with(
-            Mockery::on(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
+        $this->ssh_key_dumper->expects(self::once())->method('dumpSSHKeys')->with(
+            self::callback(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
                 return $key->getGerritHostId() === $gerrit_server_id;
             }),
-            Mockery::type(InvalidKeysCollector::class)
-        )
-            ->once();
+            self::isInstanceOf(InvalidKeysCollector::class)
+        );
 
+        $this->event->method('error');
         $this->event->process();
     }
 
@@ -101,16 +103,16 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
-        $this->gerrit_server_factory->shouldReceive('getServerById')->andThrows(new Git_RemoteServer_NotFoundException($gerrit_server_id));
+        $this->gerrit_server_factory->method('getServerById')->willThrowException(new Git_RemoteServer_NotFoundException($gerrit_server_id));
 
-        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->with(
-            Mockery::on(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
+        $this->ssh_key_dumper->expects(self::once())->method('dumpSSHKeys')->with(
+            self::callback(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
                 return $key->getGerritHostId() === $gerrit_server_id;
             }),
-            Mockery::type(InvalidKeysCollector::class)
-        )
-            ->once();
+            self::isInstanceOf(InvalidKeysCollector::class)
+        );
 
+        $this->event->method('error');
         $this->event->process();
     }
 
@@ -118,10 +120,13 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $this->event->setParameters('7');
 
-        $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
-        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->andReturns(true);
+        $gerrit_server = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $gerrit_server->method('getId')->willReturn(7);
+        $gerrit_server->method('getReplicationKey');
+        $this->gerrit_server_factory->method('getServerById')->willReturn($gerrit_server);
+        $this->ssh_key_dumper->method('dumpSSHKeys')->willReturn(true);
 
-        $this->event->shouldReceive('done')->once();
+        $this->event->expects(self::once())->method('done');
 
         $this->event->process();
     }
@@ -130,10 +135,13 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $this->event->setParameters('7');
 
-        $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
-        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->andReturns(false);
+        $gerrit_server = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $gerrit_server->method('getId')->willReturn(7);
+        $gerrit_server->method('getReplicationKey');
+        $this->gerrit_server_factory->method('getServerById')->willReturn($gerrit_server);
+        $this->ssh_key_dumper->method('dumpSSHKeys')->willReturn(false);
 
-        $this->event->shouldReceive('error')->once();
+        $this->event->expects(self::once())->method('error');
 
         $this->event->process();
     }
