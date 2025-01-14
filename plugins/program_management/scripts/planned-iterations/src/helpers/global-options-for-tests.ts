@@ -18,15 +18,16 @@
  *
  */
 
-import type { Vue } from "vue/types/vue";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import type { StoreOptions } from "vuex";
+import { createStore } from "vuex";
+import type { State } from "../type";
 
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-
-export async function createPlanIterationsLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-    return local_vue;
+export function getGlobalTestOptions(
+    store_options: StoreOptions<State>,
+): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true }), createStore(store_options)],
+    };
 }

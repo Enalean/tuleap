@@ -35,10 +35,9 @@
                 >
                     <i aria-hidden="true" class="fas fa-plus tlp-button-icon"></i>
                     {{
-                        gettext_provider.interpolate(
-                            gettext_provider.$gettext("New %{ iteration_sub_label }"),
-                            { iteration_sub_label: iterations_labels.sub_label },
-                        )
+                        $gettext("New %{ iteration_sub_label }", {
+                            iteration_sub_label: iterations_labels.sub_label,
+                        })
                     }}
                 </button>
             </div>
@@ -62,7 +61,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useNamespacedState } from "vuex-composition-helpers";
 import { getIncrementIterations } from "../../../helpers/increment-iterations-retriever";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
@@ -72,7 +71,7 @@ import IterationCard from "./IterationCard.vue";
 import type { Iteration } from "../../../type";
 import type { IterationLabels, ProgramIncrement } from "../../../store/configuration";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const { iterations_labels, iteration_tracker_id, program_increment } = useNamespacedState<{
     iterations_labels: IterationLabels;
@@ -99,13 +98,10 @@ onMounted(async () => {
 
 function buildErrorMessage(): string {
     return iterations_labels.value.label === ""
-        ? gettext_provider.$gettext("The retrieval of iterations has failed")
-        : gettext_provider.interpolate(
-              gettext_provider.$gettext("The retrieval of %{ iteration_label } has failed"),
-              {
-                  iteration_label: iterations_labels.value.label,
-              },
-          );
+        ? $gettext("The retrieval of iterations has failed")
+        : $gettext("The retrieval of %{ iteration_label } has failed", {
+              iteration_label: iterations_labels.value.label,
+          });
 }
 
 const show_empty_state = computed((): boolean => {

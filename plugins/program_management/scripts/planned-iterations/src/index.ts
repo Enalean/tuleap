@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
 import App from "./components/App.vue";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./store";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createInitializedStore } from "./store";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import "../themes/main.scss";
 
@@ -30,36 +31,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const user_locale = getDatasetItemOrThrow(document.body, "userLocale");
-    Vue.config.language = user_locale;
+    const user_locale = getDatasetItemOrThrow(document.body, "data-user-locale");
 
-    await initVueGettext(
-        Vue,
+    const gettext_plugin = await initVueGettext(
+        createGettext,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
-    const AppComponent = Vue.extend(App);
-
-    new AppComponent({
-        store: createStore({
-            program: JSON.parse(getDatasetItemOrThrow(vue_mount_point, "program")),
-            program_privacy: JSON.parse(getDatasetItemOrThrow(vue_mount_point, "programPrivacy")),
-            program_flags: JSON.parse(getDatasetItemOrThrow(vue_mount_point, "programFlags")),
-            is_program_admin: Boolean(vue_mount_point.dataset.isUserAdmin),
-            program_increment: JSON.parse(
-                getDatasetItemOrThrow(vue_mount_point, "programIncrement"),
-            ),
-            iterations_labels: JSON.parse(
-                getDatasetItemOrThrow(vue_mount_point, "iterationsLabels"),
-            ),
-            user_locale: user_locale.replace("_", "-"),
-            iteration_tracker_id: parseInt(
-                getDatasetItemOrThrow(vue_mount_point, "iterationTrackerId"),
-                10,
-            ),
-            is_accessibility_mode_enabled: Boolean(
-                vue_mount_point.dataset.isAccessibilityModeEnabled,
-            ),
-        }),
-    }).$mount(vue_mount_point);
+    createApp(App)
+        .use(
+            createInitializedStore({
+                program: JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-program")),
+                program_privacy: JSON.parse(
+                    getDatasetItemOrThrow(vue_mount_point, "data-program-privacy"),
+                ),
+                program_flags: JSON.parse(
+                    getDatasetItemOrThrow(vue_mount_point, "data-program-flags"),
+                ),
+                is_program_admin: Boolean(vue_mount_point.getAttribute("data-is-user-admin")),
+                program_increment: JSON.parse(
+                    getDatasetItemOrThrow(vue_mount_point, "data-program-increment"),
+                ),
+                iterations_labels: JSON.parse(
+                    getDatasetItemOrThrow(vue_mount_point, "data-iterations-labels"),
+                ),
+                user_locale: user_locale.replace("_", "-"),
+                iteration_tracker_id: Number.parseInt(
+                    getDatasetItemOrThrow(vue_mount_point, "data-iteration-tracker-id"),
+                    10,
+                ),
+                is_accessibility_mode_enabled: Boolean(
+                    vue_mount_point.getAttribute("data-is-accessibility-mode-enabled"),
+                ),
+            }),
+        )
+        .use(gettext_plugin)
+        .mount(vue_mount_point);
 });

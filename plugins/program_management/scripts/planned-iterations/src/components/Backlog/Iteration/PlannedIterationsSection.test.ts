@@ -18,12 +18,11 @@
  *
  */
 
+import { nextTick } from "vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import * as retriever from "../../../helpers/increment-iterations-retriever";
-
-import type { Wrapper } from "@vue/test-utils";
 import type { IterationLabels } from "../../../store/configuration";
 import PlannedIterationsSection from "./PlannedIterationsSection.vue";
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
@@ -33,23 +32,23 @@ import BacklogElementSkeleton from "./../../BacklogElementSkeleton.vue";
 jest.useFakeTimers();
 
 describe("PlannedIterationsSection", () => {
-    async function getWrapper(iterations_labels: IterationLabels): Promise<Wrapper<Vue>> {
-        return shallowMount(PlannedIterationsSection, {
-            localVue: await createPlanIterationsLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+    function getWrapper(
+        iterations_labels: IterationLabels,
+    ): VueWrapper<InstanceType<typeof PlannedIterationsSection>> {
+        const store_options = {
+            modules: {
+                configuration: {
+                    namespaced: true,
                     state: {
-                        configuration: {
-                            iterations_labels,
-                            program_increment: {
-                                id: 666,
-                                title: "Mating",
-                            },
-                            iteration_tracker_id: "101",
-                        },
+                        iterations_labels,
+                        program_increment: { id: 666, title: "Mating" },
+                        iteration_tracker_id: "101",
                     },
-                }),
+                },
             },
+        };
+        return shallowMount(PlannedIterationsSection, {
+            global: { ...getGlobalTestOptions(store_options) },
         });
     }
 
@@ -59,7 +58,7 @@ describe("PlannedIterationsSection", () => {
         });
 
         it("should display the custom iterations label and sub-label when there are configured", async () => {
-            const wrapper = await getWrapper({
+            const wrapper = getWrapper({
                 label: "Guinea Pigs",
                 sub_label: "g-pig",
             });
@@ -82,7 +81,7 @@ describe("PlannedIterationsSection", () => {
             async (iterations_labels: IterationLabels, expected_message: string) => {
                 jest.spyOn(retriever, "getIncrementIterations").mockRejectedValue("nope");
 
-                const wrapper = await getWrapper(iterations_labels);
+                const wrapper = getWrapper(iterations_labels);
 
                 await jest.runOnlyPendingTimersAsync();
 
@@ -93,7 +92,7 @@ describe("PlannedIterationsSection", () => {
         );
 
         it("should use the custom iteration sub_label in the [+ add iteration] button when it is defined", async () => {
-            const wrapper = await getWrapper({ label: "Guinea Pigs", sub_label: "g-pig" });
+            const wrapper = getWrapper({ label: "Guinea Pigs", sub_label: "g-pig" });
 
             await jest.runOnlyPendingTimersAsync();
 
@@ -107,8 +106,9 @@ describe("PlannedIterationsSection", () => {
         it("should display its placeholder when there is no iteration in the increment", async () => {
             jest.spyOn(retriever, "getIncrementIterations").mockResolvedValue([]);
 
-            const wrapper = await getWrapper({ label: "", sub_label: "" });
+            const wrapper = getWrapper({ label: "", sub_label: "" });
 
+            await nextTick();
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
             await jest.runOnlyPendingTimersAsync();
@@ -130,8 +130,9 @@ describe("PlannedIterationsSection", () => {
                 },
             ]);
 
-            const wrapper = await getWrapper({ label: "", sub_label: "" });
+            const wrapper = getWrapper({ label: "", sub_label: "" });
 
+            await nextTick();
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
             await jest.runOnlyPendingTimersAsync();
@@ -146,7 +147,7 @@ describe("PlannedIterationsSection", () => {
         it("should display an error message when the retrieval of the iterations has failed", async () => {
             jest.spyOn(retriever, "getIncrementIterations").mockRejectedValue("nope");
 
-            const wrapper = await getWrapper({
+            const wrapper = getWrapper({
                 label: "Guinea Pigs",
                 sub_label: "g-pig",
             });

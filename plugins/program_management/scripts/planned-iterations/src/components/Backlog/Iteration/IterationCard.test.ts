@@ -18,10 +18,9 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import IterationCard from "./IterationCard.vue";
 import type { Iteration } from "../../../type";
@@ -29,24 +28,19 @@ import type { Iteration } from "../../../type";
 describe("IterationCard", () => {
     let iteration: Iteration;
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper<InstanceType<typeof IterationCard>> {
         return shallowMount(IterationCard, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            user_locale: "en-US",
-                            program_increment: {
-                                id: 1280,
-                            },
+                            namespaced: true,
+                            state: { user_locale: "en-US", program_increment: { id: 1280 } },
                         },
                     },
                 }),
             },
-            localVue: await createPlanIterationsLocalVue(),
-            propsData: {
-                iteration,
-            },
+            props: { iteration },
         });
     }
 
@@ -61,8 +55,8 @@ describe("IterationCard", () => {
         };
     });
 
-    it("Display the iteration with a closed state", async () => {
-        const wrapper = await getWrapper();
+    it("Display the iteration with a closed state", () => {
+        const wrapper = getWrapper();
 
         expect(
             wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right"),
@@ -75,7 +69,7 @@ describe("IterationCard", () => {
     });
 
     it("Display the iteration with an open state", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         await wrapper.get("[data-test=iteration-card-header]").trigger("click");
 
@@ -89,8 +83,8 @@ describe("IterationCard", () => {
         expect(wrapper.find("[data-test=planned-iteration-info]").exists()).toBe(true);
     });
 
-    it("displays the content of an iteration", async () => {
-        const wrapper = await getWrapper();
+    it("displays the content of an iteration", () => {
+        const wrapper = getWrapper();
 
         expect(wrapper.get("[data-test=iteration-header-label]").text()).toContain(iteration.title);
         expect(wrapper.get("[data-test=iteration-header-dates]").text()).toContain(
@@ -104,10 +98,10 @@ describe("IterationCard", () => {
         );
     });
 
-    it("should not display the info header if the user cannot update the iteration", async () => {
+    it("should not display the info header if the user cannot update the iteration", () => {
         iteration.user_can_update = false;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=planned-iteration-info]").exists()).toBe(false);
     });

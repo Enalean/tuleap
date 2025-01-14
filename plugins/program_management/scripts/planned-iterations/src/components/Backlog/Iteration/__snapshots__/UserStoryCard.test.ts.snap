@@ -27,48 +27,36 @@ exports[`UserStoryCard should display the user_story as a card with tracker and 
               <span
                 class="element-card-xref-project-icon"
               >
-                
-                                🐹
-                            
+                🐹
               </span>
-              
-                            Guinea Pigs
-                            
+               Guinea Pigs 
               <i
                 class="fas fa-long-arrow-alt-right element-card-xref-icon"
               />
-              
-                            user_story #101
-                        
+               user_story #101
             </div>
           </a>
         </div>
-         
         <div
           class="element-card-feature-title tlp-badge-secondary tlp-badge-outline"
         >
           <i
             class="fas fa-level-up-alt"
           />
-           
           <a
             class="feature-link"
             href="uri/to/feature"
           >
-            
-                        My parent feature
-                    
+            My parent feature
           </a>
         </div>
       </div>
-       
       <span
         class="element-card-label"
       >
         User Story 101
       </span>
     </div>
-     
     <div
       class="element-card-accessibility"
       data-test="element-card-accessibility"

@@ -19,27 +19,25 @@
   -->
 
 <template>
-    <div class="planned-iteration-content-items">
-        <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
-        <iteration-no-content
-            v-if="!has_user_stories && !is_loading && !has_error"
-            data-test="empty-state"
-        />
-        <div v-if="has_error" class="tlp-alert-danger" data-test="iteration-content-error-message">
-            {{ error_message }}
-        </div>
-        <user-story-card
-            v-for="user_story in user_stories"
-            v-bind:key="user_story.id"
-            v-bind:user_story="user_story"
-        />
+    <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
+    <iteration-no-content
+        v-if="!has_user_stories && !is_loading && !has_error"
+        data-test="empty-state"
+    />
+    <div v-if="has_error" class="tlp-alert-danger" data-test="iteration-content-error-message">
+        {{ error_message }}
     </div>
+    <user-story-card
+        v-for="user_story in user_stories"
+        v-bind:key="user_story.id"
+        v-bind:user_story="user_story"
+    />
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useActions, useGetters } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import IterationNoContent from "./IterationNoContent.vue";
 import UserStoryCard from "./UserStoryCard.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";

@@ -18,33 +18,30 @@
  *
  */
 
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
-
-import type { Wrapper } from "@vue/test-utils";
 import type { IterationLabels } from "../../../store/configuration";
 
 describe("PlannedIterationsSectionEmptyState", () => {
-    async function getWrapper(iterations_labels: IterationLabels): Promise<Wrapper<Vue>> {
-        return shallowMount(PlannedIterationsSectionEmptyState, {
-            localVue: await createPlanIterationsLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+    function getWrapper(
+        iterations_labels: IterationLabels,
+    ): VueWrapper<InstanceType<typeof PlannedIterationsSectionEmptyState>> {
+        const store_options = {
+            modules: {
+                configuration: {
+                    namespaced: true,
                     state: {
-                        configuration: {
-                            iterations_labels,
-                            program_increment: {
-                                id: 666,
-                                title: "Mating",
-                            },
-                            iteration_tracker_id: 101,
-                        },
+                        iterations_labels,
+                        program_increment: { id: 666, title: "Mating" },
+                        iteration_tracker_id: 101,
                     },
-                }),
+                },
             },
+        };
+        return shallowMount(PlannedIterationsSectionEmptyState, {
+            global: { ...getGlobalTestOptions(store_options) },
         });
     }
 
@@ -53,8 +50,8 @@ describe("PlannedIterationsSectionEmptyState", () => {
         [{ label: "", sub_label: "" }, "iteration"],
     ])(
         "should use the custom iteration sub_label in the text and button when it is defined",
-        async (labels: IterationLabels, expected_naming: string) => {
-            const wrapper = await getWrapper(labels);
+        (labels: IterationLabels, expected_naming: string) => {
+            const wrapper = getWrapper(labels);
 
             expect(wrapper.get("[data-test=planned-iterations-empty-state-text]").text()).toContain(
                 expected_naming,

@@ -185,7 +185,6 @@ module.exports = {
             files: [
                 "plugins/baseline/scripts/baseline/src/**/*.vue",
                 "plugins/label/scripts/project-labeled-items/src/**/*.vue",
-                "plugins/program_management/scripts/planned-iterations/src/**/*.vue",
                 "plugins/program_management/scripts/program_management/src/**/*.vue",
                 "plugins/roadmap/scripts/roadmap-widget/src/**/*.vue",
                 "plugins/taskboard/scripts/taskboard/src/**/*.vue",

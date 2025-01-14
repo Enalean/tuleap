@@ -43,13 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useNamespacedState } from "vuex-composition-helpers";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
 import type { IterationLabels, ProgramIncrement } from "../../../store/configuration";
 import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
 
-const { interpolate, $gettext } = useGettext();
+const { $gettext } = useGettext();
 
 const { iterations_labels, iteration_tracker_id, program_increment } = useNamespacedState<{
     iterations_labels: IterationLabels;
@@ -60,14 +60,14 @@ const { iterations_labels, iteration_tracker_id, program_increment } = useNamesp
 const planned_iterations_empty_state_text =
     iterations_labels.value.sub_label === ""
         ? $gettext("There is no iteration yet.")
-        : interpolate($gettext("There is no %{ iteration_label } yet."), {
+        : $gettext("There is no %{ iteration_label } yet.", {
               iteration_label: iterations_labels.value.sub_label,
           });
 
 const create_the_first_iteration_text =
     iterations_labels.value.sub_label === ""
         ? $gettext("Create the first iteration")
-        : interpolate($gettext("Create the first %{ iteration_label }"), {
+        : $gettext("Create the first %{ iteration_label }", {
               iteration_label: iterations_labels.value.sub_label,
           });
 
