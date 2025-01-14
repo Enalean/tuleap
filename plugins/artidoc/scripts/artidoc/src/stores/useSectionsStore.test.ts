@@ -68,7 +68,6 @@ describe("useSectionsStore", () => {
         });
 
         it.each([
-            [null],
             [TrackerStub.withoutTitleAndDescription()],
             [TrackerStub.withTitle()],
             [TrackerStub.withDescription()],
@@ -89,6 +88,20 @@ describe("useSectionsStore", () => {
                 expect(isPendingFreetextSection(store.sections.value[0])).toBe(true);
             },
         );
+
+        it("should store nothing when tracker is not defined", async () => {
+            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+
+            const store = useSectionsStore();
+            store.loadSections(101, null, true);
+
+            await flushPromises();
+
+            if (store.sections.value === undefined) {
+                throw new Error("Expected store.sections to be defined");
+            }
+            expect(store.sections.value).toHaveLength(0);
+        });
 
         it("should store loaded sections when empty and configured tracker but no rights to edit document", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
@@ -306,7 +319,6 @@ describe("useSectionsStore", () => {
         );
 
         it.each([
-            [null],
             [TrackerStub.withoutTitleAndDescription()],
             [TrackerStub.withTitle()],
             [TrackerStub.withDescription()],
@@ -463,7 +475,6 @@ describe("useSectionsStore", () => {
 
     describe("insertPendingSectionForEmptyDocument", () => {
         it.each([
-            [null],
             [TrackerStub.withoutTitleAndDescription()],
             [TrackerStub.withTitle()],
             [TrackerStub.withDescription()],
@@ -530,6 +541,21 @@ describe("useSectionsStore", () => {
             expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(1);
             expect(store.sections.value?.[0].id).toStrictEqual(section.id);
+        });
+
+        it("should do nothing when tracker is not defined", async () => {
+            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+
+            const store = useSectionsStore();
+            store.loadSections(101, null, true);
+            await flushPromises();
+
+            store.insertPendingSectionForEmptyDocument(null);
+            if (store.sections.value === undefined) {
+                throw new Error("Expected store.sections to be defined.");
+            }
+
+            expect(store.sections.value).toHaveLength(0);
         });
     });
 
