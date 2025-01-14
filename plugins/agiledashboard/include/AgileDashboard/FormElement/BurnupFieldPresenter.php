@@ -66,12 +66,12 @@ class BurnupFieldPresenter
         CountElementsModeChecker $mode_checker,
         BurnupRepresentation $burnup_representation,
         \Tuleap\Tracker\Artifact\Artifact $artifact,
-        $can_burnup_be_regenerated,
-        $user_locale,
-        $warning,
+        bool $can_burnup_be_regenerated,
+        string $user_locale,
+        string $warning,
     ) {
         $this->burnup_data               = json_encode($burnup_representation);
-        $this->project_id                = $artifact->getTracker()->getProject()->getId();
+        $this->project_id                = (int) $artifact->getTracker()->getProject()->getId();
         $this->artifact_id               = $artifact->getId();
         $this->can_burnup_be_regenerated = $can_burnup_be_regenerated;
         $this->user_locale               = $user_locale;

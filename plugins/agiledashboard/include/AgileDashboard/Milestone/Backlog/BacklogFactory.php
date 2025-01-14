@@ -50,7 +50,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
         $this->planning_factory = $planning_factory;
     }
 
-    public function getBacklog(PFUser $user, Planning_Milestone $milestone, $limit = null, $offset = null): \AgileDashboard_Milestone_Backlog_Backlog
+    public function getBacklog(PFUser $user, Planning_Milestone $milestone, ?int $limit = null, ?int $offset = null): \AgileDashboard_Milestone_Backlog_Backlog
     {
         $backlog_trackers_children_can_manage = [];
         $first_child_backlog_trackers         = $this->getFirstChildBacklogTracker($user, $milestone);
@@ -62,7 +62,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
         return $this->instantiateBacklog($milestone, $backlog_trackers_children_can_manage, $limit, $offset);
     }
 
-    public function getSelfBacklog(Planning_Milestone $milestone, $limit = null, $offset = null): AgileDashboard_Milestone_Backlog_Backlog
+    public function getSelfBacklog(Planning_Milestone $milestone, ?int $limit = null, ?int $offset = null): AgileDashboard_Milestone_Backlog_Backlog
     {
         return $this->instantiateBacklog(
             $milestone,
@@ -75,8 +75,8 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
     private function instantiateBacklog(
         Planning_Milestone $milestone,
         array $backlog_trackers_children_can_manage,
-        $limit = null,
-        $offset = null,
+        ?int $limit = null,
+        ?int $offset = null,
     ): AgileDashboard_Milestone_Backlog_Backlog {
         return new AgileDashboard_Milestone_Backlog_Backlog(
             $this->artifact_factory,

@@ -40,7 +40,7 @@ class FormElementController
         $this->burnup_cache_generator = $burnup_cache_generator;
     }
 
-    public function forceBurnupCacheGeneration(Codendi_Request $request)
+    public function forceBurnupCacheGeneration(Codendi_Request $request): void
     {
         $artifact_id = $request->get('aid');
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);
@@ -48,6 +48,7 @@ class FormElementController
         if ($artifact === null) {
             $GLOBALS['Response']->redirect('/');
         }
+        assert($artifact !== null);
 
         $current_user = $request->getCurrentUser();
         if (! $artifact->getTracker()->userIsAdmin($current_user)) {

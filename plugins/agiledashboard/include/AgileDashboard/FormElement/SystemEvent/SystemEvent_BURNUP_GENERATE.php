@@ -76,11 +76,11 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
         $this->planning_factory                 = $planning_factory;
     }
 
-    private function getArtifactIdFromParameters()
+    private function getArtifactIdFromParameters(): int
     {
         $parameters = $this->getParametersAsArray();
 
-        return $parameters[0];
+        return (int) $parameters[0];
     }
 
     public function verbalizeParameters($with_link)
@@ -88,7 +88,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
         return 'Artifact_id : ' . $this->getArtifactIdFromParameters();
     }
 
-    public function process()
+    public function process(): bool
     {
         return TimezoneWrapper::wrapTimezone(
             TimezoneRetriever::getServerTimezone(),
@@ -195,7 +195,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
             $this->logger->debug("Caching subelements value $closed_subelements/$total_subelements for artifact #" . $burnup_information['id']);
             $this->count_elements_cache_dao->saveCachedFieldValueAtTimestampForSubelements(
                 $burnup_information['id'],
-                (int) $worked_day,
+                $worked_day,
                 (int) $total_subelements,
                 (int) $closed_subelements
             );
