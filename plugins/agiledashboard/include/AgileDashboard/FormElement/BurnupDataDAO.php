@@ -174,6 +174,9 @@ class BurnupDataDAO extends DataAccessObject
         return $this->getDB()->row($sql, $start_date_field_id, $end_date_field_id, $artifact_id);
     }
 
+    /**
+     * @return list<array{id: int}>
+     */
     public function searchLinkedArtifactsAtGivenTimestamp(int $artifact_id, int $timestamp, array $backlog_trackers_ids): array
     {
         $in_statement = EasyStatement::open()->in(

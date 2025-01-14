@@ -18,25 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
-class BurnupEffort
+final readonly class BurnupEffort
 {
-    private $team_effort;
-    private $total_effort;
-
-    public function __construct($team_effort, $total_effort)
-    {
-        $this->team_effort  = $team_effort;
-        $this->total_effort = $total_effort;
+    public function __construct(
+        private ?float $team_effort,
+        private ?float $total_effort,
+    ) {
     }
 
-    public function getTeamEffort()
+    public function getTeamEffort(): ?float
     {
         return $this->team_effort;
     }
 
-    public function getTotalEffort()
+    public function getTotalEffort(): ?float
     {
         return $this->total_effort;
     }

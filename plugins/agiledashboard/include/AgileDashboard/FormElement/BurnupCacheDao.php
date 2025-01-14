@@ -86,9 +86,6 @@ class BurnupCacheDao extends DataAccessObject
         WHERE artifact_id = ?
         AND timestamp >= ?
         SQL;
-        return $this->getDB()->safeQuery(
-            $sql,
-            [$artifact_id, $start_timestamp]
-        );
+        return $this->getDB()->run($sql, $artifact_id, $start_timestamp);
     }
 }

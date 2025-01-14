@@ -65,21 +65,21 @@ class BurnupCalculator
         return new BurnupEffort($team_effort, $total_effort);
     }
 
+    /**
+     * @return list<array{id: int}>
+     */
     private function getPlanningLinkedArtifactAtTimestamp(
         int $artifact_id,
         int $timestamp,
         array $backlog_trackers_ids,
-    ) {
+    ): array {
         return $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp, $backlog_trackers_ids);
     }
 
-    /**
-     * @return BurnupEffort
-     */
     private function getEffort(
         Artifact $artifact,
-        $timestamp,
-    ) {
+        int $timestamp,
+    ): BurnupEffort {
         $semantic_initial_effort = $this->initial_effort_factory->getByTracker($artifact->getTracker());
         $semantic_done           = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
 
@@ -91,7 +91,7 @@ class BurnupCalculator
         $team_effort  = 0;
         if ($changeset !== null && $initial_effort_field && $this->artifactMustBeAddedInBurnupCalculation($changeset, $semantic_done)) {
             if ($artifact->getValue($initial_effort_field, $changeset)) {
-                $total_effort = $artifact->getValue($initial_effort_field, $changeset)->getValue();
+                $total_effort = $artifact->getValue($initial_effort_field, $changeset)?->getValue();
             }
             if ($semantic_done !== null && $semantic_done->isDone($changeset)) {
                 $team_effort = $total_effort;

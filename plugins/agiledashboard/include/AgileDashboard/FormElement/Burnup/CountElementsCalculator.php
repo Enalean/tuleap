@@ -106,7 +106,7 @@ class CountElementsCalculator
             return $accumulator;
         }
 
-        $already_seen_artifacts = array_merge($accumulator->getAlreadySeenArtifacts(), [(int) $artifact->getId()]);
+        $already_seen_artifacts = array_merge($accumulator->getAlreadySeenArtifacts(), [$artifact->getId()]);
         $total_subelements      = $accumulator->getTotalElements() + 1;
         $closed_subelements     = $accumulator->getClosedElements();
 
@@ -132,6 +132,6 @@ class CountElementsCalculator
         $parent_linked_artifact = $linked_artifact->getParentWithoutPermissionChecking();
 
         return $parent_linked_artifact !== null &&
-            (int) $parent_linked_artifact->getId() === (int) $artifact->getId();
+               $parent_linked_artifact->getId() === $artifact->getId();
     }
 }

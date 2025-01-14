@@ -34,73 +34,6 @@
       <code><![CDATA[postSaveNewChangeset]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup/CountElementsCalculator.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-      <code><![CDATA[(int) $parent_linked_artifact->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup/ElementsCount.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheDao.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->getDB()->safeQuery(
-            $sql,
-            [$artifact_id, $start_timestamp]
-        )]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array{
-     *     timestamp: int,
-     *     team_effort: ?float,
-     *     total_effort: ?float,
-     * }>]]></code>
-    </MoreSpecificReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheGenerator.php">
-    <MissingReturnType>
-      <code><![CDATA[forceBurnupCacheGeneration]]></code>
-      <code><![CDATA[isCacheBurnupAlreadyAsked]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCalculator.php">
-    <MissingParamType>
-      <code><![CDATA[$timestamp]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getPlanningLinkedArtifactAtTimestamp]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[getValue]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupData.php">
-    <MissingParamType>
-      <code><![CDATA[$is_under_calculation]]></code>
-      <code><![CDATA[$timestamp]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addEffort]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupEffort.php">
-    <MissingParamType>
-      <code><![CDATA[$team_effort]]></code>
-      <code><![CDATA[$total_effort]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$team_effort]]></code>
-      <code><![CDATA[$total_effort]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getTeamEffort]]></code>
-      <code><![CDATA[getTotalEffort]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupFieldPresenter.php">
     <MissingParamType>
       <code><![CDATA[$can_burnup_be_regenerated]]></code>
@@ -42179,11 +42112,6 @@
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Notifications/Settings/NotificationsUserSettingsDisplayController.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$tracker->getId()]]></code>
-    </InvalidScalarArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/Settings/NotificationsUserSettingsUpdateController.php">
     <DeprecatedMethod>
