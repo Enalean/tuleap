@@ -20,7 +20,9 @@
 <template>
     <section class="empty-state-page">
         <empty-svg />
-        <p v-translate class="empty-state-text">There are no program increments yet</p>
+        <p class="empty-state-text">
+            {{ $gettext("There are no program increments yet") }}
+        </p>
         <form v-bind:action="create_new_program_increment" method="post">
             <button
                 class="empty-state-action tlp-button-primary"
@@ -28,13 +30,7 @@
                 v-if="can_create_program_increment"
             >
                 <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
-                <span
-                    v-translate="{
-                        program_increment_sub_label: tracker_program_increment_sub_label,
-                    }"
-                >
-                    Create the first %{ program_increment_sub_label }
-                </span>
+                {{ create_first_label }}
             </button>
         </form>
     </section>
@@ -64,6 +60,13 @@ export default class EmptyState extends Vue {
 
     get create_new_program_increment(): string {
         return buildCreateNewProgramIncrement(this.tracker_program_increment_id);
+    }
+
+    get create_first_label(): string {
+        return this.$gettextInterpolate(
+            this.$gettext("Create the first %{ program_increment_sub_label }"),
+            { program_increment_sub_label: this.tracker_program_increment_sub_label },
+        );
     }
 }
 </script>

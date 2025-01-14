@@ -161,7 +161,7 @@ describe("ProgramIncrementList", () => {
         expect(wrapper.find("[data-test=program-increment-title]").text()).toBe(
             "Program Increments",
         );
-        expect(wrapper.find("[data-test=button-add-program-increment-label]").text()).toBe(
+        expect(wrapper.find("[data-test=create-program-increment-button]").text()).toBe(
             "New program increment",
         );
     });

@@ -30,14 +30,7 @@
                     data-test="create-program-increment-button"
                 >
                     <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
-                    <span
-                        data-test="button-add-program-increment-label"
-                        v-translate="{
-                            program_increment_sub_label: tracker_program_increment_sub_label,
-                        }"
-                    >
-                        New %{ program_increment_sub_label }
-                    </span>
+                    {{ add_button_label }}
                 </button>
             </div>
         </form>
@@ -54,7 +47,7 @@
             data-test="program-increments"
         />
 
-        <backlog-element-skeleton v-if="is_loading" dat-test="program-increment-skeleton" />
+        <backlog-element-skeleton v-if="is_loading" data-test="program-increment-skeleton" />
 
         <div
             id="program-increment-error"
@@ -125,6 +118,12 @@ export default class ProgramIncrementList extends Vue {
 
     get create_new_program_increment(): string {
         return buildCreateNewProgramIncrement(this.tracker_program_increment_id);
+    }
+
+    get add_button_label(): string {
+        return this.$gettextInterpolate(this.$gettext("New %{ program_increment_sub_label }"), {
+            program_increment_sub_label: this.tracker_program_increment_sub_label,
+        });
     }
 }
 </script>

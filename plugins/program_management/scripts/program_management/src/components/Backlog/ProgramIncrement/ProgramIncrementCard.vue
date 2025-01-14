@@ -61,7 +61,7 @@
                     class="fas fa-pencil-alt program-increment-info-link-icon"
                     aria-hidden="true"
                 ></i>
-                <span v-translate>Edit</span>
+                {{ $gettext("Edit") }}
             </a>
             <a
                 v-if="is_iteration_tracker_defined"
@@ -75,7 +75,7 @@
                     class="fas fa-sign-in-alt program-increment-info-link-icon"
                     aria-hidden="true"
                 ></i>
-                <span>{{ planned_iteration_link }}</span>
+                {{ planned_iteration_link }}
             </a>
         </div>
         <section

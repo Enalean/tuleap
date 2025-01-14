@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <h2 v-translate class="program-to-be-planned-title">To Be Planned</h2>
+        <h2 class="program-to-be-planned-title">{{ $gettext("To Be Planned") }}</h2>
         <div data-is-container="true" v-bind:data-can-plan="has_plan_permissions">
             <program-increment-not-plannable />
             <feature-not-plannable v-if="!has_plan_permissions" />

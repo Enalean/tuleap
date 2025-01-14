@@ -39,7 +39,7 @@ describe("Breadcrumb", () => {
         };
 
         const wrapper = shallowMount(Breadcrumb, component_options);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBe(false);
     });
 
     it("When user is program admin, Then administration link is displayed", async () => {
@@ -59,6 +59,6 @@ describe("Breadcrumb", () => {
         expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).toContainEqual(
             "breadcrumb-switchable",
         );
-        expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBe(true);
     });
 });

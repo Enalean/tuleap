@@ -19,7 +19,9 @@
 
 <template>
     <section class="empty-state-page">
-        <p v-translate class="empty-state-text">There is nothing to plan</p>
+        <p class="empty-state-text">
+            {{ $gettext("There is nothing to plan") }}
+        </p>
     </section>
 </template>
 
