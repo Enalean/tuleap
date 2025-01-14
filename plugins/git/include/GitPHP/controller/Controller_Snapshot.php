@@ -21,18 +21,18 @@
 
 namespace Tuleap\Git\GitPHP;
 
-/**
- * GitPHP Controller Snapshot
- *
- * Controller for getting a snapshot
- *
- */
-/**
- * Snapshot controller class
- *
- */
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyLegacyBool;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
+
+#[ConfigKeyCategory('Git')]
 class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
 {
+    #[ConfigKey('Allow anonymous users to download snapshot archives of public Git repositories')]
+    #[ConfigKeyLegacyBool(true)]
+    public const IS_ANONYMOUS_SNAPSHOT_DOWNLOAD_ALLOWED = 'git_anonymous_snapshot_download_allowed';
+
     /**
      * archive
      *
@@ -177,5 +177,11 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
             }
             $this->archive->Close();
         }
+    }
+
+    public static function isSnapshotArchiveDownloadAllowed(ProvideCurrentUserWithLoggedInInformation $current_user_provider): bool
+    {
+        return \ForgeConfig::getStringAsBool(self::IS_ANONYMOUS_SNAPSHOT_DOWNLOAD_ALLOWED) ||
+            $current_user_provider->getCurrentUserWithLoggedInInformation()->is_logged_in;
     }
 }

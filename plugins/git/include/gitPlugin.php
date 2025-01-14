@@ -58,6 +58,7 @@ use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\GitPHP\Controller_Snapshot;
 use Tuleap\Git\GitXMLImportDefaultBranchRetriever;
 use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GerritServerResourceRestrictor;
@@ -489,6 +490,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         $event->addConfigClass(PreReceiveCommand::class);
         $event->addConfigClass(GitoliteAccessURLGenerator::class);
+        $event->addConfigClass(Controller_Snapshot::class);
     }
 
     public function cssFile($params)
@@ -2577,6 +2579,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 new CommitForCurrentTreeRetriever(),
                 $this->getGitRepositoryUrlManager()
             ),
+            UserManager::instance(),
             EventManager::instance()
         );
     }

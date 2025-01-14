@@ -156,11 +156,13 @@
                     >
                         {t domain="gitphp"}Tree{/t}
                     </a>
+                    {if isset($snapshot_allowed) && $snapshot_allowed}
                     <a class="tlp-dropdown-menu-item"
                        href="?a=snapshot&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip"
                     >
                         {t domain="gitphp"}Snapshot{/t}
                     </a>
+                    {/if}
                     {if ! isset($mark) || ! $mark}
                         <a class="tlp-dropdown-menu-item"
                            href="?a=shortlog&amp;h={$shortlog_presenter->first_commit->commit->getHash()|urlencode}&amp;pg={$page}&amp;m={$commit_presenter->commit->GetHash()|urlencode}">

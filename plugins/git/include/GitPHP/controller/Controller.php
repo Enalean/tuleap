@@ -21,6 +21,8 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
+
 /**
  * GitPHP Controller
  *
@@ -43,7 +45,7 @@ class Controller
      * @param string $action action
      * @return mixed controller object
      */
-    public static function GetController($action) // @codingStandardsIgnoreLine
+    public static function GetController($action, ProvideCurrentUserWithLoggedInInformation $current_user_provider) // @codingStandardsIgnoreLine
     {
         $controller = null;
 
@@ -66,12 +68,15 @@ class Controller
                 }
                 break;
             case 'history':
-                $controller = new Controller_History();
+                $controller = new Controller_History($current_user_provider);
                 break;
             case 'shortlog':
-                $controller = new Controller_Log();
+                $controller = new Controller_Log($current_user_provider);
                 break;
             case 'snapshot':
+                if (! Controller_Snapshot::isSnapshotArchiveDownloadAllowed($current_user_provider)) {
+                    throw new NotFoundException();
+                }
                 $controller = new Controller_Snapshot();
                 break;
             case 'tag':

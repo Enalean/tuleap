@@ -25,6 +25,6 @@ class NotFoundException extends MessageException
 {
     public function __construct()
     {
-        parent::__construct(dgettext('gitphp', 'The requested resource cannot be found.'));
+        parent::__construct(dgettext('gitphp', 'The requested resource cannot be found.'), false, 404);
     }
 }
