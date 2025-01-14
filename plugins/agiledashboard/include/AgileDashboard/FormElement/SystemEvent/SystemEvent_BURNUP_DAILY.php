@@ -72,7 +72,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
         $this->planning_factory                 = $planning_factory;
     }
 
-    public function process()
+    public function process(): bool
     {
         TimezoneWrapper::wrapTimezone(
             TimezoneRetriever::getServerTimezone(),
@@ -149,7 +149,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
                 $this->logger->debug("Caching subelements value $closed_subelements/$total_subelements for artifact #" . $burnup['id']);
                 $this->count_elements_cache_dao->saveCachedFieldValueAtTimestampForSubelements(
                     (int) $burnup['id'],
-                    (int) $yesterday,
+                    $yesterday,
                     (int) $total_subelements,
                     (int) $closed_subelements
                 );

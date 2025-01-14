@@ -53,7 +53,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     }
 
     /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch()
+    public function fetch(): void
     {
         // Nothing to fetch as the tab is a redirect to the milestone
     }
