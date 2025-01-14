@@ -214,8 +214,8 @@ final class BurnupDataBuilderTest extends TestCase
 
         $first_effort = array_values($efforts)[0];
         self::assertInstanceOf(BurnupEffort::class, $first_effort);
-        self::assertSame(5, $first_effort->getTeamEffort());
-        self::assertSame(10, $first_effort->getTotalEffort());
+        self::assertSame(5.0, $first_effort->getTeamEffort());
+        self::assertSame(10.0, $first_effort->getTotalEffort());
 
         $count_elements = $burnup_data->getCountElements();
         self::assertCount(1, $count_elements);

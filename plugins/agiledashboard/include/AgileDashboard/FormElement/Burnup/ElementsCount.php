@@ -63,6 +63,6 @@ class ElementsCount
 
     public function isArtifactAlreadyParsed(Artifact $artifact): bool
     {
-        return in_array((int) $artifact->getId(), $this->already_seen_artifacts, true);
+        return in_array($artifact->getId(), $this->already_seen_artifacts, true);
     }
 }

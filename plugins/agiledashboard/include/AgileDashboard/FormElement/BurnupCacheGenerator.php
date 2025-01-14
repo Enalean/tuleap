@@ -37,7 +37,7 @@ class BurnupCacheGenerator
         $this->system_event_manager = $system_event_manager;
     }
 
-    public function isCacheBurnupAlreadyAsked(Artifact $artifact)
+    public function isCacheBurnupAlreadyAsked(Artifact $artifact): bool
     {
         return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
             SystemEvent_BURNUP_GENERATE::class,
@@ -45,7 +45,7 @@ class BurnupCacheGenerator
         );
     }
 
-    public function forceBurnupCacheGeneration(Artifact $artifact)
+    public function forceBurnupCacheGeneration(Artifact $artifact): void
     {
         if ($this->isCacheBurnupAlreadyAsked($artifact)) {
             return;

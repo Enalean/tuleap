@@ -45,31 +45,25 @@ class BurnupData
      */
     private $count_elements = [];
 
-    public function __construct(DatePeriodWithOpenDays $date_period, $is_under_calculation)
+    public function __construct(DatePeriodWithOpenDays $date_period, bool $is_under_calculation)
     {
         $this->is_under_calculation = $is_under_calculation;
         $this->date_period          = $date_period;
     }
 
-    /**
-     * @return DatePeriodWithOpenDays
-     */
-    public function getDatePeriod()
+    public function getDatePeriod(): DatePeriodWithOpenDays
     {
         return $this->date_period;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBeingCalculated()
+    public function isBeingCalculated(): bool
     {
         return $this->is_under_calculation;
     }
 
-    public function addEffort(BurnupEffort $effort, $timestamp)
+    public function addEffort(BurnupEffort $effort, int $timestamp): void
     {
-        $this->efforts[(int) $timestamp] = $effort;
+        $this->efforts[$timestamp] = $effort;
     }
 
     public function addCountElements(CountElementsInfo $count_elements, int $timestamp): void
@@ -80,7 +74,7 @@ class BurnupData
     /**
      * @return BurnupEffort[]
      */
-    public function getEfforts()
+    public function getEfforts(): array
     {
         return $this->efforts;
     }
