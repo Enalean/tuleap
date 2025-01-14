@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Tuleap\Git\Gitolite\SSHKey;
+
+declare(strict_types=1);
+
+namespace Tuleap\Git\Tests\Stub\Gitolite\SSHKey;
 
 use IHaveAnSSHKey;
+use Tuleap\Git\Gitolite\SSHKey\Dumper;
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
-interface Dumper
+final class DumperStub implements Dumper
 {
-    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector): bool;
+    private function __construct()
+    {
+    }
 
-    public function removeAllExistingKeysForUserName(string $user_name): void;
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector): bool
+    {
+        return true;
+    }
+
+    public function removeAllExistingKeysForUserName(string $user_name): void
+    {
+    }
 }
