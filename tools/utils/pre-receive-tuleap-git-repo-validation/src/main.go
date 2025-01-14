@@ -5,9 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+
+	"github.com/go-git/go-git/v5"
 )
 
 type HookData struct {
+	RepositoryPath    string                      `json:"repository_path"`
 	UpdatedReferences map[string]UpdatedReference `json:"updated_references"`
 }
 
@@ -29,6 +32,14 @@ func checkIfError(err error) {
 	os.Exit(0)
 }
 
+func outputHookResult(rejectionMessage *string) {
+	output, err := json.Marshal(HookResult{RejectionMessage: rejectionMessage})
+	checkIfError(err)
+
+	fmt.Println(string(output))
+	os.Exit(0)
+}
+
 func main() {
 	var input []byte
 	for in := bufio.NewScanner(os.Stdin); in.Scan(); {
@@ -40,10 +51,15 @@ func main() {
 	checkIfError(err)
 
 	rejectionMessage := ValidateTagsFormat(hookData)
+	if rejectionMessage != nil {
+		outputHookResult(rejectionMessage)
+	}
 
-	output, err := json.Marshal(HookResult{RejectionMessage: rejectionMessage})
+	repo, err := git.PlainOpen(hookData.RepositoryPath)
 	checkIfError(err)
 
-	fmt.Println(string(output))
-	os.Exit(0)
+	rejectionMessage, err = ValidateSignatures(hookData, repo)
+	checkIfError(err)
+
+	outputHookResult(rejectionMessage)
 }
