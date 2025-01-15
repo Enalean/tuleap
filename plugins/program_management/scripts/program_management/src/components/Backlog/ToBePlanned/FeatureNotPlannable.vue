@@ -26,10 +26,4 @@
         </p>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component({})
-export default class FeatureNotPlannable extends Vue {}
-</script>
+<script setup lang="ts"></script>

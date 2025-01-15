@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -34,11 +34,4 @@
         </g>
     </svg>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component({})
-export default class EmptySvg extends Vue {}
-</script>
+<script setup lang="ts"></script>

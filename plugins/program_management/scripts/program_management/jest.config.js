@@ -18,9 +18,21 @@
  */
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const jest_base_config = defineJestConfiguration();
 export default {
     ...jest_base_config,
     displayName: "program-management-backlog",
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+    },
+    moduleNameMapper: {
+        ...jest_base_config.moduleNameMapper,
+        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
+    },
 };
