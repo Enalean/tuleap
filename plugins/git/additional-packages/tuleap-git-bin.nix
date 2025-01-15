@@ -7,16 +7,19 @@ let
   tuleapVersion = builtins.readFile ../../../VERSION;
   tuleapGitBinBasePath = "/usr/lib/tuleap/git";
   gitStatic = (pkgs.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
-    version = "2.46.1";
+    version = "2.48.1";
     src = pkgs.fetchurl {
       url = "https://www.kernel.org/pub/software/scm/git/git-${version}.tar.xz";
-      hash = "sha256-iIyvuL1qtMu+vBaAQKiFDrCI+B3DrCYXGVz8CHfw9UM=";
+      hash = "sha256-HF1UX13B61HpXSxQ2Y/fiLGja6H6MOmuXVOFxgJPgq0=";
     };
 
     dontPatchShebangs = true;
     separateDebugInfo = false;
 
-    makeFlags = oldAttrs.makeFlags or [] ++ [ "prefix=${tuleapGitBinBasePath}" ];
+    makeFlags = oldAttrs.makeFlags or [] ++ [
+      "prefix=${tuleapGitBinBasePath}"
+      "OPENSSL_SHA1_UNSAFE=1"
+      ];
 
     installFlags = oldAttrs.installFlags or [] ++ [ "DESTDIR=$(out)" ];
 
@@ -26,6 +29,10 @@ let
     # deploy additional helpers like shell completions files. It is not something we need for our context and it cannot
     # work without modification because it expects to find files under $out and not under $out/$tuleapGitBinBasePath.
     postInstall = ''
+      rm $out/${tuleapGitBinBasePath}/bin/git
+      ln -s $out/${tuleapGitBinBasePath}/libexec/git-core/git $out/${tuleapGitBinBasePath}/bin/git
+      rm $out/${tuleapGitBinBasePath}/bin/git-shell
+      ln -s $out/${tuleapGitBinBasePath}/libexec/git-core/git-shell $out/${tuleapGitBinBasePath}/bin/git-shell
       # Cleanup remaining features we do not need
       rm $out/${tuleapGitBinBasePath}/libexec/git-core/git-imap-send
       rm $out/${tuleapGitBinBasePath}/libexec/git-core/scalar
