@@ -248,7 +248,7 @@ class ProjectMilestonesPresenterBuilder
                 $this->current_user,
                 $this->getVirturalTopMilestone(),
                 $this->agile_dashboard_milestone_backlog_backlog_factory->getSelfBacklog($this->getVirturalTopMilestone()),
-                false
+                null,
             );
 
         return $backlog->count();

@@ -26,17 +26,20 @@ use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
  */
 interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection extends Iterator, Countable
 {
-    public function getParentItemName();
+    public function getParentItemName(): string;
 
-    public function setParentItemName($name);
+    public function setParentItemName(string $name): void;
 
-    public function push(IBacklogItem $item);
+    public function push(IBacklogItem $item): void;
 
-    public function containsId($id);
+    public function containsId(int $id): bool;
 
-    public function getTotalAvaialableSize();
+    public function getTotalAvaialableSize(): int;
 
-    public function setTotalAvaialableSize($size);
+    public function setTotalAvaialableSize(int $size): void;
 
-    public function getItemIds();
+    /**
+     * @return list<int>
+     */
+    public function getItemIds(): array;
 }

@@ -33,101 +33,6 @@
       <code><![CDATA[postSaveNewChangeset]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItemBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$is_inconsistent]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItemCollection.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->index]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$size]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[containsId]]></code>
-      <code><![CDATA[getItemIds]]></code>
-      <code><![CDATA[getParentItemName]]></code>
-      <code><![CDATA[getTotalAvaialableSize]]></code>
-      <code><![CDATA[push]]></code>
-      <code><![CDATA[setParentItemName]]></code>
-      <code><![CDATA[setTotalAvaialableSize]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItemCollectionFactory.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <MissingParamType>
-      <code><![CDATA[$artifacts]]></code>
-      <code><![CDATA[$linked_item_artifacts_ids]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-      <code><![CDATA[$semantics_per_artifact]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[filterOutAssignedBacklogItems]]></code>
-      <code><![CDATA[getArtifactsSemantics]]></code>
-      <code><![CDATA[getBacklogItemsArtifactIds]]></code>
-      <code><![CDATA[getDoneCollection]]></code>
-      <code><![CDATA[getInconsistentCollection]]></code>
-      <code><![CDATA[getOpenAndClosedCollection]]></code>
-      <code><![CDATA[getOpenClosedAndInconsistentCollection]]></code>
-      <code><![CDATA[getParentArtifacts]]></code>
-      <code><![CDATA[getParentTracker]]></code>
-      <code><![CDATA[getPlannedArtifactIds]]></code>
-      <code><![CDATA[getPlanningMilestoneTrackerIds]]></code>
-      <code><![CDATA[getSubmilestoneIds]]></code>
-      <code><![CDATA[getTodoCollection]]></code>
-      <code><![CDATA[getUnassignedCollection]]></code>
-      <code><![CDATA[getUnassignedOpenCollection]]></code>
-      <code><![CDATA[getUnplannedCollection]]></code>
-      <code><![CDATA[initCollections]]></code>
-      <code><![CDATA[initInconsistentItems]]></code>
-      <code><![CDATA[pushItem]]></code>
-      <code><![CDATA[pushItemInDoneCollection]]></code>
-      <code><![CDATA[pushItemInOpenCollections]]></code>
-      <code><![CDATA[removeLinkedItemsFromCollection]]></code>
-      <code><![CDATA[reorderOpenClosedAndInconsistentCollection]]></code>
-      <code><![CDATA[setInitialEffort]]></code>
-      <code><![CDATA[setInitialEffortSemantic]]></code>
-      <code><![CDATA[setParentItemName]]></code>
-      <code><![CDATA[setStatusSemantic]]></code>
-      <code><![CDATA[setTitleSemantic]]></code>
-      <code><![CDATA[userCanReadBacklogStatusField]]></code>
-      <code><![CDATA[userCanReadBacklogTitleField]]></code>
-      <code><![CDATA[userCanReadInitialEffortField]]></code>
-    </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $milestone->getGroupId()]]></code>
-    </RedundantCastGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $milestone->getArtifactId()]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedMethod>
-      <code><![CDATA[getComputedValue]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItemPresenterBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$is_inconsistent]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/DescendantItemsCollection.php">
     <MissingParamType>
       <code><![CDATA[$mode]]></code>
@@ -189,29 +94,9 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBacklogItemCollection.php">
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$size]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[containsId]]></code>
-      <code><![CDATA[getItemIds]]></code>
-      <code><![CDATA[getParentItemName]]></code>
-      <code><![CDATA[getTotalAvaialableSize]]></code>
-      <code><![CDATA[push]]></code>
-      <code><![CDATA[setParentItemName]]></code>
-      <code><![CDATA[setTotalAvaialableSize]]></code>
-    </MissingReturnType>
     <MissingTemplateParam>
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBuildBacklogItemAndBacklogItemCollection.php">
-    <MissingParamType>
-      <code><![CDATA[$is_inconsistent]]></code>
-      <code><![CDATA[$redirect_to_self]]></code>
-    </MissingParamType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Criterion/Status/ISearchOnStatus.php">
     <MissingReturnType>
@@ -42111,11 +41996,6 @@
       <code><![CDATA[getCurrentGlobalNotificationCheckPermissionSetting]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Notifications/Settings/UserNotificationSettingsPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$are_global_notifications_suspended]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Notifications/Settings/UserNotificationSettingsRetriever.php">
     <RedundantCast>
       <code><![CDATA[(int) $tracker->getId()]]></code>
@@ -49977,7 +49857,6 @@
   <file src="plugins/tracker_encryption/include/Tracker_FormElement_Field_Encrypted.php">
     <MissingParamType>
       <code><![CDATA[$field_type]]></code>
-      <code><![CDATA[$submitted_values]]></code>
       <code><![CDATA[$submitted_values]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>

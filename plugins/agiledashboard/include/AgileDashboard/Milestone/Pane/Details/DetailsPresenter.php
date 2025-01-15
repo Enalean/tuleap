@@ -24,7 +24,7 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
+use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
 
@@ -32,10 +32,10 @@ class DetailsPresenter
 {
     public $no_items_label;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection */
     public $items_collection;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection */
     public $inconsistent_collection;
 
     /** @var String */
@@ -55,8 +55,8 @@ class DetailsPresenter
 
     public function __construct(
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $items,
-        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $items,
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $inconsistent_collection,
         $trackers,
         $solve_inconsistencies_url,
         PFUser $user,

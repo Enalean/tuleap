@@ -25,8 +25,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iter
     /** @var Artifact[] */
     private $items = [];
 
-    /** @var int */
-    private $total_available_size;
+    private int $total_available_size = 0;
 
     public function push(Artifact $item)
     {
@@ -63,13 +62,13 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iter
         return current($this->items) !== false;
     }
 
-    public function getTotalAvaialableSize()
+    public function getTotalAvaialableSize(): int
     {
         return $this->total_available_size;
     }
 
-    public function setTotalAvaialableSize($size)
+    public function setTotalAvaialableSize(int $size): void
     {
-        $this->total_available_size = (int) $size;
+        $this->total_available_size = $size;
     }
 }
