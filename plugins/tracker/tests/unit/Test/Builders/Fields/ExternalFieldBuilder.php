@@ -160,12 +160,11 @@ final class ExternalFieldBuilder
             {
             }
 
-            /** @return string */
             protected function fetchArtifactValue(
                 Artifact $artifact,
                 ?Tracker_Artifact_ChangesetValue $value,
                 array $submitted_values,
-            ) {
+            ): string {
                 return '';
             }
 

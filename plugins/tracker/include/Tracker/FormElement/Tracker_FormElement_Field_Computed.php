@@ -402,7 +402,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
-    ) {
+    ): string {
         $displayed_value = null;
         $is_autocomputed = true;
         if ($value !== null) {

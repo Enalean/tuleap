@@ -660,14 +660,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the html code to display the field value in artifact
-     *
-     * @return string
      */
     abstract protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
-    );
+    ): string;
 
     /**
      * Fetch the html code to display the field value in artifact in read only

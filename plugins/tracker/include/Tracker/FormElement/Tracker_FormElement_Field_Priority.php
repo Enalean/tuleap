@@ -147,14 +147,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
-     *
-     * @return string
      */
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
-    ) {
+    ): string {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
