@@ -168,8 +168,11 @@ export function useSectionsStore(): SectionsStore {
         if (sections.value.length > 0) {
             return;
         }
+        if (!tracker) {
+            return;
+        }
 
-        const is_configured_tracker_valid = tracker && isTrackerWithSubmittableSection(tracker);
+        const is_configured_tracker_valid = isTrackerWithSubmittableSection(tracker);
         const section = is_configured_tracker_valid
             ? injectInternalId(PendingArtifactSectionFactory.overrideFromTracker(tracker))
             : injectInternalId(FreetextSectionFactory.pending());
