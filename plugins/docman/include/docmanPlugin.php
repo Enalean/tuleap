@@ -35,6 +35,8 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyLegacyBool;
+use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
@@ -186,8 +188,8 @@ use User\XML\Import\IFindUserFromXMLReference;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../document/vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class DocmanPlugin extends Plugin implements PluginWithConfigKeys
+#[\Tuleap\Config\ConfigKeyCategory('Document')]
+class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const TRUNCATED_SERVICE_NAME = 'Documents';
     public const SYSTEM_NATURE_NAME     = 'document';
@@ -201,6 +203,14 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     #[ConfigKey("Max number of files that can be uploaded with a drag'n drop in interface")]
     public const PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING = 'plugin_docman_max_number_of_files';
+
+    #[ConfigKey('Where Document files are stored')]
+    #[ConfigKeyString('/var/lib/tuleap/docman')]
+    public const CONFIG_ROOT_DIRECTORY = 'docman_root';
+
+    #[ConfigKey('Are embedded files allowed ?')]
+    #[ConfigKeyLegacyBool(true)]
+    public const CONFIG_EMBEDDED_ARE_ALLOWED = 'docman_embedded_are_allowed';
 
     /**
      * Store docman root items indexed by groupId
@@ -324,10 +334,16 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function &getPluginInfo()
+    public function getPluginInfo(): PluginInfo
     {
-        if (! is_a($this->pluginInfo, 'DocmanPluginInfo')) {
-            $this->pluginInfo = new DocmanPluginInfo($this);
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-docman', 'Document Manager'),
+                    dgettext('tuleap-docman', 'Document Manager'),
+                )
+            );
         }
         return $this->pluginInfo;
     }
@@ -626,7 +642,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public function systemEventProjectRename(array $params): void
     {
-        $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
+        $docmanPath = \ForgeConfig::get(self::CONFIG_ROOT_DIRECTORY) . '/';
         //Is this project using docman
         if (is_dir($docmanPath . $params['project']->getUnixName())) {
             $version = new Docman_VersionFactory();
@@ -642,7 +658,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     #[\Tuleap\Plugin\ListeningToEventName('file_exists_in_data_dir')]
     public function fileExistsInDataDir($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
+        $docmanPath = \ForgeConfig::get(self::CONFIG_ROOT_DIRECTORY) . '/';
         $path       = $docmanPath . $params['new_name'];
 
         if (Backend::fileExists($path)) {
@@ -688,7 +704,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     public function pluginStatisticsDiskUsageCollectProject($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $row  = $params['project_row'];
-        $root = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+        $root = \ForgeConfig::get(self::CONFIG_ROOT_DIRECTORY);
         $path = $root . '/' . strtolower($row['unix_group_name']);
 
         if (! isset($params['time_to_collect']['plugin_docman'])) {
@@ -1353,7 +1369,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     public function routeUploadsDocmanFile(): FileUploadController
     {
         $document_ongoing_upload_dao = new DocumentOngoingUploadDAO();
-        $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+        $root_path                   = \ForgeConfig::get(self::CONFIG_ROOT_DIRECTORY);
         $path_allocator              = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
         $user_manager                = UserManager::instance();
         $event_manager               = EventManager::instance();
@@ -1400,7 +1416,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeUploadsVersionFile(): FileUploadController
     {
-        $root_path                = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+        $root_path                = \ForgeConfig::get(self::CONFIG_ROOT_DIRECTORY);
         $path_allocator           = (new UploadPathAllocatorBuilder())->getVersionUploadPathAllocator();
         $version_to_upload_dao    = new DocumentOnGoingVersionToUploadDAO();
         $event_manager            = EventManager::instance();
@@ -1493,7 +1509,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
         return new DocumentTreeController(
             $this->getProjectExtractor(),
-            $this->getPluginInfo(),
             new FileDownloadLimitsBuilder(),
             new ModalDisplayer(
                 $filename_pattern_retriever,
@@ -1717,7 +1732,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     {
         $event->addConfigClass(self::class);
         $event->addConfigClass(SwitchToOldUi::class);
-        $event->addConfigClass(\Tuleap\Document\Tree\DocumentTreePresenter::class);
+        $event->addConfigClass(Docman_PermissionsManager::class);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
@@ -1804,7 +1819,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         if (empty($params['xml_content']->docman)) {
             return;
         }
-        $root_path = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+        $root_path = \ForgeConfig::get(self::CONFIG_ROOT_DIRECTORY);
 
         $logger = new WrapperLogger($params['logger'], 'docman');
         $logger->info('Start import');

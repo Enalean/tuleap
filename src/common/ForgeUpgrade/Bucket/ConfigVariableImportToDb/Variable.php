@@ -1,9 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- *
- * Originally written by Manuel Vacelet, 2006
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,13 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class DocmanPluginInfo extends PluginFileInfo
+declare(strict_types=1);
+
+namespace Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb;
+
+/**
+ * @psalm-immutable
+ */
+interface Variable
 {
-    public function __construct($plugin)
-    {
-        parent::__construct($plugin, 'docman');
-        $this->setPluginDescriptor(new DocmanPluginDescriptor());
-    }
+    public function getNameInFile(): string;
+
+    public function getNameInDb(): string;
+
+    public function getValueAsString(mixed $value): string;
 }

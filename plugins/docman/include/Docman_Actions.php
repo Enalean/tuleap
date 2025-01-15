@@ -39,7 +39,7 @@ require_once __DIR__ . '/../../../src/www/news/news_utils.php';
 /**
  * @template-extends Actions<Docman_Controller>
  */
-class Docman_Actions extends Actions
+class Docman_Actions extends Actions // phpcs:ignoreFile
 {
     public $event_manager;
 
@@ -374,7 +374,7 @@ class Docman_Actions extends Actions
                 $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                     ||
                     (
-                        $this->_controler->getProperty('embedded_are_allowed')
+                        \ForgeConfig::get(\DocmanPlugin::CONFIG_EMBEDDED_ARE_ALLOWED)
                         &&
                         $request->exist('content')
                     )
@@ -656,7 +656,7 @@ class Docman_Actions extends Actions
 
             if (
                 $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
-                ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $this->_controler->getProperty('embedded_are_allowed'))
+                ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || \ForgeConfig::get(\DocmanPlugin::CONFIG_EMBEDDED_ARE_ALLOWED))
             ) {
                 if (
                     $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
@@ -821,7 +821,7 @@ class Docman_Actions extends Actions
     protected function _getFileStorage()
     {
         if (! $this->filestorage) {
-            $this->filestorage = new Docman_FileStorage($this->_controler->getProperty('docman_root'));
+            $this->filestorage = new Docman_FileStorage(\ForgeConfig::get(\DocmanPlugin::CONFIG_ROOT_DIRECTORY));
         }
         return $this->filestorage;
     }
@@ -1034,7 +1034,7 @@ class Docman_Actions extends Actions
         $mdMapping = false;
         switch ($srcMode) {
             case 'copy':
-                $dataRoot = $this->_controler->getProperty('docman_root');
+                $dataRoot = \ForgeConfig::get(\DocmanPlugin::CONFIG_ROOT_DIRECTORY);
                 $this->_doCopyPaste($itemToPaste, $newParentItem, $user, $rank, $importMd, $dataRoot);
                 break;
 

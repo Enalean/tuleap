@@ -21,16 +21,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Docman\Settings\ForbidWritersSettings;
 use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class Docman_PermissionsManager
+#[ConfigKeyCategory("Document")]
+class Docman_PermissionsManager // phpcs:ignoreFile
 {
-    public const PLUGIN_OPTION_DELETE = 'only_siteadmin_can_delete';
-    public const PLUGIN_DOCMAN_ADMIN  = 'PLUGIN_DOCMAN_ADMIN';
+    #[ConfigKey('Restrict delete of Documents to site administrators')]
+    #[ConfigKeyLegacyBool(false)]
+    public const PLUGIN_OPTION_DELETE = 'docman_only_siteadmin_can_delete';
+
+    public const PLUGIN_DOCMAN_ADMIN = 'PLUGIN_DOCMAN_ADMIN';
 
     public const ITEM_PERMISSION_TYPE_READ   = 'PLUGIN_DOCMAN_READ';
     public const ITEM_PERMISSION_TYPE_WRITE  = 'PLUGIN_DOCMAN_WRITE';
@@ -54,14 +61,12 @@ class Docman_PermissionsManager
 
     private $lockFactory     = null;
     private static $instance = [];
-    private $plugin;
 
     private function __construct(
         private Project $project,
         private ProjectAccessChecker $project_access_checker,
         private ITellIfWritersAreAllowedToUpdatePropertiesOrDelete $forbid_writers_settings,
     ) {
-        $this->plugin = PluginManager::instance()->getPluginByName(DocmanPlugin::SERVICE_SHORTNAME);
     }
 
     /**
@@ -135,14 +140,6 @@ class Docman_PermissionsManager
     protected function getForbidWritersSettings(): ITellIfWritersAreAllowedToUpdatePropertiesOrDelete
     {
         return $this->forbid_writers_settings;
-    }
-
-    /**
-     * @protected for Testing purpose
-     */
-    protected function getPlugin(): \Plugin
-    {
-        return $this->plugin;
     }
 
     private function getItemFactory(int $project_id = 0): Docman_ItemFactory
@@ -278,7 +275,7 @@ class Docman_PermissionsManager
     private function cannotDeleteBecauseNotSuperadmin(PFUser $user)
     {
         return (
-            $this->getPlugin()->getPluginInfo()->getPropertyValueForName(self::PLUGIN_OPTION_DELETE)
+            \ForgeConfig::get(self::PLUGIN_OPTION_DELETE)
             && ! $user->isSuperUser()
         );
     }

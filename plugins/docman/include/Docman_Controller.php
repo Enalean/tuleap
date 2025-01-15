@@ -34,7 +34,7 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
-class Docman_Controller extends Controler
+class Docman_Controller extends Controler // phpcs:ignoreFile
 {
     // variables
     /**
@@ -44,7 +44,7 @@ class Docman_Controller extends Controler
     private ?PFUser $user;
     public $groupId;
     public $themePath;
-    public $plugin;
+    public DocmanPlugin $plugin;
     public $logger;
     public ResponseFeedbackWrapper $feedback;
     public $user_can_admin;
@@ -156,7 +156,7 @@ class Docman_Controller extends Controler
 
         // Clone Items, Item's permissions and metadata values
         $itemFactory     = $this->getItemFactory();
-        $dataRoot        = $this->getProperty('docman_root');
+        $dataRoot        = \ForgeConfig::get(\DocmanPlugin::CONFIG_ROOT_DIRECTORY);
         $src_root_folder = $itemFactory->getRoot($source_project_id);
         if ($src_root_folder === null) {
             $itemFactory->createRoot($destination_project_id, 'roottitle_lbl_key');
@@ -1622,11 +1622,6 @@ class Docman_Controller extends Controler
         }
     }
 
-    public function getProperty($name)
-    {
-        $info = $this->plugin->getPluginInfo();
-        return $info->getPropertyValueForName($name);
-    }
     public $item_factory;
     public function getItemFactory()
     {
