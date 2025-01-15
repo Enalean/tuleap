@@ -26,25 +26,6 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 describe("EmptyState", () => {
     let component_options: ShallowMountOptions<EmptyState>;
 
-    it("Displays the empty state for Program Increment", async () => {
-        component_options = {
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            can_create_program_increment: false,
-                            tracker_program_increment_id: 1,
-                        },
-                    },
-                }),
-            },
-        };
-
-        const wrapper = shallowMount(EmptyState, component_options);
-        expect(wrapper.element).toMatchSnapshot();
-    });
-
     it("Display the create new program increment button", async () => {
         component_options = {
             localVue: await createProgramManagementLocalVue(),

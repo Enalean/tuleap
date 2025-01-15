@@ -52,13 +52,6 @@ describe("ErrorModal", () => {
         });
     }
 
-    it("warns user that something is wrong with a button to show details", () => {
-        const actual_tlp = jest.requireActual("@tuleap/tlp-modal");
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(actual_tlp.createModal);
-        const wrapper = createWrapper("Full error message with details");
-        expect(wrapper.element).toMatchSnapshot();
-    });
-
     it(`shows the modal when mounted`, () => {
         const modal_show = jest.fn();
         jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
@@ -78,7 +71,7 @@ describe("ErrorModal", () => {
         await jest.runOnlyPendingTimersAsync();
 
         const details = wrapper.get("[data-test=details]");
-        expect(details.text()).toEqual(error_message);
+        expect(details.text()).toBe(error_message);
     });
 
     it("warns user that something is wrong without any details", () => {

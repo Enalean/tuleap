@@ -27,7 +27,9 @@
             v-bind:project_flags="flags"
             v-bind:is_program_admin="is_program_admin"
         />
-        <h1 class="program-management-title-header" v-translate>Backlog</h1>
+        <h1 class="program-management-title-header">
+            {{ $gettext("Backlog") }}
+        </h1>
         <div class="program-backlog" data-test="backlog-section" v-if="is_configured">
             <to-be-planned class="to-be-planned" />
             <div class="planning-divider">
@@ -44,15 +46,17 @@
         <div class="empty-state-page" v-else data-test="configuration-empty-state">
             <configuration-empty-state />
             <div v-if="is_program_admin" data-test="administrator-empty-state">
-                <h1 class="empty-state-title" v-translate>Program configuration is incomplete</h1>
+                <h1 class="empty-state-title">
+                    {{ $gettext("Program configuration is incomplete") }}
+                </h1>
                 <p class="empty-state-text" v-dompurify-html="getAdminEmptyState()"></p>
             </div>
             <div v-else>
-                <h1 class="empty-state-title" data-test="regular-user-empty-state" v-translate>
-                    Program configuration is incomplete
+                <h1 class="empty-state-title" data-test="regular-user-empty-state">
+                    {{ $gettext("Program configuration is incomplete") }}
                 </h1>
-                <p class="empty-state-text" v-translate>
-                    Configuration can be done in administration of service.
+                <p class="empty-state-text">
+                    {{ $gettext("Configuration can be done in administration of service.") }}
                 </p>
             </div>
         </div>
