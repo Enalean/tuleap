@@ -84,17 +84,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadHeaders() // @codingStandardsIgnoreLine
     {
         if (isset($this->params['statuscode']) && ! empty($this->params['statuscode'])) {
-            $partialHeader = $this->StatusCodeHeader($this->params['statuscode']);
-            if (! empty($partialHeader)) {
-                if (substr(php_sapi_name(), 0, 8) == 'cgi-fcgi') {
-                    /*
-                     * FastCGI requires a different header
-                     */
-                    $this->headers[] = 'Status: ' . $partialHeader;
-                } else {
-                    $this->headers[] = 'HTTP/1.1 ' . $partialHeader;
-                }
-            }
+            http_response_code((int) $this->params['statuscode']);
         }
     }
 

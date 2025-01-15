@@ -24,6 +24,7 @@ use Tuleap\Git\GitPHP\Controller;
 use Tuleap\Git\GitPHP\Controller_Message;
 use Tuleap\Git\GitPHP\MessageException;
 use Tuleap\Git\GitPHP\ProjectList;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 
 class GitViews_GitPhpViewer
 {
@@ -41,14 +42,10 @@ class GitViews_GitPhpViewer
         false,
     ];
 
-    /**
-     * @var GitRepository
-     */
-    private $repository;
-
-    public function __construct(GitRepository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private readonly GitRepository $repository,
+        private readonly ProvideCurrentUserWithLoggedInInformation $current_user_provider,
+    ) {
     }
 
     public function displayContent(HTTPRequest $request)
@@ -92,7 +89,7 @@ class GitViews_GitPhpViewer
 
             ProjectList::Instantiate($this->repository);
 
-            $controller = Controller::GetController($_GET['a'] ?? '');
+            $controller = Controller::GetController($_GET['a'] ?? '', $this->current_user_provider);
             if ($controller) {
                 $controller->RenderHeaders();
                 $controller->Render();

@@ -39,6 +39,7 @@ use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 
 class GitRepositoryBrowserController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
@@ -74,6 +75,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         History\GitPhpAccessLogger $access_logger,
         GitRepositoryHeaderDisplayer $header_displayer,
         FilesHeaderPresenterBuilder $files_header_presenter_builder,
+        private readonly ProvideCurrentUserWithLoggedInInformation $current_user_provider,
         EventManager $event_manager,
     ) {
         $this->repository_factory             = $repository_factory;
@@ -133,7 +135,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         $event = new ProjectProviderEvent($project);
         $this->event_manager->processEvent($event);
 
-        $git_php_viewer = new GitViews_GitPhpViewer($repository);
+        $git_php_viewer = new GitViews_GitPhpViewer($repository, $this->current_user_provider);
 
         $url = $this->getURL($request, $repository);
         if ($url->isADownload($request)) {

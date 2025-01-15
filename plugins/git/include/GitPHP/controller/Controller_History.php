@@ -25,6 +25,7 @@ use GitPHP\Shortlog\ShortlogPresenterBuilder;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 use UserManager;
 
 /**
@@ -33,7 +34,7 @@ use UserManager;
  */
 class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
 {
-    public function __construct()
+    public function __construct(private readonly ProvideCurrentUserWithLoggedInInformation $current_user_provider)
     {
         parent::__construct();
         if (! $this->project) {
@@ -119,6 +120,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('tree', $co->GetTree());
         $this->tpl->assign('hashbase', $this->params['hashbase']);
         $this->tpl->assign('page', $this->params['page']);
+        $this->tpl->assign('snapshot_allowed', Controller_Snapshot::isSnapshotArchiveDownloadAllowed($this->current_user_provider));
 
         $blob = $this->project->GetBlob($this->params['hash']);
         if (! $blob) {
