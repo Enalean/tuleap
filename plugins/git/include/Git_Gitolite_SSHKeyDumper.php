@@ -58,10 +58,8 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
 
     /**
      * Dump ssh keys into gitolite conf
-     *
-     * @return bool
      */
-    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector)
+    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector): bool
     {
         $this->dumpSSHKeysWithoutCommit($user);
         if ($this->commitKeyDir('Update ' . $user->getUserName() . ' SSH keys')) {
@@ -104,10 +102,8 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
 
     /**
      * Remove all pub SSH keys previously associated to a user
-     *
-     * @param $user_name
      */
-    public function removeAllExistingKeysForUserName($user_name)
+    public function removeAllExistingKeysForUserName(string $user_name): void
     {
         $this->removeUserExistingKeysFromAGivenKeyId($user_name, self::FIRST_KEY_ID);
     }

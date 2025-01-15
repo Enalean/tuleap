@@ -54,10 +54,7 @@ class Gitolite3Dumper implements Dumper
         $this->logger                       = $logger;
     }
 
-    /**
-     * @return bool
-     */
-    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector)
+    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector): bool
     {
         try {
             $this->dumpKeys($invalid_keys_collector);
@@ -69,7 +66,7 @@ class Gitolite3Dumper implements Dumper
         return true;
     }
 
-    public function removeAllExistingKeysForUserName($user_name)
+    public function removeAllExistingKeysForUserName(string $user_name): void
     {
         $this->dumpKeys(new InvalidKeysCollector());
     }

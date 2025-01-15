@@ -22,28 +22,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
+declare(strict_types=1);
 
-    private $user_account_manager;
-    private $logger;
-    private $user;
-    private $user_manager;
-    private $sshkey_dumper;
+namespace Tuleap\Git\SystemEvents;
+
+use ColinODell\PsrTestLogger\TestLogger;
+use Git_UserAccountManager;
+use Git_UserSynchronisationException;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use SystemEvent;
+use SystemEvent_GIT_EDIT_SSH_KEYS;
+use Tuleap\Git\Tests\Stub\Gitolite\SSHKey\DumperStub;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
+use UserNotExistException;
+
+final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase
+{
+    use GlobalLanguageMock;
+
+    private Git_UserAccountManager&MockObject $user_account_manager;
+    private TestLogger $logger;
+    private PFUser&MockObject $user;
+    private UserManager&MockObject $user_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->user                 = $this->createMock(PFUser::class);
+        $this->user_manager         = $this->createMock(UserManager::class);
+        $this->user_account_manager = $this->createMock(Git_UserAccountManager::class);
+        $this->logger               = new TestLogger();
 
-        $this->user                 = \Mockery::spy(\PFUser::class);
-        $this->user_manager         = \Mockery::spy(\UserManager::class);
-        $this->sshkey_dumper        = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
-        $this->user_account_manager = \Mockery::spy(\Git_UserAccountManager::class);
-        $this->logger               = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-
-        $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->user);
+        $this->user_manager->method('getUserById')->willReturnCallback(fn(int $id) => match ($id) {
+            105     => $this->user,
+            default => null,
+        });
     }
 
     public function testItLogsAnErrorIfNoUserIsPassed(): void
@@ -51,12 +66,12 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
-            $this->sshkey_dumper,
+            DumperStub::build(),
             $this->user_account_manager,
             $this->logger
         );
 
-        $this->expectException(\UserNotExistException::class);
+        $this->expectException(UserNotExistException::class);
 
         $event->process();
     }
@@ -66,12 +81,12 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', 'me', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
-            $this->sshkey_dumper,
+            DumperStub::build(),
             $this->user_account_manager,
             $this->logger
         );
 
-        $this->expectException(\UserNotExistException::class);
+        $this->expectException(UserNotExistException::class);
 
         $event->process();
     }
@@ -84,17 +99,17 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
-            $this->sshkey_dumper,
+            DumperStub::build(),
             $this->user_account_manager,
             $this->logger
         );
 
-        $this->user->shouldReceive('getAuthorizedKeysArray')->andReturns($new_keys);
+        $this->user->method('getAuthorizedKeysArray')->willReturn($new_keys);
 
-        $this->logger->shouldReceive('error')->never();
-        $this->user_account_manager->shouldReceive('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user)->once();
+        $this->user_account_manager->expects(self::once())->method('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user);
 
         $event->process();
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testItTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager(): void
@@ -108,17 +123,17 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::' . 'abcdefg' . PFUser::SSH_KEY_SEPARATOR . 'wxyz', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
-            $this->sshkey_dumper,
+            DumperStub::build(),
             $this->user_account_manager,
             $this->logger
         );
 
-        $this->user->shouldReceive('getAuthorizedKeysArray')->andReturns($new_keys);
+        $this->user->method('getAuthorizedKeysArray')->willReturn($new_keys);
 
-        $this->logger->shouldReceive('error')->never();
-        $this->user_account_manager->shouldReceive('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user)->once();
+        $this->user_account_manager->expects(self::once())->method('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user);
 
-         $event->process();
+        $event->process();
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testItWarnsAdminsWhenSSHKeySynchFails(): void
@@ -126,17 +141,18 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
-            $this->sshkey_dumper,
+            DumperStub::build(),
             $this->user_account_manager,
             $this->logger
         );
 
-        $this->user->shouldReceive('getAuthorizedKeysArray')->andReturns([]);
+        $this->user->method('getAuthorizedKeysArray')->willReturn([]);
+        $this->user->method('getUserName');
 
-        $this->user_account_manager->shouldReceive('synchroniseSSHKeys')->andThrows(new Git_UserSynchronisationException());
+        $this->user_account_manager->method('synchroniseSSHKeys')->willThrowException(new Git_UserSynchronisationException());
 
         $event->process();
 
-        $this->assertEquals(SystemEvent::STATUS_WARNING, $event->getStatus());
+        self::assertEquals(SystemEvent::STATUS_WARNING, $event->getStatus());
     }
 }

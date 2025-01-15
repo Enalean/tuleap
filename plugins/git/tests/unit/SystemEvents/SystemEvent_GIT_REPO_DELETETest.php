@@ -19,53 +19,52 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Git\Notifications\UsersToNotifyDao;
+declare(strict_types=1);
+
+namespace Tuleap\Git\SystemEvents;
+
+use EventManager;
+use GitRepository;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use SystemEvent;
+use SystemEvent_GIT_REPO_DELETE;
+use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_GIT_REPO_DELETETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $project_id;
-    private $repository_id;
-    private $repository;
-    private $repository_factory;
-    private $ugroups_to_notify_dao;
-    private $users_to_notify_dao;
-
-    /** @var SystemEvent_GIT_REPO_DELETE */
-    private $event;
-    /**
-     * @var a|\Mockery\MockInterface|EventManager
-     */
-    private $event_manager;
+    private GitRepository&MockObject $repository;
+    private UgroupsToNotifyDao&MockObject $ugroups_to_notify_dao;
+    private UsersToNotifyDao&MockObject $users_to_notify_dao;
+    private SystemEvent_GIT_REPO_DELETE&MockObject $event;
+    private EventManager&MockObject $event_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $project_id    = 101;
+        $repository_id = 69;
 
-        $this->project_id    = 101;
-        $this->repository_id = 69;
+        $this->repository = $this->createMock(GitRepository::class);
+        $this->repository->method('getId')->willReturn($repository_id);
+        $this->repository->method('getProjectId')->willReturn($project_id);
+        $this->repository->method('getPath');
 
-        $this->repository = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns($this->repository_id);
-        $this->repository->shouldReceive('getProjectId')->andReturns($this->project_id);
+        $repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $repository_factory->method('getDeletedRepository')->with($repository_id)->willReturn($this->repository);
 
-        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->repository_factory->shouldReceive('getDeletedRepository')->with($this->repository_id)->andReturns($this->repository);
+        $this->ugroups_to_notify_dao = $this->createMock(UgroupsToNotifyDao::class);
+        $this->users_to_notify_dao   = $this->createMock(UsersToNotifyDao::class);
+        $this->event_manager         = $this->createMock(EventManager::class);
 
-        $this->ugroups_to_notify_dao = \Mockery::spy(UgroupsToNotifyDao::class);
-        $this->users_to_notify_dao   = \Mockery::spy(UsersToNotifyDao::class);
-        $this->event_manager         = \Mockery::spy(\EventManager::class);
-
-        $this->event = \Mockery::mock(\SystemEvent_GIT_REPO_DELETE::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
+        $this->event = $this->createPartialMock(SystemEvent_GIT_REPO_DELETE::class, []);
+        $this->event->setParameters($project_id . SystemEvent::PARAMETER_SEPARATOR . $repository_id);
         $this->event->injectDependencies(
-            $this->repository_factory,
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
+            $repository_factory,
+            new NullLogger(),
             $this->ugroups_to_notify_dao,
             $this->users_to_notify_dao,
             $this->event_manager
@@ -74,24 +73,10 @@ final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDeletesTheRepository(): void
     {
-        $this->repository->shouldReceive('delete')->once();
-
-        $this->event->process();
-    }
-
-    public function testItDeletesNotifications(): void
-    {
-        $this->ugroups_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
-        $this->users_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
-
-        $this->event->process();
-    }
-
-    public function testItLaunchesAnEventToLetOthersDeleteStuffLinkedToTheRepository(): void
-    {
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($param) {
-            return $param instanceof \Tuleap\Git\GitRepositoryDeletionEvent;
-        }))->atLeast()->once();
+        $this->ugroups_to_notify_dao->expects(self::once())->method('deleteByRepositoryId')->with(69);
+        $this->users_to_notify_dao->expects(self::once())->method('deleteByRepositoryId')->with(69);
+        $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with(self::isInstanceOf(GitRepositoryDeletionEvent::class));
+        $this->repository->expects(self::once())->method('delete');
 
         $this->event->process();
     }
