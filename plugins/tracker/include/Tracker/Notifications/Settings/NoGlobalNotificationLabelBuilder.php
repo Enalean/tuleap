@@ -24,23 +24,23 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 final readonly class NoGlobalNotificationLabelBuilder
 {
-    public function __construct(private UserGlobalAccountNotificationSettingsRetriever $settings_retriever)
+    public function __construct(private UserGlobalAccountNotificationSettings $settings_retriever)
     {
     }
 
     public function getInputLabel(): string
     {
-        if ($this->settings_retriever->notification_on_my_own_action && $this->settings_retriever->notification_on_all_update) {
+        if ($this->settings_retriever->notification_on_my_own_action->enabled && $this->settings_retriever->notification_on_all_update->enabled) {
             return dgettext(
                 'tuleap-tracker',
                 'Notify me on all update of artifacts I touch (assignee, submitter, cc, commentator, change of value, ...).'
             );
-        } elseif ($this->settings_retriever->notification_on_my_own_action && ! $this->settings_retriever->notification_on_all_update) {
+        } elseif ($this->settings_retriever->notification_on_my_own_action->enabled && ! $this->settings_retriever->notification_on_all_update->enabled) {
             return dgettext(
                 'tuleap-tracker',
                 "Notify me on all updates I do on artifacts but not when other users further change artifact, unless I'm creator or assignee."
             );
-        } elseif (! $this->settings_retriever->notification_on_my_own_action && $this->settings_retriever->notification_on_all_update) {
+        } elseif (! $this->settings_retriever->notification_on_my_own_action->enabled && $this->settings_retriever->notification_on_all_update->enabled) {
             return dgettext(
                 'tuleap-tracker',
                 'Notify me when other users change an artifact I touched (assignee, submitter, cc, commentator, change of value, ...).'

@@ -22,15 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
+use Tuleap\Tracker\User\NotificationOnAllUpdatesPreference;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
+use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\User\ProvideCurrentUser;
 
-final readonly class UserGlobalAccountNotificationSettingsRetriever
+final readonly class UserGlobalAccountNotificationSettings
 {
     private function __construct(
-        public bool $notification_on_all_update,
-        public bool $notification_on_my_own_action,
+        public NotificationOnAllUpdatesPreference $notification_on_all_update,
+        public NotificationOnOwnActionPreference $notification_on_my_own_action,
     ) {
     }
 
@@ -40,8 +42,8 @@ final readonly class UserGlobalAccountNotificationSettingsRetriever
         NotificationOnOwnActionRetriever $notification_on_own_action,
     ): self {
         $current_user                  = $user_manager->getCurrentUser();
-        $notification_on_all_update    = $notification_on_all_update->retrieve($current_user)->enabled;
-        $notification_on_my_own_action = $notification_on_own_action->retrieve($current_user)->enabled;
+        $notification_on_all_update    = $notification_on_all_update->retrieve($current_user);
+        $notification_on_my_own_action = $notification_on_own_action->retrieve($current_user);
 
         return new self($notification_on_all_update, $notification_on_my_own_action);
     }

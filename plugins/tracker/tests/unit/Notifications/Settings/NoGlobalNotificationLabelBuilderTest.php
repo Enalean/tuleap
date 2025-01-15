@@ -44,7 +44,7 @@ final class NoGlobalNotificationLabelBuilderTest extends TestCase
     private function getInputLabel(StoreUserPreferenceStub $pref): string
     {
         $no_global_notification_label_builder = new NoGlobalNotificationLabelBuilder(
-            UserGlobalAccountNotificationSettingsRetriever::build(
+            UserGlobalAccountNotificationSettings::build(
                 ProvideCurrentUserStub::buildWithUser(
                     $this->current_user
                 ),

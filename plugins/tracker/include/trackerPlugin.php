@@ -234,7 +234,7 @@ use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayContr
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsUpdateController;
-use Tuleap\Tracker\Notifications\Settings\UserGlobalAccountNotificationSettingsRetriever;
+use Tuleap\Tracker\Notifications\Settings\UserGlobalAccountNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\TrackerForceNotificationsLevelCommand;
@@ -2011,7 +2011,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new UserNotificationOnlyStatusChangeDAO(),
                 new InvolvedNotificationDao(),
             ),
-            new NoGlobalNotificationLabelBuilder(UserGlobalAccountNotificationSettingsRetriever::build($this->getUserManager(), new NotificationOnAllUpdatesRetriever($user_preference_dao), new NotificationOnOwnActionRetriever($user_preference_dao)))
+            new NoGlobalNotificationLabelBuilder(UserGlobalAccountNotificationSettings::build($this->getUserManager(), new NotificationOnAllUpdatesRetriever($user_preference_dao), new NotificationOnOwnActionRetriever($user_preference_dao)))
         );
     }
 
