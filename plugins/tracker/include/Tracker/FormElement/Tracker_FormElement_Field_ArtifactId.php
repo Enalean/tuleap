@@ -98,16 +98,10 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
     /**
      * Display the field as a Changeset value.
      * Used in CSV data export.
-     *
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     *
-     * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
-        return $value;
+        return $value ?? '';
     }
 
     /**

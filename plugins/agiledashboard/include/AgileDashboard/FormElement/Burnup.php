@@ -184,8 +184,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         );
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?\Tracker_Report $report): string
     {
+        return '';
     }
 
     public function fetchChangesetValue(

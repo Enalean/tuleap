@@ -466,7 +466,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $this->formatDateForDisplay($value);
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return $this->formatDateForCSV($value);
     }

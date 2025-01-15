@@ -177,30 +177,32 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     public function testSpecialCharactersInCSVExport(): void
     {
         $whatever_report = \Mockery::spy(\Tracker_Report::class);
+        $artifact_id     = 1;
+        $changeset_id    = 100;
 
         $this->assertEquals(
             'Une chaine sans accent',
-            $this->text_field->fetchCSVChangesetValue(null, null, 'Une chaine sans accent', $whatever_report)
+            $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'Une chaine sans accent', $whatever_report)
         );
         $this->assertEquals(
             'Lé chaîne avé lê àccent dô où ça',
-            $this->text_field->fetchCSVChangesetValue(null, null, 'Lé chaîne avé lê àccent dô où ça', $whatever_report)
+            $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'Lé chaîne avé lê àccent dô où ça', $whatever_report)
         );
         $this->assertEquals(
             'This, or that',
-            $this->text_field->fetchCSVChangesetValue(null, null, 'This, or that', $whatever_report)
+            $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This, or that', $whatever_report)
         );
         $this->assertEquals(
             'This; or that',
-            $this->text_field->fetchCSVChangesetValue(null, null, 'This; or that', $whatever_report)
+            $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This; or that', $whatever_report)
         );
         $this->assertEquals(
             'This thing is > that thing',
-            $this->text_field->fetchCSVChangesetValue(null, null, 'This thing is > that thing', $whatever_report)
+            $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This thing is > that thing', $whatever_report)
         );
         $this->assertEquals(
             'This thing & that thing',
-            $this->text_field->fetchCSVChangesetValue(null, null, 'This thing & that thing', $whatever_report)
+            $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This thing & that thing', $whatever_report)
         );
     }
 

@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchCSVChangesetValue]]></code>
       <code><![CDATA[fetchCriteriaValue]]></code>
       <code><![CDATA[fetchMailArtifactValue]]></code>
       <code><![CDATA[fetchRawValue]]></code>
@@ -17,7 +16,6 @@
     <MissingParamType>
       <code><![CDATA[$can_burnup_be_regenerated]]></code>
       <code><![CDATA[$criteria]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$submitted_values]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -36,12 +34,9 @@
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/DescendantItemsCollection.php">
     <MissingParamType>
       <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$size]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getTotalAvaialableSize]]></code>
       <code><![CDATA[push]]></code>
-      <code><![CDATA[setTotalAvaialableSize]]></code>
     </MissingReturnType>
     <MissingTemplateParam>
       <code><![CDATA[Iterator]]></code>
@@ -14252,14 +14247,6 @@
       <code><![CDATA[$result === null]]></code>
     </TypeDoesNotContainNull>
   </file>
-  <file src="plugins/git/include/Git/Gitolite/SSHKey/Dumper.php">
-    <MissingParamType>
-      <code><![CDATA[$user_name]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[removeAllExistingKeysForUserName]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/DumperFactory.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->buildDumper()]]></code>
@@ -14270,12 +14257,8 @@
     </MissingParamType>
   </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/Gitolite3Dumper.php">
-    <MissingParamType>
-      <code><![CDATA[$user_name]]></code>
-    </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[dumpKeys]]></code>
-      <code><![CDATA[removeAllExistingKeysForUserName]]></code>
       <code><![CDATA[sanityCheck]]></code>
     </MissingReturnType>
   </file>
@@ -17056,11 +17039,6 @@
       <code><![CDATA[updateSiteAccess]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/GitPluginInfo.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/git/include/GitPresenters/AccessControlPresenter.php">
     <MissingParamType>
       <code><![CDATA[$are_fine_grained_permissions_defined]]></code>
@@ -17758,7 +17736,6 @@
       <code><![CDATA[forkOnFilesystem]]></code>
       <code><![CDATA[getDriver]]></code>
       <code><![CDATA[getEventManager]]></code>
-      <code><![CDATA[getGitPlugin]]></code>
       <code><![CDATA[getPermissionsManager]]></code>
       <code><![CDATA[inSameProject]]></code>
       <code><![CDATA[markAsDeleted]]></code>
@@ -17767,7 +17744,6 @@
       <code><![CDATA[setDao]]></code>
       <code><![CDATA[setDriver]]></code>
       <code><![CDATA[setGerritProjectAsDeleted]]></code>
-      <code><![CDATA[setGitPlugin]]></code>
       <code><![CDATA[setPermissionsManager]]></code>
     </MissingReturnType>
   </file>
@@ -17887,7 +17863,6 @@
       <code><![CDATA[dumpKeys]]></code>
       <code><![CDATA[getKeyNumber]]></code>
       <code><![CDATA[initUserKeys]]></code>
-      <code><![CDATA[removeAllExistingKeysForUserName]]></code>
       <code><![CDATA[removeUserExistingKeysFromAGivenKeyId]]></code>
       <code><![CDATA[writeKeyIfChanged]]></code>
     </MissingReturnType>
@@ -38821,7 +38796,6 @@
       <code><![CDATA[$ignore_perms]]></code>
       <code><![CDATA[$old_changeset]]></code>
       <code><![CDATA[$recipient]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$tracker]]></code>
       <code><![CDATA[$value]]></code>
@@ -38916,9 +38890,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactId.php">
-    <MissingParamType>
-      <code><![CDATA[$report]]></code>
-    </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$artifact->id]]></code>
       <code><![CDATA[$artifact->id]]></code>
@@ -39027,7 +38998,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchCSVChangesetValue]]></code>
       <code><![CDATA[fetchCriteriaValue]]></code>
       <code><![CDATA[fetchRawValue]]></code>
       <code><![CDATA[fetchRawValueFromChangeset]]></code>
@@ -39038,7 +39008,6 @@
     </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$criteria]]></code>
-      <code><![CDATA[$report]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
@@ -39187,7 +39156,6 @@
     </InvalidNullableReturnType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$report]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
@@ -39227,7 +39195,6 @@
       <code><![CDATA[$minute]]></code>
       <code><![CDATA[$month]]></code>
       <code><![CDATA[$op]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$second]]></code>
       <code><![CDATA[$timestamp]]></code>
       <code><![CDATA[$to]]></code>
@@ -39333,7 +39300,6 @@
       <code><![CDATA[$lytebox_id]]></code>
       <code><![CDATA[$read_only]]></code>
       <code><![CDATA[$read_only]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$submitter_needed]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -39446,7 +39412,6 @@
       <code><![CDATA[keepValue]]></code>
     </InvalidNullableReturnType>
     <MissingParamType>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
@@ -39525,7 +39490,6 @@
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$parent_id]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$selected_values]]></code>
       <code><![CDATA[$selected_values]]></code>
       <code><![CDATA[$to]]></code>
@@ -40248,7 +40212,6 @@
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$oid]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$submitted_value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -40347,13 +40310,11 @@
       <code><![CDATA[$is_expecting_input]]></code>
       <code><![CDATA[$is_read_only]]></code>
       <code><![CDATA[$is_read_only]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$selected_ids]]></code>
       <code><![CDATA[$submitted_value]]></code>
       <code><![CDATA[$submitted_value]]></code>
       <code><![CDATA[$user_groups]]></code>
       <code><![CDATA[$user_groups]]></code>
-      <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$criteria->id]]></code>
@@ -40483,7 +40444,6 @@
       <code><![CDATA[int]]></code>
     </InvalidNullableReturnType>
     <MissingParamType>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
@@ -40535,7 +40495,6 @@
       <code><![CDATA[$artifact]]></code>
       <code><![CDATA[$content]]></code>
       <code><![CDATA[$criteria_value]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -70231,9 +70190,6 @@
       <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
     </FalsableReturnStatement>
-    <InvalidDocblock>
-      <code><![CDATA[public function __construct($report_id, $atid)]]></code>
-    </InvalidDocblock>
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
@@ -70434,9 +70390,6 @@
     </UndefinedVariable>
   </file>
   <file src="src/common/tracker/ArtifactReportField.php">
-    <InvalidDocblock>
-      <code><![CDATA[public function __construct()]]></code>
-    </InvalidDocblock>
     <InvalidReturnStatement>
       <code><![CDATA[$this->show_on_result == 1]]></code>
       <code><![CDATA[true]]></code>
@@ -71873,9 +71826,6 @@
       <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
     </DeprecatedMethod>
-    <InvalidDocblock>
-      <code><![CDATA[public function __construct($report_id, $atid)]]></code>
-    </InvalidDocblock>
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
@@ -77752,9 +77702,6 @@
     </InvalidArgument>
   </file>
   <file src="tests/unit/common/InviteBuddy/InvitationToOneRecipientSenderStub.php">
-    <InvalidDocblock>
-      <code><![CDATA[private function __construct(private \Closure $callback)]]></code>
-    </InvalidDocblock>
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->calls]]></code>
     </LessSpecificReturnStatement>

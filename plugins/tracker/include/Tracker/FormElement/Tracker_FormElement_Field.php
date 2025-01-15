@@ -61,14 +61,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * Used in CSV data export.
      *
      * Please override this method for specific field (if needed)
-     *
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     *
-     * @return string the value of the field for artifact_id and changeset_id, formatted for CSV
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return $this->fetchChangesetValue($artifact_id, $changeset_id, $value, $report);
     }

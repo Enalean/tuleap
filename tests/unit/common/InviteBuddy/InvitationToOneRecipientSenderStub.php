@@ -32,9 +32,6 @@ final class InvitationToOneRecipientSenderStub implements InvitationToOneRecipie
 {
     private array $calls = [];
 
-    /**
-     * @param \Closure(PFUser $from_user, InvitationRecipient $recipient, ?\Project $project, ?string $custom_message, ?PFUser $resent_from_user): Ok|Err
-     */
     private function __construct(private \Closure $callback)
     {
     }

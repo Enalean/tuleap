@@ -29,8 +29,8 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
         /**
          *
          *
-         *      @param  report_id
-         *  @param  atid: the artifact type id
+         *  @param  $report_id
+         *  @param  $atid: the artifact type id
          *
          *      @return bool success.
          */

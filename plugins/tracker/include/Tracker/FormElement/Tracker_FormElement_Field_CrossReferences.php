@@ -179,7 +179,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $crossref_factory;
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report = null)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report = null): string
     {
         $html          = '';
         $crossref_fact = $this->getCrossReferencesFactory($artifact_id);

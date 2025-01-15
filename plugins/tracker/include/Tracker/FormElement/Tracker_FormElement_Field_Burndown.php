@@ -466,8 +466,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return '';
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
+        return '';
     }
 
     public function fetchCriteriaValue($criteria)

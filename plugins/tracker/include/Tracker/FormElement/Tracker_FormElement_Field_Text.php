@@ -211,9 +211,9 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return $changeset_value;
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
-        return $value;
+        return $value ?? '';
     }
 
     protected function getValueDao()
