@@ -22,107 +22,102 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\SystemEvents;
 
+use Git_Backend_Gitolite;
+use Git_GitoliteDriver;
+use GitRepository;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use SystemEvent;
+use SystemEvent_GIT_REPO_UPDATE;
 use Tuleap\Git\DefaultBranch\CannotExecuteDefaultBranchUpdateException;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
+use Tuleap\Test\PHPUnit\TestCase;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $repository_id = 115;
+    private int $repository_id = 115;
     private DefaultBranchUpdateExecutorStub $default_branch_update_executor;
-    /**
-     * @var \Git_Backend_Gitolite&\Mockery\MockInterface
-     */
-    private \Mockery\LegacyMockInterface|\Git_Backend_Gitolite|\Mockery\MockInterface $backend;
-    /**
-     * @var \GitRepository&\Mockery\MockInterface
-     */
-    private $repository;
-    /**
-     * @var \GitRepositoryFactory&\Mockery\MockInterface
-     */
-    private $repository_factory;
-    /**
-     * @var \Mockery\MockInterface&\SystemEvent_GIT_REPO_UPDATE
-     */
-    private $event;
+    private Git_Backend_Gitolite&MockObject $backend;
+    private GitRepository $repository;
+    private GitRepositoryFactory&MockObject $repository_factory;
+    private SystemEvent_GIT_REPO_UPDATE&MockObject $event;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->backend = $this->createMock(Git_Backend_Gitolite::class);
 
-        $this->backend = \Mockery::spy(\Git_Backend_Gitolite::class);
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withBackend($this->backend)->build();
 
-        $this->repository = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getBackend')->andReturns($this->backend);
-
-        $this->repository_factory             = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->repository_factory             = $this->createMock(GitRepositoryFactory::class);
         $this->default_branch_update_executor = new DefaultBranchUpdateExecutorStub();
 
-        $this->event = \Mockery::mock(\SystemEvent_GIT_REPO_UPDATE::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->event = $this->createPartialMock(SystemEvent_GIT_REPO_UPDATE::class, ['done', 'warning', 'error']);
         $this->event->setParameters("$this->repository_id");
-        $this->event->injectDependencies(
-            $this->repository_factory,
-            $this->default_branch_update_executor
-        );
+        $this->event->injectDependencies($this->repository_factory, $this->default_branch_update_executor);
     }
 
     public function testItGetsTheRepositoryFromTheFactory(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryById')
+        $this->repository_factory->expects(self::once())->method('getRepositoryById')
             ->with($this->repository_id)
-            ->once()
-            ->andReturns($this->repository);
+            ->willReturn($this->repository);
+        $this->backend->method('updateRepoConf');
+        $this->event->method('error');
 
         $this->event->process();
     }
 
     public function testItDelegatesToBackendRepositoryCreation(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $this->backend->shouldReceive('updateRepoConf')->once();
+        $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $this->backend->expects(self::once())->method('updateRepoConf');
+        $this->event->method('error');
         $this->event->process();
     }
 
     public function testItMarksTheEventAsDone(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $this->backend->shouldReceive('updateRepoConf')->once()->andReturns(true);
-        $this->event->shouldReceive('done')->once();
+        $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $this->backend->expects(self::once())->method('updateRepoConf')->willReturn(true);
+        $this->event->expects(self::once())->method('done');
         $this->event->process();
     }
 
     public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
-        $this->event->shouldReceive('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?')->once();
+        $this->repository_factory->method('getRepositoryById')->willReturn(null);
+        $this->repository_factory->method('getDeletedRepository');
+        $this->event->expects(self::once())->method('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?');
         $this->event->process();
     }
 
     public function testItMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
-        $this->repository_factory->shouldReceive('getDeletedRepository')->andReturns($this->repository);
+        $this->repository_factory->method('getRepositoryById')->willReturn(null);
+        $this->repository_factory->method('getDeletedRepository')->willReturn($this->repository);
 
-        $this->event->shouldReceive('done')->with('Unable to update a repository marked as deleted')->once();
+        $this->event->expects(self::once())->method('done')->with('Unable to update a repository marked as deleted');
 
         $this->event->process();
     }
 
     public function testDefaultBranchIsSet(): void
     {
-        $this->event->setParameters($this->repository_id . \SystemEvent::PARAMETER_SEPARATOR . 'main');
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $driver = $this->createStub(\Git_GitoliteDriver::class);
+        $this->event->setParameters($this->repository_id . SystemEvent::PARAMETER_SEPARATOR . 'main');
+        $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $driver = $this->createStub(Git_GitoliteDriver::class);
         $driver->method('commit');
         $driver->method('push');
-        $this->backend->shouldReceive('getDriver')->andReturns($driver);
-        $this->backend->shouldReceive('updateRepoConf')->andReturn(true);
-        $this->event->shouldReceive('done')->once();
+        $this->backend->method('getDriver')->willReturn($driver);
+        $this->backend->method('updateRepoConf')->willReturn(true);
+        $this->backend->method('getGitRootPath');
+        $this->event->expects(self::once())->method('done');
 
         $this->event->process();
 
@@ -131,20 +126,19 @@ final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testSystemEventIsMarkedAsFailedWhenDefaultBranchCannotBeSet(): void
     {
-        $this->event->setParameters($this->repository_id . \SystemEvent::PARAMETER_SEPARATOR . 'main');
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $driver = $this->createStub(\Git_GitoliteDriver::class);
+        $this->event->setParameters($this->repository_id . SystemEvent::PARAMETER_SEPARATOR . 'main');
+        $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $driver = $this->createStub(Git_GitoliteDriver::class);
         $driver->method('commit');
         $driver->method('push');
-        $this->backend->shouldReceive('getDriver')->andReturns($driver);
-        $this->backend->shouldReceive('updateRepoConf')->andReturn(true);
+        $this->backend->method('getDriver')->willReturn($driver);
+        $this->backend->method('updateRepoConf')->willReturn(true);
+        $this->backend->method('getGitRootPath');
         $this->default_branch_update_executor->setCallbackOnSetDefaultBranch(
-            function (): void {
-                throw new CannotExecuteDefaultBranchUpdateException('Something wrong happened');
-            }
+            static fn() => throw new CannotExecuteDefaultBranchUpdateException('Something wrong happened')
         );
 
-        $this->event->shouldReceive('error')->once();
+        $this->event->expects(self::once())->method('error');
 
         $this->event->process();
     }
