@@ -2010,6 +2010,16 @@ msgid "Notify closed artifacts"
 msgstr ""
 
 msgid ""
+"Notify me on all update of artifacts I touch (assignee, submitter, cc, "
+"commentator, change of value, ...)."
+msgstr ""
+
+msgid ""
+"Notify me on all updates I do on artifacts but not when other users further "
+"change artifact, unless I'm creator or assignee."
+msgstr ""
+
+msgid ""
 "Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, "
 "comment)"
 msgstr ""
@@ -2021,6 +2031,16 @@ msgid "Notify me on status change"
 msgstr ""
 
 msgid "Notify me when artifacts are created"
+msgstr ""
+
+msgid ""
+"Notify me when other users change an artifact I touched (assignee, "
+"submitter, cc, commentator, change of value, ...)."
+msgstr ""
+
+msgid ""
+"Notify me when other users change artifacts I created or I'm assigned to "
+"(and all fields that can trigger notifications)."
 msgstr ""
 
 msgid "Number of open artifacts"

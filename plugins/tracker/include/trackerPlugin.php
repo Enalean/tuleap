@@ -229,10 +229,12 @@ use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Notifications\Settings\NoGlobalNotificationLabelBuilder;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsUpdateController;
+use Tuleap\Tracker\Notifications\Settings\UserGlobalAccountNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\TrackerForceNotificationsLevelCommand;
@@ -1998,6 +2000,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function routeGetNotificationsMy(): DispatchableWithRequest
     {
+        $user_preference_dao = new UserPreferencesDao();
         return new NotificationsUserSettingsDisplayController(
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/notifications/'),
             $this->getTrackerFactory(),
@@ -2006,8 +2009,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new Tracker_GlobalNotificationDao(),
                 new UnsubscribersNotificationDAO(),
                 new UserNotificationOnlyStatusChangeDAO(),
-                new InvolvedNotificationDao()
-            )
+                new InvolvedNotificationDao(),
+            ),
+            new NoGlobalNotificationLabelBuilder(UserGlobalAccountNotificationSettingsRetriever::build($this->getUserManager(), new NotificationOnAllUpdatesRetriever($user_preference_dao), new NotificationOnOwnActionRetriever($user_preference_dao)))
         );
     }
 

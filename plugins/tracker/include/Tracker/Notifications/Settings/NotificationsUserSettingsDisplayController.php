@@ -41,6 +41,7 @@ final readonly class NotificationsUserSettingsDisplayController implements Dispa
         private TrackerFactory $tracker_factory,
         private TrackerManager $tracker_manager,
         private UserNotificationSettingsRetriever $user_notification_settings_retriever,
+        private NoGlobalNotificationLabelBuilder $global_notification_label_builder,
     ) {
     }
 
@@ -76,7 +77,8 @@ final readonly class NotificationsUserSettingsDisplayController implements Dispa
             new UserNotificationSettingsPresenter(
                 new CSRFSynchronizerToken($current_uri),
                 $user_notification_settings,
-                $tracker->getNotificationsLevel() === Tracker::NOTIFICATIONS_LEVEL_DISABLED
+                $tracker->getNotificationsLevel() === Tracker::NOTIFICATIONS_LEVEL_DISABLED,
+                $this->global_notification_label_builder->getInputLabel()
             )
         );
 
