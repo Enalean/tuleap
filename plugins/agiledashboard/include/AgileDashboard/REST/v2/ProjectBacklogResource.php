@@ -157,7 +157,7 @@ class ProjectBacklogResource
     {
         $backlog_unassigned = $this->backlog_factory->getSelfBacklog($top_milestone);
 
-        return $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $backlog_unassigned, false);
+        return $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $backlog_unassigned, null);
     }
 
     private function sendPaginationHeaders($limit, $offset, $size)

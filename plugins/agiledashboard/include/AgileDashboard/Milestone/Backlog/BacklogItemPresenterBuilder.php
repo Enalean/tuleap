@@ -35,8 +35,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder implements Ag
         return new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
     }
 
-    public function getItem(Artifact $artifact, $redirect_to_self, $is_inconsistent)
+    public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent)
     {
-        return new BacklogItemPresenter($artifact, $redirect_to_self, $is_inconsistent);
+        return new BacklogItemPresenter($artifact, $redirect_to_self ?? '', $is_inconsistent);
     }
 }

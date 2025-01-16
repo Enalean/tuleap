@@ -30,32 +30,31 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     /** @var IBacklogItem[] */
     private $rows = [];
 
-    /** @var int[] */
+    /** @var array<int, bool> */
     private $index = [];
 
     /** @var string */
     private $parent_item_name = '';
 
-    /** @var Int */
-    private $total_available_size;
+    private int $total_available_size = 0;
 
-    public function getParentItemName()
+    public function getParentItemName(): string
     {
         return $this->parent_item_name;
     }
 
-    public function setParentItemName($name)
+    public function setParentItemName(string $name): void
     {
         $this->parent_item_name = $name;
     }
 
-    public function push(IBacklogItem $item)
+    public function push(IBacklogItem $item): void
     {
         $this->rows[]             = $item;
         $this->index[$item->id()] = true;
     }
 
-    public function containsId($id)
+    public function containsId(int $id): bool
     {
         return isset($this->index[$id]);
     }
@@ -90,17 +89,20 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
         return count($this->rows);
     }
 
-    public function getTotalAvaialableSize()
+    public function getTotalAvaialableSize(): int
     {
         return $this->total_available_size;
     }
 
-    public function setTotalAvaialableSize($size)
+    public function setTotalAvaialableSize(int $size): void
     {
-        $this->total_available_size = (int) $size;
+        $this->total_available_size = $size;
     }
 
-    public function getItemIds()
+    /**
+     * @return list<int>
+     */
+    public function getItemIds(): array
     {
         return array_keys($this->index);
     }

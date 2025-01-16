@@ -138,7 +138,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([8], $open_and_closed_content->getItemIds());
@@ -147,7 +147,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([9], $todo_content->getItemIds());
@@ -156,7 +156,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([10], $done_content->getItemIds());
@@ -173,6 +173,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $artifact = ArtifactTestBuilder::anArtifact(10)->build();
         $descendant_items_collection->push($artifact);
+        $descendant_items_collection->setTotalAvaialableSize(1);
 
         $backlog->expects(self::once())->method('getArtifacts')->willReturn($descendant_items_collection);
 
@@ -183,6 +184,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $inconsistent_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
         $inconsistent_item       = new BacklogItem(ArtifactTestBuilder::anArtifact(9)->build(), true);
         $inconsistent_collection->push($inconsistent_item);
+        $inconsistent_collection->setTotalAvaialableSize(1);
 
         $sorted_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
 
@@ -212,7 +214,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([9], $open_inconsistent_collection->getItemIds());
@@ -221,7 +223,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([9], $open_inconsistent_collection->getItemIds());
@@ -271,7 +273,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([9], $unassigned_open_collection->getItemIds());
@@ -326,7 +328,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([23], $unassigned_collection->getItemIds());
@@ -385,7 +387,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertEquals([23], $unassigned_collection->getItemIds());
@@ -500,7 +502,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertSame([10, 11], $collection->getItemIds());
@@ -509,7 +511,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $user,
             $milestone,
             $backlog,
-            false
+            null,
         );
 
         self::assertSame([10, 11], $collection->getItemIds());

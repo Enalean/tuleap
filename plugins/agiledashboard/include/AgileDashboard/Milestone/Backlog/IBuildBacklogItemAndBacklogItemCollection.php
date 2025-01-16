@@ -38,5 +38,5 @@ interface AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollec
     /**
      * @return IBacklogItem
      */
-    public function getItem(Artifact $artifact, $redirect_to_self, $is_inconsistent);
+    public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent);
 }

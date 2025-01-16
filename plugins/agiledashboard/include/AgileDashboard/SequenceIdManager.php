@@ -78,13 +78,13 @@ class AgileDashboard_SequenceIdManager
             $this->backlog_item_ids[(int) $milestone->getArtifactId()] = [];
 
             $backlog_unassigned = $this->backlog_factory->getSelfBacklog($milestone);
-            $backlog_artifacts  = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, false);
+            $backlog_artifacts  = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, null);
 
             $this->storeTopBacklogArtifacts((int) $milestone->getArtifactId(), $backlog_artifacts);
         }
     }
 
-    private function storeTopBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_BacklogItemCollection $backlog_items)
+    private function storeTopBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $backlog_items)
     {
         $artifact_position = 1;
         foreach ($backlog_items as $backlog_item) {

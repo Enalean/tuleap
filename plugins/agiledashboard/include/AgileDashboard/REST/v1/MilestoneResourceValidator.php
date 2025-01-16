@@ -107,12 +107,12 @@ class MilestoneResourceValidator
             $backlog = $this->backlog_factory->getSelfBacklog($milestone);
 
             if ($milestone->getParent()) {
-                $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone->getParent(), $this->backlog_factory->getBacklog($user, $milestone->getParent()), false);
+                $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone->getParent(), $this->backlog_factory->getBacklog($user, $milestone->getParent()), null);
             } else {
                 $top_milestone      = $this->milestone_factory->getVirtualTopMilestone($user, $milestone->getProject());
                 $backlog_unassigned = $this->backlog_factory->getSelfBacklog($top_milestone);
 
-                $open_unplanned = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $backlog_unassigned, false);
+                $open_unplanned = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $backlog_unassigned, null);
             }
 
             $done = $this->getMilestoneDoneBacklogItems($user, $milestone, $backlog);
@@ -179,12 +179,12 @@ class MilestoneResourceValidator
 
     private function getMilestoneDoneBacklogItems(PFUser $user, Planning_Milestone $milestone, AgileDashboard_Milestone_Backlog_Backlog $backlog)
     {
-        return $this->backlog_item_collection_factory->getDoneCollection($user, $milestone, $backlog, false);
+        return $this->backlog_item_collection_factory->getDoneCollection($user, $milestone, $backlog, null);
     }
 
     private function getMilestoneTodoBacklogItems(PFUser $user, Planning_Milestone $milestone, AgileDashboard_Milestone_Backlog_Backlog $backlog)
     {
-        return $this->backlog_item_collection_factory->getTodoCollection($user, $milestone, $backlog, false);
+        return $this->backlog_item_collection_factory->getTodoCollection($user, $milestone, $backlog, null);
     }
 
     private function isArtifactInUnplannedParentMilestoneBacklogItems(Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $unplanned_backlog_items)
@@ -205,7 +205,7 @@ class MilestoneResourceValidator
     {
         $this->validateIdsAreUnique($ids);
 
-        $unplanned = $this->backlog_item_collection_factory->getUnplannedCollection($user, $milestone, $this->backlog_factory->getBacklog($user, $milestone), false);
+        $unplanned = $this->backlog_item_collection_factory->getUnplannedCollection($user, $milestone, $this->backlog_factory->getBacklog($user, $milestone), null);
 
         foreach ($ids as $id) {
             if (! $unplanned->containsId($id)) {
@@ -290,7 +290,7 @@ class MilestoneResourceValidator
             $user,
             $milestone,
             $this->backlog_factory->getBacklog($user, $milestone),
-            false
+            null,
         );
     }
 
@@ -304,7 +304,7 @@ class MilestoneResourceValidator
 
         $top_milestone      = $this->milestone_factory->getVirtualTopMilestone($user, $project);
         $backlog_unassigned = $this->backlog_factory->getSelfBacklog($top_milestone);
-        $unassigned         = $this->backlog_item_collection_factory->getUnassignedCollection($user, $top_milestone, $backlog_unassigned, false);
+        $unassigned         = $this->backlog_item_collection_factory->getUnassignedCollection($user, $top_milestone, $backlog_unassigned, null);
 
         foreach ($ids as $id) {
             if (! $unassigned->containsId($id)) {

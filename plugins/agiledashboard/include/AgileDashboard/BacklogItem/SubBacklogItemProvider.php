@@ -100,7 +100,7 @@ final class SubBacklogItemProvider
             }
         } else {
             $backlog_unassigned = $this->backlog_factory->getSelfBacklog($milestone);
-            $backlog_items      = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, false);
+            $backlog_items      = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, null);
 
             foreach ($backlog_items as $backlog_item) {
                 if ($backlog_item->getArtifact()->getTrackerId() == $backlog_tracker->getId()) {
