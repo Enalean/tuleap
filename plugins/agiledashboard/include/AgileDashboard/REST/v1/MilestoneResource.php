@@ -150,6 +150,7 @@ class MilestoneResource extends AuthenticatedResource
             new BacklogItemDao(),
             $this->tracker_artifact_factory,
             $planning_factory,
+            new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(

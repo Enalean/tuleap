@@ -81,6 +81,7 @@ class ProjectBacklogResource
             new BacklogItemDao(),
             $tracker_artifact_factory,
             $this->planning_factory,
+            new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(

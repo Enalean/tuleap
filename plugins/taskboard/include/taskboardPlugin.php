@@ -143,6 +143,7 @@ class taskboardPlugin extends Plugin
                     new BacklogItemDao(),
                     Tracker_ArtifactFactory::instance(),
                     $planning_factory,
+                    new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
                 ),
                 new AgileDashboard_PaneInfoIdentifier(),
                 $tracker_new_dropdown_link_presenter_builder,

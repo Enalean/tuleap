@@ -44,6 +44,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
         BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
         PlanningFactory $planning_factory,
+        private readonly \Tuleap\Tracker\Artifact\Dao\ArtifactDao $artifact_dao,
     ) {
         $this->dao              = $dao;
         $this->artifact_factory = $artifact_factory;
@@ -84,6 +85,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
             $milestone->getPlanning()->getBacklogTrackers(),
             $backlog_trackers_children_can_manage,
             $this->dao,
+            $this->artifact_dao,
             $limit,
             $offset
         );

@@ -160,6 +160,7 @@ class ProjectMilestonesPresenterBuilder
                 new BacklogItemDao(),
                 $artifact_factory,
                 $planning_factory,
+                new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
             ),
             new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
                 new BacklogItemDao(),

@@ -235,6 +235,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
             new BacklogItemDao(),
             $this->artifact_factory,
             $this->planning_factory,
+            new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
 
         return $backlog_item_collection_factory->getOpenAndClosedCollection(

@@ -328,6 +328,7 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
             new BacklogItemDao(),
             $tracker_artifact_factory,
             $planning_factory,
+            new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
 
         $parent_tracker_retriever = new ParentTrackerRetriever($planning_factory);

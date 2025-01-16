@@ -31,63 +31,6 @@
       <code><![CDATA[postSaveNewChangeset]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/DescendantItemsCollection.php">
-    <MissingParamType>
-      <code><![CDATA[$mode]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[push]]></code>
-    </MissingReturnType>
-    <MissingTemplateParam>
-      <code><![CDATA[Iterator]]></code>
-    </MissingTemplateParam>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/DescendantItemsFinder.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$children]]></code>
-      <code><![CDATA[$found_rows]]></code>
-      <code><![CDATA[$ids_of_parent_items_to_search_in]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$sub_milestone_ids]]></code>
-      <code><![CDATA[$sub_milestone_ids]]></code>
-      <code><![CDATA[$sub_milestone_ids]]></code>
-      <code><![CDATA[$sub_milestone_ids]]></code>
-      <code><![CDATA[$submilestone_tracker_hierarchy_tree]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[canChildrenBePlanned]]></code>
-      <code><![CDATA[extractRelevantSubmilestoneBacklogTrackerHierarchyTreeSection]]></code>
-      <code><![CDATA[getHierarchiesToSearchIn]]></code>
-      <code><![CDATA[getIdsOfChildItemsOfOneTrackerType]]></code>
-      <code><![CDATA[getIdsOfLinkedParentItemsOfOneTrackerType]]></code>
-    </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->found_rows]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBacklogItemCollection.php">
     <MissingTemplateParam>
       <code><![CDATA[Iterator]]></code>
@@ -17852,7 +17795,6 @@
       <code><![CDATA[$filePath]]></code>
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$user_name]]></code>
-      <code><![CDATA[$user_name]]></code>
       <code><![CDATA[$userbase]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -35232,37 +35174,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
@@ -35314,15 +35225,7 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveCount]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[setGroupConcatLimit]]></code>
@@ -35352,12 +35255,6 @@
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$end_date]]></code>
       <code><![CDATA[$end_date]]></code>
       <code><![CDATA[$id]]></code>
@@ -35366,12 +35263,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$reverse_order]]></code>
@@ -35382,8 +35273,6 @@
       <code><![CDATA[$submitted_on]]></code>
       <code><![CDATA[$submitted_on]]></code>
       <code><![CDATA[$timestamp]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
@@ -35413,12 +35302,6 @@
       <code><![CDATA[doesUserHaveUnsubscribedFromArtifactNotifications]]></code>
       <code><![CDATA[getChildren]]></code>
       <code><![CDATA[getChildrenForArtifacts]]></code>
-      <code><![CDATA[getLinkedArtifactsOfTrackersConcatenatedToCustomList]]></code>
-      <code><![CDATA[getLinkedArtifactsOfTrackersNotLinkedToOthers]]></code>
-      <code><![CDATA[getLinkedArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset]]></code>
-      <code><![CDATA[getLinkedArtifactsOfTrackersWithLimitAndOffset]]></code>
-      <code><![CDATA[getLinkedOpenArtifactsOfTrackersNotLinkedToOthers]]></code>
-      <code><![CDATA[getLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset]]></code>
       <code><![CDATA[getMyArtifactOrderAndPaginateStatement]]></code>
       <code><![CDATA[getPaginatedChildren]]></code>
       <code><![CDATA[getParents]]></code>
@@ -38934,7 +38817,6 @@
       <code><![CDATA[$prefill_type]]></code>
       <code><![CDATA[$read_only]]></code>
       <code><![CDATA[$report]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$reverse_artifact_links]]></code>
       <code><![CDATA[$reverse_artifact_links]]></code>
       <code><![CDATA[$type]]></code>
@@ -40302,9 +40184,7 @@
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$can_user_restrict_permissions_to_nobody]]></code>
-      <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$is_expecting_input]]></code>
@@ -40353,7 +40233,6 @@
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$report]]></code>
       <code><![CDATA[$report]]></code>
     </MissingParamType>
     <MissingReturnType>
