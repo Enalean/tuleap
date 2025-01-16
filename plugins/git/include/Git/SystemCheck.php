@@ -18,46 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git;
+
+use Git_GitoliteDriver;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc;
+use Plugin;
+use PluginConfigChecker;
+
 /**
  * I check that everything is alright on the system
  *
  * @see Event::PROCCESS_SYSTEM_CHECK
  */
-class Git_SystemCheck
+final readonly class SystemCheck
 {
-    /**
-     * @var Plugin
-     */
-    private $git_plugin;
-
-    /**
-     * @var PluginConfigChecker
-     */
-    private $config_checker;
-
-    /**
-     * @var Git_GitoliteDriver
-     */
-    private $gitolite;
-
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
-     */
-    private $gitgc;
-
     public function __construct(
-        Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc $gitgc,
-        Git_GitoliteDriver $gitolite,
-        PluginConfigChecker $config_checker,
-        Plugin $git_plugin,
+        private Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc $gitgc,
+        private Git_GitoliteDriver $gitolite,
+        private PluginConfigChecker $config_checker,
+        private Plugin $git_plugin,
     ) {
-        $this->gitgc          = $gitgc;
-        $this->gitolite       = $gitolite;
-        $this->config_checker = $config_checker;
-        $this->git_plugin     = $git_plugin;
     }
 
-    public function process()
+    public function process(): void
     {
         $this->gitolite->checkAuthorizedKeys();
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
@@ -65,14 +48,8 @@ class Git_SystemCheck
         $this->checkIncFolderAndFileOwnership();
     }
 
-    private function checkIncFolderAndFileOwnership()
+    private function checkIncFolderAndFileOwnership(): void
     {
         $this->config_checker->checkFolder($this->git_plugin);
-        $this->config_checker->checkIncFile($this->getIncFile());
-    }
-
-    private function getIncFile()
-    {
-        return $this->git_plugin->getPluginEtcRoot() . '/config.inc';
     }
 }
