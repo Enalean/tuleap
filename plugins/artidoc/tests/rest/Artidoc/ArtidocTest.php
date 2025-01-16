@@ -659,6 +659,48 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(200, $response->getStatusCode());
     }
 
+    public function testOptionsUpload(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc_files'));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testUpload(int $root_id): void
+    {
+        $artidoc_id = $this->createArtidoc($root_id, 'Artidoc upload attachment ' . $this->now)['id'];
+
+        $payload = [
+            'artidoc_id' => $artidoc_id,
+            'name' => 'filename.png',
+            'file_size' => 123,
+            'file_type' => 'image/png',
+        ];
+
+        $post_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', 'artidoc_files')->withBody(
+                $this->stream_factory->createStream(json_encode($payload, JSON_THROW_ON_ERROR))
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        self::assertSame(403, $post_response->getStatusCode());
+
+        $post_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', 'artidoc_files')->withBody(
+                $this->stream_factory->createStream(json_encode($payload, JSON_THROW_ON_ERROR))
+            ),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(200, $post_response->getStatusCode());
+        $upload_response_json = json_decode($post_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertTrue(isset($upload_response_json['download_href']));
+        self::assertTrue(isset($upload_response_json['upload_href']));
+    }
+
     /**
      * @depends testGetRootId
      */

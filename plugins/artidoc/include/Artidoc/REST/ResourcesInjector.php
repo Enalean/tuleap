@@ -25,6 +25,7 @@
 namespace Tuleap\Artidoc\REST;
 
 use Luracast\Restler\Restler;
+use Tuleap\Artidoc\REST\v1\ArtidocFilesResource;
 use Tuleap\Artidoc\REST\v1\ArtidocResource;
 use Tuleap\Artidoc\REST\v1\ArtidocSectionsResource;
 
@@ -34,5 +35,6 @@ final readonly class ResourcesInjector
     {
         $restler->addAPIClass(ArtidocResource::class, ArtidocResource::ROUTE);
         $restler->addAPIClass(ArtidocSectionsResource::class, ArtidocSectionsResource::ROUTE);
+        $restler->addAPIClass(ArtidocFilesResource::class, ArtidocFilesResource::ROUTE);
     }
 }
