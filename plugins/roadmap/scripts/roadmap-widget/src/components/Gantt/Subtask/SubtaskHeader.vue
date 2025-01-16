@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-task-header roadmap-gantt-subtask-header" v-bind:class="classes">
+    <div
+        class="roadmap-gantt-task-header roadmap-gantt-subtask-header"
+        v-bind:class="classes"
+        ref="popover_anchor"
+    >
         <header-link
             v-bind:task="row.subtask"
             v-bind:should_display_project="should_display_project"
@@ -28,9 +32,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { SubtaskRow } from "../../../type";
 import HeaderLink from "../Task/HeaderLink.vue";
 import type { Popover } from "@tuleap/tlp-popovers";
@@ -38,57 +41,52 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
 import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
 
-@Component({
-    components: { HeaderInvalidIcon, HeaderLink },
-})
-export default class SubtaskHeader extends Vue {
-    @Prop({ required: true })
-    readonly row!: SubtaskRow;
+const props = defineProps<{
+    row: SubtaskRow;
+    popover_element_id: string;
+}>();
 
-    @Prop({ required: true })
-    private readonly popover_element_id!: string;
+const popover = ref<Popover | undefined>();
+const popover_anchor = ref<InstanceType<typeof HTMLElement>>();
 
-    private popover: Popover | undefined;
+const is_task_invalid = computed(
+    (): boolean => !doesTaskHaveEndDateGreaterOrEqualToStartDate(props.row.subtask),
+);
 
-    mounted(): void {
-        const popover_element = document.getElementById(this.popover_element_id);
-        if (
-            this.is_task_invalid &&
-            this.$el instanceof HTMLElement &&
-            popover_element instanceof HTMLElement
-        ) {
-            this.popover = createPopover(this.$el, popover_element, {
-                placement: "right",
-            });
-        }
+const classes = computed((): string[] => {
+    const classes = ["roadmap-gantt-task-header-" + props.row.parent.color_name];
+
+    if (props.row.is_last_one) {
+        classes.push("roadmap-gantt-subtask-header-last-one");
     }
 
-    beforeDestroy(): void {
-        if (this.popover) {
-            this.popover.destroy();
-        }
+    if (is_task_invalid.value) {
+        classes.push("roadmap-gantt-subtask-header-for-invalid-task");
     }
 
-    get classes(): string[] {
-        const classes = ["roadmap-gantt-task-header-" + this.row.parent.color_name];
+    return classes;
+});
 
-        if (this.row.is_last_one) {
-            classes.push("roadmap-gantt-subtask-header-last-one");
-        }
+const should_display_project = computed(
+    (): boolean => props.row.parent.project.id !== props.row.subtask.project.id,
+);
 
-        if (this.is_task_invalid) {
-            classes.push("roadmap-gantt-subtask-header-for-invalid-task");
-        }
-
-        return classes;
+onMounted(() => {
+    const popover_element = document.getElementById(props.popover_element_id);
+    if (
+        is_task_invalid.value &&
+        popover_anchor.value instanceof HTMLElement &&
+        popover_element instanceof HTMLElement
+    ) {
+        popover.value = createPopover(popover_anchor.value, popover_element, {
+            placement: "right",
+        });
     }
+});
 
-    get should_display_project(): boolean {
-        return this.row.parent.project.id !== this.row.subtask.project.id;
+onBeforeUnmount(() => {
+    if (popover.value) {
+        popover.value.destroy();
     }
-
-    get is_task_invalid(): boolean {
-        return !doesTaskHaveEndDateGreaterOrEqualToStartDate(this.row.subtask);
-    }
-}
+});
 </script>
