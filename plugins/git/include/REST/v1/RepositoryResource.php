@@ -297,7 +297,7 @@ class RepositoryResource extends AuthenticatedResource
                     null,
                     null,
                 ),
-                new GitoliteAccessURLGenerator($git_plugin->getPluginInfo()),
+                new GitoliteAccessURLGenerator(),
                 new DefaultBranchUpdateExecutorAsGitoliteUser(),
                 \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
             ),

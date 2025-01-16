@@ -23,6 +23,7 @@ use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface
 {
     /**
@@ -354,7 +355,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     {
         $this->updateRepoConf($repository);
         $this->logger->debug('Backuping ' . $repository->getPath());
-        $backup_dir = $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
+        $backup_dir = \ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR);
         if ($backup_dir && is_dir($backup_dir)) {
             $this->getDriver()->backup($repository, $backup_dir);
         }
@@ -366,7 +367,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $this->logger->debug('Delete backup ' . $repository->getBackupPath());
         $this->getDriver()->deleteBackup(
             $repository,
-            $this->getGitPlugin()->getConfigurationParameter('git_backup_dir')
+            \ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR),
         );
     }
 
@@ -378,7 +379,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function archiveBeforePurge(GitRepository $repository)
     {
-        $backup = $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
+        $backup = \ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR);
 
         if (dirname($backup)) {
             $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($backup . '/' . $repository->getBackupPath() . '.tar.gz', self::PREFIX));
@@ -508,26 +509,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         return $this->driver;
     }
 
-    protected function getGitPlugin()
-    {
-        if (! $this->gitPlugin) {
-            $plugin_manager = PluginManager::instance();
-            $plugin         = $plugin_manager->getPluginByName('git');
-            assert($plugin instanceof GitPlugin);
-            $this->gitPlugin = $plugin;
-        }
-        return $this->gitPlugin;
-    }
-
-    /**
-     * Setter for tests
-     *
-     */
-    public function setGitPlugin(GitPlugin $gitPlugin)
-    {
-        $this->gitPlugin = $gitPlugin;
-    }
-
     public function disconnectFromGerrit(GitRepository $repository)
     {
         $this->getDao()->disconnectFromGerrit($repository->getId());
@@ -571,7 +552,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function restoreArchivedRepository(GitRepository $repository)
     {
         $this->logger->info('[Gitolite]Restoring repository : ' . $repository->getName());
-        $backup_directory = realpath($this->getGitPlugin()->getConfigurationParameter('git_backup_dir') . '/');
+        $backup_directory = realpath(\ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR) . '/');
         return $this->getDriver()->restoreRepository(
             $repository,
             $this->getGitRootPath(),

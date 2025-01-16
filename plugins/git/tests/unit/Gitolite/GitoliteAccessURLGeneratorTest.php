@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Git\Gitolite;
 
 use ForgeConfig;
-use GitPluginInfo;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -40,10 +39,10 @@ final class GitoliteAccessURLGeneratorTest extends TestCase
 
     public function testGetSSHAccessTypeShouldUseGitoliteSshUser(): void
     {
-        $git_plugin_info = $this->createMock(GitPluginInfo::class);
-        $git_plugin_info->method('getPropertyValueForName')->with('git_ssh_url');
+        ForgeConfig::set(GitoliteAccessURLGenerator::SSH_URL, 'ssh://gitolite@%server_name%/');
+        ForgeConfig::set(GitoliteAccessURLGenerator::HTTP_URL, 'https://%server_name%/plugins/git');
 
-        $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
+        $access_url_generator = new GitoliteAccessURLGenerator();
 
         $project    = ProjectTestBuilder::aProject()->build();
         $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->build();
@@ -55,10 +54,10 @@ final class GitoliteAccessURLGeneratorTest extends TestCase
 
     public function testGetAccessTypeShouldIncludesRepositoryFullName(): void
     {
-        $git_plugin_info = $this->createMock(GitPluginInfo::class);
-        $git_plugin_info->method('getPropertyValueForName')->willReturnOnConsecutiveCalls(null, 'https://%server_name%/plugins/git');
+        ForgeConfig::set(GitoliteAccessURLGenerator::SSH_URL, 'ssh://gitolite@%server_name%/');
+        ForgeConfig::set(GitoliteAccessURLGenerator::HTTP_URL, 'https://%server_name%/plugins/git');
 
-        $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
+        $access_url_generator = new GitoliteAccessURLGenerator();
 
         $project    = ProjectTestBuilder::aProject()->withUnixName('gpig')->build();
         $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->withName('u/johndoe/uber/bionic')->build();
@@ -72,10 +71,10 @@ final class GitoliteAccessURLGeneratorTest extends TestCase
 
     public function testSSHURLIsEmptyWhenParameterIsSetToEmpty(): void
     {
-        $git_plugin_info = $this->createMock(GitPluginInfo::class);
-        $git_plugin_info->method('getPropertyValueForName')->with('git_ssh_url')->willReturn('');
+        ForgeConfig::set(GitoliteAccessURLGenerator::SSH_URL, '');
+        ForgeConfig::set(GitoliteAccessURLGenerator::HTTP_URL, 'https://%server_name%/plugins/git');
 
-        $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
+        $access_url_generator = new GitoliteAccessURLGenerator();
 
         $repository = GitRepositoryTestBuilder::aProjectRepository()->build();
         $ssh_url    = $access_url_generator->getSSHURL($repository);
@@ -85,11 +84,10 @@ final class GitoliteAccessURLGeneratorTest extends TestCase
 
     public function testGetSSHAccessWorksWithCustomSSHURL(): void
     {
-        $git_plugin_info = $this->createMock(GitPluginInfo::class);
-        $git_plugin_info->method('getPropertyValueForName')->with('git_ssh_url')
-            ->willReturn('ssh://git@stuf.example.com:2222');
+        ForgeConfig::set(GitoliteAccessURLGenerator::SSH_URL, 'ssh://git@stuf.example.com:2222');
+        ForgeConfig::set(GitoliteAccessURLGenerator::HTTP_URL, 'https://%server_name%/plugins/git');
 
-        $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
+        $access_url_generator = new GitoliteAccessURLGenerator();
 
         $project    = ProjectTestBuilder::aProject()->withUnixName('gpig')->build();
         $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->withName('bionic')->build();
@@ -101,10 +99,10 @@ final class GitoliteAccessURLGeneratorTest extends TestCase
 
     public function testServerNameIsReplaced(): void
     {
-        $git_plugin_info = $this->createMock(GitPluginInfo::class);
-        $git_plugin_info->method('getPropertyValueForName')->willReturnOnConsecutiveCalls(null, 'https://%server_name%/plugins/git');
+        ForgeConfig::set(GitoliteAccessURLGenerator::SSH_URL, 'ssh://gitolite@%server_name%/');
+        ForgeConfig::set(GitoliteAccessURLGenerator::HTTP_URL, 'https://%server_name%/plugins/git');
 
-        $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
+        $access_url_generator = new GitoliteAccessURLGenerator();
 
         $project    = ProjectTestBuilder::aProject()->withUnixName('gpig')->build();
         $repository = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->withName('u/johndoe/uber/bionic')->build();

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,9 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Widget displaying last git pushes for the project
- */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_Widget_ProjectPushes extends Widget
 {
     public $pluginPath;
@@ -56,13 +55,11 @@ class Git_Widget_ProjectPushes extends Widget
      */
     public function getContent()
     {
-        $request = HTTPRequest::instance();
-        $groupId = $request->get('group_id');
-        $plugin  = PluginManager::instance()->getPluginByName('git');
-        assert($plugin instanceof \GitPlugin);
+        $request     = HTTPRequest::instance();
+        $groupId     = $request->get('group_id');
         $weeksNumber = $request->get('weeks_number');
         if (empty($weeksNumber)) {
-            $weeksNumber =  $plugin->getPluginInfo()->getPropVal('weeks_number');
+            $weeksNumber =  ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::WEEKS_NUMBER);
         }
         $content = '<div style="text-align:center"><p>
                         <img src="' . $this->pluginPath . '/index.php?group_id=' . $groupId . '&weeks_number=' . $weeksNumber . '&action=view_last_git_pushes" title="' . dgettext('tuleap-git', 'Last Git pushes') . '" />

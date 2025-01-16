@@ -31,13 +31,14 @@ use Tuleap\ServerHostname;
 class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
 {
     #[ConfigKey('Define a custom SSH URL to get access to the sources')]
+    #[ConfigKeyString('ssh://gitolite@%server_name%/')]
     #[ConfigKeyHelp(<<<EOT
     This is mainly useful when SSH doesn't run on the default port (22)
 
     For convenience, you can either hardcode the URLs or you can use `%server_name%`
     variable that will be replace automatically by the value of `sys_default_domain`
 
-    Exemple if your SSH server runs on port 2222:
+    Example if your SSH server runs on port 2222:
     ssh://gitolite@%server_name%:2222/
 
     You can disable display of this url by activating this variable and setting '' (empty string)
@@ -51,10 +52,6 @@ class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
     variable that will be replace automatically by the value of `sys_default_domain`
     EOT)]
     public const HTTP_URL = 'git_http_url';
-
-    public function __construct(private \GitPluginInfo $git_plugin_info)
-    {
-    }
 
     public function getSSHURL(GitRepository $repository): string
     {
@@ -78,7 +75,7 @@ class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
 
     private function getConfigurationParameter($key)
     {
-        $value = $this->git_plugin_info->getPropertyValueForName($key);
+        $value = \ForgeConfig::get($key);
         if ($value !== false && $value !== null) {
             $value = trim(str_replace('%server_name%', ServerHostname::hostnameWithHTTPSPort(), $value), '/');
         }
