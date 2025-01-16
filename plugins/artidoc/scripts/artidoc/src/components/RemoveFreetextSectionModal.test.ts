@@ -46,7 +46,7 @@ describe("RemoveFreetextSectionModal", () => {
 
     beforeEach(() => {
         freetext_section = FreetextSectionFactory.create();
-        sections_store = InjectedSectionsStoreStub.withLoadedSections([freetext_section]);
+        sections_store = InjectedSectionsStoreStub.withSections([freetext_section]);
 
         removeSection = vi.spyOn(sections_store, "removeSection");
         bus = useRemoveFreetextSectionModal();

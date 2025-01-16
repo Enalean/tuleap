@@ -53,7 +53,7 @@ describe("useSectionEditor", () => {
 
     beforeEach(() => {
         store_stub = {
-            ...InjectedSectionsStoreStub.withLoadedSections([]),
+            ...InjectedSectionsStoreStub.withSections([]),
             removeSection: remove_section,
         };
         editors_collection = useSectionEditorsStore();

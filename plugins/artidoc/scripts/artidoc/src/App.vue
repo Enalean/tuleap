@@ -30,45 +30,58 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, provide, ref } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import DocumentView from "@/views/DocumentView.vue";
 import DocumentHeader from "@/components/DocumentHeader.vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import GlobalErrorMessageModal from "@/components/GlobalErrorMessageModal.vue";
 import type { GlobalErrorMessage } from "@/global-error-message-injection-key";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
-
-const item_id = strictInject(DOCUMENT_ID);
-const store = strictInject(SECTIONS_STORE);
-
-const configuration = strictInject(CONFIGURATION_STORE);
-const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+import {
+    IS_LOADING_SECTIONS,
+    IS_LOADING_SECTIONS_FAILED,
+} from "@/is-loading-sections-injection-key";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { getSectionsLoader } from "@/components/SectionsLoader";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const { scrollToAnchor } = useScrollToAnchor();
 
 const error_message = ref<GlobalErrorMessage | null>(null);
 const has_error_message = computed(() => error_message.value !== null);
 const container = ref<HTMLElement>();
+const is_loading_sections = ref(true);
+const is_loading_failed = ref(false);
+const store = strictInject(SECTIONS_STORE);
 
+provide(IS_LOADING_SECTIONS, is_loading_sections);
+provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed);
 provide(
     SET_GLOBAL_ERROR_MESSAGE,
     (message: GlobalErrorMessage | null) => (error_message.value = message),
 );
 
-onMounted(() => {
-    store
-        .loadSections(item_id, configuration.selected_tracker.value, can_user_edit_document)
-        .then(() => {
+getSectionsLoader(strictInject(DOCUMENT_ID))
+    .loadSections()
+    .match(
+        (collection) => {
+            store.replaceAll(collection);
+            is_loading_sections.value = false;
+
             const hash = window.location.hash.slice(1);
             if (hash) {
                 scrollToAnchor(hash);
             }
-        });
+        },
+        () => {
+            store.replaceAll([]);
 
+            is_loading_sections.value = false;
+            is_loading_failed.value = true;
+        },
+    );
+
+onMounted(() => {
     container.value?.addEventListener("scroll", onScroll);
 });
 

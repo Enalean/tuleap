@@ -50,11 +50,7 @@ describe("DocumentContent", () => {
             title: { ...default_pending_artifact_section.title, value: "Title 3" },
         });
 
-        sections_store = InjectedSectionsStoreStub.withLoadedSections([
-            section_1,
-            section_2,
-            section_3,
-        ]);
+        sections_store = InjectedSectionsStoreStub.withSections([section_1, section_2, section_3]);
     });
 
     it("should display the two sections", () => {

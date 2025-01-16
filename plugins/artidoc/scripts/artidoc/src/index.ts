@@ -22,7 +22,7 @@ import { createGettext } from "vue3-gettext";
 import App from "./App.vue";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { useSectionsStore } from "@/stores/useSectionsStore";
+import { buildSectionsStore } from "@/stores/useSectionsStore";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
@@ -76,7 +76,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     app.provide(TOOLBAR_BUS, buildToolbarBus());
 
-    const sections_store = useSectionsStore();
+    const can_user_edit_document = Boolean(
+        getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument"),
+    );
+    const selected_tracker = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "selectedTracker"));
+    const sections_store = buildSectionsStore(can_user_edit_document, selected_tracker);
+
     const upload_file_store = useUploadFileStore();
     const notifications_store = useNotificationsStore();
     const editors_store = useSectionEditorsStore();
@@ -85,10 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(UPLOAD_FILE_STORE, upload_file_store);
     app.provide(NOTIFICATION_STORE, notifications_store);
     app.provide(CURRENT_LOCALE, current_locale);
-    app.provide(
-        CAN_USER_EDIT_DOCUMENT,
-        Boolean(getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument")),
-    );
+    app.provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document);
     app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore());
     app.provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus());
     app.provide(REMOVE_FREETEXT_SECTION_MODAL, useRemoveFreetextSectionModal());
@@ -102,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         CONFIGURATION_STORE,
         initConfigurationStore(
             item_id,
-            JSON.parse(getDatasetItemOrThrow(vue_mount_point, "selectedTracker")),
+            selected_tracker,
             JSON.parse(getDatasetItemOrThrow(vue_mount_point, "allowedTrackers")),
             sections_store,
         ),

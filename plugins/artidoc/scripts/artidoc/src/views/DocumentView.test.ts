@@ -17,24 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, beforeEach, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { ref } from "vue";
+import type { Ref } from "vue";
 import EmptyState from "@/views/EmptyState.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
-import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import NoAccessState from "@/views/NoAccessState.vue";
 import DocumentView from "@/views/DocumentView.vue";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import type { Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
-import type { SectionsStore } from "@/stores/useSectionsStore";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import {
+    IS_LOADING_SECTIONS,
+    IS_LOADING_SECTIONS_FAILED,
+} from "@/is-loading-sections-injection-key";
+import type { SectionsStore } from "@/stores/useSectionsStore";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 
 describe("DocumentView", () => {
+    let is_loading_sections: Ref<boolean>, is_loading_sections_failed: Ref<boolean>;
+
+    beforeEach(() => {
+        is_loading_sections = ref(false);
+        is_loading_sections_failed = ref(false);
+    });
+
     function getWrapper(
         can_user_edit_document: boolean,
         selected_tracker: Tracker | null,
@@ -47,6 +60,8 @@ describe("DocumentView", () => {
                     [CONFIGURATION_STORE.valueOf()]:
                         ConfigurationStoreStub.withSelectedTracker(selected_tracker),
                     [SECTIONS_STORE.valueOf()]: sections_store,
+                    [IS_LOADING_SECTIONS.valueOf()]: is_loading_sections,
+                    [IS_LOADING_SECTIONS_FAILED.valueOf()]: is_loading_sections_failed,
                 },
             },
         });
@@ -57,8 +72,9 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withLoadedSections([]),
+                InjectedSectionsStoreStub.withSections([]),
             );
+
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(ConfigurationPanel).exists()).toBe(false);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
@@ -69,8 +85,9 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withLoadedSections([]),
+                InjectedSectionsStoreStub.withSections([]),
             );
+
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(ConfigurationPanel).exists()).toBe(false);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
@@ -78,11 +95,8 @@ describe("DocumentView", () => {
         });
 
         it("should display configuration screen if user can edit document and the tracker is not configured", () => {
-            const wrapper = getWrapper(
-                true,
-                null,
-                InjectedSectionsStoreStub.withLoadedSections([]),
-            );
+            const wrapper = getWrapper(true, null, InjectedSectionsStoreStub.withSections([]));
+
             expect(wrapper.findComponent(ConfigurationPanel).exists()).toBe(true);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
@@ -95,8 +109,9 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withLoadedSections([ArtifactSectionFactory.create()]),
+                InjectedSectionsStoreStub.withSections([ArtifactSectionFactory.create()]),
             );
+
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
             expect(wrapper.findComponent(ConfigurationPanel).exists()).toBe(false);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
@@ -106,11 +121,14 @@ describe("DocumentView", () => {
 
     describe("when sections are loading", () => {
         it("should display document content view", () => {
+            is_loading_sections.value = true;
+
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withLoadingSections(),
+                InjectedSectionsStoreStub.withSections([]),
             );
+
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
             expect(wrapper.findComponent(ConfigurationPanel).exists()).toBe(false);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
@@ -120,11 +138,14 @@ describe("DocumentView", () => {
 
     describe("when the user is not allowed to access the document", () => {
         it("should display no access state view", () => {
+            is_loading_sections_failed.value = true;
+
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withSectionsInError(),
+                InjectedSectionsStoreStub.withSections([]),
             );
+
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(true);
             expect(wrapper.findComponent(ConfigurationPanel).exists()).toBe(false);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(false);

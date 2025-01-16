@@ -22,42 +22,25 @@ import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
 import { injectInternalId } from "@/helpers/inject-internal-id";
-import { extractArtifactAndFreetextSectionsFromArtidocSections } from "@/helpers/extract-artifact-and-freetext-sections-from-artidoc-sections";
+import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { noop, promised_noop } from "@/helpers/noop";
+import { noop } from "@/helpers/noop";
 
 const resultasync_noop = (): ResultAsync<boolean, Fault> => okAsync(true);
 
 export const InjectedSectionsStoreStub = {
-    withLoadedSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
+    withSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
         replacePendingSection: noop,
         getSectionPositionForSave: () => null,
         insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
-        loadSections: promised_noop,
+        replaceAll: noop,
         updateSection: noop,
-        is_sections_loading: ref(false),
         sections: ref(sections.map(injectInternalId)),
-        saved_sections: computed(() =>
-            extractArtifactAndFreetextSectionsFromArtidocSections(sections),
-        ),
-    }),
-    withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
-        replacePendingSection: noop,
-        getSectionPositionForSave: () => null,
-        insertPendingSectionForEmptyDocument: noop,
-        insertSection: noop,
-        removeSection: resultasync_noop,
-        loadSections: promised_noop,
-        updateSection: noop,
-        is_sections_loading: ref(true),
-        sections: ref(sections.map(injectInternalId)),
-        saved_sections: computed(() =>
-            extractArtifactAndFreetextSectionsFromArtidocSections(sections),
-        ),
+        saved_sections: computed(() => extractSavedSectionsFromArtidocSections(sections)),
     }),
     withSectionsInError: (): SectionsStore => ({
         replacePendingSection: noop,
@@ -65,28 +48,15 @@ export const InjectedSectionsStoreStub = {
         insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
-        loadSections: promised_noop,
+        replaceAll: noop,
         updateSection: noop,
-        is_sections_loading: ref(false),
-        sections: ref(undefined),
-        saved_sections: computed(() => undefined),
-    }),
-    withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
-        replacePendingSection: noop,
-        getSectionPositionForSave: () => null,
-        insertPendingSectionForEmptyDocument: noop,
-        insertSection: noop,
-        removeSection: resultasync_noop,
-        loadSections,
-        updateSection: noop,
-        is_sections_loading: ref(false),
         sections: ref([]),
         saved_sections: computed(() => []),
     }),
     withMockedInsertPendingArtifactSectionForEmptyDocument: (
         insertPendingSectionForEmptyDocument: (tracker: Tracker | null) => void,
     ): SectionsStore => ({
-        ...InjectedSectionsStoreStub.withLoadedSections([]),
+        ...InjectedSectionsStoreStub.withSections([]),
         insertPendingSectionForEmptyDocument,
     }),
 };
