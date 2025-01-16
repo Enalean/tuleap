@@ -35,38 +35,34 @@
         </form>
     </section>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { useNamespacedState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import EmptySvg from "./EmptySvg.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
-import { namespace } from "vuex-class";
 
-const configuration = namespace("configuration");
+const gettext_provider = useGettext();
 
-@Component({
-    components: { EmptySvg },
-})
-export default class EmptyState extends Vue {
-    @configuration.State
-    readonly can_create_program_increment!: boolean;
+const {
+    can_create_program_increment,
+    tracker_program_increment_id,
+    tracker_program_increment_sub_label,
+} = useNamespacedState<{
+    can_create_program_increment: boolean;
+    tracker_program_increment_id: number;
+    tracker_program_increment_sub_label: string;
+}>("configuration", [
+    "can_create_program_increment",
+    "tracker_program_increment_id",
+    "tracker_program_increment_sub_label",
+]);
 
-    @configuration.State
-    readonly tracker_program_increment_id!: number;
+const create_new_program_increment = buildCreateNewProgramIncrement(
+    tracker_program_increment_id.value,
+);
 
-    @configuration.State
-    readonly tracker_program_increment_sub_label!: string;
-
-    get create_new_program_increment(): string {
-        return buildCreateNewProgramIncrement(this.tracker_program_increment_id);
-    }
-
-    get create_first_label(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("Create the first %{ program_increment_sub_label }"),
-            { program_increment_sub_label: this.tracker_program_increment_sub_label },
-        );
-    }
-}
+const create_first_label = gettext_provider.interpolate(
+    gettext_provider.$gettext("Create the first %{ program_increment_sub_label }"),
+    { program_increment_sub_label: tracker_program_increment_sub_label.value },
+);
 </script>
