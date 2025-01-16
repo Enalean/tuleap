@@ -97,8 +97,8 @@ class ArtifactReport
     /**
      *
      *
-     *    @param    report_id
-     *  @param  atid: the artifact type id
+     *  @param  $report_id
+     *  @param  $atid: the artifact type id
      *
      *    @return bool success.
      */

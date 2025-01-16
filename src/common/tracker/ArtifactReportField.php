@@ -39,7 +39,6 @@ class ArtifactReportField extends ArtifactField
     /**
      *
      *
-     *    @param
      *    @return bool success.
      */
     public function __construct()

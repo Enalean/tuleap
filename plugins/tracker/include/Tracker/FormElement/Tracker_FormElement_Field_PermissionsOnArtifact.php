@@ -101,10 +101,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }
 
-    /**
-     * @return string
-     */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }

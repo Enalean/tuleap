@@ -86,8 +86,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return '<span class="non-displayable" title="' . dgettext('tuleap-tracker', 'The rank of an artifact only exists in the context of a milestone. You must filter by milestone to view artifact ranks.') . '">' . dgettext('tuleap-tracker', 'N/A') . '</span>';
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
+        if (! $report) {
+            return dgettext('tuleap-tracker', 'N/A');
+        }
+
         $augmented_value = $this->getAugmentedFieldValue($artifact_id, $report);
         if ($augmented_value) {
             return $augmented_value;
