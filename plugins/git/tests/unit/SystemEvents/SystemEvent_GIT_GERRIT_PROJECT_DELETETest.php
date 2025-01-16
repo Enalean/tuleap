@@ -18,150 +18,101 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
 
-require_once __DIR__ . '/../bootstrap.php';
+namespace Tuleap\Git\SystemEvents;
 
-class SystemEvent_GIT_GERRIT_PROJECT_DELETETest extends TestCase  // phpcs:ignore
+use Git_Backend_Gitolite;
+use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_RemoteServer_GerritServer;
+use Git_RemoteServer_GerritServerFactory;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use SystemEvent_GIT_GERRIT_PROJECT_DELETE;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class SystemEvent_GIT_GERRIT_PROJECT_DELETETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_RemoteServer_GerritServer|MockInterface
-     */
-    private $server;
-    /**
-     * @var Git_Backend_Gitolite|MockInterface
-     */
-    private $backend;
-    /**
-     * @var Git_Driver_Gerrit|MockInterface
-     */
-    private $driver;
-    /**
-     * @var GitRepositoryFactory|MockInterface
-     */
-    private $repository_factory;
-    /**
-     * @var SystemEvent_GIT_GERRIT_PROJECT_DELETE|MockInterface
-     */
-    private $event;
+    private Git_RemoteServer_GerritServer&MockObject $server;
+    private Git_Backend_Gitolite&MockObject $backend;
+    private Git_Driver_Gerrit&MockObject $driver;
+    private GitRepositoryFactory&MockObject $repository_factory;
+    private SystemEvent_GIT_GERRIT_PROJECT_DELETE $event;
 
     public function setUp(): void
     {
-        parent::setUp();
+        $this->repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $server_factory           = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $driver_factory           = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $this->driver             = $this->createMock(Git_Driver_Gerrit::class);
+        $driver_factory->method('getDriver')->willReturn($this->driver);
+        $this->backend = $this->createMock(Git_Backend_Gitolite::class);
 
-        $this->repository_factory = Mockery::mock(GitRepositoryFactory::class);
-        $server_factory           = Mockery::mock(Git_RemoteServer_GerritServerFactory::class);
-        $driver_factory           = Mockery::mock(Git_Driver_Gerrit_GerritDriverFactory::class);
-        $this->driver             = Mockery::mock(Git_Driver_Gerrit::class);
-        $driver_factory->shouldReceive('getDriver')->andReturn($this->driver);
-        $this->backend = Mockery::mock(Git_Backend_Gitolite::class);
-
-        $this->event = Mockery::mock(SystemEvent_GIT_GERRIT_PROJECT_DELETE::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->event = new SystemEvent_GIT_GERRIT_PROJECT_DELETE(1, '', '', '', 1, '', '', '', '', '');
         $this->event->injectDependencies($this->repository_factory, $server_factory, $driver_factory);
 
-        $this->server = Mockery::mock(Git_RemoteServer_GerritServer::class);
-        $server_factory->shouldReceive('getServerById')->andReturn($this->server);
+        $this->server = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $server_factory->method('getServerById')->willReturn($this->server);
     }
 
-    public function testItDeletesGerritProject()
+    public function testItDeletesGerritProject(): void
     {
-        $forge_project_name = 'Hello_kitty';
-        $forge_project      = Mockery::mock(Project::class);
-        $forge_project->shouldReceive('getUnixName')->andReturn($forge_project_name);
-
-        $repository_name = 'mouse';
-
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($forge_project);
-        $repository->shouldReceive('getName')->andReturn($repository_name);
-        $repository->shouldReceive('getBackend')->andReturn($this->backend);
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturn($repository);
+        $forge_project_name = 'hello_kitty';
+        $forge_project      = ProjectTestBuilder::aProject()->withUnixName($forge_project_name)->build();
+        $repository_name    = 'mouse';
+        $repository         = GitRepositoryTestBuilder::aProjectRepository()->inProject($forge_project)
+            ->withName($repository_name)->withBackend($this->backend)->build();
+        $this->repository_factory->method('getRepositoryById')->willReturn($repository);
 
         $gerrit_project_full_name = $forge_project_name . '/' . $repository_name;
 
         $repository_id    = 154;
         $remote_server_id = 33;
-        $this->event->shouldReceive(
-            [
-                'getParametersAsArray' => [
-                    $repository_id,
-                    $remote_server_id,
-                ],
-            ]
-        );
+        $this->event->setParameters("$repository_id::$remote_server_id");
 
-        $this->driver->shouldReceive('deleteProject')->with($this->server, $gerrit_project_full_name);
-        $this->backend->shouldReceive('setGerritProjectAsDeleted')->with($repository);
+        $this->driver->method('deleteProject')->with($this->server, $gerrit_project_full_name);
+        $this->backend->method('setGerritProjectAsDeleted')->with($repository);
 
-        $this->assertTrue($this->event->process());
+        self::assertTrue($this->event->process());
     }
 
-    public function testItDeletesGerritProjectWhenRepositoryIsDeleted()
+    public function testItDeletesGerritProjectWhenRepositoryIsDeleted(): void
     {
-        $forge_project_name = 'Hello_kitty';
-        $forge_project      = Mockery::mock(Project::class);
-        $forge_project->shouldReceive('getUnixName')->andReturn($forge_project_name);
-
-        $repository_name = 'mouse';
-
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($forge_project);
-        $repository->shouldReceive('getName')->andReturn($repository_name);
-        $repository->shouldReceive('getBackend')->andReturn($this->backend);
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturn(null);
-        $this->repository_factory->shouldReceive('getDeletedRepository')->andReturn($repository);
+        $forge_project_name = 'hello_kitty';
+        $forge_project      = ProjectTestBuilder::aProject()->withUnixName($forge_project_name)->build();
+        $repository_name    = 'mouse';
+        $repository         = GitRepositoryTestBuilder::aProjectRepository()->inProject($forge_project)
+            ->withName($repository_name)->withBackend($this->backend)->build();
+        $this->repository_factory->method('getRepositoryById')->willReturn(null);
+        $this->repository_factory->method('getDeletedRepository')->willReturn($repository);
 
         $gerrit_project_full_name = $forge_project_name . '/' . $repository_name;
 
         $repository_id    = 154;
         $remote_server_id = 33;
-        $this->event->shouldReceive(
-            [
-                'getParametersAsArray' => [
-                    $repository_id,
-                    $remote_server_id,
-                ],
-            ]
-        );
+        $this->event->setParameters("$repository_id::$remote_server_id");
 
-        $this->driver->shouldReceive('deleteProject')->with($this->server, $gerrit_project_full_name);
-        $this->backend->shouldReceive('setGerritProjectAsDeleted')->with($repository);
+        $this->driver->method('deleteProject')->with($this->server, $gerrit_project_full_name);
+        $this->backend->method('setGerritProjectAsDeleted')->with($repository);
 
-        $this->assertTrue($this->event->process());
+        self::assertTrue($this->event->process());
     }
 
-    public function testItDoNothingIfRepositotyIsNotFound()
+    public function testItDoNothingIfRepositotyIsNotFound(): void
     {
-        $forge_project_name = 'Hello_kitty';
-        $forge_project      = Mockery::mock(Project::class);
-        $forge_project->shouldReceive('getUnixName')->andReturn($forge_project_name);
-
-        $repository_name = 'mouse';
-
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($forge_project);
-        $repository->shouldReceive('getName')->andReturn($repository_name);
-        $repository->shouldReceive('getBackend')->andReturn($this->backend);
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturn(null);
-        $this->repository_factory->shouldReceive('getDeletedRepository')->andReturn(null);
+        $this->repository_factory->method('getRepositoryById')->willReturn(null);
+        $this->repository_factory->method('getDeletedRepository')->willReturn(null);
 
         $repository_id    = 154;
         $remote_server_id = 33;
-        $this->event->shouldReceive(
-            [
-                'getParametersAsArray' => [
-                    $repository_id,
-                    $remote_server_id,
-                ],
-            ]
-        );
+        $this->event->setParameters("$repository_id::$remote_server_id");
 
-        $this->driver->shouldReceive('deleteProject')->never();
-        $this->backend->shouldReceive('setGerritProjectAsDeleted')->never();
+        $this->driver->expects(self::never())->method('deleteProject');
+        $this->backend->expects(self::never())->method('setGerritProjectAsDeleted');
 
-        $this->assertFalse($this->event->process());
+        self::assertFalse($this->event->process());
     }
 }
