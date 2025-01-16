@@ -130,14 +130,6 @@ describe("DropContainerCell", () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
     });
 
-    it(`does not expand the column when user clicks on the expanded column cell`, () => {
-        const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column, false);
-
-        wrapper.trigger("click");
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
-    });
-
     describe("renders the AddCard component only when it is possible", () => {
         it(`renders the button when the tracker of the swimlane allows to add cards in place`, () => {
             const column = { is_collapsed: false } as ColumnDefinition;

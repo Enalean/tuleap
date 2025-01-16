@@ -108,13 +108,6 @@ describe(`InvalidMappingCell`, () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
     });
 
-    it(`does not expand the column when user clicks on the expanded column cell`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
-
-        wrapper.trigger("click");
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
-    });
-
     it(`Allows to add cards`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, true);
 

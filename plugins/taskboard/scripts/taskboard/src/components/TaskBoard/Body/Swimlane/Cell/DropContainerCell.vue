@@ -24,7 +24,7 @@
         v-bind:class="drop_classes"
         v-on:pointerenter="pointerEntersCollapsedColumn"
         v-on:pointerleave="pointerLeavesCollapsedColumn"
-        v-on:click="expandCollapsedColumn"
+        v-on:click="expandColumn(column)"
         data-is-container="true"
         v-bind:data-swimlane-id="swimlane.card.id"
         v-bind:data-column-id="column.id"
@@ -46,7 +46,6 @@
 import { Getter, namespace } from "vuex-class";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
-import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
@@ -60,7 +59,6 @@ const swimlane = namespace("swimlane");
 })
 export default class DropContainerCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,
-    ExpandCollapsedColumnMixin,
     ClassesForCollapsedColumnMixin,
 ) {
     @Prop({ required: true })
@@ -68,6 +66,9 @@ export default class DropContainerCell extends Mixins(
 
     @Prop({ required: true })
     override readonly column!: ColumnDefinition;
+
+    @column_store.Action
+    readonly expandColumn!: (column: ColumnDefinition) => void;
 
     @column_store.Getter
     readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];

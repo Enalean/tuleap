@@ -23,7 +23,7 @@
         v-bind:class="classes"
         v-on:pointerenter="pointerEntersCollapsedColumn"
         v-on:pointerleave="pointerLeavesCollapsedColumn"
-        v-on:click="expandCollapsedColumn"
+        v-on:click="expandColumn(column)"
         data-navigation="cell"
     >
         <add-card v-if="is_add_card_rendered" v-bind:column="column" v-bind:swimlane="swimlane" />
@@ -32,26 +32,32 @@
 
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
-import { Getter } from "vuex-class";
+import { Getter, namespace } from "vuex-class";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
-import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import AddCard from "../Card/Add/AddCard.vue";
-import type { Swimlane } from "../../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../../type";
+
+const column_store = namespace("column");
 
 @Component({
     components: { AddCard },
 })
 export default class InvalidMappingCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,
-    ExpandCollapsedColumnMixin,
     ClassesForCollapsedColumnMixin,
 ) {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
+    @Prop({ required: true })
+    override readonly column!: ColumnDefinition;
+
     @Getter
     readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
+
+    @column_store.Action
+    readonly expandColumn!: (column: ColumnDefinition) => void;
 
     get is_add_card_rendered(): boolean {
         return this.can_add_in_place(this.swimlane);
