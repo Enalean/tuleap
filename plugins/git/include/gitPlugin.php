@@ -58,6 +58,7 @@ use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\SystemCheck;
 use Tuleap\Git\GitPHP\Controller_Snapshot;
 use Tuleap\Git\GitXMLImportDefaultBranchRetriever;
 use Tuleap\Git\LegacyConfigInc;
@@ -1141,7 +1142,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
         $gitolite_driver = $this->getGitoliteDriver();
 
-        $system_check = new Git_SystemCheck(
+        $system_check = new SystemCheck(
             $gitgc,
             $gitolite_driver,
             new PluginConfigChecker($params['logger']),

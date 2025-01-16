@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-use Git_SystemCheck;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PluginConfigChecker;
 
@@ -32,7 +31,7 @@ class SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $driver;
     private $gitgc;
-    /** @var Git_SystemCheck */
+    /** @var SystemCheck */
     private $system_check;
 
     protected function setUp(): void
@@ -44,7 +43,7 @@ class SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
         $config_checker = new PluginConfigChecker($logger);
         $plugin         = \Mockery::spy(\Plugin::class);
 
-        $this->system_check = new Git_SystemCheck(
+        $this->system_check = new SystemCheck(
             $this->gitgc,
             $this->driver,
             $config_checker,
