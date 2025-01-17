@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Webhook;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Project\ProjectUserUGroupMembershipsRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
@@ -51,6 +52,13 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->changeset_representation_builder,
             BuildCompleteTrackerRESTRepresentationStub::build(),
             ProvideUserAvatarUrlStub::build(),
+            new class implements ProjectUserUGroupMembershipsRetriever
+            {
+                public function getMembershipsInAProject(\Project $project, \PFUser $user): array
+                {
+                    return [new \ProjectUGroup(['group_id' => $project->getID(), 'ugroup_id' => 104])];
+                }
+            }
         );
     }
 
@@ -86,6 +94,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('create', $payload->getPayload()['action']);
         self::assertNull($payload->getPayload()['previous']);
         self::assertFalse($payload->getPayload()['is_custom_code_execution']);
+        self::assertNotEmpty($payload->getPayload()['submitter_user_groups']);
     }
 
     public function testItSetWASMUpdateToTrueIfCCEUser(): void
