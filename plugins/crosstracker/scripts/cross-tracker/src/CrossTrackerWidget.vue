@@ -80,7 +80,7 @@ import SelectableTable from "./components/selectable-table/SelectableTable.vue";
 import type { ReportState } from "./domain/ReportState";
 import {
     CLEAR_FEEDBACKS,
-    IS_CSV_EXPORT_ALLOWED,
+    IS_EXPORT_ALLOWED,
     IS_USER_ADMIN,
     NOTIFY_FAULT,
     REPORT_ID,
@@ -117,7 +117,7 @@ provide(NOTIFY_FAULT, notifyFault);
 provide(CLEAR_FEEDBACKS, clearFeedbacks);
 const has_error = computed<boolean>(() => current_fault.value.isValue());
 
-const is_csv_export_allowed = computed<boolean>(() => {
+const is_export_allowed = computed<boolean>(() => {
     if (report_state.value !== "report-saved" || has_error.value === true) {
         return false;
     }
@@ -126,7 +126,8 @@ const is_csv_export_allowed = computed<boolean>(() => {
     }
     return invalid_trackers.value.length === 0;
 });
-provide(IS_CSV_EXPORT_ALLOWED, is_csv_export_allowed);
+
+provide(IS_EXPORT_ALLOWED, is_export_allowed);
 
 function initReports(): void {
     props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
@@ -209,7 +210,7 @@ defineExpose({
     report_state,
     current_fault,
     current_success,
-    is_csv_export_allowed,
+    is_export_allowed,
 });
 </script>
 

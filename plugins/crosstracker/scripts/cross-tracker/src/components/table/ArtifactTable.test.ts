@@ -34,7 +34,7 @@ import type { Artifact } from "../../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import {
     DATE_FORMATTER,
-    IS_CSV_EXPORT_ALLOWED,
+    IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_ID,
     REPORT_STATE,
@@ -63,7 +63,7 @@ describe("ArtifactTable", () => {
                 provide: {
                     [DATE_FORMATTER.valueOf()]: date_formatter,
                     [REPORT_STATE.valueOf()]: ref(report_state),
-                    [IS_CSV_EXPORT_ALLOWED.valueOf()]: ref(is_csv_export_allowed),
+                    [IS_EXPORT_ALLOWED.valueOf()]: ref(is_csv_export_allowed),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [REPORT_ID.valueOf()]: 472,
                 },

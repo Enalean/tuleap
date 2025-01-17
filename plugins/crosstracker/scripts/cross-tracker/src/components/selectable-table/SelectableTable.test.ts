@@ -33,7 +33,7 @@ import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
-    IS_CSV_EXPORT_ALLOWED,
+    IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -51,6 +51,7 @@ import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "../EmptyState.vue";
 import type { ReportState } from "../../domain/ReportState";
 import SelectableCell from "./SelectableCell.vue";
+import ExportXLSXButton from "../ExportXLSXButton.vue";
 
 vi.useFakeTimers();
 
@@ -61,13 +62,13 @@ const TEXT_COLUMN_NAME = "details";
 describe(`SelectableTable`, () => {
     let errorSpy: Mock,
         report_state: ReportState,
-        is_csv_export_allowed: boolean,
+        is_xslx_export_allowed: boolean,
         writing_cross_tracker_report: WritingCrossTrackerReport;
 
     beforeEach(() => {
         errorSpy = vi.fn();
         report_state = "report-saved";
-        is_csv_export_allowed = true;
+        is_xslx_export_allowed = true;
 
         writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
@@ -97,7 +98,7 @@ describe(`SelectableTable`, () => {
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
                     [REPORT_STATE.valueOf()]: ref(report_state),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
-                    [IS_CSV_EXPORT_ALLOWED.valueOf()]: ref(is_csv_export_allowed),
+                    [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xslx_export_allowed),
                 },
             },
             props: {
@@ -298,7 +299,7 @@ describe(`SelectableTable`, () => {
         });
     });
     describe("Empty state", () => {
-        it("displays the empty state when there is no result", () => {
+        it("displays the empty state and no XLSX button when there is no result", () => {
             const table_result = {
                 table: new ArtifactsTableBuilder().build(),
                 total: 0,
@@ -310,6 +311,41 @@ describe(`SelectableTable`, () => {
 
             const wrapper = getWrapper(table_retriever);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
+            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
+        });
+    });
+    describe(`render XSLX button`, () => {
+        let table_retriever: RetrieveArtifactsTable;
+        beforeEach(() => {
+            const table = new ArtifactsTableBuilder()
+                .withColumn(NUMERIC_COLUMN_NAME)
+                .withArtifactRow(
+                    new ArtifactRowBuilder()
+                        .addCell(NUMERIC_COLUMN_NAME, {
+                            type: NUMERIC_CELL,
+                            value: Option.fromValue(74),
+                        })
+                        .build(),
+                )
+                .build();
+
+            const table_result = {
+                table,
+                total: 1,
+            };
+            table_retriever = RetrieveArtifactsTableStub.withContent(table_result, table_result);
+        });
+        it(`does not show the CSV export button when told not to`, () => {
+            is_xslx_export_allowed = false;
+
+            const wrapper = getWrapper(table_retriever);
+            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
+        });
+
+        it(`shows the CSV export button otherwise`, async () => {
+            const wrapper = getWrapper(table_retriever);
+            await vi.runOnlyPendingTimersAsync();
+            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(true);
         });
     });
 });
