@@ -27,43 +27,31 @@
     </drop-container-cell>
 </template>
 
-<script lang="ts">
-import { Component, Mixins, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Card, ColumnDefinition, Swimlane } from "../../../../../type";
-import { namespace } from "vuex-class";
 import ChildCard from "../Card/ChildCard.vue";
 import CardSkeleton from "../Skeleton/CardSkeleton.vue";
-import SkeletonMixin from "../Skeleton/skeleton-mixin";
 import DropContainerCell from "./DropContainerCell.vue";
+import { useSkeletons } from "../Skeleton/skeleton-composable";
+import { useNamespacedGetters } from "vuex-composition-helpers";
+import { computed } from "vue";
 
-const swimlane = namespace("swimlane");
+const props = defineProps<{
+    column: ColumnDefinition;
+    swimlane: Swimlane;
+}>();
 
-@Component({
-    components: { DropContainerCell, ChildCard, CardSkeleton },
-})
-export default class ChildrenCell extends Mixins(SkeletonMixin) {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const { cards_in_cell } = useNamespacedGetters("swimlane", ["cards_in_cell"]);
 
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const cards = computed((): Card[] => {
+    return cards_in_cell.value(props.swimlane, props.column);
+});
 
-    @swimlane.Getter
-    readonly cards_in_cell!: (
-        current_swimlane: Swimlane,
-        current_column: ColumnDefinition,
-    ) => Card[];
-
-    get cards(): Card[] {
-        return this.cards_in_cell(this.swimlane, this.column);
+const nb_skeletons_to_display = computed((): number => {
+    if (cards.value.length > 0) {
+        return 1;
     }
 
-    get nb_skeletons_to_display(): number {
-        if (this.cards.length > 0) {
-            return 1;
-        }
-
-        return this.nb_skeletons;
-    }
-}
+    return useSkeletons(cards.value.length);
+});
 </script>

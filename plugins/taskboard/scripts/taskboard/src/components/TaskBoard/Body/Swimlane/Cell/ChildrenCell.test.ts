@@ -25,12 +25,13 @@ import ChildCard from "../Card/ChildCard.vue";
 import CardSkeleton from "../Skeleton/CardSkeleton.vue";
 import ChildrenCell from "./ChildrenCell.vue";
 import type { RootState } from "../../../../../store/type";
+import type Vue from "vue";
 
 function createWrapper(
     swimlane: Swimlane,
     is_collapsed: boolean,
     cards_in_cell: Card[],
-): Wrapper<ChildrenCell> {
+): Wrapper<Vue> {
     const todo: ColumnDefinition = {
         id: 2,
         label: "To do",
