@@ -66,10 +66,7 @@ class TrackerPrivateCommentUGroupPermissionRetriever
 
         $ugroups = [];
         foreach ($ugroups_id as $ugroup_id) {
-            $ugroup = $this->ugroup_manager->getById($ugroup_id);
-            if ($ugroup !== null) {
-                $ugroups[] = $ugroup;
-            }
+            $ugroups[] = $this->ugroup_manager->getById($ugroup_id);
         }
 
         return $ugroups;

@@ -80,12 +80,10 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     {
         $dar     = $this->getUGroupManager()->searchUGroupByBindingSource($ugroupId);
         $ugroups = [];
-        if ($dar && ! $dar->isError()) {
-            foreach ($dar as $row) {
-                $cloneId                        = $row['ugroup_id'];
-                $ugroups[$cloneId]['cloneName'] = $row['name'];
-                $ugroups[$cloneId]['group_id']  = $row['group_id'];
-            }
+        foreach ($dar as $row) {
+            $cloneId                        = $row['ugroup_id'];
+            $ugroups[$cloneId]['cloneName'] = $row['name'];
+            $ugroups[$cloneId]['group_id']  = $row['group_id'];
         }
         return $ugroups;
     }
@@ -103,9 +101,7 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         $bindingRemoved = true;
         if (! empty($bindedUgroups)) {
             foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
-                if (! $this->getUGroupManager()->updateUgroupBinding($ugroupKey)) {
-                    $bindingRemoved = false;
-                }
+                $this->getUGroupManager()->updateUgroupBinding($ugroupKey);
             }
         }
         return $bindingRemoved;
@@ -181,9 +177,7 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
      */
     public function updateUgroupBinding($ugroupId, $sourceId)
     {
-        if (! $this->getUGroupManager()->updateUgroupBinding($ugroupId, $sourceId)) {
-            throw new Exception('Unable to store ugroup binding');
-        }
+        $this->getUGroupManager()->updateUgroupBinding($ugroupId, $sourceId);
     }
 
     /**
@@ -245,13 +239,9 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
      */
     public function removeBinding($ugroupId)
     {
-        if ($this->getUGroupManager()->updateUgroupBinding($ugroupId)) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
-            return true;
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
-            return false;
-        }
+        $this->getUGroupManager()->updateUgroupBinding($ugroupId);
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
+        return true;
     }
 
     public function reloadUgroupBindingInProject(Project $project)

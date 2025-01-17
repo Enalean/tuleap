@@ -57,7 +57,6 @@ use RestrictedPluginDao;
 use SimpleXMLElement;
 use SiteCache;
 use System_Command;
-use TestHelper;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
@@ -420,7 +419,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $result = TestHelper::emptyDar();
+        $result = [];
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn($result);
         $this->permission_dao->method('addPermission')->withConsecutive(
             [Git::PERM_READ, self::anything(), 3],
@@ -452,7 +451,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $result = TestHelper::emptyDar();
+        $result = [];
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn($result);
         $this->permission_dao->method('addPermission')->withConsecutive(
             [Git::PERM_READ, self::anything(), 3],
@@ -526,7 +525,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $result = TestHelper::emptyDar();
+        $result = [];
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn($result);
 
         $this->permission_dao->method('addPermission')->withConsecutive(
@@ -549,7 +548,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
 
         $this->event_manager->expects(self::exactly(3))->method('processEvent');
 
@@ -566,7 +565,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
 
         $this->fine_grained_updater->expects(self::never())->method('enableRepository');
         $this->regexp_fine_grained_enabler->expects(self::never())->method('enableForRepository');
@@ -587,7 +586,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
 
         $this->fine_grained_updater->expects(self::once())->method('enableRepository');
         $this->regexp_fine_grained_enabler->expects(self::never())->method('enableForRepository');
@@ -610,7 +609,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
 
         $this->fine_grained_updater->expects(self::once())->method('enableRepository');
@@ -632,7 +631,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(false);
 
         $this->fine_grained_updater->expects(self::once())->method('enableRepository');
@@ -655,7 +654,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
 
         $this->fine_grained_updater->expects(self::never())->method('enableRepository');
@@ -689,7 +688,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             []
         );
 
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
         $this->fine_grained_factory->method('getFineGrainedPermissionFromXML')->willReturn($representation);
 
@@ -726,7 +725,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             []
         );
 
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
         $this->fine_grained_factory->method('getFineGrainedPermissionFromXML')->willReturn($representation, false, $representation);
 
@@ -772,7 +771,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             []
         );
 
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(TestHelper::emptyDar());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
         $this->fine_grained_factory->method('getFineGrainedPermissionFromXML')
             ->willReturnOnConsecutiveCalls($representation_01, $representation_02, $representation_01);

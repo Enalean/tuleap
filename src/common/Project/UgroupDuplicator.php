@@ -93,10 +93,6 @@ class UgroupDuplicator
         $ugroup_id     = $source_ugroup->getId();
         $new_ugroup_id = $this->dao->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
 
-        if ($new_ugroup_id === false) {
-            return;
-        }
-
         $new_ugroup = $this->manager->getById($new_ugroup_id);
 
         $this->pluginDuplicatesUgroup($source_ugroup, $new_ugroup);

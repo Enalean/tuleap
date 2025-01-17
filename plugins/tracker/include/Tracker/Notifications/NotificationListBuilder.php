@@ -87,7 +87,7 @@ class NotificationListBuilder
     {
         $ugroups_to_be_notified_parsed = [];
         foreach ($ugroups_to_be_notified as $ugroup_presenter) {
-            $ugroup_row                      = $this->ugroup_dao->searchByUGroupId($ugroup_presenter->ugroup_id)->getRow();
+            $ugroup_row                      = $this->ugroup_dao->searchByUGroupId($ugroup_presenter->ugroup_id);
             $ugroup                          = new ProjectUGroup($ugroup_row);
             $ugroup_parsed                   = [
                 'type' => 'group',

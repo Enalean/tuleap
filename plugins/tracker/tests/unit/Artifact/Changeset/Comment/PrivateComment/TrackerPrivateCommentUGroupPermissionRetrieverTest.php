@@ -98,7 +98,7 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends \Tuleap\Test\PH
             ->shouldReceive('getUgroupIdsOfPrivateComment')
             ->with(5)
             ->once()
-            ->andReturn([1, 2, 666]);
+            ->andReturn([1, 2]);
 
         $ugroup_1 = \Mockery::mock(\ProjectUGroup::class);
         $ugroup_2 = \Mockery::mock(\ProjectUGroup::class);
@@ -113,11 +113,6 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends \Tuleap\Test\PH
             ->with(2)
             ->once()
             ->andReturn($ugroup_2);
-        $this->ugroup_manager
-            ->shouldReceive('getById')
-            ->with(666)
-            ->once()
-            ->andReturn(null);
 
         $ugroups = $this->retriever->getUGroupsCanSeePrivateComment($this->tracker, 5);
 

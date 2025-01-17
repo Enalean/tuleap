@@ -280,9 +280,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user->method('getProjects')->willReturn([101, 103]);
 
-        $dar = TestHelper::arrayToDar(['group_id' => 102], ['group_id' => 103], ['group_id' => 104]);
         $dao = $this->createMock(\UGroupDao::class);
-        $dao->method('searchGroupByUserId')->willReturn($dar);
+        $dao->method('searchGroupByUserId')->willReturn([['group_id' => 102], ['group_id' => 103], ['group_id' => 104]]);
         $user->method('getUGroupDao')->willReturn($dao);
 
         self::assertEquals([102, 103, 104, 101], $user->getAllProjects());
