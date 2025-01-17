@@ -18,33 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Artifact\View;
+
+use Codendi_Request;
+use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * Represents an artifact or a specifict information of it
  */
-abstract class Tracker_Artifact_View_View
+abstract readonly class TrackerArtifactView
 {
-    /** @var Artifact */
-    protected $artifact;
-
-    /** @var PFUser */
-    protected $user;
-
-    /** @var Codendi_Request */
-    protected $request;
-
-    public function __construct(Artifact $artifact, Codendi_Request $request, PFUser $user)
+    public function __construct(protected Artifact $artifact, protected Codendi_Request $request, protected PFUser $user)
     {
-        $this->artifact = $artifact;
-        $this->request  = $request;
-        $this->user     = $user;
     }
 
-    /**
-     * @return string url to reach the view
-     */
-    public function getURL()
+    public function getURL(): string
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
             [
@@ -54,18 +43,9 @@ abstract class Tracker_Artifact_View_View
         );
     }
 
-    /**
-     * @return string
-     */
-    abstract public function getTitle();
+    abstract public function getTitle(): string;
 
-    /**
-     * @return string unique identifier
-     */
-    abstract public function getIdentifier();
+    abstract public function getIdentifier(): string;
 
-    /**
-     * @return string html
-     */
-    abstract public function fetch();
+    abstract public function fetch(): string;
 }

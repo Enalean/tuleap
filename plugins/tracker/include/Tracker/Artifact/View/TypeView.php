@@ -20,26 +20,25 @@
 
 namespace Tuleap\Tracker\Artifact\View;
 
-use Tracker_Artifact_View_View;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 
-class TypeView extends Tracker_Artifact_View_View
+final readonly class TypeView extends TrackerArtifactView
 {
-    /** @see Tracker_Artifact_View_View::getTitle() */
-    public function getTitle()
+    /** @see TrackerArtifactView::getTitle() */
+    public function getTitle(): string
     {
         return dgettext('tuleap-tracker', 'Children');
     }
 
-    /** @see Tracker_Artifact_View_View::getIdentifier() */
-    public function getIdentifier()
+    /** @see TrackerArtifactView::getIdentifier() */
+    public function getIdentifier(): string
     {
         return 'link';
     }
 
-    /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch()
+    /** @see TrackerArtifactView::fetch() */
+    public function fetch(): string
     {
         $layout = $GLOBALS['HTML'];
         \assert($layout instanceof \Tuleap\Layout\BaseLayout);

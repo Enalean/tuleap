@@ -25,6 +25,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
+use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -32,29 +33,22 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
-class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
+readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
 {
     public const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
     public const USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
-
-    /**
-     * @var Tracker_Artifact_ArtifactRenderer
-     */
-    protected $renderer;
 
     public function __construct(
         Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
-        Tracker_Artifact_ArtifactRenderer $renderer,
+        protected Tracker_Artifact_ArtifactRenderer $renderer,
     ) {
         parent::__construct($artifact, $request, $user);
-
-        $this->renderer = $renderer;
     }
 
-    /** @see Tracker_Artifact_View_View::getURL() */
-    public function getURL()
+    /** @see TrackerArtifactView::getURL() */
+    public function getURL(): string
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
             [
@@ -63,20 +57,20 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         );
     }
 
-    /** @see Tracker_Artifact_View_View::getTitle() */
-    public function getTitle()
+    /** @see TrackerArtifactView::getTitle() */
+    public function getTitle(): string
     {
         return dgettext('tuleap-tracker', 'Artifact');
     }
 
-    /** @see Tracker_Artifact_View_View::getIdentifier() */
-    public function getIdentifier()
+    /** @see TrackerArtifactView::getIdentifier() */
+    public function getIdentifier(): string
     {
         return 'edit';
     }
 
-    /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch()
+    /** @see TrackerArtifactView::fetch() */
+    public function fetch(): string
     {
         $html  = '';
         $html .= '<div class="tracker_artifact">';
@@ -115,7 +109,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
      *
      * @return string The HTML code for artifact follow-up comments
      */
-    private function fetchFollowUps($submitted_comment = '')
+    private function fetchFollowUps($submitted_comment = ''): string
     {
         $html  = '';
         $html .= $this->fetchSubmitButton();
@@ -153,7 +147,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         return $html;
     }
 
-    private function fetchSettingsButton($invert_order, $display_changes)
+    private function fetchSettingsButton($invert_order, $display_changes): string
     {
         $settings_label        = dgettext('tuleap-tracker', 'Display settings');
         $invert_comment_label  = dgettext('tuleap-tracker', 'Comments are in reversed order');
@@ -192,7 +186,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         return $html;
     }
 
-    private function fetchCommentContent(array $comments, $invert_comments)
+    private function fetchCommentContent(array $comments, $invert_comments): string
     {
         $html = '';
         $i    = 0;
@@ -218,7 +212,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         return implode('', $comments_content);
     }
 
-    private function fetchAddNewComment(Tracker $tracker, $submitted_comment)
+    private function fetchAddNewComment(Tracker $tracker, $submitted_comment): string
     {
         $html = '<div class="artifact-new-comment-section">';
         $hp   = Codendi_HTMLPurifier::instance();
@@ -279,7 +273,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         return $html;
     }
 
-    private function fetchReplyByMailHelp()
+    private function fetchReplyByMailHelp(): string
     {
         $html = '';
         if ($this->canUpdateArtifactByMail()) {

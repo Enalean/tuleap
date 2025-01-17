@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit
+final readonly class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit
 {
     /** @see Tracker_Artifact_View_Edit::getURL() */
-    public function getURL()
+    public function getURL(): string
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
             [
@@ -32,19 +32,19 @@ class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit
     }
 
     /** @see Tracker_Artifact_View_Edit::getTitle() */
-    public function getTitle()
+    public function getTitle(): string
     {
         return dgettext('tuleap-tracker', 'Artifact');
     }
 
     /** @see Tracker_Artifact_View_Edit::fetch() */
-    public function fetch()
+    public function fetch(): string
     {
         self::fetchEditViewJSCode();
 
         $html  = '';
         $html .= '<div class="tracker_artifact">';
-        $html .= $this->renderer->fetchFieldsForCopy($this->artifact, $this->request->get('artifact'));
+        $html .= $this->renderer->fetchFieldsForCopy($this->artifact);
         $html .= '</div>';
         return $html;
     }
