@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="element-card" v-bind:class="additional_classnames">
+    <div class="element-card" v-bind:class="additional_classnames" data-test="user-story-card">
         <div class="element-card-content">
             <div class="element-card-xref-label">
                 <a
@@ -34,42 +34,39 @@
                 <span class="element-card-label">{{ user_story.title }}</span>
             </div>
         </div>
-        <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
+        <div
+            class="element-card-accessibility"
+            v-if="show_accessibility_pattern"
+            data-test="user-story-accessibility"
+        ></div>
     </div>
 </template>
-
-<script lang="ts">
-import { namespace } from "vuex-class";
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { UserStory } from "../../helpers/UserStories/user-stories-retriever";
 import {
     getAccessibilityClasses,
     showAccessibilityPattern,
 } from "../../helpers/element-card-css-extractor";
 
-const configuration = namespace("configuration");
+const { accessibility } = useNamespacedState<{ accessibility: boolean }>("configuration", [
+    "accessibility",
+]);
 
-@Component
-export default class UserStoryDisplayer extends Vue {
-    @Prop({ required: true })
-    readonly user_story!: UserStory;
+const props = defineProps<{ user_story: UserStory }>();
 
-    @configuration.State
-    readonly accessibility!: boolean;
+const additional_classnames = computed((): string => {
+    const classnames = getAccessibilityClasses(props.user_story, accessibility.value);
 
-    get additional_classnames(): string {
-        const classnames = getAccessibilityClasses(this.user_story, this.accessibility);
-
-        if (!this.user_story.is_open) {
-            classnames.push("element-card-closed");
-        }
-
-        return classnames.join(" ");
+    if (!props.user_story.is_open) {
+        classnames.push("element-card-closed");
     }
 
-    get show_accessibility_pattern(): boolean {
-        return showAccessibilityPattern(this.user_story, this.accessibility);
-    }
-}
+    return classnames.join(" ");
+});
+
+const show_accessibility_pattern = computed((): boolean =>
+    showAccessibilityPattern(props.user_story, accessibility.value),
+);
 </script>

@@ -29,7 +29,7 @@ describe("UserStoryDisplayer", () => {
     const getWrapper = async (
         user_story?: Partial<UserStory>,
         accessibility = false,
-    ): Promise<Wrapper<UserStoryDisplayer>> => {
+    ): Promise<Wrapper<Vue>> => {
         const defaulted_user_story = {
             id: 14,
             title: "My US",
@@ -66,18 +66,27 @@ describe("UserStoryDisplayer", () => {
     it("Displays user story with accessibility", async () => {
         const wrapper = await getWrapper({}, true);
 
-        expect(wrapper.element).toMatchSnapshot();
+        const card_classes = wrapper.get("[data-test=user-story-card]").classes();
+        expect(card_classes).toContain("element-card-with-accessibility");
+        expect(card_classes).toContain("element-card-fiesta-red");
+        expect(card_classes).toContain("element-card-background-lake-placid-blue");
+        expect(wrapper.find("[data-test=user-story-accessibility]").exists()).toBe(true);
     });
 
     it("Displays user story without accessibility", async () => {
         const wrapper = await getWrapper();
 
-        expect(wrapper.element).toMatchSnapshot();
+        const card_classes = wrapper.get("[data-test=user-story-card]").classes();
+        expect(card_classes).not.toContain("element-card-with-accessibility");
+        expect(wrapper.find("[data-test=user-story-accessibility]").exists()).toBe(false);
     });
 
     it("Displays a closed user story with accessibility", async () => {
         const wrapper = await getWrapper({ is_open: false }, true);
 
-        expect(wrapper.element).toMatchSnapshot();
+        const card_classes = wrapper.get("[data-test=user-story-card]").classes();
+        expect(card_classes).toContain("element-card-with-accessibility");
+        expect(card_classes).toContain("element-card-closed");
+        expect(wrapper.find("[data-test=user-story-accessibility]").exists()).toBe(true);
     });
 });
