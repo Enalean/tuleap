@@ -27,6 +27,9 @@ export function expandColumn(
     context: ActionContext<ColumnState, RootState>,
     column: ColumnDefinition,
 ): Promise<void> {
+    if (!column.is_collapsed) {
+        return Promise.resolve();
+    }
     context.commit("expandColumn", column);
     const payload: UserPreference = {
         key: getCollapsePreferenceName(context, column),

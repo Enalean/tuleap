@@ -42,9 +42,10 @@ describe("Column module actions", () => {
     });
 
     describe("expandColumn", () => {
-        it(`When the column is expanded, the user pref is stored`, async () => {
+        it(`When expand column, the user pref is stored`, async () => {
             const column: ColumnDefinition = {
                 id: 69,
+                is_collapsed: true,
             } as ColumnDefinition;
 
             await actions.expandColumn(context, column);
@@ -55,12 +56,23 @@ describe("Column module actions", () => {
                 { root: true },
             );
         });
+
+        it(`When column is already expanded, nothing happens`, async () => {
+            const column: ColumnDefinition = {
+                id: 69,
+                is_collapsed: false,
+            } as ColumnDefinition;
+
+            await actions.expandColumn(context, column);
+            expect(context.commit).not.toHaveBeenCalledWith("expandColumn", column);
+        });
     });
 
     describe("collapseColumn", () => {
         it(`When the column is collapsed, the user pref is stored`, async () => {
             const column: ColumnDefinition = {
                 id: 69,
+                is_collapsed: true,
             } as ColumnDefinition;
 
             await actions.collapseColumn(context, column);
