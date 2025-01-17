@@ -17,47 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmptyState from "./EmptyState.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("EmptyState", () => {
-    let component_options: ShallowMountOptions<EmptyState>;
-
-    it("Display the create new program increment button", async () => {
-        component_options = {
+    async function getWrapper(can_create_program_increment: boolean): Promise<Wrapper<Vue>> {
+        return shallowMount(EmptyState, {
             localVue: await createProgramManagementLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
                         configuration: {
-                            can_create_program_increment: true,
+                            can_create_program_increment,
                             tracker_program_increment_sub_label: "Foo",
                         },
                     },
                 }),
             },
-        };
+        });
+    }
 
-        const wrapper = shallowMount(EmptyState, component_options);
+    it("Display the create new program increment button", async () => {
+        const wrapper = await getWrapper(true);
 
         expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(true);
         expect(wrapper.get("[data-test=create-program-increment-button]").html()).toContain("Foo");
     });
 
     it("No button is displayed when user can not add program increments", async () => {
-        component_options = {
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: { configuration: { can_create_program_increment: false } },
-                }),
-            },
-        };
-
-        const wrapper = shallowMount(EmptyState, component_options);
+        const wrapper = await getWrapper(false);
 
         expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(false);
     });

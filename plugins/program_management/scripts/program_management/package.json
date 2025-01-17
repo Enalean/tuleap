@@ -17,9 +17,11 @@
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
     "@tuleap/vue2-dompurify-html": "workspace:^",
+    "@tuleap/vue2-gettext-composition-helper": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "vue": "^2.7.8",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "vuex-composition-helpers": "2.0.3"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
