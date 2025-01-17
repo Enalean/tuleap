@@ -63,7 +63,7 @@ final class OngoingUploadDaoTest extends TestIntegrationTestCase
         self::assertNull($row);
     }
 
-    public function testDeleteUnusableFile(): void
+    public function testDeleteExpiredFiles(): void
     {
         $now             = new \DateTimeImmutable();
         $expiration      = $now->add(new \DateInterval('P1D'));
@@ -83,18 +83,18 @@ final class OngoingUploadDaoTest extends TestIntegrationTestCase
 
         $id = $dao->saveFileOnGoingUpload($file_to_upload);
 
-        $row = $dao->searchFileOngoingUploadById($id);
-        self::assertNotNull($row);
+        self::assertNotNull($dao->searchFileOngoingUploadById($id));
 
-        $dao->deleteUnusableFile($now);
+        self::assertEmpty($dao->searchExpiredUploads($now));
+        $dao->deleteExpiredFiles($now);
 
-        $row = $dao->searchFileOngoingUploadById($id);
-        self::assertNotNull($row);
+        self::assertNotNull($dao->searchFileOngoingUploadById($id));
 
-        $dao->deleteUnusableFile($time_to_cleanup);
+        self::assertNotEmpty($dao->searchExpiredUploads($time_to_cleanup));
+        $dao->deleteExpiredFiles($time_to_cleanup);
 
-        $row = $dao->searchFileOngoingUploadById($id);
-        self::assertNull($row);
+        self::assertNull($dao->searchFileOngoingUploadById($id));
+        self::assertEmpty($dao->searchExpiredUploads($time_to_cleanup));
     }
 
     public function testSearchFileOngoingUploadByItemIdNameAndExpirationDate(): void

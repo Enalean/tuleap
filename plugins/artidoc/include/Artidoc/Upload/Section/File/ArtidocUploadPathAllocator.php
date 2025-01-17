@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Upload\Section\File;
 
 use ForgeConfig;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Tus\NextGen\TusFileInformation;
 use Tuleap\Upload\NextGen\PathAllocator;
 use Tuleap\Upload\NextGen\UploadPathAllocator;
@@ -31,11 +32,21 @@ final readonly class ArtidocUploadPathAllocator implements PathAllocator
 {
     private UploadPathAllocator $core_upload_path_allocator;
 
-    public function __construct()
+    private function __construct(int $artidoc_id)
     {
         $this->core_upload_path_allocator = new UploadPathAllocator(
-            ForgeConfig::get('tmp_dir') . '/artidoc/ongoing-sections-file-upload',
+            ForgeConfig::get('sys_data_dir') . '/artidoc/sections-file-upload/' . $artidoc_id,
         );
+    }
+
+    public static function fromArtidoc(Artidoc $artidoc): self
+    {
+        return new self($artidoc->getId());
+    }
+
+    public static function fromExpiredFileInformation(ExpiredFileInformation $file_information): self
+    {
+        return new self($file_information->artidoc_id);
     }
 
     public function getPathForItemBeingUploaded(TusFileInformation $file_information): string

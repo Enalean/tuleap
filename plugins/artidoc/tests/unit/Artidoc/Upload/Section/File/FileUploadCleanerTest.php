@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Upload\Section\File;
 
 use org\bovigo\vfs\vfsStream;
-use Tuleap\Artidoc\Stubs\Upload\Section\File\DeleteUnusableFilesStub;
-use Tuleap\Artidoc\Stubs\Upload\Section\File\SearchFileOngoingUploadIdsStub;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Stubs\Upload\Section\File\DeleteExpiredFilesStub;
+use Tuleap\Artidoc\Stubs\Upload\Section\File\SearchExpiredUploadsStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 use Tuleap\Upload\NextGen\FileBeingUploadedInformation;
@@ -35,36 +37,47 @@ final class FileUploadCleanerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    private const ARTIDOC_ID = 123;
+
     public function testDanglingFilesBeingUploadedAreCleaned(): void
     {
         $tmp_dir = vfsStream::setup();
-        \ForgeConfig::set('tmp_dir', $tmp_dir->url());
+        \ForgeConfig::set('sys_data_dir', $tmp_dir->url());
 
-        $path_allocator = new ArtidocUploadPathAllocator();
+        $path_allocator = ArtidocUploadPathAllocator::fromArtidoc(new ArtidocDocument(['item_id' => self::ARTIDOC_ID]));
 
         $identifier_factory = new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory());
 
-        $existing_item_id                  = $identifier_factory->buildIdentifier();
-        $existing_file_information         = new FileBeingUploadedInformation($existing_item_id, 'Filename', 10, 0);
-        $existing_item_being_uploaded_path = $path_allocator->getPathForItemBeingUploaded($existing_file_information);
-        $this->createFileOnSystem($existing_item_being_uploaded_path);
+        $expired_item_id          = $identifier_factory->buildIdentifier();
+        $expired_file_information = new FileBeingUploadedInformation($expired_item_id, 'Expired', 10, 0);
+        $expired_item_path        = $path_allocator->getPathForItemBeingUploaded($expired_file_information);
+        $this->createFileOnSystem($expired_item_path);
 
-        $nonexisting_item_id           = $identifier_factory->buildIdentifier();
-        $non_existing_file_information = new FileBeingUploadedInformation($nonexisting_item_id, 'Filename', 10, 0);
-        $non_existing_item_path        = $path_allocator->getPathForItemBeingUploaded($non_existing_file_information);
-        $this->createFileOnSystem($non_existing_item_path);
+        $non_expired_item_id          = $identifier_factory->buildIdentifier();
+        $non_expired_file_information = new FileBeingUploadedInformation($non_expired_item_id, 'Not expired', 10, 0);
+        $non_expired_item_path        = $path_allocator->getPathForItemBeingUploaded($non_expired_file_information);
+        $this->createFileOnSystem($non_expired_item_path);
 
-        $deletor                = DeleteUnusableFilesStub::build();
-        $search_ongoing_uploads = SearchFileOngoingUploadIdsStub::withResults([$existing_item_id]);
+        $deletor = DeleteExpiredFilesStub::build();
+        $search  = SearchExpiredUploadsStub::withResults([new ExpiredFileInformation(
+            self::ARTIDOC_ID,
+            $expired_file_information->getID(),
+            $expired_file_information->getName(),
+            $expired_file_information->getLength(),
+        ),
+        ]);
 
-        $cleaner = new FileUploadCleaner($path_allocator, $search_ongoing_uploads, $deletor);
+        $cleaner = new FileUploadCleaner($search, $deletor, new DBTransactionExecutorPassthrough());
+
+        self::assertFileExists($expired_item_path);
+        self::assertFileExists($non_expired_item_path);
 
         $current_time = new \DateTimeImmutable();
         $cleaner->deleteDanglingFilesToUpload($current_time);
 
         self::assertTrue($deletor->isCalled());
-        self::assertFileExists($existing_item_being_uploaded_path);
-        self::assertFileDoesNotExist($non_existing_item_path);
+        self::assertFileDoesNotExist($expired_item_path);
+        self::assertFileExists($non_expired_item_path);
     }
 
     private function createFileOnSystem(string $path): void

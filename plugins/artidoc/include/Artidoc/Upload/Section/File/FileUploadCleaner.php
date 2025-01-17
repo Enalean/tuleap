@@ -22,36 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-use Tuleap\Tus\Identifier\FileIdentifier;
+use Tuleap\DB\DBTransactionExecutor;
 
 final readonly class FileUploadCleaner
 {
     public function __construct(
-        private ArtidocUploadPathAllocator $path_allocator,
-        private SearchFileOngoingUploadIds $search_ongoing_uploads,
-        private DeleteUnusableFiles $deletor,
+        private SearchExpiredUploads $search,
+        private DeleteExpiredFiles $deletor,
+        private DBTransactionExecutor $transaction,
     ) {
     }
 
     public function deleteDanglingFilesToUpload(\DateTimeImmutable $current_time): void
     {
-        $this->deletor->deleteUnusableFiles($current_time);
-
-        $file_being_uploaded_item_ids = array_reduce(
-            $this->search_ongoing_uploads->searchFileOngoingUploadIds(),
-            static function (array $acc, FileIdentifier $id) {
-                $acc[$id->toString()] = true;
-
-                return $acc;
-            },
-            [],
-        );
-
-        $file_being_uploaded_filesystem = $this->path_allocator->getCurrentlyUsedAllocatedPathsPerExpectedItemIDs();
-        foreach ($file_being_uploaded_filesystem as $expected_item_id => $path) {
-            if (! isset($file_being_uploaded_item_ids[$expected_item_id]) && \is_file("$path")) {
-                \unlink("$path");
+        $this->transaction->execute(function () use ($current_time) {
+            foreach ($this->search->searchExpiredUploads($current_time) as $expired) {
+                $path_allocator = ArtidocUploadPathAllocator::fromExpiredFileInformation($expired);
+                $path           = $path_allocator->getPathForItemBeingUploaded($expired);
+                if (\is_file($path)) {
+                    \unlink($path);
+                }
             }
-        }
+
+            $this->deletor->deleteExpiredFiles($current_time);
+        });
     }
 }

@@ -33,7 +33,6 @@ use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
-use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
 use Tuleap\Artidoc\Upload\Section\File\CannotWriteFileFault;
 use Tuleap\Artidoc\Upload\Section\File\EmptyFileToUploadFinisher;
 use Tuleap\Artidoc\Upload\Section\File\FileToUploadCreator;
@@ -100,7 +99,7 @@ final class ArtidocFilesResource extends AuthenticatedResource
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 (int) ForgeConfig::get('sys_max_size_upload')
             ),
-            new EmptyFileToUploadFinisher(new ArtidocUploadPathAllocator())
+            new EmptyFileToUploadFinisher()
         );
 
         return $retriever->retrieveArtidocUserCanWrite($payload->artidoc_id)

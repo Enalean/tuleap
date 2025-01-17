@@ -18,32 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\Upload\Section\File;
 
-namespace Tuleap\Artidoc\Stubs\Upload\Section\File;
-
-use Tuleap\Artidoc\Upload\Section\File\SearchFileOngoingUploadIds;
-use Tuleap\Tus\Identifier\FileIdentifier;
-
-final readonly class SearchFileOngoingUploadIdsStub implements SearchFileOngoingUploadIds
+interface DeleteExpiredFiles
 {
-    /**
-     * @param list<FileIdentifier> $results
-     */
-    public function __construct(private array $results)
-    {
-    }
-
-    /**
-     * @param list<FileIdentifier> $results
-     */
-    public static function withResults(array $results): self
-    {
-        return new self($results);
-    }
-
-    public function searchFileOngoingUploadIds(): array
-    {
-        return $this->results;
-    }
+    public function deleteExpiredFiles(\DateTimeImmutable $current_time): void;
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Upload\Section\File;
 
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -35,15 +36,15 @@ final class EmptyFileToUploadFinisherTest extends TestCase
     public function testCreateEmptyFile(): void
     {
         $tmp = vfsStream::setup()->url();
-        \ForgeConfig::set('tmp_dir', $tmp);
+        \ForgeConfig::set('sys_data_dir', $tmp);
 
         $identifier     = (new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
         $file_to_upload = new FileToUpload($identifier, 'filename.png');
 
-        $upload_path_allocator = new ArtidocUploadPathAllocator();
+        $upload_path_allocator = ArtidocUploadPathAllocator::fromArtidoc(new ArtidocDocument(['item_id' => 123]));
 
-        (new EmptyFileToUploadFinisher($upload_path_allocator))->createEmptyFile($file_to_upload);
+        (new EmptyFileToUploadFinisher())->createEmptyFile($file_to_upload, $upload_path_allocator);
 
-        self::assertTrue(is_file($tmp . '/artidoc/ongoing-sections-file-upload/' . $identifier->toString()));
+        self::assertTrue(is_file($tmp . '/artidoc/sections-file-upload/123/' . $identifier->toString()));
     }
 }

@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use DateTimeImmutable;
 use PFUser;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
 use Tuleap\Artidoc\Upload\Section\File\CreateFileToUpload;
 use Tuleap\Artidoc\Upload\Section\File\FileToUpload;
 use Tuleap\Artidoc\Upload\Section\File\FinishEmptyFileToUpload;
@@ -55,9 +56,12 @@ final readonly class FileCreator
             $current_time,
             $file_post_representation->name,
             $file_post_representation->file_size,
-        )->andThen(function (FileToUpload $file_to_upload) use ($file_post_representation) {
+        )->andThen(function (FileToUpload $file_to_upload) use ($file_post_representation, $artidoc) {
             if ($file_post_representation->file_size === 0) {
-                return $this->empty_file_to_upload_finisher->createEmptyFile($file_to_upload);
+                return $this->empty_file_to_upload_finisher->createEmptyFile(
+                    $file_to_upload,
+                    ArtidocUploadPathAllocator::fromArtidoc($artidoc),
+                );
             }
 
             return Result::ok($file_to_upload);

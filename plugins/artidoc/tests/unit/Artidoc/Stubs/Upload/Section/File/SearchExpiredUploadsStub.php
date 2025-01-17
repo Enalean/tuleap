@@ -22,28 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Upload\Section\File;
 
-use Tuleap\Artidoc\Upload\Section\File\DeleteUnusableFiles;
+use Tuleap\Artidoc\Upload\Section\File\ExpiredFileInformation;
+use Tuleap\Artidoc\Upload\Section\File\SearchExpiredUploads;
 
-final class DeleteUnusableFilesStub implements DeleteUnusableFiles
+final readonly class SearchExpiredUploadsStub implements SearchExpiredUploads
 {
-    private bool $called = false;
-
-    private function __construct()
+    /**
+     * @param list<ExpiredFileInformation> $results
+     */
+    public function __construct(private array $results)
     {
     }
 
-    public static function build(): self
+    /**
+     * @param list<ExpiredFileInformation> $results
+     */
+    public static function withResults(array $results): self
     {
-        return new self();
+        return new self($results);
     }
 
-    public function deleteUnusableFiles(\DateTimeImmutable $current_time): void
+    public function searchExpiredUploads(\DateTimeImmutable $current_time): array
     {
-        $this->called = true;
-    }
-
-    public function isCalled(): bool
-    {
-        return $this->called;
+        return $this->results;
     }
 }
