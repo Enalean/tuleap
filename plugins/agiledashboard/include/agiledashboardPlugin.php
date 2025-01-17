@@ -783,6 +783,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build(),
+            new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
     }
 

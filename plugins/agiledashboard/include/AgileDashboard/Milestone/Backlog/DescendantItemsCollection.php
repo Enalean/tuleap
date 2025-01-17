@@ -20,6 +20,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
+/**
+ * @template-implements Iterator<Artifact>
+ */
 class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iterator, Countable
 {
     /** @var Artifact[] */
@@ -27,7 +30,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iter
 
     private int $total_available_size = 0;
 
-    public function push(Artifact $item)
+    public function push(Artifact $item): void
     {
         $this->items[] = $item;
     }
@@ -52,7 +55,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iter
         reset($this->items);
     }
 
-    public function count($mode = 'COUNT_NORMAL'): int
+    public function count(string $mode = 'COUNT_NORMAL'): int
     {
         return count($this->items);
     }
