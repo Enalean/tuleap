@@ -124,13 +124,11 @@ describe("rest-querier", () => {
             const report_id = 72;
             const trackers_id = [16, 80, 6];
             const expert_query = '@title = "stalky"';
-            const expert_mode = false;
 
             const result = await getQueryResult(
                 report_id,
                 trackers_id,
                 expert_query,
-                expert_mode,
                 limit,
                 offset,
             );
@@ -141,7 +139,6 @@ describe("rest-querier", () => {
                     params: {
                         limit,
                         offset,
-                        report_mode: "default",
                         query: JSON.stringify({ trackers_id, expert_query }),
                     },
                 },
@@ -178,7 +175,6 @@ describe("rest-querier", () => {
                     report_id,
                     [first_tracker.id, second_tracker.id],
                     expert_query,
-                    false,
                 );
 
                 expect(putJSON).toHaveBeenCalledWith(

@@ -64,17 +64,6 @@ final class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         self::assertEquals(400, $response->getStatusCode());
     }
 
-    public function testItDoesNotAddTrackersUserCantView(): void
-    {
-        $params   = [
-            'trackers_id' => [$this->epic_tracker_id, $this->kanban_tracker_id],
-            'report_mode' => 'default',
-        ];
-        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-
-        self::assertEquals(403, $response->getStatusCode());
-    }
-
     public function testItThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArray(): void
     {
         $query = json_encode(

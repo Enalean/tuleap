@@ -21,7 +21,6 @@ import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { decodeJSON, getResponse, uri } from "@tuleap/fetch-result";
 import type { SelectableReportContentRepresentation } from "./cross-tracker-rest-api-types";
-import { DEFAULT_MODE, EXPERT_MODE } from "./cross-tracker-rest-api-types";
 import type {
     ArtifactsTableWithTotal,
     RetrieveArtifactsTable,
@@ -36,7 +35,6 @@ export const ArtifactsTableRetriever = (
         getSelectableQueryResult(
             tracker_ids,
             expert_query,
-            expert_mode,
             limit,
             offset,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
@@ -44,7 +42,6 @@ export const ArtifactsTableRetriever = (
                 params: {
                     limit,
                     offset,
-                    report_mode: expert_mode ? EXPERT_MODE : DEFAULT_MODE,
                     query: JSON.stringify({
                         trackers_id: tracker_ids,
                         expert_query,
@@ -63,7 +60,6 @@ export const ArtifactsTableRetriever = (
                 params: {
                     limit,
                     offset,
-                    report_mode: EXPERT_MODE,
                 },
             }).andThen((response) => {
                 const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);

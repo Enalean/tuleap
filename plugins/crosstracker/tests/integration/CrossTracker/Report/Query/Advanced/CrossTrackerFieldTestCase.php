@@ -63,7 +63,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
     protected function addReportToProject(int $report_id, int $project_id): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert('plugin_crosstracker_report', ['id' => $report_id, 'expert_query' => '']);
+        $db->insert('plugin_crosstracker_query', ['id' => $report_id, 'query' => '']);
         $widget_dao   = new DashboardWidgetDao(
             new WidgetFactory(
                 UserManager::instance(),
