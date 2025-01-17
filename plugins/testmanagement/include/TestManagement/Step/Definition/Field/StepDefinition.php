@@ -118,10 +118,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return false;
     }
 
-    /**
-     * @param mixed $criteria
-     */
-    public function fetchCriteriaValue($criteria): string
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }

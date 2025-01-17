@@ -132,11 +132,7 @@ final class ExternalFieldBuilder
             {
             }
 
-            /**
-             * @param Tracker_Report_Criteria $criteria
-             * @return string
-             */
-            public function fetchCriteriaValue($criteria)
+            public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
             {
                 return '';
             }

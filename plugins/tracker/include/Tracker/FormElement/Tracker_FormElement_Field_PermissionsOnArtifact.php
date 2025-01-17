@@ -490,7 +490,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return;
     }
 
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html           = '';
         $criteria_value = $this->getCriteriaValue($criteria);
@@ -505,12 +505,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             return $html;
         }
 
-        if ($criteria->is_advanced) {
+        if ($criteria->is_advanced === true) {
             $multiple = ' multiple="multiple" ';
             $size     = ' size="' . min(7, count($user_groups) + 2) . '" ';
         }
 
-        $html .= '<select id="tracker_report_criteria_' . ($criteria->is_advanced ? 'adv_' : '') . $this->id . '"
+        $html .= '<select id="tracker_report_criteria_' . ($criteria->is_advanced === true ? 'adv_' : '') . $this->id . '"
                           name="' . $name . '" ' .
                           $size .
                           $multiple . '>';

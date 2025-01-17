@@ -656,7 +656,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return '';
     }
 
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }

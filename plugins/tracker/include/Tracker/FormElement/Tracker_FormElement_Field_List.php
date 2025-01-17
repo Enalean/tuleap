@@ -461,13 +461,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $value['values'];
     }
 
-    /**
-     * Display the field value as a criteria
-     * @param Tracker_Report_Criteria $criteria
-     * @return string
-     * @see fetchCriteria
-     */
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $hp             = Codendi_HTMLPurifier::instance();
         $html           = '';

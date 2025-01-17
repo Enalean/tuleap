@@ -748,16 +748,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $value;
     }
 
-    /**
-     * Display the field value as a criteria
-     * @param Tracker_Report_Criteria $criteria
-     * @return string
-     * @see fetchCriteria
-     */
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $html           = '';
         $criteria_value = $this->extractCriteriaValue($this->getCriteriaValue($criteria));
 
         $name = "criteria[$this->id]";

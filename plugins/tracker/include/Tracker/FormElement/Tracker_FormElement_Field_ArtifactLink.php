@@ -90,14 +90,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return $html;
     }
 
-    /**
-     * Display the field value as a criteria
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     */
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {

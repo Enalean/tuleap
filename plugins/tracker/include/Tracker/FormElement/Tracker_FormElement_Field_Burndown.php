@@ -471,8 +471,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return '';
     }
 
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
+        return '';
     }
 
     public function fetchRawValue($value)
