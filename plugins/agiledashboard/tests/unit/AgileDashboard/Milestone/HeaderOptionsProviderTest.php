@@ -38,8 +38,10 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnTrackersStub;
 
 final class HeaderOptionsProviderTest extends TestCase
 {
@@ -68,6 +70,7 @@ final class HeaderOptionsProviderTest extends TestCase
             $header_options_for_planning_provider,
             $this->parent_retriever,
             new CurrentContextSectionToHeaderOptionsInserter(),
+            RetrieveUserPermissionOnTrackersStub::build()->withPermissionOn([101, 102, 104], TrackerPermissionType::PERMISSION_SUBMIT),
         );
 
         $this->user      = UserTestBuilder::buildWithDefaults();
@@ -85,27 +88,22 @@ final class HeaderOptionsProviderTest extends TestCase
         $this->epic            = TrackerTestBuilder::aTracker()
             ->withId(101)
             ->withName('epic')
-            ->withUserCanSubmit(true)
             ->build();
         $this->story           = TrackerTestBuilder::aTracker()
             ->withId(102)
             ->withName('story')
-            ->withUserCanSubmit(true)
             ->build();
         $this->requirement     = TrackerTestBuilder::aTracker()
             ->withId(103)
             ->withName('req')
-            ->withUserCanSubmit(false)
             ->build();
         $this->task            = TrackerTestBuilder::aTracker()
             ->withId(104)
             ->withName('task')
-            ->withUserCanSubmit(true)
             ->build();
         $this->top_requirement = TrackerTestBuilder::aTracker()
             ->withId(105)
             ->withName('top')
-            ->withUserCanSubmit(false)
             ->build();
     }
 

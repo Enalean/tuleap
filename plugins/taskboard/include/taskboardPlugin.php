@@ -51,6 +51,7 @@ use Tuleap\Taskboard\Tracker\TrackerPresenterCollectionBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -158,7 +159,8 @@ class taskboardPlugin extends Plugin
                 new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
                     $planning_factory,
                 ),
-                $header_options_inserter
+                $header_options_inserter,
+                TrackersPermissionsRetriever::build(),
             ),
         );
     }

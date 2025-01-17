@@ -25,7 +25,7 @@ namespace Tuleap\AgileDashboard\Milestone\Criterion\Status;
  */
 interface ISearchOnStatus
 {
-    public function shouldRetrieveOpenMilestones();
+    public function shouldRetrieveOpenMilestones(): bool;
 
-    public function shouldRetrieveClosedMilestones();
+    public function shouldRetrieveClosedMilestones(): bool;
 }

@@ -36,38 +36,6 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Criterion/Status/ISearchOnStatus.php">
-    <MissingReturnType>
-      <code><![CDATA[shouldRetrieveClosedMilestones]]></code>
-      <code><![CDATA[shouldRetrieveOpenMilestones]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Criterion/Status/StatusAll.php">
-    <MissingReturnType>
-      <code><![CDATA[shouldRetrieveClosedMilestones]]></code>
-      <code><![CDATA[shouldRetrieveOpenMilestones]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Criterion/Status/StatusClosed.php">
-    <MissingReturnType>
-      <code><![CDATA[shouldRetrieveClosedMilestones]]></code>
-      <code><![CDATA[shouldRetrieveOpenMilestones]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Criterion/Status/StatusOpen.php">
-    <MissingReturnType>
-      <code><![CDATA[shouldRetrieveClosedMilestones]]></code>
-      <code><![CDATA[shouldRetrieveOpenMilestones]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/HeaderOptionsProvider.php">
-    <DeprecatedMethod>
-      <code><![CDATA[userCanSubmitArtifact]]></code>
-    </DeprecatedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$tracker->userCanSubmitArtifact($user)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -15694,13 +15662,6 @@
       <code><![CDATA[getDateFromTimestamp]]></code>
       <code><![CDATA[getDayDataSQLQuery]]></code>
       <code><![CDATA[getMonthDataSQLQuery]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/SystemCheck.php">
-    <MissingReturnType>
-      <code><![CDATA[checkIncFolderAndFileOwnership]]></code>
-      <code><![CDATA[getIncFile]]></code>
-      <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/SystemEventManager.php">
