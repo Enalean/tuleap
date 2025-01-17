@@ -18,41 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Webhook;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
+use ColinODell\PsrTestLogger\TestLogger;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Webhook\Emitter;
 use UserHelper;
 
-class WebhookRequestSenderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookRequestSenderTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     protected function setUp(): void
     {
-        parent::setUp();
-        UserHelper::clearInstance();
-        UserHelper::setInstance(\Mockery::spy(UserHelper::class));
+        UserHelper::setInstance($this->createMock(UserHelper::class));
     }
 
     protected function tearDown(): void
     {
         UserHelper::clearInstance();
-        parent::tearDown();
     }
 
     public function testItSendsWebhooks(): void
     {
-        $webhook_factory = \Mockery::mock(WebhookFactory::class);
-        $webhook_emitter = \Mockery::mock(Emitter::class);
-        $logger          = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $webhook_factory = $this->createMock(WebhookFactory::class);
+        $webhook_emitter = $this->createMock(Emitter::class);
+        $logger          = new TestLogger();
 
         $sender = new WebhookRequestSender($webhook_emitter, $webhook_factory, $logger, ProvideUserAvatarUrlStub::build());
 
-        $repository = \Mockery::spy(\GitRepository::class);
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->build();
         $user       = UserTestBuilder::aUser()->build();
         $oldrev     = 'oldrev';
         $newrev     = 'newrev';
@@ -61,11 +59,11 @@ class WebhookRequestSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $web_hook_01 = new Webhook(1, 1, 'url_01');
         $web_hook_02 = new Webhook(2, 1, 'url_02');
 
-        $webhook_factory->shouldReceive('getWebhooksForRepository')->andReturns([$web_hook_01, $web_hook_02]);
+        $webhook_factory->method('getWebhooksForRepository')->willReturn([$web_hook_01, $web_hook_02]);
 
-        $webhook_emitter->shouldReceive('emit')->once();
-        $logger->shouldReceive('info')->once();
+        $webhook_emitter->expects(self::once())->method('emit');
 
         $sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
+        self::assertTrue($logger->hasInfoRecords());
     }
 }
