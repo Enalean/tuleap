@@ -22,15 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\User\AccessKey\Scope;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 
 final class GitRepositoryAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function getAuthenticationScopeClassname(): string
     {
         return GitRepositoryAccessKeyScope::class;
@@ -38,9 +35,9 @@ final class GitRepositoryAccessKeyScopeTest extends AuthenticationScopeTestCase
 
     public function testDoesNotCoversAllTheScopes(): void
     {
-        $scope = \Mockery::mock(AuthenticationScope::class);
-        $scope->shouldReceive('getIdentifier')->andReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
+        $scope = $this->createMock(AuthenticationScope::class);
+        $scope->method('getIdentifier')->willReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
 
-        $this->assertFalse(GitRepositoryAccessKeyScope::fromItself()->covers($scope));
+        self::assertFalse(GitRepositoryAccessKeyScope::fromItself()->covers($scope));
     }
 }
