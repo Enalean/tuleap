@@ -393,20 +393,18 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @param Artifact                        $artifact The artifact
      * @param PFUser                          $user     The user who will receive the email
-     * @param bool                            $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      * @param string                          $format   output format
      *
-     * @return string
      */
 
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
-        $ignore_perms,
+        bool $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text',
-    ) {
+        string $format = 'text',
+    ): string {
         $purifier = Codendi_HTMLPurifier::instance();
         $output   = '';
         if ($format == Codendi_Mail::FORMAT_HTML) {

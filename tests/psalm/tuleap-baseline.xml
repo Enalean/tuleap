@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchMailArtifactValue]]></code>
       <code><![CDATA[fetchRawValue]]></code>
       <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[fetchSubmitValue]]></code>
@@ -39128,7 +39127,6 @@
       <code><![CDATA[$changeset_value_id]]></code>
       <code><![CDATA[$data]]></code>
       <code><![CDATA[$fileinfo]]></code>
-      <code><![CDATA[$format]]></code>
       <code><![CDATA[$last_changeset]]></code>
       <code><![CDATA[$lytebox_id]]></code>
       <code><![CDATA[$lytebox_id]]></code>
@@ -40306,7 +40304,6 @@
     </NullableReturnStatement>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$timestamp]]></code>
-      <code><![CDATA[$value]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedDocblockClass>
       <code><![CDATA[date]]></code>

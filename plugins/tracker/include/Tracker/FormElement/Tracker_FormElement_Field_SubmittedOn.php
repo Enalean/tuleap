@@ -288,22 +288,14 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
 
     /**
      * Fetch data to display the field value in mail
-     *
-     * @param Artifact                        $artifact The artifact
-     * @param PFUser                          $user     The user who will receive the email
-     * @param bool                            $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
-     * @param string                          $format   output format
-     *
-     * @return string
      */
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
-        $ignore_perms,
+        bool $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text',
-    ) {
+        string $format = 'text',
+    ): string {
         if (empty($value)) {
             $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
@@ -314,8 +306,8 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
-                $value  = $value->getTimestamp();
-                $output = $value ? $this->formatDate($value) : '';
+                $timestamp = $value->getTimestamp();
+                $output    = $timestamp !== null ? $this->formatDate($timestamp) : '';
                 break;
         }
         return $output;
