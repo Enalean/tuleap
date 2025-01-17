@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\Tus\Identifier\FileIdentifier;
 use Tuleap\Tus\Identifier\FileIdentifierFactory;
 
-class OngoingUploadDao extends DataAccessObject implements DeleteUnusedFiles, SaveFileUpload, SearchFileUpload, DeleteFileUpload
+class OngoingUploadDao extends DataAccessObject implements DeleteUnusedFiles, SaveFileUpload, SearchFileUpload, DeleteFileUpload, SearchFileOngoingUploadIds, DeleteUnusableFiles
 {
     public function __construct(private FileIdentifierFactory $identifier_factory)
     {
@@ -106,5 +106,26 @@ class OngoingUploadDao extends DataAccessObject implements DeleteUnusedFiles, Sa
         }
 
         return $row;
+    }
+
+    public function searchFileOngoingUploadIds(): array
+    {
+        /**
+         * @var list<string> $ids
+         */
+        $ids = $this->getDB()->column('SELECT id FROM plugin_artidoc_section_upload');
+
+        return array_map(
+            fn (string $id) => $this->identifier_factory->buildFromBytesData($id),
+            $ids,
+        );
+    }
+
+    public function deleteUnusableFiles(\DateTimeImmutable $current_time): void
+    {
+        $this->getDB()->run(
+            'DELETE FROM plugin_artidoc_section_upload WHERE expiration_date <= ?',
+            $current_time->getTimestamp()
+        );
     }
 }

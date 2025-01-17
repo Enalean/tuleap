@@ -36,6 +36,9 @@ use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
+use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
+use Tuleap\Artidoc\Upload\Section\File\FileUploadCleaner;
+use Tuleap\Artidoc\Upload\Section\File\OngoingUploadDao;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -71,6 +74,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -164,6 +168,19 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             EventManager::instance(),
             new RecentlyVisitedDocumentDao(),
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart(): void
+    {
+        $dao = new OngoingUploadDao(new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()));
+
+        $cleaner = new FileUploadCleaner(
+            new ArtidocUploadPathAllocator(),
+            $dao,
+            $dao,
+        );
+        $cleaner->deleteDanglingFilesToUpload(new \DateTimeImmutable());
     }
 
     #[ListeningToEventClass]
