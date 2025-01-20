@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
-
-final class EmptyWASMCaller implements WASMCaller
+/**
+ * @psalm-immutable
+ */
+final readonly class WASMCallerRuntimeSettings
 {
-    public function __construct()
-    {
-    }
-
-    public function call(string $wasm_path, string $module_input, WASMCallerRuntimeSettings $runtime_settings): Option
-    {
-        return Option::nothing(Ok::class);
+    /**
+     * @param WASMModuleMountPoint[] $mount_points
+     */
+    public function __construct(
+        public array $mount_points,
+        public WASMRuntimeLimits $limits,
+    ) {
     }
 }

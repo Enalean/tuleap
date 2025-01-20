@@ -31,8 +31,7 @@ use Tuleap\Option\Option;
 interface WASMCaller
 {
     /**
-     * @psalm-param WASMModuleMountPoint[] $mount_points
      * @psalm-return Option<\Tuleap\NeverThrow\Ok<string>|\Tuleap\NeverThrow\Err<Fault>>
      */
-    public function call(string $wasm_path, string $module_input, array $mount_points): Option;
+    public function call(string $wasm_path, string $module_input, WASMCallerRuntimeSettings $runtime_settings): Option;
 }
