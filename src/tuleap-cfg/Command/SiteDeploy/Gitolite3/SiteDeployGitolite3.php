@@ -48,6 +48,8 @@ final class SiteDeployGitolite3
         $this->updateGitoliteShellProfile($logger);
 
         $this->updateGitoliteConfig($logger);
+
+        $this->updateGitolitePermissions($logger);
     }
 
     private function updateGitoliteShellProfile(LoggerInterface $logger): void
@@ -86,6 +88,34 @@ final class SiteDeployGitolite3
         if ($expected_gitolite_config !== $current_gitolite_config) {
             $logger->info('Updating ' . self::GITOLITE_RC_CONFIG);
             $this->writeFile(self::GITOLITE_RC_CONFIG, $expected_gitolite_config);
+        }
+    }
+
+    private function updateGitolitePermissions(LoggerInterface $logger): void
+    {
+        $dot_gitolite_dir = self::GITOLITE_BASE_DIR . '/.gitolite';
+        if (! \Psl\Filesystem\is_directory($dot_gitolite_dir)) {
+            $logger->debug('Gitolite3 .gitolite dir not detected');
+            return;
+        }
+
+        \Psl\Filesystem\change_permissions($dot_gitolite_dir, 0750);
+        $this->changeDirectoryAndFirstLevelFilesPermissions($dot_gitolite_dir . '/hooks');
+        $this->changeDirectoryAndFirstLevelFilesPermissions($dot_gitolite_dir . '/hooks/common');
+        $this->changeDirectoryAndFirstLevelFilesPermissions($dot_gitolite_dir . '/logs');
+    }
+
+    /**
+     * @psalm-param non-empty-string $path
+     */
+    private function changeDirectoryAndFirstLevelFilesPermissions(string $path): void
+    {
+        \Psl\Filesystem\change_permissions($path, 0750);
+        $files = \Psl\Filesystem\read_directory($path);
+        foreach ($files as $file) {
+            if (\Psl\Filesystem\is_file($file) && ! \Psl\Filesystem\is_symbolic_link($file)) {
+                \Psl\Filesystem\change_permissions($file, 0640);
+            }
         }
     }
 
