@@ -1276,7 +1276,7 @@ packages:
       htmlparser2: 9.1.0
       is-installed-globally: 1.0.0
       jiti: 1.21.6
-      katex: 0.16.11
+      katex: 0.16.21
       kolorist: 1.8.0
       local-pkg: 0.5.0
       lz-string: 1.5.0
@@ -1370,7 +1370,7 @@ packages:
       file-saver: 2.0.5
       floating-vue: 5.2.2(vue@3.5.9)
       fuse.js: 7.0.0
-      katex: 0.16.11
+      katex: 0.16.21
       lz-string: 1.5.0
       mermaid: 11.2.1
       monaco-editor: 0.51.0
@@ -1451,7 +1451,7 @@ packages:
       '@shikijs/markdown-it': 1.20.0
       '@vitejs/plugin-vue': 5.1.4(vite@5.4.8)(vue@3.5.9)
       '@vitejs/plugin-vue-jsx': 4.0.1(vite@5.4.8)(vue@3.5.9)
-      katex: 0.16.11
+      katex: 0.16.21
       mermaid: 11.2.1
       monaco-editor: 0.51.0
       shiki: 1.20.0
@@ -3664,8 +3664,8 @@ packages:
       setimmediate: 1.0.5
     dev: false
 
-  /katex@0.16.11:
-    resolution: {integrity: sha512-RQrI8rlHY92OLf3rho/Ts8i/XvjgguEjOkO1BEXcU3N8BqPpSzBNwV/G0Ukr+P/l3ivvJUE/Fa/CwbS6HesGNQ==}
+  /katex@0.16.21:
+    resolution: {integrity: sha512-XvqR7FgOHtWupfMiigNzmh+MgUVmDGU2kXZm899ZkPfcuoPuFxyHmXsgATDpFZDAXCI8tvinaVcDo8PIIJSo4A==}
     hasBin: true
     dependencies:
       commander: 8.3.0
@@ -3993,7 +3993,7 @@ packages:
       dagre-d3-es: 7.0.10
       dayjs: 1.11.13
       dompurify: 3.1.7
-      katex: 0.16.11
+      katex: 0.16.21
       khroma: 2.1.0
       lodash-es: 4.17.21
       marked: 13.0.3
