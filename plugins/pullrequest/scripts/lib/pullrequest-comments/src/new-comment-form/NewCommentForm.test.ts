@@ -18,8 +18,13 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import type { HostElement } from "./NewCommentForm";
-import { form_height_descriptor } from "./NewCommentForm";
+import "@tuleap/commonmark-popover/commonmark-popover-stub";
+import type { HostElement, NewCommentForm } from "./NewCommentForm";
+import {
+    PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
+    form_height_descriptor,
+} from "./NewCommentForm";
+import { ControlNewCommentFormStub } from "../../tests/stubs/main";
 
 vi.mock("@tuleap/mention", () => ({
     initMentions(): void {
@@ -36,5 +41,29 @@ describe("NewCommentForm", () => {
         vi.advanceTimersToNextTimer();
 
         expect(host.post_rendering_callback).toHaveBeenCalledTimes(1);
+    });
+
+    it(`should keep the writing zone's comment content up-to-date`, async () => {
+        vi.useFakeTimers();
+        const new_comment_form = document.createElement(
+            PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
+        ) as NewCommentForm & HTMLElement;
+        new_comment_form.controller = ControlNewCommentFormStub();
+        const doc = document.implementation.createHTMLDocument();
+
+        doc.body.append(new_comment_form);
+        await vi.runOnlyPendingTimersAsync();
+        expect(new_comment_form.writing_zone.comment_content).toBe("");
+        expect(new_comment_form.presenter.comment_content).toBe(
+            new_comment_form.controller.buildInitialPresenter().comment_content,
+        );
+
+        const updated_comment = "unimprovedly intromittent";
+        new_comment_form.writing_zone.dispatchEvent(
+            new CustomEvent("writing-zone-input", { detail: { content: updated_comment } }),
+        );
+        await vi.runOnlyPendingTimersAsync();
+        expect(new_comment_form.writing_zone.comment_content).toBe(updated_comment);
+        expect(new_comment_form.presenter.comment_content).toBe(updated_comment);
     });
 });

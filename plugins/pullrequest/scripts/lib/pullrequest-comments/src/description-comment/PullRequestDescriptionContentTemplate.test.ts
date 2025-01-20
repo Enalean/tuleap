@@ -36,7 +36,7 @@ describe("PullRequestDescriptionContentTemplate", () => {
 
         base_host = {
             edition_form_presenter: null,
-            controller: ControlPullRequestDescriptionCommentStub,
+            controller: ControlPullRequestDescriptionCommentStub(),
         } as HostElement;
     });
 

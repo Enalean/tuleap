@@ -29,23 +29,20 @@ import { getDescriptionCommentFormTemplate } from "./PullRequestDescriptionComme
 import { gettext_provider } from "../gettext-provider";
 import { WritingZoneController } from "../writing-zone/WritingZoneController";
 import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
-import type { InternalWritingZone } from "../writing-zone/WritingZone";
+import type { WritingZone } from "../writing-zone/WritingZone";
 import { getWritingZoneElement } from "../writing-zone/WritingZone";
-import type { ElementContainingAWritingZone } from "../types";
 
 export const PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME =
     "tuleap-pullrequest-description-comment";
-export type HostElement = PullRequestDescriptionComment &
-    ElementContainingAWritingZone<PullRequestDescriptionComment> &
-    HTMLElement;
+export type HostElement = PullRequestDescriptionComment & HTMLElement;
 
 export type PullRequestDescriptionComment = {
-    readonly render: () => HTMLElement;
+    render(): HTMLElement;
     readonly after_render_once: unknown;
-    readonly controller: ControlPullRequestDescriptionComment;
+    controller: ControlPullRequestDescriptionComment;
     readonly post_description_form_close_callback: () => void;
     readonly writing_zone_controller: ControlWritingZone;
-    readonly writing_zone: HTMLElement & InternalWritingZone;
+    readonly writing_zone: HTMLElement & WritingZone;
     description: PullRequestDescriptionCommentPresenter;
     edition_form_presenter: DescriptionCommentFormPresenter | null;
 };
@@ -81,8 +78,13 @@ define<PullRequestDescriptionComment>({
     controller: (host, value) => value,
     after_render_once: after_render_once_descriptor,
     post_description_form_close_callback: post_description_form_close_callback_descriptor,
-    edition_form_presenter: (host, presenter: DescriptionCommentFormPresenter | undefined) =>
-        presenter ?? null,
+    edition_form_presenter(host, presenter: DescriptionCommentFormPresenter | undefined) {
+        if (!presenter) {
+            return null;
+        }
+        host.writing_zone.comment_content = presenter.description_content;
+        return presenter;
+    },
     writing_zone_controller: (host, controller: ControlWritingZone | undefined) =>
         controller ??
         WritingZoneController({
@@ -90,6 +92,16 @@ define<PullRequestDescriptionComment>({
             focus_writing_zone_when_connected: true,
             project_id: host.description.project_id,
         }),
-    writing_zone: getWritingZoneElement,
+    writing_zone(host: HostElement) {
+        const element = getWritingZoneElement();
+        element.controller = host.writing_zone_controller;
+        element.addEventListener("writing-zone-input", (event: Event) => {
+            if (!(event instanceof CustomEvent)) {
+                return;
+            }
+            host.controller.handleWritingZoneContentChange(host, event.detail.content);
+        });
+        return element;
+    },
     render: renderDescriptionComment,
 });

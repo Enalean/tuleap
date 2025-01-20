@@ -20,7 +20,7 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
-import type { InternalWritingZone } from "./WritingZone";
+import type { WritingZone } from "./WritingZone";
 import type { WritingZonePresenter } from "./WritingZonePresenter";
 import "../writing-zone/WritingZone";
 
@@ -41,9 +41,9 @@ const isTabActive = (tab_name: WritingZoneTabName, presenter: WritingZonePresent
 };
 
 export const buildWriteTab = (
-    host: InternalWritingZone,
+    host: WritingZone,
     gettext_provider: GettextProvider,
-): UpdateFunction<InternalWritingZone> => {
+): UpdateFunction<WritingZone> => {
     const tabs_classes = {
         "tlp-tab": true,
         "tlp-tab-active": isTabActive(TAB_WRITE, host.presenter),
@@ -61,9 +61,9 @@ export const buildWriteTab = (
 };
 
 export const buildPreviewTab = (
-    host: InternalWritingZone,
+    host: WritingZone,
     gettext_provider: GettextProvider,
-): UpdateFunction<InternalWritingZone> => {
+): UpdateFunction<WritingZone> => {
     const tabs_classes = {
         "tlp-tab": true,
         "tlp-tab-active": isTabActive(TAB_PREVIEW, host.presenter),

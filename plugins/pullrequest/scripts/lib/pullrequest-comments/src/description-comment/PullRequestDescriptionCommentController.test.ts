@@ -52,14 +52,12 @@ describe("PullRequestDescriptionCommentController", () => {
 
     it("showEditionForm() should assign a DescriptionCommentFormPresenter to the given host", () => {
         const doc = document.implementation.createHTMLDocument();
-        const content = doc.createElement("div");
         const writing_zone = doc.createElement("div");
         const writing_zone_controller = WritingZoneController({
             document: doc,
             focus_writing_zone_when_connected: true,
             project_id,
         });
-        const setWritingZoneContent = vi.spyOn(writing_zone_controller, "setWritingZoneContent");
         const host = {
             edition_form_presenter: null,
             description: {
@@ -67,17 +65,12 @@ describe("PullRequestDescriptionCommentController", () => {
             },
             writing_zone_controller,
             writing_zone,
-            content: () => content,
         } as unknown as PullRequestDescriptionComment;
 
         getController(SaveDescriptionCommentStub.withDefault()).showEditionForm(host);
 
         expect(host.edition_form_presenter).toStrictEqual(
             PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(host.description),
-        );
-        expect(setWritingZoneContent).toHaveBeenCalledWith(
-            writing_zone,
-            host.description.raw_content,
         );
     });
 
@@ -117,6 +110,7 @@ describe("PullRequestDescriptionCommentController", () => {
 
     describe("saveDescriptionComment()", () => {
         it(`should save the new description, update the description presenter and display back the read mode`, async () => {
+            vi.useFakeTimers();
             const edition_form_presenter =
                 PullRequestDescriptionCommentFormPresenter.fromCurrentDescription({
                     raw_content: "This commit fixes bug #456",
@@ -137,7 +131,8 @@ describe("PullRequestDescriptionCommentController", () => {
 
             const description_saver =
                 SaveDescriptionCommentStub.withResponsePayload(updated_pullrequest);
-            await getController(description_saver).saveDescriptionComment(host);
+            getController(description_saver).saveDescriptionComment(host);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(description_saver.getLastCallParams()).toStrictEqual(
                 PullRequestDescriptionCommentFormPresenter.buildSubmitted(edition_form_presenter),
@@ -152,7 +147,7 @@ describe("PullRequestDescriptionCommentController", () => {
             expect(host.post_description_form_close_callback).toHaveBeenCalledOnce();
         });
 
-        it(`should trigger the onErrorCallback when an error occurres while saving the description`, async () => {
+        it(`should trigger the onErrorCallback when an error occurs while saving the description`, async () => {
             const edition_form_presenter =
                 PullRequestDescriptionCommentFormPresenter.fromCurrentDescription({
                     raw_content: "This commit fixes bug #456",
@@ -164,7 +159,8 @@ describe("PullRequestDescriptionCommentController", () => {
 
             const tuleap_api_fault = Fault.fromMessage("Forbidden");
             const description_saver = SaveDescriptionCommentStub.withFault(tuleap_api_fault);
-            await getController(description_saver).saveDescriptionComment(host);
+            getController(description_saver).saveDescriptionComment(host);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(onErrorCallback).toHaveBeenCalledOnce();
             expect(onErrorCallback).toHaveBeenCalledWith(tuleap_api_fault);

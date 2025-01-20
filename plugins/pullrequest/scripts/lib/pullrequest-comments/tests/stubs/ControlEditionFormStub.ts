@@ -24,11 +24,8 @@ const noop = (): void => {
 };
 
 export const ControlEditionFormStub = (): ControlEditionForm => ({
-    initEditionForm: noop,
     cancelEdition: noop,
     saveEditedContent: (): Promise<void> => {
         return Promise.resolve();
     },
-    handleWritingZoneContentChange: noop,
-    shouldFocusWritingZoneOnceRendered: () => true,
 });

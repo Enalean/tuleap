@@ -24,11 +24,11 @@ const noop = (): void => {
     // Do nothing
 };
 
-export const ControlPullRequestDescriptionCommentStub: ControlPullRequestDescriptionComment = {
-    showEditionForm: noop,
-    hideEditionForm: noop,
-    handleWritingZoneContentChange: noop,
-    saveDescriptionComment: noop,
-    getRelativeDateHelper: () => RelativeDateHelperStub,
-    shouldFocusWritingZoneOnceRendered: () => true,
-};
+export const ControlPullRequestDescriptionCommentStub =
+    (): ControlPullRequestDescriptionComment => ({
+        showEditionForm: noop,
+        hideEditionForm: noop,
+        handleWritingZoneContentChange: noop,
+        saveDescriptionComment: noop,
+        getRelativeDateHelper: () => RelativeDateHelperStub,
+    });

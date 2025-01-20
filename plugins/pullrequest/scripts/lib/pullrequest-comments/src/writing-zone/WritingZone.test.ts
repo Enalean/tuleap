@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { MockInstance } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
-import type { ElementContainingAWritingZone } from "../types";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
-import { getWritingZoneElement, isWritingZoneElement } from "./WritingZone";
-import type { InternalWritingZone } from "./WritingZone";
+import type { WritingZone } from "./WritingZone";
+import { getWritingZoneElement } from "./WritingZone";
 import "@tuleap/commonmark-popover/commonmark-popover-stub";
 
 vi.mock("@tuleap/mention", () => ({
@@ -32,10 +31,7 @@ vi.mock("@tuleap/mention", () => ({
         // Mock @tuleap/mention because it needs jquery in tests
     },
 }));
-
-type ElementNeedingAWritingZone = ElementContainingAWritingZone<{
-    _some_attribute: never;
-}>;
+vi.useFakeTimers();
 
 const project_id = 105;
 
@@ -55,7 +51,7 @@ describe("WritingZone", () => {
         vi.useFakeTimers();
     });
 
-    const getBuiltWritingZoneElement = (): HTMLElement & InternalWritingZone => {
+    const getBuiltWritingZoneElement = (): HTMLElement & WritingZone => {
         const shouldFocusWritingZoneOnceRendered = (): boolean => focus_writing_zone_when_connected;
         writing_zone_controller = WritingZoneController({
             document: doc,
@@ -68,67 +64,10 @@ describe("WritingZone", () => {
         resetWritingZone = vi.spyOn(writing_zone_controller, "resetWritingZone");
         onTextareaInput = vi.spyOn(writing_zone_controller, "onTextareaInput");
 
-        const component_needing_a_writing_zone: ElementNeedingAWritingZone = {
-            controller: {
-                handleWritingZoneContentChange: vi.fn(),
-                shouldFocusWritingZoneOnceRendered,
-            },
-            writing_zone_controller,
-        };
-
-        const writing_zone = getWritingZoneElement(component_needing_a_writing_zone);
-        if (!isWritingZoneElement(writing_zone)) {
-            throw new Error("Expected a WritingZone element.");
-        }
-
-        return writing_zone;
+        const element = getWritingZoneElement();
+        element.controller = writing_zone_controller;
+        return element;
     };
-
-    describe("getWritingZoneElement()", () => {
-        it(`Given a component needing to display a WritingZone
-            Then it should create a WritingZone element
-            Assign it the component's writing_zone_controller
-            Make the component's own controller react on writing zone inputs
-            And finally return the WritingZone element`, () => {
-            const shouldFocusWritingZoneOnceRendered = (): boolean => true;
-            const component_needing_a_writing_zone: ElementNeedingAWritingZone = {
-                controller: {
-                    handleWritingZoneContentChange: vi.fn(),
-                    shouldFocusWritingZoneOnceRendered,
-                },
-                writing_zone_controller: WritingZoneController({
-                    document: doc,
-                    focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
-                    project_id,
-                }),
-            };
-
-            const writing_zone = getWritingZoneElement(component_needing_a_writing_zone);
-            if (!isWritingZoneElement(writing_zone)) {
-                throw new Error("Expected a WritingZone element.");
-            }
-
-            expect(writing_zone.controller).toBe(
-                component_needing_a_writing_zone.writing_zone_controller,
-            );
-
-            const writing_zone_content = "Please rebase!";
-            writing_zone.dispatchEvent(
-                new CustomEvent("writing-zone-input", {
-                    detail: {
-                        content: writing_zone_content,
-                    },
-                }),
-            );
-
-            expect(
-                component_needing_a_writing_zone.controller.handleWritingZoneContentChange,
-            ).toHaveBeenCalledOnce();
-            expect(
-                component_needing_a_writing_zone.controller.handleWritingZoneContentChange,
-            ).toHaveBeenCalledWith(component_needing_a_writing_zone, writing_zone_content);
-        });
-    });
 
     describe("Connect/Disconnect", () => {
         it("When focus_writing_zone_when_connected is true, and the WritingZone is added the DOM tree, then it should be focused", async () => {
@@ -138,9 +77,8 @@ describe("WritingZone", () => {
 
             expect(focusWritingZone).not.toHaveBeenCalled();
 
-            await doc.body.append(writing_zone);
-
-            vi.advanceTimersToNextTimer();
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusWritingZone).toHaveBeenCalled();
         });
@@ -150,7 +88,8 @@ describe("WritingZone", () => {
 
             const writing_zone = getBuiltWritingZoneElement();
 
-            await doc.body.append(writing_zone);
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusWritingZone).not.toHaveBeenCalledOnce();
         });
@@ -159,9 +98,9 @@ describe("WritingZone", () => {
             const writing_zone = getBuiltWritingZoneElement();
             const content = "This is a description comment.";
 
-            writing_zone_controller.setWritingZoneContent(writing_zone, content);
-
-            await doc.body.append(writing_zone);
+            writing_zone.comment_content = content;
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(writing_zone.textarea.value).toBe(content);
         });
@@ -170,8 +109,8 @@ describe("WritingZone", () => {
             const writing_zone = getBuiltWritingZoneElement();
             const addEventListener = vi.spyOn(writing_zone, "addEventListener");
 
-            await doc.body.append(writing_zone);
-            vi.advanceTimersToNextTimer();
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(addEventListener).toHaveBeenCalledTimes(2);
         });
@@ -182,8 +121,10 @@ describe("WritingZone", () => {
             const writing_zone = getBuiltWritingZoneElement();
             const removeEventListener = vi.spyOn(writing_zone, "removeEventListener");
 
-            await doc.body.append(writing_zone);
-            await doc.body.removeChild(writing_zone);
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
+            doc.body.removeChild(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(resetWritingZone).toHaveBeenCalledOnce();
             expect(removeEventListener).toHaveBeenCalledTimes(2);
@@ -194,7 +135,8 @@ describe("WritingZone", () => {
         it("When some content is typed into the textarea, then the onTextAreaChange callback should be triggered", async () => {
             const writing_zone = getBuiltWritingZoneElement();
 
-            await doc.body.append(writing_zone);
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             const textarea = selectOrThrow(
                 writing_zone,
@@ -213,8 +155,8 @@ describe("WritingZone", () => {
         it("Should focus the WritingZone when it catches the focusin event", async () => {
             const writing_zone = getBuiltWritingZoneElement();
 
-            await doc.body.append(writing_zone);
-            vi.advanceTimersToNextTimer();
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             writing_zone.dispatchEvent(new Event("focusin"));
 
@@ -224,8 +166,8 @@ describe("WritingZone", () => {
         it("Should blur the WritingZone when it catches the focusout event", async () => {
             const writing_zone = getBuiltWritingZoneElement();
 
-            await doc.body.append(writing_zone);
-            vi.advanceTimersToNextTimer();
+            doc.body.append(writing_zone);
+            await vi.runOnlyPendingTimersAsync();
 
             writing_zone.dispatchEvent(new Event("focusout"));
 

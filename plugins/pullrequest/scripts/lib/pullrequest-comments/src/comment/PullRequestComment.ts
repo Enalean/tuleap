@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import { define, html } from "hybrids";
 import { loadTooltips } from "@tuleap/tooltip";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
 import { gettext_provider } from "../gettext-provider";
-import type { ElementContainingAWritingZone } from "../types";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
@@ -31,14 +30,12 @@ import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter"
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 
 export const PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME = "tuleap-pullrequest-comment";
-export type HostElement = PullRequestCommentComponentType &
-    ElementContainingAWritingZone<PullRequestCommentComponentType> &
-    HTMLElement;
+export type HostElement = PullRequestCommentComponentType & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
 
 export type PullRequestCommentComponentType = {
-    readonly render: () => HTMLElement;
+    render(): HTMLElement;
     readonly after_render_once: unknown;
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;

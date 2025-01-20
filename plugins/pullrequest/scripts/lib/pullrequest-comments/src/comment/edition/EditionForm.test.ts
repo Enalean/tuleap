@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import "@tuleap/commonmark-popover/commonmark-popover-stub";
+import type { EditionForm, HostElement } from "./EditionForm";
+import { TAG } from "./EditionForm";
+import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 import { ControlEditionFormStub } from "../../../tests/stubs/ControlEditionFormStub";
-import type { InternalEditionForm } from "./EditionForm";
-import { after_render_once_descriptor } from "./EditionForm";
 
 vi.mock("@tuleap/mention", () => ({
     initMentions(): void {
@@ -29,15 +31,29 @@ vi.mock("@tuleap/mention", () => ({
 }));
 
 describe("EditionForm", () => {
-    it("When the EditionForm has been rendered once, Then its controller should initialize it", () => {
-        const controller = ControlEditionFormStub();
-        const initEditionForm = vi.spyOn(controller, "initEditionForm");
-        const host = {
-            controller,
-        } as unknown as InternalEditionForm;
+    it(`should keep the writing zone's comment content up-to-date`, async () => {
+        vi.useFakeTimers();
+        const edition_form = document.createElement(TAG) as EditionForm & HTMLElement;
+        const initial_comment = "jawbation aphthongia";
+        edition_form.comment = PullRequestCommentPresenterStub.buildInlineCommentWithData({
+            raw_content: initial_comment,
+        });
+        edition_form.project_id = 168;
+        edition_form.controller = ControlEditionFormStub();
+        const doc = document.implementation.createHTMLDocument();
 
-        after_render_once_descriptor.observe(host);
+        doc.body.append(edition_form);
+        const internal_edition_form = edition_form as HostElement;
+        await vi.runOnlyPendingTimersAsync();
+        expect(internal_edition_form.writing_zone.comment_content).toBe(initial_comment);
+        expect(internal_edition_form.presenter.edited_content).toBe(initial_comment);
 
-        expect(initEditionForm).toHaveBeenCalledOnce();
+        const updated_comment = "hyperalimentation orchestrator";
+        internal_edition_form.writing_zone.dispatchEvent(
+            new CustomEvent("writing-zone-input", { detail: { content: updated_comment } }),
+        );
+        await vi.runOnlyPendingTimersAsync();
+        expect(internal_edition_form.writing_zone.comment_content).toBe(updated_comment);
+        expect(internal_edition_form.presenter.edited_content).toBe(updated_comment);
     });
 });

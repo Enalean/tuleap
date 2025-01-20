@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { define, html } from "hybrids";
-import type { ElementContainingAWritingZone } from "../../types";
-import type { ControlWritingZone } from "../../writing-zone/WritingZoneController";
+import { define } from "hybrids";
 import { WritingZoneController } from "../../writing-zone/WritingZoneController";
-import type { InternalWritingZone } from "../../writing-zone/WritingZone";
+import type { WritingZone } from "../../writing-zone/WritingZone";
 import { getWritingZoneElement } from "../../writing-zone/WritingZone";
 import type { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
 import type { ControlEditionForm } from "./EditionFormController";
@@ -32,44 +30,46 @@ import { EditionFormPresenter } from "./EditionFormPresenter";
 export const TAG = "tuleap-pullrequest-comment-edition-form";
 
 export type EditionForm = {
-    readonly controller: ControlEditionForm;
-    readonly comment: PullRequestCommentPresenter;
-    readonly project_id: number;
+    controller: ControlEditionForm;
+    comment: PullRequestCommentPresenter;
+    project_id: number;
 };
-
 export type InternalEditionForm = Readonly<EditionForm> & {
-    writing_zone_controller: ControlWritingZone;
-    writing_zone: HTMLElement & InternalWritingZone;
-    after_render_once: unknown;
-    render: () => HTMLElement;
+    writing_zone: HTMLElement & WritingZone;
     presenter: EditionFormPresenter;
 };
-
-export type HostElement = InternalEditionForm &
-    ElementContainingAWritingZone<InternalEditionForm> &
-    HTMLElement;
-
-export const after_render_once_descriptor = {
-    value: (host: InternalEditionForm): unknown => host.render(),
-    observe(host: InternalEditionForm): void {
-        host.controller.initEditionForm(host);
-    },
-};
+export type HostElement = InternalEditionForm & HTMLElement;
 
 define<InternalEditionForm>({
     tag: TAG,
     project_id: (host, value) => value,
     comment: (host, comment) => comment,
-    presenter: (host, value) => value ?? EditionFormPresenter.fromComment(host.comment),
+    presenter: function (
+        host: InternalEditionForm,
+        current_presenter: EditionFormPresenter | undefined,
+    ): EditionFormPresenter {
+        const presenter = current_presenter ?? EditionFormPresenter.fromComment(host.comment);
+        host.writing_zone.comment_content = presenter.edited_content;
+        return presenter;
+    },
     controller: (host, value) => value,
-    writing_zone_controller: (host, controller: ControlWritingZone | undefined) =>
-        controller ??
-        WritingZoneController({
+    writing_zone(host: HostElement) {
+        const element = getWritingZoneElement();
+        element.controller = WritingZoneController({
             document,
             project_id: host.project_id,
-            focus_writing_zone_when_connected: host.controller.shouldFocusWritingZoneOnceRendered(),
-        }),
-    writing_zone: getWritingZoneElement,
-    after_render_once: after_render_once_descriptor,
-    render: (host) => html`${getEditionForm(host, gettext_provider)}`,
+            focus_writing_zone_when_connected: true,
+        });
+        element.addEventListener("writing-zone-input", (event: Event) => {
+            if (!(event instanceof CustomEvent)) {
+                return;
+            }
+            host.presenter = EditionFormPresenter.buildUpdated(
+                host.presenter,
+                event.detail.content,
+            );
+        });
+        return element;
+    },
+    render: (host) => getEditionForm(host, gettext_provider),
 });

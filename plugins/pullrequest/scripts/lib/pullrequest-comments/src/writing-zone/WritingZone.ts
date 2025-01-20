@@ -20,52 +20,38 @@
 import { define } from "hybrids";
 import { initMentions } from "@tuleap/mention";
 import { gettext_provider } from "../gettext-provider";
-import type { ElementContainingAWritingZone } from "../types";
 import type { ControlWritingZone } from "./WritingZoneController";
 import type { WritingZonePresenter } from "./WritingZonePresenter";
 import { getWritingZoneTemplate } from "./WritingZoneTemplate";
 
 export const TAG = "tuleap-pullrequest-comment-writing-zone";
 
-export type InternalWritingZone = {
+export type WritingZone = {
     controller: ControlWritingZone;
     presenter: WritingZonePresenter;
-    textarea: HTMLTextAreaElement;
+    readonly textarea: HTMLTextAreaElement;
+    comment_content: string;
     render(): HTMLElement;
 };
 
-export type HostElement = InternalWritingZone & HTMLElement;
+export type HostElement = WritingZone & HTMLElement;
 
-export const isWritingZoneElement = (
-    element: Element,
-): element is HTMLElement & InternalWritingZone => {
+export const isWritingZoneElement = (element: Element): element is HTMLElement & WritingZone => {
     return element.tagName.toLowerCase() === TAG;
 };
 
-export const getWritingZoneElement = <ElementType>(
-    host: ElementContainingAWritingZone<ElementType>,
-): HTMLElement & InternalWritingZone => {
+export const getWritingZoneElement = (): HostElement => {
     const element = document.createElement(TAG);
     if (!isWritingZoneElement(element)) {
         throw new Error("Failed to create a WritingZone element.");
     }
-
-    element.controller = host.writing_zone_controller;
-    element.addEventListener("writing-zone-input", (event: Event) => {
-        if (!(event instanceof CustomEvent)) {
-            return;
-        }
-
-        host.controller.handleWritingZoneContentChange(host, event.detail.content);
-    });
-
     return element;
 };
 
-define<InternalWritingZone>({
+define<WritingZone>({
     tag: TAG,
     controller: {
-        value: (host: InternalWritingZone, controller) => controller,
+        value: (host: WritingZone, controller) => controller,
         connect: (host) => {
             function onFocusIn(): void {
                 host.controller.focusWritingZone(host);
@@ -108,8 +94,9 @@ define<InternalWritingZone>({
             return textarea_element;
         },
         connect: (host) => {
-            host.textarea.value = host.presenter.initial_content;
+            host.textarea.value = host.comment_content;
         },
     },
+    comment_content: "",
     render: (host) => getWritingZoneTemplate(host, gettext_provider),
 });

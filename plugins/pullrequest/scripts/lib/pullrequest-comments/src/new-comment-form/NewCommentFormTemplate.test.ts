@@ -17,32 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, beforeEach, expect, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./NewCommentForm";
 import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
-import {
-    getNewCommentFormContent,
-    getCancelButton,
-    getSubmitButton,
-} from "./NewCommentFormTemplate";
+import { getCancelButton, getSubmitButton } from "./NewCommentFormTemplate";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { ControlNewCommentFormStub } from "../../tests/stubs/ControlNewCommentFormStub";
 import { NewCommentFormComponentConfigStub } from "../../tests/stubs/NewCommentFormComponentConfigStub";
-import { WritingZoneController } from "../writing-zone/WritingZoneController";
-import {
-    getWritingZoneElement,
-    isWritingZoneElement,
-    TAG as WRITING_ZONE_TAG_NAME,
-} from "../writing-zone/WritingZone";
 
 vi.mock("@tuleap/mention", () => ({
     initMentions(): void {
         // Mock @tuleap/mention because it needs jquery in tests
     },
 }));
-
-const project_id = 105;
 
 describe("NewCommentFormTemplate", () => {
     let target: ShadowRoot;
@@ -63,41 +51,6 @@ describe("NewCommentFormTemplate", () => {
             ),
             "This is a new comment",
         );
-
-    it("When some content has been updated in the writing zone, then the controller should update the template", () => {
-        const host = {
-            presenter: getPresenter(),
-            controller: ControlNewCommentFormStub(),
-            writing_zone_controller: WritingZoneController({
-                document: document.implementation.createHTMLDocument(),
-                focus_writing_zone_when_connected: true,
-                project_id,
-            }),
-        } as HostElement;
-
-        const host_with_writing_zone = {
-            ...host,
-            writing_zone: getWritingZoneElement(host),
-        };
-
-        const handleWritingZoneContentChange = vi.spyOn(
-            host.controller,
-            "handleWritingZoneContentChange",
-        );
-        const render = getNewCommentFormContent(host_with_writing_zone, GettextProviderStub);
-        render(host_with_writing_zone, target);
-
-        const writing_zone = target.querySelector(WRITING_ZONE_TAG_NAME);
-        if (!writing_zone || !isWritingZoneElement(writing_zone)) {
-            throw new Error("Can't find the WritingZone element in the DOM.");
-        }
-
-        writing_zone.dispatchEvent(
-            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } }),
-        );
-
-        expect(handleWritingZoneContentChange).toHaveBeenCalledOnce();
-    });
 
     describe("Cancel button", () => {
         it("When the Cancel action is not allowed, then it should not be rendered", () => {

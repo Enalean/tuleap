@@ -40,7 +40,6 @@ export const ControlNewCommentFormStub = (): ControlNewCommentForm => ({
         return Promise.resolve();
     },
     cancelNewComment: noop,
-    handleWritingZoneContentChange: noop,
     triggerPostSubmitCallback: noop,
     shouldFocusWritingZoneOnceRendered: () => true,
     getProjectId: () => 105,

@@ -101,19 +101,6 @@ describe("NewCommentFormController", () => {
         });
     });
 
-    describe("updateNewComment()", () => {
-        it("Should assign the host a new empty presenter, and call the on_cancel_callback", () => {
-            const host = { presenter: getEmptyPresenter() } as NewCommentForm;
-            const new_comment = "This is a new comment";
-
-            getController().handleWritingZoneContentChange(host, new_comment);
-
-            expect(host.presenter).toStrictEqual(
-                NewCommentFormPresenter.updateContent(getEmptyPresenter(), new_comment),
-            );
-        });
-    });
-
     describe("saveNewComment()", () => {
         it(`When the comment is saved successfully
             Then it should call the post_submit_callback with the PullRequestComment
