@@ -140,7 +140,7 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         UserManager::setInstance($this->user_manager);
 
         $this->ugroup_dao = $this->createMock(UGroupDao::class);
-        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(new DataAccessResultEmpty());
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(null);
 
         $this->xml_import_helper      = $this->createMock(XMLImportHelper::class);
         $this->frs_permission_creator = $this->createMock(\Tuleap\FRS\FRSPermissionCreator::class);

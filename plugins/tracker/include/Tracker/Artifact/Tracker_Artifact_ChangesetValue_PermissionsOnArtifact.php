@@ -198,9 +198,9 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return Codendi_HTMLPurifier::instance()->purify($value);
     }
 
-    protected function getDao()
+    protected function getDao(): UGroupDao
     {
-        return new UGroupDao(CodendiDataAccess::instance());
+        return new UGroupDao();
     }
 
     protected function getUgroupLabel(string $ugroup_name): string

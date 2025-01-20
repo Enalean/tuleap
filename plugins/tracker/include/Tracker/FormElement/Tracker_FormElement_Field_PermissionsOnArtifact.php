@@ -363,22 +363,20 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $perms      = $value->getPerms();
             $perms_name = [];
             foreach ($perms as $perm) {
-                $row          = $ugroup_dao->searchByUGroupId($perm)->getRow();
-                $perms_name[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
+                $row = $ugroup_dao->searchByUGroupId($perm);
+                if ($row === null) {
+                    continue;
+                }
+                $perms_name[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey($row['name']);
             }
             $html .= implode(',', $perms_name);
         }
         return $html;
     }
 
-   /**
-    * Returns the UGroupDao
-    *
-    * @return UGroupDao The dao
-    */
-    protected function getUGroupDao()
+    protected function getUGroupDao(): UGroupDao
     {
-        return new UGroupDao(CodendiDataAccess::instance());
+        return new UGroupDao();
     }
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option

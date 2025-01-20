@@ -62,11 +62,11 @@ final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
                     (int) $def['group_id'] === (int) $group_id &&
                     (int) $def['ugroup_id'] === $ugroup_id
                 ) {
-                    return \TestHelper::arrayToDar($def);
+                    return $def;
                 }
             }
 
-            return \TestHelper::emptyDar();
+            return [];
         });
         $dao->method('searchByGroupIdAndName')->willReturnCallback(function (string|int $group_id, string $name) use ($ugroup_definitions) {
             foreach ($ugroup_definitions as $def) {
@@ -74,13 +74,13 @@ final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
                     (int) $def['group_id'] === (int) $group_id &&
                     $def['name'] === $name
                 ) {
-                    return \TestHelper::arrayToDar($def);
+                    return $def;
                 }
             }
 
-            return \TestHelper::emptyDar();
+            return [];
         });
-        $dao->method('searchDynamicAndStaticByGroupId')->with(123)->willReturn(\TestHelper::argListToDar($ugroup_definitions));
+        $dao->method('searchDynamicAndStaticByGroupId')->with(123)->willReturn($ugroup_definitions);
 
         $this->ugroup_manager = new UGroupManager($dao);
     }

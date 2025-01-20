@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -47,8 +46,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemoveUgroupBinding(): void
     {
-        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding')
-            ->willReturn(true);
+        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding');
         $GLOBALS['Language']->expects(self::once())->method('getText')
             ->with('project_ugroup_binding', 'binding_removed');
         $GLOBALS['Response']->expects(self::once())->method('addFeedback');
@@ -58,29 +56,9 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateUGroupBinding(): void
     {
-        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding')
-            ->willReturn(true);
+        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding');
 
         $this->binding->updateUgroupBinding(200, 300);
-    }
-
-    public function testRemoveAllUGroupsBindingReturnsFalseWhenNotAllUGroupsCouldBeUpdated(): void
-    {
-        $bound_ugroups = [300 => [], 400 => [], 500 => [], 600 => []];
-        $this->binding = $this->createPartialMock(UGroupBinding::class, [
-            'getUGroupsByBindingSource',
-            'getUGroupManager',
-        ]);
-        $this->binding->expects(self::once())->method('getUGroupsByBindingSource')
-            ->with(200)
-            ->willReturn($bound_ugroups);
-        $this->binding->method('getUGroupManager')
-            ->willReturn($this->ugroup_manager);
-
-        $this->ugroup_manager->expects(self::exactly(4))->method('updateUgroupBinding')
-            ->willReturnOnConsecutiveCalls(true, true, false, false);
-
-        self::assertFalse($this->binding->removeAllUGroupsBinding(200));
     }
 
     public function testRemoveAllUGroupsBindingReturnsTrueWhenNoBoundUGroups(): void
@@ -96,25 +74,8 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($this->binding->removeAllUGroupsBinding(200));
     }
 
-    public function testGetUGroupsByBindingSourceReturnsAnEmptyArrayWhenDARisError(): void
-    {
-        $dar = $this->createMock(LegacyDataAccessResultInterface::class);
-        $this->ugroup_manager->expects(self::once())->method('searchUGroupByBindingSource')
-            ->with(200)
-            ->willReturn($dar);
-        $dar->expects(self::once())->method('isError')->willReturn(true);
-
-        self::assertEmpty($this->binding->getUGroupsByBindingSource(200));
-    }
-
     public function testGetUGroupsByBindingSourceReturnsAnArrayOfProjectIdsAndUGroupNames(): void
     {
-        $dar = $this->createMock(LegacyDataAccessResultInterface::class);
-        $this->ugroup_manager->expects(self::once())->method('searchUGroupByBindingSource')
-            ->with(200)
-            ->willReturn($dar);
-
-        $dar->expects(self::once())->method('isError')->willReturn(false);
         $first_row  = [
             'ugroup_id' => 300,
             'name'      => 'panicmongering',
@@ -125,10 +86,10 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
             'name'      => 'counteraverment',
             'group_id'  => 185,
         ];
-        $dar->method('valid')->willReturn(true, true, false);
-        $dar->method('current')->willReturn($first_row, $second_row);
-        $dar->method('rewind');
-        $dar->method('next');
+
+        $this->ugroup_manager->expects(self::once())->method('searchUGroupByBindingSource')
+            ->with(200)
+            ->willReturn([$first_row, $second_row]);
 
         $result = $this->binding->getUGroupsByBindingSource(200);
 
@@ -159,18 +120,11 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $first_bound_ugroup  = ['ugroup_id' => 400, 'source_id' => 200];
         $second_bound_ugroup = ['ugroup_id' => 500, 'source_id' => 200];
-        $dar                 = $this->createStub(LegacyDataAccessResultInterface::class);
-        $dar->method('current')
-            ->willReturn($first_bound_ugroup, $second_bound_ugroup);
-        $dar->method('valid')
-            ->willReturn(true, true, false);
-        $dar->method('rewind');
-        $dar->method('next');
 
         $project = ProjectTestBuilder::aProject()->build();
         $this->ugroup_manager->expects(self::once())->method('searchBindedUgroupsInProject')
             ->with($project)
-            ->willReturn($dar);
+            ->willReturn([$first_bound_ugroup, $second_bound_ugroup]);
         $this->binding = $this->getMockBuilder(UGroupBinding::class)
             ->setConstructorArgs([$this->ugroup_user_dao, $this->ugroup_manager])
             ->onlyMethods(['reloadUgroupBinding'])

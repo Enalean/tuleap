@@ -126,12 +126,12 @@ if ($json_format) {
 
         if ($current_user->isAdmin($with_groups_of_user_in_project_id)) {
             $ugroups_dar = $ugroup_dao->searchUgroupsForAdministratorInProject(
-                $current_user->getId(),
+                (int) $current_user->getId(),
                 $with_groups_of_user_in_project_id
             );
         } else {
             $ugroups_dar = $ugroup_dao->searchUgroupsUserIsMemberInProject(
-                $current_user->getId(),
+                (int) $current_user->getId(),
                 $with_groups_of_user_in_project_id
             );
         }

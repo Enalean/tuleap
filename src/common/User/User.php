@@ -865,12 +865,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getAllProjects(): array
     {
         if ($this->all_projects === null) {
-            $projects = [];
-            $dar      = $this->getUGroupDao()->searchGroupByUserId($this->user_id);
+            $all_projects = [];
+            $dar          = $this->getUGroupDao()->searchGroupByUserId((int) $this->getId());
             foreach ($dar as $row) {
-                $projects[] = $row['group_id'];
+                $project_id                = $row['group_id'];
+                $all_projects[$project_id] = $project_id;
             }
-            $this->all_projects = array_unique(array_merge($projects, $this->getProjects()));
+            foreach ($this->getProjects() as $project) {
+                $project_id                = (int) $project;
+                $all_projects[$project_id] = $project_id;
+            }
+            $this->all_projects = array_values($all_projects);
         }
         return $this->all_projects;
     }
