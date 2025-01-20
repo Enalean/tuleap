@@ -106,12 +106,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }
 
-    /**
-     * Fetch the value
-     * @param mixed $value the value of the field
-     * @return string
-     */
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
         return $this->values[$value]->getLabel();
     }

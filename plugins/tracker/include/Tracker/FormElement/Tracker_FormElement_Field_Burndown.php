@@ -474,8 +474,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return '';
     }
 
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
+        return '';
     }
 
     public function afterCreate(array $form_element_data, $tracker_is_empty)

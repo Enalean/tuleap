@@ -214,8 +214,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return '';
     }
 
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
+        return '';
     }
 
     public function fetchRawValueFromChangeset($changeset)

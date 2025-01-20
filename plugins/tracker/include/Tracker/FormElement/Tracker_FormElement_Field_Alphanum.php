@@ -83,10 +83,8 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
 
     /**
      * Fetch the value
-     * @param mixed $value the value of the field
-     * @return string
      */
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
         return $value;
     }

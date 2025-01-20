@@ -123,10 +123,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function fetchRawValue($value): string
+    public function fetchRawValue(mixed $value): string
     {
         return '';
     }

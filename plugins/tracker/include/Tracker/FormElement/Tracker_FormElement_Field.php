@@ -73,10 +73,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the value
-     * @param mixed $value the value of the field
-     * @return string
      */
-    abstract public function fetchRawValue($value);
+    abstract public function fetchRawValue(mixed $value): string;
 
     /**
      * Get the "from" statement to allow search with this field

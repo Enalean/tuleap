@@ -173,13 +173,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         );
     }
 
-    /**
-     * Fetch the value
-     * @param mixed $value the value of the field
-     * @return string
-     */
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
+        assert($value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
         $artifact_id_array = $value->getArtifactIds();
         return implode(', ', $artifact_id_array);
     }

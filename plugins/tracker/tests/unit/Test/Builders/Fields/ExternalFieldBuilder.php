@@ -137,11 +137,7 @@ final class ExternalFieldBuilder
                 return '';
             }
 
-            /**
-             * @param mixed $value
-             * @return string
-             */
-            public function fetchRawValue($value)
+            public function fetchRawValue(mixed $value): string
             {
                 return '';
             }
