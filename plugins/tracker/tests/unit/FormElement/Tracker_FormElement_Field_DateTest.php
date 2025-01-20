@@ -558,7 +558,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $user     = Mockery::mock(\PFUser::class);
         $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $date     = $this->getDateField();
-        $this->assertEquals('-', $date->fetchMailArtifactValue($artifact, $user, false, null, null));
+        $this->assertEquals('-', $date->fetchMailArtifactValue($artifact, $user, false, null, 'html'));
     }
 
     public function testFieldDateShouldSendAMailWithAReadableDateEnUS(): void

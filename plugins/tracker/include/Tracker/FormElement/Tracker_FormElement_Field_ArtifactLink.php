@@ -1168,21 +1168,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
 
     /**
      * Fetch the html code to display the field value in artifact
-     *
-     * @param Artifact                        $artifact The artifact
-     * @param PFUser                          $user     The user who will receive the email
-     * @param bool                            $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
-     *
-     * @return string
      */
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
-        $ignore_perms,
+        bool $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text',
-    ) {
+        string $format = 'text',
+    ): string {
         if (empty($value) || ! $value->getValue()) {
             return '-';
         }

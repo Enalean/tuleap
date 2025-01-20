@@ -479,22 +479,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     /**
      * Fetch data to display the field value in mail
-     *
-     * @param Artifact                        $artifact The artifact
-     * @param PFUser                          $user     The user who will receive the email
-     * @param bool                            $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
-     * @param string                          $format   output format
-     *
-     * @return string
      */
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
-        $ignore_perms,
+        bool $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text',
-    ) {
+        string $format = 'text',
+    ): string {
         $changeset      = $artifact->getLastChangesetWithFieldValue($this);
         $computed_value = null;
         if ($changeset !== null) {

@@ -260,32 +260,24 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
 
      /**
      * Fetch the field value in artifact to be displayed in mail
-     *
-     * @param Artifact                        $artifact The artifact
-     * @param PFUser                          $user     The user who will receive the email
-     * @param bool                            $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
-     * @param string                          $format   mail format
-     *
-     * @return string
      */
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
-        $ignore_perms,
+        bool $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text',
-    ) {
+        string $format = 'text',
+    ): string {
         $output = '';
 
-        $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
+        $bind_value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
 
         switch ($format) {
             case 'html':
                 $output .= $this->fetchArtifactValueReadOnly($artifact);
                 break;
             default:
-                $output = $this->getBind()->formatMailArtifactValue($value->getId());
+                $output = $this->getBind()->formatMailArtifactValue($bind_value->getId());
                 break;
         }
         return $output;
