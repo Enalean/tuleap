@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchRawValue]]></code>
       <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[fetchSubmitValue]]></code>
       <code><![CDATA[fetchSubmitValueMasschange]]></code>
@@ -38837,7 +38836,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchRawValue]]></code>
       <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[fetchSubmitValue]]></code>
       <code><![CDATA[fetchSubmitValueMasschange]]></code>
@@ -38904,7 +38902,6 @@
       <code><![CDATA[$dar]]></code>
     </DeprecatedMethod>
     <InvalidReturnType>
-      <code><![CDATA[fetchRawValue]]></code>
       <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[getRESTAvailableValues]]></code>
     </InvalidReturnType>

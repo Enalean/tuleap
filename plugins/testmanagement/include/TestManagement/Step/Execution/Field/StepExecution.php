@@ -108,7 +108,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
         return '';
     }

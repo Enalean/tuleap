@@ -653,8 +653,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return '';
     }
 
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
+        return '';
     }
 
     protected function getCriteriaDao()

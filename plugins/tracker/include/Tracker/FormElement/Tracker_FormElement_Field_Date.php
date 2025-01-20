@@ -625,12 +625,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return true;
     }
 
-    /**
-     * Fetch the value
-     * @param mixed $value the value of the field
-     * @return string
-     */
-    public function fetchRawValue($value)
+    public function fetchRawValue(mixed $value): string
     {
         return $this->formatDate($value);
     }
