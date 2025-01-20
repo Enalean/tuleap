@@ -26,6 +26,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Upload\Section\File\InsertFileToUpload;
 use Tuleap\Artidoc\Upload\Section\File\OngoingUploadDao;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
@@ -57,10 +58,15 @@ final class OngoingUploadDaoTest extends TestIntegrationTestCase
         self::assertSame($file_to_upload->size, $row['file_size']);
         self::assertSame($file_to_upload->user_id, $row['user_id']);
 
+        $uploaded_file = $dao->searchUploadedFile($id);
+        self::assertTrue(Result::isOk($uploaded_file));
+
         $dao->deleteById($id);
 
         $row = $dao->searchFileOngoingUploadById($id);
         self::assertNull($row);
+        $uploaded_file = $dao->searchUploadedFile($id);
+        self::assertTrue(Result::isErr($uploaded_file));
     }
 
     public function testDeleteExpiredFiles(): void

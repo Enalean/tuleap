@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
@@ -27,6 +28,7 @@ use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\ArtidocAttachmentController;
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
@@ -62,10 +64,14 @@ use Tuleap\Document\Tree\OtherItemTypeDefinition;
 use Tuleap\Document\Tree\OtherItemTypes;
 use Tuleap\Document\Tree\SearchCriterionListOptionPresenter;
 use Tuleap\Document\Tree\TypeOptionsCollection;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -116,8 +122,38 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/artidoc', function (FastRoute\RouteCollector $r) {
-            $r->get('/{id:\d+}[/]', $this->getRouteHandler('routeController'));
+            $r->get('/{id:\w+}[/]', $this->getRouteHandler('routeController'));
         });
+
+        $event->getRouteCollector()->get(
+            ArtidocAttachmentController::ROUTE_PREFIX . '/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[-{filename:.*}]',
+            $this->getRouteHandler('routeAttachmentController'),
+        );
+    }
+
+    public function routeAttachmentController(): DispatchableWithRequest
+    {
+        $file_identifier_factory = new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory());
+
+        return new ArtidocAttachmentController(
+            new ArtidocWithContextRetriever(
+                new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
+                CurrentUserHasArtidocPermissionsChecker::withCurrentUser(HTTPRequest::instance()->getCurrentUser()),
+                new ArtidocWithContextDecorator(
+                    ProjectManager::instance(),
+                    new DocumentServiceFromAllowedProjectRetriever($this),
+                ),
+            ),
+            $file_identifier_factory,
+            new OngoingUploadDao($file_identifier_factory),
+            new BinaryFileResponseBuilder(
+                HTTPFactoryBuilder::responseFactory(),
+                HTTPFactoryBuilder::streamFactory()
+            ),
+            new SapiStreamEmitter(),
+            new SessionWriteCloseMiddleware(),
+            new TuleapRESTCORSMiddleware()
+        );
     }
 
     public function routeController(): DispatchableWithRequest

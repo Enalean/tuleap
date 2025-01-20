@@ -17,24 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-use Tuleap\Artidoc\ArtidocAttachmentController;
-use Tuleap\Tus\Identifier\FileIdentifier;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
 
-/**
- * @psalm-mutation-free
- */
-final readonly class FileToDownload
+final readonly class UploadedFileWithArtidoc
 {
-    public function __construct(private FileIdentifier $id, private string $filename)
+    public function __construct(public UploadedFileInformation $file, public Artidoc $artidoc)
     {
-    }
-
-    public function getDownloadHref(): string
-    {
-        return ArtidocAttachmentController::ROUTE_PREFIX . '/' . urlencode($this->id->toString()) . '-' . rawurlencode($this->filename);
     }
 }

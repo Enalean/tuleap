@@ -24,10 +24,14 @@ namespace Tuleap\Artidoc\Upload\Section\File;
 
 use DateTimeImmutable;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tus\Identifier\FileIdentifier;
 use Tuleap\Tus\Identifier\FileIdentifierFactory;
 
-class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, SearchFileUpload, DeleteFileUpload, SearchExpiredUploads, DeleteExpiredFiles
+class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, SearchFileUpload, DeleteFileUpload, SearchExpiredUploads, DeleteExpiredFiles, SearchUploadedFile
 {
     public function __construct(private FileIdentifierFactory $identifier_factory)
     {
@@ -121,6 +125,24 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Searc
                 $row['file_size'],
             ),
             $rows,
+        );
+    }
+
+    public function searchUploadedFile(FileIdentifier $id): Ok|Err
+    {
+        $row = $this->getDB()->row('SELECT * FROM plugin_artidoc_section_upload WHERE id = ?', $id->getBytes());
+
+        if (empty($row)) {
+            return Result::err(Fault::fromMessage('Unable to find uploaded file'));
+        }
+
+        return Result::ok(
+            new UploadedFileInformation(
+                $row['item_id'],
+                $this->identifier_factory->buildFromBytesData($row['id']),
+                $row['file_name'],
+                $row['file_size'],
+            ),
         );
     }
 
