@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
+
 /**
  * I am a helper to build selectbox options of all milestones of a given tracker
  */
@@ -29,7 +31,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     /** @var AgileDashboard_Planning_NearestPlanningTrackerProvider */
     private $nearest_planning_tracker_provider;
 
-    /** @var AgileDashboard_Milestone_MilestoneDao */
+    /** @var MilestoneDao */
     private $dao;
 
     /** @var Tracker_HierarchyFactory */
@@ -46,7 +48,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
 
     public function __construct(
         AgileDashboard_Planning_NearestPlanningTrackerProvider $nearest_planning_tracker_provider,
-        AgileDashboard_Milestone_MilestoneDao $dao,
+        MilestoneDao $dao,
         Tracker_HierarchyFactory $hierarchy_factory,
         PlanningFactory $planning_factory,
         TrackerFactory $tracker_factory,

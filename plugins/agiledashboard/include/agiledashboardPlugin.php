@@ -58,6 +58,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
@@ -1410,9 +1411,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    private function getMilestoneDao(): AgileDashboard_Milestone_MilestoneDao
+    private function getMilestoneDao(): MilestoneDao
     {
-        return new AgileDashboard_Milestone_MilestoneDao();
+        return new MilestoneDao();
     }
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void

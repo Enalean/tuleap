@@ -20,13 +20,13 @@
 
 use Psr\Log\LoggerInterface;
 use Tuleap\AgileDashboard\BacklogItemDao;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Date\DatePeriodWithOpenDays;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -64,7 +64,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     private $planning_permissions_manager;
 
     /**
-     * @var AgileDashboard_Milestone_MilestoneDao
+     * @var MilestoneDao
      */
     private $milestone_dao;
 
@@ -91,7 +91,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         Tracker_FormElementFactory $formelement_factory,
         AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
         PlanningPermissionsManager $planning_permissions_manager,
-        AgileDashboard_Milestone_MilestoneDao $milestone_dao,
+        MilestoneDao $milestone_dao,
         BuildSemanticTimeframe $semantic_timeframe_builder,
         LoggerInterface $logger,
     ) {
@@ -121,7 +121,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 $artifact_factory
             ),
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
+            new MilestoneDao(),
             SemanticTimeframeBuilder::build(),
             BackendLogger::getDefaultLogger(),
         );
@@ -353,7 +353,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
         if ($milestone_artifact) {
             $sub_milestone_artifacts = $this->milestone_dao->searchSubMilestones($milestone_artifact->getId());
-            $sub_milestones          = $this->convertDarToArrayOfMilestones($user, $milestone, $sub_milestone_artifacts);
+            $sub_milestones          = $this->convertDBResultToArrayOfMilestones($user, $milestone, $sub_milestone_artifacts);
         }
 
         return $sub_milestones;
@@ -389,7 +389,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             );
 
             $total_size     = $this->milestone_dao->foundRows();
-            $sub_milestones = $this->convertDarToArrayOfMilestones(
+            $sub_milestones = $this->convertDBResultToArrayOfMilestones(
                 $request->getUser(),
                 $milestone,
                 $sub_milestone_artifacts
@@ -423,7 +423,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
 
         $total_size = $this->milestone_dao->foundRows();
-        $siblings   = $this->convertDarToArrayOfMilestones($request->getUser(), $milestone, $sibling_milestones);
+        $siblings   = $this->convertDBResultToArrayOfMilestones($request->getUser(), $milestone, $sibling_milestones);
         return new PaginatedMilestones($siblings, $total_size);
     }
 
@@ -461,7 +461,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             );
 
             $total_size     = $this->milestone_dao->foundRows();
-            $top_milestones = $this->convertDarToArrayOfMilestones($user, $virtual_milestone, $top_milestone_artifacts);
+            $top_milestones = $this->convertDBResultToArrayOfMilestones($user, $virtual_milestone, $top_milestone_artifacts);
         }
 
         return new PaginatedMilestones($top_milestones, $total_size);
@@ -511,7 +511,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return Planning_ArtifactMilestone[]
      */
-    private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts): array
+    private function convertDBResultToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, array $sub_milestone_artifacts): array
     {
         $sub_milestones = [];
 

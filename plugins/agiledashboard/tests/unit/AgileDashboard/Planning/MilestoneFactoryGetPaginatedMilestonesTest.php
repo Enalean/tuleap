@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,10 +32,10 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
-use TestHelper;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
@@ -64,7 +63,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     private Planning_MilestoneFactory $milestone_factory;
     private PlanningFactory&MockObject $planning_factory;
-    private AgileDashboard_Milestone_MilestoneDao&MockObject $milestone_dao;
+    private MilestoneDao&MockObject $milestone_dao;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private Planning $top_planning;
     private TopMilestoneRequest $top_milestone_request;
@@ -80,7 +79,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
     {
         $this->planning_factory = $this->createMock(PlanningFactory::class);
         $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $this->milestone_dao    = $this->createMock(AgileDashboard_Milestone_MilestoneDao::class);
+        $this->milestone_dao    = $this->createMock(MilestoneDao::class);
 
         $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
         $form_element_factory->method('getComputableFieldByNameForUser');
@@ -178,10 +177,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
             ->build();
         $this->milestone_dao->expects(self::once())->method('searchPaginatedTopMilestones')
             ->with(15, $this->top_milestone_request)
-            ->willReturn(TestHelper::arrayToDar(
-                ['id' => 24],
-                ['id' => 25]
-            ));
+            ->willReturn([['id' => 24], ['id' => 25]]);
         $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(24, $milestone_tracker);
@@ -201,7 +197,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     private function getSubMilestones(): PaginatedMilestones
     {
-        $this->milestone_dao->method('searchPaginatedSubMilestones')->willReturn(TestHelper::emptyDar());
+        $this->milestone_dao->method('searchPaginatedSubMilestones')->willReturn([]);
         $this->milestone_dao->method('foundRows')->willReturn(0);
 
         return $this->milestone_factory->getPaginatedSubMilestones($this->sub_milestone_request);
@@ -219,10 +215,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
     {
         $this->milestone_dao->expects(self::once())->method('searchPaginatedSubMilestones')
             ->with(121, $this->sub_milestone_request)
-            ->willReturn(TestHelper::arrayToDar(
-                ['id' => 138],
-                ['id' => 139]
-            ));
+            ->willReturn([['id' => 138], ['id' => 139]]);
         $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(138, $this->sub_milestone_tracker);
@@ -249,7 +242,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     public function testItReturnsEmptyWhenNoSiblingTopMilestones(): void
     {
-        $this->milestone_dao->method('searchPaginatedSiblingTopMilestones')->willReturn(TestHelper::emptyDar());
+        $this->milestone_dao->method('searchPaginatedSiblingTopMilestones')->willReturn([]);
         $this->milestone_dao->method('foundRows')->willReturn(0);
 
         $sibling_milestones = $this->getSiblingMilestones();
@@ -280,10 +273,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
         $this->milestone_dao->expects(self::once())->method('searchPaginatedSiblingTopMilestones')
             ->with(93, $top_milestone_tracker_id, $this->sibling_milestone_request)
-            ->willReturn(TestHelper::arrayToDar(
-                ['id' => 138],
-                ['id' => 139]
-            ));
+            ->willReturn([['id' => 138], ['id' => 139]]);
         $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(138, $top_milestone_tracker);
@@ -312,7 +302,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         );
         $this->reference_milestone->setAncestors([$parent_milestone]);
 
-        $this->milestone_dao->method('searchPaginatedSiblingMilestones')->willReturn(TestHelper::emptyDar());
+        $this->milestone_dao->method('searchPaginatedSiblingMilestones')->willReturn([]);
         $this->milestone_dao->method('foundRows')->willReturn(0);
 
         $sibling_milestones = $this->getSiblingMilestones();
@@ -332,10 +322,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
         $this->milestone_dao->expects(self::once())->method('searchPaginatedSiblingMilestones')
             ->with(121, $this->sibling_milestone_request)
-            ->willReturn(TestHelper::arrayToDar(
-                ['id' => 138],
-                ['id' => 139]
-            ));
+            ->willReturn([['id' => 138], ['id' => 139]]);
         $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(138, $this->sub_milestone_tracker);

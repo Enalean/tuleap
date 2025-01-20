@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
 use AgileDashboard_Planning_NearestPlanningTrackerProvider;
-use DataAccessResult;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
-use TestHelper;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_HierarchyFactory;
@@ -48,7 +45,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
     private int $sprint_tracker_id;
     private Tracker $task_tracker;
     private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
-    private AgileDashboard_Milestone_MilestoneDao&MockObject $dao;
+    private MilestoneDao&MockObject $dao;
     private AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider $provider;
     private AgileDashboard_Planning_NearestPlanningTrackerProvider&MockObject $nearest_planning_tracker_provider;
 
@@ -98,7 +95,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
             ->withConsecutive([1231], [1232], [1241])
             ->willReturnOnConsecutiveCalls($sprint_artifact_1231, $sprint_artifact_1232, $sprint_artifact_1241);
 
-        $this->dao                               = $this->createMock(AgileDashboard_Milestone_MilestoneDao::class);
+        $this->dao                               = $this->createMock(MilestoneDao::class);
         $this->nearest_planning_tracker_provider = $this->createMock(AgileDashboard_Planning_NearestPlanningTrackerProvider::class);
 
         $this->provider = new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
@@ -132,7 +129,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
 
         $this->dao->expects(self::atLeastOnce())->method('getAllMilestoneByTrackers')
             ->with([$this->sprint_tracker_id])
-            ->willReturn($this->getDarResults());
+            ->willReturn($this->getDBResults());
 
         $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
     }
@@ -147,16 +144,16 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
         $this->sprint_tracker->method('userCanView')->with($this->user)->willReturn(true);
 
         $this->dao->expects(self::once())->method('getAllMilestoneByTrackers')
-            ->willReturn($this->getDarResults());
+            ->willReturn($this->getDBResults());
 
         $options = $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
 
         self::assertDoesNotMatchRegularExpression('/Sprint 31/', implode('', $options));
     }
 
-    private function getDarResults(): DataAccessResult
+    private function getDBResults(): array
     {
-        return TestHelper::arrayToDar(
+        return [
             [
                 'm101_id'     => '123',
                 'm101_title'  => 'Tuleap 6.5',
@@ -174,7 +171,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
                 'm101_title'  => 'Tuleap 6.6',
                 'm1001_id'    => '1241',
                 'm1001_title' => 'Sprint 33',
-            ]
-        );
+            ],
+        ];
     }
 }

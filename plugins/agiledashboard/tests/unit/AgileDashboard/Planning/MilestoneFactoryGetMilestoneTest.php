@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,9 +32,9 @@ use Planning_NoMilestone;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Psr\Log\NullLogger;
-use TestHelper;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -53,7 +52,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeSt
 final class MilestoneFactoryGetMilestoneTest extends TestCase
 {
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
-    private AgileDashboard_Milestone_MilestoneDao&MockObject $dao;
+    private MilestoneDao&MockObject $dao;
     private PFUser $user;
     private PlanningFactory&MockObject $planning_factory;
     private Planning_MilestoneFactory $milestone_factory;
@@ -64,7 +63,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
         $this->planning_factory = $this->createMock(PlanningFactory::class);
         $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
         $formelement_factory    = $this->createMock(Tracker_FormElementFactory::class);
-        $this->dao              = $this->createMock(AgileDashboard_Milestone_MilestoneDao::class);
+        $this->dao              = $this->createMock(MilestoneDao::class);
         $formelement_factory->method('getComputableFieldByNameForUser');
 
         $this->milestone_factory = new Planning_MilestoneFactory(
@@ -116,7 +115,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
             'use_artifact_permissions' => true,
         ];
 
-        $this->dao->method('searchSubMilestones')->willReturn(TestHelper::arrayToDar($row_sprint_1, $row_sprint_2, $row_hackfest_2012));
+        $this->dao->method('searchSubMilestones')->willReturn([$row_sprint_1, $row_sprint_2, $row_hackfest_2012]);
 
         $release_1_0   = ArtifactTestBuilder::anArtifact(1)
             ->withTitle('release_1_0')
