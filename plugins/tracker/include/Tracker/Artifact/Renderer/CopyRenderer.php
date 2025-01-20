@@ -24,11 +24,12 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
+class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(
         EventManager $event_manager,
@@ -37,8 +38,9 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         TypeIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
         HiddenFieldsetsDetector $hidden_fieldsets_detector,
+        ArtifactViewCollectionBuilder $collection_builder,
     ) {
-        parent::__construct($event_manager, $artifact, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector);
+        parent::__construct($event_manager, $artifact, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector, $collection_builder);
         $this->redirect->query_parameters = [
             'tracker' => (string) $artifact->getTrackerId(),
             'func'    => 'submit-copy-artifact',
@@ -118,7 +120,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
                 </div>';
     }
 
-    protected function fetchView(Codendi_Request $request, PFUser $user)
+    protected function fetchView(Codendi_Request $request, PFUser $user): string
     {
         $view_collection = new Tracker_Artifact_View_ViewCollection($this->event_manager);
         $view_collection->add(new Tracker_Artifact_View_Copy($this->artifact, $request, $user, $this));

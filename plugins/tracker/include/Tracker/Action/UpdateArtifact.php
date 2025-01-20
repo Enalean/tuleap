@@ -23,7 +23,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Action_UpdateArtifact
+class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var Artifact */
     private $artifact;
@@ -108,7 +108,8 @@ class Tracker_Action_UpdateArtifact
                     $layout,
                     $this->artifact_retriever,
                     $this->visit_recorder,
-                    $this->hidden_fieldsets_detector
+                    $this->hidden_fieldsets_detector,
+                    new \Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
                 );
                 $render->display($request, $current_user);
             }
@@ -123,7 +124,8 @@ class Tracker_Action_UpdateArtifact
                     $layout,
                     $this->artifact_retriever,
                     $this->visit_recorder,
-                    $this->hidden_fieldsets_detector
+                    $this->hidden_fieldsets_detector,
+                    new \Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
                 );
                 $render->display($request, $current_user);
             }

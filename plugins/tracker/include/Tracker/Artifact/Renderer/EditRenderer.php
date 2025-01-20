@@ -28,14 +28,14 @@ use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay;
 use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
-use Tuleap\Tracker\Artifact\View\TypeView;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ParentOfArtifactCollection;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer
+class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Add tab at the top of artifact view
@@ -49,17 +49,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     public const EVENT_ADD_VIEW_IN_COLLECTION = 'tracker_artifact_editrenderer_add_view_in_collection';
 
     /**
-     * @var Tracker_IDisplayTrackerLayout
-     */
-    protected $layout;
-    private $retriever;
-
-    /**
-     * @var HiddenFieldsetsDetector
-     */
-    private $hidden_fieldsets_detector;
-
-    /**
      * @var Artifact[]
      */
     private $hierarchy;
@@ -68,15 +57,13 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     public function __construct(
         EventManager $event_manager,
         Artifact $artifact,
-        Tracker_IDisplayTrackerLayout $layout,
-        TypeIsChildLinkRetriever $retriever,
+        protected Tracker_IDisplayTrackerLayout $layout,
+        private TypeIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
-        HiddenFieldsetsDetector $hidden_fieldsets_detector,
+        private HiddenFieldsetsDetector $hidden_fieldsets_detector,
+        private ArtifactViewCollectionBuilder $collection_builder,
     ) {
         parent::__construct($artifact, $event_manager, $visit_recorder);
-        $this->layout                    = $layout;
-        $this->retriever                 = $retriever;
-        $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
     /**
@@ -192,33 +179,9 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         }
     }
 
-    protected function fetchView(Codendi_Request $request, PFUser $user)
+    protected function fetchView(Codendi_Request $request, PFUser $user): string
     {
-        $view_collection = new Tracker_Artifact_View_ViewCollection($this->event_manager);
-        $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this));
-
-        if ($this->artifact->getTracker()->isProjectAllowedToUseType()) {
-            $artifact_links = $this->retriever->getChildren($this->artifact);
-            if (count($artifact_links) > 0) {
-                $view_collection->add(new TypeView($this->artifact, $request, $user));
-            }
-        } else {
-            if ($this->artifact->getTracker()->getChildren()) {
-                $view_collection->add(new TypeView($this->artifact, $request, $user));
-            }
-        }
-
-        EventManager::instance()->processEvent(
-            self::EVENT_ADD_VIEW_IN_COLLECTION,
-            [
-                'artifact'   => $this->artifact,
-                'collection' => $view_collection,
-                'request'    => $request,
-                'user'       => $user,
-            ]
-        );
-
-        return $view_collection->fetchRequestedView($request);
+        return $this->collection_builder->build($this->artifact, $this->tracker, $request, $user, $this)->fetchRequestedView($request);
     }
 
     protected function fetchTitle()

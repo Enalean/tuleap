@@ -24,10 +24,10 @@ use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 /**
  * First class collection of Tracker_Artifact_View_View
  */
-class Tracker_Artifact_View_ViewCollection
+class Tracker_Artifact_View_ViewCollection // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var TrackerArtifactView[] */
-    private $views = [];
+    public $views = [];
 
     public function __construct(private readonly EventManager $event_manager)
     {
@@ -38,7 +38,7 @@ class Tracker_Artifact_View_ViewCollection
         $this->views[$view->getIdentifier()] = $view;
     }
 
-    public function fetchRequestedView(Codendi_Request $request)
+    public function fetchRequestedView(Codendi_Request $request): string
     {
         $requested_view = $this->getRequestedView($request);
 
