@@ -29,14 +29,11 @@ use GitDao;
 use GitPermissionsManager;
 use GitPlugin;
 use GitRepositoryFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Psr\Log\NullLogger;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use UserDao;
 
@@ -45,8 +42,6 @@ use UserDao;
  */
 class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public static function smartHTTPRoutesProvider()
     {
         return [
@@ -140,31 +135,37 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function runTestOnURL($method, $uri, $expected_dispatch_status, $expected_dispatch_handler)
     {
-        $git_plugin = Mockery::mock(GitPlugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dispatcher = \FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route_collector) use ($git_plugin) {
-            $git_plugin->shouldReceive(
-                [
-                    'getRepositoryFactory'      => \Mockery::mock(GitRepositoryFactory::class),
-                    'getChainOfRouters'               => \Mockery::mock(RouterLink::class),
-                    'getLogger'                       => \Mockery::mock(\Psr\Log\LoggerInterface::class),
-                    'getGerritServerFactory'          => \Mockery::mock(
-                        Git_RemoteServer_GerritServerFactory::class,
-                        ['getServers' => []]
-                    ),
-                    'getPermissionsManager'           => \Mockery::mock(PermissionsManager::class),
-                    'getGitPhpAccessLogger'           => \Mockery::mock(GitPhpAccessLogger::class),
-                    'getGitPermissionsManager'        => \Mockery::mock(GitPermissionsManager::class),
-                    'getUserDao'                      => \Mockery::mock(UserDao::class),
-                    'getGitDao'                       => \Mockery::mock(GitDao::class),
-                    'getConfigurationParameter'       => 'foo',
-                    'getIncludeAssets'                => \Mockery::mock(IncludeAssets::class),
-                    'getHeaderRenderer'               => Mockery::mock(HeaderRenderer::class),
-                    'getThemeManager'                 => Mockery::mock(\ThemeManager::class),
-                    'getGitRepositoryHeaderDisplayer' => Mockery::mock(GitRepositoryHeaderDisplayer::class),
-                    'getName'                         => 'git',
-                ]
-            );
+        $git_plugin = $this->createPartialMock(
+            GitPlugin::class,
+            [
+                'getRepositoryFactory',
+                'getChainOfRouters',
+                'getLogger',
+                'getGerritServerFactory',
+                'getPermissionsManager',
+                'getGitPhpAccessLogger',
+                'getGitPermissionsManager',
+                'getUserDao',
+                'getGitDao',
+                'getHeaderRenderer',
+                'getThemeManager',
+                'getGitRepositoryHeaderDisplayer',
+                'getName',
+            ]
+        );
+        $git_plugin->method('getRepositoryFactory')->willReturn($this->createMock(GitRepositoryFactory::class));
+        $git_plugin->method('getChainOfRouters')->willReturn($this->createMock(RouterLink::class));
+        $git_plugin->method('getGerritServerFactory')->willReturn($this->createMock(Git_RemoteServer_GerritServerFactory::class));
+        $git_plugin->method('getPermissionsManager')->willReturn($this->createMock(PermissionsManager::class));
+        $git_plugin->method('getGitPhpAccessLogger')->willReturn($this->createMock(GitPhpAccessLogger::class));
+        $git_plugin->method('getGitPermissionsManager')->willReturn($this->createMock(GitPermissionsManager::class));
+        $git_plugin->method('getUserDao')->willReturn($this->createMock(UserDao::class));
+        $git_plugin->method('getGitDao')->willReturn($this->createMock(GitDao::class));
+        $git_plugin->method('getLogger')->willReturn(new NullLogger());
+        $git_plugin->method('getGitRepositoryHeaderDisplayer')->willReturn($this->createMock(GitRepositoryHeaderDisplayer::class));
+        $git_plugin->method('getName')->willReturn('git');
 
+        $dispatcher = \FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route_collector) use ($git_plugin) {
             $event = new CollectRoutesEvent($route_collector);
 
             $git_plugin->collectRoutesEvent($event);

@@ -128,8 +128,7 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = \Mockery::spy(\GitRepository::class);
-        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns(null);
 
         $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();
@@ -226,8 +225,7 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = \Mockery::spy(\GitRepository::class);
-        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns(null);
 
         $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();

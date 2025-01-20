@@ -21,6 +21,7 @@
 
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
+use Tuleap\Git\LegacyConfigInc;
 use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
@@ -36,10 +37,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 
-/**
- * GitActions
- * @todo call Event class instead of SystemEvent
- */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitActions extends PluginActions
 {
     /**
@@ -232,7 +230,7 @@ class GitActions extends PluginActions
             if ($repository->canBeDeleted()) {
                 $this->markAsDeleted($repository);
                 $controller->addInfo(sprintf(dgettext('tuleap-git', 'Repository \'%1$s\' will be removed in a few seconds'), $repository->getFullName()));
-                $controller->addInfo(sprintf(dgettext('tuleap-git', 'A repository backup of \'%1$s\' will be available in the backup directory'), $repository->getFullName()) . ' : ' . $controller->getPlugin()->getConfigurationParameter('git_backup_dir'));
+                $controller->addInfo(sprintf(dgettext('tuleap-git', 'A repository backup of \'%1$s\' will be available in the backup directory'), $repository->getFullName()) . ' : ' . ForgeConfig::get(LegacyConfigInc::BACKUP_DIR));
             } else {
                 $this->getController()->addError(dgettext('tuleap-git', 'Unable to delete repository: it has child(ren)'));
                 $this->redirectToRepo($repository);
@@ -573,7 +571,10 @@ class GitActions extends PluginActions
             return false;
         }
 
-        $repository = $this->_loadRepository($projectId, $repositoryId);
+        $repository = $this->loadRepository($projectId, $repositoryId);
+        if (! $repository) {
+            return false;
+        }
 
         if ($repository->getMailPrefix() != $mailPrefix) {
             $repository->setMailPrefix($mailPrefix);
@@ -597,8 +598,8 @@ class GitActions extends PluginActions
     public function notificationAddMail($projectId, $repositoryId, $mails, $pane)
     {
         $controller = $this->getController();
-        $repository = $this->_loadRepository($projectId, $repositoryId);
-        if (empty($repositoryId) || empty($mails)) {
+        $repository = $this->loadRepository($projectId, $repositoryId);
+        if (! $repository || empty($mails)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
@@ -632,8 +633,8 @@ class GitActions extends PluginActions
     public function notificationAddUsers($projectId, $repository_id, array $users)
     {
         $controller = $this->getController();
-        $repository = $this->_loadRepository($projectId, $repository_id);
-        if (empty($repository_id) || empty($users)) {
+        $repository = $this->loadRepository($projectId, $repository_id);
+        if (! $repository || empty($users)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
@@ -671,8 +672,8 @@ class GitActions extends PluginActions
     public function notificationAddUgroups($projectId, $repository_id, array $ugroups)
     {
         $controller = $this->getController();
-        $repository = $this->_loadRepository($projectId, $repository_id);
-        if (empty($repository_id) || empty($ugroups)) {
+        $repository = $this->loadRepository($projectId, $repository_id);
+        if (! $repository || empty($ugroups)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
@@ -709,8 +710,8 @@ class GitActions extends PluginActions
     public function notificationRemoveMail($projectId, $repositoryId, $mails, $pane)
     {
         $controller = $this->getController();
-        $repository = $this->_loadRepository($projectId, $repositoryId);
-        if (empty($repositoryId) || empty($mails)) {
+        $repository = $this->loadRepository($projectId, $repositoryId);
+        if (! $repository || empty($mails)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
@@ -741,8 +742,11 @@ class GitActions extends PluginActions
         }
         $great_success = true;
         $controller    = $this->getController();
-        $repository    = $this->_loadRepository($project_id, $repository_id);
-        $user_manager  = UserManager::instance();
+        $repository    = $this->loadRepository($project_id, $repository_id);
+        if (! $repository) {
+            return false;
+        }
+        $user_manager = UserManager::instance();
 
         foreach ($users_to_remove as $user_id) {
             $user = $user_manager->getUserById($user_id);
@@ -782,7 +786,10 @@ class GitActions extends PluginActions
         }
         $great_success = true;
         $controller    = $this->getController();
-        $repository    = $this->_loadRepository($project_id, $repository_id);
+        $repository    = $this->loadRepository($project_id, $repository_id);
+        if (! $repository) {
+            return false;
+        }
 
         foreach ($ugroups_to_remove as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getUgroup($this->request->getProject(), $ugroup_id);
@@ -860,7 +867,10 @@ class GitActions extends PluginActions
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
-        $repository = $this->_loadRepository($projectId, $repoId);
+        $repository = $this->loadRepository($projectId, $repoId);
+        if (! $repository) {
+            return false;
+        }
         if (strcmp($repoAccess, 'private') == 0 && strcmp($repository->getAccess(), $repoAccess) != 0) {
             $mailsToDelete = $repository->getNonMemberMails();
             if (! empty($mailsToDelete)) {
@@ -883,7 +893,10 @@ class GitActions extends PluginActions
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
-        $repository    = $this->_loadRepository($projectId, $repoId);
+        $repository = $this->loadRepository($projectId, $repoId);
+        if (! $repository) {
+            return false;
+        }
         $mailsToDelete = $repository->getNonMemberMails();
         foreach ($mailsToDelete as $mail) {
             $repository->notificationRemoveMail($mail);
@@ -1045,7 +1058,7 @@ class GitActions extends PluginActions
         }
     }
 
-    public function _loadRepository($projectId, $repositoryId)
+    private function loadRepository($projectId, $repositoryId): ?GitRepository
     {
         $repository = $this->getGitRepository($repositoryId);
         if ($repository) {
@@ -1055,6 +1068,7 @@ class GitActions extends PluginActions
             $c = $this->getController();
             $this->getController()->addError(dgettext('tuleap-git', 'The repository does not exist'));
             $c->redirect('/plugins/git/?action=index&group_id=' . $projectId);
+            return null;
         }
     }
 
