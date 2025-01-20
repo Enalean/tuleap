@@ -32,68 +32,6 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-    </DeprecatedMethod>
-    <MissingClosureReturnType>
-      <code><![CDATA[function ($tracker_id) {]]></code>
-    </MissingClosureReturnType>
-    <MissingParamType>
-      <code><![CDATA[$milestone_tracker_id]]></code>
-      <code><![CDATA[$parent_tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[countMilestones]]></code>
-      <code><![CDATA[countMilestonesAfter]]></code>
-      <code><![CDATA[extractSelectFragments]]></code>
-      <code><![CDATA[getAllMilestoneByTrackers]]></code>
-      <code><![CDATA[getFromFragments]]></code>
-      <code><![CDATA[getOrderFragments]]></code>
-      <code><![CDATA[getSelectFragments]]></code>
-      <code><![CDATA[getTitleFromFragment]]></code>
-      <code><![CDATA[getTrackerFromFragment]]></code>
-      <code><![CDATA[joinRecursively]]></code>
-      <code><![CDATA[searchPaginatedSiblingMilestones]]></code>
-      <code><![CDATA[searchPaginatedSiblingTopMilestones]]></code>
-      <code><![CDATA[searchPaginatedSubMilestones]]></code>
-      <code><![CDATA[searchPaginatedTopMilestones]]></code>
-      <code><![CDATA[searchSubMilestones]]></code>
-    </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $child_tracker_id]]></code>
-      <code><![CDATA[! $res]]></code>
-      <code><![CDATA[! $res]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneParentLinker.php">
     <DeprecatedMethod>
       <code><![CDATA[linkArtifact]]></code>
@@ -1227,13 +1165,6 @@
       <code><![CDATA[$planned_artifacts]]></code>
       <code><![CDATA[$planned_artifacts]]></code>
     </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code><![CDATA[$sub_milestone_artifacts]]></code>
-      <code><![CDATA[$sub_milestone_artifacts]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-      <code><![CDATA[foundRows]]></code>
-    </DeprecatedMethod>
     <InvalidScalarArgument>
       <code><![CDATA[$top_milestone->getProject()->getID()]]></code>
     </InvalidScalarArgument>
@@ -12578,14 +12509,6 @@
       <code><![CDATA[$release_id]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/frs/include/FRS/ArtifactView.php">
-    <InvalidReturnType>
-      <code><![CDATA[fetch]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$release_id]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/frs/include/FRS/REST/ResourcesInjector.php">
     <MissingReturnType>
       <code><![CDATA[declareProjectResources]]></code>
@@ -15962,7 +15885,6 @@
       <code><![CDATA[$template_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_loadRepository]]></code>
       <code><![CDATA[changeProjectRepositoriesAccess]]></code>
       <code><![CDATA[checkIfProjectIsValid]]></code>
       <code><![CDATA[checkRepoValidity]]></code>
@@ -34834,11 +34756,6 @@
       <code><![CDATA[$this->user_manager->getUserById($row['prioritized_by'])]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/View/Copy.php">
-    <TooManyArguments>
-      <code><![CDATA[fetchFieldsForCopy]]></code>
-    </TooManyArguments>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/View/Edit.php">
     <MissingParamType>
       <code><![CDATA[$display_changes]]></code>
@@ -34847,12 +34764,6 @@
       <code><![CDATA[$submitted_comment]]></code>
       <code><![CDATA[$submitted_comment]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fetchAddNewComment]]></code>
-      <code><![CDATA[fetchCommentContent]]></code>
-      <code><![CDATA[fetchReplyByMailHelp]]></code>
-      <code><![CDATA[fetchSettingsButton]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/View/ViewCollection.php">
     <MissingReturnType>
@@ -38721,7 +38632,6 @@
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Alphanum.php">
     <MissingParamType>
       <code><![CDATA[$criteria]]></code>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$criteria_value]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -39010,7 +38920,6 @@
     </InvalidNullableReturnType>
     <MissingParamType>
       <code><![CDATA[$column]]></code>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$criteria_dates]]></code>
       <code><![CDATA[$criteria_value]]></code>
@@ -40130,7 +40039,6 @@
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$can_user_restrict_permissions_to_nobody]]></code>
-      <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$is_expecting_input]]></code>
       <code><![CDATA[$is_read_only]]></code>

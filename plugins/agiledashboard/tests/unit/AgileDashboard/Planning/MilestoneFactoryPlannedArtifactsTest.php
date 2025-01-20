@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Planning_MilestoneFactory;
 use PlanningFactory;
@@ -31,6 +30,7 @@ use PlanningPermissionsManager;
 use Psr\Log\NullLogger;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -63,7 +63,7 @@ final class MilestoneFactoryPlannedArtifactsTest extends TestCase
             $this->createMock(Tracker_FormElementFactory::class),
             $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
             $this->createMock(PlanningPermissionsManager::class),
-            $this->createMock(AgileDashboard_Milestone_MilestoneDao::class),
+            $this->createMock(MilestoneDao::class),
             BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured(TrackerTestBuilder::aTracker()->build()),
             new NullLogger(),
         );

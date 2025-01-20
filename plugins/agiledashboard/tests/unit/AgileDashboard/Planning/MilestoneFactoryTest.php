@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use LogicException;
 use PFUser;
@@ -35,6 +34,7 @@ use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -94,7 +94,6 @@ final class MilestoneFactoryTest extends TestCase
 
         $status_counter               = $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
         $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
-        $milestone_dao                = $this->createMock(AgileDashboard_Milestone_MilestoneDao::class);
 
         $logger                                      = new NullLogger();
         $date_period_open_current_without_start_date = DatePeriodWithOpenDays::buildFromEndDate(0, 0, $logger);
@@ -130,7 +129,7 @@ final class MilestoneFactoryTest extends TestCase
             $formelement_factory,
             $status_counter,
             $planning_permissions_manager,
-            $milestone_dao,
+            $this->createMock(MilestoneDao::class),
             $semantic_timeframe_builder,
             $logger,
         );

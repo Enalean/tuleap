@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -35,6 +34,7 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -70,7 +70,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends TestCase
             $form_element_factory,
             $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
             $this->createMock(PlanningPermissionsManager::class),
-            $this->createMock(AgileDashboard_Milestone_MilestoneDao::class),
+            $this->createMock(MilestoneDao::class),
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 TrackerTestBuilder::aTracker()->build(),
                 IComputeTimeframesStub::fromStartAndDuration(
