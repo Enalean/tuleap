@@ -22,6 +22,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ComponentPublicInstance } from "vue";
+import { ref } from "vue";
 import TableOfContents from "./TableOfContents.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
@@ -32,6 +33,7 @@ import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { noop } from "@/helpers/noop";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
@@ -44,7 +46,7 @@ describe("TableOfContents", () => {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [DOCUMENT_ID.valueOf()]: 123,
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections([
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([
                             ArtifactSectionFactory.override({
                                 artifact: { ...default_section.artifact, id: 1 },
                             }),
@@ -54,6 +56,7 @@ describe("TableOfContents", () => {
                         ]),
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
+                        [IS_LOADING_SECTIONS.valueOf()]: ref(true),
                     },
                 },
             });
@@ -92,13 +95,14 @@ describe("TableOfContents", () => {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [DOCUMENT_ID.valueOf()]: 123,
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadedSections([
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([
                             section_1,
                             section_2,
                             freetext_section,
                         ]),
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
+                        [IS_LOADING_SECTIONS.valueOf()]: ref(false),
                     },
                 },
             });

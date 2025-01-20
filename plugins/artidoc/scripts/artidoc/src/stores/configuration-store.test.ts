@@ -89,7 +89,7 @@ describe("configuration-store", () => {
                 1,
                 null,
                 [],
-                InjectedSectionsStoreStub.withLoadedSections([]),
+                InjectedSectionsStoreStub.withSections([]),
             );
             store.is_success.value = true;
 

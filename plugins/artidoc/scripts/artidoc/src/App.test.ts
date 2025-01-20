@@ -21,17 +21,17 @@ import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
 import DocumentView from "@/views/DocumentView.vue";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import * as rest_querier from "./helpers/rest-querier";
 
 describe("App", () => {
-    it("should display the document view", () => {
-        const loadSections = vi.fn().mockReturnValue(Promise.resolve());
-
+    it("should load and display the document view", () => {
+        const getAllJSON = vi.spyOn(rest_querier, "getAllSections");
         const wrapper = shallowMount(App, {
             global: {
                 provide: {
@@ -39,13 +39,12 @@ describe("App", () => {
                         ConfigurationStoreStub.withoutAllowedTrackers(),
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
                     [DOCUMENT_ID.valueOf()]: 1,
-                    [SECTIONS_STORE.valueOf()]:
-                        InjectedSectionsStoreStub.withMockedLoadSections(loadSections),
+                    [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([]),
                 },
             },
         });
 
-        expect(loadSections).toHaveBeenCalled();
+        expect(getAllJSON).toHaveBeenCalledOnce();
         expect(wrapper.findComponent(DocumentView).exists()).toBe(true);
     });
 });

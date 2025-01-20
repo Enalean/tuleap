@@ -39,12 +39,12 @@
                 class="dragndrop-grip"
                 data-test="dragndrop-grip"
                 v-if="is_reorder_allowed"
-                v-bind:class="{ 'dragndrop-grip-when-sections-loading': is_sections_loading }"
+                v-bind:class="{ 'dragndrop-grip-when-sections-loading': is_loading_sections }"
             >
                 <dragndrop-grip-illustration />
             </span>
 
-            <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
+            <span v-if="is_loading_sections" class="tlp-skeleton-text"></span>
             <a
                 v-else-if="isArtifactSection(section) || !isSectionBasedOnArtifact(section)"
                 v-bind:href="`#section-${section.id}`"
@@ -60,7 +60,7 @@
                 class="reorder-arrows"
                 data-test="reorder-arrows"
                 v-if="is_reorder_allowed"
-                v-bind:class="{ 'reorder-arrows-when-sections-loading': is_sections_loading }"
+                v-bind:class="{ 'reorder-arrows-when-sections-loading': is_loading_sections }"
                 data-not-drag-handle="true"
             >
                 <reorder-arrows
@@ -97,10 +97,12 @@ import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-dura
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { isCannotReorderSectionsFault } from "@/stores/CannotReorderSectionsFault";
 import { buildSectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
+import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 
 const { $gettext } = useGettext();
 
-const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
+const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
+const { sections } = strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const document_id = strictInject(DOCUMENT_ID);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);

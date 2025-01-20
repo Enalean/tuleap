@@ -23,7 +23,7 @@
             <section-dropdown
                 v-bind:editor="editor"
                 v-bind:section="section"
-                v-if="!is_sections_loading"
+                v-if="!is_loading_sections"
             />
         </div>
 
@@ -39,10 +39,10 @@
         >
             <section-header
                 class="section-header"
-                v-if="!is_sections_loading"
+                v-if="!is_loading_sections"
                 v-bind:title="section.display_title"
             />
-            <section-header-skeleton v-if="is_sections_loading" class="section-header" />
+            <section-header-skeleton v-if="is_loading_sections" class="section-header" />
             <section-description
                 v-bind:editable_description="editable_description"
                 v-bind:readonly_description="getReadonlyDescription()"
@@ -74,14 +74,14 @@ import SectionFooter from "./footer/SectionFooter.vue";
 import { useAttachmentFile } from "@/composables/useAttachmentFile";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { useUploadFile } from "@/composables/useUploadFile";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { useGettext } from "vue3-gettext";
+import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 
 const props = defineProps<{ section: ArtidocSection }>();
-const { is_sections_loading } = strictInject(SECTIONS_STORE);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
+const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 
 const {
     upload_url,

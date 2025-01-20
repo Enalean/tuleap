@@ -46,6 +46,7 @@ import ConfigurationModal from "@/components/configuration/ConfigurationModal.vu
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
+import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 
 const { $gettext } = useGettext();
 
@@ -57,12 +58,10 @@ let dropdown: Dropdown | null = null;
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const { saved_sections, is_sections_loading } = strictInject(SECTIONS_STORE);
+const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
+const { saved_sections } = strictInject(SECTIONS_STORE);
 const should_display_pdf_menu_item = computed(
-    () =>
-        !is_sections_loading.value &&
-        saved_sections.value !== undefined &&
-        saved_sections.value.length > 0,
+    () => !is_loading_sections.value && saved_sections.value.length > 0,
 );
 
 const should_display_dropdown = should_display_pdf_menu_item.value || can_user_edit_document;

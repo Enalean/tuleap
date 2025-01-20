@@ -19,8 +19,8 @@
   -->
 
 <template>
-    <section-description-skeleton v-if="is_sections_loading" />
-    <template v-if="!is_sections_loading && can_section_be_edited">
+    <section-description-skeleton v-if="is_loading_sections" />
+    <template v-if="!is_loading_sections && can_section_be_edited">
         <component
             v-bind:is="async_editor"
             v-bind:upload_url="upload_url"
@@ -38,7 +38,7 @@
         />
     </template>
     <section-description-read-only
-        v-if="!is_sections_loading && !can_section_be_edited"
+        v-if="!is_loading_sections && !can_section_be_edited"
         v-bind:readonly_value="readonly_description"
     />
 </template>
@@ -50,10 +50,10 @@ import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 
 defineProps<{
     title: string;
@@ -70,7 +70,7 @@ defineProps<{
     section: ArtidocSection;
 }>();
 
-const { is_sections_loading } = strictInject(SECTIONS_STORE);
+const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const can_section_be_edited = computed(() => can_user_edit_document);

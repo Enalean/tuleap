@@ -187,7 +187,7 @@ function openModal(
                     autocompleter,
                     configuration.selected_tracker.value,
                     title_field.value,
-                    sections.value || [],
+                    sections.value,
                     gettext_provider,
                 ).orElse((fault) => {
                     error_message.value = String(fault);
@@ -236,29 +236,31 @@ function closeModal(): void {
 
 function onSubmit(event: Event): void {
     event.preventDefault();
-    if (selected.value && sections.value) {
-        createArtifactSection(
-            documentId,
-            selected.value.id,
-            getInsertionPositionExcludingPendingSections(add_position, sections.value),
-        ).match(
-            (section: ArtidocSection) => {
-                on_successful_addition_callback(section);
-                modal?.hide();
-            },
-            (fault) => {
-                error_message.value = interpolate(
-                    $gettext(
-                        "An error occurred while creating section from existing artifact %{ xref }: %{ details }",
-                    ),
-                    {
-                        xref: selected.value?.xref,
-                        details: String(fault),
-                    },
-                );
-            },
-        );
+    if (!selected.value) {
+        return;
     }
+
+    createArtifactSection(
+        documentId,
+        selected.value.id,
+        getInsertionPositionExcludingPendingSections(add_position, sections.value),
+    ).match(
+        (section: ArtidocSection) => {
+            on_successful_addition_callback(section);
+            modal?.hide();
+        },
+        (fault) => {
+            error_message.value = interpolate(
+                $gettext(
+                    "An error occurred while creating section from existing artifact %{ xref }: %{ details }",
+                ),
+                {
+                    xref: selected.value?.xref,
+                    details: String(fault),
+                },
+            );
+        },
+    );
 }
 </script>
 

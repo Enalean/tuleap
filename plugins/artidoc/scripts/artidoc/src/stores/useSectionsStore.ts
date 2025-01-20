@@ -30,28 +30,21 @@ import type {
     PendingArtifactSection,
     PendingFreetextSection,
 } from "@/helpers/artidoc-section.type";
-import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { deleteSection, getAllSections } from "@/helpers/rest-querier";
+import { deleteSection } from "@/helpers/rest-querier";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
 import type { ResultAsync } from "neverthrow";
 import { injectInternalId } from "@/helpers/inject-internal-id";
-import { extractArtifactAndFreetextSectionsFromArtidocSections } from "@/helpers/extract-artifact-and-freetext-sections-from-artidoc-sections";
+import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 
 export interface SectionsStore {
-    sections: Ref<StoredArtidocSection[] | undefined>;
-    saved_sections: ComputedRef<readonly ArtidocSection[] | undefined>;
-    is_sections_loading: Ref<boolean>;
-    loadSections: (
-        item_id: number,
-        tracker: Tracker | null,
-        can_user_edit_document: boolean,
-    ) => Promise<void>;
+    sections: Ref<StoredArtidocSection[]>;
+    saved_sections: ComputedRef<readonly ArtidocSection[]>;
     updateSection: (section: ArtidocSection) => void;
     insertSection: (section: ArtidocSection, position: PositionForSection) => void;
     removeSection: (
@@ -64,6 +57,7 @@ export interface SectionsStore {
         pending: PendingArtifactSection | PendingFreetextSection,
         section: ArtidocSection,
     ) => void;
+    replaceAll: (sections_collection: StoredArtidocSection[]) => void;
 }
 
 type BeforeSection = { before: string };
@@ -75,51 +69,25 @@ export interface InternalArtidocSectionId {
     internal_id: string;
 }
 
-export function useSectionsStore(): SectionsStore {
-    const skeleton_data = [
-        ArtifactSectionFactory.skeleton(),
-        ArtifactSectionFactory.skeleton(),
-        ArtifactSectionFactory.skeleton(),
-    ].map(injectInternalId);
+export function buildSectionsStore(
+    can_user_edit_document: boolean,
+    tracker: Tracker | null,
+): SectionsStore {
+    const sections: Ref<StoredArtidocSection[]> = ref([]);
 
-    const sections: Ref<StoredArtidocSection[] | undefined> = ref(skeleton_data);
-    const is_sections_loading = ref(true);
+    function replaceAll(sections_collection: StoredArtidocSection[]): void {
+        sections.value = sections_collection;
 
-    const saved_sections: ComputedRef<readonly ArtidocSection[] | undefined> = computed(() => {
-        return extractArtifactAndFreetextSectionsFromArtidocSections(sections.value);
-    });
-
-    function loadSections(
-        item_id: number,
-        tracker: Tracker | null,
-        can_user_edit_document: boolean,
-    ): Promise<void> {
-        return getAllSections(item_id)
-            .andThen((artidoc_sections: readonly ArtidocSection[]) => {
-                sections.value = [...artidoc_sections].map(injectInternalId);
-
-                if (sections.value.length === 0 && can_user_edit_document) {
-                    insertPendingSectionForEmptyDocument(tracker);
-                }
-
-                return okAsync(true);
-            })
-            .match(
-                () => {
-                    is_sections_loading.value = false;
-                },
-                () => {
-                    sections.value = undefined;
-                    is_sections_loading.value = false;
-                },
-            );
+        if (sections_collection.length === 0 && can_user_edit_document) {
+            insertPendingSectionForEmptyDocument(tracker);
+        }
     }
 
-    function updateSection(section: ArtidocSection): void {
-        if (sections.value === undefined) {
-            throw Error("Unexpected call to updateSection while there is no section");
-        }
+    const saved_sections: ComputedRef<readonly ArtidocSection[]> = computed(() => {
+        return extractSavedSectionsFromArtidocSections(sections.value);
+    });
 
+    function updateSection(section: ArtidocSection): void {
         const length = sections.value.length;
         for (let i = 0; i < length; i++) {
             const current = sections.value[i];
@@ -136,10 +104,6 @@ export function useSectionsStore(): SectionsStore {
     }
 
     function insertSection(section: ArtidocSection, position: PositionForSection): void {
-        if (sections.value === undefined) {
-            return;
-        }
-
         const NOT_FOUND = -1;
         const index = getIndexWhereSectionShouldBeInserted(sections.value, position);
 
@@ -162,13 +126,7 @@ export function useSectionsStore(): SectionsStore {
     }
 
     function insertPendingSectionForEmptyDocument(tracker: Tracker | null): void {
-        if (sections.value === undefined) {
-            return;
-        }
-        if (sections.value.length > 0) {
-            return;
-        }
-        if (!tracker) {
+        if (sections.value.length > 0 || !tracker) {
             return;
         }
 
@@ -184,10 +142,6 @@ export function useSectionsStore(): SectionsStore {
         section: ArtidocSection,
         tracker: Tracker | null,
     ): ResultAsync<boolean, Fault> {
-        if (sections.value === undefined) {
-            return okAsync(true);
-        }
-
         const index = sections.value.findIndex((element) => element.id === section.id);
         if (index === -1) {
             return okAsync(true);
@@ -202,10 +156,6 @@ export function useSectionsStore(): SectionsStore {
         }
 
         return deleteSection(section.id).andThen(() => {
-            if (sections.value === undefined) {
-                return okAsync(true);
-            }
-
             sections.value.splice(index, 1);
 
             insertPendingSectionForEmptyDocument(tracker);
@@ -215,10 +165,6 @@ export function useSectionsStore(): SectionsStore {
     }
 
     function getSectionPositionForSave(section: ArtidocSection): PositionForSection {
-        if (sections.value === undefined) {
-            return null;
-        }
-
         const index = sections.value.findIndex((element) => element.id === section.id);
         if (index === -1) {
             return null;
@@ -241,10 +187,6 @@ export function useSectionsStore(): SectionsStore {
         pending: PendingArtifactSection | PendingFreetextSection,
         section: ArtidocSection,
     ): void {
-        if (sections.value === undefined) {
-            return;
-        }
-
         const index = sections.value.findIndex((element) => element.id === pending.id);
         if (index === -1) {
             return;
@@ -259,8 +201,7 @@ export function useSectionsStore(): SectionsStore {
     return {
         sections,
         saved_sections,
-        is_sections_loading,
-        loadSections,
+        replaceAll,
         updateSection,
         insertSection,
         removeSection,

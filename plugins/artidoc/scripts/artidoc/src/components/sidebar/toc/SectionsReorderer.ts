@@ -46,13 +46,9 @@ export type SectionsReorderer = {
 };
 
 export const buildSectionsReorderer = (
-    sections: Ref<StoredArtidocSection[] | undefined>,
+    sections: Ref<StoredArtidocSection[]>,
 ): SectionsReorderer => {
     function getNextArtifactOrFreetextSection(start: number): Option<ArtidocSection> {
-        if (sections.value === undefined) {
-            return Option.nothing();
-        }
-
         for (let i = start; i < sections.value.length; i++) {
             const next_section = sections.value[i];
             if (!isPendingSection(next_section)) {
@@ -64,10 +60,6 @@ export const buildSectionsReorderer = (
     }
 
     function getPreviousArtifactOrFreetextSection(start: number): Option<ArtidocSection> {
-        if (sections.value === undefined) {
-            return Option.nothing();
-        }
-
         for (let i = start; i >= 0; i--) {
             const previous_section = sections.value[i];
             if (!isPendingSection(previous_section)) {
@@ -119,10 +111,6 @@ export const buildSectionsReorderer = (
     ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
             (index): ResultAsync<unknown, Fault> => {
-                if (sections.value === undefined) {
-                    return errAsync(CannotReorderSectionsFault.build());
-                }
-
                 if (index === 0) {
                     return errAsync(CannotReorderSectionsFault.build());
                 }
@@ -152,10 +140,6 @@ export const buildSectionsReorderer = (
     ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
             (index) => {
-                if (sections.value === undefined) {
-                    return errAsync(CannotReorderSectionsFault.build());
-                }
-
                 if (index >= sections.value.length - 1) {
                     return errAsync(CannotReorderSectionsFault.build());
                 }
@@ -188,10 +172,6 @@ export const buildSectionsReorderer = (
             (index_section) => {
                 return findIndexOfSection(next_sibling).match(
                     (index_sibling) => {
-                        if (sections.value === undefined) {
-                            throw new Error("Sections are undefined. It should not happen.");
-                        }
-
                         if (sections.value.length - 1 < index_section) {
                             return errAsync(CannotReorderSectionsFault.build());
                         }
@@ -238,10 +218,6 @@ export const buildSectionsReorderer = (
     ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
             (index_section) => {
-                if (sections.value === undefined) {
-                    return errAsync(CannotReorderSectionsFault.build());
-                }
-
                 if (sections.value.length - 1 < index_section) {
                     return errAsync(CannotReorderSectionsFault.build());
                 }
@@ -272,10 +248,6 @@ export const buildSectionsReorderer = (
     }
 
     function findIndexOfSection(section: InternalArtidocSectionId): Option<number> {
-        if (sections.value === undefined) {
-            return Option.nothing();
-        }
-
         const index = sections.value.findIndex(
             (element) => element.internal_id === section.internal_id,
         );

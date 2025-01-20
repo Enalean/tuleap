@@ -17,54 +17,71 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, vi, expect } from "vitest";
-import { AT_THE_END, useSectionsStore } from "@/stores/useSectionsStore";
+import { describe, beforeEach, it, vi, expect } from "vitest";
+import type { SectionsStore } from "@/stores/useSectionsStore";
+import { AT_THE_END, buildSectionsStore } from "@/stores/useSectionsStore";
 import * as rest from "@/helpers/rest-querier";
-import { errAsync, okAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { Fault } from "@tuleap/fault";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import type { Tracker } from "@/stores/configuration-store";
-import type { FreetextSection, SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import type {
+    ArtidocSection,
+    FreetextSection,
+    SectionBasedOnArtifact,
+} from "@/helpers/artidoc-section.type";
 import { isPendingFreetextSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
-describe("useSectionsStore", () => {
-    describe("loadSections", () => {
-        it("should have 3 dummy sections by default (for skeletons)", () => {
-            const store = useSectionsStore();
+describe("buildSectionsStore", () => {
+    let can_user_edit_document: boolean, selected_tracker: Tracker | null;
 
-            expect(store.sections.value).toHaveLength(3);
-        });
+    beforeEach(() => {
+        can_user_edit_document = true;
+        selected_tracker = null;
+    });
 
-        it("should store loaded sections", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([ArtifactSectionFactory.create(), FreetextSectionFactory.create()]),
+    const getEmptyStore = (): SectionsStore =>
+        buildSectionsStore(can_user_edit_document, selected_tracker);
+
+    const getStoreWithSections = (sections: ArtidocSection[]): SectionsStore => {
+        const store = buildSectionsStore(can_user_edit_document, selected_tracker);
+        store.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
+        return store;
+    };
+
+    it("should have no sections by default", () => {
+        const store = getEmptyStore();
+
+        expect(store.sections.value).toHaveLength(0);
+    });
+
+    describe("replaceAll", () => {
+        it("should store loaded sections", () => {
+            const store = getEmptyStore();
+
+            store.replaceAll(
+                CreateStoredSections.fromArtidocSectionsCollection([
+                    ArtifactSectionFactory.create(),
+                    FreetextSectionFactory.create(),
+                ]),
             );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, false);
-
-            await flushPromises();
 
             expect(store.sections.value).toHaveLength(2);
         });
 
-        it("should create an internal id because when section are replaced (pending section -> artifact section) the fake id is replaced by the real one and it could mess up the v-for.key", async () => {
+        it("should create an internal id because when section are replaced (pending section -> artifact section) the fake id is replaced by the real one and it could mess up the v-for.key", () => {
+            const store = getEmptyStore();
             const section = ArtifactSectionFactory.create();
 
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+            store.replaceAll([CreateStoredSections.fromArtidocSection(section)]);
 
-            const store = useSectionsStore();
-            store.loadSections(101, null, false);
-
-            await flushPromises();
-
-            expect(store.sections.value?.[0]?.internal_id).toBeDefined();
-            expect(store.sections.value?.[0]?.id).toBe(section.id);
-            expect(store.sections.value?.[0]?.internal_id).not.toBe(section.id);
+            expect(store.sections.value[0]?.internal_id).toBeDefined();
+            expect(store.sections.value[0]?.id).toBe(section.id);
+            expect(store.sections.value[0]?.internal_id).not.toBe(section.id);
         });
 
         it.each([
@@ -73,43 +90,31 @@ describe("useSectionsStore", () => {
             [TrackerStub.withDescription()],
         ])(
             "should store a pending freetext section when the document is empty and user can edit document and configured tracker = %s",
-            async (tracker: Tracker) => {
-                vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+            (tracker: Tracker) => {
+                selected_tracker = tracker;
 
-                const store = useSectionsStore();
-                store.loadSections(101, tracker, true);
+                const store = getEmptyStore();
 
-                await flushPromises();
+                store.replaceAll([]);
 
-                if (store.sections.value === undefined) {
-                    throw new Error("Expected store.sections to be defined");
-                }
                 expect(store.sections.value).toHaveLength(1);
                 expect(isPendingFreetextSection(store.sections.value[0])).toBe(true);
             },
         );
 
-        it("should store nothing when tracker is not defined", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+        it("should store nothing when tracker is not defined", () => {
+            const store = getEmptyStore();
+            store.replaceAll([]);
 
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-
-            await flushPromises();
-
-            if (store.sections.value === undefined) {
-                throw new Error("Expected store.sections to be defined");
-            }
             expect(store.sections.value).toHaveLength(0);
         });
 
-        it("should store loaded sections when empty and configured tracker but no rights to edit document", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+        it("should store loaded sections when empty and configured tracker but no rights to edit document", () => {
+            selected_tracker = TrackerStub.withTitleAndDescription();
+            can_user_edit_document = false;
 
-            const store = useSectionsStore();
-            store.loadSections(101, TrackerStub.withTitleAndDescription(), false);
-
-            await flushPromises();
+            const store = getEmptyStore();
+            store.replaceAll([]);
 
             expect(store.sections.value).toHaveLength(0);
         });
@@ -117,91 +122,19 @@ describe("useSectionsStore", () => {
         it(`should create a pending artifact section
             when loaded sections are empty
             and there is a configured tracker
-            and user can edit document`, async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+            and user can edit document`, () => {
+            selected_tracker = TrackerStub.withTitleAndDescription();
 
-            const store = useSectionsStore();
-            store.loadSections(101, TrackerStub.withTitleAndDescription(), true);
-
-            await flushPromises();
-
-            if (store.sections.value === undefined) {
-                throw new Error("Expected store.sections to be defined");
-            }
+            const store = getEmptyStore();
+            store.replaceAll([]);
 
             expect(store.sections.value).toHaveLength(1);
             expect(isPendingArtifactSection(store.sections.value[0])).toBe(true);
         });
-
-        it("should store undefined in case of error", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                errAsync(Fault.fromMessage("Oopsie!")),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, false);
-
-            await flushPromises();
-
-            expect(store.sections.value).toBeUndefined();
-        });
-    });
-
-    describe("is_sections_loading", () => {
-        it("should says that sections are loading by default", () => {
-            const store = useSectionsStore();
-
-            expect(store.is_sections_loading.value).toBe(true);
-        });
-
-        it("should says that sections are not anymore loading when they are loaded #CaptainObvious", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([ArtifactSectionFactory.create(), FreetextSectionFactory.create()]),
-            );
-
-            const store = useSectionsStore();
-            await store.loadSections(101, null, false);
-
-            await flushPromises();
-
-            expect(store.is_sections_loading.value).toBe(false);
-        });
-
-        it("should says that sections are not anymore loading even in case of error", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                errAsync(Fault.fromMessage("Oopsie!")),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, false);
-
-            await flushPromises();
-
-            expect(store.is_sections_loading.value).toBe(false);
-        });
     });
 
     describe("updateSection", () => {
-        it.each([
-            ["artifact", ArtifactSectionFactory.create()],
-            ["freetext", FreetextSectionFactory.create()],
-        ])(
-            "should throw when we try to update a %s section while sections are undefined",
-            async (name, section) => {
-                vi.spyOn(rest, "getAllSections").mockReturnValue(
-                    errAsync(Fault.fromMessage("Oopsie!")),
-                );
-
-                const store = useSectionsStore();
-                store.loadSections(101, null, true);
-
-                await flushPromises();
-
-                expect(() => store.updateSection(section)).toThrow();
-            },
-        );
-
-        it("should update the artifact section", async () => {
+        it("should update the artifact section", () => {
             const section = ArtifactSectionFactory.create();
             const section_a = ArtifactSectionFactory.override({
                 ...section,
@@ -220,13 +153,7 @@ describe("useSectionsStore", () => {
                 },
             });
 
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section_a, section_b]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-
-            await flushPromises();
-
+            const store = getStoreWithSections([section_a, section_b]);
             store.updateSection(
                 ArtifactSectionFactory.override({
                     ...section_b,
@@ -238,16 +165,16 @@ describe("useSectionsStore", () => {
             );
 
             const section_0: SectionBasedOnArtifact = store.sections
-                .value?.[0] as SectionBasedOnArtifact;
+                .value[0] as SectionBasedOnArtifact;
             const section_1: SectionBasedOnArtifact = store.sections
-                .value?.[1] as SectionBasedOnArtifact;
+                .value[1] as SectionBasedOnArtifact;
 
             expect(store.sections.value).toHaveLength(2);
-            expect(section_0?.title.value).toBe("Section A");
-            expect(section_1?.title.value).toBe("Updated section B");
+            expect(section_0.title.value).toBe("Section A");
+            expect(section_1.title.value).toBe("Updated section B");
         });
 
-        it("should update the freetext section", async () => {
+        it("should update the freetext section", () => {
             const section = FreetextSectionFactory.create();
             const section_a = FreetextSectionFactory.override({
                 ...section,
@@ -260,13 +187,7 @@ describe("useSectionsStore", () => {
                 title: "Section B",
             });
 
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section_a, section_b]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-
-            await flushPromises();
-
+            const store = getStoreWithSections([section_a, section_b]);
             store.updateSection(
                 FreetextSectionFactory.override({
                     ...section_b,
@@ -274,12 +195,12 @@ describe("useSectionsStore", () => {
                 }),
             );
 
-            const section_0: FreetextSection = store.sections.value?.[0] as FreetextSection;
-            const section_1: FreetextSection = store.sections.value?.[1] as FreetextSection;
+            const section_0: FreetextSection = store.sections.value[0] as FreetextSection;
+            const section_1: FreetextSection = store.sections.value[1] as FreetextSection;
 
             expect(store.sections.value).toHaveLength(2);
-            expect(section_0?.title).toBe("Section A");
-            expect(section_1?.title).toBe("Updated section B");
+            expect(section_0.title).toBe("Section A");
+            expect(section_1.title).toBe("Updated section B");
         });
     });
 
@@ -293,19 +214,16 @@ describe("useSectionsStore", () => {
         ])(
             "should remove the section when it is found and tracker is %s",
             async (tracker: Tracker | null) => {
+                selected_tracker = tracker;
+
                 const section1 = ArtifactSectionFactory.create();
                 const section2 = PendingArtifactSectionFactory.create();
                 const section3 = ArtifactSectionFactory.create();
                 const section4 = PendingArtifactSectionFactory.create();
 
-                vi.spyOn(rest, "getAllSections").mockReturnValue(
-                    okAsync([section1, section2, section3, section4]),
-                );
                 vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
-                const store = useSectionsStore();
-                store.loadSections(101, null, true);
-                await flushPromises();
+                const store = getStoreWithSections([section1, section2, section3, section4]);
 
                 store.removeSection(section2, tracker);
                 store.removeSection(section3, null);
@@ -313,8 +231,8 @@ describe("useSectionsStore", () => {
 
                 expect(store.sections.value).not.toBeUndefined();
                 expect(store.sections.value).toHaveLength(2);
-                expect(store.sections.value?.[0].id).toStrictEqual(section1.id);
-                expect(store.sections.value?.[1].id).toStrictEqual(section4.id);
+                expect(store.sections.value[0].id).toStrictEqual(section1.id);
+                expect(store.sections.value[1].id).toStrictEqual(section4.id);
             },
         );
 
@@ -326,18 +244,14 @@ describe("useSectionsStore", () => {
             "should remove the last section and add automatically a new pending freetext section when tracker is %s",
             async (tracker: Tracker) => {
                 const section = ArtifactSectionFactory.create();
+                const store = getStoreWithSections([section]);
 
-                vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
                 vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
-
-                const store = useSectionsStore();
-                store.loadSections(101, null, true);
-                await flushPromises();
 
                 store.removeSection(section, tracker);
                 await flushPromises();
 
-                const pending = store.sections.value?.[0];
+                const pending = store.sections.value[0];
                 if (pending === undefined) {
                     throw Error("Should get a section");
                 }
@@ -349,20 +263,15 @@ describe("useSectionsStore", () => {
 
         it("should remove the last section and add automatically a new pending artifact section when tracker has title and description", async () => {
             const section = ArtifactSectionFactory.create();
+            const store = getStoreWithSections([section]);
 
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
             vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
 
             store.removeSection(section, TrackerStub.withTitleAndDescription());
             await flushPromises();
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(1);
-            const pending = store.sections.value?.[0];
+            const pending = store.sections.value[0];
             if (pending === undefined) {
                 throw Error("Should get a section");
             }
@@ -370,13 +279,11 @@ describe("useSectionsStore", () => {
         });
 
         it("should do nothing when there is no sections", async () => {
-            const store = useSectionsStore();
-            store.sections.value = undefined;
-
+            const store = getEmptyStore();
             store.removeSection(ArtifactSectionFactory.create(), null);
             await flushPromises();
 
-            expect(store.sections.value).toBeUndefined();
+            expect(store.sections.value).toHaveLength(0);
         });
 
         it("should do nothing when section cannot be found", async () => {
@@ -384,24 +291,16 @@ describe("useSectionsStore", () => {
             const section2 = PendingArtifactSectionFactory.create();
             const section3 = ArtifactSectionFactory.create();
             const section4 = PendingArtifactSectionFactory.create();
-
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([section1, section2, section3, section4]),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+            const store = getStoreWithSections([section1, section2, section3, section4]);
 
             store.removeSection(ArtifactSectionFactory.create(), null);
             await flushPromises();
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(4);
-            expect(store.sections.value?.[0].id).toStrictEqual(section1.id);
-            expect(store.sections.value?.[1].id).toStrictEqual(section2.id);
-            expect(store.sections.value?.[2].id).toStrictEqual(section3.id);
-            expect(store.sections.value?.[3].id).toStrictEqual(section4.id);
+            expect(store.sections.value[0].id).toStrictEqual(section1.id);
+            expect(store.sections.value[1].id).toStrictEqual(section2.id);
+            expect(store.sections.value[2].id).toStrictEqual(section3.id);
+            expect(store.sections.value[3].id).toStrictEqual(section4.id);
         });
     });
 
@@ -410,66 +309,37 @@ describe("useSectionsStore", () => {
         const section2 = PendingArtifactSectionFactory.create();
         const new_section = PendingArtifactSectionFactory.create();
 
-        it("should do nothing when sections are undefined", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                errAsync(Fault.fromMessage("Bad request")),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
-
-            store.insertSection(PendingArtifactSectionFactory.create(), AT_THE_END);
-
-            expect(store.sections.value).toBeUndefined();
-        });
-
-        it("should insert the section at the beginning", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+        it("should insert the section at the beginning", () => {
+            const store = getStoreWithSections([section1, section2]);
 
             store.insertSection(new_section, { before: section1.id });
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(3);
-            expect(store.sections.value?.[0].id).toStrictEqual(new_section.id);
-            expect(store.sections.value?.[1].id).toStrictEqual(section1.id);
-            expect(store.sections.value?.[2].id).toStrictEqual(section2.id);
+            expect(store.sections.value[0].id).toStrictEqual(new_section.id);
+            expect(store.sections.value[1].id).toStrictEqual(section1.id);
+            expect(store.sections.value[2].id).toStrictEqual(section2.id);
         });
 
-        it("should insert the section before the second one", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+        it("should insert the section before the second one", () => {
+            const store = getStoreWithSections([section1, section2]);
 
             store.insertSection(new_section, { before: section2.id });
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(3);
-            expect(store.sections.value?.[0].id).toStrictEqual(section1.id);
-            expect(store.sections.value?.[1].id).toStrictEqual(new_section.id);
-            expect(store.sections.value?.[2].id).toStrictEqual(section2.id);
+            expect(store.sections.value[0].id).toStrictEqual(section1.id);
+            expect(store.sections.value[1].id).toStrictEqual(new_section.id);
+            expect(store.sections.value[2].id).toStrictEqual(section2.id);
         });
 
-        it("should insert the section at the end", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+        it("should insert the section at the end", () => {
+            const store = getStoreWithSections([section1, section2]);
 
             store.insertSection(new_section, AT_THE_END);
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(3);
-            expect(store.sections.value?.[0].id).toStrictEqual(section1.id);
-            expect(store.sections.value?.[1].id).toStrictEqual(section2.id);
-            expect(store.sections.value?.[2].id).toStrictEqual(new_section.id);
+            expect(store.sections.value[0].id).toStrictEqual(section1.id);
+            expect(store.sections.value[1].id).toStrictEqual(section2.id);
+            expect(store.sections.value[2].id).toStrictEqual(new_section.id);
         });
     });
 
@@ -478,109 +348,51 @@ describe("useSectionsStore", () => {
             [TrackerStub.withoutTitleAndDescription()],
             [TrackerStub.withTitle()],
             [TrackerStub.withDescription()],
-        ])(
-            "should insert a pending freetext section if tracker is %s",
-            async (tracker: Tracker) => {
-                vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+        ])("should insert a pending freetext section if tracker is %s", (tracker: Tracker) => {
+            selected_tracker = tracker;
 
-                const store = useSectionsStore();
-                store.loadSections(101, null, true);
-                await flushPromises();
+            const store = getEmptyStore();
+            store.insertPendingSectionForEmptyDocument(tracker);
 
-                store.insertPendingSectionForEmptyDocument(tracker);
-                if (store.sections.value === undefined) {
-                    throw new Error("Expected store.sections to be defined.");
-                }
+            expect(store.sections.value).toHaveLength(1);
+            expect(isPendingFreetextSection(store.sections.value[0])).toBe(true);
+        });
 
-                expect(store.sections.value).toHaveLength(1);
-                expect(isPendingFreetextSection(store.sections.value[0])).toBe(true);
-            },
-        );
-
-        it("should insert a pending artifact section when sections is empty", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+        it("should insert a pending artifact section when sections is empty", () => {
+            const store = getEmptyStore();
 
             store.insertPendingSectionForEmptyDocument(TrackerStub.withTitleAndDescription());
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(1);
-            const section = store.sections.value?.[0];
+            const section = store.sections.value[0];
             if (section === undefined) {
                 throw Error("Should get a section");
             }
             expect(isPendingArtifactSection(section));
         });
 
-        it("should do nothing when loading of sections failed", () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                errAsync(Fault.fromMessage("Bad request")),
-            );
-
-            const store = useSectionsStore();
-            store.sections.value = undefined;
-
-            store.insertPendingSectionForEmptyDocument(TrackerStub.withTitleAndDescription());
-
-            expect(store.sections.value).toBeUndefined();
-        });
-
-        it("should do nothing when not empty", async () => {
+        it("should do nothing when not empty", () => {
             const section = ArtifactSectionFactory.create();
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+            const store = getStoreWithSections([section]);
 
             store.insertPendingSectionForEmptyDocument(TrackerStub.withTitleAndDescription());
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(1);
-            expect(store.sections.value?.[0].id).toStrictEqual(section.id);
+            expect(store.sections.value[0].id).toStrictEqual(section.id);
         });
 
-        it("should do nothing when tracker is not defined", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
-
+        it("should do nothing when tracker is not defined", () => {
+            const store = getEmptyStore();
             store.insertPendingSectionForEmptyDocument(null);
-            if (store.sections.value === undefined) {
-                throw new Error("Expected store.sections to be defined.");
-            }
 
             expect(store.sections.value).toHaveLength(0);
         });
     });
 
     describe("getSectionPositionForSave", () => {
-        describe("scenario that should not happen  (how can we have a section to get position, but no sections at all in the store?)", () => {
-            it("should return at the end if section is not found", async () => {
-                vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
-
-                const store = useSectionsStore();
-                store.loadSections(101, null, true);
-                await flushPromises();
-
-                expect(
-                    store.getSectionPositionForSave(PendingArtifactSectionFactory.create()),
-                ).toBeNull();
-            });
-
-            it("should return at the end if loading of sections failed", async () => {
-                vi.spyOn(rest, "getAllSections").mockReturnValue(
-                    errAsync(Fault.fromMessage("Bad request")),
-                );
-
-                const store = useSectionsStore();
-                store.loadSections(101, null, true);
-                await flushPromises();
+        describe("scenario that should not happen (how can we have a section to get position, but no sections at all in the store?)", () => {
+            it("should return at the end if section is not found", () => {
+                const store = getEmptyStore();
 
                 expect(
                     store.getSectionPositionForSave(PendingArtifactSectionFactory.create()),
@@ -588,18 +400,11 @@ describe("useSectionsStore", () => {
             });
         });
 
-        it("should return the position that could be used for save", async () => {
+        it("should return the position that could be used for save", () => {
             const section0 = ArtifactSectionFactory.create();
             const section1 = ArtifactSectionFactory.create();
             const section2 = ArtifactSectionFactory.create();
-
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([section0, section1, section2]),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+            const store = getStoreWithSections([section0, section1, section2]);
 
             expect(store.getSectionPositionForSave(section0)).toStrictEqual({
                 before: section1.id,
@@ -610,7 +415,7 @@ describe("useSectionsStore", () => {
             expect(store.getSectionPositionForSave(section2)).toBeNull();
         });
 
-        it("should return the position by excluding pending artifact section because we cannot position a section with a non-existing-yet section", async () => {
+        it("should return the position by excluding pending artifact section because we cannot position a section with a non-existing-yet section", () => {
             const section0 = PendingArtifactSectionFactory.create();
             const section1 = ArtifactSectionFactory.create();
             const section2 = PendingArtifactSectionFactory.create();
@@ -618,13 +423,14 @@ describe("useSectionsStore", () => {
             const section4 = ArtifactSectionFactory.create();
             const section5 = PendingArtifactSectionFactory.create();
 
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([section0, section1, section2, section3, section4, section5]),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+            const store = getStoreWithSections([
+                section0,
+                section1,
+                section2,
+                section3,
+                section4,
+                section5,
+            ]);
 
             expect(store.getSectionPositionForSave(section0)).toStrictEqual({
                 before: section1.id,
@@ -644,31 +450,9 @@ describe("useSectionsStore", () => {
     });
 
     describe("replacePendingSection", () => {
-        it("should do nothing if loading of sections failed", async () => {
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                errAsync(Fault.fromMessage("Bad request")),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
-
-            store.replacePendingSection(
-                PendingArtifactSectionFactory.create(),
-                ArtifactSectionFactory.create(),
-            );
-
-            expect(store.sections.value).toBe(undefined);
-        });
-
-        it("should do nothing if the pending sections cannot be found", async () => {
+        it("should do nothing if the pending sections cannot be found", () => {
             const section = PendingArtifactSectionFactory.create();
-
-            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
+            const store = getStoreWithSections([section]);
 
             store.replacePendingSection(
                 PendingArtifactSectionFactory.create(),
@@ -676,62 +460,47 @@ describe("useSectionsStore", () => {
             );
 
             expect(store.sections.value).toHaveLength(1);
-            expect(store.sections.value?.[0].id).toStrictEqual(section.id);
+            expect(store.sections.value[0].id).toStrictEqual(section.id);
         });
 
-        it("should replace an artifact section", async () => {
+        it("should replace an artifact section", () => {
             const section0 = PendingArtifactSectionFactory.create();
             const section1 = ArtifactSectionFactory.create();
             const section2 = PendingArtifactSectionFactory.create();
             const section3 = PendingArtifactSectionFactory.create();
-
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([section0, section1, section2, section3]),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
-
             const newone = ArtifactSectionFactory.create();
+
+            const store = getStoreWithSections([section0, section1, section2, section3]);
 
             store.replacePendingSection(section2, newone);
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(4);
-            expect(store.sections.value?.[0].id).toStrictEqual(section0.id);
-            expect(store.sections.value?.[1].id).toStrictEqual(section1.id);
-            expect(store.sections.value?.[2].id).toStrictEqual(newone.id);
-            expect(store.sections.value?.[3].id).toStrictEqual(section3.id);
+            expect(store.sections.value[0].id).toStrictEqual(section0.id);
+            expect(store.sections.value[1].id).toStrictEqual(section1.id);
+            expect(store.sections.value[2].id).toStrictEqual(newone.id);
+            expect(store.sections.value[3].id).toStrictEqual(section3.id);
         });
 
-        it("should replace a freetext section", async () => {
+        it("should replace a freetext section", () => {
             const section0 = FreetextSectionFactory.create();
             const section1 = FreetextSectionFactory.pending();
             const section2 = FreetextSectionFactory.create();
             const section3 = FreetextSectionFactory.create();
-
-            vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([section0, section1, section2, section3]),
-            );
-
-            const store = useSectionsStore();
-            store.loadSections(101, null, true);
-            await flushPromises();
-
             const newone = FreetextSectionFactory.create();
+
+            const store = getStoreWithSections([section0, section1, section2, section3]);
+
             if (!isPendingFreetextSection(section1)) {
                 throw new Error("Expected a pending freetext section");
             }
 
             store.replacePendingSection(section1, newone);
 
-            expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(4);
-            expect(store.sections.value?.[0].id).toStrictEqual(section0.id);
-            expect(store.sections.value?.[1].id).toStrictEqual(newone.id);
-            expect(store.sections.value?.[2].id).toStrictEqual(section2.id);
-            expect(store.sections.value?.[3].id).toStrictEqual(section3.id);
+            expect(store.sections.value[0].id).toStrictEqual(section0.id);
+            expect(store.sections.value[1].id).toStrictEqual(newone.id);
+            expect(store.sections.value[2].id).toStrictEqual(section2.id);
+            expect(store.sections.value[3].id).toStrictEqual(section3.id);
         });
     });
 });

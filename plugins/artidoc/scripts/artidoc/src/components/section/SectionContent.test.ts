@@ -21,6 +21,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionContent from "./SectionContent.vue";
 import type { ComponentPublicInstance } from "vue";
+import { ref } from "vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionHeader from "./header/SectionHeader.vue";
 import SectionDescription from "./description/SectionDescription.vue";
@@ -34,6 +35,8 @@ import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { createGettext } from "vue3-gettext";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
+import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 
 describe("SectionContent", () => {
     describe.each([
@@ -53,10 +56,9 @@ describe("SectionContent", () => {
                 global: {
                     plugins: [createGettext({ silent: true })],
                     provide: {
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadedSections(
-                            [],
-                        ),
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([]),
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
+                        [IS_LOADING_SECTIONS.valueOf()]: ref(false),
                     },
                 },
                 props: {
@@ -92,10 +94,11 @@ describe("SectionContent", () => {
                 global: {
                     plugins: [createGettext({ silent: true })],
                     provide: {
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections(
-                            [],
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections(
+                            skeleton_sections_collection,
                         ),
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
+                        [IS_LOADING_SECTIONS.valueOf()]: ref(true),
                     },
                 },
                 props: {
