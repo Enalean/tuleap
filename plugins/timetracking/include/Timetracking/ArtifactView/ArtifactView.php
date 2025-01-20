@@ -23,43 +23,36 @@ namespace Tuleap\Timetracking\ArtifactView;
 use Codendi_Request;
 use PFUser;
 use TemplateRendererFactory;
-use Tracker_Artifact_View_View;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
-class ArtifactView extends Tracker_Artifact_View_View
+final readonly class ArtifactView extends TrackerArtifactView
 {
     public const IDENTIFIER = 'timetracking';
-
-    /**
-     * @var ArtifactViewPresenter
-     */
-    private $presenter;
 
     public function __construct(
         Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
-        ArtifactViewPresenter $presenter,
+        private ArtifactViewPresenter $presenter,
     ) {
         parent::__construct($artifact, $request, $user);
-
-        $this->presenter = $presenter;
     }
 
-    /** @see Tracker_Artifact_View_View::getTitle() */
-    public function getTitle()
+    /** @see TrackerArtifactView::getTitle() */
+    public function getTitle(): string
     {
         return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
-    /** @see Tracker_Artifact_View_View::getIdentifier() */
-    public function getIdentifier()
+    /** @see TrackerArtifactView::getIdentifier() */
+    public function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch()
+    /** @see TrackerArtifactView::fetch() */
+    public function fetch(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
 

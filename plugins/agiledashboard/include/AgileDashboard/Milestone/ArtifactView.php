@@ -23,42 +23,36 @@ namespace Tuleap\AgileDashboard\Milestone;
 use Planning_Milestone;
 use Codendi_Request;
 use PFUser;
-use Tracker_Artifact_View_View;
+use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
-class ArtifactView extends Tracker_Artifact_View_View
+final readonly class ArtifactView extends TrackerArtifactView
 {
-    /**
-     * @var Planning_Milestone
-     */
-    private $milestone;
-
-    public function __construct(Planning_Milestone $milestone, Codendi_Request $request, PFUser $user)
+    public function __construct(private Planning_Milestone $milestone, Codendi_Request $request, PFUser $user)
     {
         parent::__construct($milestone->getArtifact(), $request, $user);
-
-        $this->milestone = $milestone;
     }
 
-    /** @see Tracker_Artifact_View_View::getTitle() */
-    public function getTitle()
+    /** @see TrackerArtifactView::getTitle() */
+    public function getTitle(): string
     {
         return dgettext('tuleap-agiledashboard', 'Milestone')
             . ' <i class="fas fa-external-link-alt"></i>';
     }
 
-    /** @see Tracker_Artifact_View_View::getIdentifier() */
-    public function getIdentifier()
+    /** @see TrackerArtifactView::getIdentifier() */
+    public function getIdentifier(): string
     {
         return 'milestone';
     }
 
-    /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch(): void
+    /** @see TrackerArtifactView::fetch() */
+    public function fetch(): string
     {
         // Nothing to fetch as the tab is a redirect to the milestone
+        return '';
     }
 
-    public function getURL()
+    public function getURL(): string
     {
         return AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             [

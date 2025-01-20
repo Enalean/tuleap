@@ -19,20 +19,21 @@
  */
 
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalCssAssetsForArtifactDisplay;
+use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
 /**
  * First class collection of Tracker_Artifact_View_View
  */
 class Tracker_Artifact_View_ViewCollection
 {
-    /** @var Tracker_Artifact_View_View[] */
+    /** @var TrackerArtifactView[] */
     private $views = [];
 
     public function __construct(private readonly EventManager $event_manager)
     {
     }
 
-    public function add(Tracker_Artifact_View_View $view)
+    public function add(TrackerArtifactView $view)
     {
         $this->views[$view->getIdentifier()] = $view;
     }
@@ -57,7 +58,7 @@ class Tracker_Artifact_View_ViewCollection
     }
 
     /**
-     * @return Tracker_Artifact_View_View
+     * @return TrackerArtifactView
      */
     private function getRequestedView(Codendi_Request $request)
     {
@@ -73,7 +74,7 @@ class Tracker_Artifact_View_ViewCollection
      *
      * @return string html
      */
-    private function fetchTabs(Tracker_Artifact_View_View $current_view)
+    private function fetchTabs(TrackerArtifactView $current_view)
     {
         $html  = '';
         $html .= '<div class="main-project-tabs"><ul class="nav nav-tabs tracker-artifact-nav">';

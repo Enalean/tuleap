@@ -22,43 +22,37 @@ namespace Tuleap\FRS;
 
 use Codendi_Request;
 use PFUser;
-use Tracker_Artifact_View_View;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
-class ArtifactView extends Tracker_Artifact_View_View
+final readonly class ArtifactView extends TrackerArtifactView
 {
-    /**
-     * @var Artifact
-     */
-    private $release_id;
-
-    public function __construct($release_id, Artifact $artifact, Codendi_Request $request, PFUser $user)
+    public function __construct(private int $release_id, Artifact $artifact, Codendi_Request $request, PFUser $user)
     {
         parent::__construct($artifact, $request, $user);
-
-        $this->release_id = $release_id;
     }
 
-    /** @see Tracker_Artifact_View_View::getTitle() */
-    public function getTitle()
+    /** @see TrackerArtifactView::getTitle() */
+    public function getTitle(): string
     {
         return dgettext('tuleap-frs', 'File release')
         . ' <i class="fas fa-external-link-alt"></i>';
     }
 
-    /** @see Tracker_Artifact_View_View::getIdentifier() */
-    public function getIdentifier()
+    /** @see TrackerArtifactView::getIdentifier() */
+    public function getIdentifier(): string
     {
         return 'frs';
     }
 
-    /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch()
+    /** @see TrackerArtifactView::fetch() */
+    public function fetch(): string
     {
         // Nothing to fetch as the tab is a redirect to the frs
+        return '';
     }
 
-    public function getURL()
+    public function getURL(): string
     {
         $release_id = urlencode((string) $this->release_id);
         return "/frs/release/$release_id/release-notes";
