@@ -191,20 +191,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $html;
     }
 
-    /**
-     * Display the field value as a criteria
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     * @see fetchCriteria
-     */
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
-        $value = $this->getCriteriaValue($criteria);
-        if (! $value) {
-            $value = '';
-        }
         $hp = Codendi_HTMLPurifier::instance();
         return '<input type="text" name="criteria[' . $this->id . ']" value="' . $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
     }

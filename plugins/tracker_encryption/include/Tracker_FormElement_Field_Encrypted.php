@@ -149,13 +149,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     {
     }
 
-    /**
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     * @see fetchCriteria
-     */
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }

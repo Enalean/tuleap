@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchCriteriaValue]]></code>
       <code><![CDATA[fetchMailArtifactValue]]></code>
       <code><![CDATA[fetchRawValue]]></code>
       <code><![CDATA[fetchRawValueFromChangeset]]></code>
@@ -15,7 +14,6 @@
     </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$can_burnup_be_regenerated]]></code>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$submitted_values]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -38632,7 +38630,6 @@
     <MissingParamType>
       <code><![CDATA[$advanced_criteria]]></code>
       <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$criteria_value]]></code>
       <code><![CDATA[$csv_value]]></code>
       <code><![CDATA[$format]]></code>
@@ -38841,7 +38838,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchCriteriaValue]]></code>
       <code><![CDATA[fetchRawValue]]></code>
       <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[fetchSubmitValue]]></code>
@@ -38849,9 +38845,6 @@
       <code><![CDATA[getQueryFrom]]></code>
       <code><![CDATA[keepValue]]></code>
     </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$criteria]]></code>
-    </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[buildBurndownDataForLegacy]]></code>
@@ -38918,7 +38911,6 @@
     </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$computed_value]]></code>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$displayed_value]]></code>
       <code><![CDATA[$id]]></code>
@@ -39134,7 +39126,6 @@
       <code><![CDATA[$attachment_id]]></code>
       <code><![CDATA[$attachment_index]]></code>
       <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$data]]></code>
       <code><![CDATA[$fileinfo]]></code>
       <code><![CDATA[$format]]></code>
@@ -39212,7 +39203,6 @@
       <code><![CDATA[Tracker_Artifact_ChangesetValue]]></code>
     </InvalidNullableReturnType>
     <MissingParamType>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$criteria_value]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
@@ -39236,7 +39226,6 @@
       <code><![CDATA[Tracker_Artifact_ChangesetValue]]></code>
     </InvalidNullableReturnType>
     <MissingParamType>
-      <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$criteria_value]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -40147,7 +40136,7 @@
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$can_user_restrict_permissions_to_nobody]]></code>
       <code><![CDATA[$changeset_id]]></code>
-      <code><![CDATA[$criteria]]></code>
+      <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$is_expecting_input]]></code>
       <code><![CDATA[$is_read_only]]></code>
       <code><![CDATA[$is_read_only]]></code>

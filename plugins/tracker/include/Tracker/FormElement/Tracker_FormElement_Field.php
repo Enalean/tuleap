@@ -51,10 +51,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Display the field value as a criteria
-     * @return string
      * @see fetchCriteria
      */
-    abstract public function fetchCriteriaValue($criteria);
+    abstract public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string;
 
     /**
      * Display the field as a Changeset value.

@@ -122,7 +122,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $this->fetchAllAttachmentForCSV($artifact_id, $this->getChangesetValues($changeset_id));
     }
 
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {

@@ -507,13 +507,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function fetchCriteriaValue($criteria)
+    public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html = '';
-        if ($criteria->is_advanced) {
+        if ($criteria->is_advanced === true) {
             $html = $this->fetchAdvancedCriteriaValue($criteria);
         } else {
-            $hp             = Codendi_HTMLPurifier::instance();
             $criteria_value = $this->getCriteriaValue($criteria);
             $lt_selected    = '';
             $eq_selected    = '';
