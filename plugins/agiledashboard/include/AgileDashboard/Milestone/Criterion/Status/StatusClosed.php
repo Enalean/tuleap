@@ -25,12 +25,12 @@ namespace Tuleap\AgileDashboard\Milestone\Criterion\Status;
  */
 final class StatusClosed implements ISearchOnStatus
 {
-    public function shouldRetrieveOpenMilestones()
+    public function shouldRetrieveOpenMilestones(): bool
     {
         return false;
     }
 
-    public function shouldRetrieveClosedMilestones()
+    public function shouldRetrieveClosedMilestones(): bool
     {
         return true;
     }

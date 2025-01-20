@@ -50,6 +50,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormate
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -203,6 +204,7 @@ final class testplanPlugin extends Plugin
                         $planning_factory,
                     ),
                     $header_options_inserter,
+                    TrackersPermissionsRetriever::build(),
                 ),
                 $testmanagement_config,
                 $tracker_factory,

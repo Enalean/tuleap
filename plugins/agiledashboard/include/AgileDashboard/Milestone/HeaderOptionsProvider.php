@@ -32,6 +32,8 @@ use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 
 class HeaderOptionsProvider
 {
@@ -42,6 +44,7 @@ class HeaderOptionsProvider
         private readonly HeaderOptionsForPlanningProvider $header_options_for_planning_provider,
         private readonly ParentTrackerRetriever $parent_tracker_retriever,
         private readonly CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
+        private readonly RetrieveUserPermissionOnTrackers $permission_on_trackers,
     ) {
     }
 
@@ -94,6 +97,7 @@ class HeaderOptionsProvider
     }
 
     /**
+     * @param \Tracker[] $trackers
      * @param Option<NewDropdownLinkSectionPresenter> $current_context_section
      * @return Option<NewDropdownLinkSectionPresenter>
      */
@@ -105,18 +109,21 @@ class HeaderOptionsProvider
         Option $current_context_section,
         string $pane_identifier,
     ): Option {
-        $parent_trackers = $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $trackers);
-        foreach (array_merge($trackers, $parent_trackers) as $tracker) {
-            if ($tracker->userCanSubmitArtifact($user)) {
-                $current_context_section = $this->header_options_inserter->addLinkToCurrentContextSection(
-                    $section_label,
-                    $this->presenter_builder->buildWithAdditionalUrlParameters($tracker, [
-                        'planning[' . $pane_identifier . '][' . $milestone->getPlanningId() . ']' => (string) $milestone->getArtifactId(),
-                        \Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER => '1',
-                    ]),
-                    $current_context_section,
-                );
-            }
+        $parent_trackers  = $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $trackers);
+        $allowed_trackers = $this->permission_on_trackers->retrieveUserPermissionOnTrackers(
+            $user,
+            array_merge($trackers, $parent_trackers),
+            TrackerPermissionType::PERMISSION_SUBMIT,
+        )->allowed;
+        foreach ($allowed_trackers as $tracker) {
+            $current_context_section = $this->header_options_inserter->addLinkToCurrentContextSection(
+                $section_label,
+                $this->presenter_builder->buildWithAdditionalUrlParameters($tracker, [
+                    'planning[' . $pane_identifier . '][' . $milestone->getPlanningId() . ']' => (string) $milestone->getArtifactId(),
+                    \Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER => '1',
+                ]),
+                $current_context_section,
+            );
         }
 
         return $current_context_section;

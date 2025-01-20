@@ -49,6 +49,7 @@ use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\User\ProvideCurrentUser;
 
 class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -133,7 +134,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
                     $planning_factory,
                 ),
-                $header_options_inserter
+                $header_options_inserter,
+                TrackersPermissionsRetriever::build(),
             ),
             new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
             new RecentlyVisitedTopBacklogDao(),
