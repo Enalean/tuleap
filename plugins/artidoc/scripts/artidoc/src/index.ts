@@ -54,6 +54,7 @@ import {
     REMOVE_FREETEXT_SECTION_MODAL,
     useRemoveFreetextSectionModal,
 } from "@/composables/useRemoveFreetextSectionModal";
+import { watchForNeededPendingSectionInsertion } from "@/stores/PendingSectionInserter";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -80,7 +81,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument"),
     );
     const selected_tracker = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "selectedTracker"));
-    const sections_store = buildSectionsStore(can_user_edit_document, selected_tracker);
+    const sections_store = buildSectionsStore();
+    const configuration_store = initConfigurationStore(
+        item_id,
+        selected_tracker,
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "allowedTrackers")),
+    );
+
+    watchForNeededPendingSectionInsertion(
+        sections_store,
+        configuration_store.selected_tracker,
+        can_user_edit_document,
+    );
 
     const upload_file_store = useUploadFileStore();
     const notifications_store = useNotificationsStore();
@@ -100,15 +112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         UPLOAD_MAX_SIZE,
         Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "uploadMaxSize"), 10),
     );
-    app.provide(
-        CONFIGURATION_STORE,
-        initConfigurationStore(
-            item_id,
-            selected_tracker,
-            JSON.parse(getDatasetItemOrThrow(vue_mount_point, "allowedTrackers")),
-            sections_store,
-        ),
-    );
+    app.provide(CONFIGURATION_STORE, configuration_store);
     app.provide(
         PDF_TEMPLATES_STORE,
         initPdfTemplatesStore(JSON.parse(getDatasetItemOrThrow(vue_mount_point, "pdfTemplates"))),

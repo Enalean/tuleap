@@ -87,11 +87,9 @@ import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { computed, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
 import { moveDropdownMenuInDocumentBody } from "@/helpers/move-dropdownmenu-in-document-body";
 
-const configuration = strictInject(CONFIGURATION_STORE);
 const remove_freetext_section = strictInject(REMOVE_FREETEXT_SECTION_MODAL);
 
 const { $gettext } = useGettext();
@@ -135,7 +133,7 @@ watch(trigger, () => {
 
 function onDelete(): void {
     if (is_artifact_section) {
-        deleteSection(configuration.selected_tracker.value);
+        deleteSection();
         return;
     }
     remove_freetext_section.openModal(props.section);

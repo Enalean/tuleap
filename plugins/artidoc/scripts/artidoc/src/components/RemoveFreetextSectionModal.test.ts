@@ -76,7 +76,7 @@ describe("RemoveFreetextSectionModal", () => {
         wrapper.find("[data-test=remove-button]").trigger("click");
 
         expect(removeSection).toHaveBeenCalledOnce();
-        expect(removeSection).toHaveBeenCalledWith(freetext_section, null);
+        expect(removeSection).toHaveBeenCalledWith(freetext_section);
     });
 
     it("When the user cancels the removal of the section, then it should not delete it ", () => {

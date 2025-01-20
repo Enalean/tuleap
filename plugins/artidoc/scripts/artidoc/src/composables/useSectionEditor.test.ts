@@ -209,7 +209,7 @@ describe("useSectionEditor", () => {
                     "the description changed",
                 );
 
-                editor_actions.cancelEditor(null);
+                editor_actions.cancelEditor();
 
                 expect(editor_state.is_section_in_edit_mode.value).toBe(false);
 
@@ -236,7 +236,7 @@ describe("useSectionEditor", () => {
                     ref(false),
                     vi.fn(),
                 );
-                editor_actions.cancelEditor(null);
+                editor_actions.cancelEditor();
 
                 expect(upload_file_store_stub.cancelSectionUploads).toHaveBeenCalledOnce();
             });
@@ -249,7 +249,7 @@ describe("useSectionEditor", () => {
                     ref(false),
                     () => {},
                 );
-                editor_actions.cancelEditor(null);
+                editor_actions.cancelEditor();
                 expect(store_stub.removeSection).toHaveBeenCalled();
             });
         });

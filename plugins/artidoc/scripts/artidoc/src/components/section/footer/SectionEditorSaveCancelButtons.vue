@@ -42,14 +42,10 @@
 <script setup lang="ts">
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 const props = defineProps<{
     editor: SectionEditor;
 }>();
-
-const { selected_tracker } = strictInject(CONFIGURATION_STORE);
 
 const { $gettext } = useGettext();
 const { cancelEditor, saveEditor } = props.editor.editor_actions;
@@ -57,7 +53,7 @@ const is_edit_mode = props.editor.editor_state.is_section_in_edit_mode;
 const is_save_allowed = props.editor.editor_state.is_save_allowed;
 
 function onCancel(): void {
-    cancelEditor(selected_tracker.value);
+    cancelEditor();
 }
 </script>
 
