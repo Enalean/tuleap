@@ -26,7 +26,7 @@
     # default umask gives you perms of '0700'; see the rc file docs for
     # how/why you might change this
     # Tuleap: group should have access to repositories (codendiadm is member of gitolite group)
-    UMASK                           =>  0007,
+    UMASK                           =>  0027,
 
     # look for "git-config" in the documentation
     # Tuleap: allow all config keys (hooks.showrev, etc)

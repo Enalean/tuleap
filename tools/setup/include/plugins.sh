@@ -26,11 +26,6 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if [ -d "${git_home}/.gitolite" ]; then
-        ${chmod} 750 ${git_home}/.gitolite
-        ${chmod} 750 ${git_home}/.gitolite/*
-    fi
-
     if [ ! -d "${tuleap_data}/.ssh" ]; then
         ${install} --directory \
                    --group=${tuleap_unix_user} \
