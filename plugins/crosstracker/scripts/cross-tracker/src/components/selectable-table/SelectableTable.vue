@@ -172,7 +172,6 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithT
     return artifacts_retriever.getSelectableQueryResult(
         props.writing_cross_tracker_report.getTrackerIds(),
         props.writing_cross_tracker_report.expert_query,
-        props.writing_cross_tracker_report.expert_mode,
         limit,
         offset,
     );

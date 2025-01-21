@@ -202,8 +202,7 @@ class crosstrackerPlugin extends Plugin
                 new ProjectCrossTrackerSearch(
                     new CrossTrackerReportCreator($report_dao),
                     new ReportInheritanceHandler(
-                        new CrossTrackerReportFactory($report_dao, $report_dao, \TrackerFactory::instance()),
-                        $report_dao,
+                        new CrossTrackerReportFactory($report_dao),
                         $report_dao,
                         $this->getBackendLogger()
                     )
@@ -222,15 +221,6 @@ class crosstrackerPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
-    }
-
-    #[ListeningToEventName(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED)]
-    public function trackerEventProjectCreationTrackersRequired(array $params): void
-    {
-        $dao = new CrossTrackerReportDao();
-        foreach ($dao->searchTrackersIdUsedByCrossTrackerByProjectId($params['project_id']) as $row) {
-            $params['tracker_ids_list'][] = $row['id'];
-        }
     }
 
     #[ListeningToEventClass]
@@ -514,9 +504,7 @@ class crosstrackerPlugin extends Plugin
 
         return new CSVExportController(
             new CrossTrackerReportFactory(
-                $report_dao,
-                $report_dao,
-                $tracker_factory
+                $report_dao
             ),
             $cross_tracker_artifact_factory,
             $representation_factory,

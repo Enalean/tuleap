@@ -44,7 +44,6 @@ import type {
     ReportRepresentation,
     TrackerReference,
 } from "./cross-tracker-rest-api-types";
-import { DEFAULT_MODE, EXPERT_MODE } from "./cross-tracker-rest-api-types";
 
 const mapToTrackerAndProject = (
     trackers: ReadonlyArray<TrackerReference>,
@@ -63,7 +62,7 @@ export function getReport(report_id: number): ResultAsync<Report, Fault> {
                 expert_query: report.expert_query,
                 trackers: mapToTrackerAndProject(report.trackers),
                 invalid_trackers: report.invalid_trackers,
-                expert_mode: report.report_mode === EXPERT_MODE,
+                expert_mode: true,
             };
         },
     );
@@ -92,7 +91,6 @@ export function getQueryResult(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string,
-    expert_mode: boolean,
     limit: number,
     offset: number,
 ): ResultAsync<ArtifactsCollection, Fault> {
@@ -100,7 +98,6 @@ export function getQueryResult(
         params: {
             limit,
             offset,
-            report_mode: expert_mode ? EXPERT_MODE : DEFAULT_MODE,
             query: JSON.stringify({ trackers_id, expert_query }),
         },
     }).andThen((response) => {
@@ -116,18 +113,16 @@ export function updateReport(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string,
-    expert_mode: boolean,
 ): ResultAsync<Report, Fault> {
     return putJSON<ReportRepresentation>(uri`/api/v1/cross_tracker_reports/${report_id}`, {
         trackers_id,
         expert_query,
-        report_mode: expert_mode ? EXPERT_MODE : DEFAULT_MODE,
     }).map((report): Report => {
         return {
             expert_query: report.expert_query,
             trackers: mapToTrackerAndProject(report.trackers),
             invalid_trackers: report.invalid_trackers,
-            expert_mode: report.report_mode === EXPERT_MODE,
+            expert_mode: true,
         };
     });
 }

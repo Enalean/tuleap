@@ -30,7 +30,6 @@ export type ReportRepresentation = {
     readonly trackers: ReadonlyArray<TrackerReference>;
     readonly expert_query: string;
     readonly invalid_trackers: ReadonlyArray<TrackerReference>;
-    readonly report_mode: typeof EXPERT_MODE | typeof DEFAULT_MODE;
 };
 
 export type ReportContentRepresentation = {

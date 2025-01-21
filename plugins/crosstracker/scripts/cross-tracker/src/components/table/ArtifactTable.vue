@@ -171,7 +171,6 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsCollection
         report_id,
         props.writing_cross_tracker_report.getTrackerIds(),
         props.writing_cross_tracker_report.expert_query,
-        props.writing_cross_tracker_report.expert_mode,
         limit,
         current_offset,
     );

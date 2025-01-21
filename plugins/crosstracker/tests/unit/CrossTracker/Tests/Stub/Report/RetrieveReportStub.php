@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Tests\Stub\Report;
 final readonly class RetrieveReportStub implements \Tuleap\CrossTracker\Report\RetrieveReport
 {
     /**
-     * @param list<array{id: int, expert_query: string, expert_mode: 0|1 }> $reports
+     * @param list<array{id: int, query: string, title: string, description: string}> $reports
      */
     private function __construct(private array $reports)
     {
@@ -42,8 +42,8 @@ final readonly class RetrieveReportStub implements \Tuleap\CrossTracker\Report\R
     }
 
     /**
-     * @param array{id: int, expert_query: string, expert_mode: 0|1 } $first_report
-     * @param array{id: int, expert_query: string, expert_mode: 0|1 } ...$other_reports
+     * @param array{id: int, query: string, title: string, description: string} $first_report
+     * @param array{id: int, query: string, title: string, description: string} ...$other_reports
      * @no-named-arguments
      */
     public static function withReports(array $first_report, array ...$other_reports): self

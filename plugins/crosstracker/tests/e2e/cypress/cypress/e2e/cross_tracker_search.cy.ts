@@ -102,47 +102,6 @@ describe("Cross tracker search", function () {
             cy.wrap(cell).should("contain", "kanban 2");
         });
 
-        cy.log("Switch to Default mode and select some trackers");
-        editWidget();
-        toggleWidgetMode();
-
-        cy.log("Select project");
-        cy.get("[data-test=cross-tracker-selector-project]").select(project_name);
-
-        cy.get("[data-test=cross-tracker-selector-tracker]").select("Bugs");
-        cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
-        cy.get("[data-test=cross-tracker-selector-tracker]").select("Tasks");
-        cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
-
-        cy.log("The default query should return open artifacts");
-        clearCodeMirror();
-        cy.get("[data-test=search-report-button]").click();
-        cy.wait("@getReportContent", { timeout: 5000 });
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
-        assertOpenArtifacts();
-
-        editWidget();
-        updateSearchQuery("@title != 'foo'");
-        cy.wait("@getReportContent", { timeout: 5000 });
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
-        assertAllArtifacts();
-
-        editWidget();
-        updateSearchQuery("@status = OPEN()");
-        cy.wait("@getReportContent", { timeout: 5000 });
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
-        assertOpenArtifacts();
-
-        editWidget();
-        updateSearchQuery("@submitted_on BETWEEN(NOW() - 2m, NOW() - 1m)");
-        cy.get("[data-test=cross-tracker-no-results]");
-
-        editWidget();
-        updateSearchQuery('@last_update_date > "2018-01-01"');
-        cy.wait("@getReportContent", { timeout: 5000 });
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
-        assertAllArtifacts();
-
         cy.log("Save results");
         cy.get("[data-test=cross-tracker-save-report]").click();
         cy.get("[data-test=cross-tracker-report-success]");
@@ -150,8 +109,14 @@ describe("Cross tracker search", function () {
         cy.log("reload page and check report still has results");
         cy.reload();
         cy.wait("@getReportContent", { timeout: 5000 });
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
-        assertAllArtifacts();
+        cy.get("[data-test=cross-tracker-search-widget] [data-test=cell]").then((cell) => {
+            cy.wrap(cell).should("contain", "bug");
+            cy.wrap(cell).should("contain", "bug 1");
+            cy.wrap(cell).should("contain", "bug 2");
+            cy.wrap(cell).should("contain", "nananana");
+            cy.wrap(cell).should("contain", "kanban 1");
+            cy.wrap(cell).should("contain", "kanban 2");
+        });
     });
 });
 
@@ -165,31 +130,6 @@ function updateSearchQuery(search_query: string): void {
     cy.get(".cm-editor").type(search_query);
     cy.get("[data-test=search-report-button]").click();
     cy.get("[data-test=tql-reading-mode-query]").contains(search_query);
-}
-
-function toggleWidgetMode(): void {
-    cy.get("[data-test=cross-tracker-search-widget] [data-test=switch-mode]").click();
-}
-
-function assertOpenArtifacts(): void {
-    cy.get("[data-test=cross-tracker-results-artifact]").then((artifact) => {
-        cy.wrap(artifact).should("contain", "nananana");
-        cy.wrap(artifact).should("contain", "kanban 2");
-        cy.wrap(artifact).should("contain", "bug");
-        cy.wrap(artifact).should("contain", "bug 1");
-        cy.wrap(artifact).should("contain", "bug 2");
-    });
-}
-
-function assertAllArtifacts(): void {
-    cy.get("[data-test=cross-tracker-results-artifact]").then((artifact) => {
-        cy.wrap(artifact).should("contain", "nananana");
-        cy.wrap(artifact).should("contain", "kanban 2");
-        cy.wrap(artifact).should("contain", "kanban 1");
-        cy.wrap(artifact).should("contain", "bug");
-        cy.wrap(artifact).should("contain", "bug 1");
-        cy.wrap(artifact).should("contain", "bug 2");
-    });
 }
 
 function clearCodeMirror(): void {

@@ -26,6 +26,7 @@
                 class="tlp-switch-checkbox"
                 v-bind:checked="is_in_expert_mode"
                 v-on:click="switchMode"
+                disabled
                 data-test="switch-to-expert-input"
             />
             <label
@@ -56,15 +57,11 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { DOCUMENTATION_BASE_URL, REPORT_ID } from "../injection-symbols";
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
-const props = defineProps<{
+defineProps<{
     is_in_expert_mode: boolean;
 }>();
 
 export type SwitchModeEvent = { readonly is_expert_mode: boolean };
-
-const emit = defineEmits<{
-    (e: "switch-to-query-mode", is_expert_mode: SwitchModeEvent): void;
-}>();
 
 const report_id = strictInject(REPORT_ID);
 const doc_base_url = strictInject(DOCUMENTATION_BASE_URL);
@@ -76,9 +73,10 @@ const switch_to_expert_id = computed((): string => {
 });
 
 function switchMode(): void {
-    emit("switch-to-query-mode", {
-        is_expert_mode: !props.is_in_expert_mode,
-    });
+    // There is only one mode: expert. This code should be removed in a future cleanup
+    // emit("switch-to-query-mode", {
+    //     is_expert_mode: !props.is_in_expert_mode,
+    // });
 }
 </script>
 

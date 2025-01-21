@@ -123,7 +123,7 @@ class ProjectCrossTrackerSearch extends Widget
         $owner_type,
         MappingRegistry $mapping_registry,
     ): int {
-        return $this->inheritance_handler->handle($id, $mapping_registry->getCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY));
+        return $this->inheritance_handler->handle($id);
     }
 
     public function getJavascriptAssets(): array

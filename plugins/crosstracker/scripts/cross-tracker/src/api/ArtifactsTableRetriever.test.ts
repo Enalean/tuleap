@@ -25,7 +25,6 @@ import type { RetrieveArtifactsTable } from "../domain/RetrieveArtifactsTable";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import { SelectableReportContentRepresentationStub } from "../../tests/builders/SelectableReportContentRepresentationStub";
 import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
-import { EXPERT_MODE } from "./cross-tracker-rest-api-types";
 
 describe(`ArtifactsTableRetriever`, () => {
     describe(`getSelectableQueryResult()`, () => {
@@ -34,7 +33,6 @@ describe(`ArtifactsTableRetriever`, () => {
         const report_id = 583;
         const tracker_ids = [78, 518, 937];
         const expert_query = `SELECT start_date WHERE @title = "forevouched"`;
-        const expert_mode = true;
 
         const getRetriever = (): RetrieveArtifactsTable => {
             return ArtifactsTableRetriever(ArtifactsTableBuilder(), report_id);
@@ -67,7 +65,6 @@ describe(`ArtifactsTableRetriever`, () => {
             const result = await getRetriever().getSelectableQueryResult(
                 tracker_ids,
                 expert_query,
-                expert_mode,
                 limit,
                 offset,
             );
@@ -78,7 +75,6 @@ describe(`ArtifactsTableRetriever`, () => {
                     params: {
                         limit,
                         offset,
-                        report_mode: EXPERT_MODE,
                         query: JSON.stringify({
                             trackers_id: tracker_ids,
                             expert_query,
@@ -126,7 +122,6 @@ describe(`ArtifactsTableRetriever`, () => {
                     params: {
                         limit,
                         offset,
-                        report_mode: EXPERT_MODE,
                     },
                 },
             );

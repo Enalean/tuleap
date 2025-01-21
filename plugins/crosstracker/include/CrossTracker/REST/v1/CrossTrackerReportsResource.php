@@ -44,7 +44,6 @@ use Tracker_Semantic_TitleDao;
 use Tracker_Semantic_TitleFactory;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReport;
@@ -182,12 +181,8 @@ use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
-use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
-use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
-use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use URLVerification;
 use UserHelper;
@@ -265,13 +260,12 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @param string|null $query
      *                      With a property "trackers_id" to search artifacts presents in given trackers.
      *                      With a property "expert_query" to customize the search. {@required false}
-     * @param string|null $report_mode Mode of the report. {@from path}{@choice default,expert}{@required false}
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @throws RestException 404
      */
-    public function getIdContent(int $id, ?string $query, ?string $report_mode = null, int $limit = self::MAX_LIMIT, int $offset = 0): LegacyCrossTrackerReportContentRepresentation|CrossTrackerReportContentRepresentation
+    public function getIdContent(int $id, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0): LegacyCrossTrackerReportContentRepresentation|CrossTrackerReportContentRepresentation
     {
         $this->checkAccess();
         Header::allowOptionsGet();
@@ -282,18 +276,9 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $query_parser = new QueryParameterParser(new JsonDecoder());
 
-            $expert_mode  = $report_mode === null ? $report->isExpert() : $report_mode === CrossTrackerReportRepresentation::MODE_EXPERT;
             $expert_query = $this->getExpertQueryFromRoute($query, $report, $query_parser);
 
-            if ($expert_mode) {
-                $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query);
-            } else {
-                $trackers = $this->getTrackersFromRoute($query, $report, $query_parser);
-                if (count($trackers) === 0) {
-                    return new LegacyCrossTrackerReportContentRepresentation([]);
-                }
-                $expected_report = new CrossTrackerDefaultReport($report->getId(), $expert_query, $trackers);
-            }
+            $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query);
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
@@ -306,22 +291,9 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 )
             );
 
-            if ($expected_report->isExpert()) {
-                assert($artifacts instanceof CrossTrackerReportContentRepresentation);
-                $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
-                return $artifacts;
-            }
-
-            assert($artifacts instanceof ArtifactMatchingReportCollection);
-            $representations = (new ArtifactRepresentationFactory())->buildRepresentationsForReport(
-                $artifacts,
-                $current_user,
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
-            );
-
-            $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
-
-            return new LegacyCrossTrackerReportContentRepresentation($representations->getArtifacts());
+            assert($artifacts instanceof CrossTrackerReportContentRepresentation);
+            $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
+            return $artifacts;
         } catch (CrossTrackerReportNotFoundException) {
             throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Report not found'));
         } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
@@ -362,7 +334,6 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      * @param array $trackers_id Tracker id to link to report {@max 25}
-     * @param string $report_mode Mode of the report. Default value is "default" {@choice default,expert}{@example default}
      * @param string $expert_query The TQL query saved with the report
      *
      * @status 201
@@ -372,24 +343,18 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put(int $id, array $trackers_id, string $report_mode = 'default', string $expert_query = ''): CrossTrackerReportRepresentation
+    protected function put(int $id, array $trackers_id, string $expert_query = ''): CrossTrackerReportRepresentation
     {
         $this->sendAllowHeaders();
 
         $current_user = $this->user_manager->getCurrentUser();
         try {
-            $report = $this->getReport($id);
-            if ($report_mode === CrossTrackerReportRepresentation::MODE_EXPERT) {
-                $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query);
-                $trackers        = $this->getReportTrackersRetriever()->getReportTrackers($expected_report, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
-            } else {
-                $tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
-                $trackers          = $tracker_extractor->extractTrackers($trackers_id);
-                $expected_report   = new CrossTrackerDefaultReport($report->getId(), $expert_query, $trackers);
-            }
-            $this->checkQueryIsValid($trackers, $expert_query, $report_mode === CrossTrackerReportRepresentation::MODE_EXPERT, $current_user, $id);
+            $report          = $this->getReport($id);
+            $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query);
+            $trackers        = $this->getReportTrackersRetriever()->getReportTrackers($expected_report, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
+            $this->checkQueryIsValid($trackers, $expert_query, $current_user, $id);
 
-            $this->getCrossTrackerDao()->updateReport($id, $trackers, $expert_query, $expected_report->isExpert());
+            $this->getCrossTrackerDao()->updateQuery($id, $expert_query);
         } catch (CrossTrackerReportNotFoundException) {
             throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $id));
         } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
@@ -407,28 +372,20 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @param Tracker[] $trackers
      * @throws RestException
      */
-    private function checkQueryIsValid(array $trackers, string $expert_query, bool $expert_mode, PFUser $user, int $report_id): void
+    private function checkQueryIsValid(array $trackers, string $expert_query, PFUser $user, int $report_id): void
     {
         if ($expert_query === '') {
-            if ($expert_mode) {
-                throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Expert query is required and cannot be empty'));
-            }
-
-            return;
+            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Expert query is required and cannot be empty'));
         }
 
         try {
-            if ($expert_mode) {
-                $report = new CrossTrackerExpertReport($report_id, $expert_query);
-            } else {
-                $report = new CrossTrackerDefaultReport($report_id, $expert_query, $trackers);
-            }
+            $report = new CrossTrackerExpertReport($report_id, $expert_query);
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($user, $report);
             $field_checker    = $this->getDuckTypedFieldChecker();
             $metadata_checker = $this->getMetadataChecker();
             $this->getExpertQueryValidator()->validateExpertQuery(
                 $expert_query,
-                $expert_mode,
+                true,
                 new InvalidSearchablesCollectionBuilder($this->getInvalidComparisonsCollector(), $trackers, $user),
                 new InvalidSelectablesCollectionBuilder(
                     new InvalidSelectablesCollectorVisitor($field_checker, $metadata_checker),
@@ -459,7 +416,6 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     {
         return match ($report::class) {
             CrossTrackerExpertReport::class  => CrossTrackerExpertReportRepresentation::fromReport($report, $user),
-            CrossTrackerDefaultReport::class => CrossTrackerDefaultReportRepresentation::fromReport($report, $user),
             default                          => throw new LogicException('Unexpected report type'),
         };
     }
@@ -547,9 +503,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     {
         $report_dao     = new CrossTrackerReportDao();
         $report_factory = new CrossTrackerReportFactory(
-            $report_dao,
-            $report_dao,
-            TrackerFactory::instance()
+            $report_dao
         );
 
         $report       = $report_factory->getById($id);
