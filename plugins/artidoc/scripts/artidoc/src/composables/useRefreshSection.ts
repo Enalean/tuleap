@@ -17,17 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.type";
-import type {
-    ArtifactSection,
-    ArtidocSection,
-    FreetextSection,
-} from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { getSection } from "@/helpers/rest-querier";
 import type { Fault } from "@tuleap/fault";
 import type { EditorErrors } from "@/composables/useEditorErrors";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import type { Ref } from "vue";
 import { ref } from "vue";
+import type { UpdateSections } from "@/stores/SectionsUpdater";
 
 export type RefreshSection = {
     isJustRefreshed: () => boolean;
@@ -37,9 +34,9 @@ export type RefreshSection = {
 export function useRefreshSection(
     section: ArtidocSection,
     editor_errors: EditorErrors,
+    update_sections: UpdateSections,
     callbacks: {
         closeEditor: () => void;
-        updateSectionStore: (section: ArtifactSection | FreetextSection) => void;
         updateCurrentSection: (section: ArtidocSection) => void;
     },
 ): RefreshSection {
@@ -54,7 +51,7 @@ export function useRefreshSection(
             (artidoc_section: ArtidocSection) => {
                 callbacks.updateCurrentSection(artidoc_section);
                 if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
-                    callbacks.updateSectionStore(artidoc_section);
+                    update_sections.updateSection(artidoc_section);
                 }
                 callbacks.closeEditor();
                 addTemporaryJustRefreshedFlag();

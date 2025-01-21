@@ -80,6 +80,7 @@ import { useGettext } from "vue3-gettext";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { getPendingSectionsReplacer } from "@/stores/PendingSectionsReplacer";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { getSectionsUpdater } from "@/stores/SectionsUpdater";
 
 const props = defineProps<{ section: ArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -102,6 +103,7 @@ const editor = useSectionEditor(
     mergeArtifactAttachments,
     setWaitingListAttachments,
     getPendingSectionsReplacer(sections_collection),
+    getSectionsUpdater(sections_collection),
     upload_file.is_in_progress,
     (error: string) => {
         setGlobalErrorMessage({

@@ -40,6 +40,7 @@ import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
 import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
+import type { UpdateSections } from "@/stores/SectionsUpdater";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -72,6 +73,7 @@ export function useSectionEditor(
     mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
     replace_pending_sections: ReplacePendingSections,
+    update_sections: UpdateSections,
     is_upload_in_progress: Ref<boolean>,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
@@ -91,8 +93,7 @@ export function useSectionEditor(
             0 !== current_section.value.attachments?.field_id
         );
     });
-    const { getSectionPositionForSave, removeSection, updateSection } =
-        strictInject(SECTIONS_STORE);
+    const { getSectionPositionForSave, removeSection } = strictInject(SECTIONS_STORE);
     const is_section_in_edit_mode = ref(isPendingSection(current_section.value));
     const is_section_editable = computed(() => {
         if (
@@ -119,9 +120,9 @@ export function useSectionEditor(
     const { refreshSection, isJustRefreshed } = useRefreshSection(
         current_section.value,
         editor_errors_handler,
+        update_sections,
         {
             closeEditor: closeEditor,
-            updateSectionStore: updateSection,
             updateCurrentSection: updateCurrentSection,
         },
     );
@@ -146,8 +147,8 @@ export function useSectionEditor(
     const { save, forceSave, isBeingSaved, isJustSaved } = useSaveSection(
         editor_errors_handler,
         replace_pending_sections,
+        update_sections,
         {
-            updateSectionStore: updateSection,
             updateCurrentSection,
             closeEditor,
             setEditMode,
