@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\View;
 
+use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 
@@ -49,7 +50,12 @@ final readonly class LinksView extends TrackerArtifactView
 
         $field = \Tracker_FormElementFactory::instance()->getAnArtifactLinkField($this->user, $this->artifact->getTracker());
         if (! $field) {
-            return '<div class="tlp-card">' . dgettext('tuleap-tracker', 'No links found for artifact.') . '</div>';
+            $presenter = new EmptyStateLinkViewPresenter($this->user, $this->artifact);
+            $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/artifact');
+            return $renderer->renderToString(
+                'view/link-view-empty-state',
+                $presenter
+            );
         }
 
         return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-type"></div>'

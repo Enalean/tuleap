@@ -2158,9 +2158,6 @@ msgstr ""
 "Aucun champ de l'artéfact ne peut être déplacé dans l'outil de suivi de "
 "destination."
 
-msgid "No links found for artifact."
-msgstr "Aucun liens trouvé pour l'artéfact."
-
 msgid "No logs yet"
 msgstr "Pas encore d'historique"
 
@@ -3822,6 +3819,13 @@ msgid "The tracker '%1$s' has been properly restored"
 msgstr "L'outil de suivi '%1$s' a été proprement restauré"
 
 msgid ""
+"The tracker does not have an artifact link field, nothing can be displayed "
+"here."
+msgstr ""
+"L'outil de suivi n'a pas de champ liens entre artéfacts, nous ne pouvons "
+"rien afficher ici."
+
+msgid ""
 "The tracker does not seem to have the create/reply by mail feature enabled."
 msgstr "Le tracker ne semble pas permettre l'édition d'artéfact par mail."
 
@@ -4725,6 +4729,12 @@ msgstr "Vous pouvez accéder à l'artéfact <a href=\"%1$s\">ici</a>."
 #, php-format
 msgid "You can access the artifact here: %1$s"
 msgstr "Vous pouvez accéder à l'artéfact ici: %1$s"
+
+msgid ""
+"You can add an artifact link field %sin your tracker fields administration%s."
+msgstr ""
+"Vous pouvez ajouter un champ liens entre artéfacts %sdans l'administration "
+"des champs de votre outil de suivi%s."
 
 #, php-format
 msgid ""
