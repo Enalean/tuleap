@@ -46,10 +46,10 @@
 import { Getter, namespace } from "vuex-class";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
-import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
+import { useClassesForCollapsedColumn } from "./classes-for-collapsed-column-composable";
 
 const column_store = namespace("column");
 const swimlane = namespace("swimlane");
@@ -57,10 +57,7 @@ const swimlane = namespace("swimlane");
 @Component({
     components: { AddCard, CellDisallowsDropOverlay },
 })
-export default class DropContainerCell extends Mixins(
-    HoveringStateForCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin,
-) {
+export default class DropContainerCell extends Mixins(HoveringStateForCollapsedColumnMixin) {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
@@ -90,7 +87,7 @@ export default class DropContainerCell extends Mixins(
     }
 
     get drop_classes(): string[] {
-        const classes = this.classes;
+        const classes = useClassesForCollapsedColumn(this.column).getClasses();
         if (this.is_add_card_rendered) {
             classes.push("taskboard-cell-with-add-form");
         }
