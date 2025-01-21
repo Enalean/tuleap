@@ -20,7 +20,7 @@
 <template>
     <button class="btn" type="button" v-on:click="unmarkDeletion()">
         <i class="fa fa-undo"></i>
-        <translate key="undelete"> Undo deletion </translate>
+        {{ $gettext("Undo deletion") }}
     </button>
 </template>
 <script>

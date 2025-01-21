@@ -21,7 +21,7 @@
     <div>
         <p>
             <input type="hidden" v-bind:name="'artifact[' + field_id + '][no_steps]'" value="1" />
-            <translate>There isn't any step defined yet. Start by adding one.</translate>
+            {{ $gettext("There isn't any step defined yet. Start by adding one.") }}
         </p>
         <div>
             <button
@@ -31,7 +31,7 @@
                 data-test="add-step"
             >
                 <i class="fa fa-plus"></i>
-                <translate>Add step</translate>
+                {{ $gettext("Add step") }}
             </button>
         </div>
     </div>

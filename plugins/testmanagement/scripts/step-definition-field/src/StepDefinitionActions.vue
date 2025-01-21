@@ -20,7 +20,7 @@
 <template>
     <div class="ttm-definition-step-actions">
         <div class="ttm-definition-step-actions-format-and-helper-container">
-            <translate>Format:</translate>
+            {{ $gettext("Format:") }}
             <select
                 v-bind:id="format_select_id"
                 ref="format"
