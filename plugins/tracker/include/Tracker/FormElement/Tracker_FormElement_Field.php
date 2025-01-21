@@ -816,10 +816,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
      */
-    abstract public function fetchRawValueFromChangeset($changeset);
+    abstract public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string;
 
     public function fetchAdmin($tracker)
     {

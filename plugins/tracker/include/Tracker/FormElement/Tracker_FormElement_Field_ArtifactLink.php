@@ -1200,16 +1200,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return $output;
     }
 
-    /**
-     * Fetch the value in a specific changeset
-     *
-     * @param Tracker_Artifact_Changeset $changeset
-     *
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
-        // never used...
+        return '';
     }
 
     /**

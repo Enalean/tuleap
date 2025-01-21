@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\Step\Execution\Field;
 
 use Codendi_HTMLPurifier;
 use TemplateRendererFactory;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
@@ -205,7 +206,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return new StepExecutionChangesetValueDao();
     }
 
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
     }

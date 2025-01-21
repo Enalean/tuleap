@@ -252,12 +252,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     /**
      * Fetch the value in a specific changeset
-     *
-     * @param Tracker_Artifact_Changeset $changeset
-     *
-     * @return string
      */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         //Nothing special to say here
         return '';

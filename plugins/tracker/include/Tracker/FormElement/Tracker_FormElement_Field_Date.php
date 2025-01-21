@@ -630,12 +630,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $this->formatDate($value);
     }
 
-    /**
-     * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         $value = 0;
         if ($v = $changeset->getValue($this)) {

@@ -94,12 +94,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return 'c.submitted_on';
     }
 
-    /**
-     * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return $this->formatDate($changeset->getSubmittedOn());
     }

@@ -933,8 +933,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
+        return '';
     }
 
     public function getChangesetValue($changeset, $value_id, $has_changed)

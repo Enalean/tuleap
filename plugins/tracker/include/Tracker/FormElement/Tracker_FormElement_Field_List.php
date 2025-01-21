@@ -572,12 +572,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->getBind()->fetchRawValue($value);
     }
 
-    /**
-     * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return $this->getBind()->fetchRawValueFromChangeset($changeset);
     }

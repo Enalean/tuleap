@@ -483,8 +483,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
     }
 
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
+        return '';
     }
 
     public function getChangesetValue($changeset, $value_id, $has_changed)

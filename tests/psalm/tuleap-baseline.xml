@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[fetchSubmitValue]]></code>
       <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[fetchTooltipValue]]></code>
@@ -29809,11 +29808,6 @@
       <code><![CDATA[getNotificationsForPath]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/svn/include/SVN/Notifications/NotificationListBuilder.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/svn/include/SVN/Notifications/NotificationPresenter.php">
     <MissingParamType>
       <code><![CDATA[$emails_to_be_notified_json]]></code>
@@ -34509,7 +34503,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[format]]></code>
-      <code><![CDATA[getDao]]></code>
       <code><![CDATA[getUgroupRESTRepresentation]]></code>
       <code><![CDATA[getUserGroupRESTId]]></code>
       <code><![CDATA[nodiff]]></code>
@@ -38660,9 +38653,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA['']]></code>
     </InvalidArgument>
-    <InvalidReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
@@ -38746,7 +38736,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[fetchSubmitValue]]></code>
       <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[getQueryFrom]]></code>
@@ -38812,7 +38801,6 @@
       <code><![CDATA[$dar]]></code>
     </DeprecatedMethod>
     <InvalidReturnType>
-      <code><![CDATA[fetchRawValueFromChangeset]]></code>
       <code><![CDATA[getRESTAvailableValues]]></code>
     </InvalidReturnType>
     <MissingParamType>
@@ -40024,9 +40012,6 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
     </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-    </DeprecatedMethod>
     <InvalidReturnStatement>
       <code><![CDATA[$project_groups]]></code>
     </InvalidReturnStatement>
@@ -41501,9 +41486,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/NotificationListBuilder.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$emails_to_be_notified]]></code>
       <code><![CDATA[$ugroups_to_be_notified]]></code>
@@ -57744,43 +57726,24 @@
   </file>
   <file src="src/common/Project/UGroupBinding.php">
     <DeprecatedMethod>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[$this->ugroupManager->searchBindedUgroupsInProject($project)]]></code>
-      <code><![CDATA[$this->ugroupManager->searchBindedUgroupsInProject($project)]]></code>
       <code><![CDATA[$ugroups]]></code>
       <code><![CDATA[$ugroups]]></code>
-      <code><![CDATA[isError]]></code>
     </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[getRecursiveRefresher]]></code>
       <code><![CDATA[reloadUgroupBindingInProject]]></code>
     </MissingReturnType>
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[getId]]></code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="src/common/Project/UGroupManager.php">
     <DeprecatedMethod>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[$dar]]></code>
       <code><![CDATA[$members]]></code>
       <code><![CDATA[$members]]></code>
-      <code><![CDATA[commit]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
-      <code><![CDATA[rowCount]]></code>
-      <code><![CDATA[rowCount]]></code>
-      <code><![CDATA[startTransaction]]></code>
     </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[$user->getId()]]></code>
-    </InvalidArgument>
     <InvalidClass>
       <code><![CDATA[PFUSer]]></code>
       <code><![CDATA[ProjectUgroup]]></code>
@@ -57788,12 +57751,6 @@
       <code><![CDATA[ProjectUgroup]]></code>
       <code><![CDATA[ProjectUgroup]]></code>
     </InvalidClass>
-    <InvalidReturnStatement>
-      <code><![CDATA[new ProjectUGroup($dar->getRow())]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-    </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$name]]></code>
@@ -57809,15 +57766,10 @@
       <code><![CDATA[createEmptyUgroup]]></code>
       <code><![CDATA[getDynamicUGoupByName]]></code>
       <code><![CDATA[getDynamicUGoupIdByName]]></code>
-      <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getUnormalisedName]]></code>
       <code><![CDATA[getUsersToAdd]]></code>
       <code><![CDATA[getUsersToRemove]]></code>
-      <code><![CDATA[syncUgroupMembers]]></code>
     </MissingReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[null]]></code>
-    </NullableReturnStatement>
     <PossiblyInvalidArgument>
       <code><![CDATA[$user->getId()]]></code>
     </PossiblyInvalidArgument>
@@ -57835,12 +57787,6 @@
     <MissingParamType>
       <code><![CDATA[$message]]></code>
     </MissingParamType>
-  </file>
-  <file src="src/common/Project/UGroups/Binding/RecursiveBoundUGroupsRefresher.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$bound_ugroups]]></code>
-      <code><![CDATA[$bound_ugroups]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="src/common/Project/UGroups/InvalidUGroupException.php">
     <MissingParamType>
@@ -60828,8 +60774,6 @@
       <code><![CDATA[db_query($sql)]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[$dar]]></code>
       <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
     <MissingParamType>
@@ -65132,121 +65076,6 @@
       <code><![CDATA[updateAndGetLastId]]></code>
       <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
-  </file>
-  <file src="src/common/dao/UGroupDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[isError]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmartImplode]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[rowCount]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[updateAndGetLastId]]></code>
-    </DeprecatedMethod>
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-    </InvalidFalsableReturnType>
-    <MissingParamType>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$new_project_id]]></code>
-      <code><![CDATA[$new_ugroup_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$ugroup_id]]></code>
-      <code><![CDATA[$ugroup_id]]></code>
-      <code><![CDATA[$ugroup_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[createBinding]]></code>
-      <code><![CDATA[searchByGroupIdAndName]]></code>
-      <code><![CDATA[searchByGroupIdAndUGroupId]]></code>
-      <code><![CDATA[searchByListOfUGroupsId]]></code>
-      <code><![CDATA[searchByUserIdTakingAccountUserProjectMembership]]></code>
-      <code><![CDATA[searchDynamicAndStaticByGroupId]]></code>
-      <code><![CDATA[searchNameByGroupIdAndUGroupId]]></code>
-      <code><![CDATA[searchStaticByGroupId]]></code>
-      <code><![CDATA[searchUgroupsForAdministratorInProject]]></code>
-      <code><![CDATA[searchUgroupsUserIsMemberInProject]]></code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Integrer]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/dao/UGroupUserDao.php">
     <DeprecatedMethod>
