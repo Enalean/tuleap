@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\Tus\Identifier\FileIdentifier;
 use Tuleap\Tus\Identifier\FileIdentifierFactory;
 
-class OngoingUploadDao extends DataAccessObject implements DeleteUnusedFiles, SaveFileUpload, SearchFileUpload, DeleteFileUpload, SearchFileOngoingUploadIds, DeleteUnusableFiles
+class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, SearchFileUpload, DeleteFileUpload, SearchExpiredUploads, DeleteExpiredFiles
 {
     public function __construct(private FileIdentifierFactory $identifier_factory)
     {
@@ -89,11 +89,6 @@ class OngoingUploadDao extends DataAccessObject implements DeleteUnusedFiles, Sa
         ]);
     }
 
-    public function deleteUnusableFile(DateTimeImmutable $current_time): void
-    {
-        $this->getDB()->run('DELETE FROM plugin_artidoc_section_upload WHERE expiration_date <= ?', $current_time->getTimestamp());
-    }
-
     /**
      * @return array{id: FileIdentifier, file_size: int, file_name: string, item_id: int, user_id: int, expiration_date: int} | null
      */
@@ -108,20 +103,28 @@ class OngoingUploadDao extends DataAccessObject implements DeleteUnusedFiles, Sa
         return $row;
     }
 
-    public function searchFileOngoingUploadIds(): array
+    public function searchExpiredUploads(\DateTimeImmutable $current_time): array
     {
         /**
-         * @var list<string> $ids
+         * @var list<array{id: string, item_id: int, file_size: int, file_name: string}> $rows
          */
-        $ids = $this->getDB()->column('SELECT id FROM plugin_artidoc_section_upload');
+        $rows = $this->getDB()->run(
+            'SELECT id, file_name, file_size, item_id FROM plugin_artidoc_section_upload WHERE expiration_date <= ?',
+            $current_time->getTimestamp(),
+        );
 
         return array_map(
-            fn (string $id) => $this->identifier_factory->buildFromBytesData($id),
-            $ids,
+            fn (array $row) => new ExpiredFileInformation(
+                $row['item_id'],
+                $this->identifier_factory->buildFromBytesData($row['id']),
+                $row['file_name'],
+                $row['file_size'],
+            ),
+            $rows,
         );
     }
 
-    public function deleteUnusableFiles(\DateTimeImmutable $current_time): void
+    public function deleteExpiredFiles(\DateTimeImmutable $current_time): void
     {
         $this->getDB()->run(
             'DELETE FROM plugin_artidoc_section_upload WHERE expiration_date <= ?',

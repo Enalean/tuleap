@@ -23,11 +23,12 @@ namespace Tuleap\Artidoc\Upload\Section\File;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Upload\NextGen\PathAllocator;
 
 interface FinishEmptyFileToUpload
 {
     /**
      * @return Ok<FileToUpload>|Err<Fault>
      */
-    public function createEmptyFile(FileToUpload $file_to_upload): Ok|Err;
+    public function createEmptyFile(FileToUpload $file_to_upload, PathAllocator $upload_path_allocator): Ok|Err;
 }

@@ -20,12 +20,11 @@
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-use Tuleap\Tus\Identifier\FileIdentifier;
 
-interface SearchFileOngoingUploadIds
+interface SearchExpiredUploads
 {
     /**
-     * @return list<FileIdentifier>
+     * @return list<ExpiredFileInformation>
      */
-    public function searchFileOngoingUploadIds(): array;
+    public function searchExpiredUploads(\DateTimeImmutable $current_time): array;
 }

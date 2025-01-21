@@ -30,17 +30,12 @@ use Tuleap\Upload\NextGen\PathAllocator;
 
 final readonly class EmptyFileToUploadFinisher implements FinishEmptyFileToUpload
 {
-    public function __construct(
-        private PathAllocator $upload_path_allocator,
-    ) {
-    }
-
-    public function createEmptyFile(FileToUpload $file_to_upload): Ok|Err
+    public function createEmptyFile(FileToUpload $file_to_upload, PathAllocator $upload_path_allocator): Ok|Err
     {
         $id               = $file_to_upload->id;
         $file_information = new FileAlreadyUploadedInformation($id, $file_to_upload->filename, 0);
 
-        $path = $this->upload_path_allocator->getPathForItemBeingUploaded($file_information);
+        $path = $upload_path_allocator->getPathForItemBeingUploaded($file_information);
 
         $allocated_path_directory = dirname($path);
         if (

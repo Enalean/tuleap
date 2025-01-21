@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
+use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
@@ -31,7 +32,7 @@ final class ArtidocUploadPathAllocatorTest extends TestCase
 {
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID(): void
     {
-        $allocator = new ArtidocUploadPathAllocator();
+        $allocator = ArtidocUploadPathAllocator::fromArtidoc(new ArtidocDocument(['item_id' => 123]));
 
         $file_id = (new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
 

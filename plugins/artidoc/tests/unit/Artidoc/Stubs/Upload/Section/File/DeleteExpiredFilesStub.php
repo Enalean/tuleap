@@ -18,9 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Upload\Section\File;
+declare(strict_types=1);
 
-interface DeleteUnusableFiles
+namespace Tuleap\Artidoc\Stubs\Upload\Section\File;
+
+use Tuleap\Artidoc\Upload\Section\File\DeleteExpiredFiles;
+
+final class DeleteExpiredFilesStub implements DeleteExpiredFiles
 {
-    public function deleteUnusableFiles(\DateTimeImmutable $current_time): void;
+    private bool $called = false;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function deleteExpiredFiles(\DateTimeImmutable $current_time): void
+    {
+        $this->called = true;
+    }
+
+    public function isCalled(): bool
+    {
+        return $this->called;
+    }
 }

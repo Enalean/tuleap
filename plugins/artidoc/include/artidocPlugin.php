@@ -36,12 +36,13 @@ use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
-use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
 use Tuleap\Artidoc\Upload\Section\File\FileUploadCleaner;
 use Tuleap\Artidoc\Upload\Section\File\OngoingUploadDao;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\Item\Icon\DocumentIconPresenterEvent;
@@ -176,9 +177,9 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         $dao = new OngoingUploadDao(new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()));
 
         $cleaner = new FileUploadCleaner(
-            new ArtidocUploadPathAllocator(),
             $dao,
             $dao,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         );
         $cleaner->deleteDanglingFilesToUpload(new \DateTimeImmutable());
     }

@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Upload\Section\File\FinishEmptyFileToUpload;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Upload\NextGen\PathAllocator;
 
 final readonly class FinishEmptyFileToUploadStub implements FinishEmptyFileToUpload
 {
@@ -50,7 +51,7 @@ final readonly class FinishEmptyFileToUploadStub implements FinishEmptyFileToUpl
         return new self(false);
     }
 
-    public function createEmptyFile(FileToUpload $file_to_upload): Ok|Err
+    public function createEmptyFile(FileToUpload $file_to_upload, PathAllocator $upload_path_allocator): Ok|Err
     {
         if ($this->success === null) {
             throw new \Exception('Unexpected call to ' . __METHOD__);
