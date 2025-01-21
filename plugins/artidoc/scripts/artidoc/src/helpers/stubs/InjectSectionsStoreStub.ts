@@ -20,7 +20,6 @@
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { Tracker } from "@/stores/configuration-store";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
 import type { ResultAsync } from "neverthrow";
@@ -34,7 +33,6 @@ export const InjectedSectionsStoreStub = {
     withSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
         replacePendingSection: noop,
         getSectionPositionForSave: () => null,
-        insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
         replaceAll: noop,
@@ -45,18 +43,11 @@ export const InjectedSectionsStoreStub = {
     withSectionsInError: (): SectionsStore => ({
         replacePendingSection: noop,
         getSectionPositionForSave: () => null,
-        insertPendingSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: resultasync_noop,
         replaceAll: noop,
         updateSection: noop,
         sections: ref([]),
         saved_sections: computed(() => []),
-    }),
-    withMockedInsertPendingArtifactSectionForEmptyDocument: (
-        insertPendingSectionForEmptyDocument: (tracker: Tracker | null) => void,
-    ): SectionsStore => ({
-        ...InjectedSectionsStoreStub.withSections([]),
-        insertPendingSectionForEmptyDocument,
     }),
 };

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, it, vi, expect } from "vitest";
+import { describe, it, vi, expect } from "vitest";
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { AT_THE_END, buildSectionsStore } from "@/stores/useSectionsStore";
 import * as rest from "@/helpers/rest-querier";
@@ -25,30 +25,20 @@ import { okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-import type { Tracker } from "@/stores/configuration-store";
 import type {
     ArtidocSection,
     FreetextSection,
     SectionBasedOnArtifact,
 } from "@/helpers/artidoc-section.type";
-import { isPendingFreetextSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
+import { isPendingFreetextSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
 describe("buildSectionsStore", () => {
-    let can_user_edit_document: boolean, selected_tracker: Tracker | null;
-
-    beforeEach(() => {
-        can_user_edit_document = true;
-        selected_tracker = null;
-    });
-
-    const getEmptyStore = (): SectionsStore =>
-        buildSectionsStore(can_user_edit_document, selected_tracker);
+    const getEmptyStore = (): SectionsStore => buildSectionsStore();
 
     const getStoreWithSections = (sections: ArtidocSection[]): SectionsStore => {
-        const store = buildSectionsStore(can_user_edit_document, selected_tracker);
+        const store = buildSectionsStore();
         store.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
         return store;
     };
@@ -82,54 +72,6 @@ describe("buildSectionsStore", () => {
             expect(store.sections.value[0]?.internal_id).toBeDefined();
             expect(store.sections.value[0]?.id).toBe(section.id);
             expect(store.sections.value[0]?.internal_id).not.toBe(section.id);
-        });
-
-        it.each([
-            [TrackerStub.withoutTitleAndDescription()],
-            [TrackerStub.withTitle()],
-            [TrackerStub.withDescription()],
-        ])(
-            "should store a pending freetext section when the document is empty and user can edit document and configured tracker = %s",
-            (tracker: Tracker) => {
-                selected_tracker = tracker;
-
-                const store = getEmptyStore();
-
-                store.replaceAll([]);
-
-                expect(store.sections.value).toHaveLength(1);
-                expect(isPendingFreetextSection(store.sections.value[0])).toBe(true);
-            },
-        );
-
-        it("should store nothing when tracker is not defined", () => {
-            const store = getEmptyStore();
-            store.replaceAll([]);
-
-            expect(store.sections.value).toHaveLength(0);
-        });
-
-        it("should store loaded sections when empty and configured tracker but no rights to edit document", () => {
-            selected_tracker = TrackerStub.withTitleAndDescription();
-            can_user_edit_document = false;
-
-            const store = getEmptyStore();
-            store.replaceAll([]);
-
-            expect(store.sections.value).toHaveLength(0);
-        });
-
-        it(`should create a pending artifact section
-            when loaded sections are empty
-            and there is a configured tracker
-            and user can edit document`, () => {
-            selected_tracker = TrackerStub.withTitleAndDescription();
-
-            const store = getEmptyStore();
-            store.replaceAll([]);
-
-            expect(store.sections.value).toHaveLength(1);
-            expect(isPendingArtifactSection(store.sections.value[0])).toBe(true);
         });
     });
 
@@ -205,82 +147,29 @@ describe("buildSectionsStore", () => {
     });
 
     describe("removeSection", () => {
-        it.each([
-            [null],
-            [TrackerStub.withoutTitleAndDescription()],
-            [TrackerStub.withTitle()],
-            [TrackerStub.withDescription()],
-            [TrackerStub.withTitleAndDescription()],
-        ])(
-            "should remove the section when it is found and tracker is %s",
-            async (tracker: Tracker | null) => {
-                selected_tracker = tracker;
-
-                const section1 = ArtifactSectionFactory.create();
-                const section2 = PendingArtifactSectionFactory.create();
-                const section3 = ArtifactSectionFactory.create();
-                const section4 = PendingArtifactSectionFactory.create();
-
-                vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
-
-                const store = getStoreWithSections([section1, section2, section3, section4]);
-
-                store.removeSection(section2, tracker);
-                store.removeSection(section3, null);
-                await flushPromises();
-
-                expect(store.sections.value).not.toBeUndefined();
-                expect(store.sections.value).toHaveLength(2);
-                expect(store.sections.value[0].id).toStrictEqual(section1.id);
-                expect(store.sections.value[1].id).toStrictEqual(section4.id);
-            },
-        );
-
-        it.each([
-            [TrackerStub.withoutTitleAndDescription()],
-            [TrackerStub.withTitle()],
-            [TrackerStub.withDescription()],
-        ])(
-            "should remove the last section and add automatically a new pending freetext section when tracker is %s",
-            async (tracker: Tracker) => {
-                const section = ArtifactSectionFactory.create();
-                const store = getStoreWithSections([section]);
-
-                vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
-
-                store.removeSection(section, tracker);
-                await flushPromises();
-
-                const pending = store.sections.value[0];
-                if (pending === undefined) {
-                    throw Error("Should get a section");
-                }
-
-                expect(store.sections.value).toHaveLength(1);
-                expect(isPendingFreetextSection(pending)).toBe(true);
-            },
-        );
-
-        it("should remove the last section and add automatically a new pending artifact section when tracker has title and description", async () => {
-            const section = ArtifactSectionFactory.create();
-            const store = getStoreWithSections([section]);
+        it("should remove the section", async () => {
+            const section1 = ArtifactSectionFactory.create();
+            const section2 = PendingArtifactSectionFactory.create();
+            const section3 = ArtifactSectionFactory.create();
+            const section4 = PendingArtifactSectionFactory.create();
 
             vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
-            store.removeSection(section, TrackerStub.withTitleAndDescription());
+            const store = getStoreWithSections([section1, section2, section3, section4]);
+
+            store.removeSection(section2);
+            store.removeSection(section3);
             await flushPromises();
 
-            expect(store.sections.value).toHaveLength(1);
-            const pending = store.sections.value[0];
-            if (pending === undefined) {
-                throw Error("Should get a section");
-            }
-            expect(isPendingArtifactSection(pending)).toBe(true);
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(2);
+            expect(store.sections.value[0].id).toStrictEqual(section1.id);
+            expect(store.sections.value[1].id).toStrictEqual(section4.id);
         });
 
         it("should do nothing when there is no sections", async () => {
             const store = getEmptyStore();
-            store.removeSection(ArtifactSectionFactory.create(), null);
+            store.removeSection(ArtifactSectionFactory.create());
             await flushPromises();
 
             expect(store.sections.value).toHaveLength(0);
@@ -293,7 +182,7 @@ describe("buildSectionsStore", () => {
             const section4 = PendingArtifactSectionFactory.create();
             const store = getStoreWithSections([section1, section2, section3, section4]);
 
-            store.removeSection(ArtifactSectionFactory.create(), null);
+            store.removeSection(ArtifactSectionFactory.create());
             await flushPromises();
 
             expect(store.sections.value).toHaveLength(4);
@@ -340,52 +229,6 @@ describe("buildSectionsStore", () => {
             expect(store.sections.value[0].id).toStrictEqual(section1.id);
             expect(store.sections.value[1].id).toStrictEqual(section2.id);
             expect(store.sections.value[2].id).toStrictEqual(new_section.id);
-        });
-    });
-
-    describe("insertPendingSectionForEmptyDocument", () => {
-        it.each([
-            [TrackerStub.withoutTitleAndDescription()],
-            [TrackerStub.withTitle()],
-            [TrackerStub.withDescription()],
-        ])("should insert a pending freetext section if tracker is %s", (tracker: Tracker) => {
-            selected_tracker = tracker;
-
-            const store = getEmptyStore();
-            store.insertPendingSectionForEmptyDocument(tracker);
-
-            expect(store.sections.value).toHaveLength(1);
-            expect(isPendingFreetextSection(store.sections.value[0])).toBe(true);
-        });
-
-        it("should insert a pending artifact section when sections is empty", () => {
-            const store = getEmptyStore();
-
-            store.insertPendingSectionForEmptyDocument(TrackerStub.withTitleAndDescription());
-
-            expect(store.sections.value).toHaveLength(1);
-            const section = store.sections.value[0];
-            if (section === undefined) {
-                throw Error("Should get a section");
-            }
-            expect(isPendingArtifactSection(section));
-        });
-
-        it("should do nothing when not empty", () => {
-            const section = ArtifactSectionFactory.create();
-            const store = getStoreWithSections([section]);
-
-            store.insertPendingSectionForEmptyDocument(TrackerStub.withTitleAndDescription());
-
-            expect(store.sections.value).toHaveLength(1);
-            expect(store.sections.value[0].id).toStrictEqual(section.id);
-        });
-
-        it("should do nothing when tracker is not defined", () => {
-            const store = getEmptyStore();
-            store.insertPendingSectionForEmptyDocument(null);
-
-            expect(store.sections.value).toHaveLength(0);
         });
     });
 

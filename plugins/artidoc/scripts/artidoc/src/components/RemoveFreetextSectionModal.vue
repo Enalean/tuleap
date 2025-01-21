@@ -79,13 +79,11 @@ import type { Modal } from "@tuleap/tlp-modal";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 
 const gettext_provider = useGettext();
 const { $gettext } = gettext_provider;
 
-const configuration = strictInject(CONFIGURATION_STORE);
 const { removeSection } = strictInject(SECTIONS_STORE);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 
@@ -116,7 +114,7 @@ function openModal(section: ArtidocSection): void {
 
 function onDelete(): void {
     if (section_to_remove) {
-        removeSection(section_to_remove, configuration.selected_tracker.value).match(
+        removeSection(section_to_remove).match(
             () => {
                 closeModal();
             },

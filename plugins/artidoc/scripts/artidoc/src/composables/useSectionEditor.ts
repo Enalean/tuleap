@@ -27,7 +27,6 @@ import {
 } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import type { Tracker } from "@/stores/configuration-store";
 import useSaveSection from "@/composables/useSaveSection";
 import type { EditorErrors } from "@/composables/useEditorErrors";
 import { useEditorErrors } from "@/composables/useEditorErrors";
@@ -45,9 +44,9 @@ export type SectionEditorActions = {
     enableEditor: () => void;
     saveEditor: () => void;
     forceSaveEditor: () => void;
-    cancelEditor: (tracker: Tracker | null) => void;
+    cancelEditor: () => void;
     refreshSection: RefreshSection["refreshSection"];
-    deleteSection: (tracker: Tracker | null) => void;
+    deleteSection: () => void;
 };
 
 export type EditorState = {
@@ -165,18 +164,18 @@ export function useSectionEditor(
     }
 
     const { cancelSectionUploads } = strictInject(UPLOAD_FILE_STORE);
-    function cancelEditor(tracker: Tracker | null): void {
+    function cancelEditor(): void {
         closeEditor();
         cancelSectionUploads(current_section.value.id);
 
         if (isPendingSection(current_section.value)) {
             editors_collection.removeEditor(current_section.value);
-            removeSection(current_section.value, tracker);
+            removeSection(current_section.value);
         }
     }
 
-    function deleteSection(tracker: Tracker | null): void {
-        removeSection(current_section.value, tracker).match(
+    function deleteSection(): void {
+        removeSection(current_section.value).match(
             () => {
                 if (is_section_in_edit_mode.value) {
                     closeEditor();

@@ -20,7 +20,6 @@
 import type { Ref } from "vue";
 import { ref } from "vue";
 import { putConfiguration } from "@/helpers/rest-querier";
-import type { SectionsStore } from "@/stores/useSectionsStore";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Project } from "@/helpers/project.type";
 
@@ -88,7 +87,6 @@ export function initConfigurationStore(
     document_id: number,
     selected_tracker: Tracker | null,
     allowed_trackers: readonly Tracker[],
-    sections_store: SectionsStore,
 ): ConfigurationStore {
     const currently_selected_tracker = ref(selected_tracker);
     const is_saving = ref(false);
@@ -108,7 +106,6 @@ export function initConfigurationStore(
         putConfiguration(document_id, new_selected_tracker.id).match(
             () => {
                 currently_selected_tracker.value = new_selected_tracker;
-                sections_store.insertPendingSectionForEmptyDocument(new_selected_tracker);
                 is_saving.value = false;
                 is_success.value = true;
             },
