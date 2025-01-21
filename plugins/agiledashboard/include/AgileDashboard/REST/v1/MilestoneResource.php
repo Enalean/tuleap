@@ -31,6 +31,10 @@ use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
+use ReferenceManager;
+use Tracker_Artifact_Changeset_ChangesetDataInitializator;
+use Tracker_Artifact_Changeset_CommentDao;
+use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -39,8 +43,9 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
-use Tuleap\AgileDashboard\BacklogItemDao;
+use TransitionFactory;
 use Tuleap\AgileDashboard\BacklogItem\AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
@@ -51,25 +56,59 @@ use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementMover;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
-use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\REST\RESTLogger;
+use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use URLVerification;
 use UserManager;
+use WorkflowFactory;
 
 /**
  * Wrapper for milestone related REST methods
@@ -228,7 +267,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @url PUT {id}/milestones
      *
-     * @param int $id    Id of the milestone
+     * @param int $id Id of the milestone
      * @param array $ids Ids of the new milestones {@from body}
      *
      * @throws RestException 400
@@ -297,7 +336,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @url PATCH {id}/milestones
      *
-     * @param int   $id  Id of the milestone
+     * @param int $id Id of the milestone
      * @param array $add Submilestones to add in milestone {@from body}
      *
      * @throws RestException 400
@@ -455,10 +494,10 @@ class MilestoneResource extends AuthenticatedResource
      * @url GET {id}/siblings
      * @access hybrid
      *
-     * @param int    $id     Id of the milestone
-     * @param string $query  JSON object of search criteria properties {@from path}
-     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}{@max 10}
-     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $id Id of the milestone
+     * @param string $query JSON object of search criteria properties {@from path}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 10}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
@@ -511,12 +550,12 @@ class MilestoneResource extends AuthenticatedResource
      * @url GET {id}/milestones
      * @access hybrid
      *
-     * @param int    $id     Id of the milestone
+     * @param int $id Id of the milestone
      * @param string $fields Set of fields to return in the result {@choice all,slim}
-     * @param string $query  JSON object of search criteria properties {@from path}
-     * @param int    $limit  Number of elements displayed per page {@from path}
-     * @param int    $offset Position of the first element to display {@from path}
-     * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
+     * @param string $query JSON object of search criteria properties {@from path}
+     * @param int $limit Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     * @param string $order In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
@@ -563,8 +602,8 @@ class MilestoneResource extends AuthenticatedResource
      * @url GET {id}/content
      * @access hybrid
      *
-     * @param int $id     Id of the milestone
-     * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
+     * @param int $id Id of the milestone
+     * @param int $limit Number of elements displayed per page {@min 0} {@max 100}
      * @param int $offset Position of the first element to display {@min 0}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
@@ -633,7 +672,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @url PUT {id}/content
      *
-     * @param int $id    Id of the milestone
+     * @param int $id Id of the milestone
      * @param array $ids Ids of backlog items {@from body}
      *
      * @throws RestException 400
@@ -795,9 +834,9 @@ class MilestoneResource extends AuthenticatedResource
      * @url GET {id}/backlog
      * @access hybrid
      *
-     * @param int $id     Id of the milestone
-     * @param string $query  JSON object of search criteria properties {@from path}
-     * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
+     * @param int $id Id of the milestone
+     * @param string $query JSON object of search criteria properties {@from path}
+     * @param int $limit Number of elements displayed per page {@min 0} {@max 100}
      * @param int $offset Position of the first element to display {@min 0}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
@@ -924,9 +963,9 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @url PATCH {id}/backlog
      *
-     * @param int                                                $id    Id of the milestone Item
+     * @param int $id Id of the milestone Item
      * @param \Tuleap\Tracker\REST\Helpers\OrderRepresentation $order Order of the children {@from body}
-     * @param array                                              $add    Ids to add/move to milestone backlog {@from body} {@type BacklogAddRepresentation}
+     * @param array $add Ids to add/move to milestone backlog {@from body} {@type BacklogAddRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -1005,7 +1044,7 @@ class MilestoneResource extends AuthenticatedResource
      * @url POST {id}/backlog
      * @status 201
      *
-     * @param int                  $id   Id of the milestone
+     * @param int $id Id of the milestone
      * @param BacklogItemReference $item Reference of the Backlog Item {@from body} {@type BacklogItemReference}
      *
      * @throws RestException 400
@@ -1239,9 +1278,68 @@ class MilestoneResource extends AuthenticatedResource
     {
         $db_transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
-        $milestone_parent_linker = new MilestoneParentLinker(
+        $form_element_factory     = Tracker_FormElementFactory::instance();
+        $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $reference_manager        = ReferenceManager::instance();
+        $artifact_links_usage_dao = new ArtifactLinksUsageDao();
+        $milestone_parent_linker  = new MilestoneParentLinker(
             $this->milestone_factory,
-            $this->backlog_factory
+            $this->backlog_factory,
+            new ArtifactLinker(
+                $form_element_factory,
+                new NewChangesetCreator(
+                    $db_transaction_executor,
+                    ArtifactChangesetSaver::build(),
+                    new AfterNewChangesetHandler($this->tracker_artifact_factory, $fields_retriever),
+                    WorkflowFactory::instance(),
+                    new CommentCreator(
+                        new Tracker_Artifact_Changeset_CommentDao(),
+                        $reference_manager,
+                        new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                        new TextValueValidator(),
+                    ),
+                    new NewChangesetFieldValueSaver(
+                        $fields_retriever,
+                        new ChangesetValueSaver(),
+                    ),
+                    new NewChangesetValidator(
+                        new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                            $form_element_factory,
+                            new ArtifactLinkValidator(
+                                $this->tracker_artifact_factory,
+                                new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                                $artifact_links_usage_dao,
+                                $this->event_manager,
+                            ),
+                            new WorkflowUpdateChecker(
+                                new FrozenFieldDetector(
+                                    new TransitionRetriever(
+                                        new StateFactory(
+                                            TransitionFactory::instance(),
+                                            new SimpleWorkflowDao()
+                                        ),
+                                        new TransitionExtractor()
+                                    ),
+                                    FrozenFieldsRetriever::instance()
+                                )
+                            )
+                        ),
+                        new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                        new ParentLinkAction($this->tracker_artifact_factory),
+                    ),
+                    new NewChangesetPostProcessor(
+                        $this->event_manager,
+                        ActionsQueuer::build(RESTLogger::getLogger()),
+                        new ChangesetCommentIndexer(
+                            new ItemToIndexQueueEventBased($this->event_manager),
+                            $this->event_manager,
+                            new Tracker_Artifact_Changeset_CommentDao(),
+                        ),
+                        new MentionedUserInTextRetriever(UserManager::instance()),
+                    ),
+                ),
+                new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $this->tracker_artifact_factory)
+            ),
         );
 
         return new MilestoneElementMover(

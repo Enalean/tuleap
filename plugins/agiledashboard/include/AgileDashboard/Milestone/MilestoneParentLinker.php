@@ -19,28 +19,20 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 
 class MilestoneParentLinker
 {
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogFactory
-     */
-    private $backlog_factory;
-
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
     public function __construct(
-        Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly Planning_MilestoneFactory $milestone_factory,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly ArtifactLinker $artifact_linker,
     ) {
-        $this->milestone_factory = $milestone_factory;
-        $this->backlog_factory   = $backlog_factory;
     }
 
-    public function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, Artifact $artifact_added)
+    public function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, Artifact $artifact_added): void
     {
         $this->milestone_factory->addMilestoneAncestors($user, $milestone);
 
@@ -63,7 +55,9 @@ class MilestoneParentLinker
                 $user
             )
         ) {
-            $parent_milestone_artifact->linkArtifact($artifact_added->getId(), $user);
+            $this->artifact_linker->linkArtifact($parent_milestone_artifact, new CollectionOfForwardLinks([
+                ForwardLinkProxy::buildFromData($artifact_added->getId(), Tracker_FormElement_Field_ArtifactLink::NO_TYPE),
+            ]), $user);
             $this->linkToMilestoneParent($parent_milestone, $user, $artifact_added);
         }
     }
@@ -96,7 +90,7 @@ class MilestoneParentLinker
         Artifact $artifact_added,
         Artifact $parent_milestone_artifact,
         PFUser $user,
-    ) {
+    ): bool {
         $parent = $artifact_added->getParent($user);
 
         if (! $parent) {
