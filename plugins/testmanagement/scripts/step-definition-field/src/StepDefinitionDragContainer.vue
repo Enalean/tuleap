@@ -50,7 +50,7 @@
                         data-test="add-step"
                     >
                         <i class="fa fa-plus"></i>
-                        <translate>Add step</translate>
+                        {{ $gettext("Add step") }}
                     </button>
                 </div>
             </div>

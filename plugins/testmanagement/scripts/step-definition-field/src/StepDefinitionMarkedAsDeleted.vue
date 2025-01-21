@@ -31,7 +31,7 @@
                 <step-definition-arrow-expected />
                 <div class="ttm-definition-step-expected-edit">
                     <div class="ttm-definition-step-expected-edit-title">
-                        <translate>Expected results</translate>
+                        {{ $gettext("Expected results") }}
                     </div>
                     <div
                         v-dompurify-html="step.raw_expected_results"

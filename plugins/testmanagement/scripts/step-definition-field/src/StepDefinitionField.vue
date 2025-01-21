@@ -27,10 +27,10 @@
                 v-on:click="toggleIsDragging()"
             >
                 <i class="fas fa-sync fa-rotate-90"></i>
-                <translate v-if="is_dragging" key="stop-reordering">
-                    Stop reordering steps
-                </translate>
-                <translate v-else key="start-reordering">Reorder steps</translate>
+                <span v-if="is_dragging" key="stop-reordering">
+                    {{ $gettext("Stop reordering steps") }}
+                </span>
+                <span v-else key="start-reordering">{{ $gettext("Reorder steps") }}</span>
             </button>
             <div class="ttm-definition-step-add-bar" v-show="!is_dragging">
                 <button
@@ -40,7 +40,7 @@
                     data-test="add-step"
                 >
                     <i class="fa fa-plus"></i>
-                    <translate>Add step</translate>
+                    {{ $gettext("Add step") }}
                 </button>
             </div>
         </div>

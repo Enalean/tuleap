@@ -61,7 +61,7 @@
             data-test="description-preview"
         ></div>
         <div class="alert alert-error" v-if="is_preview_in_error" data-test="description-error">
-            <translate>There was an error in the Markdown preview:</translate>
+            {{ $gettext("There was an error in the Markdown preview:") }}
             {{ error_text }}
         </div>
         <p class="text-info tracker-richtexteditor-help shown" v-bind:id="description_help_id"></p>
@@ -70,7 +70,7 @@
             <step-definition-arrow-expected />
             <div class="ttm-definition-step-expected-edit">
                 <div class="ttm-definition-step-expected-edit-title">
-                    <translate>Expected results</translate>
+                    {{ $gettext("Expected results") }}
                 </div>
 
                 <input
@@ -103,7 +103,7 @@
                     v-if="is_preview_in_error"
                     data-test="expected-results-error"
                 >
-                    <translate>There was an error in the Markdown preview:</translate>
+                    {{ $gettext("There was an error in the Markdown preview:") }}
                     {{ error_text }}
                 </div>
                 <div

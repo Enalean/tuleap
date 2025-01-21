@@ -27,17 +27,17 @@
             data-test="button-helper"
         >
             <i class="fas fa-question-circle" aria-hidden="true"></i>
-            <translate>Help</translate>
+            {{ $gettext("Help") }}
         </button>
         <section class="tlp-popover" id="popover-content" ref="popover_content">
             <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title" v-translate>For your information...</h1>
+                <h1 class="tlp-popover-title">{{ $gettext("For your information...") }}</h1>
             </div>
             <table class="tlp-table">
                 <thead>
                     <tr>
-                        <th v-translate>Type...</th>
-                        <th v-translate>...to get</th>
+                        <th>{{ $gettext("Type...") }}</th>
+                        <th>{{ $gettext("...to get") }}</th>
                     </tr>
                 </thead>
                 <tbody>
