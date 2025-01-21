@@ -31,15 +31,6 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneParentLinker.php">
-    <DeprecatedMethod>
-      <code><![CDATA[linkArtifact]]></code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code><![CDATA[isParentLinkedToParentMilestone]]></code>
-      <code><![CDATA[linkToMilestoneParent]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -33953,7 +33944,6 @@
       <code><![CDATA[fetchFromArtifactId]]></code>
       <code><![CDATA[fetchLastChangesetId]]></code>
       <code><![CDATA[fetchTitle]]></code>
-      <code><![CDATA[fetchView]]></code>
     </MissingReturnType>
     <PossiblyNullReference>
       <code><![CDATA[getId]]></code>
@@ -34014,9 +34004,6 @@
     <MissingParamType>
       <code><![CDATA[$number]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$retriever]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[displayANumberOfBlankTab]]></code>
       <code><![CDATA[displayFooter]]></code>
@@ -34025,7 +34012,6 @@
       <code><![CDATA[fetchFormContent]]></code>
       <code><![CDATA[fetchTitle]]></code>
       <code><![CDATA[fetchTitleInHierarchy]]></code>
-      <code><![CDATA[fetchView]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/SubmitAbstractRenderer.php">
@@ -34761,7 +34747,6 @@
   <file src="plugins/tracker/include/Tracker/Artifact/View/ViewCollection.php">
     <MissingReturnType>
       <code><![CDATA[add]]></code>
-      <code><![CDATA[fetchRequestedView]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XML/XMLArtifact.php">
@@ -38659,7 +38644,6 @@
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$data]]></code>
-      <code><![CDATA[$format]]></code>
       <code><![CDATA[$format]]></code>
       <code><![CDATA[$format]]></code>
       <code><![CDATA[$from_aid]]></code>
@@ -57738,9 +57722,6 @@
     <DeprecatedMethod>
       <code><![CDATA[$members]]></code>
       <code><![CDATA[$members]]></code>
-      <code><![CDATA[isError]]></code>
-      <code><![CDATA[isError]]></code>
-      <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
     </DeprecatedMethod>
