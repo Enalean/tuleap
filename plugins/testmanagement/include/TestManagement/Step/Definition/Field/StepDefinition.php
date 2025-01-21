@@ -27,6 +27,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ReferenceManager;
 use TemplateRendererFactory;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
@@ -245,7 +246,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return new StepDefinitionChangesetValueDao();
     }
 
-    public function fetchRawValueFromChangeset($changeset): string
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
     }

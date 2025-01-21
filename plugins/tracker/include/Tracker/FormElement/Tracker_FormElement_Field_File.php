@@ -138,12 +138,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $value;
     }
 
-    /**
-     * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         $value = '';
         if ($v = $changeset->getValue($this)) {

@@ -89,12 +89,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         return $value;
     }
 
-    /**
-     * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         $value = '';
         if ($v = $changeset->getValue($this)) {

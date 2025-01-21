@@ -283,12 +283,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         );
     }
 
-    /**
-     * @param Tracker_Artifact_Changeset $changeset
-     *
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
     }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
@@ -191,11 +192,7 @@ final class ExternalFieldBuilder
             {
             }
 
-            /**
-             * @param \Tracker_Artifact_Changeset $changeset
-             * @return string
-             */
-            public function fetchRawValueFromChangeset($changeset)
+            public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
             {
                 return '';
             }
