@@ -29,6 +29,7 @@ const config = {
         "cross-references-fields": "./src/fields/cross-references-fields.ts",
         "list-fields": "./src/fields/list-fields.ts",
         "mass-change": "./src/mass-change/mass-change-view.ts",
+        "link-view": "./src/link-tab/link-tab-view.ts",
     },
     context: __dirname,
     output: webpack_configurator.configureOutput(

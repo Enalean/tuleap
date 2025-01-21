@@ -118,10 +118,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
@@ -963,7 +963,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $layout,
                     $this->getTypeIsChildLinkRetriever(),
                     $this->getVisitRecorder(),
-                    $this->getHiddenFieldsetsDetector()
+                    $this->getHiddenFieldsetsDetector(),
+                    new Renderer\ArtifactViewCollectionBuilder($this->getEventManager(), $this->getTypeIsChildLinkRetriever())
                 );
 
                 $renderer->display($request, $current_user);
@@ -1003,7 +1004,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         $layout,
                         $this->getTypeIsChildLinkRetriever(),
                         $this->getVisitRecorder(),
-                        $this->getHiddenFieldsetsDetector()
+                        $this->getHiddenFieldsetsDetector(),
+                        new Renderer\ArtifactViewCollectionBuilder($this->getEventManager(), $this->getTypeIsChildLinkRetriever())
                     );
                     $renderer->display($request, $current_user);
                 }
