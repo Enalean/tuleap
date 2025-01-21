@@ -83,7 +83,7 @@ import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTracker
 import type { Artifact, ArtifactsCollection } from "../../type";
 import {
     DATE_FORMATTER,
-    IS_CSV_EXPORT_ALLOWED,
+    IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_ID,
     REPORT_STATE,
@@ -95,7 +95,7 @@ const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerRep
 
 const report_state = strictInject(REPORT_STATE);
 const date_formatter = strictInject(DATE_FORMATTER);
-const is_csv_export_allowed = strictInject(IS_CSV_EXPORT_ALLOWED);
+const is_csv_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 const notifyFault = strictInject(NOTIFY_FAULT);
 const report_id = strictInject(REPORT_ID);
 

@@ -74,6 +74,9 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
+msgid "Export XSLX"
+msgstr ""
+
 msgid "First"
 msgstr ""
 

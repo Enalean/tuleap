@@ -243,14 +243,14 @@ describe("CrossTrackerWidget", () => {
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
 
-            expect(wrapper.vm.is_csv_export_allowed).toBe(false);
+            expect(wrapper.vm.is_export_allowed).toBe(false);
         });
 
         it(`when there was an error, it does not allow CSV export`, () => {
             const wrapper = getWrapper();
             wrapper.vm.current_fault = Option.fromValue(Fault.fromMessage("Ooops"));
 
-            expect(wrapper.vm.is_csv_export_allowed).toBe(false);
+            expect(wrapper.vm.is_export_allowed).toBe(false);
         });
 
         it(`when user is NOT admin and there is no error,
@@ -258,7 +258,7 @@ describe("CrossTrackerWidget", () => {
             is_user_admin = false;
             const wrapper = getWrapper();
 
-            expect(wrapper.vm.is_csv_export_allowed).toBe(true);
+            expect(wrapper.vm.is_export_allowed).toBe(true);
         });
 
         it(`when user is admin and there are invalid trackers selected in the report,
@@ -271,14 +271,14 @@ describe("CrossTrackerWidget", () => {
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.is_csv_export_allowed).toBe(false);
+            expect(wrapper.vm.is_export_allowed).toBe(false);
         });
 
         it(`when user is admin and there are no invalid trackers,
             it allows CSV export`, () => {
             const wrapper = getWrapper();
 
-            expect(wrapper.vm.is_csv_export_allowed).toBe(true);
+            expect(wrapper.vm.is_export_allowed).toBe(true);
         });
     });
 });
