@@ -8,6 +8,7 @@ This log lists the architectural decisions for Program Management plugin.
 * [ADR-0002](0002-hexagonal-architecture.md) - Hexagonal Architecture in Program Management plugin
 * [ADR-0003](0003-static-factory-method.md) - Static factory method
 * [ADR-0004](0004-mock-free-tests.md) - Writing unit-tests without mocks
+* [ADR-0005](0005-build-domain-objects.md) - Build Domain objects without passing interfaces
 
 ADRs that applies to plugins and core can be found [at the root of the project](../../../../docs/decisions/README.md)
 

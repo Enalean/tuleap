@@ -1,6 +1,6 @@
 # Static factory method
 
-* Status: accepted
+* Status: superseded by [ADR-0005 Build Domain objects without passing interfaces][6]
 * Deciders: Joris MASSON, Marie Ange GARNIER
 * Date: 2021-10-12
 
@@ -166,6 +166,7 @@ We repeat instantiation of some of our classes so many times in Tests that we ha
 * DataClump (primitive obsession) [bliki][2]
 * Named Constructors in PHP [blog post][3]
 * [ADR-0004 Writing unit-tests without mocks][5]
+* [ADR-0005 Build Domain objects without passing interfaces][6]
 
 [0]: https://tuleap.net/plugins/tracker/?aid=16683
 [1]: <../glossary.md>
@@ -173,3 +174,4 @@ We repeat instantiation of some of our classes so many times in Tests that we ha
 [3]: https://verraes.net/2014/06/named-constructors-in-php/
 [4]: 0002-hexagonal-architecture.md
 [5]: 0004-mock-free-tests.md
+[6]: 0005-build-domain-objects.md
