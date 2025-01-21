@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use HTTPRequest;
-use Tracker_Artifact_View_Edit;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Artifact\View\ArtifactViewEdit;
 
 class InvertDisplayChangesController implements DispatchableWithRequestNoAuthz
 {
@@ -44,6 +44,6 @@ class InvertDisplayChangesController implements DispatchableWithRequestNoAuthz
         if ($request->getCurrentUser()->isAnonymous()) {
             throw new ForbiddenException();
         }
-        $request->getCurrentUser()->togglePreference(Tracker_Artifact_View_Edit::USER_PREFERENCE_DISPLAY_CHANGES, 0, 1);
+        $request->getCurrentUser()->togglePreference(ArtifactViewEdit::USER_PREFERENCE_DISPLAY_CHANGES, 0, 1);
     }
 }

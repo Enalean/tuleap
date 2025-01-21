@@ -16,15 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-use Tuleap\Tracker\Artifact\Renderer\GetAdditionalCssAssetsForArtifactDisplay;
+
+
+namespace Tuleap\Tracker\Artifact\Renderer;
+
+use Codendi_Request;
+use EventManager;
 use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
-/**
- * First class collection of Tracker_Artifact_View_View
- */
-class Tracker_Artifact_View_ViewCollection // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class ViewCollection
 {
     /** @var TrackerArtifactView[] */
     public $views = [];
@@ -33,7 +36,7 @@ class Tracker_Artifact_View_ViewCollection // phpcs:ignore PSR1.Classes.ClassDec
     {
     }
 
-    public function add(TrackerArtifactView $view)
+    public function add(TrackerArtifactView $view): void
     {
         $this->views[$view->getIdentifier()] = $view;
     }

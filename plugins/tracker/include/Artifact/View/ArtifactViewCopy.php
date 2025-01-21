@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,36 +16,39 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\Tracker\Artifact\View;
 
-use Codendi_Request;
-use PFUser;
-use Tuleap\Tracker\Artifact\Artifact;
-
-/**
- * Represents an artifact or a specifict information of it
- */
-abstract readonly class TrackerArtifactView
+final readonly class ArtifactViewCopy extends ArtifactViewEdit
 {
-    public function __construct(protected Artifact $artifact, protected Codendi_Request $request, protected PFUser $user)
-    {
-    }
-
+    /** @see ArtifactViewEdit::getURL() */
     public function getURL(): string
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
             [
-                'aid'  => $this->artifact->getId(),
-                'view' => $this->getIdentifier(),
+                'aid' => $this->artifact->getId(),
+                'func' => 'copy-artifact',
             ]
         );
     }
 
-    abstract public function getTitle(): string;
+    /** @see ArtifactViewEdit::getTitle() */
+    public function getTitle(): string
+    {
+        return dgettext('tuleap-tracker', 'Artifact');
+    }
 
-    abstract public function getIdentifier(): string;
+    /** @see ArtifactViewEdit::fetch() */
+    public function fetch(): string
+    {
+        self::fetchEditViewJSCode();
 
-    abstract public function fetch(): string;
+        $html  = '';
+        $html .= '<div class="tracker_artifact">';
+        $html .= $this->renderer->fetchFieldsForCopy($this->artifact);
+        $html .= '</div>';
+        return $html;
+    }
 }
