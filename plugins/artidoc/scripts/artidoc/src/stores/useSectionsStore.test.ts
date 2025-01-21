@@ -30,7 +30,6 @@ import type {
     FreetextSection,
     SectionBasedOnArtifact,
 } from "@/helpers/artidoc-section.type";
-import { isPendingFreetextSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
@@ -289,61 +288,6 @@ describe("buildSectionsStore", () => {
             });
             expect(store.getSectionPositionForSave(section4)).toBeNull();
             expect(store.getSectionPositionForSave(section5)).toBeNull();
-        });
-    });
-
-    describe("replacePendingSection", () => {
-        it("should do nothing if the pending sections cannot be found", () => {
-            const section = PendingArtifactSectionFactory.create();
-            const store = getStoreWithSections([section]);
-
-            store.replacePendingSection(
-                PendingArtifactSectionFactory.create(),
-                ArtifactSectionFactory.create(),
-            );
-
-            expect(store.sections.value).toHaveLength(1);
-            expect(store.sections.value[0].id).toStrictEqual(section.id);
-        });
-
-        it("should replace an artifact section", () => {
-            const section0 = PendingArtifactSectionFactory.create();
-            const section1 = ArtifactSectionFactory.create();
-            const section2 = PendingArtifactSectionFactory.create();
-            const section3 = PendingArtifactSectionFactory.create();
-            const newone = ArtifactSectionFactory.create();
-
-            const store = getStoreWithSections([section0, section1, section2, section3]);
-
-            store.replacePendingSection(section2, newone);
-
-            expect(store.sections.value).toHaveLength(4);
-            expect(store.sections.value[0].id).toStrictEqual(section0.id);
-            expect(store.sections.value[1].id).toStrictEqual(section1.id);
-            expect(store.sections.value[2].id).toStrictEqual(newone.id);
-            expect(store.sections.value[3].id).toStrictEqual(section3.id);
-        });
-
-        it("should replace a freetext section", () => {
-            const section0 = FreetextSectionFactory.create();
-            const section1 = FreetextSectionFactory.pending();
-            const section2 = FreetextSectionFactory.create();
-            const section3 = FreetextSectionFactory.create();
-            const newone = FreetextSectionFactory.create();
-
-            const store = getStoreWithSections([section0, section1, section2, section3]);
-
-            if (!isPendingFreetextSection(section1)) {
-                throw new Error("Expected a pending freetext section");
-            }
-
-            store.replacePendingSection(section1, newone);
-
-            expect(store.sections.value).toHaveLength(4);
-            expect(store.sections.value[0].id).toStrictEqual(section0.id);
-            expect(store.sections.value[1].id).toStrictEqual(newone.id);
-            expect(store.sections.value[2].id).toStrictEqual(section2.id);
-            expect(store.sections.value[3].id).toStrictEqual(section3.id);
         });
     });
 });

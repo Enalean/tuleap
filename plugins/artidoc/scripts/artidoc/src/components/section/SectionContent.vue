@@ -78,10 +78,13 @@ import { useUploadFile } from "@/composables/useUploadFile";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { useGettext } from "vue3-gettext";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
+import { getPendingSectionsReplacer } from "@/stores/PendingSectionsReplacer";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const props = defineProps<{ section: ArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
+const sections_collection = strictInject(SECTIONS_STORE);
 
 const {
     upload_url,
@@ -98,6 +101,7 @@ const editor = useSectionEditor(
     props.section,
     mergeArtifactAttachments,
     setWaitingListAttachments,
+    getPendingSectionsReplacer(sections_collection),
     upload_file.is_in_progress,
     (error: string) => {
         setGlobalErrorMessage({

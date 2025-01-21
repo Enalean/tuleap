@@ -25,11 +25,7 @@ import {
     isFreetextSection,
     isPendingSection,
 } from "@/helpers/artidoc-section.type";
-import type {
-    ArtidocSection,
-    PendingArtifactSection,
-    PendingFreetextSection,
-} from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { deleteSection } from "@/helpers/rest-querier";
 import type { ResultAsync } from "neverthrow";
 import { injectInternalId } from "@/helpers/inject-internal-id";
@@ -45,10 +41,6 @@ export interface SectionsStore {
     insertSection: (section: ArtidocSection, position: PositionForSection) => void;
     removeSection: (section: ArtidocSection) => ResultAsync<boolean, Fault>;
     getSectionPositionForSave: (section: ArtidocSection) => PositionForSection;
-    replacePendingSection: (
-        pending: PendingArtifactSection | PendingFreetextSection,
-        section: ArtidocSection,
-    ) => void;
     replaceAll: (sections_collection: StoredArtidocSection[]) => void;
 }
 
@@ -148,21 +140,6 @@ export function buildSectionsStore(): SectionsStore {
         return null;
     }
 
-    function replacePendingSection(
-        pending: PendingArtifactSection | PendingFreetextSection,
-        section: ArtidocSection,
-    ): void {
-        const index = sections.value.findIndex((element) => element.id === pending.id);
-        if (index === -1) {
-            return;
-        }
-
-        sections.value[index] = {
-            ...section,
-            internal_id: sections.value[index].internal_id,
-        };
-    }
-
     return {
         sections,
         saved_sections,
@@ -171,6 +148,5 @@ export function buildSectionsStore(): SectionsStore {
         insertSection,
         removeSection,
         getSectionPositionForSave,
-        replacePendingSection,
     };
 }
