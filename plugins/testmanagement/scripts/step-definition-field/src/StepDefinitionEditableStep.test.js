@@ -20,8 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
-import { createLocalVueForTests } from "./helpers/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
 import * as tuleap_api from "./api/tuleap-api.js";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 
@@ -37,18 +36,20 @@ jest.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
     };
 });
 
-async function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMONMARK) {
-    const state = {
-        is_dragging: false,
-        field_id: 18,
-        project_id: 102,
-    };
-
-    const store_options = { state };
-    const store = createStoreMock(store_options);
-
+function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMONMARK) {
     return shallowMount(StepDefinitionEditableStep, {
-        localVue: await createLocalVueForTests(),
+        global: {
+            ...getGlobalTestOptions({
+                state: {
+                    is_dragging: false,
+                    field_id: 18,
+                    project_id: 102,
+                },
+            }),
+            directives: {
+                "dompurify-html": jest.fn(),
+            },
+        },
         propsData: {
             step: {
                 raw_description: "raw description",
@@ -61,65 +62,64 @@ async function getComponentInstance(data = {}, description_format = TEXT_FORMAT_
                 ...data,
             };
         },
-        mocks: { $store: store },
     });
 }
 
 describe("StepDefinitionEditableStep", () => {
     describe(`The display of the textareas, CommonMark preview or error`, () => {
-        it(`displays both textareas if the user is in edit mode and if there is no error`, async () => {
-            const wrapper = await getComponentInstance({
+        it(`display form in edit mode, when it is in edit mode without error`, () => {
+            const wrapper = getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_in_error: false,
             });
 
-            expect(wrapper.find("[data-test=expected-results-textarea").isVisible()).toBe(true);
-            expect(wrapper.find("[data-test=description-textarea").isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=expected-results-textarea]").isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=description-textarea]").isVisible()).toBe(true);
 
-            expect(wrapper.find("[data-test=expected-results-preview").exists()).toBe(false);
-            expect(wrapper.find("[data-test=description-preview").exists()).toBe(false);
+            expect(wrapper.find("[data-test=expected-results-preview]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=description-preview]").exists()).toBe(false);
 
-            expect(wrapper.find("[data-test=expected-results-error").exists()).toBe(false);
-            expect(wrapper.find("[data-test=description-error").exists()).toBe(false);
+            expect(wrapper.find("[data-test=expected-results-error]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=description-error]").exists()).toBe(false);
         });
 
-        it(`displays both preview if the user is in preview mode and there is no error during the CommonMark interpretation`, async () => {
-            const wrapper = await getComponentInstance({
+        it(`display form in preview mode, when it is in edit mode without error`, () => {
+            const wrapper = getComponentInstance({
                 is_in_preview_mode: true,
                 is_preview_in_error: false,
             });
 
-            expect(wrapper.find("[data-test=expected-results-textarea").isVisible()).toBe(false);
-            expect(wrapper.find("[data-test=description-textarea").isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=expected-results-textarea]").isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=description-textarea]").isVisible()).toBe(false);
 
-            expect(wrapper.find("[data-test=expected-results-preview").isVisible()).toBe(true);
-            expect(wrapper.find("[data-test=description-preview").isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=expected-results-preview]").isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=description-preview]").isVisible()).toBe(true);
 
-            expect(wrapper.find("[data-test=expected-results-error").exists()).toBe(false);
-            expect(wrapper.find("[data-test=description-error").exists()).toBe(false);
+            expect(wrapper.find("[data-test=expected-results-error]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=description-error]").exists()).toBe(false);
         });
 
-        it(`displays an error when the CommonMark cannot be interpreted`, async () => {
-            const wrapper = await getComponentInstance({
+        it(`displays an error when the CommonMark cannot be interpreted`, () => {
+            const wrapper = getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_in_error: true,
             });
 
-            expect(wrapper.find("[data-test=expected-results-textarea").isVisible()).toBe(false);
-            expect(wrapper.find("[data-test=description-textarea").isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=expected-results-textarea]").isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=description-textarea]").isVisible()).toBe(false);
 
-            expect(wrapper.find("[data-test=expected-results-preview").exists()).toBe(false);
-            expect(wrapper.find("[data-test=description-preview").exists()).toBe(false);
+            expect(wrapper.find("[data-test=expected-results-preview]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=description-preview]").exists()).toBe(false);
 
-            expect(wrapper.find("[data-test=expected-results-error").isVisible()).toBe(true);
-            expect(wrapper.find("[data-test=description-error").isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=expected-results-error]").isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=description-error]").isVisible()).toBe(true);
         });
     });
     describe("The preview event handling", () => {
         it(`interprets the CommonMark when the user switch to the preview mode`, async () => {
             jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
-            const wrapper = await getComponentInstance({
+            const wrapper = getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_loading: false,
                 is_preview_in_error: false,
@@ -136,10 +136,10 @@ describe("StepDefinitionEditableStep", () => {
             expect(wrapper.vm.$data.is_preview_loading).toBe(false);
         });
 
-        it(`does not interpret the CommonMark when the user switch to the edit mode`, async () => {
+        it(`does not interpret the CommonMark when the user switch to the edit mode`, () => {
             jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
-            const wrapper = await getComponentInstance({
+            const wrapper = getComponentInstance({
                 is_in_preview_mode: true,
             });
 
@@ -154,7 +154,7 @@ describe("StepDefinitionEditableStep", () => {
                 expected_error_text,
             );
 
-            const wrapper = await getComponentInstance({
+            const wrapper = getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_loading: false,
                 is_preview_in_error: false,
@@ -171,8 +171,8 @@ describe("StepDefinitionEditableStep", () => {
             expect(wrapper.vm.$data.is_preview_loading).toBe(false);
         });
         describe("Get the content of the RTE editors", () => {
-            it("retrieves the content of the both editors if they are set and if the current step is in HTML format", async () => {
-                const wrapper = await getComponentInstance({}, TEXT_FORMAT_HTML);
+            it("retrieves the content of the both editors if they are set and if the current step is in HTML format", () => {
+                const wrapper = getComponentInstance({}, TEXT_FORMAT_HTML);
 
                 expect(wrapper.vm.$data.raw_description).toContain("raw description");
                 expect(wrapper.vm.$data.raw_expected_results).toContain("raw expected results");
@@ -183,8 +183,8 @@ describe("StepDefinitionEditableStep", () => {
                 expect(wrapper.vm.$data.raw_expected_results).toContain("some fabulous content");
             });
 
-            it("does not retrieve the RTE content if the format is not HTML", async () => {
-                const wrapper = await getComponentInstance({});
+            it("does not retrieve the RTE content if the format is not HTML", () => {
+                const wrapper = getComponentInstance({});
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
@@ -199,8 +199,8 @@ describe("StepDefinitionEditableStep", () => {
                 );
             });
 
-            it("does not retrieve the RTE content if one RTE editor is not set", async () => {
-                const wrapper = await getComponentInstance({}, TEXT_FORMAT_HTML);
+            it("does not retrieve the RTE content if one RTE editor is not set", () => {
+                const wrapper = getComponentInstance({}, TEXT_FORMAT_HTML);
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(

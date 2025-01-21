@@ -21,5 +21,10 @@ import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
 const jest_base_config = defineJestConfiguration();
 export default {
-    ...jest_base_config,
+    ...defineJestConfiguration(),
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+    displayName: "tracker/step-definition-field",
 };

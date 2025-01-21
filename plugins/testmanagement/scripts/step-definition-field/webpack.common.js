@@ -36,6 +36,12 @@ export default [
             path.resolve(__dirname, "./frontend-assets/"),
             "/assets/testmanagement/step-definition-field/",
         ),
+        resolve: {
+            extensions: [".js", ".ts", ".vue"],
+            alias: {
+                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
+            },
+        },
         externals: {
             jquery: "jQuery",
             ckeditor4: "CKEDITOR",
