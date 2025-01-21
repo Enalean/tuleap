@@ -30,7 +30,7 @@ import {
 } from "@/composables/useOpenAddExistingSectionModalBus";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-import { AT_THE_END } from "@/stores/useSectionsStore";
+import { AT_THE_END } from "@/stores/SectionsInserter";
 import { noop } from "@/helpers/noop";
 
 describe("AddExistingSectionModal", () => {

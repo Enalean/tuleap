@@ -32,7 +32,6 @@ const resultasync_noop = (): ResultAsync<boolean, Fault> => okAsync(true);
 export const InjectedSectionsStoreStub = {
     withSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
         getSectionPositionForSave: () => null,
-        insertSection: noop,
         removeSection: resultasync_noop,
         replaceAll: noop,
         updateSection: noop,
@@ -41,7 +40,6 @@ export const InjectedSectionsStoreStub = {
     }),
     withSectionsInError: (): SectionsStore => ({
         getSectionPositionForSave: () => null,
-        insertSection: noop,
         removeSection: resultasync_noop,
         replaceAll: noop,
         updateSection: noop,

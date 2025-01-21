@@ -19,7 +19,7 @@
 
 import { describe, it, vi, expect } from "vitest";
 import type { SectionsStore } from "@/stores/useSectionsStore";
-import { AT_THE_END, buildSectionsStore } from "@/stores/useSectionsStore";
+import { buildSectionsStore } from "@/stores/useSectionsStore";
 import * as rest from "@/helpers/rest-querier";
 import { okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
@@ -189,45 +189,6 @@ describe("buildSectionsStore", () => {
             expect(store.sections.value[1].id).toStrictEqual(section2.id);
             expect(store.sections.value[2].id).toStrictEqual(section3.id);
             expect(store.sections.value[3].id).toStrictEqual(section4.id);
-        });
-    });
-
-    describe("insertSection", () => {
-        const section1 = ArtifactSectionFactory.create();
-        const section2 = PendingArtifactSectionFactory.create();
-        const new_section = PendingArtifactSectionFactory.create();
-
-        it("should insert the section at the beginning", () => {
-            const store = getStoreWithSections([section1, section2]);
-
-            store.insertSection(new_section, { before: section1.id });
-
-            expect(store.sections.value).toHaveLength(3);
-            expect(store.sections.value[0].id).toStrictEqual(new_section.id);
-            expect(store.sections.value[1].id).toStrictEqual(section1.id);
-            expect(store.sections.value[2].id).toStrictEqual(section2.id);
-        });
-
-        it("should insert the section before the second one", () => {
-            const store = getStoreWithSections([section1, section2]);
-
-            store.insertSection(new_section, { before: section2.id });
-
-            expect(store.sections.value).toHaveLength(3);
-            expect(store.sections.value[0].id).toStrictEqual(section1.id);
-            expect(store.sections.value[1].id).toStrictEqual(new_section.id);
-            expect(store.sections.value[2].id).toStrictEqual(section2.id);
-        });
-
-        it("should insert the section at the end", () => {
-            const store = getStoreWithSections([section1, section2]);
-
-            store.insertSection(new_section, AT_THE_END);
-
-            expect(store.sections.value).toHaveLength(3);
-            expect(store.sections.value[0].id).toStrictEqual(section1.id);
-            expect(store.sections.value[1].id).toStrictEqual(section2.id);
-            expect(store.sections.value[2].id).toStrictEqual(new_section.id);
         });
     });
 

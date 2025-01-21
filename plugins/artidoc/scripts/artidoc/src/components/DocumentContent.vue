@@ -24,7 +24,7 @@
     <div class="tlp-card">
         <ol>
             <li
-                v-for="section in sections"
+                v-for="section in sections_collection.sections.value"
                 v-bind:key="section.internal_id"
                 v-bind:id="getId(section)"
                 v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
@@ -33,8 +33,8 @@
                 <add-new-section-button
                     class="artidoc-button-add-section-container"
                     v-if="has_add_button"
-                    v-bind:insert_section_callback="insertSection"
                     v-bind:position="{ before: section.id }"
+                    v-bind:sections_inserter="sections_inserter"
                 />
                 <section-container v-bind:section="section" />
             </li>
@@ -42,8 +42,8 @@
         <add-new-section-button
             class="artidoc-button-add-section-container"
             v-if="has_add_button"
-            v-bind:insert_section_callback="insertSection"
             v-bind:position="AT_THE_END"
+            v-bind:sections_inserter="sections_inserter"
         />
         <add-existing-section-modal />
         <remove-freetext-section-modal />
@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { AT_THE_END } from "@/stores/useSectionsStore";
+import { AT_THE_END, getSectionsInserter } from "@/stores/SectionsInserter";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import SectionContainer from "@/components/section/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -63,10 +63,10 @@ import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
 
-const { sections, insertSection } = strictInject(SECTIONS_STORE);
-
+const sections_collection = strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
+const sections_inserter = getSectionsInserter(sections_collection);
 const has_add_button = can_user_edit_document;
 
 function getId(section: ArtidocSection): string {
