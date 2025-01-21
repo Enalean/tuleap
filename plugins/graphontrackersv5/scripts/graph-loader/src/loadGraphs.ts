@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             Number.parseInt(report_id, 10),
             Number.parseInt(renderer_id, 10),
             Number.parseInt(graph_id, 10),
-            in_dashboard === "1",
+            in_dashboard,
         )
             .match(
                 (graph_data) => graphFactory(Number.parseInt(graph_id, 10), graph_data),

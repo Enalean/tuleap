@@ -25,7 +25,7 @@ export function getChartData(
     report_id: number,
     renderer_id: number,
     chart_id: number,
-    in_dashboard: boolean,
+    in_dashboard: string,
 ): ResultAsync<GraphData, Fault> {
     return getJSON<GraphData>(
         uri`/plugins/graphontrackersv5/report/${report_id}/renderer/${renderer_id}/chart/${chart_id}`,
