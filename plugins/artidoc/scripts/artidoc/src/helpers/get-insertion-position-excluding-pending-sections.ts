@@ -18,7 +18,7 @@
  */
 
 import type { InternalArtidocSectionId, PositionForSection } from "@/stores/useSectionsStore";
-import { AT_THE_END } from "@/stores/useSectionsStore";
+import { AT_THE_END } from "@/stores/SectionsInserter";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 

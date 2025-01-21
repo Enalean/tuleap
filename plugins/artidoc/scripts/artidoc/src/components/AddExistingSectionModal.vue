@@ -87,7 +87,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { createArtifactSection } from "@/helpers/rest-querier";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { PositionForSection } from "@/stores/useSectionsStore";
-import { AT_THE_END } from "@/stores/useSectionsStore";
+import { AT_THE_END } from "@/stores/SectionsInserter";
 import type { Artifact } from "@/helpers/search-existing-artifacts-for-autocompleter";
 import {
     isArtifact,

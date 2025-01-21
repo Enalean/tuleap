@@ -18,17 +18,9 @@
  */
 
 import { describe, beforeEach, expect, it, vi } from "vitest";
-import type { MockInstance } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import type {
-    PendingFreetextSection,
-    PendingArtifactSection,
-} from "@/helpers/artidoc-section.type";
-import {
-    isPendingFreetextSection,
-    isPendingArtifactSection,
-    isPendingSection,
-} from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isPendingFreetextSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { shallowMount } from "@vue/test-utils";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import type { ConfigurationStore } from "@/stores/configuration-store";
@@ -40,36 +32,35 @@ import {
     useOpenConfigurationModalBusStore,
 } from "@/stores/useOpenConfigurationModalBusStore";
 import { createGettext } from "vue3-gettext";
-import { AT_THE_END } from "@/stores/useSectionsStore";
+import type { InsertSections } from "@/stores/SectionsInserter";
+import { AT_THE_END } from "@/stores/SectionsInserter";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-import { noop } from "@/helpers/noop";
 import type { OpenAddExistingSectionModalBus } from "@/composables/useOpenAddExistingSectionModalBus";
 import {
     OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
     useOpenAddExistingSectionModalBus,
 } from "@/composables/useOpenAddExistingSectionModalBus";
+import { SectionsInserterStub } from "@/helpers/stubs/SectionsInserterStub";
 
 vi.mock("@tuleap/tlp-dropdown");
 
 describe("AddNewSectionButton", () => {
     let add_existing_section_bus: OpenAddExistingSectionModalBus,
-        configuration_bus: OpenConfigurationModalBusStore,
-        insert_section_callback: MockInstance & (() => void);
+        configuration_bus: OpenConfigurationModalBusStore;
 
     beforeEach(() => {
         add_existing_section_bus = useOpenAddExistingSectionModalBus();
         configuration_bus = useOpenConfigurationModalBusStore();
-        insert_section_callback = vi.fn();
     });
 
     function getWrapper(
-        insert_section_callback: () => void,
+        sections_inserter: InsertSections,
         configuration_store: ConfigurationStore,
         configuration_bus: OpenConfigurationModalBusStore,
         add_existing_section_bus: OpenAddExistingSectionModalBus,
     ): VueWrapper {
         return shallowMount(AddNewSectionButton, {
-            props: { position: AT_THE_END, insert_section_callback },
+            props: { position: AT_THE_END, sections_inserter },
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
@@ -81,13 +72,24 @@ describe("AddNewSectionButton", () => {
         });
     }
 
-    const getInsertedPendingSection = (): PendingFreetextSection | PendingArtifactSection => {
-        const section = insert_section_callback.mock.calls[0][0];
-        if (!section || !isPendingSection(section)) {
-            throw new Error("Expected a PendingSection");
+    const expectLastInsertedSectionToBeAPendingArtifactSection = (
+        inserted_section: ArtidocSection | null,
+    ): void => {
+        if (inserted_section === null) {
+            throw new Error("Expected a pending artifact section to be inserted.");
         }
 
-        return section;
+        expect(isPendingArtifactSection(inserted_section)).toBe(true);
+    };
+
+    const expectLastInsertedSectionToBeAPendingFreetextSection = (
+        inserted_section: ArtidocSection | null,
+    ): void => {
+        if (inserted_section === null) {
+            throw new Error("Expected a pending freetext section to be inserted.");
+        }
+
+        expect(isPendingFreetextSection(inserted_section)).toBe(true);
     };
 
     describe("[Create new section] when the tracker is not configured", () => {
@@ -99,7 +101,7 @@ describe("AddNewSectionButton", () => {
             });
 
             const wrapper = getWrapper(
-                insert_section_callback,
+                SectionsInserterStub.withoutExpectedCall(),
                 ConfigurationStoreStub.withSelectedTracker(null),
                 configuration_bus,
                 add_existing_section_bus,
@@ -108,7 +110,6 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
-            expect(insert_section_callback).not.toHaveBeenCalled();
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
@@ -121,8 +122,9 @@ describe("AddNewSectionButton", () => {
                 onSuccessfulSaved();
             });
 
+            const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
-                insert_section_callback,
+                inserter,
                 store,
                 configuration_bus,
                 add_existing_section_bus,
@@ -131,8 +133,8 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
-            expect(insert_section_callback).toHaveBeenCalledOnce();
-            expect(isPendingArtifactSection(getInsertedPendingSection())).toBe(true);
+
+            expectLastInsertedSectionToBeAPendingArtifactSection(inserter.getLastInsertedSection());
         });
     });
 
@@ -155,7 +157,7 @@ describe("AddNewSectionButton", () => {
             });
 
             const wrapper = getWrapper(
-                insert_section_callback,
+                SectionsInserterStub.withoutExpectedCall(),
                 store,
                 configuration_bus,
                 add_existing_section_bus,
@@ -164,7 +166,6 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
-            expect(insert_section_callback).not.toHaveBeenCalled();
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
@@ -186,8 +187,9 @@ describe("AddNewSectionButton", () => {
                 onSuccessfulSaved();
             });
 
+            const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
-                insert_section_callback,
+                inserter,
                 store,
                 configuration_bus,
                 add_existing_section_bus,
@@ -196,8 +198,7 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
-            expect(insert_section_callback).toHaveBeenCalledOnce();
-            expect(isPendingArtifactSection(getInsertedPendingSection())).toBe(true);
+            expectLastInsertedSectionToBeAPendingArtifactSection(inserter.getLastInsertedSection());
         });
     });
 
@@ -220,7 +221,7 @@ describe("AddNewSectionButton", () => {
             });
 
             const wrapper = getWrapper(
-                insert_section_callback,
+                SectionsInserterStub.withoutExpectedCall(),
                 store,
                 configuration_bus,
                 add_existing_section_bus,
@@ -229,7 +230,6 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
-            expect(insert_section_callback).not.toHaveBeenCalled();
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
@@ -251,8 +251,9 @@ describe("AddNewSectionButton", () => {
                 onSuccessfulSaved();
             });
 
+            const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
-                insert_section_callback,
+                inserter,
                 store,
                 configuration_bus,
                 add_existing_section_bus,
@@ -261,8 +262,7 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
-            expect(insert_section_callback).toHaveBeenCalledOnce();
-            expect(isPendingArtifactSection(getInsertedPendingSection())).toBe(true);
+            expectLastInsertedSectionToBeAPendingArtifactSection(inserter.getLastInsertedSection());
         });
     });
 
@@ -289,8 +289,9 @@ describe("AddNewSectionButton", () => {
                 },
             });
 
+            const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
-                insert_section_callback,
+                inserter,
                 store,
                 configuration_bus,
                 add_existing_section_bus,
@@ -299,8 +300,7 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(false);
-            expect(insert_section_callback).toHaveBeenCalledOnce();
-            expect(isPendingArtifactSection(getInsertedPendingSection())).toBe(true);
+            expectLastInsertedSectionToBeAPendingArtifactSection(inserter.getLastInsertedSection());
         });
 
         it("should ask to open the add existing section modal", async () => {
@@ -328,7 +328,7 @@ describe("AddNewSectionButton", () => {
             });
 
             const wrapper = getWrapper(
-                insert_section_callback,
+                SectionsInserterStub.withoutExpectedCall(),
                 store,
                 configuration_bus,
                 add_existing_section_bus,
@@ -337,7 +337,6 @@ describe("AddNewSectionButton", () => {
             await wrapper.find("[data-test=add-existing-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
-            expect(insert_section_callback).not.toHaveBeenCalled();
         });
     });
 
@@ -347,7 +346,7 @@ describe("AddNewSectionButton", () => {
             const openAddExistingSectionModal = vi.spyOn(add_existing_section_bus, "openModal");
 
             const wrapper = getWrapper(
-                noop,
+                SectionsInserterStub.withoutExpectedCall(),
                 ConfigurationStoreStub.withSelectedTracker(null),
                 configuration_bus,
                 add_existing_section_bus,
@@ -371,7 +370,12 @@ describe("AddNewSectionButton", () => {
                 onSuccessfulSaved();
             });
 
-            const wrapper = getWrapper(noop, store, configuration_bus, add_existing_section_bus);
+            const wrapper = getWrapper(
+                SectionsInserterStub.withoutExpectedCall(),
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
 
             await wrapper.find("[data-test=add-existing-section]").trigger("click");
 
@@ -382,8 +386,9 @@ describe("AddNewSectionButton", () => {
 
     describe("AddNewFreetextSection", () => {
         it("should insert a new pending freetext section", () => {
+            const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
-                insert_section_callback,
+                inserter,
                 ConfigurationStoreStub.withSelectedTracker(null),
                 configuration_bus,
                 add_existing_section_bus,
@@ -391,8 +396,7 @@ describe("AddNewSectionButton", () => {
 
             wrapper.find("[data-test=add-freetext-section]").trigger("click");
 
-            expect(insert_section_callback).toHaveBeenCalledOnce();
-            expect(isPendingFreetextSection(getInsertedPendingSection())).toBe(true);
+            expectLastInsertedSectionToBeAPendingFreetextSection(inserter.getLastInsertedSection());
         });
     });
 });

@@ -68,17 +68,18 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { OPEN_ADD_EXISTING_SECTION_MODAL_BUS } from "@/composables/useOpenAddExistingSectionModalBus";
 import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/configuration-store";
-import type { PositionForSection, SectionsStore } from "@/stores/useSectionsStore";
+import type { PositionForSection } from "@/stores/useSectionsStore";
 import type { ArtidocSection, PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import type { InsertSections } from "@/stores/SectionsInserter";
 
 const props = defineProps<{
     position: PositionForSection;
-    insert_section_callback: SectionsStore["insertSection"];
+    sections_inserter: InsertSections;
 }>();
 
 const configuration_store = strictInject(CONFIGURATION_STORE);
@@ -143,7 +144,7 @@ function addExistingSection(): void {
 
 function openAddExistingSectionModal(): void {
     add_existing_section_bus.openModal(props.position, (section: ArtidocSection): void => {
-        props.insert_section_callback(section, props.position);
+        props.sections_inserter.insertSection(section, props.position);
     });
 }
 
@@ -164,7 +165,7 @@ function addNewArtifactSection(): void {
 function addNewFreetextSection(): void {
     dropdown?.hide();
 
-    props.insert_section_callback(FreetextSectionFactory.pending(), props.position);
+    props.sections_inserter.insertSection(FreetextSectionFactory.pending(), props.position);
 }
 
 function openConfigurationModalBeforeInsertingNewSection(): void {
@@ -184,7 +185,7 @@ function insertNewSection(): void {
         configuration_store.selected_tracker.value,
     );
 
-    props.insert_section_callback(section, props.position);
+    props.sections_inserter.insertSection(section, props.position);
 }
 </script>
 

@@ -28,7 +28,6 @@ import {
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { deleteSection } from "@/helpers/rest-querier";
 import type { ResultAsync } from "neverthrow";
-import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
 
@@ -38,7 +37,6 @@ export interface SectionsStore {
     sections: Ref<StoredArtidocSection[]>;
     saved_sections: ComputedRef<readonly ArtidocSection[]>;
     updateSection: (section: ArtidocSection) => void;
-    insertSection: (section: ArtidocSection, position: PositionForSection) => void;
     removeSection: (section: ArtidocSection) => ResultAsync<boolean, Fault>;
     getSectionPositionForSave: (section: ArtidocSection) => PositionForSection;
     replaceAll: (sections_collection: StoredArtidocSection[]) => void;
@@ -47,7 +45,6 @@ export interface SectionsStore {
 type BeforeSection = { before: string };
 export type AtTheEnd = null;
 
-export const AT_THE_END: AtTheEnd = null;
 export type PositionForSection = AtTheEnd | BeforeSection;
 export interface InternalArtidocSectionId {
     internal_id: string;
@@ -77,28 +74,6 @@ export function buildSectionsStore(): SectionsStore {
                     internal_id: sections.value[i].internal_id,
                 };
             }
-        }
-    }
-
-    function insertSection(section: ArtidocSection, position: PositionForSection): void {
-        const NOT_FOUND = -1;
-        const index = getIndexWhereSectionShouldBeInserted(sections.value, position);
-
-        if (index === NOT_FOUND) {
-            sections.value.push(injectInternalId(section));
-        } else {
-            sections.value.splice(index, 0, injectInternalId(section));
-        }
-
-        function getIndexWhereSectionShouldBeInserted(
-            sections: StoredArtidocSection[],
-            position: PositionForSection,
-        ): number {
-            if (position === AT_THE_END) {
-                return NOT_FOUND;
-            }
-
-            return sections.findIndex((sibling) => sibling.id === position.before);
         }
     }
 
@@ -145,7 +120,6 @@ export function buildSectionsStore(): SectionsStore {
         saved_sections,
         replaceAll,
         updateSection,
-        insertSection,
         removeSection,
         getSectionPositionForSave,
     };
