@@ -25,11 +25,7 @@ import { okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import type {
-    ArtidocSection,
-    FreetextSection,
-    SectionBasedOnArtifact,
-} from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
@@ -71,77 +67,6 @@ describe("buildSectionsStore", () => {
             expect(store.sections.value[0]?.internal_id).toBeDefined();
             expect(store.sections.value[0]?.id).toBe(section.id);
             expect(store.sections.value[0]?.internal_id).not.toBe(section.id);
-        });
-    });
-
-    describe("updateSection", () => {
-        it("should update the artifact section", () => {
-            const section = ArtifactSectionFactory.create();
-            const section_a = ArtifactSectionFactory.override({
-                ...section,
-                id: "section-a",
-                title: {
-                    ...section.title,
-                    value: "Section A",
-                },
-            });
-            const section_b = ArtifactSectionFactory.override({
-                ...section,
-                id: "section-b",
-                title: {
-                    ...section.title,
-                    value: "Section B",
-                },
-            });
-
-            const store = getStoreWithSections([section_a, section_b]);
-            store.updateSection(
-                ArtifactSectionFactory.override({
-                    ...section_b,
-                    title: {
-                        ...section_b.title,
-                        value: "Updated section B",
-                    },
-                }),
-            );
-
-            const section_0: SectionBasedOnArtifact = store.sections
-                .value[0] as SectionBasedOnArtifact;
-            const section_1: SectionBasedOnArtifact = store.sections
-                .value[1] as SectionBasedOnArtifact;
-
-            expect(store.sections.value).toHaveLength(2);
-            expect(section_0.title.value).toBe("Section A");
-            expect(section_1.title.value).toBe("Updated section B");
-        });
-
-        it("should update the freetext section", () => {
-            const section = FreetextSectionFactory.create();
-            const section_a = FreetextSectionFactory.override({
-                ...section,
-                id: "section-a",
-                title: "Section A",
-            });
-            const section_b = FreetextSectionFactory.override({
-                ...section,
-                id: "section-b",
-                title: "Section B",
-            });
-
-            const store = getStoreWithSections([section_a, section_b]);
-            store.updateSection(
-                FreetextSectionFactory.override({
-                    ...section_b,
-                    title: "Updated section B",
-                }),
-            );
-
-            const section_0: FreetextSection = store.sections.value[0] as FreetextSection;
-            const section_1: FreetextSection = store.sections.value[1] as FreetextSection;
-
-            expect(store.sections.value).toHaveLength(2);
-            expect(section_0.title).toBe("Section A");
-            expect(section_1.title).toBe("Updated section B");
         });
     });
 

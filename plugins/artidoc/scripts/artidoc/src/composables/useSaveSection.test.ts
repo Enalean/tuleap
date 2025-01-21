@@ -32,13 +32,15 @@ import { okAsync } from "neverthrow";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { PendingSectionsReplacerStub } from "@/helpers/stubs/PendingSectionsReplacerStub";
+import { noop } from "@/helpers/noop";
+import { SectionsUpdaterStub } from "@/helpers/stubs/SectionsUpdaterStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
 
 describe("useSaveSection", () => {
     let editor_errors: EditorErrors;
-    let callbacks: Parameters<typeof useSaveSection>[2];
+    let callbacks: Parameters<typeof useSaveSection>[3];
 
     beforeEach(() => {
         editor_errors = {
@@ -46,9 +48,8 @@ describe("useSaveSection", () => {
             handleError: vi.fn(),
         };
         callbacks = {
-            updateSectionStore: vi.fn(),
-            updateCurrentSection: vi.fn(),
-            closeEditor: vi.fn(),
+            updateCurrentSection: noop,
+            closeEditor: noop,
             setEditMode: vi.fn(),
             getSectionPositionForSave: vi.fn(),
             mergeArtifactAttachments: vi.fn(),
@@ -67,6 +68,7 @@ describe("useSaveSection", () => {
             const { forceSave } = useSaveSection(
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withNoExpectedCall(),
                 callbacks,
             );
 
@@ -83,6 +85,7 @@ describe("useSaveSection", () => {
             const { forceSave } = useSaveSection(
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withNoExpectedCall(),
                 callbacks,
             );
 
@@ -103,6 +106,7 @@ describe("useSaveSection", () => {
                 const { save } = useSaveSection(
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withNoExpectedCall(),
                     callbacks,
                 );
 
@@ -117,6 +121,7 @@ describe("useSaveSection", () => {
                 const { save } = useSaveSection(
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withNoExpectedCall(),
                     callbacks,
                 );
 
@@ -132,6 +137,7 @@ describe("useSaveSection", () => {
                 const { save } = useSaveSection(
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withNoExpectedCall(),
                     callbacks,
                 );
 
@@ -150,6 +156,7 @@ describe("useSaveSection", () => {
                 const { save } = useSaveSection(
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withNoExpectedCall(),
                     callbacks,
                 );
 
@@ -170,6 +177,7 @@ describe("useSaveSection", () => {
             const { save } = useSaveSection(
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withNoExpectedCall(),
                 callbacks,
             );
 
@@ -185,6 +193,7 @@ describe("useSaveSection", () => {
             const { save } = useSaveSection(
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withNoExpectedCall(),
                 callbacks,
             );
 
@@ -196,7 +205,12 @@ describe("useSaveSection", () => {
 
         it("When the saved section is a pending artifact section, Then it should create it and replace it by the saved one.", async () => {
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
-            const { save } = useSaveSection(editor_errors, replacer, callbacks);
+            const { save } = useSaveSection(
+                editor_errors,
+                replacer,
+                SectionsUpdaterStub.withNoExpectedCall(),
+                callbacks,
+            );
 
             const pending_section = PendingArtifactSectionFactory.create();
             const createArtifact = vi
@@ -216,7 +230,12 @@ describe("useSaveSection", () => {
 
         it("When the saved section is a pending freetext section, Then it should create it and replace it by the saved one.", async () => {
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
-            const { save } = useSaveSection(editor_errors, replacer, callbacks);
+            const { save } = useSaveSection(
+                editor_errors,
+                replacer,
+                SectionsUpdaterStub.withNoExpectedCall(),
+                callbacks,
+            );
 
             const pending_section = FreetextSectionFactory.pending();
             const createFreetextSection = vi

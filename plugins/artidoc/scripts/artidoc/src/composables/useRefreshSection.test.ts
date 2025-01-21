@@ -27,6 +27,7 @@ import * as rest from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { SectionsUpdaterStub } from "@/helpers/stubs/SectionsUpdaterStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = ArtifactSectionFactory.create();
@@ -36,11 +37,10 @@ const editor_errors: EditorErrors = {
 };
 
 describe("useRefreshSection", () => {
-    let callbacks: Parameters<typeof useRefreshSection>[2];
+    let callbacks: Parameters<typeof useRefreshSection>[3];
     beforeEach(() => {
         callbacks = {
             closeEditor: vi.fn(),
-            updateSectionStore: vi.fn(),
             updateCurrentSection: vi.fn(),
         };
     });
@@ -54,33 +54,49 @@ describe("useRefreshSection", () => {
             });
 
             it(`should call update section from editor with ${name}`, async () => {
-                const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
+                const updater = SectionsUpdaterStub.withExpectedCall();
+                const { refreshSection } = useRefreshSection(
+                    section,
+                    editor_errors,
+                    updater,
+                    callbacks,
+                );
                 refreshSection();
 
                 await flushPromises();
 
+                expect(updater.getLastUpdatedSection()).toStrictEqual(new_section);
                 expect(callbacks.updateCurrentSection).toHaveBeenCalledWith(new_section);
             });
             it(`should close editor with ${name}`, async () => {
-                const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
+                const updater = SectionsUpdaterStub.withExpectedCall();
+                const { refreshSection } = useRefreshSection(
+                    section,
+                    editor_errors,
+                    updater,
+                    callbacks,
+                );
 
                 refreshSection();
                 await flushPromises();
 
+                expect(updater.getLastUpdatedSection()).toStrictEqual(new_section);
                 expect(callbacks.closeEditor).toHaveBeenCalledOnce();
             });
             describe("when the api call returns an artifact section", () => {
                 it("should call update section from store", async () => {
+                    const updater = SectionsUpdaterStub.withExpectedCall();
                     const { refreshSection } = useRefreshSection(
                         ArtifactSectionFactory.create(),
                         editor_errors,
+                        updater,
                         callbacks,
                     );
 
                     refreshSection();
                     await flushPromises();
 
-                    expect(callbacks.updateSectionStore).toHaveBeenCalledWith(new_section);
+                    expect(updater.getLastUpdatedSection()).toStrictEqual(new_section);
                 });
             });
         });
@@ -95,14 +111,24 @@ describe("useRefreshSection", () => {
             });
 
             it(`should call handle error from editor with ${name}`, async () => {
-                const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
+                const { refreshSection } = useRefreshSection(
+                    section,
+                    editor_errors,
+                    SectionsUpdaterStub.withNoExpectedCall(),
+                    callbacks,
+                );
                 refreshSection();
                 await flushPromises();
 
                 expect(editor_errors.handleError).toHaveBeenCalledWith(fault);
             });
             it(`should update is_outdated with ${name}`, async () => {
-                const { refreshSection } = useRefreshSection(section, editor_errors, callbacks);
+                const { refreshSection } = useRefreshSection(
+                    section,
+                    editor_errors,
+                    SectionsUpdaterStub.withNoExpectedCall(),
+                    callbacks,
+                );
                 editor_errors.is_outdated.value = true;
                 expect(editor_errors.is_outdated.value).toBe(true);
 

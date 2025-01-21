@@ -20,11 +20,7 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import { okAsync } from "neverthrow";
-import {
-    isArtifactSection,
-    isFreetextSection,
-    isPendingSection,
-} from "@/helpers/artidoc-section.type";
+import { isPendingSection } from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { deleteSection } from "@/helpers/rest-querier";
 import type { ResultAsync } from "neverthrow";
@@ -36,7 +32,6 @@ export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 export interface SectionsStore {
     sections: Ref<StoredArtidocSection[]>;
     saved_sections: ComputedRef<readonly ArtidocSection[]>;
-    updateSection: (section: ArtidocSection) => void;
     removeSection: (section: ArtidocSection) => ResultAsync<boolean, Fault>;
     getSectionPositionForSave: (section: ArtidocSection) => PositionForSection;
     replaceAll: (sections_collection: StoredArtidocSection[]) => void;
@@ -60,22 +55,6 @@ export function buildSectionsStore(): SectionsStore {
     const saved_sections: ComputedRef<readonly ArtidocSection[]> = computed(() => {
         return extractSavedSectionsFromArtidocSections(sections.value);
     });
-
-    function updateSection(section: ArtidocSection): void {
-        const length = sections.value.length;
-        for (let i = 0; i < length; i++) {
-            const current = sections.value[i];
-            if (
-                (isArtifactSection(current) || isFreetextSection(current)) &&
-                current.id === section.id
-            ) {
-                sections.value[i] = {
-                    ...section,
-                    internal_id: sections.value[i].internal_id,
-                };
-            }
-        }
-    }
 
     function removeSection(section: ArtidocSection): ResultAsync<boolean, Fault> {
         const index = sections.value.findIndex((element) => element.id === section.id);
@@ -119,7 +98,6 @@ export function buildSectionsStore(): SectionsStore {
         sections,
         saved_sections,
         replaceAll,
-        updateSection,
         removeSection,
         getSectionPositionForSave,
     };
