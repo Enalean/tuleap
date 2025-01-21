@@ -29,8 +29,6 @@ use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -95,21 +93,14 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildListValue($sprint_artifact_closed_changeset, $sprint_status_field_id, $sprint_status_values['closed'][1]);
     }
 
-    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return $result;
-    }
-
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
             new CrossTrackerExpertReport(
                 1,
                 "SELECT @status FROM @project = 'self' WHERE field_status = '' OR field_status != ''",
+                '',
+                '',
             ),
             $this->user,
         );

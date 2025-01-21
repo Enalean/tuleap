@@ -29,7 +29,6 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
 {
-    private const PROJECT_ID = 134;
     private CrossTrackerReportDao $report_dao;
     private CrossTrackerReportCreator $creator;
 

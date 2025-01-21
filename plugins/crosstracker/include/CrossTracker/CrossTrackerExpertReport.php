@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker;
 
-use Project;
-use Tracker;
-use Tracker_FormElement_Field;
-
-final readonly class CrossTrackerExpertReport implements CrossTrackerReport
+final readonly class CrossTrackerExpertReport
 {
     public function __construct(
         private int $id,
-        private string $expert_query,
+        private string $query,
+        private string $title,
+        private string $description,
     ) {
     }
 
@@ -39,68 +37,18 @@ final readonly class CrossTrackerExpertReport implements CrossTrackerReport
         return $this->id;
     }
 
-    public function getExpertQuery(): string
+    public function getQuery(): string
     {
-        return $this->expert_query;
+        return $this->query;
     }
 
-    public function isExpert(): bool
+    public function getTitle(): string
     {
-        return true;
+        return $this->title;
     }
 
-    /**
-     * @return Project[]
-     */
-    public function getProjects(): array
+    public function getDescription(): string
     {
-        $projects = [];
-        foreach ($this->getTrackers() as $tracker) {
-            $project                     = $tracker->getProject();
-            $projects[$project->getID()] = $project;
-        }
-        return array_values($projects);
-    }
-
-    /**
-     * @return Tracker[]
-     */
-    public function getTrackers(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return Tracker_FormElement_Field[]
-     */
-    public function getColumnFields(): array
-    {
-        $fields = [];
-        foreach ($this->getTrackers() as $tracker) {
-            $title_field       = $tracker->getTitleField();
-            $status_field      = $tracker->getStatusField();
-            $assigned_to_field = $tracker->getContributorField();
-            foreach ([$title_field, $status_field, $assigned_to_field] as $field) {
-                if ($field !== null) {
-                    $fields[$field->getId()] = $field;
-                }
-            }
-        }
-        return array_values($fields);
-    }
-
-    /**
-     * @return Tracker_FormElement_Field[]
-     */
-    public function getSearchFields(): array
-    {
-        $fields = [];
-        foreach ($this->getTrackers() as $tracker) {
-            $field = $tracker->getStatusField();
-            if ($field !== null) {
-                $fields[$field->getId()] = $field;
-            }
-        }
-        return array_values($fields);
+        return $this->description;
     }
 }

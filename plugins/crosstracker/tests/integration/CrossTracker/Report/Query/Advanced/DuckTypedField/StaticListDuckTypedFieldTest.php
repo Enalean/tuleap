@@ -26,16 +26,11 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field_List;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
@@ -44,9 +39,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
 
     private PFUser $project_member;
     private PFUser $project_admin;
-    private Tracker $release_tracker;
-    private Tracker $sprint_tracker;
-    private Tracker $task_tracker;
     private int $release_artifact_empty_id;
     private int $release_artifact_with_cheese_id;
     private int $release_artifact_with_lead_id;
@@ -67,19 +59,20 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
-        $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
-        $tracker_builder->setViewPermissionOnTracker($this->release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $release_list_field_id = $tracker_builder->buildStaticListField($this->release_tracker->getId(), 'list_field', 'sb');
+        $release_list_field_id = $tracker_builder->buildStaticListField($release_tracker->getId(), 'list_field', 'sb');
         $release_bind_ids      = $tracker_builder->buildValuesForStaticListField($release_list_field_id, ['lead', 'management', 'cheese']);
-        $sprint_list_field_id  = $tracker_builder->buildStaticListField($this->sprint_tracker->getId(), 'list_field', 'msb');
+        $sprint_list_field_id  = $tracker_builder->buildStaticListField($sprint_tracker->getId(), 'list_field', 'msb');
         $sprint_bind_ids       = $tracker_builder->buildValuesForStaticListField($sprint_list_field_id, ['lead', 'management', 'cheese']);
-        $task_list_field_id    = $tracker_builder->buildStaticListField($this->task_tracker->getId(), 'list_field', 'sb');
+        $task_list_field_id    = $tracker_builder->buildStaticListField($task_tracker->getId(), 'list_field', 'sb');
         $task_bind_ids         = $tracker_builder->buildValuesForStaticListField($task_list_field_id, ['lead', 'management', 'cheese']);
 
         $tracker_builder->grantReadPermissionOnField(
@@ -95,13 +88,13 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_ADMIN
         );
 
-        $this->release_artifact_empty_id           = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_artifact_with_cheese_id     = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_artifact_with_lead_id       = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->sprint_artifact_empty_id            = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->sprint_artifact_with_cheese_id      = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->sprint_artifact_with_cheese_lead_id = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->task_artifact_with_cheese_id        = $tracker_builder->buildArtifact($this->task_tracker->getId());
+        $this->release_artifact_empty_id           = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->release_artifact_with_cheese_id     = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->release_artifact_with_lead_id       = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->sprint_artifact_empty_id            = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->sprint_artifact_with_cheese_id      = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->sprint_artifact_with_cheese_lead_id = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->task_artifact_with_cheese_id        = $tracker_builder->buildArtifact($task_tracker->getId());
 
         $release_artifact_empty_changeset           = $tracker_builder->buildLastChangeset($this->release_artifact_empty_id);
         $release_artifact_with_cheese_changeset     = $tracker_builder->buildLastChangeset($this->release_artifact_with_cheese_id);
@@ -153,27 +146,14 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         );
     }
 
-    /**
-     * @return list<int>
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     */
-    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof ArtifactMatchingReportCollection);
-        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
-    }
-
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field = ''",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field = ''",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -185,10 +165,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field = 'cheese'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field = 'cheese'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -200,10 +181,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field = 'cheese'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field = 'cheese'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -219,10 +201,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field = 'cheese' OR list_field = 'lead'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field = 'cheese' OR list_field = 'lead'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -237,10 +220,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqualAnd(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field = 'cheese' AND list_field = 'lead'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field = 'cheese' AND list_field = 'lead'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -252,10 +236,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field != ''",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field != ''",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -270,10 +255,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field != 'lead'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field != 'lead'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -288,10 +274,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field != 'lead'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field != 'lead'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -307,10 +294,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field != 'cheese' AND list_field != 'lead'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field != 'cheese' AND list_field != 'lead'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -322,10 +310,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field IN('cheese')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field IN('cheese')",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -337,10 +326,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field IN('cheese')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field IN('cheese')",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -356,10 +346,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInValues(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field IN('lead', 'cheese')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field IN('lead', 'cheese')",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -374,10 +365,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field IN('lead') AND list_field IN('cheese')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field IN('lead') AND list_field IN('cheese')",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -389,10 +381,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field NOT IN('lead')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field NOT IN('lead')",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -407,10 +400,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field NOT IN('lead')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field NOT IN('lead')",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -426,10 +420,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInValues(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field NOT IN('lead', 'cheese')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field NOT IN('lead', 'cheese')",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -441,10 +436,11 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotInValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "list_field NOT IN('lead') AND list_field NOT IN ('cheese')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE list_field NOT IN('lead') AND list_field NOT IN ('cheese')",
+                '',
+                '',
             ),
             $this->project_member
         );

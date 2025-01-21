@@ -25,24 +25,16 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class StatusMetadataTest extends CrossTrackerFieldTestCase
 {
     private PFUser $project_member;
     private PFUser $project_admin;
-    private Tracker $release_tracker;
-    private Tracker $sprint_tracker;
-    private Tracker $task_tracker;
     private int $release_artifact_open_id;
     private int $release_artifact_close_id;
     private int $sprint_artifact_open_id;
@@ -63,20 +55,21 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
-        $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
-        $tracker_builder->setViewPermissionOnTracker($this->release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $release_status_field_id = $tracker_builder->buildStaticListField($this->release_tracker->getId(), 'release_status', 'sb');
-        $release_status_values   = $tracker_builder->buildOpenAndClosedValuesForField($release_status_field_id, $this->release_tracker->getId(), ['Open'], ['Closed']);
-        $sprint_status_field_id  = $tracker_builder->buildStaticListField($this->sprint_tracker->getId(), 'sprint_status', 'sb');
-        $sprint_status_values    = $tracker_builder->buildOpenAndClosedValuesForField($sprint_status_field_id, $this->sprint_tracker->getId(), ['Open'], ['Closed']);
-        $task_status_field_id    = $tracker_builder->buildStaticListField($this->task_tracker->getId(), 'task_status', 'sb');
-        $task_status_values      = $tracker_builder->buildOpenAndClosedValuesForField($task_status_field_id, $this->task_tracker->getId(), ['Open'], ['Closed']);
+        $release_status_field_id = $tracker_builder->buildStaticListField($release_tracker->getId(), 'release_status', 'sb');
+        $release_status_values   = $tracker_builder->buildOpenAndClosedValuesForField($release_status_field_id, $release_tracker->getId(), ['Open'], ['Closed']);
+        $sprint_status_field_id  = $tracker_builder->buildStaticListField($sprint_tracker->getId(), 'sprint_status', 'sb');
+        $sprint_status_values    = $tracker_builder->buildOpenAndClosedValuesForField($sprint_status_field_id, $sprint_tracker->getId(), ['Open'], ['Closed']);
+        $task_status_field_id    = $tracker_builder->buildStaticListField($task_tracker->getId(), 'task_status', 'sb');
+        $task_status_values      = $tracker_builder->buildOpenAndClosedValuesForField($task_status_field_id, $task_tracker->getId(), ['Open'], ['Closed']);
 
         $tracker_builder->grantReadPermissionOnField(
             $release_status_field_id,
@@ -91,12 +84,12 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_ADMIN
         );
 
-        $this->release_artifact_open_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_artifact_close_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->sprint_artifact_open_id   = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->sprint_artifact_close_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->task_artifact_open_id     = $tracker_builder->buildArtifact($this->task_tracker->getId());
-        $this->task_artifact_close_id    = $tracker_builder->buildArtifact($this->task_tracker->getId());
+        $this->release_artifact_open_id  = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->release_artifact_close_id = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->sprint_artifact_open_id   = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->sprint_artifact_close_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->task_artifact_open_id     = $tracker_builder->buildArtifact($task_tracker->getId());
+        $this->task_artifact_close_id    = $tracker_builder->buildArtifact($task_tracker->getId());
 
         $release_artifact_open_changeset  = $tracker_builder->buildLastChangeset($this->release_artifact_open_id);
         $release_artifact_close_changeset = $tracker_builder->buildLastChangeset($this->release_artifact_close_id);
@@ -113,27 +106,14 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildListValue($task_artifact_close_changeset, $task_status_field_id, $task_status_values['closed'][0]);
     }
 
-    /**
-     * @return list<int>
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     */
-    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof ArtifactMatchingReportCollection);
-        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
-    }
-
     public function testEqualOpen(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@status = OPEN()',
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @status = OPEN()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -145,10 +125,11 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqualOpen(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@status = OPEN()',
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @status = OPEN()",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -160,10 +141,11 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@status = OPEN() OR @status = OPEN()',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @status = OPEN() OR @status = OPEN()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -175,10 +157,11 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualOpen(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@status != OPEN()',
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @status != OPEN()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -190,10 +173,11 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@status != OPEN()',
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @status != OPEN()",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -205,10 +189,11 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@status != OPEN() AND @status != OPEN()',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @status != OPEN() AND @status != OPEN()",
+                '',
+                '',
             ),
             $this->project_member
         );

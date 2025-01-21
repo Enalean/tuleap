@@ -25,15 +25,10 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use UserManager;
 
@@ -42,9 +37,6 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     private PFUser $project_member;
     private PFUser $project_admin;
     private PFUser $alice;
-    private Tracker $release_tracker;
-    private Tracker $sprint_tracker;
-    private Tracker $task_tracker;
     private int $release_artifact_alice_id;
     private int $release_artifact_bob_id;
     private int $sprint_artifact_alice_id;
@@ -66,6 +58,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
         $this->alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $bob         = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
@@ -77,23 +70,23 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
         $user_manager->method('getCurrentUser')->willReturn($this->alice);
         UserManager::setInstance($user_manager);
 
-        $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
-        $tracker_builder->setViewPermissionOnTracker($this->release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $task_subby_field_id = $tracker_builder->buildSubmittedByField($this->task_tracker->getId());
+        $task_subby_field_id = $tracker_builder->buildSubmittedByField($task_tracker->getId());
         $tracker_builder->grantReadPermissionOnField($task_subby_field_id, ProjectUGroup::PROJECT_ADMIN);
 
-        $this->release_artifact_alice_id  = $tracker_builder->buildArtifact($this->release_tracker->getId(), 0, (int) $this->alice->getId());
-        $this->release_artifact_bob_id    = $tracker_builder->buildArtifact($this->release_tracker->getId(), 0, (int) $bob->getId());
-        $this->sprint_artifact_alice_id   = $tracker_builder->buildArtifact($this->sprint_tracker->getId(), 0, (int) $this->alice->getId());
-        $this->sprint_artifact_bob_id     = $tracker_builder->buildArtifact($this->sprint_tracker->getId(), 0, (int) $bob->getId());
-        $this->sprint_artifact_charles_id = $tracker_builder->buildArtifact($this->sprint_tracker->getId(), 0, (int) $charles->getId());
-        $this->task_artifact_alice_id     = $tracker_builder->buildArtifact($this->task_tracker->getId(), 0, (int) $this->alice->getId());
-        $this->task_artifact_bob_id       = $tracker_builder->buildArtifact($this->task_tracker->getId(), 0, (int) $bob->getId());
+        $this->release_artifact_alice_id  = $tracker_builder->buildArtifact($release_tracker->getId(), 0, (int) $this->alice->getId());
+        $this->release_artifact_bob_id    = $tracker_builder->buildArtifact($release_tracker->getId(), 0, (int) $bob->getId());
+        $this->sprint_artifact_alice_id   = $tracker_builder->buildArtifact($sprint_tracker->getId(), 0, (int) $this->alice->getId());
+        $this->sprint_artifact_bob_id     = $tracker_builder->buildArtifact($sprint_tracker->getId(), 0, (int) $bob->getId());
+        $this->sprint_artifact_charles_id = $tracker_builder->buildArtifact($sprint_tracker->getId(), 0, (int) $charles->getId());
+        $this->task_artifact_alice_id     = $tracker_builder->buildArtifact($task_tracker->getId(), 0, (int) $this->alice->getId());
+        $this->task_artifact_bob_id       = $tracker_builder->buildArtifact($task_tracker->getId(), 0, (int) $bob->getId());
 
         $tracker_builder->buildLastChangeset($this->release_artifact_alice_id);
         $tracker_builder->buildLastChangeset($this->release_artifact_bob_id);
@@ -104,27 +97,14 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($this->task_artifact_bob_id);
     }
 
-    /**
-     * @return list<int>
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     */
-    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof ArtifactMatchingReportCollection);
-        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
-    }
-
     public function testEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by = 'bob'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob'",
+                '',
+                '',
             ),
             $this->project_member,
         );
@@ -136,10 +116,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by = 'bob'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob'",
+                '',
+                '',
             ),
             $this->project_admin,
         );
@@ -151,10 +132,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_by = MYSELF()',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by = MYSELF()",
+                '',
+                '',
             ),
             $this->alice,
         );
@@ -166,10 +148,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by = 'bob' OR @submitted_by = 'alice'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by = 'alice'",
+                '',
+                '',
             ),
             $this->project_member,
         );
@@ -184,10 +167,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by != 'bob'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob'",
+                '',
+                '',
             ),
             $this->project_member,
         );
@@ -199,10 +183,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by != 'bob'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob'",
+                '',
+                '',
             ),
             $this->project_admin,
         );
@@ -218,10 +203,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_by != MYSELF()',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by != MYSELF()",
+                '',
+                '',
             ),
             $this->alice,
         );
@@ -233,10 +219,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by != 'bob' AND @submitted_by != 'alice'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob' AND @submitted_by != 'alice'",
+                '',
+                '',
             ),
             $this->project_member,
         );
@@ -248,10 +235,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob')",
+                '',
+                '',
             ),
             $this->project_member,
         );
@@ -263,10 +251,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob')",
+                '',
+                '',
             ),
             $this->project_admin,
         );
@@ -278,10 +267,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_by IN(MYSELF())',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN(MYSELF())",
+                '',
+                '',
             ),
             $this->alice,
         );
@@ -293,10 +283,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInMultiple(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by IN('bob', MYSELF())",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob', MYSELF())",
+                '',
+                '',
             ),
             $this->alice,
         );
@@ -311,10 +302,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by IN('bob') OR @submitted_by IN('charles')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob') OR @submitted_by IN('charles')",
+                '',
+                '',
             ),
             $this->project_member,
         );
@@ -326,10 +318,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by NOT IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob')",
+                '',
+                '',
             ),
             $this->project_member,
         );
@@ -341,10 +334,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by NOT IN('bob')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob')",
+                '',
+                '',
             ),
             $this->project_admin,
         );
@@ -360,10 +354,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_by NOT IN(MYSELF())',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN(MYSELF())",
+                '',
+                '',
             ),
             $this->alice,
         );
@@ -375,10 +370,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInMultiple(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by NOT IN('bob', 'alice')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob', 'alice')",
+                '',
+                '',
             ),
             $this->alice,
         );
@@ -390,10 +386,11 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_by NOT IN('bob') AND @submitted_by NOT IN('alice')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob') AND @submitted_by NOT IN('alice')",
+                '',
+                '',
             ),
             $this->project_member,
         );

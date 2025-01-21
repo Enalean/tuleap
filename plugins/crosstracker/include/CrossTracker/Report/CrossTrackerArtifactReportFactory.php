@@ -28,9 +28,8 @@ use PFUser;
 use Tracker;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyInt;
-use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
-use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
@@ -67,7 +66,6 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
-use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
 final readonly class CrossTrackerArtifactReportFactory
 {
@@ -80,8 +78,6 @@ final readonly class CrossTrackerArtifactReportFactory
     public const MAX_SELECT = 'crosstracker_maximum_selected_columns';
 
     public function __construct(
-        private CrossTrackerArtifactReportDao $artifact_report_dao,
-        private RetrieveArtifact $artifact_factory,
         private ExpertQueryValidator $expert_query_validator,
         private QueryBuilderVisitor $query_builder,
         private SelectBuilderVisitor $select_builder,
@@ -115,84 +111,21 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      */
     public function getArtifactsMatchingReport(
-        CrossTrackerReport $report,
+        CrossTrackerExpertReport $report,
         PFUser $current_user,
         int $limit,
         int $offset,
-    ): ArtifactMatchingReportCollection|CrossTrackerReportContentRepresentation {
-        if ($report->getExpertQuery() === '') {
-            if ($report->isExpert()) {
-                throw new ExpertQueryIsEmptyException();
-            }
-
-            return $this->getArtifactsFromGivenTrackers(
-                $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
-                $limit,
-                $offset,
-                $current_user,
-            );
+    ): CrossTrackerReportContentRepresentation {
+        if ($report->getQuery() === '') {
+            throw new ExpertQueryIsEmptyException();
         }
 
-        if ($report->isExpert()) {
-            return $this->getArtifactsMatchingExpertQuery(
-                $report,
-                $current_user,
-                $limit,
-                $offset,
-            );
-        }
-        return $this->getArtifactsMatchingDefaultQuery(
+        return $this->getArtifactsMatchingExpertQuery(
             $report,
             $current_user,
             $limit,
-            $offset
+            $offset,
         );
-    }
-
-    /**
-     * @param Tracker[] $trackers
-     */
-    private function getArtifactsFromGivenTrackers(array $trackers, int $limit, int $offset, PFUser $current_user): ArtifactMatchingReportCollection
-    {
-        if (count($trackers) === 0) {
-            return new ArtifactMatchingReportCollection([], 0);
-        }
-        $this->instrumentation->updateTrackerCount(count($trackers));
-
-        $trackers_id = $this->getTrackersId($trackers);
-
-        $result     = $this->artifact_report_dao->searchArtifactsFromTracker($trackers_id, $limit, $offset);
-        $total_size = $this->artifact_report_dao->foundRows();
-        return $this->buildCollectionOfArtifacts($result, $total_size, $current_user);
-    }
-
-    /**
-     * @throws SearchablesAreInvalidException
-     * @throws SearchablesDoNotExistException
-     * @throws SyntaxError
-     * @throws SelectablesDoNotExistException
-     * @throws SelectablesAreInvalidException
-     * @throws OrderByIsInvalidException
-     */
-    private function getArtifactsMatchingDefaultQuery(
-        CrossTrackerReport $report,
-        PFUser $current_user,
-        int $limit,
-        int $offset,
-    ): ArtifactMatchingReportCollection {
-        $trackers = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
-        $this->instrumentation->updateTrackerCount(count($trackers));
-        $query                 = $this->getQueryFromReport($report, $current_user, $trackers);
-        $condition             = $query->getCondition();
-        $additional_from_where = $this->query_builder->buildFromWhere($condition, $trackers, $current_user);
-        $results               = $this->expert_query_dao->searchArtifactsMatchingQuery(
-            $additional_from_where,
-            $this->getTrackersId($trackers),
-            $limit,
-            $offset
-        );
-        $total_size            = $this->expert_query_dao->foundRows();
-        return $this->buildCollectionOfArtifacts($results, $total_size, $current_user);
     }
 
     /**
@@ -209,7 +142,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      */
     private function getArtifactsMatchingExpertQuery(
-        CrossTrackerReport $report,
+        CrossTrackerExpertReport $report,
         PFUser $current_user,
         int $limit,
         int $offset,
@@ -227,10 +160,11 @@ final readonly class CrossTrackerArtifactReportFactory
 
         $additional_from_where = $this->query_builder->buildFromWhere($query->getCondition(), $trackers, $current_user);
         $additional_from_order = $this->order_builder->buildFromOrder($query->getOrderBy(), $trackers, $current_user);
+        $tracker_ids           = $this->getTrackersId($trackers);
         $artifact_ids          = $this->expert_query_dao->searchArtifactsIdsMatchingQuery(
             $additional_from_where,
             $additional_from_order,
-            $this->getTrackersId($trackers),
+            $tracker_ids,
             $limit,
             $offset
         );
@@ -249,7 +183,7 @@ final readonly class CrossTrackerArtifactReportFactory
 
         $total_size = $this->expert_query_dao->countArtifactsMatchingQuery(
             $additional_from_where,
-            $this->getTrackersId($trackers),
+            $tracker_ids,
         );
 
         $this->instrumentation->updateSelectCount(count($query->getSelect()));
@@ -277,28 +211,18 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      */
     private function getQueryFromReport(
-        CrossTrackerReport $report,
+        CrossTrackerExpertReport $report,
         PFUser $current_user,
         array $trackers,
     ): Query {
-        $expert_query = $report->getExpertQuery();
+        $expert_query = $report->getQuery();
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
-            $report->isExpert(),
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
             new InvalidOrderByBuilder($this->field_checker, $this->metadata_checker, $trackers, $current_user),
         );
         return $this->parser->parse($expert_query);
-    }
-
-    /**
-     * @param Tracker[] $trackers
-     * @return Tracker[]
-     */
-    private function getOnlyActiveTrackersInActiveProjects(array $trackers): array
-    {
-        return array_filter($trackers, static fn(Tracker $tracker) => $tracker->isActive() && $tracker->getProject()->isActive());
     }
 
     /**
@@ -330,26 +254,6 @@ final readonly class CrossTrackerArtifactReportFactory
             }
         }
         return $artifacts;
-    }
-
-    private function buildCollectionOfArtifacts(array $results, int $total_size, PFUser $current_user): ArtifactMatchingReportCollection
-    {
-        $artifacts = [];
-        foreach ($results as $artifact) {
-            $artifact = $this->artifact_factory->getArtifactById($artifact['id']);
-            if ($artifact && ! in_array($artifact, $artifacts, true)) {
-                $artifacts[] = $artifact;
-            }
-        }
-
-        return new ArtifactMatchingReportCollection(
-            $this->permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
-                $current_user,
-                $artifacts,
-                ArtifactPermissionType::PERMISSION_VIEW,
-            )->allowed,
-            $total_size,
-        );
     }
 
     /**

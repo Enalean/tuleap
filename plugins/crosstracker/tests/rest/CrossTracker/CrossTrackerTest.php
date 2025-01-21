@@ -64,6 +64,8 @@ final class CrossTrackerTest extends RestBase
             'expert_query'     => '',
             'trackers'         => [],
             'report_mode'      => 'expert',
+            'title'            => '',
+            'description'      => '',
         ];
 
         self::assertEquals($expected_cross_tracker, decode($response->getBody()->getContents()));
@@ -85,6 +87,8 @@ final class CrossTrackerTest extends RestBase
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
             'trackers'     => [],
             'report_mode'  => 'expert',
+            'title'        => '',
+            'description'  => '',
         ];
 
         self::assertEquals($expected_cross_tracker, decode($response->getBody()->getContents()));

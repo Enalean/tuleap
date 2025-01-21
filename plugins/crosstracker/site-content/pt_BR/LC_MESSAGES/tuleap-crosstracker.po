@@ -72,10 +72,6 @@ msgid ""
 "instead if you want to get the field."
 msgstr ""
 
-msgid ""
-"'limit' and 'offset' are required parameters. Please add them in the query."
-msgstr ""
-
 msgid "@project IN(...) cannot contain multiple times the same value"
 msgstr ""
 
@@ -137,9 +133,6 @@ msgstr ""
 msgid "Anonymous user"
 msgstr ""
 
-msgid "CSV export of expert report is not supported"
-msgstr ""
-
 msgid "Cross trackers search"
 msgstr ""
 
@@ -162,12 +155,6 @@ msgid ""
 "condition in the FROM part of your query"
 msgstr ""
 
-msgid "Invalid value for 'limit'. It must be an integer"
-msgstr ""
-
-msgid "Invalid value for 'offset'. It must be an integer"
-msgstr ""
-
 msgid "No tracker found"
 msgstr ""
 
@@ -175,9 +162,6 @@ msgid "Only 'self' and 'aggregated' are supported for @project IN(...)"
 msgstr ""
 
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
-msgstr ""
-
-msgid "Project not found"
 msgstr ""
 
 msgid "Report not found"
@@ -205,23 +189,7 @@ msgid ""
 "instead. (e.g @tracker.name IN('t1', ...))"
 msgstr ""
 
-#, php-format
-msgid "The maximum value for 'limit' is %d"
-msgstr ""
-
 msgid "You can use @project with 'aggregated' only in a Program project"
-msgstr ""
-
-msgid "You cannot access all projects of the search"
-msgstr ""
-
-msgid "You cannot access all the columns displayed in this search"
-msgstr ""
-
-msgid "You cannot access all the fields used to filter the search"
-msgstr ""
-
-msgid "You cannot access all trackers of the search"
 msgstr ""
 
 #, php-format
@@ -247,9 +215,6 @@ msgstr ""
 
 msgid ""
 "You cannot use @project with 'self' in the context of a personal dashboard"
-msgstr ""
-
-msgid "You don't have permission to access this project"
 msgstr ""
 
 msgid "end of input"

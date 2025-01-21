@@ -25,24 +25,16 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class TitleMetadataTest extends CrossTrackerFieldTestCase
 {
     private PFUser $project_member;
     private PFUser $project_admin;
-    private Tracker $release_tracker;
-    private Tracker $sprint_tracker;
-    private Tracker $task_tracker;
     private int $release_artifact_empty_id;
     private int $release_artifact_with_title_id;
     private int $release_artifact_with_title_2_id;
@@ -63,30 +55,31 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
-        $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
-        $tracker_builder->setViewPermissionOnTracker($this->release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_title_field_id = $tracker_builder->buildStringField(
-            $this->release_tracker->getId(),
+            $release_tracker->getId(),
             'release_title'
         );
         $sprint_title_field_id  = $tracker_builder->buildStringField(
-            $this->sprint_tracker->getId(),
+            $sprint_tracker->getId(),
             'sprint_title',
         );
         $task_title_field_id    = $tracker_builder->buildStringField(
-            $this->task_tracker->getId(),
+            $task_tracker->getId(),
             'task_title',
         );
 
-        $tracker_builder->buildTitleSemantic($this->release_tracker->getId(), $release_title_field_id);
-        $tracker_builder->buildTitleSemantic($this->sprint_tracker->getId(), $sprint_title_field_id);
-        $tracker_builder->buildTitleSemantic($this->task_tracker->getId(), $task_title_field_id);
+        $tracker_builder->buildTitleSemantic($release_tracker->getId(), $release_title_field_id);
+        $tracker_builder->buildTitleSemantic($sprint_tracker->getId(), $sprint_title_field_id);
+        $tracker_builder->buildTitleSemantic($task_tracker->getId(), $task_title_field_id);
 
         $tracker_builder->grantReadPermissionOnField(
             $release_title_field_id,
@@ -101,12 +94,12 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_ADMIN
         );
 
-        $this->release_artifact_empty_id        = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_artifact_with_title_id   = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->release_artifact_with_title_2_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
-        $this->sprint_artifact_empty_id         = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->sprint_artifact_with_title_id    = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
-        $this->task_artifact_with_title_id      = $tracker_builder->buildArtifact($this->task_tracker->getId());
+        $this->release_artifact_empty_id        = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->release_artifact_with_title_id   = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->release_artifact_with_title_2_id = $tracker_builder->buildArtifact($release_tracker->getId());
+        $this->sprint_artifact_empty_id         = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->sprint_artifact_with_title_id    = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->task_artifact_with_title_id      = $tracker_builder->buildArtifact($task_tracker->getId());
 
         $release_empty_changeset        = $tracker_builder->buildLastChangeset($this->release_artifact_empty_id);
         $release_with_title_changeset   = $tracker_builder->buildLastChangeset($this->release_artifact_with_title_id);
@@ -123,27 +116,14 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildTextValue($task_with_title_changeset, $task_title_field_id, 'title', 'text');
     }
 
-    /**
-     * @return list<int>
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     */
-    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof ArtifactMatchingReportCollection);
-        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
-    }
-
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title = ''",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title = ''",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -155,10 +135,11 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title = 'title'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title = 'title'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -170,10 +151,11 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title = 'title'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title = 'title'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -185,10 +167,11 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title = 'title' OR @title = 'MyArtifact'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title = 'title' OR @title = 'MyArtifact'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -200,10 +183,11 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title != ''",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title != ''",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -215,10 +199,11 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title != 'MyArtifact'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title != 'MyArtifact'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -233,10 +218,11 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title != 'MyArtifact'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title != 'MyArtifact'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -252,10 +238,11 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@title != 'MyArtifact' AND @title != ''",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @title != 'MyArtifact' AND @title != ''",
+                '',
+                '',
             ),
             $this->project_member
         );

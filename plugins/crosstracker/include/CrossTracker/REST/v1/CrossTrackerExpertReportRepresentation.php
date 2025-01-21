@@ -19,9 +19,9 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\REST\v1;
 
-use PFUser;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\TrackerReference;
@@ -29,8 +29,10 @@ use Tuleap\Tracker\REST\TrackerReference;
 /**
  * @psalm-immutable
  */
-final readonly class CrossTrackerExpertReportRepresentation implements CrossTrackerReportRepresentation
+final readonly class CrossTrackerExpertReportRepresentation
 {
+    public const MODE_EXPERT = 'expert';
+
     /**
      * @param TrackerReference[] $trackers
      */
@@ -38,28 +40,22 @@ final readonly class CrossTrackerExpertReportRepresentation implements CrossTrac
         public int $id,
         public string $uri,
         public string $expert_query,
-        public array $trackers,
-        public string $report_mode,
+        public string $title,
+        public string $description,
+        public array $trackers = [],
+        public string $report_mode = self::MODE_EXPERT,
     ) {
     }
 
-    public static function fromReport(CrossTrackerExpertReport $report, PFUser $user): self
+    public static function fromReport(CrossTrackerExpertReport $report): self
     {
-        $trackers = [];
-
-        foreach ($report->getTrackers() as $tracker) {
-            if ($tracker->userCanView($user)) {
-                $trackers[] = TrackerReference::build($tracker);
-            }
-        }
-
         $report_id = JsonCast::toInt($report->getId());
         return new self(
             $report_id,
             CrossTrackerReportsResource::ROUTE . '/' . $report_id,
-            $report->getExpertQuery(),
-            $trackers,
-            self::MODE_EXPERT
+            $report->getQuery(),
+            $report->getTitle(),
+            $report->getDescription(),
         );
     }
 }

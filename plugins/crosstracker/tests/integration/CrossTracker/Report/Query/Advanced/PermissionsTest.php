@@ -22,41 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use LogicException;
-use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class PermissionsTest extends CrossTrackerFieldTestCase
 {
-    /**
-     * @return list<int>
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     */
-    private function getMatchingArtifactIds(CrossTrackerExpertReport $report, PFUser $user): array
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return array_values(array_map(static function (array $artifact): int {
-            if (! isset($artifact['@id']) || ! ($artifact['@id'] instanceof NumericResultRepresentation)) {
-                throw new LogicException('Query result should contains @id column');
-            }
-            return (int) $artifact['@id']->value;
-        }, $result->artifacts));
-    }
-
     public function testItGetOnlyArtifactsUserCanSee(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -83,6 +57,8 @@ final class PermissionsTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT @id FROM @project = 'self' WHERE @id >= 1",
+                '',
+                '',
             ),
             $user_1,
         );

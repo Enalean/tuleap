@@ -29,8 +29,6 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -124,21 +122,14 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
         );
     }
 
-    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return $result;
-    }
-
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
             new CrossTrackerExpertReport(
                 1,
                 "SELECT date_field FROM @project = 'self' WHERE date_field = '' OR date_field != ''",
+                '',
+                ''
             ),
             $this->user,
         );
