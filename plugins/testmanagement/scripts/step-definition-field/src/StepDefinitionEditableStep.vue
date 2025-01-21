@@ -33,10 +33,7 @@
             v-on:input="toggleRTE"
             v-on:interpret-content-event="togglePreview"
         >
-            <step-deletion-action-button-mark-as-deleted
-                v-bind:mark-as-deleted="markAsDeleted"
-                v-bind:is_deletion="true"
-            />
+            <step-deletion-action-button-mark-as-deleted v-bind:step="step" />
         </step-definition-actions>
         <input
             type="hidden"
@@ -193,7 +190,7 @@ export default {
             }
         },
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.editors) {
             this.editors[0].destroy();
             this.editors[1].destroy();
@@ -203,9 +200,6 @@ export default {
         this.loadEditor();
     },
     methods: {
-        markAsDeleted() {
-            this.$store.commit("setStepDeleted", [this.step, true]);
-        },
         getEditorsContent() {
             if (this.is_current_step_in_html_format && this.areRTEEditorsSet()) {
                 this.step.raw_description = this.editors[1].getContent();

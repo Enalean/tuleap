@@ -17,9 +17,25 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
-    <button class="btn" type="button" v-on:click="props.unmarkDeletion()">
+<template>
+    <button class="btn" type="button" v-on:click="unmarkDeletion()">
         <i class="fa fa-undo"></i>
-        <translate key="undelete">Undo deletion</translate>
+        <translate key="undelete"> Undo deletion </translate>
     </button>
 </template>
+<script>
+export default {
+    name: "StepDeletionActionButtonUnmarkDeletion",
+    props: {
+        step: {
+            type: Object,
+            required: true,
+        },
+    },
+    methods: {
+        unmarkDeletion() {
+            this.$store.commit("setStepDeleted", [this.step, false]);
+        },
+    },
+};
+</script>

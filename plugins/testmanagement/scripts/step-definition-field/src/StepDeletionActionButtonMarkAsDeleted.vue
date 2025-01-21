@@ -17,9 +17,26 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
-    <button class="btn" type="button" v-on:click="props.markAsDeleted()">
+<template>
+    <button class="btn" type="button" v-on:click="markAsDeleted()">
         <i class="far fa-trash-alt"></i>
-        <translate key="delete">Delete</translate>
+        {{ $gettext("Delete") }}
     </button>
 </template>
+
+<script>
+export default {
+    name: "StepDeletionActionButtonMarkAsDeleted",
+    props: {
+        step: {
+            type: Object,
+            required: true,
+        },
+    },
+    methods: {
+        markAsDeleted() {
+            this.$store.commit("setStepDeleted", [this.step, true]);
+        },
+    },
+};
+</script>

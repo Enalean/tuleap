@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -32,3 +32,8 @@
         />
     </svg>
 </template>
+<script>
+export default {
+    name: "StepDefinitionArrowExpected",
+};
+</script>
