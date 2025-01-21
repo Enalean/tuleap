@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,20 +21,35 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-use Tuleap\Artidoc\ArtidocAttachmentController;
 use Tuleap\Tus\Identifier\FileIdentifier;
+use Tuleap\Tus\NextGen\TusFileInformation;
 
-/**
- * @psalm-mutation-free
- */
-final readonly class FileToDownload
+final readonly class UploadedFileInformation implements TusFileInformation
 {
-    public function __construct(private FileIdentifier $id, private string $filename)
+    public function __construct(public int $artidoc_id, private FileIdentifier $id, private string $name, private int $length)
     {
+        if ($this->length < 0) {
+            throw new \UnexpectedValueException('The length must be positive');
+        }
     }
 
-    public function getDownloadHref(): string
+    public function getID(): FileIdentifier
     {
-        return ArtidocAttachmentController::ROUTE_PREFIX . '/' . urlencode($this->id->toString()) . '-' . rawurlencode($this->filename);
+        return $this->id;
+    }
+
+    public function getLength(): int
+    {
+        return $this->length;
+    }
+
+    public function getOffset(): int
+    {
+        return 0;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 }
