@@ -45,6 +45,7 @@ import type { EditorErrors } from "@/composables/useEditorErrors";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { ref } from "vue";
+import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
 
 export type SaveEditor = {
     forceSave: (
@@ -67,12 +68,12 @@ export type SaveEditor = {
 
 export default function useSaveSection(
     editor_errors: EditorErrors,
+    replace_pending_sections: ReplacePendingSections,
     callbacks: {
         updateSectionStore: SectionsStore["updateSection"];
         updateCurrentSection: (new_value: ArtidocSection) => void;
         closeEditor: () => void;
         setEditMode: (new_value: boolean) => void;
-        replacePendingSection: SectionsStore["replacePendingSection"];
         getSectionPositionForSave: SectionsStore["getSectionPositionForSave"];
         mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"];
     },
@@ -178,7 +179,7 @@ export default function useSaveSection(
         saveSection(section, { description: new_value.description, title: new_value.title }).match(
             (artidoc_section: ArtidocSection) => {
                 if (isPendingSection(section)) {
-                    callbacks.replacePendingSection(section, artidoc_section);
+                    replace_pending_sections.replacePendingSection(section, artidoc_section);
                 } else if (
                     isArtifactSection(artidoc_section) ||
                     isFreetextSection(artidoc_section)

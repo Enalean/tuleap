@@ -39,6 +39,7 @@ import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
 import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { PendingSectionsReplacerStub } from "@/helpers/stubs/PendingSectionsReplacerStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
@@ -79,6 +80,7 @@ describe("useSectionEditor", () => {
                 section,
                 merge_artifacts,
                 set_waiting_list,
+                PendingSectionsReplacerStub.withNoExpectedCall(),
                 ref(true),
                 () => {},
             );
@@ -127,6 +129,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    PendingSectionsReplacerStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -149,6 +152,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    PendingSectionsReplacerStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -166,6 +170,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    PendingSectionsReplacerStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -183,6 +188,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    PendingSectionsReplacerStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -200,6 +206,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    PendingSectionsReplacerStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -233,6 +240,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    PendingSectionsReplacerStub.withNoExpectedCall(),
                     ref(false),
                     vi.fn(),
                 );
@@ -246,6 +254,7 @@ describe("useSectionEditor", () => {
                     PendingArtifactSectionFactory.create(),
                     merge_artifacts,
                     set_waiting_list,
+                    PendingSectionsReplacerStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -265,6 +274,7 @@ describe("useSectionEditor", () => {
                 section,
                 merge_artifacts,
                 set_waiting_list,
+                PendingSectionsReplacerStub.withNoExpectedCall(),
                 ref(false),
                 () => {},
             );
@@ -283,6 +293,7 @@ describe("useSectionEditor", () => {
                 section,
                 merge_artifacts,
                 set_waiting_list,
+                PendingSectionsReplacerStub.withNoExpectedCall(),
                 ref(false),
                 () => {},
             );

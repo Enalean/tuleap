@@ -39,6 +39,7 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
+import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -70,6 +71,7 @@ export function useSectionEditor(
     section: ArtidocSection,
     mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
+    replace_pending_sections: ReplacePendingSections,
     is_upload_in_progress: Ref<boolean>,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
@@ -89,7 +91,7 @@ export function useSectionEditor(
             0 !== current_section.value.attachments?.field_id
         );
     });
-    const { getSectionPositionForSave, replacePendingSection, removeSection, updateSection } =
+    const { getSectionPositionForSave, removeSection, updateSection } =
         strictInject(SECTIONS_STORE);
     const is_section_in_edit_mode = ref(isPendingSection(current_section.value));
     const is_section_editable = computed(() => {
@@ -141,15 +143,18 @@ export function useSectionEditor(
         },
     });
 
-    const { save, forceSave, isBeingSaved, isJustSaved } = useSaveSection(editor_errors_handler, {
-        updateSectionStore: updateSection,
-        updateCurrentSection,
-        closeEditor,
-        setEditMode,
-        replacePendingSection,
-        getSectionPositionForSave,
-        mergeArtifactAttachments,
-    });
+    const { save, forceSave, isBeingSaved, isJustSaved } = useSaveSection(
+        editor_errors_handler,
+        replace_pending_sections,
+        {
+            updateSectionStore: updateSection,
+            updateCurrentSection,
+            closeEditor,
+            setEditMode,
+            getSectionPositionForSave,
+            mergeArtifactAttachments,
+        },
+    );
 
     const enableEditor = (): void => {
         setEditMode(true);
