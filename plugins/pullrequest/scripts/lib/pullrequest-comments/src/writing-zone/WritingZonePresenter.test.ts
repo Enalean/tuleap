@@ -31,7 +31,6 @@ describe("WritingZonePresenter", () => {
 
     it("buildInitial() should return an initial presenter", () => {
         expect(initial_presenter).toStrictEqual({
-            initial_content: "",
             previewed_content: "",
             has_preview_error: false,
             is_focused: false,
@@ -43,7 +42,6 @@ describe("WritingZonePresenter", () => {
 
     it("buildFocused() should return a presenter with is_focused being true", () => {
         expect(WritingZonePresenter.buildFocused(initial_presenter)).toStrictEqual({
-            initial_content: "",
             previewed_content: "",
             has_preview_error: false,
             is_focused: true,
@@ -55,7 +53,6 @@ describe("WritingZonePresenter", () => {
 
     it("buildBlurred() should return a presenter with is_focused being false", () => {
         expect(WritingZonePresenter.buildBlurred(initial_presenter)).toStrictEqual({
-            initial_content: "",
             previewed_content: "",
             has_preview_error: false,
             is_focused: false,
@@ -67,7 +64,6 @@ describe("WritingZonePresenter", () => {
 
     it("buildWritingMode() should return a presenter with is_focused and is_in_writing_mode being true", () => {
         expect(WritingZonePresenter.buildWritingMode(initial_presenter)).toStrictEqual({
-            initial_content: "",
             previewed_content: "",
             has_preview_error: false,
             is_focused: true,
@@ -81,26 +77,11 @@ describe("WritingZonePresenter", () => {
         expect(
             WritingZonePresenter.buildPreviewMode(initial_presenter, "<p>Previewed content</p>"),
         ).toStrictEqual({
-            initial_content: "",
             previewed_content: "<p>Previewed content</p>",
             has_preview_error: false,
             is_focused: true,
             is_in_writing_mode: false,
             is_in_preview_mode: true,
-            project_id,
-        });
-    });
-
-    it("buildWithContent() should return a presenter with initial_content being the provided string", () => {
-        expect(
-            WritingZonePresenter.buildWithContent(initial_presenter, "This is new content"),
-        ).toStrictEqual({
-            initial_content: "This is new content",
-            previewed_content: "",
-            has_preview_error: false,
-            is_focused: false,
-            is_in_writing_mode: true,
-            is_in_preview_mode: false,
             project_id,
         });
     });

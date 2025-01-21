@@ -21,10 +21,10 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import DOMPurify from "dompurify";
 import type { GettextProvider } from "@tuleap/gettext";
-import type { InternalWritingZone } from "./WritingZone";
+import type { WritingZone } from "./WritingZone";
 import { buildPreviewTab, buildWriteTab } from "./WritingZoneTabsTemplate";
 
-const displayWritingMode = (host: InternalWritingZone): UpdateFunction<InternalWritingZone> => {
+const displayWritingMode = (host: WritingZone): UpdateFunction<WritingZone> => {
     if (!host.presenter.is_in_writing_mode) {
         return html``;
     }
@@ -33,9 +33,9 @@ const displayWritingMode = (host: InternalWritingZone): UpdateFunction<InternalW
 };
 
 const displayPreviewMode = (
-    host: InternalWritingZone,
+    host: WritingZone,
     gettext_provider: GettextProvider,
-): UpdateFunction<InternalWritingZone> => {
+): UpdateFunction<WritingZone> => {
     if (!host.presenter.is_in_preview_mode) {
         return html``;
     }
@@ -69,15 +69,15 @@ const displayPreviewMode = (
 };
 
 export const getWritingZoneTemplate = (
-    host: InternalWritingZone,
+    host: WritingZone,
     gettext_provider: GettextProvider,
-): UpdateFunction<InternalWritingZone> => {
+): UpdateFunction<WritingZone> => {
     return html`
         <div class="pull-request-comment-writing-zone-header">
             <div class="tlp-tabs pull-request-comment-writing-zone-header-tabs">
                 ${buildWriteTab(host, gettext_provider)} ${buildPreviewTab(host, gettext_provider)}
                 <div class="pull-request-comment-writing-zone-header-tabs-spacer"></div>
-                <tuleap-commonmark-popover />
+                <tuleap-commonmark-popover></tuleap-commonmark-popover>
             </div>
         </div>
         ${displayWritingMode(host)} ${displayPreviewMode(host, gettext_provider)}

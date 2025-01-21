@@ -18,30 +18,27 @@
  */
 
 import { define } from "hybrids";
-import type { NewCommentFormPresenter } from "./NewCommentFormPresenter";
+import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
 import type { ControlNewCommentForm } from "./NewCommentFormController";
 import { getNewCommentFormContent } from "./NewCommentFormTemplate";
 import { WritingZoneController } from "../writing-zone/WritingZoneController";
 import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
 import { gettext_provider } from "../gettext-provider";
-import type { InternalWritingZone } from "../writing-zone/WritingZone";
+import type { WritingZone } from "../writing-zone/WritingZone";
 import { getWritingZoneElement } from "../writing-zone/WritingZone";
-import type { ElementContainingAWritingZone } from "../types";
 
 export const PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME = "tuleap-pullrequest-new-comment-form";
-export type HostElement = NewCommentForm &
-    HTMLElement &
-    ElementContainingAWritingZone<NewCommentForm>;
 
 export interface NewCommentForm {
-    readonly render: () => HTMLElement;
+    render(): HTMLElement;
     readonly element_height: number;
-    readonly post_rendering_callback: (() => void) | undefined;
-    readonly controller: ControlNewCommentForm;
+    post_rendering_callback: (() => void) | undefined;
+    controller: ControlNewCommentForm;
     readonly writing_zone_controller: ControlWritingZone;
-    readonly writing_zone: HTMLElement & InternalWritingZone;
+    readonly writing_zone: HTMLElement & WritingZone;
     presenter: NewCommentFormPresenter;
 }
+export type HostElement = NewCommentForm & HTMLElement;
 
 export const form_height_descriptor = {
     value: (host: NewCommentForm): number => host.render().getBoundingClientRect().height,
@@ -59,13 +56,31 @@ define<NewCommentForm>({
     writing_zone_controller: (host, controller: ControlWritingZone | undefined) =>
         controller ??
         WritingZoneController({
-            unsaved_content: host.presenter.comment_content,
             document,
             project_id: Number(host.controller.getProjectId()),
             focus_writing_zone_when_connected: host.controller.shouldFocusWritingZoneOnceRendered(),
         }),
-    writing_zone: getWritingZoneElement,
+    writing_zone(host: HostElement) {
+        const element = getWritingZoneElement();
+        element.controller = host.writing_zone_controller;
+        element.addEventListener("writing-zone-input", (event: Event) => {
+            if (!(event instanceof CustomEvent)) {
+                return;
+            }
+            host.presenter = NewCommentFormPresenter.updateContent(
+                host.presenter,
+                event.detail.content,
+            );
+        });
+        return element;
+    },
     controller: (host, controller: ControlNewCommentForm) => controller,
-    presenter: (host, value) => value ?? host.controller.buildInitialPresenter(),
+    presenter(host, presenter: NewCommentFormPresenter | undefined) {
+        if (!presenter) {
+            return host.controller.buildInitialPresenter();
+        }
+        host.writing_zone.comment_content = presenter.comment_content;
+        return presenter;
+    },
     render: (host) => getNewCommentFormContent(host, gettext_provider),
 });

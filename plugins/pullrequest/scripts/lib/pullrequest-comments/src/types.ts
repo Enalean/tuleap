@@ -20,7 +20,6 @@
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { Fault } from "@tuleap/fault";
 import type { LocaleString } from "@tuleap/date-helper";
-import type { ControlWritingZone } from "./writing-zone/WritingZoneController";
 
 export interface CurrentPullRequestUserPresenter {
     readonly user_id: number;
@@ -31,16 +30,3 @@ export interface CurrentPullRequestUserPresenter {
 }
 
 export type PullRequestCommentErrorCallback = (fault: Fault) => void;
-
-export type WritingZoneInteractionsHandler<ElementType> = {
-    handleWritingZoneContentChange(
-        element: ElementContainingAWritingZone<ElementType>,
-        content: string,
-    ): void;
-    shouldFocusWritingZoneOnceRendered(): boolean;
-};
-
-export type ElementContainingAWritingZone<ElementType> = {
-    readonly controller: WritingZoneInteractionsHandler<ElementType>;
-    readonly writing_zone_controller: ControlWritingZone;
-};

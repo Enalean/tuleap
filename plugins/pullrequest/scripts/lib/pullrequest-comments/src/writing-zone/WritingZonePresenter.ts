@@ -18,7 +18,6 @@
  */
 
 export interface WritingZonePresenter {
-    readonly initial_content: string;
     readonly previewed_content: string;
     readonly project_id: number;
     readonly is_focused: boolean;
@@ -29,7 +28,6 @@ export interface WritingZonePresenter {
 
 export const WritingZonePresenter = {
     buildInitial: (project_id: number): WritingZonePresenter => ({
-        initial_content: "",
         previewed_content: "",
         project_id,
         is_focused: false,
@@ -61,10 +59,6 @@ export const WritingZonePresenter = {
         is_in_preview_mode: true,
         has_preview_error: false,
         previewed_content,
-    }),
-    buildWithContent: (presenter: WritingZonePresenter, content: string): WritingZonePresenter => ({
-        ...presenter,
-        initial_content: content,
     }),
     buildPreviewWithError: (presenter: WritingZonePresenter): WritingZonePresenter => ({
         ...presenter,

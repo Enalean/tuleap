@@ -43,32 +43,6 @@ describe("WritingZoneController", () => {
 
     it("initWritingZone() should return a default presenter", () => {
         expect(controller.initWritingZone()).toStrictEqual({
-            initial_content: "",
-            previewed_content: "",
-            has_preview_error: false,
-            is_focused: false,
-            is_in_writing_mode: true,
-            is_in_preview_mode: false,
-            project_id,
-        });
-    });
-
-    it("When there is some unsaved content, initWritingZone() should return a default presenter containing the unsaved content", () => {
-        const host = {
-            presenter: undefined,
-            project_id,
-            textarea,
-            dispatchEvent: () => {
-                // Do nothing
-            },
-        } as unknown as HostElement;
-
-        textarea.value = "Some unsaved content, before the WritingZone disconnects";
-
-        controller.onTextareaInput(host);
-
-        expect(controller.initWritingZone()).toStrictEqual({
-            initial_content: textarea.value,
             previewed_content: "",
             has_preview_error: false,
             is_focused: false,
@@ -81,6 +55,7 @@ describe("WritingZoneController", () => {
     it(`onTextAreaInput() should dispatch a "writing-zone-input" containing the WritingZone's <textarea/> content`, () => {
         const host = Object.assign(doc.createElement("div"), {
             textarea,
+            comment_content: "",
         } as HostElement);
 
         textarea.value = "Please rebase!";
@@ -89,8 +64,8 @@ describe("WritingZoneController", () => {
 
         controller.onTextareaInput(host);
 
+        expect(host.comment_content).toBe(textarea.value);
         expect(dispatchEvent).toHaveBeenCalledOnce();
-
         const event = dispatchEvent.mock.calls[0][0] as CustomEvent;
 
         expect(event.type).toBe("writing-zone-input");
@@ -172,16 +147,15 @@ describe("WritingZoneController", () => {
         - Load the tooltips`, async () => {
         vi.useFakeTimers();
 
+        const content_to_preview = "Content to preview";
         const host = {
-            textarea,
+            comment_content: content_to_preview,
             presenter: WritingZonePresenter.buildWritingMode(
                 WritingZonePresenter.buildInitial(project_id),
             ),
         } as HostElement;
 
-        const content_to_preview = "Content to preview";
         const previewed_content = "<p>Previewed content</p>";
-        textarea.value = content_to_preview;
 
         vi.spyOn(preview_fetcher, "fetchCommonMarkPreview").mockReturnValue(
             okAsync(previewed_content),
@@ -190,9 +164,8 @@ describe("WritingZoneController", () => {
             // do nothing
         });
 
-        await controller.switchToPreviewMode(host);
-
-        vi.advanceTimersToNextTimer();
+        controller.switchToPreviewMode(host);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(preview_fetcher.fetchCommonMarkPreview).toHaveBeenCalledWith(
             project_id,
@@ -204,19 +177,17 @@ describe("WritingZoneController", () => {
         expect(tooltip.loadTooltips).toHaveBeenCalledOnce();
     });
 
-    it(`When an error occurres while the preview is fetched, then switchToPreviewMode() should:
+    it(`When an error occurs while the preview is fetched, then switchToPreviewMode() should:
         - then set the presenter to PreviewWithError
         - not load the tooltips`, async () => {
         vi.useFakeTimers();
 
         const host = {
-            textarea,
+            comment_content: "Content to preview",
             presenter: WritingZonePresenter.buildWritingMode(
                 WritingZonePresenter.buildInitial(project_id),
             ),
         } as HostElement;
-
-        textarea.value = "Content to preview";
 
         vi.spyOn(preview_fetcher, "fetchCommonMarkPreview").mockReturnValue(
             errAsync("Some error we cannot display"),
@@ -225,9 +196,8 @@ describe("WritingZoneController", () => {
             // do nothing
         });
 
-        await controller.switchToPreviewMode(host);
-
-        vi.advanceTimersToNextTimer();
+        controller.switchToPreviewMode(host);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(host.presenter).toStrictEqual(
             WritingZonePresenter.buildPreviewWithError(host.presenter),
@@ -239,6 +209,7 @@ describe("WritingZoneController", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
+            comment_content: "Please rebase!",
             presenter: WritingZonePresenter.buildPreviewMode(
                 WritingZonePresenter.buildInitial(project_id),
                 "<p>Please rebase!</p>",
@@ -254,6 +225,7 @@ describe("WritingZoneController", () => {
         }).resetWritingZone(host);
 
         expect(textarea.value).toBe("");
+        expect(host.comment_content).toBe("");
         expect(host.presenter.is_focused).toBe(false);
         expect(host.presenter.is_in_writing_mode).toBe(true);
         expect(Array.from(parent_element.classList)).not.toContain(PARENT_ELEMENT_ACTIVE_CLASS);
@@ -274,19 +246,4 @@ describe("WritingZoneController", () => {
             ).toBe(expected);
         },
     );
-
-    it("setWritingZoneContent() should set the WritingZone initial_content", () => {
-        const host = {
-            presenter: WritingZonePresenter.buildInitial(project_id),
-        } as unknown as HostElement;
-        const new_content = "This is new content";
-
-        WritingZoneController({
-            document: doc,
-            project_id,
-            focus_writing_zone_when_connected: true,
-        }).setWritingZoneContent(host, new_content);
-
-        expect(host.presenter.initial_content).toBe(new_content);
-    });
 });

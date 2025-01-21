@@ -18,7 +18,7 @@
  */
 
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { PullRequestCommentErrorCallback, WritingZoneInteractionsHandler } from "../types";
+import type { PullRequestCommentErrorCallback } from "../types";
 import type { NewCommentForm } from "./NewCommentForm";
 import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
 import type { NewCommentFormAuthorPresenter } from "./NewCommentFormPresenter";
@@ -30,13 +30,13 @@ export interface NewCommentFormComponentConfig {
     readonly project_id: number;
 }
 
-export type ControlNewCommentForm = WritingZoneInteractionsHandler<NewCommentForm> & {
-    buildInitialPresenter: () => NewCommentFormPresenter;
-    saveNewComment: (host: NewCommentForm) => Promise<void>;
-    cancelNewComment: (host: NewCommentForm) => void;
+export type ControlNewCommentForm = {
+    shouldFocusWritingZoneOnceRendered(): boolean;
+    buildInitialPresenter(): NewCommentFormPresenter;
+    saveNewComment(host: NewCommentForm): Promise<void>;
+    cancelNewComment(host: NewCommentForm): void;
     triggerPostSubmitCallback: NewCommentPostSubmitCallback;
-    shouldFocusWritingZoneOnceRendered: () => boolean;
-    getProjectId: () => number;
+    getProjectId(): number;
 };
 
 export type NewCommentCancelCallback = () => void;
@@ -51,14 +51,14 @@ export const NewCommentFormController = (
     on_error_callback: PullRequestCommentErrorCallback,
     on_cancel_callback?: NewCommentCancelCallback,
 ): ControlNewCommentForm => ({
-    buildInitialPresenter: (): NewCommentFormPresenter => {
+    buildInitialPresenter(): NewCommentFormPresenter {
         return NewCommentFormPresenter.buildFromAuthor(author, config);
     },
-    cancelNewComment: (host: NewCommentForm): void => {
+    cancelNewComment(host: NewCommentForm): void {
         host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
         on_cancel_callback?.();
     },
-    saveNewComment: (host: NewCommentForm): Promise<void> => {
+    saveNewComment(host: NewCommentForm): Promise<void> {
         host.presenter = NewCommentFormPresenter.buildSubmitted(host.presenter);
 
         return comment_saver.saveComment(host.presenter, comment_creation_context).match(
@@ -74,10 +74,7 @@ export const NewCommentFormController = (
             },
         );
     },
-    handleWritingZoneContentChange: (host: NewCommentForm, new_comment: string): void => {
-        host.presenter = NewCommentFormPresenter.updateContent(host.presenter, new_comment);
-    },
-    triggerPostSubmitCallback: (new_comment_payload: PullRequestComment): void => {
+    triggerPostSubmitCallback(new_comment_payload: PullRequestComment): void {
         /**
          * Expose a method to manually trigger the post_submit_callback.
          * For testing purpose only

@@ -18,9 +18,11 @@
  */
 
 import { describe, it, beforeEach, expect, vi } from "vitest";
+import "@tuleap/commonmark-popover/commonmark-popover-stub";
 import type { MockInstance } from "vitest";
 import type { HostElement } from "./PullRequestDescriptionComment";
 import {
+    PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
     renderDescriptionComment,
     after_render_once_descriptor,
     post_description_form_close_callback_descriptor,
@@ -30,12 +32,20 @@ import * as tooltip from "@tuleap/tooltip";
 import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
 import { DescriptionAuthorStub } from "../../tests/stubs/DescriptionAuthorStub";
 import { ControlPullRequestDescriptionCommentStub } from "../../tests/stubs/ControlPullRequestDescriptionCommentStub";
+import { PullRequestDescriptionCommentPresenterStub } from "../../tests/stubs/PullRequestDescriptionCommentPresenterStub";
+import { PullRequestDescriptionCommentController } from "./PullRequestDescriptionCommentController";
+import { SaveDescriptionCommentStub } from "../../tests/stubs/SaveDescriptionCommentStub";
+import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 
 vi.mock("@tuleap/mention", () => ({
     initMentions(): void {
         // Mock @tuleap/mention because it needs jquery in tests
     },
 }));
+
+const noop = (): void => {
+    //Do nothing
+};
 
 describe("PullRequestDescriptionComment", () => {
     let target: ShadowRoot, loadTooltips: MockInstance;
@@ -62,7 +72,7 @@ describe("PullRequestDescriptionComment", () => {
                     post_date: "2023-03-13T15:00:00Z",
                     can_user_update_description: true,
                 },
-                controller: ControlPullRequestDescriptionCommentStub,
+                controller: ControlPullRequestDescriptionCommentStub(),
             } as HostElement;
         });
 
@@ -108,5 +118,39 @@ describe("PullRequestDescriptionComment", () => {
         vi.advanceTimersToNextTimer();
 
         expect(loadTooltips).toHaveBeenCalledTimes(1);
+    });
+
+    it(`should keep the writing zone's comment content up-to-date`, async () => {
+        vi.useFakeTimers();
+        const description_comment = document.createElement(
+            PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
+        ) as HostElement;
+        const initial_comment = "Eppie androphyll";
+        description_comment.description =
+            PullRequestDescriptionCommentPresenterStub.buildInitial(initial_comment);
+        description_comment.controller = PullRequestDescriptionCommentController(
+            SaveDescriptionCommentStub.withDefault(),
+            CurrentPullRequestUserPresenterStub.withDefault(),
+            noop,
+        );
+        const doc = document.implementation.createHTMLDocument();
+
+        doc.body.append(description_comment);
+        description_comment.controller.showEditionForm(description_comment);
+        await vi.runOnlyPendingTimersAsync();
+        expect(description_comment.writing_zone.comment_content).toBe(initial_comment);
+        expect(description_comment.edition_form_presenter?.description_content).toBe(
+            initial_comment,
+        );
+
+        const updated_comment = "Sanforized dispersement";
+        description_comment.writing_zone.dispatchEvent(
+            new CustomEvent("writing-zone-input", { detail: { content: updated_comment } }),
+        );
+        await vi.runOnlyPendingTimersAsync();
+        expect(description_comment.writing_zone.comment_content).toBe(updated_comment);
+        expect(description_comment.edition_form_presenter?.description_content).toBe(
+            updated_comment,
+        );
     });
 });

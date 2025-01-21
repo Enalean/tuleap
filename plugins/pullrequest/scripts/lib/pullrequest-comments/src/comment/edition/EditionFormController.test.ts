@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, it, expect, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Fault } from "@tuleap/fault";
 import type { EditedComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { SaveEditedCommentStub } from "../../../tests/stubs/SaveEditedCommentStub";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 import { EditionFormPresenterStub } from "../../../tests/stubs/EditionFormPresenterStub";
-import type { ControlWritingZone } from "../../writing-zone/WritingZoneController";
 import type { ControlEditionForm } from "./EditionFormController";
 import { EditionFormController } from "./EditionFormController";
-import type { HostElement, InternalEditionForm } from "./EditionForm";
-import { EditionFormPresenter } from "./EditionFormPresenter";
+import type { HostElement } from "./EditionForm";
 
 describe("EditionFormController", () => {
     let post_submit_callback: () => void,
@@ -49,36 +47,6 @@ describe("EditionFormController", () => {
             on_cancel_callback,
             on_error_callback,
         );
-
-    it("shouldFocusWritingZoneOnceRendered() should return true", () => {
-        expect(getController().shouldFocusWritingZoneOnceRendered()).toBe(true);
-    });
-
-    it("initEditionForm() should assign a presenter to the current host", () => {
-        const setWritingZoneContent = vi.fn();
-        const host = {
-            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            writing_zone_controller: {
-                setWritingZoneContent,
-            } as unknown as ControlWritingZone,
-        } as InternalEditionForm;
-
-        getController().initEditionForm(host);
-
-        expect(host.presenter).toStrictEqual(EditionFormPresenter.fromComment(host.comment));
-        expect(setWritingZoneContent).toHaveBeenCalledOnce();
-    });
-
-    it("handleWritingZoneContentChange() should assign a new presenter to the current host with the currently typed content", () => {
-        const host = {
-            presenter: EditionFormPresenterStub.buildInitial("Please rebase"),
-        } as InternalEditionForm;
-
-        const new_content = "Please rebase onto the master branch";
-        getController().handleWritingZoneContentChange(host, new_content);
-
-        expect(host.presenter.edited_content).toBe(new_content);
-    });
 
     it("cancelEdition() should call the on_cancel_callback", () => {
         getController().cancelEdition();
