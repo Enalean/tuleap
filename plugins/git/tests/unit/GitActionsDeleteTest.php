@@ -19,125 +19,154 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once __DIR__ . '/bootstrap.php';
+namespace Tuleap\Git;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitActionsDeleteTest extends \Tuleap\Test\PHPUnit\TestCase
+use Git;
+use Git_Backend_Gitolite;
+use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_Driver_Gerrit_ProjectCreator;
+use Git_Driver_Gerrit_Template_TemplateFactory;
+use Git_Driver_Gerrit_UserAccountManager;
+use Git_GitRepositoryUrlManager;
+use Git_RemoteServer_GerritServerFactory;
+use Git_SystemEventManager;
+use GitActions;
+use GitPermissionsManager;
+use GitPlugin;
+use GitRepository;
+use GitRepositoryFactory;
+use GitRepositoryManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectHistoryDao;
+use ProjectManager;
+use Psr\Log\NullLogger;
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpPermissionFilter;
+use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
+
+final class GitActionsDeleteTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    protected $git_actions;
-    protected $project_id;
-    protected $repository_id;
-    protected $repository;
-    protected $git_system_event_manager;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Git
-     */
-    private $controller;
+    private GitActions $git_actions;
+    private int $project_id;
+    private int $repository_id;
+    private GitRepository&MockObject $repository;
+    private Git_SystemEventManager&MockObject $git_system_event_manager;
+    private Git&MockObject $controller;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->project_id    = 101;
         $this->repository_id = 69;
 
-        $this->repository = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns($this->repository_id);
-        $this->repository->shouldReceive('getProjectId')->andReturns($this->project_id);
+        $this->repository = $this->createMock(GitRepository::class);
+        $this->repository->method('getId')->willReturn($this->repository_id);
+        $this->repository->method('getProjectId')->willReturn($this->project_id);
+        $this->repository->method('getName');
+        $this->repository->method('getFullName');
 
-        $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->git_system_event_manager = $this->createMock(Git_SystemEventManager::class);
 
-        $this->controller = Mockery::mock(\Git::class)
-            ->shouldReceive('getPlugin')
-            ->andReturns(\Mockery::spy(\GitPlugin::class))
-            ->getMock();
+        $this->controller = $this->createMock(Git::class);
+        $git_plugin       = $this->createMock(GitPlugin::class);
+        $this->controller->method('getPlugin')->willReturn($git_plugin);
 
-        $this->controller->shouldReceive('getUser');
-        $this->controller->shouldReceive('getRequest');
+        $this->controller->method('getUser');
+        $this->controller->method('getRequest');
 
-        $git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $git_repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($this->repository);
+        $git_repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $git_repository_factory->method('getRepositoryById')->with($this->repository_id)->willReturn($this->repository);
 
-        $git_plugin = Mockery::mock(\GitPlugin::class)
-            ->shouldReceive('areFriendlyUrlsActivated')
-            ->andReturnFalse()
-            ->getMock();
+        $git_plugin->method('areFriendlyUrlsActivated')->willReturn(false);
 
         $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
+        $driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $driver_factory->method('getDriver')->willReturn($this->createMock(Git_Driver_Gerrit::class));
+        $history_dao       = $this->createMock(ProjectHistoryDao::class);
         $this->git_actions = new GitActions(
             $this->controller,
             $this->git_system_event_manager,
             $git_repository_factory,
-            \Mockery::spy(\GitRepositoryManager::class),
-            \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class),
-            Mockery::mock(\Git_Driver_Gerrit_GerritDriverFactory::class)
-                ->shouldReceive('getDriver')
-                ->andReturn(\Mockery::spy(\Git_Driver_Gerrit::class))
-                ->getMock(),
-            \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
-            \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class),
-            \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
-            \Mockery::spy(\ProjectManager::class),
-            \Mockery::spy(\GitPermissionsManager::class),
+            $this->createMock(GitRepositoryManager::class),
+            $this->createMock(Git_RemoteServer_GerritServerFactory::class),
+            $driver_factory,
+            $this->createMock(Git_Driver_Gerrit_UserAccountManager::class),
+            $this->createMock(Git_Driver_Gerrit_ProjectCreator::class),
+            $this->createMock(Git_Driver_Gerrit_Template_TemplateFactory::class),
+            $this->createMock(ProjectManager::class),
+            $this->createMock(GitPermissionsManager::class),
             $url_manager,
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            \Mockery::spy(\ProjectHistoryDao::class),
-            \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
-            \Mockery::spy(\Tuleap\Git\RemoteServer\GerritCanMigrateChecker::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
-            \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
-            \Mockery::spy(\UGroupManager::class)
+            new NullLogger(),
+            $history_dao,
+            $this->createMock(MigrationHandler::class),
+            $this->createMock(GerritCanMigrateChecker::class),
+            $this->createMock(FineGrainedUpdater::class),
+            $this->createMock(FineGrainedPermissionSaver::class),
+            $this->createMock(FineGrainedRetriever::class),
+            $this->createMock(HistoryValueFormatter::class),
+            $this->createMock(PermissionChangesDetector::class),
+            $this->createMock(RegexpFineGrainedEnabler::class),
+            $this->createMock(RegexpFineGrainedDisabler::class),
+            $this->createMock(RegexpPermissionFilter::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $this->createMock(UsersToNotifyDao::class),
+            $this->createMock(UgroupsToNotifyDao::class),
+            $this->createMock(UGroupManager::class)
         );
+        $history_dao->method('groupAddHistory');
     }
 
     public function testItMarksRepositoryAsDeleted(): void
     {
-        $this->controller->shouldReceive('addInfo');
-        $this->controller->shouldReceive('redirect')->once();
+        $this->controller->method('addInfo');
+        $this->controller->expects(self::once())->method('redirect');
 
-        $this->repository->shouldReceive('canBeDeleted')->andReturns(true);
-        $this->repository->shouldReceive('markAsDeleted')->once();
+        $this->repository->method('canBeDeleted')->willReturn(true);
+        $this->repository->expects(self::once())->method('markAsDeleted');
+        $this->git_system_event_manager->method('queueRepositoryDeletion');
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 
     public function testItTriggersASystemEventForPhysicalRemove(): void
     {
-        $this->controller->shouldReceive('addInfo');
-        $this->controller->shouldReceive('redirect')->once();
+        $this->controller->method('addInfo');
+        $this->controller->expects(self::once())->method('redirect');
 
-        $this->repository->shouldReceive('canBeDeleted')->andReturns(true);
-        $this->repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\Git_Backend_Gitolite::class));
+        $this->repository->method('canBeDeleted')->willReturn(true);
+        $this->repository->method('markAsDeleted');
+        $this->repository->method('getBackend')->willReturn($this->createMock(Git_Backend_Gitolite::class));
 
-        $this->git_system_event_manager->shouldReceive('queueRepositoryDeletion')->with($this->repository)->once();
+        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryDeletion')->with($this->repository);
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 
     public function testItDoesntDeleteWhenRepositoryCannotBeDeleted(): void
     {
-        $this->controller->shouldReceive('addError');
-        $this->controller->shouldReceive('redirect')->once();
+        $this->controller->method('addError');
+        $this->controller->expects(self::once())->method('redirect');
 
-        $this->repository->shouldReceive('canBeDeleted')->andReturns(false);
-        $this->repository->shouldReceive('markAsDeleted')->never();
+        $this->repository->method('canBeDeleted')->willReturn(false);
+        $this->repository->expects(self::never())->method('markAsDeleted');
+        $this->repository->method('getRelativeHTTPUrl');
 
-        $this->git_system_event_manager->shouldReceive('queueRepositoryDeletion')->never();
+        $this->git_system_event_manager->expects(self::never())->method('queueRepositoryDeletion');
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
