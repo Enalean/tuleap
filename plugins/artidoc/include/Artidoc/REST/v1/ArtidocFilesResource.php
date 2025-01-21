@@ -93,9 +93,11 @@ final class ArtidocFilesResource extends AuthenticatedResource
             ),
         );
 
-        $file_creator = new FileCreator(
+        $ongoing_upload_dao = new OngoingUploadDao(new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()));
+        $file_creator       = new FileCreator(
             new FileToUploadCreator(
-                new OngoingUploadDao(new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory())),
+                $ongoing_upload_dao,
+                $ongoing_upload_dao,
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 (int) ForgeConfig::get('sys_max_size_upload')
             ),

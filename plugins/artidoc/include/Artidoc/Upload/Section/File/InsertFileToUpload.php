@@ -30,7 +30,7 @@ final readonly class InsertFileToUpload
         public string $name,
         public int $size,
         public int $user_id,
-        public int $expiration_date,
+        public ?int $expiration_date,
         public int $artidoc_id,
     ) {
     }
@@ -40,13 +40,13 @@ final readonly class InsertFileToUpload
         string $name,
         int $size,
         \PFUser $user,
-        \DateTimeImmutable $expiration_date,
+        ?\DateTimeImmutable $expiration_date,
     ): self {
         return new self(
             $name,
             $size,
             (int) $user->getId(),
-            $expiration_date->getTimestamp(),
+            $expiration_date?->getTimestamp(),
             $artidoc->getId(),
         );
     }

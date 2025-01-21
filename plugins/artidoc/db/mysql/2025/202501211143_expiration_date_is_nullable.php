@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Upload\Section\File;
+declare(strict_types=1);
 
-use Tuleap\Tus\Identifier\FileIdentifier;
-
-interface SearchFileUpload
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202501211143_expiration_date_is_nullable extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @return array{id: FileIdentifier, file_size: int, file_name: string, user_id: int, expiration_date: ?int, item_id: int} | null
-     */
-    public function searchFileOngoingUploadById(FileIdentifier $id): ?array;
+    public function description(): string
+    {
+        return 'plugin_artidoc_section_version.expiration_date is nullable';
+    }
+
+    public function up(): void
+    {
+        $this->api->dbh->exec(
+            <<<EOS
+            ALTER TABLE plugin_artidoc_section_upload MODIFY COLUMN expiration_date INT UNSIGNED NULL
+            EOS,
+        );
+    }
 }
