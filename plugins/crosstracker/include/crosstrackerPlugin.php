@@ -489,7 +489,9 @@ class crosstrackerPlugin extends Plugin
                 $project_manager,
                 $event_manager,
             ),
-            new CrossTrackerInstrumentation(Prometheus::instance())
+            new CrossTrackerInstrumentation(Prometheus::instance()),
+            $trackers_permissions,
+            $artifact_factory,
         );
 
         $formatter_visitor = new CSVFormatterVisitor(new CSVFormatter());

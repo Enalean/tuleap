@@ -402,6 +402,8 @@ final class ArtifactReportFactoryInstantiator
                 $event_manager,
             ),
             new CrossTrackerInstrumentation(Prometheus::getInMemory()),
+            $trackers_permissions,
+            $artifact_factory,
         );
     }
 }
