@@ -41,13 +41,13 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { PendingSectionsReplacerStub } from "@/helpers/stubs/PendingSectionsReplacerStub";
 import { SectionsUpdaterStub } from "@/helpers/stubs/SectionsUpdaterStub";
+import { SectionsRemoverStub } from "@/helpers/stubs/SectionsRemoverStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
 const merge_artifacts = vi.fn();
 const set_waiting_list = vi.fn();
 
-const remove_section = vi.fn();
 describe("useSectionEditor", () => {
     let store_stub: SectionsStore;
     let editors_collection: SectionEditorsStore;
@@ -56,7 +56,6 @@ describe("useSectionEditor", () => {
     beforeEach(() => {
         store_stub = {
             ...InjectedSectionsStoreStub.withSections([]),
-            removeSection: remove_section,
         };
         editors_collection = useSectionEditorsStore();
         upload_file_store_stub = {
@@ -83,6 +82,7 @@ describe("useSectionEditor", () => {
                 set_waiting_list,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsRemoverStub.withNoExpectedCall(),
                 ref(true),
                 () => {},
             );
@@ -133,6 +133,7 @@ describe("useSectionEditor", () => {
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsRemoverStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -157,6 +158,7 @@ describe("useSectionEditor", () => {
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsRemoverStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -176,6 +178,7 @@ describe("useSectionEditor", () => {
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsRemoverStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -195,6 +198,7 @@ describe("useSectionEditor", () => {
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsRemoverStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -214,6 +218,7 @@ describe("useSectionEditor", () => {
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsRemoverStub.withNoExpectedCall(),
                     ref(false),
                     () => {},
                 );
@@ -231,13 +236,12 @@ describe("useSectionEditor", () => {
                     expect(editor_section_content.getReadonlyDescription()).toBe(
                         artifact_section.description.value,
                     );
-                } else {
-                    expect(editor_section_content.getReadonlyDescription()).toBe(
-                        freetext_section.description,
-                    );
+                    return;
                 }
 
-                expect(store_stub.removeSection).not.toHaveBeenCalled();
+                expect(editor_section_content.getReadonlyDescription()).toBe(
+                    freetext_section.description,
+                );
             });
             it.each([
                 ["artifact_section", artifact_section],
@@ -249,6 +253,7 @@ describe("useSectionEditor", () => {
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsRemoverStub.withNoExpectedCall(),
                     ref(false),
                     vi.fn(),
                 );
@@ -258,17 +263,21 @@ describe("useSectionEditor", () => {
             });
 
             it("should remove the section if it is a pending one", () => {
+                const sections_remover = SectionsRemoverStub.withExpectedCall();
+                const section = PendingArtifactSectionFactory.create();
+
                 const { editor_actions } = useSectionEditor(
-                    PendingArtifactSectionFactory.create(),
+                    section,
                     merge_artifacts,
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    sections_remover,
                     ref(false),
                     () => {},
                 );
                 editor_actions.cancelEditor();
-                expect(store_stub.removeSection).toHaveBeenCalled();
+                expect(sections_remover.getLastRemovedSection()).toStrictEqual(section);
             });
         });
     });
@@ -285,6 +294,7 @@ describe("useSectionEditor", () => {
                 set_waiting_list,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsRemoverStub.withNoExpectedCall(),
                 ref(false),
                 () => {},
             );
@@ -305,6 +315,7 @@ describe("useSectionEditor", () => {
                 set_waiting_list,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsRemoverStub.withNoExpectedCall(),
                 ref(false),
                 () => {},
             );

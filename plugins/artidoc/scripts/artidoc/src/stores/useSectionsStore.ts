@@ -19,20 +19,15 @@
 
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
-import { okAsync } from "neverthrow";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { deleteSection } from "@/helpers/rest-querier";
-import type { ResultAsync } from "neverthrow";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
-import type { Fault } from "@tuleap/fault";
 
 export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 
 export interface SectionsStore {
     sections: Ref<StoredArtidocSection[]>;
     saved_sections: ComputedRef<readonly ArtidocSection[]>;
-    removeSection: (section: ArtidocSection) => ResultAsync<boolean, Fault>;
     getSectionPositionForSave: (section: ArtidocSection) => PositionForSection;
     replaceAll: (sections_collection: StoredArtidocSection[]) => void;
 }
@@ -55,25 +50,6 @@ export function buildSectionsStore(): SectionsStore {
     const saved_sections: ComputedRef<readonly ArtidocSection[]> = computed(() => {
         return extractSavedSectionsFromArtidocSections(sections.value);
     });
-
-    function removeSection(section: ArtidocSection): ResultAsync<boolean, Fault> {
-        const index = sections.value.findIndex((element) => element.id === section.id);
-        if (index === -1) {
-            return okAsync(true);
-        }
-
-        if (isPendingSection(section)) {
-            sections.value.splice(index, 1);
-
-            return okAsync(true);
-        }
-
-        return deleteSection(section.id).andThen(() => {
-            sections.value.splice(index, 1);
-
-            return okAsync(true);
-        });
-    }
 
     function getSectionPositionForSave(section: ArtidocSection): PositionForSection {
         const index = sections.value.findIndex((element) => element.id === section.id);
@@ -98,7 +74,6 @@ export function buildSectionsStore(): SectionsStore {
         sections,
         saved_sections,
         replaceAll,
-        removeSection,
         getSectionPositionForSave,
     };
 }

@@ -22,24 +22,17 @@ import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
-import type { ResultAsync } from "neverthrow";
-import { okAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
 import { noop } from "@/helpers/noop";
-
-const resultasync_noop = (): ResultAsync<boolean, Fault> => okAsync(true);
 
 export const InjectedSectionsStoreStub = {
     withSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
         getSectionPositionForSave: () => null,
-        removeSection: resultasync_noop,
         replaceAll: noop,
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractSavedSectionsFromArtidocSections(sections)),
     }),
     withSectionsInError: (): SectionsStore => ({
         getSectionPositionForSave: () => null,
-        removeSection: resultasync_noop,
         replaceAll: noop,
         sections: ref([]),
         saved_sections: computed(() => []),

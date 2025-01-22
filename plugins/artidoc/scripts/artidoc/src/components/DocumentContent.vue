@@ -46,7 +46,7 @@
             v-bind:sections_inserter="sections_inserter"
         />
         <add-existing-section-modal />
-        <remove-freetext-section-modal />
+        <remove-freetext-section-modal v-bind:remove_sections="sections_remover" />
     </div>
 </template>
 
@@ -62,11 +62,13 @@ import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
+import { getSectionsRemover } from "@/stores/SectionsRemover";
 
 const sections_collection = strictInject(SECTIONS_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const sections_inserter = getSectionsInserter(sections_collection);
+const sections_remover = getSectionsRemover(sections_collection);
 const has_add_button = can_user_edit_document;
 
 function getId(section: ArtidocSection): string {
