@@ -41,6 +41,7 @@ import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
 import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
 import type { UpdateSections } from "@/stores/SectionsUpdater";
+import type { RemoveSections } from "@/stores/SectionsRemover";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -74,6 +75,7 @@ export function useSectionEditor(
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
+    remove_sections: RemoveSections,
     is_upload_in_progress: Ref<boolean>,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
@@ -93,7 +95,7 @@ export function useSectionEditor(
             0 !== current_section.value.attachments?.field_id
         );
     });
-    const { getSectionPositionForSave, removeSection } = strictInject(SECTIONS_STORE);
+    const { getSectionPositionForSave } = strictInject(SECTIONS_STORE);
     const is_section_in_edit_mode = ref(isPendingSection(current_section.value));
     const is_section_editable = computed(() => {
         if (
@@ -176,12 +178,12 @@ export function useSectionEditor(
 
         if (isPendingSection(current_section.value)) {
             editors_collection.removeEditor(current_section.value);
-            removeSection(current_section.value);
+            remove_sections.removeSection(current_section.value);
         }
     }
 
     function deleteSection(): void {
-        removeSection(current_section.value).match(
+        remove_sections.removeSection(current_section.value).match(
             () => {
                 if (is_section_in_edit_mode.value) {
                     closeEditor();

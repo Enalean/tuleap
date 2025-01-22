@@ -81,6 +81,7 @@ import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { getPendingSectionsReplacer } from "@/stores/PendingSectionsReplacer";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { getSectionsUpdater } from "@/stores/SectionsUpdater";
+import { getSectionsRemover } from "@/stores/SectionsRemover";
 
 const props = defineProps<{ section: ArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -104,6 +105,7 @@ const editor = useSectionEditor(
     setWaitingListAttachments,
     getPendingSectionsReplacer(sections_collection),
     getSectionsUpdater(sections_collection),
+    getSectionsRemover(sections_collection),
     upload_file.is_in_progress,
     (error: string) => {
         setGlobalErrorMessage({

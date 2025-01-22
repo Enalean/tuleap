@@ -17,12 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, vi, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { buildSectionsStore } from "@/stores/useSectionsStore";
-import * as rest from "@/helpers/rest-querier";
-import { okAsync } from "neverthrow";
-import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
@@ -67,53 +64,6 @@ describe("buildSectionsStore", () => {
             expect(store.sections.value[0]?.internal_id).toBeDefined();
             expect(store.sections.value[0]?.id).toBe(section.id);
             expect(store.sections.value[0]?.internal_id).not.toBe(section.id);
-        });
-    });
-
-    describe("removeSection", () => {
-        it("should remove the section", async () => {
-            const section1 = ArtifactSectionFactory.create();
-            const section2 = PendingArtifactSectionFactory.create();
-            const section3 = ArtifactSectionFactory.create();
-            const section4 = PendingArtifactSectionFactory.create();
-
-            vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
-
-            const store = getStoreWithSections([section1, section2, section3, section4]);
-
-            store.removeSection(section2);
-            store.removeSection(section3);
-            await flushPromises();
-
-            expect(store.sections.value).not.toBeUndefined();
-            expect(store.sections.value).toHaveLength(2);
-            expect(store.sections.value[0].id).toStrictEqual(section1.id);
-            expect(store.sections.value[1].id).toStrictEqual(section4.id);
-        });
-
-        it("should do nothing when there is no sections", async () => {
-            const store = getEmptyStore();
-            store.removeSection(ArtifactSectionFactory.create());
-            await flushPromises();
-
-            expect(store.sections.value).toHaveLength(0);
-        });
-
-        it("should do nothing when section cannot be found", async () => {
-            const section1 = ArtifactSectionFactory.create();
-            const section2 = PendingArtifactSectionFactory.create();
-            const section3 = ArtifactSectionFactory.create();
-            const section4 = PendingArtifactSectionFactory.create();
-            const store = getStoreWithSections([section1, section2, section3, section4]);
-
-            store.removeSection(ArtifactSectionFactory.create());
-            await flushPromises();
-
-            expect(store.sections.value).toHaveLength(4);
-            expect(store.sections.value[0].id).toStrictEqual(section1.id);
-            expect(store.sections.value[1].id).toStrictEqual(section2.id);
-            expect(store.sections.value[2].id).toStrictEqual(section3.id);
-            expect(store.sections.value[3].id).toStrictEqual(section4.id);
         });
     });
 

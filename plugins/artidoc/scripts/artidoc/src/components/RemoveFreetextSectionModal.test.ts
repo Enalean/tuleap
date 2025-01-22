@@ -19,8 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { MockInstance } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { createGettext } from "vue3-gettext";
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
@@ -37,22 +36,22 @@ import type { UseRemoveFreetextSectionModal } from "@/composables/useRemoveFreet
 import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { noop } from "@/helpers/noop";
+import type { RemoveSections } from "@/stores/SectionsRemover";
+import { SectionsRemoverStub } from "@/helpers/stubs/SectionsRemoverStub";
 
 describe("RemoveFreetextSectionModal", () => {
     let freetext_section: FreetextSection,
         sections_store: SectionsStore,
-        removeSection: MockInstance,
         bus: UseRemoveFreetextSectionModal;
 
     beforeEach(() => {
         freetext_section = FreetextSectionFactory.create();
         sections_store = InjectedSectionsStoreStub.withSections([freetext_section]);
 
-        removeSection = vi.spyOn(sections_store, "removeSection");
         bus = useRemoveFreetextSectionModal();
     });
 
-    const getWrapper = (): VueWrapper =>
+    const getWrapper = (remove_sections: RemoveSections): VueWrapper =>
         shallowMount(RemoveFreetextSectionModal, {
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -64,10 +63,14 @@ describe("RemoveFreetextSectionModal", () => {
                     [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
                 },
             },
+            props: {
+                remove_sections,
+            },
         });
 
     it("When the user confirms the removal of the section, then it should delete it", () => {
-        const wrapper = getWrapper();
+        const sections_remover = SectionsRemoverStub.withExpectedCall();
+        const wrapper = getWrapper(sections_remover);
         expect(wrapper.classes()).not.toContain("tlp-modal-shown");
 
         bus.openModal(freetext_section);
@@ -75,16 +78,13 @@ describe("RemoveFreetextSectionModal", () => {
 
         wrapper.find("[data-test=remove-button]").trigger("click");
 
-        expect(removeSection).toHaveBeenCalledOnce();
-        expect(removeSection).toHaveBeenCalledWith(freetext_section);
+        expect(sections_remover.getLastRemovedSection()).toStrictEqual(freetext_section);
     });
 
     it("When the user cancels the removal of the section, then it should not delete it ", () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper(SectionsRemoverStub.withNoExpectedCall());
 
         bus.openModal(freetext_section);
         wrapper.find("[data-test=cancel-button]").trigger("click");
-
-        expect(removeSection).not.toHaveBeenCalled();
     });
 });

@@ -77,14 +77,17 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { createModal } from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { RemoveSections } from "@/stores/SectionsRemover";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 
 const gettext_provider = useGettext();
 const { $gettext } = gettext_provider;
 
-const { removeSection } = strictInject(SECTIONS_STORE);
+const props = defineProps<{
+    remove_sections: RemoveSections;
+}>();
+
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 
 strictInject(REMOVE_FREETEXT_SECTION_MODAL).registerHandler(openModal);
@@ -114,7 +117,7 @@ function openModal(section: ArtidocSection): void {
 
 function onDelete(): void {
     if (section_to_remove) {
-        removeSection(section_to_remove).match(
+        props.remove_sections.removeSection(section_to_remove).match(
             () => {
                 closeModal();
             },
