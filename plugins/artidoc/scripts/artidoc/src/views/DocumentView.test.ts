@@ -31,13 +31,13 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import type { Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import {
     IS_LOADING_SECTIONS,
     IS_LOADING_SECTIONS_FAILED,
 } from "@/is-loading-sections-injection-key";
-import type { SectionsStore } from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 
 describe("DocumentView", () => {
@@ -51,7 +51,7 @@ describe("DocumentView", () => {
     function getWrapper(
         can_user_edit_document: boolean,
         selected_tracker: Tracker | null,
-        sections_store: SectionsStore,
+        sections_collection: SectionsCollection,
     ): VueWrapper {
         return shallowMount(DocumentView, {
             global: {
@@ -59,7 +59,7 @@ describe("DocumentView", () => {
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
                     [CONFIGURATION_STORE.valueOf()]:
                         ConfigurationStoreStub.withSelectedTracker(selected_tracker),
-                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [IS_LOADING_SECTIONS.valueOf()]: is_loading_sections,
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: is_loading_sections_failed,
                 },
@@ -72,7 +72,7 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withSections([]),
+                SectionsCollectionStub.withSections([]),
             );
 
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
@@ -85,7 +85,7 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withSections([]),
+                SectionsCollectionStub.withSections([]),
             );
 
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
@@ -95,7 +95,7 @@ describe("DocumentView", () => {
         });
 
         it("should display configuration screen if user can edit document and the tracker is not configured", () => {
-            const wrapper = getWrapper(true, null, InjectedSectionsStoreStub.withSections([]));
+            const wrapper = getWrapper(true, null, SectionsCollectionStub.withSections([]));
 
             expect(wrapper.findComponent(ConfigurationPanel).exists()).toBe(true);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
@@ -109,7 +109,7 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withSections([ArtifactSectionFactory.create()]),
+                SectionsCollectionStub.withSections([ArtifactSectionFactory.create()]),
             );
 
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
@@ -126,7 +126,7 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withSections([]),
+                SectionsCollectionStub.withSections([]),
             );
 
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
@@ -143,7 +143,7 @@ describe("DocumentView", () => {
             const wrapper = getWrapper(
                 false,
                 ConfigurationStoreStub.bugs,
-                InjectedSectionsStoreStub.withSections([]),
+                SectionsCollectionStub.withSections([]),
             );
 
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(true);

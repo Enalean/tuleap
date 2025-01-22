@@ -17,24 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
 import { noop } from "@/helpers/noop";
 
-export const InjectedSectionsStoreStub = {
-    withSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
-        getSectionPositionForSave: () => null,
+export const SectionsCollectionStub = {
+    withSections: (sections: readonly ArtidocSection[]): SectionsCollection => ({
         replaceAll: noop,
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractSavedSectionsFromArtidocSections(sections)),
-    }),
-    withSectionsInError: (): SectionsStore => ({
-        getSectionPositionForSave: () => null,
-        replaceAll: noop,
-        sections: ref([]),
-        saved_sections: computed(() => []),
     }),
 };

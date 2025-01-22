@@ -25,8 +25,8 @@ import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import * as rest_querier from "./helpers/rest-querier";
 
 describe("App", () => {
@@ -39,7 +39,7 @@ describe("App", () => {
                         ConfigurationStoreStub.withoutAllowedTrackers(),
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
                     [DOCUMENT_ID.valueOf()]: 1,
-                    [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([]),
+                    [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                 },
             },
         });

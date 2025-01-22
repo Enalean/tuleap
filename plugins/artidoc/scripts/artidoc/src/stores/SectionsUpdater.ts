@@ -19,13 +19,13 @@
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.type";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 
 export type UpdateSections = {
     updateSection(section: ArtidocSection): void;
 };
 
-export const getSectionsUpdater = (sections_collection: SectionsStore): UpdateSections => ({
+export const getSectionsUpdater = (sections_collection: SectionsCollection): UpdateSections => ({
     updateSection(section: ArtidocSection): void {
         const length = sections_collection.sections.value.length;
         for (let i = 0; i < length; i++) {

@@ -22,8 +22,8 @@ import { createGettext } from "vue3-gettext";
 import App from "./App.vue";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { buildSectionsStore } from "@/stores/useSectionsStore";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { buildSectionsCollection } from "@/stores/SectionsCollection";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument"),
     );
     const selected_tracker = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "selectedTracker"));
-    const sections_store = buildSectionsStore();
+    const sections_collection = buildSectionsCollection();
     const configuration_store = initConfigurationStore(
         item_id,
         selected_tracker,
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     watchForNeededPendingSectionInsertion(
-        sections_store,
+        sections_collection,
         configuration_store.selected_tracker,
         can_user_edit_document,
     );
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const notifications_store = useNotificationsStore();
     const editors_store = useSectionEditorsStore();
     app.provide(EDITORS_COLLECTION, editors_store);
-    app.provide(SECTIONS_STORE, sections_store);
+    app.provide(SECTIONS_COLLECTION, sections_collection);
     app.provide(UPLOAD_FILE_STORE, upload_file_store);
     app.provide(NOTIFICATION_STORE, notifications_store);
     app.provide(CURRENT_LOCALE, current_locale);

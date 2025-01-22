@@ -21,13 +21,13 @@ import type { Ref } from "vue";
 import { watch } from "vue";
 import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 export const watchForNeededPendingSectionInsertion = (
-    sections_collection: SectionsStore,
+    sections_collection: SectionsCollection,
     tracker: Ref<Tracker | null>,
     can_user_edit_document: boolean,
 ): void => {

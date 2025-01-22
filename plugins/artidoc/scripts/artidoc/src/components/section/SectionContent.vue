@@ -79,14 +79,15 @@ import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { useGettext } from "vue3-gettext";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { getPendingSectionsReplacer } from "@/stores/PendingSectionsReplacer";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import { getSectionsUpdater } from "@/stores/SectionsUpdater";
 import { getSectionsRemover } from "@/stores/SectionsRemover";
+import { getSectionsPositionsForSaveRetriever } from "@/stores/SectionsPositionsForSaveRetriever";
 
 const props = defineProps<{ section: ArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
-const sections_collection = strictInject(SECTIONS_STORE);
+const sections_collection = strictInject(SECTIONS_COLLECTION);
 
 const {
     upload_url,
@@ -106,6 +107,7 @@ const editor = useSectionEditor(
     getPendingSectionsReplacer(sections_collection),
     getSectionsUpdater(sections_collection),
     getSectionsRemover(sections_collection),
+    getSectionsPositionsForSaveRetriever(sections_collection),
     upload_file.is_in_progress,
     (error: string) => {
         setGlobalErrorMessage({

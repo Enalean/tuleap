@@ -25,8 +25,8 @@ import type { ComponentPublicInstance } from "vue";
 import { ref } from "vue";
 import TableOfContents from "./TableOfContents.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
@@ -46,7 +46,7 @@ describe("TableOfContents", () => {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [DOCUMENT_ID.valueOf()]: 123,
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([
+                        [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([
                             ArtifactSectionFactory.override({
                                 artifact: { ...default_section.artifact, id: 1 },
                             }),
@@ -95,7 +95,7 @@ describe("TableOfContents", () => {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [DOCUMENT_ID.valueOf()]: 123,
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([
+                        [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([
                             section_1,
                             section_2,
                             freetext_section,

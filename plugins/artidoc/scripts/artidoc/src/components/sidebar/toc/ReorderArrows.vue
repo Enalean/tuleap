@@ -46,7 +46,7 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
-import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/useSectionsStore";
+import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { SectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
 

@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    AtTheEnd,
-    PositionForSection,
-    SectionsStore,
-    StoredArtidocSection,
-} from "@/stores/useSectionsStore";
+import type { SectionsCollection, StoredArtidocSection } from "@/stores/SectionsCollection";
+import type { PositionForSection, AtTheEnd } from "@/stores/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
@@ -32,7 +28,7 @@ export type InsertSections = {
 
 export const AT_THE_END: AtTheEnd = null;
 
-export const getSectionsInserter = (sections_collection: SectionsStore): InsertSections => {
+export const getSectionsInserter = (sections_collection: SectionsCollection): InsertSections => {
     const NOT_FOUND = -1;
 
     const getIndexWhereSectionShouldBeInserted = (

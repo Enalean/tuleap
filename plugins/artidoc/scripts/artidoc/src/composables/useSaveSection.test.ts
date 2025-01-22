@@ -34,13 +34,14 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { PendingSectionsReplacerStub } from "@/helpers/stubs/PendingSectionsReplacerStub";
 import { noop } from "@/helpers/noop";
 import { SectionsUpdaterStub } from "@/helpers/stubs/SectionsUpdaterStub";
+import { SectionsPositionsForSaveRetrieverStub } from "@/helpers/stubs/SectionsPositionsForSaveRetrieverStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
 
 describe("useSaveSection", () => {
     let editor_errors: EditorErrors;
-    let callbacks: Parameters<typeof useSaveSection>[3];
+    let callbacks: Parameters<typeof useSaveSection>[4];
 
     beforeEach(() => {
         editor_errors = {
@@ -51,7 +52,6 @@ describe("useSaveSection", () => {
             updateCurrentSection: noop,
             closeEditor: noop,
             setEditMode: vi.fn(),
-            getSectionPositionForSave: vi.fn(),
             mergeArtifactAttachments: vi.fn(),
         };
         mockStrictInject([
@@ -69,6 +69,7 @@ describe("useSaveSection", () => {
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
 
@@ -86,6 +87,7 @@ describe("useSaveSection", () => {
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
 
@@ -107,6 +109,7 @@ describe("useSaveSection", () => {
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
 
@@ -122,6 +125,7 @@ describe("useSaveSection", () => {
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
 
@@ -138,6 +142,7 @@ describe("useSaveSection", () => {
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
 
@@ -157,6 +162,7 @@ describe("useSaveSection", () => {
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
 
@@ -178,6 +184,7 @@ describe("useSaveSection", () => {
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
 
@@ -194,6 +201,7 @@ describe("useSaveSection", () => {
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
 
@@ -209,6 +217,7 @@ describe("useSaveSection", () => {
                 editor_errors,
                 replacer,
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
 
@@ -234,6 +243,7 @@ describe("useSaveSection", () => {
                 editor_errors,
                 replacer,
                 SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
 

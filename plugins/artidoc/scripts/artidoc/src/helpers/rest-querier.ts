@@ -32,7 +32,7 @@ import TurndownService from "turndown";
 import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
-import type { PositionForSection } from "@/stores/useSectionsStore";
+import type { PositionForSection } from "@/stores/SectionsPositionsForSaveRetriever";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 

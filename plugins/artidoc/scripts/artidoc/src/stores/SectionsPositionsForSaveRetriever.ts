@@ -17,37 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync } from "neverthrow";
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
 import type { SectionsCollection } from "@/stores/SectionsCollection";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { deleteSection } from "@/helpers/rest-querier";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 
-export type RemoveSections = {
-    removeSection: (section: ArtidocSection) => ResultAsync<boolean, Fault>;
+type BeforeSection = { before: string };
+export type AtTheEnd = null;
+
+export type PositionForSection = AtTheEnd | BeforeSection;
+
+export type RetrieveSectionsPositionForSave = {
+    getSectionPositionForSave(section: ArtidocSection): PositionForSection;
 };
 
-export const getSectionsRemover = (sections_collection: SectionsCollection): RemoveSections => ({
-    removeSection(section: ArtidocSection): ResultAsync<boolean, Fault> {
+export const getSectionsPositionsForSaveRetriever = (
+    sections_collection: SectionsCollection,
+): RetrieveSectionsPositionForSave => ({
+    getSectionPositionForSave(section): PositionForSection {
         const index = sections_collection.sections.value.findIndex(
             (element) => element.id === section.id,
         );
         if (index === -1) {
-            return okAsync(true);
+            return null;
         }
 
-        if (isPendingSection(section)) {
-            sections_collection.sections.value.splice(index, 1);
-
-            return okAsync(true);
+        if (index === sections_collection.sections.value.length - 1) {
+            return null;
         }
 
-        return deleteSection(section.id).andThen(() => {
-            sections_collection.sections.value.splice(index, 1);
+        for (let i = index + 1; i < sections_collection.sections.value.length; i++) {
+            if (!isPendingSection(sections_collection.sections.value[i])) {
+                return { before: sections_collection.sections.value[i].id };
+            }
+        }
 
-            return okAsync(true);
-        });
+        return null;
     },
 });

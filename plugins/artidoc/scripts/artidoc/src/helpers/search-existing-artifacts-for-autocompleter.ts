@@ -24,7 +24,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import type { Language } from "vue3-gettext";
 import type { ColorName } from "@tuleap/core-constants";
-import type { InternalArtidocSectionId } from "@/stores/useSectionsStore";
+import type { InternalArtidocSectionId } from "@/stores/SectionsCollection";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";

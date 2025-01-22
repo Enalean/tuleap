@@ -35,13 +35,13 @@ import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { RefreshSection } from "@/composables/useRefreshSection";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
 import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
 import type { UpdateSections } from "@/stores/SectionsUpdater";
 import type { RemoveSections } from "@/stores/SectionsRemover";
+import type { RetrieveSectionsPositionForSave } from "@/stores/SectionsPositionsForSaveRetriever";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -76,6 +76,7 @@ export function useSectionEditor(
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
     remove_sections: RemoveSections,
+    retrieve_positions: RetrieveSectionsPositionForSave,
     is_upload_in_progress: Ref<boolean>,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
@@ -95,7 +96,6 @@ export function useSectionEditor(
             0 !== current_section.value.attachments?.field_id
         );
     });
-    const { getSectionPositionForSave } = strictInject(SECTIONS_STORE);
     const is_section_in_edit_mode = ref(isPendingSection(current_section.value));
     const is_section_editable = computed(() => {
         if (
@@ -150,11 +150,11 @@ export function useSectionEditor(
         editor_errors_handler,
         replace_pending_sections,
         update_sections,
+        retrieve_positions,
         {
             updateCurrentSection,
             closeEditor,
             setEditMode,
-            getSectionPositionForSave,
             mergeArtifactAttachments,
         },
     );

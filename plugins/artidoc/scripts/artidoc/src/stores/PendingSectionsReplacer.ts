@@ -22,7 +22,7 @@ import type {
     PendingArtifactSection,
     PendingFreetextSection,
 } from "@/helpers/artidoc-section.type";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 
 export type ReplacePendingSections = {
     replacePendingSection(
@@ -32,7 +32,7 @@ export type ReplacePendingSections = {
 };
 
 export const getPendingSectionsReplacer = (
-    sections_collection: SectionsStore,
+    sections_collection: SectionsCollection,
 ): ReplacePendingSections => ({
     replacePendingSection(pending, section): void {
         const index = sections_collection.sections.value.findIndex(

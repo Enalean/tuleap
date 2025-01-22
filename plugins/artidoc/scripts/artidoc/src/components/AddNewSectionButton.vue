@@ -68,7 +68,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { OPEN_ADD_EXISTING_SECTION_MODAL_BUS } from "@/composables/useOpenAddExistingSectionModalBus";
 import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/configuration-store";
-import type { PositionForSection } from "@/stores/useSectionsStore";
+import type { PositionForSection } from "@/stores/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection, PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { computed, ref, onMounted, onUnmounted } from "vue";

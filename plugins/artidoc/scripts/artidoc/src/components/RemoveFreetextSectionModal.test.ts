@@ -21,12 +21,12 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { describe, it, expect, beforeEach } from "vitest";
 import { createGettext } from "vue3-gettext";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import type { FreetextSection } from "@/helpers/artidoc-section.type";
 import {
     REMOVE_FREETEXT_SECTION_MODAL,
@@ -41,12 +41,12 @@ import { SectionsRemoverStub } from "@/helpers/stubs/SectionsRemoverStub";
 
 describe("RemoveFreetextSectionModal", () => {
     let freetext_section: FreetextSection,
-        sections_store: SectionsStore,
+        sections_collection: SectionsCollection,
         bus: UseRemoveFreetextSectionModal;
 
     beforeEach(() => {
         freetext_section = FreetextSectionFactory.create();
-        sections_store = InjectedSectionsStoreStub.withSections([freetext_section]);
+        sections_collection = SectionsCollectionStub.withSections([freetext_section]);
 
         bus = useRemoveFreetextSectionModal();
     });
@@ -58,7 +58,7 @@ describe("RemoveFreetextSectionModal", () => {
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]:
                         ConfigurationStoreStub.withSelectedTracker(null),
-                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [REMOVE_FREETEXT_SECTION_MODAL.valueOf()]: bus,
                     [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
                 },

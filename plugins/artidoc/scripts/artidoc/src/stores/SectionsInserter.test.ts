@@ -18,8 +18,8 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { buildSectionsStore } from "@/stores/useSectionsStore";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import { buildSectionsCollection } from "@/stores/SectionsCollection";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 import { AT_THE_END, getSectionsInserter } from "@/stores/SectionsInserter";
 import type { InsertSections } from "@/stores/SectionsInserter";
@@ -31,10 +31,10 @@ const section2 = PendingArtifactSectionFactory.create();
 const new_section = PendingArtifactSectionFactory.create();
 
 describe("SectionsInserter", () => {
-    let sections_collection: SectionsStore, inserter: InsertSections;
+    let sections_collection: SectionsCollection, inserter: InsertSections;
 
     beforeEach(() => {
-        sections_collection = buildSectionsStore();
+        sections_collection = buildSectionsCollection();
         sections_collection.replaceAll(
             CreateStoredSections.fromArtidocSectionsCollection([section1, section2]),
         );

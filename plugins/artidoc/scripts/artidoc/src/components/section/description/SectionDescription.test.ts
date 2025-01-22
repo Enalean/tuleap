@@ -23,9 +23,9 @@ import type { VueWrapper } from "@vue/test-utils";
 import { ref } from "vue";
 import SectionDescription from "./SectionDescription.vue";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { noop } from "@/helpers/noop";
@@ -47,7 +47,7 @@ describe.each([[ArtifactSectionFactory], [FreetextSectionFactory]])(
             shallowMount(SectionDescription, {
                 global: {
                     provide: {
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([]),
+                        [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
                         [IS_LOADING_SECTIONS.valueOf()]: ref(are_sections_loading),
                     },

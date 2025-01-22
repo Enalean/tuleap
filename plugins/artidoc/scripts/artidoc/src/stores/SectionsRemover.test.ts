@@ -24,8 +24,8 @@ import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
-import type { SectionsStore } from "@/stores/useSectionsStore";
-import { buildSectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
+import { buildSectionsCollection } from "@/stores/SectionsCollection";
 import { getSectionsRemover } from "@/stores/SectionsRemover";
 
 const section1 = ArtifactSectionFactory.create();
@@ -34,10 +34,10 @@ const section3 = ArtifactSectionFactory.create();
 const section4 = PendingArtifactSectionFactory.create();
 
 describe("SectionsRemover", () => {
-    let sections_collection: SectionsStore;
+    let sections_collection: SectionsCollection;
 
     beforeEach(() => {
-        sections_collection = buildSectionsStore();
+        sections_collection = buildSectionsCollection();
         sections_collection.replaceAll(
             CreateStoredSections.fromArtidocSectionsCollection([
                 section1,

@@ -44,7 +44,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 
@@ -59,7 +59,7 @@ let dropdown: Dropdown | null = null;
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
-const { saved_sections } = strictInject(SECTIONS_STORE);
+const { saved_sections } = strictInject(SECTIONS_COLLECTION);
 const should_display_pdf_menu_item = computed(
     () => !is_loading_sections.value && saved_sections.value.length > 0,
 );
