@@ -23,7 +23,7 @@ use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 /**
  * I am a helper to build selectbox options of all milestones of a given tracker
  */
-class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
+class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const TOP_BACKLOG_IDENTIFIER   = '0';
     public const TOP_BACKLOG_OPTION_ENTRY = 'Top Backlog';
@@ -67,7 +67,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
      *
      * @return string[]
      */
-    public function getSelectboxOptions(Tracker $backlog_tracker, $selected_milestone_id, PFUser $user): array
+    public function getSelectboxOptions(Tracker $backlog_tracker, int $selected_milestone_id, PFUser $user): array
     {
         $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($user, $backlog_tracker, $this->hierarchy_factory);
         if (! $nearest_planning_tracker) {
@@ -80,7 +80,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     }
 
     /** @return string[] */
-    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, $selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
+    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, int $selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
     {
         $hp                = Codendi_HTMLPurifier::instance();
         $options           = [];
@@ -95,7 +95,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
         foreach ($this->dao->getAllMilestoneByTrackers($planning_trackers_ids) as $row) {
             foreach ($planning_trackers_ids as $index => $id) {
                 $tracker = $this->tracker_factory->getTrackerById($id);
-                if ($tracker->userCanView($user)) {
+                if ($tracker !== null && $tracker->userCanView($user)) {
                     $milestone_id    = $row['m' . $id . '_id'];
                     $milestone_title = $row['m' . $id . '_title'];
 
@@ -121,7 +121,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
         return $options;
     }
 
-    private function getOptionForSelectBox($selected_milestone_id, $milestone_id, $content)
+    private function getOptionForSelectBox(int $selected_milestone_id, int $milestone_id, string $content): string
     {
         $selected = '';
 
@@ -136,22 +136,22 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
         return $option;
     }
 
-    private function addTopBacklogPlanningEntry($selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
+    private function addTopBacklogPlanningEntry(int $selected_milestone_id, Tracker $backlog_tracker, PFUser $user): string
     {
         try {
-            $top_planning = $this->planning_factory->getVirtualTopPlanning($user, $backlog_tracker->getGroupId());
+            $top_planning = $this->planning_factory->getVirtualTopPlanning($user, (int) $backlog_tracker->getGroupId());
         } catch (Planning_NoPlanningsException $exception) {
-            return;
+            return '';
         }
 
         if ($top_planning) {
             $backlog_trackers_ids = $top_planning->getBacklogTrackersIds();
 
             if (in_array($backlog_tracker->getId(), $backlog_trackers_ids)) {
-                return $this->getOptionForSelectBox($selected_milestone_id, self::TOP_BACKLOG_IDENTIFIER, self::TOP_BACKLOG_OPTION_ENTRY);
+                return $this->getOptionForSelectBox($selected_milestone_id, (int) self::TOP_BACKLOG_IDENTIFIER, self::TOP_BACKLOG_OPTION_ENTRY);
             }
         }
-        return;
+        return '';
     }
 
     /** @return int[] */

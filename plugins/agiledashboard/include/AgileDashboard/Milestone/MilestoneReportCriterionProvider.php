@@ -24,11 +24,11 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 /**
  * I am a helper to provide a selectbox as a criterion in the tracker report to choose a milestone for a given tracker
  */
-class AgileDashboard_Milestone_MilestoneReportCriterionProvider
+class AgileDashboard_Milestone_MilestoneReportCriterionProvider // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELD_NAME = 'agiledashboard_milestone';
     public const ANY        = '';
-    public const UNPLANNED  = '-1';
+    public const UNPLANNED  = -1;
 
     /** @var AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider */
     private $options_provider;
@@ -58,10 +58,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider
         $this->unplanned_report_criterion_checker   = $unplanned_report_criterion_checker;
     }
 
-    /**
-     * @return string
-     */
-    public function getCriterion(Tracker $backlog_tracker, PFUser $user)
+    public function getCriterion(Tracker $backlog_tracker, PFUser $user): ?string
     {
         $options = $this->options_provider->getSelectboxOptions(
             $backlog_tracker,
@@ -88,12 +85,12 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider
         return $criterion;
     }
 
-    private function getSelectedOptionId(): string
+    private function getSelectedOptionId(): int
     {
         if ($this->unplanned_report_criterion_checker->isUnplannedValueSelected()) {
             return self::UNPLANNED;
         }
 
-        return (string) $this->milestone_provider->getMilestoneId();
+        return (int) $this->milestone_provider->getMilestoneId();
     }
 }

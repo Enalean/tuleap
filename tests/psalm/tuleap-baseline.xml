@@ -30,60 +30,6 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$milestone_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByReportId]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionOptionsProvider.php">
-    <MissingParamType>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$milestone_id]]></code>
-      <code><![CDATA[$selected_milestone_id]]></code>
-      <code><![CDATA[$selected_milestone_id]]></code>
-      <code><![CDATA[$selected_milestone_id]]></code>
-      <code><![CDATA[$selected_milestone_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addTopBacklogPlanningEntry]]></code>
-      <code><![CDATA[getOptionForSelectBox]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$backlog_tracker->getGroupId()]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[userCanView]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionProvider.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[null]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneStatusCounter.php">
     <DeprecatedMethod>
       <code><![CDATA[$artifact_status]]></code>
@@ -4405,8 +4351,6 @@
     <MissingParamType>
       <code><![CDATA[$content_id]]></code>
       <code><![CDATA[$expert_query]]></code>
-      <code><![CDATA[$expert_query]]></code>
-      <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$report_id]]></code>
     </MissingParamType>

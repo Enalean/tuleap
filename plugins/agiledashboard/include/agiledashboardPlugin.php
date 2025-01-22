@@ -60,6 +60,7 @@ use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
+use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
 use Tuleap\AgileDashboard\Planning\BacklogHistoryEntry;
@@ -467,7 +468,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
         $additional_criterion = $provider->getCriterion($backlog_tracker, $user);
 
-        if (! $additional_criterion) {
+        if ($additional_criterion === null) {
             return;
         }
 
@@ -563,8 +564,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $report_id  = $params['report']->getId();
         $field_name = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
 
-        $row = $dao->searchByReportId($report_id)->getRow();
-        if ($row) {
+        $row = $dao->searchByReportId($report_id);
+        if ($row !== null) {
             $params['additional_criteria_values'][$field_name]['value'] = $row['milestone_id'];
         }
     }
