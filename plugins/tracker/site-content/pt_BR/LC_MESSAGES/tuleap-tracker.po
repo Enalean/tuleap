@@ -1923,9 +1923,6 @@ msgstr ""
 msgid "No fields in the artifact can be moved in the destination tracker."
 msgstr ""
 
-msgid "No links found for artifact."
-msgstr ""
-
 msgid "No logs yet"
 msgstr ""
 
@@ -3357,6 +3354,11 @@ msgid "The tracker '%1$s' has been properly restored"
 msgstr ""
 
 msgid ""
+"The tracker does not have an artifact link field, nothing can be displayed "
+"here."
+msgstr ""
+
+msgid ""
 "The tracker does not seem to have the create/reply by mail feature enabled."
 msgstr ""
 
@@ -4135,6 +4137,10 @@ msgstr ""
 
 #, php-format
 msgid "You can access the artifact here: %1$s"
+msgstr ""
+
+msgid ""
+"You can add an artifact link field %sin your tracker fields administration%s."
 msgstr ""
 
 #, php-format
