@@ -766,6 +766,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $metadata_checker,
             $this->getReportTrackersRetriever(),
             $this->getInstrumentation(),
+            $trackers_permissions,
+            $tracker_artifact_factory,
         );
     }
 

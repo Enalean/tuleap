@@ -48,13 +48,15 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\Permission\ArtifactPermissionType;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectException;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
@@ -93,13 +95,14 @@ final readonly class CrossTrackerArtifactReportFactory
         private MetadataChecker $metadata_checker,
         private RetrieveReportTrackers $report_trackers_retriever,
         private CrossTrackerInstrumentation $instrumentation,
+        private RetrieveUserPermissionOnArtifacts $permission_on_artifacts_retriever,
+        private RetrieveArtifact $artifact_retriever,
     ) {
     }
 
     /**
      * @throws ExpertQueryIsEmptyException
      * @throws FromIsInvalidException
-     * @throws InvalidSelectException
      * @throws LimitSizeIsExceededException
      * @throws MissingFromException
      * @throws OrderByIsInvalidException
@@ -193,7 +196,6 @@ final readonly class CrossTrackerArtifactReportFactory
 
     /**
      * @throws FromIsInvalidException
-     * @throws InvalidSelectException
      * @throws LimitSizeIsExceededException
      * @throws MissingFromException
      * @throws OrderByIsInvalidException
@@ -231,6 +233,14 @@ final readonly class CrossTrackerArtifactReportFactory
             $limit,
             $offset
         );
+        $artifact_ids          = array_map(
+            static fn(Artifact $artifact) => $artifact->getId(),
+            $this->permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
+                $current_user,
+                $this->getArtifacts($artifact_ids),
+                ArtifactPermissionType::PERMISSION_VIEW,
+            )->allowed,
+        );
 
         if ($artifact_ids === []) {
             return new CrossTrackerReportContentRepresentation([], [], 0);
@@ -246,7 +256,7 @@ final readonly class CrossTrackerArtifactReportFactory
         $select_results         = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $additional_select_from,
             $additional_from_order,
-            array_map(static fn(array $row) => $row['id'], $artifact_ids),
+            array_values($artifact_ids),
         );
 
         $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$query->getSelect()], $trackers, $current_user, $select_results);
@@ -255,7 +265,6 @@ final readonly class CrossTrackerArtifactReportFactory
 
     /**
      * @param Tracker[] $trackers
-     * @throws InvalidSelectException
      * @throws LimitSizeIsExceededException
      * @throws OrderByIsInvalidException
      * @throws SearchablesAreInvalidException
@@ -304,6 +313,22 @@ final readonly class CrossTrackerArtifactReportFactory
         }
 
         return $id;
+    }
+
+    /**
+     * @param list<array{id: int}> $artifact_ids
+     * @return list<Artifact>
+     */
+    private function getArtifacts(array $artifact_ids): array
+    {
+        $artifacts = [];
+        foreach ($artifact_ids as $row) {
+            $artifact = $this->artifact_retriever->getArtifactById($row['id']);
+            if ($artifact !== null) {
+                $artifacts[] = $artifact;
+            }
+        }
+        return $artifacts;
     }
 
     private function buildCollectionOfArtifacts(array $results, int $total_size): ArtifactMatchingReportCollection
