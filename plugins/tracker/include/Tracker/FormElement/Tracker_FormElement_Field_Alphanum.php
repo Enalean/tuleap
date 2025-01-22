@@ -94,7 +94,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         $value = '';
         if ($v = $changeset->getValue($this)) {
             if ($row = $this->getValueDao()->searchById($v->getId(), $this->id)->getRow()) {
-                $value = $row['value'];
+                $value = $row['value'] ?? '';
             }
         }
         return $value;
