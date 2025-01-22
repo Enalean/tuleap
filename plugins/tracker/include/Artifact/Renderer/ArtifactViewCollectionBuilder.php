@@ -26,9 +26,8 @@ namespace Tuleap\Tracker\Artifact\Renderer;
 use Codendi_Request;
 use EventManager;
 use PFUser;
-use Tracker_Artifact_View_Edit;
-use Tracker_Artifact_View_ViewCollection;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\View\ArtifactViewEdit;
 use Tuleap\Tracker\Artifact\View\LinksView;
 use Tuleap\Tracker\Artifact\View\TypeView;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
@@ -39,10 +38,10 @@ final class ArtifactViewCollectionBuilder
     {
     }
 
-    public function build(Artifact $artifact, \Tracker $tracker, Codendi_Request $request, PFUser $user, \Tracker_Artifact_EditRenderer $renderer): Tracker_Artifact_View_ViewCollection
+    public function build(Artifact $artifact, \Tracker $tracker, Codendi_Request $request, PFUser $user, \Tracker_Artifact_EditRenderer $renderer): ViewCollection
     {
-        $view_collection = new Tracker_Artifact_View_ViewCollection($this->event_manager);
-        $view_collection->add(new Tracker_Artifact_View_Edit($artifact, $request, $user, $renderer));
+        $view_collection = new ViewCollection($this->event_manager);
+        $view_collection->add(new ArtifactViewEdit($artifact, $request, $user, $renderer));
 
         if ($artifact->getTracker()->isProjectAllowedToUseType()) {
             $artifact_links = $this->retriever->getChildren($artifact);

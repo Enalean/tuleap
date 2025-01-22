@@ -20,9 +20,9 @@
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use Planning_Milestone;
 use Codendi_Request;
 use PFUser;
+use Planning_Milestone;
 use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
 final readonly class ArtifactView extends TrackerArtifactView

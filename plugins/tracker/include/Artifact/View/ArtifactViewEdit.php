@@ -18,6 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Artifact\View;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use PFUser;
+use TemplateRendererFactory;
+use Tracker;
+use Tracker_Artifact_ArtifactRenderer;
+use Tracker_Artifact_Followup_Item;
+use Tracker_ArtifactByEmailStatus;
+use Tracker_FormElementFactory;
+use TransitionFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\EditView\NewCommentPresenter;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
@@ -25,7 +37,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
-use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -33,7 +44,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
-readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
+readonly class ArtifactViewEdit extends TrackerArtifactView
 {
     public const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
     public const USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
@@ -98,7 +109,7 @@ readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
     final protected static function fetchEditViewJSCode(): void
     {
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
+            __DIR__ . '/../../../scripts/artifact/frontend-assets',
             '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
@@ -109,7 +120,7 @@ readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
      *
      * @return string The HTML code for artifact follow-up comments
      */
-    private function fetchFollowUps($submitted_comment = ''): string
+    private function fetchFollowUps(string $submitted_comment = ''): string
     {
         $html  = '';
         $html .= $this->fetchSubmitButton();
@@ -125,7 +136,7 @@ readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
 
         $html .= '<div id="tracker_artifact_followup_comments" class="' . $classname . '">';
         $html .= '<div id="tracker_artifact_followup_comments-content">';
-        $html .= $this->fetchSettingsButton($invert_order, $display_changes);
+        $html .= $this->fetchSettingsButton($invert_order, (bool) $display_changes);
         $html .= '<h1 id="tracker_artifact_followups">' . dgettext('tuleap-tracker', 'Follow-ups') . '</h1>';
         $html .= '<section class="tracker_artifact_followups" data-test="artifact-followups">';
 
@@ -147,7 +158,7 @@ readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
         return $html;
     }
 
-    private function fetchSettingsButton($invert_order, $display_changes): string
+    private function fetchSettingsButton(bool $invert_order, bool $display_changes): string
     {
         $settings_label        = dgettext('tuleap-tracker', 'Display settings');
         $invert_comment_label  = dgettext('tuleap-tracker', 'Comments are in reversed order');
@@ -186,7 +197,7 @@ readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
         return $html;
     }
 
-    private function fetchCommentContent(array $comments, $invert_comments): string
+    private function fetchCommentContent(array $comments, bool $invert_comments): string
     {
         $html = '';
         $i    = 0;
@@ -212,7 +223,7 @@ readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
         return implode('', $comments_content);
     }
 
-    private function fetchAddNewComment(Tracker $tracker, $submitted_comment): string
+    private function fetchAddNewComment(Tracker $tracker, string $submitted_comment): string
     {
         $html = '<div class="artifact-new-comment-section">';
         $hp   = Codendi_HTMLPurifier::instance();
@@ -230,8 +241,9 @@ readonly class Tracker_Artifact_View_Edit extends TrackerArtifactView
         }
 
         if ($this->artifact->userCanUpdate($this->user)) {
-            $renderer_factory       = TemplateRendererFactory::build();
-            $renderer               = $renderer_factory->getRenderer(__DIR__ . '/../../../Artifact');
+            $renderer_factory = TemplateRendererFactory::build();
+
+            $renderer               = $renderer_factory->getRenderer(__DIR__ . '/../../Artifact');
             $rich_textarea_provider = new RichTextareaProvider(
                 new \Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder(
                     new FileUploadDataProvider(

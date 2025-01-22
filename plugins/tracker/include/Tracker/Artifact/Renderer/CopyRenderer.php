@@ -26,6 +26,8 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
+use Tuleap\Tracker\Artifact\Renderer\ViewCollection;
+use Tuleap\Tracker\Artifact\View\ArtifactViewCopy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
@@ -122,8 +124,8 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
 
     protected function fetchView(Codendi_Request $request, PFUser $user): string
     {
-        $view_collection = new Tracker_Artifact_View_ViewCollection($this->event_manager);
-        $view_collection->add(new Tracker_Artifact_View_Copy($this->artifact, $request, $user, $this));
+        $view_collection = new ViewCollection($this->event_manager);
+        $view_collection->add(new ArtifactViewCopy($this->artifact, $request, $user, $this));
 
         return $view_collection->fetchRequestedView($request);
     }
