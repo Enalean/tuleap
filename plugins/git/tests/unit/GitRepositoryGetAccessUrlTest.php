@@ -18,30 +18,23 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once 'bootstrap.php';
+namespace Tuleap\Git;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitRepositoryGetAccessUrlTest extends \Tuleap\Test\PHPUnit\TestCase
+use Git_Backend_Interface;
+use GitRepository;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitRepositoryGetAccessUrlTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_Backend_Interface
-     */
-    private $backend;
-
-    /**
-     * @var GitRepository
-     */
-    private $repository;
+    private Git_Backend_Interface&MockObject $backend;
+    private GitRepository $repository;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->backend = \Mockery::spy(\Git_Backend_Interface::class);
+        $this->backend = $this->createMock(Git_Backend_Interface::class);
 
         $this->repository = new GitRepository();
         $this->repository->setBackend($this->backend);
@@ -50,7 +43,7 @@ class GitRepositoryGetAccessUrlTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTheBackendContent(): void
     {
         $access_url = ['ssh' => 'plop'];
-        $this->backend->shouldReceive('getAccessURL')->andReturns(['ssh' => 'plop']);
-        $this->assertEquals($access_url, $this->repository->getAccessURL());
+        $this->backend->method('getAccessURL')->willReturn(['ssh' => 'plop']);
+        self::assertEquals($access_url, $this->repository->getAccessURL());
     }
 }
