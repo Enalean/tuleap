@@ -18,35 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once 'bootstrap.php';
+namespace Tuleap\Git;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitPluginPostSystemEvents extends \Tuleap\Test\PHPUnit\TestCase
+use Git_GitoliteDriver;
+use Git_SystemEventManager;
+use GitPlugin;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitPluginPostSystemEvents extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private GitPlugin&MockObject $plugin;
+    private Git_GitoliteDriver&MockObject $gitolite_driver;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->plugin          = $this->createPartialMock(GitPlugin::class, [
+            'getGitSystemEventManager',
+            'getGitoliteDriver',
+            'getLogger',
+        ]);
+        $this->gitolite_driver = $this->createMock(Git_GitoliteDriver::class);
 
-        $this->plugin               = \Mockery::mock(\GitPlugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->gitolite_driver      = \Mockery::spy(\Git_GitoliteDriver::class);
-
-        $this->plugin->shouldReceive('getGitSystemEventManager')->andReturns($this->system_event_manager);
-        $this->plugin->shouldReceive('getGitoliteDriver')->andReturns($this->gitolite_driver);
-        $this->plugin->shouldReceive('getLogger')->andReturns(\Mockery::spy(\TruncateLevel\Psr\Log\LoggerInterface::class));
+        $this->plugin->method('getGitSystemEventManager')->willReturn($this->createMock(Git_SystemEventManager::class));
+        $this->plugin->method('getGitoliteDriver')->willReturn($this->gitolite_driver);
+        $this->plugin->method('getLogger')->willReturn(new NullLogger());
     }
 
     public function testItDoesNotProcessPostSystemEventsActionsIfNotGitRelated(): void
     {
-        $this->gitolite_driver->shouldReceive('commit')
-            ->never();
-
-        $this->gitolite_driver->shouldReceive('push')
-            ->never();
+        $this->gitolite_driver->expects(self::never())->method('commit');
+        $this->gitolite_driver->expects(self::never())->method('push');
 
         $params = [
             'executed_events_ids' => [54156],

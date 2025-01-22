@@ -18,24 +18,34 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Git;
+
+use Git;
+use GitRepositoryFactory;
+use HTTPRequest;
+use PFUser;
+use SystemEventDao;
+use SystemEventManager;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
 
-require_once 'bootstrap.php';
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalLanguageMock;
 
     protected function setup(): void
     {
-        $system_event_manager = Mockery::mock(SystemEventManager::class);
-        $sys_dao              = Mockery::mock(SystemEventDao::class);
-        $sys_dao->shouldReceive('searchWithParam')->andReturn([]);
-        $system_event_manager->shouldReceive('_getDao')->andReturn($sys_dao);
+        $system_event_manager = $this->createMock(SystemEventManager::class);
+        $sys_dao              = $this->createMock(SystemEventDao::class);
+        $sys_dao->method('searchWithParam')->willReturn([]);
+        $system_event_manager->method('_getDao')->willReturn($sys_dao);
 
         SystemEventManager::setInstance($system_event_manager);
     }
@@ -44,49 +54,48 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         SystemEventManager::clearInstance();
         unset($_SERVER['REQUEST_METHOD'], $GLOBALS['_SESSION']);
-
-        parent::tearDown();
     }
 
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView(): void
     {
-        $usermanager               = \Mockery::spy(\UserManager::class);
+        $usermanager = $this->createMock(UserManager::class);
+        $usermanager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $request                   = new HTTPRequest();
         $request->params           = ['repo_id' => 1];
 
-        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git = $this->createPartialMock(Git::class, ['addAction', 'definePermittedActions', 'addView']);
         $git->setRequest($request);
         $git->setUserManager($usermanager);
         $git->setAction('del');
         $git->setPermittedActions(['del']);
 
-        $repository = \Mockery::spy(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturn(1);
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)->build();
 
-        $factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->andReturns($repository)->getMock();
+        $factory = $this->createMock(GitRepositoryFactory::class);
+        $factory->method('getRepositoryById')->willReturn($repository);
         $git->setFactory($factory);
 
-        $git->shouldReceive('addAction')->with('deleteRepository', Mockery::any())->once();
-        $git->shouldReceive('definePermittedActions')->once();
-        $git->shouldReceive('addView')->with('index')->once();
+        $git->expects(self::once())->method('addAction')->with('deleteRepository', self::anything());
+        $git->expects(self::once())->method('definePermittedActions');
+        $git->expects(self::once())->method('addView')->with('index');
 
         $git->request();
     }
 
     public function testDispatchToForkRepositoriesIfRequestsPersonal(): void
     {
-        $git             = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git             = $this->createPartialMock(Git::class, ['_doDispatchForkRepositories']);
         $request         = new HTTPRequest();
         $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
-        $git->shouldReceive('_doDispatchForkRepositories')->once();
+        $git->expects(self::once())->method('_doDispatchForkRepositories');
 
-        $factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $factory = $this->createMock(GitRepositoryFactory::class);
         $git->setFactory($factory);
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isMember')->andReturns(true);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isMember')->willReturn(true);
         $git->user = $user;
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
@@ -94,17 +103,17 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember(): void
     {
-        $git             = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git             = $this->createPartialMock(Git::class, ['_doDispatchForkRepositories']);
         $request         = new HTTPRequest();
         $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
-        $git->shouldReceive('_doDispatchForkRepositories')->never();
+        $git->expects(self::never())->method('_doDispatchForkRepositories');
 
-        $factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $factory = $this->createMock(GitRepositoryFactory::class);
         $git->setFactory($factory);
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isMember')->andReturns(false);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isMember')->willReturn(false);
         $git->user = $user;
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
@@ -112,19 +121,19 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDispatchToForkCrossProjectIfRequestsProject(): void
     {
-        $git             = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git             = $this->createPartialMock(Git::class, ['_doDispatchForkCrossProject']);
         $request         = new HTTPRequest();
         $request->params = ['choose_destination' => 'project'];
         $git->setRequest($request);
 
-        $factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $factory = $this->createMock(GitRepositoryFactory::class);
         $git->setFactory($factory);
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isMember')->andReturns(true);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isMember')->willReturn(true);
         $git->user = $user;
 
-        $git->shouldReceive('_doDispatchForkCrossProject')->once();
+        $git->expects(self::once())->method('_doDispatchForkCrossProject');
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
     }
 }
