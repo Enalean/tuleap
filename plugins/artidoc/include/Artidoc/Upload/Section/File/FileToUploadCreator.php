@@ -38,6 +38,7 @@ final readonly class FileToUploadCreator implements CreateFileToUpload
 
     public function __construct(
         private OngoingUploadDao $dao,
+        private SaveFileUpload $save,
         private DBTransactionExecutor $transaction_executor,
         private int $max_size_upload,
     ) {
@@ -59,7 +60,7 @@ final readonly class FileToUploadCreator implements CreateFileToUpload
             $filename,
             $filesize,
             $user,
-            $this->getExpirationDate($current_time)
+            $filesize === 0 ? null : $this->getExpirationDate($current_time)
         );
 
         return $this->transaction_executor->execute(
@@ -68,7 +69,7 @@ final readonly class FileToUploadCreator implements CreateFileToUpload
                     ->andThen(
                         function (?FileIdentifier $id) use ($new_upload) {
                             return Result::ok(
-                                $id ?? $this->dao->saveFileOngoingUpload($new_upload)
+                                $id ?? $this->save->saveFileOngoingUpload($new_upload)
                             );
                         }
                     );

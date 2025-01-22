@@ -40,7 +40,7 @@ CREATE TABLE plugin_artidoc_section_upload
     file_name       VARCHAR(255) NOT NULL DEFAULT '',
     file_size       BIGINT       NOT NULL DEFAULT 0,
     user_id         INT          NOT NULL,
-    expiration_date INT UNSIGNED NOT NULL,
+    expiration_date INT UNSIGNED NULL,
     item_id         INT UNSIGNED NOT NULL,
     INDEX idx_date (expiration_date)
 ) ENGINE = InnoDB;

@@ -23,6 +23,7 @@ namespace Tuleap\Artidoc\Upload\Section\File;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
+use Tuleap\Artidoc\Stubs\Upload\Section\File\SaveFileUploadStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -45,29 +46,67 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao = $this->createMock(OngoingUploadDao::class);
     }
 
-    public function testCreation(): void
+    public function testItCreatesAnUploadWithA4HoursExpirationDate(): void
     {
         $identifier = (new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
 
+        $save = SaveFileUploadStub::withCreatedIdentifier($identifier);
+
         $this->dao->method('searchFileOngoingUploadByItemIdNameAndExpirationDate')->willReturn([]);
-        $this->dao->method('saveFileOngoingUpload')->willReturn($identifier);
 
         $creator = new FileToUploadCreator(
             $this->dao,
+            $save,
             new DBTransactionExecutorPassthrough(),
             self::MAX_SIZE_UPLOAD
         );
 
-        $result = $creator->create(
+        $current_time = new \DateTimeImmutable();
+        $result       = $creator->create(
             new ArtidocDocument(['item_id' => 1]),
             UserTestBuilder::aUser()->withId(self::UPLOADING_USER_ID)->build(),
-            new \DateTimeImmutable(),
+            $current_time,
             'filename.txt',
             $this->file_size,
         );
 
         self::assertTrue(Result::isOk($result));
         $this->assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
+        self::assertTrue($save->isCalled());
+        self::assertSame(
+            $current_time->add(new \DateInterval('PT4H'))->getTimestamp(),
+            $save->getSaved()->expiration_date,
+        );
+    }
+
+    public function testItCreatesAnUploadWithoutExpirationDateIfFileIsEmpty(): void
+    {
+        $identifier = (new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
+
+        $save = SaveFileUploadStub::withCreatedIdentifier($identifier);
+
+        $this->dao->method('searchFileOngoingUploadByItemIdNameAndExpirationDate')->willReturn([]);
+
+        $creator = new FileToUploadCreator(
+            $this->dao,
+            $save,
+            new DBTransactionExecutorPassthrough(),
+            self::MAX_SIZE_UPLOAD
+        );
+
+        $current_time = new \DateTimeImmutable();
+        $result       = $creator->create(
+            new ArtidocDocument(['item_id' => 1]),
+            UserTestBuilder::aUser()->withId(self::UPLOADING_USER_ID)->build(),
+            $current_time,
+            'filename.txt',
+            0,
+        );
+
+        self::assertTrue(Result::isOk($result));
+        $this->assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
+        self::assertTrue($save->isCalled());
+        self::assertNull($save->getSaved()->expiration_date);
     }
 
     public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile(): void
@@ -76,9 +115,11 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('searchFileOngoingUploadByItemIdNameAndExpirationDate')->willReturn([
             ['id' => $identifier, 'user_id' => self::UPLOADING_USER_ID, 'file_size' => self::FILE_SIZE],
         ]);
+        $save = SaveFileUploadStub::withCreatedIdentifier($identifier);
 
         $creator = new FileToUploadCreator(
             $this->dao,
+            $save,
             new DBTransactionExecutorPassthrough(),
             self::MAX_SIZE_UPLOAD
         );
@@ -91,6 +132,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->file_size,
         );
 
+        self::assertFalse($save->isCalled());
         self::assertTrue(Result::isOk($result));
         $this->assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
     }
@@ -101,6 +143,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $creator = new FileToUploadCreator(
             $this->dao,
+            SaveFileUploadStub::shouldNotBeCalled(),
             new DBTransactionExecutorPassthrough(),
             self::MAX_SIZE_UPLOAD
         );
@@ -125,6 +168,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $creator = new FileToUploadCreator(
             $this->dao,
+            SaveFileUploadStub::shouldNotBeCalled(),
             new DBTransactionExecutorPassthrough(),
             self::MAX_SIZE_UPLOAD
         );

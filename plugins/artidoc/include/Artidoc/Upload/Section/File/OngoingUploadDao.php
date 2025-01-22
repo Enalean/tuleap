@@ -93,9 +93,6 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Searc
         ]);
     }
 
-    /**
-     * @return array{id: FileIdentifier, file_size: int, file_name: string, item_id: int, user_id: int, expiration_date: int} | null
-     */
     public function searchFileOngoingUploadById(FileIdentifier $id): ?array
     {
         $row = $this->getDB()->row('SELECT * FROM plugin_artidoc_section_upload WHERE id = ?', $id->getBytes());
