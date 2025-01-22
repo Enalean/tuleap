@@ -58,10 +58,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @param array $values The existing values. default is empty
      * @param mixed $name   A string for a given name or true for the default name (artifact[123]), false for no name.
-     *
-     * @return string html
      */
-    public function fetchOpenList($values = [], $name = true)
+    public function fetchOpenList($values = [], $name = true): string
     {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -130,12 +128,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $html;
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         if (isset($submitted_values[$this->id])) {
             return $this->fetchOpenList($this->toObj($submitted_values[$this->id]));

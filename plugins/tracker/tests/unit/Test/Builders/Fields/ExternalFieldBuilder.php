@@ -169,8 +169,7 @@ final class ExternalFieldBuilder
                 return '';
             }
 
-            /** @return string */
-            protected function fetchSubmitValue(array $submitted_values)
+            protected function fetchSubmitValue(array $submitted_values): string
             {
                 return '';
             }

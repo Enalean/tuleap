@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     /**
      * @return string html
      */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
 

@@ -247,12 +247,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $html  = '';
         $html .= '<div class="add-attachement">';

@@ -86,7 +86,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return format_date($GLOBALS['Language']->getText('system', 'datefmt_time'), (float) $timestamp, '');
     }
 
-    protected function getDatePicker($value, array $errors)
+    protected function getDatePicker($value, array $errors): string
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             'tracker_admin_field_' . $this->field->getId(),

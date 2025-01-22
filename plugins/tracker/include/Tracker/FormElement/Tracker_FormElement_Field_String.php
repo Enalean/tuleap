@@ -89,13 +89,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         return $this->getDao()->delete($this->id);
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);

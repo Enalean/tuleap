@@ -253,13 +253,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $value  = $this->getValueFromSubmitOrDefault($submitted_values);
         $format = $this->getDefaultFormatForUser($this->getCurrentUser());
@@ -337,10 +331,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 
-    /**
-     * @return string
-     */
-    private function getRichTextarea(?Artifact $artifact, string $format, string $content)
+    private function getRichTextarea(?Artifact $artifact, string $format, string $content): string
     {
         $tracker = $this->getTracker();
         if (! $tracker) {

@@ -126,11 +126,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return new PermissionsOnArtifactUsageFormatter($this->getPermissionsValidator());
     }
 
-    /**
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $value = $this->getPermissionsOnArtifactUGroupRetriever()->initializeUGroupsIfNoUGroupsAreChoosen($value);
@@ -231,7 +227,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             '</div>';
     }
 
-    private function getArtifactValueHTML($artifact_id, $can_user_restrict_permissions_to_nobody, $is_read_only)
+    private function getArtifactValueHTML($artifact_id, $can_user_restrict_permissions_to_nobody, $is_read_only): string
     {
         $changeset_values   = $this->getLastChangesetValues($artifact_id);
         $is_expecting_input = $this->isRequired() && empty($changeset_values);
