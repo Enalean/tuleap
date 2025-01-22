@@ -1057,14 +1057,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         );
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     *
-     * @param array $submitted_values the values already submitted
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $html               = '';
         $prefill_new_values = '';

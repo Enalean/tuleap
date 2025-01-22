@@ -221,12 +221,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return new Tracker_Report_Criteria_Text_ValueDao();
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         return '';
     }

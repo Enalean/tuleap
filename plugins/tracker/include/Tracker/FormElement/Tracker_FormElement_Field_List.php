@@ -585,12 +585,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return new ListValueDao();
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $selected_values = isset($submitted_values[$this->id]) ? $submitted_values[$this->id] : [];
         $default_values  = $this->getSubmitDefaultValues();
@@ -921,10 +916,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @param array  $selected_values
      * @param mixed  $submitted_values_for_this_list
-     *
-     * @return string
      */
-    protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = []) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = []): string //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html     = '';
         $purifier = Codendi_HTMLPurifier::instance();

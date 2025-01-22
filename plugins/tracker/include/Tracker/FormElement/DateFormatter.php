@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_FormElement_DateFormatter
+class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DATE_FORMAT = 'Y-m-d';
 
@@ -74,7 +74,7 @@ class Tracker_FormElement_DateFormatter
         return $formatted_value;
     }
 
-    public function fetchSubmitValue(array $submitted_values, array $errors)
+    public function fetchSubmitValue(array $submitted_values, array $errors): string
     {
         $value = $this->field->getValueFromSubmitOrDefault($submitted_values);
 
@@ -124,7 +124,7 @@ class Tracker_FormElement_DateFormatter
         return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
     }
 
-    protected function getDatePicker($value, array $errors)
+    protected function getDatePicker($value, array $errors): string
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             'tracker_admin_field_' . $this->field->getId(),

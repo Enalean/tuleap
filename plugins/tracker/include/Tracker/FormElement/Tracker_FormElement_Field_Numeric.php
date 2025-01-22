@@ -193,13 +193,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return (int) $value;
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);

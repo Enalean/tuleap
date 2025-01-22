@@ -173,7 +173,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         return '';
     }

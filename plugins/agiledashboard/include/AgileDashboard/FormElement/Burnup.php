@@ -234,8 +234,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return '';
     }
 
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
+        return '';
     }
 
     protected function fetchSubmitValueMasschange()

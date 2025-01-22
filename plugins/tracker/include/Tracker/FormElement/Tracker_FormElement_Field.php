@@ -712,10 +712,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the html code to display the field value in new artifact submission form
-     *
-     * @return string html
      */
-    abstract protected function fetchSubmitValue(array $submitted_values);
+    abstract protected function fetchSubmitValue(array $submitted_values): string;
 
     /**
      * Return a value from user submitted request (if any) or from default value (if any)

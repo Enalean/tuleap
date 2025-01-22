@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchSubmitValue]]></code>
       <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[fetchTooltipValue]]></code>
       <code><![CDATA[getDao]]></code>
@@ -4407,17 +4406,10 @@
       <code><![CDATA[$content_id]]></code>
       <code><![CDATA[$expert_query]]></code>
       <code><![CDATA[$expert_query]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$report_id]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[searchTrackersIdUsedByCrossTrackerByProjectId]]></code>
-      <code><![CDATA[updateExpertQuery]]></code>
-      <code><![CDATA[updateReport]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerReportFactory.php">
     <MissingParamType>
@@ -36098,11 +36090,9 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[fetchArtifactValueReadOnly]]></code>
-      <code><![CDATA[fetchSubmitValue]]></code>
       <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[formatDate]]></code>
       <code><![CDATA[formatDateForDisplay]]></code>
-      <code><![CDATA[getDatePicker]]></code>
       <code><![CDATA[getFieldDataForCSVPreview]]></code>
       <code><![CDATA[getFormat]]></code>
       <code><![CDATA[validate]]></code>
@@ -36123,7 +36113,6 @@
     <MissingReturnType>
       <code><![CDATA[formatDate]]></code>
       <code><![CDATA[formatDateForDisplay]]></code>
-      <code><![CDATA[getDatePicker]]></code>
       <code><![CDATA[getFieldDataForCSVPreview]]></code>
       <code><![CDATA[getUserDateFormatPreference]]></code>
       <code><![CDATA[validate]]></code>
@@ -38720,7 +38709,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchSubmitValue]]></code>
       <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[getQueryFrom]]></code>
       <code><![CDATA[keepValue]]></code>
@@ -40027,7 +40015,6 @@
       <code><![CDATA[accept]]></code>
       <code><![CDATA[exportCriteriaValueToXML]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
-      <code><![CDATA[getArtifactValueHTML]]></code>
       <code><![CDATA[getFieldDataFromArray]]></code>
       <code><![CDATA[getHiddenArtifactValueForEdition]]></code>
       <code><![CDATA[getLastChangesetValues]]></code>

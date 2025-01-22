@@ -514,8 +514,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
     }
 
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
+        return '';
     }
 
     protected function fetchSubmitValueMasschange()
