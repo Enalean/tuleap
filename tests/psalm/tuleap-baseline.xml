@@ -67976,6 +67976,7 @@
       <code><![CDATA[SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']))]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']))]]></code>
       <code><![CDATA[getMailPreferencesByEmail]]></code>
+      <code><![CDATA[isTrackerAdmin]]></code>
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[false]]></code>
@@ -69655,6 +69656,8 @@
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code><![CDATA[getRow]]></code>
+      <code><![CDATA[isTrackerAdmin]]></code>
+      <code><![CDATA[isTrackerAdmin]]></code>
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[false]]></code>
@@ -70392,6 +70395,9 @@
       <code><![CDATA[db_result(db_query($sql), 0, 0)]]></code>
       <code><![CDATA[db_result(db_query($sql), 0, 0)]]></code>
     </DeprecatedFunction>
+    <DeprecatedMethod>
+      <code><![CDATA[isTrackerAdmin]]></code>
+    </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
@@ -75886,6 +75892,8 @@
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[groupAddHistory]]></code>
+      <code><![CDATA[isTrackerAdmin]]></code>
+      <code><![CDATA[isTrackerAdmin]]></code>
       <code><![CDATA[quoteLikeValueSuffix]]></code>
       <code><![CDATA[quoteLikeValueSurround]]></code>
     </DeprecatedMethod>
