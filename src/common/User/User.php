@@ -428,6 +428,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
     /**
      * is this user admin of the tracker group_artifact_id
+     * @deprecated This API belongs to Trackers v3, please use Trackers v5 API.
      * @return bool
      */
     public function isTrackerAdmin($group_id, $group_artifact_id)
