@@ -20,49 +20,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once 'bootstrap.php';
-
-class PathJoinUtilTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PathJoinUtilTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testEmptyArrayReturnsEmptyPath(): void
     {
-        $this->assertEquals('', PathJoinUtil::unixPathJoin([]));
+        self::assertEquals('', PathJoinUtil::unixPathJoin([]));
     }
 
     public function testTheSlashInFrontOfTheFirstElementIsKept(): void
     {
-        $this->assertEquals('/toto', PathJoinUtil::unixPathJoin(['/toto']));
-        $this->assertEquals('/toto/tata/', PathJoinUtil::unixPathJoin(['/toto', 'tata/']));
+        self::assertEquals('/toto', PathJoinUtil::unixPathJoin(['/toto']));
+        self::assertEquals('/toto/tata/', PathJoinUtil::unixPathJoin(['/toto', 'tata/']));
     }
 
     public function testAtTheEndThereIsASlashOnlyIfTheLastElementHasOne(): void
     {
-        $this->assertEquals('toto/', PathJoinUtil::unixPathJoin(['toto/']));
-        $this->assertEquals('toto/tata/', PathJoinUtil::unixPathJoin(['toto', 'tata/']));
+        self::assertEquals('toto/', PathJoinUtil::unixPathJoin(['toto/']));
+        self::assertEquals('toto/tata/', PathJoinUtil::unixPathJoin(['toto', 'tata/']));
     }
 
     public function testRemoveSlashesWhenThereAreMoreThanOne(): void
     {
-        $this->assertEquals('/toto', PathJoinUtil::unixPathJoin(['//toto']));
-        $this->assertEquals('toto/tata', PathJoinUtil::unixPathJoin(['toto/', '/tata']));
-        $this->assertEquals('/toto/tata/titi/tutu', PathJoinUtil::unixPathJoin(['/toto/', '/tata/', '/titi/', '//tutu']));
+        self::assertEquals('/toto', PathJoinUtil::unixPathJoin(['//toto']));
+        self::assertEquals('toto/tata', PathJoinUtil::unixPathJoin(['toto/', '/tata']));
+        self::assertEquals('/toto/tata/titi/tutu', PathJoinUtil::unixPathJoin(['/toto/', '/tata/', '/titi/', '//tutu']));
     }
 
     public function testAllEmptyElementsAreIgnored(): void
     {
-        $this->assertEquals('toto/0', PathJoinUtil::unixPathJoin(['', null, 'toto', '0']));
+        self::assertEquals('toto/0', PathJoinUtil::unixPathJoin(['', null, 'toto', '0']));
     }
 
     public function testUserRepoPathIsPrefixedByUsername(): void
     {
-        $this->assertEquals('u/nicolas', PathJoinUtil::userRepoPath('nicolas', ''));
-        $this->assertEquals('u/nicolas/toto', PathJoinUtil::userRepoPath('nicolas', 'toto'));
+        self::assertEquals('u/nicolas', PathJoinUtil::userRepoPath('nicolas', ''));
+        self::assertEquals('u/nicolas/toto', PathJoinUtil::userRepoPath('nicolas', 'toto'));
     }
 
     public function testUserRepoPathComplainsWhenThereAreDoubleDots(): void
@@ -74,6 +72,6 @@ class PathJoinUtilTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserRepoPathComplainsWhenUserTriesToByPathItsHomeDirectory(): void
     {
         $this->expectException('MalformedPathException');
-        $this->assertEquals('u/nicolas/root', PathJoinUtil::userRepoPath('nicolas', '/users/../root'));
+        self::assertEquals('u/nicolas/root', PathJoinUtil::userRepoPath('nicolas', '/users/../root'));
     }
 }

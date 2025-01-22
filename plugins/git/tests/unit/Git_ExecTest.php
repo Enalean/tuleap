@@ -19,25 +19,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\TemporaryTestDirectory;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git;
+
+use Exception;
+use Git_Command_Exception;
+use Git_Exec;
+use System_Command;
+use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\PHPUnit\TestCase;
+
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Git_ExecTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     private const NULL_SHA1 = '0000000000000000000000000000000000000000';
 
-    private $fixture_dir;
-    private $git_exec;
-    private $symlink_repo;
+    private string $fixture_dir;
+    private Git_Exec $git_exec;
+    private string $symlink_repo;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->symlink_repo = $this->getTmpDir() . '/tuleap-git-exec-test_' . random_int(0, 99999999);
         $this->fixture_dir  = $this->getTmpDir() . '/tuleap-git-exec-test_' . random_int(0, 99999999);
         mkdir($this->fixture_dir);
@@ -52,15 +57,13 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         system("rm -rf $this->fixture_dir");
         unlink($this->symlink_repo);
-
-        parent::tearDown();
     }
 
     public function testThereIsSomethingToCommitWhenStuffIsAdded(): void
     {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
-        $this->assertTrue($this->git_exec->isThereAnythingToCommit());
+        self::assertTrue($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testThereIsSomethingToCommitWhenStuffIsRemoved(): void
@@ -69,7 +72,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit('add stuff');
         $this->git_exec->rm("$this->fixture_dir/toto");
-        $this->assertTrue($this->git_exec->isThereAnythingToCommit());
+        self::assertTrue($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testThereIsSomethingToCommitWhenStuffIsMoved(): void
@@ -78,7 +81,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit('add stuff');
         $this->git_exec->mv("$this->fixture_dir/toto", "$this->fixture_dir/tata");
-        $this->assertTrue($this->git_exec->isThereAnythingToCommit());
+        self::assertTrue($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testItMovesTheFilesInSymlinkedRepo(): void
@@ -91,14 +94,14 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_exec->commit('bla');
         $git_exec->mv($file_orig_path, $file_dest_path);
         $git_exec->commit('rename');
-        $this->assertFalse($git_exec->isThereAnythingToCommit());
-        $this->assertFalse(file_exists($file_orig_path));
-        $this->assertEquals('bla', file_get_contents($file_dest_path));
+        self::assertFalse($git_exec->isThereAnythingToCommit());
+        self::assertFalse(file_exists($file_orig_path));
+        self::assertEquals('bla', file_get_contents($file_dest_path));
     }
 
     public function testThereIsNothingToCommitOnEmptyRepository(): void
     {
-        $this->assertFalse($this->git_exec->isThereAnythingToCommit());
+        self::assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testGetAllBranchesSortedByCreationDate(): void
@@ -120,7 +123,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file_orig_path);
         $this->git_exec->commit('test2');
 
-        $this->assertEquals(['test', 'main'], $this->git_exec->getAllBranchesSortedByCreationDate());
+        self::assertEquals(['test', 'main'], $this->git_exec->getAllBranchesSortedByCreationDate());
     }
 
     public function testGetAllTagsSortedByCreationDate(): void
@@ -131,7 +134,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->commit('test');
         system("cd $this->fixture_dir && " . Git_Exec::getGitCommand() . ' tag -a test -m oui');
 
-        $this->assertEquals(['test'], $this->git_exec->getAllTagsSortedByCreationDate());
+        self::assertEquals(['test'], $this->git_exec->getAllTagsSortedByCreationDate());
     }
 
     public function testThereIsNothingToCommitOnAlreadyCommitedRepo(): void
@@ -139,13 +142,13 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit('add stuff');
-        $this->assertFalse($this->git_exec->isThereAnythingToCommit());
+        self::assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testThereIsNothingToCommitWhenNewFilesAreNotAdded(): void
     {
         touch("$this->fixture_dir/toto");
-        $this->assertFalse($this->git_exec->isThereAnythingToCommit());
+        self::assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testThereIsNothingToCommitWhenContentDoesntChange(): void
@@ -154,7 +157,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit('add stuff');
         file_put_contents("$this->fixture_dir/toto", 'stuff');
-        $this->assertFalse($this->git_exec->isThereAnythingToCommit());
+        self::assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
     public function testItDoesntRaiseAnErrorWhenTryingToRemoveAnUntrackedFile(): void
@@ -163,7 +166,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->rm("$this->fixture_dir/toto");
 
         //All is OK
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testItReturnsTrueWhenTheRevExists(): void
@@ -174,25 +177,25 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $res = $this->git_exec->doesObjectExists('main');
 
-        $this->assertTrue($res);
+        self::assertTrue($res);
     }
 
     public function testItReturnsFalseWhenTheRevDoesNotExist(): void
     {
         $res = $this->git_exec->doesObjectExists('this_is_not_a_rev');
 
-        $this->assertFalse($res);
+        self::assertFalse($res);
     }
 
     public function testItReturnsEachLineOfTheCommitMessage(): void
     {
         $message     = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n"
-            . "\n"
-            . "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n"
-            . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"
-            . "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n"
-            . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
-            . 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+                       . "\n"
+                       . "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n"
+                       . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"
+                       . "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n"
+                       . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
+                       . 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
         $commit_sha1 = $this->getSha1($message);
 
         $result = $this->git_exec->getCommitMessage($commit_sha1);
@@ -202,7 +205,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTheReferenceDoesNotExist(): void
     {
-        $this->expectException(\Git_Command_Exception::class);
+        $this->expectException(Git_Command_Exception::class);
         $this->git_exec->getCommitMessage(self::NULL_SHA1);
     }
 
@@ -254,11 +257,11 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add("$this->fixture_dir/toto");
 
         $this->git_exec->commit($commit_message);
-        $command = new \System_Command();
+        $command = new System_Command();
         $output  = $command->exec(
             sprintf(
                 '%1$s -C %2$s rev-parse HEAD',
-                \Git_Exec::getGitCommand(),
+                Git_Exec::getGitCommand(),
                 $this->fixture_dir
             )
         );
