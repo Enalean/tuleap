@@ -44,9 +44,9 @@ import type { EditorErrors } from "@/composables/useEditorErrors";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { ref } from "vue";
-import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
-import type { UpdateSections } from "@/stores/SectionsUpdater";
-import type { RetrieveSectionsPositionForSave } from "@/stores/SectionsPositionsForSaveRetriever";
+import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
+import type { UpdateSections } from "@/sections/SectionsUpdater";
+import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
 
 export type SaveEditor = {
     forceSave: (

@@ -23,10 +23,10 @@ import { okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
-import { getSectionsRemover } from "@/stores/SectionsRemover";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { getSectionsRemover } from "@/sections/SectionsRemover";
 
 const section1 = ArtifactSectionFactory.create();
 const section2 = PendingArtifactSectionFactory.create();

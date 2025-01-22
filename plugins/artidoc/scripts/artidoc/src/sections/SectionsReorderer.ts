@@ -25,8 +25,8 @@ import { Option } from "@tuleap/option";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { reorderSections } from "@/helpers/rest-querier";
-import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/SectionsCollection";
-import { CannotReorderSectionsFault } from "@/stores/CannotReorderSectionsFault";
+import type { InternalArtidocSectionId, StoredArtidocSection } from "@/sections/SectionsCollection";
+import { CannotReorderSectionsFault } from "@/sections/CannotReorderSectionsFault";
 
 export type SectionsReorderer = {
     moveSectionUp(document_id: number, section: StoredArtidocSection): ResultAsync<unknown, Fault>;

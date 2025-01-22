@@ -21,10 +21,10 @@ import { describe, it, expect } from "vitest";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
-import { getSectionsPositionsForSaveRetriever } from "@/stores/SectionsPositionsForSaveRetriever";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositionsForSaveRetriever";
 
 describe("SectionsPositionsForSaveRetriever", () => {
     const getStoreWithSections = (sections: ArtidocSection[]): SectionsCollection => {

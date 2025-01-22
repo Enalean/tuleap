@@ -42,8 +42,8 @@ import {
     IS_LOADING_SECTIONS_FAILED,
 } from "@/is-loading-sections-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { getSectionsLoader } from "@/components/SectionsLoader";
-import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
+import { getSectionsLoader } from "@/sections/SectionsLoader";
+import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 
 const { scrollToAnchor } = useScrollToAnchor();
 

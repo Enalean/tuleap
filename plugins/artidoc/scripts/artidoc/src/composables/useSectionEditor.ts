@@ -38,10 +38,10 @@ import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
-import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
-import type { UpdateSections } from "@/stores/SectionsUpdater";
-import type { RemoveSections } from "@/stores/SectionsRemover";
-import type { RetrieveSectionsPositionForSave } from "@/stores/SectionsPositionsForSaveRetriever";
+import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
+import type { UpdateSections } from "@/sections/SectionsUpdater";
+import type { RemoveSections } from "@/sections/SectionsRemover";
+import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
 
 export type SectionEditorActions = {
     enableEditor: () => void;

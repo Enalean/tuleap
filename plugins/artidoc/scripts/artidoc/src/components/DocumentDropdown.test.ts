@@ -26,11 +26,11 @@ import { createGettext } from "vue3-gettext";
 import { ref } from "vue";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
-import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
-import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
+import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
 import {
     IS_LOADING_SECTIONS,

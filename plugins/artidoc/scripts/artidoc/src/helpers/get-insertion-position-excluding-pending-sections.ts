@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InternalArtidocSectionId } from "@/stores/SectionsCollection";
-import type { PositionForSection } from "@/stores/SectionsPositionsForSaveRetriever";
-import { AT_THE_END } from "@/stores/SectionsInserter";
+import type { InternalArtidocSectionId } from "@/sections/SectionsCollection";
+import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
+import { AT_THE_END } from "@/sections/SectionsInserter";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 

@@ -18,7 +18,7 @@
  */
 
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
 export const skeleton_sections_collection = CreateStoredSections.fromArtidocSectionsCollection([
     ArtifactSectionFactory.skeleton(),

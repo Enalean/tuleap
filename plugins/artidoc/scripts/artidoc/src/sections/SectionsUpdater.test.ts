@@ -25,10 +25,10 @@ import type {
     FreetextSection,
     SectionBasedOnArtifact,
 } from "@/helpers/artidoc-section.type";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
-import { getSectionsUpdater } from "@/stores/SectionsUpdater";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { getSectionsUpdater } from "@/sections/SectionsUpdater";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
 describe("SectionsUpdater", () => {
     const getCollectionWithSections = (sections: ArtidocSection[]): SectionsCollection => {

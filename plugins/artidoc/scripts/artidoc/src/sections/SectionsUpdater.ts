@@ -19,7 +19,7 @@
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.type";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 
 export type UpdateSections = {
     updateSection(section: ArtidocSection): void;

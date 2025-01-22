@@ -18,7 +18,7 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { PositionForSection } from "@/stores/SectionsPositionsForSaveRetriever";
+import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { noop } from "@/helpers/noop";
 

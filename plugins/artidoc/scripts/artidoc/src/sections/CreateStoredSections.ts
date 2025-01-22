@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
-import {
-    CannotReorderSectionsFault,
-    isCannotReorderSectionsFault,
-} from "@/stores/CannotReorderSectionsFault";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import { injectInternalId } from "@/helpers/inject-internal-id";
 
-describe("CannotReorderSectionsFault", () => {
-    it("CannotReorderSectionsFault::build() should build a CannotReorderSectionsFault", () => {
-        const fault = CannotReorderSectionsFault.build();
-
-        expect(isCannotReorderSectionsFault(fault)).toBe(true);
-    });
-});
+export const CreateStoredSections = {
+    fromArtidocSectionsCollection: (sections: readonly ArtidocSection[]): StoredArtidocSection[] =>
+        sections.map(injectInternalId),
+    fromArtidocSection: (section: ArtidocSection): StoredArtidocSection =>
+        injectInternalId(section),
+};

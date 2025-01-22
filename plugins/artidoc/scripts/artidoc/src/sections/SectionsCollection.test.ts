@@ -18,10 +18,10 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
 describe("SectionsCollection", () => {
     it("should have no sections by default", () => {
