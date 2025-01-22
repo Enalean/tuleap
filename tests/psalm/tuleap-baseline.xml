@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[fetchTooltipValue]]></code>
       <code><![CDATA[getDao]]></code>
       <code><![CDATA[getQueryFrom]]></code>
@@ -34671,20 +34670,6 @@
       <code><![CDATA[$this->user_manager->getUserById($row['prioritized_by'])]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/View/Edit.php">
-    <MissingParamType>
-      <code><![CDATA[$display_changes]]></code>
-      <code><![CDATA[$invert_comments]]></code>
-      <code><![CDATA[$invert_order]]></code>
-      <code><![CDATA[$submitted_comment]]></code>
-      <code><![CDATA[$submitted_comment]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/View/ViewCollection.php">
-    <MissingReturnType>
-      <code><![CDATA[add]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XML/XMLArtifact.php">
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
@@ -36034,7 +36019,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[fetchArtifactValueReadOnly]]></code>
-      <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[formatDate]]></code>
       <code><![CDATA[formatDateForDisplay]]></code>
       <code><![CDATA[getFieldDataForCSVPreview]]></code>
@@ -38653,7 +38637,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchSubmitValueMasschange]]></code>
       <code><![CDATA[getQueryFrom]]></code>
       <code><![CDATA[keepValue]]></code>
     </InvalidReturnType>
@@ -38753,8 +38736,6 @@
       <code><![CDATA[doNotDisplaySpecialPropertiesAtFieldCreation]]></code>
       <code><![CDATA[fetchArtifactForOverlay]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
-      <code><![CDATA[fetchBackToAutocomputedButton]]></code>
-      <code><![CDATA[fetchComputedInputs]]></code>
       <code><![CDATA[fetchComputedValueWithLabel]]></code>
       <code><![CDATA[fetchSubmitForOverlay]]></code>
       <code><![CDATA[getComputedValueWithNoLabel]]></code>
@@ -39152,7 +39133,6 @@
       <code><![CDATA[$workflow->is_used]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_fetchFieldMasschange]]></code>
       <code><![CDATA[exportCriteriaValueToXML]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[fetchFieldContainerEnd]]></code>

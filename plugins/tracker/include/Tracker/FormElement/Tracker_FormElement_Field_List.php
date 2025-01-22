@@ -607,14 +607,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->getBind()->getDefaultValues();
     }
 
-     /**
-     * Fetch the html code to display the field value in masschange submission form
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
-        return $this->_fetchFieldMasschange('tracker_field_' . $this->id, 'artifact[' . $this->id . ']', $this->getBind()->getDefaultValues());
+        return $this->_fetchFieldMasschange('tracker_field_' . $this->id, 'artifact[' . $this->id . ']');
     }
 
     /**
@@ -1036,14 +1031,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return '</select>';
     }
 
-    protected function _fetchFieldMasschange($id, $name, $selected_values) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _fetchFieldMasschange($id, $name): string //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $purifier   = Codendi_HTMLPurifier::instance();
-        $html       = '';
-        $multiple   = ' ';
-        $size       = ' ';
-        $bind_type  = 'data-bind-type="' . $this->getBind()->getType() . '"';
-        $has_colors = count($this->getDecorators()) > 0;
+        $purifier  = Codendi_HTMLPurifier::instance();
+        $html      = '';
+        $multiple  = ' ';
+        $size      = ' ';
+        $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
 
         if ($this->isMultiple()) {
             $multiple = ' multiple="multiple" ';

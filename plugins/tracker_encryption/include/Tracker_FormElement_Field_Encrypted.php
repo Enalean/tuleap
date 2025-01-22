@@ -260,10 +260,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
-    /**
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }

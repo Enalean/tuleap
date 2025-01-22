@@ -265,11 +265,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return $this->getRichTextarea(null, $format, $value['content']);
     }
 
-     /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         $html  = '';
         $value = dgettext('tuleap-tracker', 'Unchanged');

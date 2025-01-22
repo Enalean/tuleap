@@ -733,10 +733,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the html code to display the field value in masschange submission form
-     *
-     * @return string html
      */
-    abstract protected function fetchSubmitValueMasschange();
+    abstract protected function fetchSubmitValueMasschange(): string;
 
     /**
      * Fetch the html code to display the field value in tooltip

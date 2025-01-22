@@ -846,10 +846,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * @param array  $artifact_links         The current artifact links
      * @param string $prefill_new_values     Prefill new values field (what the user has submitted, if any)
      * @param bool   $read_only              True if the user can't add or remove links
-     *
-     * @return string html
      */
-    protected function fetchHtmlWidgetMasschange($name, $artifact_links, $prefill_new_values, $read_only)
+    protected function fetchHtmlWidgetMasschange($name, $artifact_links, $prefill_new_values, $read_only): string
     {
         $html          = '';
         $html_name_new = '';
@@ -1115,9 +1113,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      *
      * @return string html
      */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
-        $html               = '';
         $prefill_new_values = dgettext('tuleap-tracker', 'Unchanged');
         $read_only          = false;
         $name               = 'artifact[' . $this->id . ']';

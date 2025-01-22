@@ -373,7 +373,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    private function fetchBackToAutocomputedButton($is_disabled)
+    private function fetchBackToAutocomputedButton($is_disabled): string
     {
         $disabled = '';
         if ($is_disabled) {
@@ -417,7 +417,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->fetchComputedInputs($displayed_value, $is_autocomputed);
     }
 
-    private function fetchComputedInputs($displayed_value, $is_autocomputed)
+    private function fetchComputedInputs($displayed_value, $is_autocomputed): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '<input type="text" class="field-computed"
@@ -796,7 +796,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         $unchanged = dgettext('tuleap-tracker', 'Unchanged');
         $html      = $this->fetchComputedInputs($unchanged, false);
