@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Renderer;
 
 use Codendi_Request;
 use Tracker_Artifact_EditRenderer;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
@@ -33,6 +34,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactViewCollectionBuilderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     private \EventManager&\PHPUnit\Framework\MockObject\MockObject $event_manager;
     private TypeIsChildLinkRetriever&\PHPUnit\Framework\MockObject\MockObject $retriever;
     private ArtifactViewCollectionBuilder $builder;
@@ -51,6 +54,21 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
 
     public function testItAddsTabWhenThereIsArtifactLinksForProjectAllowedToUseType(): void
     {
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
+        $this->retriever->method('getChildren')->willReturn([ArtifactTestBuilder::anArtifact(2)->build()]);
+        $this->event_manager->expects($this->once())->method('processEvent');
+
+        $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
+        self::assertCount(2, $view_collection->views);
+        self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
+        self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
+    }
+
+    public function testItAddsChildrenTabWhenFeatureFlagIsSet(): void
+    {
+        \ForgeConfig::set('feature_flag_reactivate_tab_children_in_artifact_view', '1');
+
         $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
         $this->retriever->method('getChildren')->willReturn([ArtifactTestBuilder::anArtifact(2)->build()]);
@@ -84,9 +102,8 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
         $this->event_manager->expects($this->once())->method('processEvent');
 
         $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
-        self::assertCount(3, $view_collection->views);
+        self::assertCount(2, $view_collection->views);
         self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
-        self::assertSame('link', $view_collection->views['link']->getIdentifier());
         self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
     }
 

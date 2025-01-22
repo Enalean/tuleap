@@ -43,10 +43,11 @@ final readonly class TypeView extends TrackerArtifactView
         $layout = $GLOBALS['HTML'];
         \assert($layout instanceof \Tuleap\Layout\BaseLayout);
         $layout->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
+            new IncludeAssets(__DIR__ . '/../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
             'children-view.js',
         ));
 
-        return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-type"></div>';
+        $warning_message = dgettext('tuleap-tracker', 'This view will be removed soon, it is replaced by the brand new Links tab');
+        return '<div class="feedback_warning">' . $warning_message . '</div><div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-type"></div>';
     }
 }

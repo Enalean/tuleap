@@ -3601,6 +3601,10 @@ msgstr ""
 msgid "This type can't be deleted because it is or has been already used."
 msgstr ""
 
+msgid ""
+"This view will be removed soon, it is replaced by the brand new Links tab"
+msgstr ""
+
 msgid "Those rules will be applied on each creation/update of artifacts."
 msgstr ""
 
