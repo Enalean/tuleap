@@ -24,7 +24,10 @@ import { noop } from "@/helpers/noop";
 export const UploadFileStub = {
     uploadNotInProgress: (): UseUploadFileType => ({
         file_upload_options: {
-            upload_url: "upload_url",
+            post_information: {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            },
             max_size_upload: 123,
             onErrorCallback: noop,
             onStartUploadCallback: () => [],
@@ -37,7 +40,10 @@ export const UploadFileStub = {
 
     uploadInProgress: (): UseUploadFileType => ({
         file_upload_options: {
-            upload_url: "https://upload_url",
+            post_information: {
+                upload_url: "https://upload_url",
+                getUploadJsonPayload: noop,
+            },
             max_size_upload: 12345678,
             onStartUploadCallback: () => [],
             onErrorCallback: noop,

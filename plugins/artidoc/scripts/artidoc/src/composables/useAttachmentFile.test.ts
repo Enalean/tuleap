@@ -19,20 +19,26 @@
 
 import { describe, expect, it } from "vitest";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { ref } from "vue";
 import { useAttachmentFile } from "@/composables/useAttachmentFile";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 const section = ArtifactSectionFactory.create();
-const field_id = ref(section.attachments ? section.attachments.field_id : 0);
+const artidoc_id = 123;
+
 describe("useAttachmentFile", () => {
     it("should return formatted upload_url", () => {
-        const { upload_url } = useAttachmentFile(field_id);
-        expect(upload_url).toBe("/api/v1/tracker_fields/171/files");
+        const { post_information } = useAttachmentFile(section, artidoc_id);
+        expect(post_information.upload_url).toBe("/api/v1/tracker_fields/171/files");
+    });
+
+    it("should return a specific upload url for freetext sections", () => {
+        const { post_information } = useAttachmentFile(FreetextSectionFactory.create(), artidoc_id);
+        expect(post_information.upload_url).toBe("/api/v1/artidoc_files");
     });
 
     describe("getWaitingListAttachments", () => {
         it("should return the waiting list", () => {
-            const { getWaitingListAttachments } = useAttachmentFile(field_id);
+            const { getWaitingListAttachments } = useAttachmentFile(section, artidoc_id);
 
             expect(getWaitingListAttachments().value).toEqual([]);
         });
@@ -40,8 +46,10 @@ describe("useAttachmentFile", () => {
 
     describe("addAttachmentToWaitingList", () => {
         it("should add a new attachment to the waiting list", () => {
-            const { addAttachmentToWaitingList, getWaitingListAttachments } =
-                useAttachmentFile(field_id);
+            const { addAttachmentToWaitingList, getWaitingListAttachments } = useAttachmentFile(
+                section,
+                artidoc_id,
+            );
             expect(getWaitingListAttachments().value).toEqual([]);
 
             const attachment_id_to_add = 123;
@@ -58,8 +66,10 @@ describe("useAttachmentFile", () => {
     describe("mergeArtifactAttachments", () => {
         describe("when all pending images are present in the current description", () => {
             it("should get all files to upload", () => {
-                const { mergeArtifactAttachments, setWaitingListAttachments } =
-                    useAttachmentFile(field_id);
+                const { mergeArtifactAttachments, setWaitingListAttachments } = useAttachmentFile(
+                    section,
+                    artidoc_id,
+                );
 
                 setWaitingListAttachments([
                     { id: 123, upload_url: "/path/to/foo.png" },
@@ -77,8 +87,10 @@ describe("useAttachmentFile", () => {
         });
         describe("when some pending images has been removed in the current description", () => {
             it("should get only files present in the description", () => {
-                const { mergeArtifactAttachments, setWaitingListAttachments } =
-                    useAttachmentFile(field_id);
+                const { mergeArtifactAttachments, setWaitingListAttachments } = useAttachmentFile(
+                    section,
+                    artidoc_id,
+                );
 
                 setWaitingListAttachments([
                     { id: 123, upload_url: "/path/to/foo.png" },
@@ -97,8 +109,10 @@ describe("useAttachmentFile", () => {
 
     describe("setWaitingListAttachments", () => {
         it("should set new waiting file list", () => {
-            const { getWaitingListAttachments, setWaitingListAttachments } =
-                useAttachmentFile(field_id);
+            const { getWaitingListAttachments, setWaitingListAttachments } = useAttachmentFile(
+                section,
+                artidoc_id,
+            );
 
             expect(getWaitingListAttachments().value).toEqual([]);
 

@@ -140,7 +140,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         $event->getRouteCollector()->addRoute(
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
             FileToUpload::ROUTE_PREFIX . '/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}',
-            [self::class, 'routeUploadSectionsFile'],
+            $this->getRouteHandler('routeUploadSectionsFile'),
         );
 
         $event->getRouteCollector()->get(

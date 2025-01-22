@@ -28,7 +28,7 @@ use Tuleap\Tus\Identifier\FileIdentifier;
  */
 final readonly class FileToUpload
 {
-    public const ROUTE_PREFIX = '/uploads/artidoc/sections/file/';
+    public const ROUTE_PREFIX = '/uploads/artidoc/sections/file';
 
     public function __construct(public FileIdentifier $id, public string $filename)
     {
@@ -36,7 +36,7 @@ final readonly class FileToUpload
 
     public function getUploadHref(): string
     {
-        return self::ROUTE_PREFIX . urlencode($this->id->toString());
+        return self::ROUTE_PREFIX . '/' . urlencode($this->id->toString());
     }
 
     public function getDownloadHref(): string

@@ -28,8 +28,13 @@ export type OnGoingUploadFile = {
     progress: number;
 };
 
+export type UploadPostInformation = {
+    readonly upload_url: string;
+    readonly getUploadJsonPayload: (file: File) => unknown;
+};
+
 export type FileUploadOptions = {
-    upload_url: string;
+    readonly post_information: UploadPostInformation;
     max_size_upload: number;
     onErrorCallback: (
         error: UploadError | MaxSizeUploadExceededError | InvalidFileUploadError,

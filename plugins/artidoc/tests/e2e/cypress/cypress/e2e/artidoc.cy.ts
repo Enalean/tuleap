@@ -123,7 +123,7 @@ describe("Artidoc", () => {
             cy.intercept("PUT", "*/artifacts/*").as("updateArtifact");
             cy.intercept("GET", "*/artidoc_sections/*").as("editSection");
 
-            pasteImageInSectionDescription();
+            pasteImageInSectionDescription("/uploads/tracker/file/*");
             cy.contains("button", "Save").click();
 
             cy.wait(["@updateArtifact", "@editSection"]);
@@ -155,7 +155,7 @@ describe("Artidoc", () => {
             "Performance Requirement",
         ]);
 
-        cy.log("User should be able to add a freetext at the beggining");
+        cy.log("User should be able to add a freetext at the beginning");
         cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
         cy.get("[data-test=add-freetext-section]").first().click({ force: true });
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
@@ -165,6 +165,25 @@ describe("Artidoc", () => {
         cy.reload();
         assertDocumentContainsSections([
             "Introduction",
+            "Functional Requirement",
+            "Security Requirement (edited)",
+            "Performance Requirement",
+        ]);
+
+        cy.log("Paste image in freetext section");
+        cy.get("[data-test=artidoc-section]:first-child").within(() => {
+            getSectionTitle().type("{end} (edited)");
+            pasteImageInSectionDescription("/uploads/artidoc/sections/file/*");
+            cy.contains("button", "Save").click();
+
+            cy.wait(["@editSection"]);
+
+            // ignore rule for image pasted in ProseMirror
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("img").should("have.attr", "src").should("include", "/artidoc/attachments/");
+        });
+        assertDocumentContainsSections([
+            "Introduction (edited)",
             "Functional Requirement",
             "Security Requirement (edited)",
             "Performance Requirement",
@@ -238,8 +257,8 @@ function fillInFreeTextSectionTitleAndDescription({
     cy.wait("@editSection");
 }
 
-function pasteImageInSectionDescription(): void {
-    cy.intercept("PATCH", "/uploads/tracker/file/*").as("UploadImage");
+function pasteImageInSectionDescription(url_to_intercept: string): void {
+    cy.intercept("PATCH", url_to_intercept).as("UploadImage");
 
     getSectionDescription().click();
     getSectionDescription().then((section_description) => {

@@ -62,7 +62,10 @@ describe.each([[ArtifactSectionFactory], [FreetextSectionFactory]])(
                     editable_description: "Lorem ipsum",
                     readonly_description: "Lorem ipsum",
                     is_edit_mode: false,
-                    upload_url: "/file/upload",
+                    post_information: {
+                        upload_url: "/file/upload",
+                        getUploadJsonPayload: noop,
+                    },
                     add_attachment_to_waiting_list: noop,
                     input_section_content: noop,
                     is_image_upload_allowed: true,

@@ -75,7 +75,16 @@ describe("uploadFile", () => {
             file = new File(["123"], "file_name.png", { type: "image/png" });
             other_file = new File(["456"], "other.png", { type: "image/png" });
             options = {
-                upload_url,
+                post_information: {
+                    getUploadJsonPayload(file: File): unknown {
+                        return {
+                            name: file.name,
+                            file_size: file.size,
+                            file_type: file.type,
+                        };
+                    },
+                    upload_url,
+                },
                 max_size_upload,
                 onErrorCallback: vi.fn(),
                 onStartUploadCallback: vi.fn().mockReturnValue([
@@ -100,7 +109,10 @@ describe("uploadFile", () => {
                         mockFileList([file]),
                         {
                             ...options,
-                            upload_url: "",
+                            post_information: {
+                                ...options.post_information,
+                                upload_url: "",
+                            },
                         },
                         gettext_provider,
                         [],
