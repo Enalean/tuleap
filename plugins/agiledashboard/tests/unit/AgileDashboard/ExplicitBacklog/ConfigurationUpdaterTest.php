@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use Codendi_Request;
-use MilestoneReportCriterionDao;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\BacklogItemDao;
+use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalResponseMock;

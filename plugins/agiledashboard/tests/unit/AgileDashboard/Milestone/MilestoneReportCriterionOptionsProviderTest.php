@@ -116,7 +116,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
 
         $this->dao->expects(self::never())->method('getAllMilestoneByTrackers');
 
-        self::assertEmpty($this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user));
+        self::assertEmpty($this->provider->getSelectboxOptions($this->task_tracker, 0, $this->user));
     }
 
     public function testItDoesNotSearchOnProductTrackerSinceThereIsNoPlanning(): void
@@ -131,7 +131,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
             ->with([$this->sprint_tracker_id])
             ->willReturn($this->getDBResults());
 
-        $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
+        $this->provider->getSelectboxOptions($this->task_tracker, 0, $this->user);
     }
 
     public function testItDoesNotSearchOnMilestonesUserCantView(): void
@@ -146,7 +146,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
         $this->dao->expects(self::once())->method('getAllMilestoneByTrackers')
             ->willReturn($this->getDBResults());
 
-        $options = $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
+        $options = $this->provider->getSelectboxOptions($this->task_tracker, 0, $this->user);
 
         self::assertDoesNotMatchRegularExpression('/Sprint 31/', implode('', $options));
     }

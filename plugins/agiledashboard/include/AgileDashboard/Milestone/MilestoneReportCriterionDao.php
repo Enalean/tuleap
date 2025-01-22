@@ -19,52 +19,50 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Milestone;
+
+use AgileDashboard_Milestone_MilestoneReportCriterionProvider;
+use Tuleap\DB\DataAccessObject;
+
 class MilestoneReportCriterionDao extends DataAccessObject
 {
-    public function save($report_id, $milestone_id)
+    public function save(int $report_id, int $milestone_id): void
     {
-        $report_id    = $this->da->escapeInt($report_id);
-        $milestone_id = $this->da->escapeInt($milestone_id);
+        $sql = 'REPLACE INTO plugin_agiledashboard_criteria (report_id, milestone_id) VALUES (?, ?)';
 
-        $sql = "REPLACE INTO plugin_agiledashboard_criteria (report_id, milestone_id)
-                VALUES ($report_id, $milestone_id)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $report_id, $milestone_id);
     }
 
-    public function delete($report_id)
+    public function delete(int $report_id): void
     {
-        $report_id = $this->da->escapeInt($report_id);
+        $sql = 'DELETE FROM plugin_agiledashboard_criteria WHERE report_id = ?';
 
-        $sql = "DELETE FROM plugin_agiledashboard_criteria
-                WHERE report_id = $report_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $report_id);
     }
 
-    public function searchByReportId($report_id)
+    /**
+     * @return array{milestone_id: int}|null
+     */
+    public function searchByReportId(int $report_id): ?array
     {
-        $report_id = $this->da->escapeInt($report_id);
+        $sql = 'SELECT milestone_id FROM plugin_agiledashboard_criteria WHERE report_id = ?';
 
-        $sql = "SELECT milestone_id
-                FROM plugin_agiledashboard_criteria
-                WHERE report_id = $report_id";
-
-        return $this->retrieve($sql);
+        return $this->getDB()->row($sql, $report_id);
     }
 
     public function updateAllUnplannedValueToAnyInProject(int $project_id): void
     {
-        $project_id      = $this->da->escapeInt($project_id);
-        $unplanned_value = $this->da->escapeInt(AgileDashboard_Milestone_MilestoneReportCriterionProvider::UNPLANNED);
+        $sql = <<<SQL
+        DELETE plugin_agiledashboard_criteria.*
+        FROM plugin_agiledashboard_criteria
+            INNER JOIN tracker_report ON (plugin_agiledashboard_criteria.report_id = tracker_report.id)
+            INNER JOIN tracker ON (tracker_report.tracker_id = tracker.id)
+        WHERE plugin_agiledashboard_criteria.milestone_id = ?
+            AND tracker.group_id = ?
+        SQL;
 
-        $sql = "DELETE plugin_agiledashboard_criteria.*
-                FROM plugin_agiledashboard_criteria
-                    INNER JOIN tracker_report ON (plugin_agiledashboard_criteria.report_id = tracker_report.id)
-                    INNER JOIN tracker ON (tracker_report.tracker_id = tracker.id)
-                WHERE plugin_agiledashboard_criteria.milestone_id = $unplanned_value
-                    AND tracker.group_id = $project_id";
-
-        $this->update($sql);
+        $this->getDB()->run($sql, AgileDashboard_Milestone_MilestoneReportCriterionProvider::UNPLANNED, $project_id);
     }
 }

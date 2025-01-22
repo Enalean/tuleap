@@ -43,7 +43,7 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItReturnsAnEmptyStringIfExplicitBacklogIsNotUsed(): void
     {
-        $selected_option = '0';
+        $selected_option = 0;
 
         $this->explicit_backlog_dao
             ->expects(self::once())
@@ -56,7 +56,7 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItReturnsTheSelectboxOptionAsStringIfExplicitBacklogIsUsed(): void
     {
-        $selected_option = '0';
+        $selected_option = 0;
 
         $this->explicit_backlog_dao
             ->expects(self::once())
@@ -73,7 +73,7 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItReturnsTheSelectedSelectboxOptionAsStringIfExplicitBacklogIsUsedAndSelectedOptionIsUnplanned(): void
     {
-        $selected_option = '-1';
+        $selected_option = -1;
 
         $this->explicit_backlog_dao
             ->expects(self::once())
