@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
 class Tracker_ArtifactDao extends DataAccessObject
@@ -759,26 +758,6 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function getLinkedArtifactsByIds(array $artifact_ids, array $excluded_ids = []): array
     {
         return (new \Tuleap\Tracker\Artifact\Dao\ArtifactDao())->getLinkedArtifactsByIds($artifact_ids, $excluded_ids);
-    }
-
-    /**
-     * Return artifact status (open/closed)
-     *
-     * @param int[] $artifact_ids
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-     */
-    public function getArtifactsStatusByIds(array $artifact_ids)
-    {
-        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql          = "SELECT A.id, IF(CVL.bindvalue_id IS NULL, '" . Artifact::STATUS_CLOSED . "', '" . Artifact::STATUS_OPEN . "') AS status
-                FROM tracker_artifact AS A
-                LEFT JOIN (
-                    tracker_changeset_value AS CV
-                    INNER JOIN tracker_semantic_status SS ON (CV.field_id = SS.field_id)
-                    INNER JOIN tracker_changeset_value_list CVL ON (CV.id = CVL.changeset_value_id AND CVL.bindvalue_id = SS.open_value_id)
-                ) ON (A.last_changeset_id = CV.changeset_id)
-                WHERE A.id IN ($artifact_ids)";
-        return $this->retrieve($sql);
     }
 
     /** @return array */

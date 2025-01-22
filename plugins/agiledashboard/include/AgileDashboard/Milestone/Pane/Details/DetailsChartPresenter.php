@@ -25,42 +25,19 @@ use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
 
 class DetailsChartPresenter
 {
-    public $has_burndown = false;
-    public $burndown_label;
-    public $burndown_presenter;
-
-    public $has_burnup = false;
-    public $burnup_label;
-    public $burnup_presenter;
-    public $has_charts = false;
-    /**
-     * @var array
-     */
-    public $escaped_charts;
-    /**
-     * @var bool
-     */
-    public $has_escaped_charts;
+    public bool $has_charts;
+    public bool $has_escaped_charts;
 
     public function __construct(
-        $has_burndown,
-        $burndown_label,
-        $has_burnup,
-        $burnup_label,
-        ?BurndownFieldPresenter $burndown_presenter = null,
-        ?BurnupFieldPresenter $burnup_presenter = null,
-        ?array $escaped_charts = null,
+        public bool $has_burndown,
+        public ?string $burndown_label,
+        public bool $has_burnup,
+        public ?string $burnup_label,
+        public ?BurndownFieldPresenter $burndown_presenter = null,
+        public ?BurnupFieldPresenter $burnup_presenter = null,
+        public ?array $escaped_charts = null,
     ) {
-        $this->has_burndown       = $has_burndown;
-        $this->burndown_label     = $burndown_label;
-        $this->burndown_presenter = $burndown_presenter;
-        $this->has_burnup         = $has_burnup;
-        $this->burnup_label       = $burnup_label;
-        $this->burnup_presenter   = $burnup_presenter;
-
-        $this->escaped_charts     = $escaped_charts;
-        $this->has_escaped_charts = count($escaped_charts) > 0;
-
-        $this->has_charts = $this->has_burndown || $this->has_burnup || $this->has_escaped_charts;
+        $this->has_escaped_charts = $this->escaped_charts !== null && count($this->escaped_charts) > 0;
+        $this->has_charts         = $this->has_burndown || $this->has_burnup || $this->has_escaped_charts;
     }
 }

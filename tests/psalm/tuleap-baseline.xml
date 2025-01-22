@@ -30,47 +30,6 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneStatusCounter.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$artifact_status]]></code>
-      <code><![CDATA[$artifact_status]]></code>
-      <code><![CDATA[getChildrenForArtifacts]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$milestone_artifact_id]]></code>
-      <code><![CDATA[$milestone_artifact_id]]></code>
-      <code><![CDATA[$milestone_artifact_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[countStatus]]></code>
-      <code><![CDATA[getBacklogArtifactsUserCanView]]></code>
-      <code><![CDATA[getChildrenUserCanView]]></code>
-      <code><![CDATA[getStatusForMilestoneArtifactId]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Details/DetailsChartPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$burndown_label]]></code>
-      <code><![CDATA[$burnup_label]]></code>
-      <code><![CDATA[$has_burndown]]></code>
-      <code><![CDATA[$has_burnup]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$burndown_label]]></code>
-      <code><![CDATA[$burndown_presenter]]></code>
-      <code><![CDATA[$burnup_label]]></code>
-      <code><![CDATA[$burnup_presenter]]></code>
-      <code><![CDATA[$has_burndown]]></code>
-      <code><![CDATA[$has_burnup]]></code>
-      <code><![CDATA[$has_charts]]></code>
-    </MissingPropertyType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$escaped_charts]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$escaped_charts]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Details/DetailsChartPresentersRetriever.php">
     <MissingParamType>
       <code><![CDATA[$escaped_chart]]></code>

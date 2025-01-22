@@ -117,7 +117,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $form_element_factory,
             new AgileDashboard_Milestone_MilestoneStatusCounter(
                 new BacklogItemDao(),
-                new Tracker_ArtifactDao(),
+                new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
                 $artifact_factory
             ),
             new PlanningPermissionsManager(),

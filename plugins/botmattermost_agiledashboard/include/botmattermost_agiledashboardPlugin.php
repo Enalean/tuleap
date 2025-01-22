@@ -91,7 +91,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         $artifact_factory         = Tracker_ArtifactFactory::instance();
         $milestone_status_counter = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new BacklogItemDao(),
-            new Tracker_ArtifactDao(),
+            new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
             $artifact_factory
         );
         $planning_factory         = PlanningFactory::build();
