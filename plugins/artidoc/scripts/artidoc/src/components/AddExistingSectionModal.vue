@@ -82,11 +82,11 @@ import type { HTMLTemplateResult, HTMLTemplateStringProcessor, LazyboxItem } fro
 import { createLazyAutocompleter } from "@tuleap/lazybox";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { LazyAutocompleter } from "@tuleap/lazybox/src/LazyAutocompleterElement";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { createArtifactSection } from "@/helpers/rest-querier";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { PositionForSection } from "@/stores/useSectionsStore";
+import type { PositionForSection } from "@/stores/SectionsPositionsForSaveRetriever";
 import { AT_THE_END } from "@/stores/SectionsInserter";
 import type { Artifact } from "@/helpers/search-existing-artifacts-for-autocompleter";
 import {
@@ -103,7 +103,7 @@ const close_title = $gettext("Close");
 
 const documentId = strictInject(DOCUMENT_ID);
 const configuration = strictInject(CONFIGURATION_STORE);
-const { sections } = strictInject(SECTIONS_STORE);
+const { sections } = strictInject(SECTIONS_COLLECTION);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 

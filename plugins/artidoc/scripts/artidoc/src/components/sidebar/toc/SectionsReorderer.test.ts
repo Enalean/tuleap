@@ -27,7 +27,7 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import * as rest from "@/helpers/rest-querier";
-import type { StoredArtidocSection } from "@/stores/useSectionsStore";
+import type { StoredArtidocSection } from "@/stores/SectionsCollection";
 import { buildSectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
 import type { SectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";

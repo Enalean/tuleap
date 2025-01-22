@@ -40,13 +40,13 @@ import { errAsync, okAsync } from "neverthrow";
 import { getSectionInItsLatestVersion } from "@/helpers/get-section-in-its-latest-version";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { SectionsStore } from "@/stores/useSectionsStore";
 import type { EditorErrors } from "@/composables/useEditorErrors";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { ref } from "vue";
 import type { ReplacePendingSections } from "@/stores/PendingSectionsReplacer";
 import type { UpdateSections } from "@/stores/SectionsUpdater";
+import type { RetrieveSectionsPositionForSave } from "@/stores/SectionsPositionsForSaveRetriever";
 
 export type SaveEditor = {
     forceSave: (
@@ -71,11 +71,11 @@ export default function useSaveSection(
     editor_errors: EditorErrors,
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
+    retrieve_positions: RetrieveSectionsPositionForSave,
     callbacks: {
         updateCurrentSection: (new_value: ArtidocSection) => void;
         closeEditor: () => void;
         setEditMode: (new_value: boolean) => void;
-        getSectionPositionForSave: SectionsStore["getSectionPositionForSave"];
         mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"];
     },
 ): SaveEditor {
@@ -223,7 +223,7 @@ export default function useSaveSection(
                 createArtifactSection(
                     document_id,
                     id,
-                    callbacks.getSectionPositionForSave(section),
+                    retrieve_positions.getSectionPositionForSave(section),
                 ),
             );
         }
@@ -233,7 +233,7 @@ export default function useSaveSection(
                 document_id,
                 new_value.title,
                 new_value.description,
-                callbacks.getSectionPositionForSave(section),
+                retrieve_positions.getSectionPositionForSave(section),
             );
         }
 

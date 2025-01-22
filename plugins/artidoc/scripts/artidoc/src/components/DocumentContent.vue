@@ -57,14 +57,14 @@ import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import SectionContainer from "@/components/section/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
 import { getSectionsRemover } from "@/stores/SectionsRemover";
 
-const sections_collection = strictInject(SECTIONS_STORE);
+const sections_collection = strictInject(SECTIONS_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const sections_inserter = getSectionsInserter(sections_collection);

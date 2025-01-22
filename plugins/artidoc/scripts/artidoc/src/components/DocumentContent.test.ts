@@ -22,17 +22,17 @@ import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionContainer from "@/components/section/SectionContainer.vue";
-import type { SectionsStore } from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import AddNewSectionButton from "./AddNewSectionButton.vue";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 
 describe("DocumentContent", () => {
-    let sections_store: SectionsStore;
+    let sections_collection: SectionsCollection;
     let section_1: ArtidocSection, section_2: ArtidocSection, section_3: ArtidocSection;
 
     beforeEach(() => {
@@ -50,14 +50,18 @@ describe("DocumentContent", () => {
             title: { ...default_pending_artifact_section.title, value: "Title 3" },
         });
 
-        sections_store = InjectedSectionsStoreStub.withSections([section_1, section_2, section_3]);
+        sections_collection = SectionsCollectionStub.withSections([
+            section_1,
+            section_2,
+            section_3,
+        ]);
     });
 
     it("should display the two sections", () => {
         const list = shallowMount(DocumentContent, {
             global: {
                 provide: {
-                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
                 },
             },
@@ -69,7 +73,7 @@ describe("DocumentContent", () => {
         const list = shallowMount(DocumentContent, {
             global: {
                 provide: {
-                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
                 },
             },
@@ -85,7 +89,7 @@ describe("DocumentContent", () => {
             shallowMount(DocumentContent, {
                 global: {
                     provide: {
-                        [SECTIONS_STORE.valueOf()]: sections_store,
+                        [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
                     },
                 },
@@ -98,7 +102,7 @@ describe("DocumentContent", () => {
             shallowMount(DocumentContent, {
                 global: {
                     provide: {
-                        [SECTIONS_STORE.valueOf()]: sections_store,
+                        [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
                     },
                 },
@@ -110,7 +114,7 @@ describe("DocumentContent", () => {
         const wrapper = shallowMount(DocumentContent, {
             global: {
                 provide: {
-                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
                 },
             },
@@ -123,7 +127,7 @@ describe("DocumentContent", () => {
         const wrapper = shallowMount(DocumentContent, {
             global: {
                 provide: {
-                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
                 },
             },

@@ -19,28 +19,22 @@
 
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
-import { isPendingSection } from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
 
 export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 
-export interface SectionsStore {
+export interface SectionsCollection {
     sections: Ref<StoredArtidocSection[]>;
     saved_sections: ComputedRef<readonly ArtidocSection[]>;
-    getSectionPositionForSave: (section: ArtidocSection) => PositionForSection;
     replaceAll: (sections_collection: StoredArtidocSection[]) => void;
 }
 
-type BeforeSection = { before: string };
-export type AtTheEnd = null;
-
-export type PositionForSection = AtTheEnd | BeforeSection;
 export interface InternalArtidocSectionId {
     internal_id: string;
 }
 
-export function buildSectionsStore(): SectionsStore {
+export function buildSectionsCollection(): SectionsCollection {
     const sections: Ref<StoredArtidocSection[]> = ref([]);
 
     function replaceAll(sections_collection: StoredArtidocSection[]): void {
@@ -51,29 +45,9 @@ export function buildSectionsStore(): SectionsStore {
         return extractSavedSectionsFromArtidocSections(sections.value);
     });
 
-    function getSectionPositionForSave(section: ArtidocSection): PositionForSection {
-        const index = sections.value.findIndex((element) => element.id === section.id);
-        if (index === -1) {
-            return null;
-        }
-
-        if (index === sections.value.length - 1) {
-            return null;
-        }
-
-        for (let i = index + 1; i < sections.value.length; i++) {
-            if (!isPendingSection(sections.value[i])) {
-                return { before: sections.value[i].id };
-            }
-        }
-
-        return null;
-    }
-
     return {
         sections,
         saved_sections,
         replaceAll,
-        getSectionPositionForSave,
     };
 }

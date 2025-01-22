@@ -18,7 +18,7 @@
  */
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { StoredArtidocSection } from "@/stores/useSectionsStore";
+import type { StoredArtidocSection } from "@/stores/SectionsCollection";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 
 export const CreateStoredSections = {

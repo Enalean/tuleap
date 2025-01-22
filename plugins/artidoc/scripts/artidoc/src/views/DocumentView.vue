@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <document-layout v-if="is_loading_sections || store.sections.value.length > 0" />
+    <document-layout v-if="is_loading_sections || sections_collection.sections.value.length > 0" />
     <div v-else-if="!is_loading_sections && is_loading_failed" class="tlp-framed">
         <no-access-state />
     </div>
@@ -37,7 +37,7 @@ import EmptyState from "@/views/EmptyState.vue";
 import NoAccessState from "@/views/NoAccessState.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import {
     IS_LOADING_SECTIONS,
     IS_LOADING_SECTIONS_FAILED,
@@ -46,7 +46,7 @@ import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-co
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const is_loading_failed = strictInject(IS_LOADING_SECTIONS_FAILED);
-const store = strictInject(SECTIONS_STORE);
+const sections_collection = strictInject(SECTIONS_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const { selected_tracker } = strictInject(CONFIGURATION_STORE);
 
@@ -54,5 +54,5 @@ const should_display_configuration_panel = computed(
     () => can_user_edit_document && !selected_tracker.value,
 );
 
-store.replaceAll(skeleton_sections_collection);
+sections_collection.replaceAll(skeleton_sections_collection);
 </script>

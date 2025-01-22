@@ -25,18 +25,18 @@ import { isPendingArtifactSection, isPendingFreetextSection } from "@/helpers/ar
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { Tracker } from "@/stores/configuration-store";
-import type { SectionsStore } from "@/stores/useSectionsStore";
-import { buildSectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
+import { buildSectionsCollection } from "@/stores/SectionsCollection";
 import { watchForNeededPendingSectionInsertion } from "@/stores/PendingSectionInserter";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
 describe("PendingSectionInserter", () => {
-    let sections_collection: SectionsStore,
+    let sections_collection: SectionsCollection,
         selected_tracker: Ref<Tracker | null>,
         can_user_edit_document: boolean;
 
     beforeEach(() => {
-        sections_collection = buildSectionsStore();
+        sections_collection = buildSectionsCollection();
         sections_collection.replaceAll(
             CreateStoredSections.fromArtidocSectionsCollection([ArtifactSectionFactory.create()]),
         );

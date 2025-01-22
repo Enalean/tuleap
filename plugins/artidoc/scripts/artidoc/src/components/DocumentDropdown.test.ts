@@ -26,34 +26,39 @@ import { createGettext } from "vue3-gettext";
 import { ref } from "vue";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
-import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
+import {
+    IS_LOADING_SECTIONS,
+    IS_LOADING_SECTIONS_FAILED,
+} from "@/is-loading-sections-injection-key";
 
 vi.mock("@tuleap/tlp-dropdown");
 
 describe("DocumentDropdown", () => {
-    let is_loading_sections: boolean;
+    let is_loading_sections: boolean, is_loading_sections_failed: boolean;
 
     beforeEach(() => {
         is_loading_sections = false;
+        is_loading_sections_failed = false;
     });
 
     function getWrapper(
         can_user_edit_document: boolean,
-        sections_store: SectionsStore,
+        sections_collection: SectionsCollection,
     ): VueWrapper {
         return shallowMount(DocumentDropdown, {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [IS_LOADING_SECTIONS.valueOf()]: ref(is_loading_sections),
+                    [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(is_loading_sections_failed),
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
-                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                 },
             },
         });
@@ -61,14 +66,14 @@ describe("DocumentDropdown", () => {
 
     describe("Document configuration", () => {
         it("should display configuration modal when user can edit document", () => {
-            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withSections([]));
+            const wrapper = getWrapper(true, SectionsCollectionStub.withSections([]));
 
             expect(wrapper.findComponent(ConfigurationModalTrigger).exists()).toBe(true);
             expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(true);
         });
 
         it("should not display configuration modal when user cannot edit document", () => {
-            const wrapper = getWrapper(false, InjectedSectionsStoreStub.withSections([]));
+            const wrapper = getWrapper(false, SectionsCollectionStub.withSections([]));
 
             expect(wrapper.findComponent(ConfigurationModalTrigger).exists()).toBe(false);
             expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(false);
@@ -79,19 +84,21 @@ describe("DocumentDropdown", () => {
         it("should not display PDF export when the sections are being loaded", () => {
             is_loading_sections = true;
 
-            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withSections([]));
+            const wrapper = getWrapper(true, SectionsCollectionStub.withSections([]));
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
         });
 
         it("should not display PDF export when the loading of sections failed", () => {
-            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withSectionsInError());
+            is_loading_sections_failed = true;
+
+            const wrapper = getWrapper(true, SectionsCollectionStub.withSections([]));
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
         });
 
         it("should not display PDF export when there is no sections", () => {
-            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withSections([]));
+            const wrapper = getWrapper(true, SectionsCollectionStub.withSections([]));
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
         });
@@ -99,7 +106,7 @@ describe("DocumentDropdown", () => {
         it("should display PDF export when there is at least one artifact section", () => {
             const wrapper = getWrapper(
                 true,
-                InjectedSectionsStoreStub.withSections([ArtifactSectionFactory.create()]),
+                SectionsCollectionStub.withSections([ArtifactSectionFactory.create()]),
             );
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(true);
@@ -108,7 +115,7 @@ describe("DocumentDropdown", () => {
         it("should not display PDF export when there is only pending sections", () => {
             const wrapper = getWrapper(
                 true,
-                InjectedSectionsStoreStub.withSections([
+                SectionsCollectionStub.withSections([
                     PendingArtifactSectionFactory.create(),
                     PendingArtifactSectionFactory.create(),
                 ]),

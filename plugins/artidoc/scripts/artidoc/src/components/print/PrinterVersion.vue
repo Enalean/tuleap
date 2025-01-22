@@ -91,12 +91,12 @@
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import SectionPrinterVersion from "@/components/print/SectionPrinterVersion.vue";
 import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import { computed } from "vue";
 
-const { saved_sections } = strictInject(SECTIONS_STORE);
+const { saved_sections } = strictInject(SECTIONS_COLLECTION);
 const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 
 const has_title_page_content = computed(

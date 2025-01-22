@@ -20,7 +20,7 @@
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
-import type { StoredArtidocSection } from "@/stores/useSectionsStore";
+import type { StoredArtidocSection } from "@/stores/SectionsCollection";
 import { getAllSections } from "@/helpers/rest-querier";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";

@@ -28,9 +28,9 @@ import SectionDescription from "./description/SectionDescription.vue";
 import * as editor from "@/composables/useSectionEditor";
 import * as upload_file from "@/composables/useUploadFile";
 import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { createGettext } from "vue3-gettext";
@@ -56,7 +56,7 @@ describe("SectionContent", () => {
                 global: {
                     plugins: [createGettext({ silent: true })],
                     provide: {
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections([]),
+                        [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
                         [IS_LOADING_SECTIONS.valueOf()]: ref(false),
                     },
@@ -94,7 +94,7 @@ describe("SectionContent", () => {
                 global: {
                     plugins: [createGettext({ silent: true })],
                     provide: {
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withSections(
+                        [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections(
                             skeleton_sections_collection,
                         ),
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,

@@ -21,16 +21,16 @@ import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useSectionEditor } from "@/composables/useSectionEditor";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
 import * as saveSection from "@/composables/useSaveSection";
 import * as refreshSection from "@/composables/useRefreshSection";
 import * as editorError from "@/composables/useEditorErrors";
 import * as editorContent from "@/composables/useEditorSectionContent";
-import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
 import type { SectionEditorsStore } from "@/stores/useSectionEditorsStore";
 import { EDITORS_COLLECTION, useSectionEditorsStore } from "@/stores/useSectionEditorsStore";
 import { ref } from "vue";
@@ -42,6 +42,7 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { PendingSectionsReplacerStub } from "@/helpers/stubs/PendingSectionsReplacerStub";
 import { SectionsUpdaterStub } from "@/helpers/stubs/SectionsUpdaterStub";
 import { SectionsRemoverStub } from "@/helpers/stubs/SectionsRemoverStub";
+import { SectionsPositionsForSaveRetrieverStub } from "@/helpers/stubs/SectionsPositionsForSaveRetrieverStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
@@ -49,14 +50,12 @@ const merge_artifacts = vi.fn();
 const set_waiting_list = vi.fn();
 
 describe("useSectionEditor", () => {
-    let store_stub: SectionsStore;
+    let store_stub: SectionsCollection;
     let editors_collection: SectionEditorsStore;
     let upload_file_store_stub: UploadFileStoreType;
 
     beforeEach(() => {
-        store_stub = {
-            ...InjectedSectionsStoreStub.withSections([]),
-        };
+        store_stub = SectionsCollectionStub.withSections([]);
         editors_collection = useSectionEditorsStore();
         upload_file_store_stub = {
             ...UploadFileStoreStub.uploadInProgress(),
@@ -65,7 +64,7 @@ describe("useSectionEditor", () => {
         mockStrictInject([
             [CAN_USER_EDIT_DOCUMENT, true],
             [DOCUMENT_ID, 1],
-            [SECTIONS_STORE, store_stub],
+            [SECTIONS_COLLECTION, store_stub],
             [EDITORS_COLLECTION, editors_collection],
             [UPLOAD_FILE_STORE, upload_file_store_stub],
         ]);
@@ -83,6 +82,7 @@ describe("useSectionEditor", () => {
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
                 SectionsRemoverStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 ref(true),
                 () => {},
             );
@@ -134,6 +134,7 @@ describe("useSectionEditor", () => {
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     ref(false),
                     () => {},
                 );
@@ -159,6 +160,7 @@ describe("useSectionEditor", () => {
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     ref(false),
                     () => {},
                 );
@@ -179,6 +181,7 @@ describe("useSectionEditor", () => {
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     ref(false),
                     () => {},
                 );
@@ -199,6 +202,7 @@ describe("useSectionEditor", () => {
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     ref(false),
                     () => {},
                 );
@@ -219,6 +223,7 @@ describe("useSectionEditor", () => {
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     ref(false),
                     () => {},
                 );
@@ -254,6 +259,7 @@ describe("useSectionEditor", () => {
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     ref(false),
                     vi.fn(),
                 );
@@ -273,6 +279,7 @@ describe("useSectionEditor", () => {
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     sections_remover,
+                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     ref(false),
                     () => {},
                 );
@@ -295,6 +302,7 @@ describe("useSectionEditor", () => {
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
                 SectionsRemoverStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 ref(false),
                 () => {},
             );
@@ -316,6 +324,7 @@ describe("useSectionEditor", () => {
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
                 SectionsRemoverStub.withNoExpectedCall(),
+                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 ref(false),
                 () => {},
             );

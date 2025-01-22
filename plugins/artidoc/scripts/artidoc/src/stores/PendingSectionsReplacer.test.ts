@@ -23,17 +23,17 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { isPendingFreetextSection } from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { SectionsStore } from "@/stores/useSectionsStore";
-import { buildSectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
+import { buildSectionsCollection } from "@/stores/SectionsCollection";
 import { getPendingSectionsReplacer } from "@/stores/PendingSectionsReplacer";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
 describe("PendingSectionsReplacer", () => {
-    const getSectionsCollection = (sections: ArtidocSection[]): SectionsStore => {
-        const store = buildSectionsStore();
-        store.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
+    const getSectionsCollection = (sections: ArtidocSection[]): SectionsCollection => {
+        const collection = buildSectionsCollection();
+        collection.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
 
-        return store;
+        return collection;
     };
 
     it("should do nothing if the pending sections cannot be found", () => {

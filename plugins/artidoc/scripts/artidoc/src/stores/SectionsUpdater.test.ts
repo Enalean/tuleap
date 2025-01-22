@@ -25,16 +25,16 @@ import type {
     FreetextSection,
     SectionBasedOnArtifact,
 } from "@/helpers/artidoc-section.type";
-import type { SectionsStore } from "@/stores/useSectionsStore";
-import { buildSectionsStore } from "@/stores/useSectionsStore";
+import type { SectionsCollection } from "@/stores/SectionsCollection";
+import { buildSectionsCollection } from "@/stores/SectionsCollection";
 import { getSectionsUpdater } from "@/stores/SectionsUpdater";
 import { CreateStoredSections } from "@/stores/CreateStoredSections";
 
 describe("SectionsUpdater", () => {
-    const getCollectionWithSections = (sections: ArtidocSection[]): SectionsStore => {
-        const store = buildSectionsStore();
-        store.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
-        return store;
+    const getCollectionWithSections = (sections: ArtidocSection[]): SectionsCollection => {
+        const collections = buildSectionsCollection();
+        collections.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
+        return collections;
     };
 
     it("should update the artifact section", () => {

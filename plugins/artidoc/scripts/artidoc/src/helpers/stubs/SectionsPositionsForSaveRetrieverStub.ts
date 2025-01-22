@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { InternalArtidocSectionId } from "@/stores/SectionsCollection";
-import { v4 as uuidv4 } from "uuid";
+import type {
+    PositionForSection,
+    RetrieveSectionsPositionForSave,
+} from "@/stores/SectionsPositionsForSaveRetriever";
+import { AT_THE_END } from "@/stores/SectionsInserter";
 
-export function injectInternalId(
-    section: ArtidocSection,
-): ArtidocSection & InternalArtidocSectionId {
-    return {
-        ...section,
-        internal_id: uuidv4(),
-    };
-}
+export const SectionsPositionsForSaveRetrieverStub = {
+    withDefaultPositionAtTheEnd: (): RetrieveSectionsPositionForSave => ({
+        getSectionPositionForSave: (): PositionForSection => AT_THE_END,
+    }),
+};
