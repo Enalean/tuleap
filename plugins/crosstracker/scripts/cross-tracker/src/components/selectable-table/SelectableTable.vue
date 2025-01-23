@@ -63,6 +63,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
+    GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_STATE,
@@ -72,32 +73,16 @@ import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTracker
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { useGettext } from "vue3-gettext";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "../EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
-import {
-    ARTIFACT_COLUMN_NAME,
-    ARTIFACT_ID_COLUMN_NAME,
-    ASSIGNED_TO_COLUMN_NAME,
-    DESCRIPTION_COLUMN_NAME,
-    LAST_UPDATE_BY_COLUMN_NAME,
-    LAST_UPDATE_DATE_COLUMN_NAME,
-    PRETTY_TITLE_COLUMN_NAME,
-    PROJECT_COLUMN_NAME,
-    STATUS_COLUMN_NAME,
-    SUBMITTED_BY_COLUMN_NAME,
-    SUBMITTED_ON_COLUMN_NAME,
-    TITLE_COLUMN_NAME,
-    TRACKER_COLUMN_NAME,
-} from "../../domain/ColumnName";
 import EditCell from "./EditCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 
-const { $gettext } = useGettext();
+const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const report_state = strictInject(REPORT_STATE);
@@ -178,46 +163,7 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithT
 }
 
 const getColumnName = (name: ColumnName): string => {
-    if (name === TITLE_COLUMN_NAME) {
-        return $gettext("Title");
-    }
-    if (name === DESCRIPTION_COLUMN_NAME) {
-        return $gettext("Description");
-    }
-    if (name === STATUS_COLUMN_NAME) {
-        return $gettext("Status");
-    }
-    if (name === ASSIGNED_TO_COLUMN_NAME) {
-        return $gettext("Assigned to");
-    }
-    if (name === ARTIFACT_ID_COLUMN_NAME) {
-        return $gettext("Id");
-    }
-    if (name === SUBMITTED_ON_COLUMN_NAME) {
-        return $gettext("Submitted on");
-    }
-    if (name === SUBMITTED_BY_COLUMN_NAME) {
-        return $gettext("Submitted by");
-    }
-    if (name === LAST_UPDATE_DATE_COLUMN_NAME) {
-        return $gettext("Last update date");
-    }
-    if (name === LAST_UPDATE_BY_COLUMN_NAME) {
-        return $gettext("Last update by");
-    }
-    if (name === PROJECT_COLUMN_NAME) {
-        return $gettext("Project");
-    }
-    if (name === TRACKER_COLUMN_NAME) {
-        return $gettext("Tracker");
-    }
-    if (name === PRETTY_TITLE_COLUMN_NAME) {
-        return $gettext("Artifact");
-    }
-    if (name === ARTIFACT_COLUMN_NAME) {
-        return "";
-    }
-    return name;
+    return column_name_getter.getTranslatedColumnName(name);
 };
 
 const isEven = (index: number): boolean => index % 2 === 0;

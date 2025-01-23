@@ -33,6 +33,7 @@ import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
     DOCUMENTATION_BASE_URL,
+    GET_COLUMN_NAME,
     IS_USER_ADMIN,
     REPORT_ID,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -41,6 +42,7 @@ import {
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { ColumnNameGetter } from "./domain/ColumnNameGetter";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -59,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const projects_retriever: RetrieveProjects = { getSortedProjectsIAmMemberOf };
     const projects_cache = ProjectsCache(projects_retriever);
+    const column_name_getter = ColumnNameGetter({ $gettext: gettext_plugin.$gettext });
 
     for (const widget_element of widget_cross_tracker_elements) {
         if (!widget_element || !(widget_element instanceof HTMLElement)) {
@@ -101,6 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(REPORT_ID, report_id)
             .provide(IS_USER_ADMIN, is_widget_admin)
             .provide(DOCUMENTATION_BASE_URL, documentation_url)
+            .provide(GET_COLUMN_NAME, column_name_getter)
             .mount(vue_mount_point);
     }
 });
