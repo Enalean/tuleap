@@ -33,6 +33,7 @@ import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_STATE,
@@ -52,6 +53,8 @@ import EmptyState from "../EmptyState.vue";
 import type { ReportState } from "../../domain/ReportState";
 import SelectableCell from "./SelectableCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
+import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
+import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
 
 vi.useFakeTimers();
 
@@ -99,6 +102,9 @@ describe(`SelectableTable`, () => {
                     [REPORT_STATE.valueOf()]: ref(report_state),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xslx_export_allowed),
+                    [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
+                        createVueGettextProviderPassThrough(),
+                    ),
                 },
             },
             props: {
