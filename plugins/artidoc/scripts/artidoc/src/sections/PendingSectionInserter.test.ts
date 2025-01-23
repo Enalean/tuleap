@@ -25,10 +25,10 @@ import { isPendingArtifactSection, isPendingFreetextSection } from "@/helpers/ar
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { Tracker } from "@/stores/configuration-store";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
-import { watchForNeededPendingSectionInsertion } from "@/stores/PendingSectionInserter";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
 describe("PendingSectionInserter", () => {
     let sections_collection: SectionsCollection,

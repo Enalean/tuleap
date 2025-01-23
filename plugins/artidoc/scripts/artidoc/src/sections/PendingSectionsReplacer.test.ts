@@ -23,10 +23,10 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { isPendingFreetextSection } from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
-import { getPendingSectionsReplacer } from "@/stores/PendingSectionsReplacer";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
 describe("PendingSectionsReplacer", () => {
     const getSectionsCollection = (sections: ArtidocSection[]): SectionsCollection => {

@@ -82,12 +82,12 @@ import type { HTMLTemplateResult, HTMLTemplateStringProcessor, LazyboxItem } fro
 import { createLazyAutocompleter } from "@tuleap/lazybox";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { LazyAutocompleter } from "@tuleap/lazybox/src/LazyAutocompleterElement";
-import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { createArtifactSection } from "@/helpers/rest-querier";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { PositionForSection } from "@/stores/SectionsPositionsForSaveRetriever";
-import { AT_THE_END } from "@/stores/SectionsInserter";
+import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
+import { AT_THE_END } from "@/sections/SectionsInserter";
 import type { Artifact } from "@/helpers/search-existing-artifacts-for-autocompleter";
 import {
     isArtifact,

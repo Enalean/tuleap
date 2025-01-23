@@ -22,7 +22,7 @@ import type {
     PendingArtifactSection,
     PendingFreetextSection,
 } from "@/helpers/artidoc-section.type";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 
 export type ReplacePendingSections = {
     replacePendingSection(

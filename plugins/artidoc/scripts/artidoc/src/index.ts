@@ -22,8 +22,8 @@ import { createGettext } from "vue3-gettext";
 import App from "./App.vue";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
-import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -54,7 +54,7 @@ import {
     REMOVE_FREETEXT_SECTION_MODAL,
     useRemoveFreetextSectionModal,
 } from "@/composables/useRemoveFreetextSectionModal";
-import { watchForNeededPendingSectionInsertion } from "@/stores/PendingSectionInserter";
+import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");

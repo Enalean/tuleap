@@ -18,7 +18,7 @@
  */
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { InternalArtidocSectionId } from "@/stores/SectionsCollection";
+import type { InternalArtidocSectionId } from "@/sections/SectionsCollection";
 import { v4 as uuidv4 } from "uuid";
 
 export function injectInternalId(

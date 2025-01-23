@@ -27,7 +27,7 @@ import * as rest from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { SectionsUpdaterStub } from "@/helpers/stubs/SectionsUpdaterStub";
+import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = ArtifactSectionFactory.create();

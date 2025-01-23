@@ -24,7 +24,7 @@ import type { EditorErrors } from "@/composables/useEditorErrors";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import type { Ref } from "vue";
 import { ref } from "vue";
-import type { UpdateSections } from "@/stores/SectionsUpdater";
+import type { UpdateSections } from "@/sections/SectionsUpdater";
 
 export type RefreshSection = {
     isJustRefreshed: () => boolean;

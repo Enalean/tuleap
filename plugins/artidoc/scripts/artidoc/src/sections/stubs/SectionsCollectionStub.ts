@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SectionsCollection } from "@/stores/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { injectInternalId } from "@/helpers/inject-internal-id";

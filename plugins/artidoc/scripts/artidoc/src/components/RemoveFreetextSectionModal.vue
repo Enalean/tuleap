@@ -77,7 +77,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { createModal } from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { RemoveSections } from "@/stores/SectionsRemover";
+import type { RemoveSections } from "@/sections/SectionsRemover";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 

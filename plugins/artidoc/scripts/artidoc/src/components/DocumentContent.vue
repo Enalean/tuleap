@@ -52,17 +52,17 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { AT_THE_END, getSectionsInserter } from "@/stores/SectionsInserter";
+import { AT_THE_END, getSectionsInserter } from "@/sections/SectionsInserter";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import SectionContainer from "@/components/section/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
-import { getSectionsRemover } from "@/stores/SectionsRemover";
+import { getSectionsRemover } from "@/sections/SectionsRemover";
 
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);

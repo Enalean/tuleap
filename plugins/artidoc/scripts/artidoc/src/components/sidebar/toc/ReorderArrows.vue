@@ -46,9 +46,9 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
-import type { InternalArtidocSectionId, StoredArtidocSection } from "@/stores/SectionsCollection";
+import type { InternalArtidocSectionId, StoredArtidocSection } from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { SectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
+import type { SectionsReorderer } from "@/sections/SectionsReorderer";
 
 const props = defineProps<{
     is_first: boolean;

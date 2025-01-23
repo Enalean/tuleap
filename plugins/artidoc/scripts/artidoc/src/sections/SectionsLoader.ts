@@ -17,29 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InsertSections } from "@/stores/SectionsInserter";
+import type { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
+import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import { getAllSections } from "@/helpers/rest-querier";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
-export type InsertSectionsStub = InsertSections & {
-    getLastInsertedSection(): ArtidocSection | null;
+export type LoadSections = {
+    loadSections: () => ResultAsync<StoredArtidocSection[], Fault>;
 };
 
-export const SectionsInserterStub = {
-    withExpectedCall(): InsertSectionsStub {
-        let last_inserted_section: ArtidocSection | null = null;
-
-        return {
-            getLastInsertedSection: () => last_inserted_section,
-            insertSection(section: ArtidocSection): void {
-                last_inserted_section = section;
-            },
-        };
-    },
-    withoutExpectedCall(): InsertSections {
-        return {
-            insertSection(): void {
-                throw new Error("Did not expect SectionsInserter::insertSection to be called");
-            },
-        };
-    },
-};
+export const getSectionsLoader = (artidoc_id: number): LoadSections => ({
+    loadSections: (): ResultAsync<StoredArtidocSection[], Fault> =>
+        getAllSections(artidoc_id).andThen((artidoc_sections: readonly ArtidocSection[]) =>
+            okAsync(CreateStoredSections.fromArtidocSectionsCollection(artidoc_sections)),
+        ),
+});

@@ -17,40 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SectionsCollection } from "@/stores/SectionsCollection";
+import { okAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { deleteSection } from "@/helpers/rest-querier";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 
-type BeforeSection = { before: string };
-export type AtTheEnd = null;
-
-export type PositionForSection = AtTheEnd | BeforeSection;
-
-export type RetrieveSectionsPositionForSave = {
-    getSectionPositionForSave(section: ArtidocSection): PositionForSection;
+export type RemoveSections = {
+    removeSection: (section: ArtidocSection) => ResultAsync<boolean, Fault>;
 };
 
-export const getSectionsPositionsForSaveRetriever = (
-    sections_collection: SectionsCollection,
-): RetrieveSectionsPositionForSave => ({
-    getSectionPositionForSave(section): PositionForSection {
+export const getSectionsRemover = (sections_collection: SectionsCollection): RemoveSections => ({
+    removeSection(section: ArtidocSection): ResultAsync<boolean, Fault> {
         const index = sections_collection.sections.value.findIndex(
             (element) => element.id === section.id,
         );
         if (index === -1) {
-            return null;
+            return okAsync(true);
         }
 
-        if (index === sections_collection.sections.value.length - 1) {
-            return null;
+        if (isPendingSection(section)) {
+            sections_collection.sections.value.splice(index, 1);
+
+            return okAsync(true);
         }
 
-        for (let i = index + 1; i < sections_collection.sections.value.length; i++) {
-            if (!isPendingSection(sections_collection.sections.value[i])) {
-                return { before: sections_collection.sections.value[i].id };
-            }
-        }
+        return deleteSection(section.id).andThen(() => {
+            sections_collection.sections.value.splice(index, 1);
 
-        return null;
+            return okAsync(true);
+        });
     },
 });

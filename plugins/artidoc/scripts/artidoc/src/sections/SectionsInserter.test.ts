@@ -18,11 +18,11 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { buildSectionsCollection } from "@/stores/SectionsCollection";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
-import { AT_THE_END, getSectionsInserter } from "@/stores/SectionsInserter";
-import type { InsertSections } from "@/stores/SectionsInserter";
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { AT_THE_END, getSectionsInserter } from "@/sections/SectionsInserter";
+import type { InsertSections } from "@/sections/SectionsInserter";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 

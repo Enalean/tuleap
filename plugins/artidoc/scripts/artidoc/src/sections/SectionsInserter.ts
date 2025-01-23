@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SectionsCollection, StoredArtidocSection } from "@/stores/SectionsCollection";
-import type { PositionForSection, AtTheEnd } from "@/stores/SectionsPositionsForSaveRetriever";
+import type { SectionsCollection, StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { PositionForSection, AtTheEnd } from "@/sections/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { CreateStoredSections } from "@/stores/CreateStoredSections";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
 export type InsertSections = {
     insertSection(section: ArtidocSection, position: PositionForSection): void;

@@ -31,10 +31,10 @@ import * as latest from "@/helpers/get-section-in-its-latest-version";
 import { okAsync } from "neverthrow";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { PendingSectionsReplacerStub } from "@/helpers/stubs/PendingSectionsReplacerStub";
+import { PendingSectionsReplacerStub } from "@/sections/stubs/PendingSectionsReplacerStub";
 import { noop } from "@/helpers/noop";
-import { SectionsUpdaterStub } from "@/helpers/stubs/SectionsUpdaterStub";
-import { SectionsPositionsForSaveRetrieverStub } from "@/helpers/stubs/SectionsPositionsForSaveRetrieverStub";
+import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
+import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/SectionsPositionsForSaveRetrieverStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();

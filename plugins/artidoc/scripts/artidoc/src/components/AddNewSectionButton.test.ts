@@ -32,15 +32,15 @@ import {
     useOpenConfigurationModalBusStore,
 } from "@/stores/useOpenConfigurationModalBusStore";
 import { createGettext } from "vue3-gettext";
-import type { InsertSections } from "@/stores/SectionsInserter";
-import { AT_THE_END } from "@/stores/SectionsInserter";
+import type { InsertSections } from "@/sections/SectionsInserter";
+import { AT_THE_END } from "@/sections/SectionsInserter";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import type { OpenAddExistingSectionModalBus } from "@/composables/useOpenAddExistingSectionModalBus";
 import {
     OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
     useOpenAddExistingSectionModalBus,
 } from "@/composables/useOpenAddExistingSectionModalBus";
-import { SectionsInserterStub } from "@/helpers/stubs/SectionsInserterStub";
+import { SectionsInserterStub } from "@/sections/stubs/SectionsInserterStub";
 
 vi.mock("@tuleap/tlp-dropdown");
 

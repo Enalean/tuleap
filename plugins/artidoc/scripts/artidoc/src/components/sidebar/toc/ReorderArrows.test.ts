@@ -25,11 +25,11 @@ import { Fault } from "@tuleap/fault";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { injectInternalId } from "@/helpers/inject-internal-id";
-import type { InternalArtidocSectionId } from "@/stores/SectionsCollection";
+import type { InternalArtidocSectionId } from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import type { SectionsReorderer } from "@/components/sidebar/toc/SectionsReorderer";
-import { SectionsReordererStub } from "@/helpers/stubs/SectionsReordererStub";
+import type { SectionsReorderer } from "@/sections/SectionsReorderer";
+import { SectionsReordererStub } from "@/sections/stubs/SectionsReordererStub";
 
 describe("ReorderArrows", () => {
     let section: ArtidocSection & InternalArtidocSectionId, sections_reorderer: SectionsReorderer;

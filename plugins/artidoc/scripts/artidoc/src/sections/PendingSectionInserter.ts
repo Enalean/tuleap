@@ -21,7 +21,7 @@ import type { Ref } from "vue";
 import { watch } from "vue";
 import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";

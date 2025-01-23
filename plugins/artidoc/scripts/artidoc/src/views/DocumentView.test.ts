@@ -31,13 +31,13 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import type { Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
-import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import {
     IS_LOADING_SECTIONS,
     IS_LOADING_SECTIONS_FAILED,
 } from "@/is-loading-sections-injection-key";
-import type { SectionsCollection } from "@/stores/SectionsCollection";
-import { SectionsCollectionStub } from "@/helpers/stubs/SectionsCollectionStub";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
+import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 
 describe("DocumentView", () => {

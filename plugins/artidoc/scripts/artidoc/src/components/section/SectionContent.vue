@@ -78,11 +78,11 @@ import { useUploadFile } from "@/composables/useUploadFile";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { useGettext } from "vue3-gettext";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
-import { getPendingSectionsReplacer } from "@/stores/PendingSectionsReplacer";
-import { SECTIONS_COLLECTION } from "@/stores/sections-collection-injection-key";
-import { getSectionsUpdater } from "@/stores/SectionsUpdater";
-import { getSectionsRemover } from "@/stores/SectionsRemover";
-import { getSectionsPositionsForSaveRetriever } from "@/stores/SectionsPositionsForSaveRetriever";
+import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
+import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { getSectionsUpdater } from "@/sections/SectionsUpdater";
+import { getSectionsRemover } from "@/sections/SectionsRemover";
+import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositionsForSaveRetriever";
 
 const props = defineProps<{ section: ArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
