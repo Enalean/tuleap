@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Upload\Section\File;
+namespace Tuleap\Artidoc\Upload\Section\File\Tus;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\Tus\NextGen\TusFileInformation;
 
-final readonly class UploadedFileWithArtidoc
+/**
+ * @psalm-immutable
+ */
+final readonly class ArtidocNotFoundFault extends Fault
 {
-    public function __construct(public UploadFileInformation $file, public Artidoc $artidoc)
+    public static function build(TusFileInformation $file_information): self
     {
+        return new self("Unable to find corresponding artidoc id from tus file information #{$file_information->getID()}");
     }
 }

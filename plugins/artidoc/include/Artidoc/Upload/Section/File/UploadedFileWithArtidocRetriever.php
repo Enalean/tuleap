@@ -22,29 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Artidoc\BuildArtidocWithContextRetriever;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
 
-final readonly class FileUploadCleaner
+final class UploadedFileWithArtidocRetriever implements RetrieveUploadedFileWithArtidoc
 {
     public function __construct(
-        private SearchExpiredUploads $search,
-        private DeleteExpiredFiles $deletor,
-        private DBTransactionExecutor $transaction,
+        private BuildArtidocWithContextRetriever $retrieve_artidoc_builder,
     ) {
     }
 
-    public function deleteDanglingFilesToUpload(\DateTimeImmutable $current_time): void
+    public function getUploadedFileWithArtidoc(\PFUser $user, UploadFileInformation $file): Ok|Err
     {
-        $this->transaction->execute(function () use ($current_time) {
-            foreach ($this->search->searchExpiredUploads($current_time) as $expired) {
-                $path_allocator = ArtidocUploadPathAllocator::fromFileInformation($expired);
-                $path           = $path_allocator->getPathForItemBeingUploaded($expired);
-                if (\is_file($path)) {
-                    \unlink($path);
-                }
-            }
-
-            $this->deletor->deleteExpiredFiles($current_time);
-        });
+        return $this->retrieve_artidoc_builder
+            ->buildForUser($user)
+            ->retrieveArtidocUserCanWrite($file->artidoc_id)
+            ->map(
+                static fn (ArtidocWithContext $artidoc) => new UploadedFileWithArtidoc($file, $artidoc->document)
+            );
     }
 }

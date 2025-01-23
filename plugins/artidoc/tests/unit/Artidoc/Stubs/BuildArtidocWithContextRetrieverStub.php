@@ -18,17 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Upload\Section\File;
+declare(strict_types=1);
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Tus\Identifier\FileIdentifier;
+namespace Tuleap\Artidoc\Stubs;
 
-interface SearchUploadedFile
+use Tuleap\Artidoc\BuildArtidocWithContextRetriever;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+
+final readonly class BuildArtidocWithContextRetrieverStub implements BuildArtidocWithContextRetriever
 {
-    /**
-     * @return Ok<UploadedFileInformation>|Err<Fault>
-     */
-    public function searchUploadedFile(FileIdentifier $id): Ok|Err;
+    private function __construct(private RetrieveArtidocWithContext $retriever)
+    {
+    }
+
+    public static function withRetriever(RetrieveArtidocWithContext $retriever): self
+    {
+        return new self($retriever);
+    }
+
+    public function buildForUser(\PFUser $user): RetrieveArtidocWithContext
+    {
+        return $this->retriever;
+    }
 }

@@ -22,11 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-final readonly class UploadedFileWithArtidoc
+interface RetrieveUploadedFileWithArtidoc
 {
-    public function __construct(public UploadFileInformation $file, public Artidoc $artidoc)
-    {
-    }
+    /**
+     * @return Ok<UploadedFileWithArtidoc>|Err<Fault>
+     */
+    public function getUploadedFileWithArtidoc(\PFUser $user, UploadFileInformation $file): Ok|Err;
 }

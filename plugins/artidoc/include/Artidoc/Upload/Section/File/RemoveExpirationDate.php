@@ -22,10 +22,7 @@ namespace Tuleap\Artidoc\Upload\Section\File;
 
 use Tuleap\Tus\Identifier\FileIdentifier;
 
-interface SearchFileUpload
+interface RemoveExpirationDate
 {
-    /**
-     * @return array{id: FileIdentifier, file_size: int, file_name: string, user_id: int, expiration_date: ?int, item_id: int} | null
-     */
-    public function searchFileOngoingUploadById(FileIdentifier $id): ?array;
+    public function removeExpirationDate(FileIdentifier $id): void;
 }

@@ -18,15 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc;
 
-namespace Tuleap\Artidoc\Upload\Section\File;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
-
-final readonly class UploadedFileWithArtidoc
+interface BuildArtidocWithContextRetriever
 {
-    public function __construct(public UploadFileInformation $file, public Artidoc $artidoc)
-    {
-    }
+    public function buildForUser(\PFUser $user): RetrieveArtidocWithContext;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,39 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Upload\Section\File;
+namespace Tuleap\Artidoc\Stubs\Upload\Section\File;
 
+use Tuleap\Artidoc\Upload\Section\File\DeleteFileUpload;
 use Tuleap\Tus\Identifier\FileIdentifier;
-use Tuleap\Tus\NextGen\TusFileInformation;
 
-final readonly class UploadedFileInformation implements TusFileInformation
+final class DeleteFileUploadStub implements DeleteFileUpload
 {
-    public function __construct(public int $artidoc_id, private FileIdentifier $id, private string $name, private int $length)
+    private bool $called = false;
+
+    private function __construct()
     {
-        if ($this->length < 0) {
-            throw new \UnexpectedValueException('The length must be positive');
-        }
     }
 
-    public function getID(): FileIdentifier
+    public static function build(): self
     {
-        return $this->id;
+        return new self();
     }
 
-    public function getLength(): int
+    public function deleteById(FileIdentifier $id): void
     {
-        return $this->length;
+        $this->called = true;
     }
 
-    public function getOffset(): int
+    public function isCalled(): bool
     {
-        return 0;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
+        return $this->called;
     }
 }

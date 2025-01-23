@@ -29,8 +29,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
-use Tuleap\Artidoc\Upload\Section\File\SearchUploadedFile;
-use Tuleap\Artidoc\Upload\Section\File\UploadedFileInformation;
+use Tuleap\Artidoc\Upload\Section\File\SearchUpload;
+use Tuleap\Artidoc\Upload\Section\File\UploadFileInformation;
 use Tuleap\Artidoc\Upload\Section\File\UploadedFileWithArtidoc;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\NeverThrow\Err;
@@ -51,7 +51,7 @@ final class ArtidocAttachmentController extends DispatchablePSR15Compatible impl
     public function __construct(
         private readonly RetrieveArtidocWithContext $retrieve_artidoc,
         private readonly FileIdentifierFactory $identifier_factory,
-        private readonly SearchUploadedFile $search,
+        private readonly SearchUpload $search,
         private readonly BinaryFileResponseBuilder $response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -87,10 +87,10 @@ final class ArtidocAttachmentController extends DispatchablePSR15Compatible impl
     /**
      * @return Ok<UploadedFileWithArtidoc>|Err<Fault>
      */
-    public function getUploadedFileWithArtidoc(FileIdentifier $id): Ok|Err
+    private function getUploadedFileWithArtidoc(FileIdentifier $id): Ok|Err
     {
-        return $this->search->searchUploadedFile($id)
-            ->andThen(fn (UploadedFileInformation $file) =>
+        return $this->search->searchUpload($id)
+            ->andThen(fn (UploadFileInformation $file) =>
                 $this->retrieve_artidoc->retrieveArtidocUserCanRead($file->artidoc_id)->map(
                     static fn (ArtidocWithContext $artidoc) => new UploadedFileWithArtidoc($file, $artidoc->document)
                 ));
