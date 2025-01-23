@@ -20,140 +20,133 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\DisplayTrackerLayoutStub;
+use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    /**
-     * @var SimpleXMLElement
-     */
-    private $default_xml;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private SimpleXMLElement $default_xml;
+    private PFUser $user;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker */
-    private $tracker;
+    private Tracker&MockObject $tracker;
+    private Tracker $another_tracker;
+    private Artifact $artifact_in_another_tracker;
 
-    /** @var Tracker_Action_CopyArtifact */
-    private $action;
+    private Tracker_Action_CopyArtifact $action;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Codendi_Request */
-    private $request;
+    private Codendi_Request $request;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_XML_Exporter_ArtifactXMLExporter */
-    private $xml_exporter;
+    private Tracker_XML_Exporter_ArtifactXMLExporter&MockObject $xml_exporter;
 
-    /** @var int */
-    private $changeset_id = 101;
+    private int $changeset_id = 101;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact */
-    private $from_artifact;
+    private Artifact&MockObject $from_artifact;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact */
-    private $new_artifact;
+    private Artifact&MockObject $new_artifact;
 
-    /** @var int */
-    private $artifact_id = 123;
+    private int $artifact_id = 123;
 
-    /** @var int */
-    private $new_artifact_id = 456;
+    private int $new_artifact_id = 456;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_IDisplayTrackerLayout */
-    private $layout;
+    private Tracker_IDisplayTrackerLayout $layout;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_XMLImport */
-    private $xml_importer;
+    private Tracker_Artifact_XMLImport&MockObject $xml_importer;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_XML_Updater_ChangesetXMLUpdater */
-    private $xml_updater;
+    private Tracker_XML_Updater_ChangesetXMLUpdater&MockObject $xml_updater;
 
-    /** @var array */
-    private $submitted_values;
+    private array $submitted_values;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_Changeset */
-    private $from_changeset;
+    private Tracker_Artifact_Changeset $from_changeset;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory */
-    private $artifact_factory;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_XML_Updater_TemporaryFileXMLUpdater */
-    private $file_updater;
+    private Tracker_XML_Updater_TemporaryFileXMLUpdater&MockObject $file_updater;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_XML_Exporter_ChildrenXMLExporter */
-    private $children_xml_exporter;
+    private Tracker_XML_Exporter_ChildrenXMLExporter&MockObject $children_xml_exporter;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_XML_Importer_ArtifactImportedMapping */
-    private $artifacts_imported_mapping;
+    private Tracker_XML_Importer_ArtifactImportedMapping&MockObject $artifacts_imported_mapping;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_XML_Importer_CopyArtifactInformationsAggregator */
-    private $logger;
+    private Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact */
-    private $a_mocked_artifact;
+    private Artifact $a_mocked_artifact;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory */
-    private $tracker_factory;
-    /**
-     * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $event_manager;
+    private TrackerFactory&MockObject $tracker_factory;
+    private EventManager&MockObject $event_manager;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $changeset_factory = Mockery::spy(Tracker_Artifact_ChangesetFactory::class);
-        $this->tracker     = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(1);
-        $this->tracker->shouldReceive('getItemName');
-        $this->tracker->shouldReceive('getProject')->andReturn(
+        $changeset_factory = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
+        $changeset_factory->method('getChangeset');
+
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getId')->willReturn(1);
+        $this->tracker->method('getItemName');
+        $this->tracker->method('getProject')->willReturn(
             \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build()
         );
-        $this->new_artifact = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods(
-        );
+        $this->new_artifact = $this->createPartialMock(Artifact::class, ['createNewChangesetWithoutRequiredValidation']);
         $this->new_artifact->setId($this->new_artifact_id);
-        $this->layout         = Mockery::spy(Tracker_IDisplayTrackerLayout::class);
-        $this->user           = Mockery::spy(PFUser::class);
-        $this->xml_exporter   = Mockery::spy(Tracker_XML_Exporter_ArtifactXMLExporter::class);
-        $this->xml_importer   = Mockery::spy(Tracker_Artifact_XMLImport::class);
-        $this->xml_updater    = Mockery::spy(Tracker_XML_Updater_ChangesetXMLUpdater::class);
-        $this->file_updater   = Mockery::spy(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
-        $this->from_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->from_changeset->shouldReceive('getId')->andReturn($this->changeset_id);
-        $this->from_artifact = Mockery::mock(Artifact::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $this->layout        = DisplayTrackerLayoutStub::build();
+        $this->user          = UserTestBuilder::buildWithDefaults();
+        $this->xml_exporter  = $this->createMock(Tracker_XML_Exporter_ArtifactXMLExporter::class);
+        $this->xml_importer  = $this->createMock(Tracker_Artifact_XMLImport::class);
+        $this->xml_updater   = $this->createMock(Tracker_XML_Updater_ChangesetXMLUpdater::class);
+        $this->file_updater  = $this->createMock(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
+        $this->from_artifact = $this->createPartialMock(Artifact::class, ['getChangesetFactory']);
         $this->from_artifact->setId($this->artifact_id);
         $this->from_artifact->setTracker($this->tracker);
+        $this->from_changeset = ChangesetTestBuilder::aChangeset($this->changeset_id)->ofArtifact($this->from_artifact)->build();
         $this->from_artifact->setChangesets([$this->changeset_id => $this->from_changeset]);
-        $this->from_artifact->shouldReceive('getChangesetFactory')->andReturn($changeset_factory);
-        $this->from_changeset->shouldReceive('getArtifact')->andReturn($this->from_artifact);
-        $this->from_changeset->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->children_xml_exporter      = Mockery::spy(Tracker_XML_Exporter_ChildrenXMLExporter::class);
-        $this->artifacts_imported_mapping = Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class);
+        $this->from_artifact->method('getChangesetFactory')->willReturn($changeset_factory);
+        $this->children_xml_exporter      = $this->createMock(Tracker_XML_Exporter_ChildrenXMLExporter::class);
+        $this->artifacts_imported_mapping = $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class);
 
-        $backend_logger = Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->children_xml_exporter->method('exportChildren');
+        $this->artifacts_imported_mapping->method('add');
+
+        $backend_logger = new \Psr\Log\NullLogger();
         $this->logger   = new Tracker_XML_Importer_CopyArtifactInformationsAggregator($backend_logger);
 
         $this->submitted_values = [];
 
-        $this->artifact_factory = Mockery::spy(Tracker_ArtifactFactory::class);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
-            ->withArgs([$this->user, $this->artifact_id])
-            ->andReturn($this->from_artifact);
+        $this->another_tracker             = TrackerTestBuilder::aTracker()->withId(111)->build();
+        $this->artifact_in_another_tracker = ArtifactTestBuilder::anArtifact(666)
+            ->inTracker($this->another_tracker)
+            ->build();
 
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $this->request->shouldReceive('get')->with('from_artifact_id')->andReturn($this->artifact_id);
-        $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn($this->changeset_id);
-        $this->request->shouldReceive('get')->with('artifact')->andReturn($this->submitted_values);
+        $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->artifact_factory
+            ->method('getArtifactByIdUserCanView')
+            ->willReturnCallback(fn (PFUser $user, $id) => match (true) {
+                $user === $this->user && $id === $this->artifact_id => $this->from_artifact,
+                $user === $this->user && $id === $this->artifact_in_another_tracker->getId() => $this->artifact_in_another_tracker,
+                default => null,
+            });
 
-        $this->tracker_factory = Mockery::spy(\TrackerFactory::class);
+        $this->request = HTTPRequestBuilder::get()
+            ->withParams([
+                'from_artifact_id' => $this->artifact_id,
+                'from_changeset_id' => $this->changeset_id,
+                'artifact' => $this->submitted_values,
+            ])->build();
+
+        $this->tracker_factory = $this->createMock(\TrackerFactory::class);
         $this->event_manager   = $this->createMock(EventManager::class);
 
         $this->action = new Tracker_Action_CopyArtifact(
@@ -172,25 +165,29 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->default_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
 
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->andReturns($this->default_xml)->byDefault(
-        );
+        $this->a_mocked_artifact = $this->createMock(Artifact::class);
+        $this->a_mocked_artifact->method('getId')->willReturn(444);
 
-        $this->a_mocked_artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-
-        $this->xml_importer->shouldReceive('createFieldsDataBuilder')
-            ->andReturn(Mockery::spy(Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder::class));
+        $this->xml_importer->method('createFieldsDataBuilder')
+            ->willReturn($this->createMock(Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder::class));
     }
 
     public function testItExportsTheRequiredSnapshotArtifact(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
-        $this->xml_importer->shouldReceive('importBareArtifact')->andReturn(Mockery::spy(
-            \Tuleap\Tracker\Artifact\Artifact::class
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
+        $this->xml_importer->method('importBareArtifact')->willReturn($this->createMock(
+            Artifact::class
         ));
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')
-            ->withArgs([Mockery::any(), $this->from_changeset])
-            ->once()
-            ->andReturn($this->default_xml);
+        $this->xml_exporter
+            ->expects(self::once())
+            ->method('exportSnapshotWithoutComments')
+            ->willReturnCallback(
+                fn (SimpleXMLElement $artifacts_xml, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                    $this->from_changeset => $this->default_xml
+                }
+            );
+        $this->xml_updater->method('update');
+        $this->file_updater->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -208,28 +205,34 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
             </artifacts>
 XML;
         $xml         = new SimpleXMLElement($xml_content);
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->once()->andReturns($xml);
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
-        $this->tracker->shouldReceive('getWorkflow')->andReturn(Mockery::spy(\Workflow::class));
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($this->tracker);
+        $this->xml_exporter->expects(self::once())->method('exportSnapshotWithoutComments')->willReturn($xml);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
+        $workflow = $this->createMock(\Workflow::class);
+        $workflow->method('disable');
+        $this->tracker->method('getWorkflow')->willReturn($workflow);
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
-        $this->xml_importer->shouldReceive('importBareArtifact')->andReturn($this->new_artifact);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
+        $this->xml_importer->method('importBareArtifact')->willReturn($this->new_artifact);
+        $this->xml_importer->method('importChangesets');
 
-        $this->new_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')->once();
+        $this->new_artifact->expects(self::once())->method('createNewChangesetWithoutRequiredValidation');
 
         $this->event_manager->expects(self::once())->method('dispatch');
 
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?aid=456');
+
+        $this->xml_updater->method('update');
+        $this->file_updater->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
     public function testItDoesNothingAndRedirectsToTheTrackerIfCannotSubmit(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(false);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(false);
 
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
+        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
 
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
@@ -238,116 +241,124 @@ XML;
 
     public function testItRedirectsToTheTrackerIfXMLImportFailed(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
+
+        $this->xml_exporter->method('exportSnapshotWithoutComments')->willReturn($this->default_xml);
 
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
+
+        $this->xml_updater->method('update');
+        $this->file_updater->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
     public function testItUpdatesTheXMLWithIncomingValues(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
 
-        $this->xml_updater->shouldReceive('update')->withArgs(
-            [
-                $this->tracker,
-                Mockery::any(),
-                $this->submitted_values,
-                $this->user,
-                $_SERVER['REQUEST_TIME'],
-            ]
-        )->once();
+        $this->xml_exporter->method('exportSnapshotWithoutComments')->willReturn($this->default_xml);
+
+        $this->xml_updater->expects(self::once())->method('update')->with(
+            $this->tracker,
+            self::anything(),
+            $this->submitted_values,
+            $this->user,
+            $_SERVER['REQUEST_TIME'],
+        );
+        $this->file_updater->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
     public function testItUpdateTheXMLToNotMoveTheOriginalAttachementButToDoACopyInstead(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
 
-        $this->file_updater->shouldReceive('update')->once();
+        $this->xml_exporter->method('exportSnapshotWithoutComments')->willReturn($this->default_xml);
+
+        $this->file_updater->expects(self::once())->method('update');
+
+        $this->xml_updater->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
     public function testItErrorsIfNoArtifactIdInTheRequest(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
 
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $this->request->shouldReceive('get')->with('from_artifact_id')->andReturn(false);
-        $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn($this->changeset_id);
-        $this->request->shouldReceive('get')->with('artifact')->andReturn($this->submitted_values);
+        $this->request = HTTPRequestBuilder::get()
+            ->withParams([
+                'from_changeset_id' => $this->changeset_id,
+                'artifact' => $this->submitted_values,
+            ])->build();
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
-        $this->xml_updater->shouldReceive('update')->never();
+        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects(self::never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
     public function testItErrorsIfNoChangesetIdInTheRequest(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
 
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $this->request->shouldReceive('get')->with('from_artifact_id')->andReturn($this->artifact_id);
-        $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn(false);
-        $this->request->shouldReceive('get')->with('artifact')->andReturn($this->submitted_values);
+        $this->request = HTTPRequestBuilder::get()
+            ->withParams([
+                'from_artifact_id' => $this->artifact_id,
+                'artifact' => $this->submitted_values,
+            ])->build();
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
-        $this->xml_updater->shouldReceive('update')->never();
+        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects(self::never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
     public function testItErrorsIfNoSubmittedValuesInTheRequest(): void
     {
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
 
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $this->request->shouldReceive('get')->with('from_artifact_id')->andReturn($this->artifact_id);
-        $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn($this->changeset_id);
-        $this->request->shouldReceive('get')->with('artifact')->andReturn($this->changeset_id);
+        $this->request = HTTPRequestBuilder::get()
+            ->withParams([
+                'from_artifact_id' => $this->artifact_id,
+                'from_changeset_id' => $this->changeset_id,
+                'artifact' => $this->changeset_id,
+            ])->build();
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
-        $this->xml_updater->shouldReceive('update')->never();
+        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects(self::never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
     public function testItErrorsIfArtifactDoesNotBelongToTracker(): void
     {
-        $another_tracker = Mockery::mock(Tracker::class);
-        $another_tracker->shouldReceive('getId')->andReturn(111);
-        $artifact_in_another_tracker = Mockery::mock(Artifact::class);
-        $artifact_in_another_tracker->shouldReceive('getTracker')->andReturn($another_tracker);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
 
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
-            ->withArgs([$this->user, 666])
-            ->andReturn($artifact_in_another_tracker);
+        $this->request = HTTPRequestBuilder::get()
+            ->withParams([
+                'from_artifact_id' => $this->artifact_in_another_tracker->getId(),
+                'from_changeset_id' => $this->changeset_id,
+                'artifact' => $this->submitted_values,
+            ])->build();
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
-
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $this->request->shouldReceive('get')->with('from_artifact_id')->andReturn(666);
-        $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn($this->changeset_id);
-        $this->request->shouldReceive('get')->with('artifact')->andReturn($this->changeset_id);
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
-        $this->xml_updater->shouldReceive('update')->never();
+        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects(self::never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -365,18 +376,25 @@ XML;
             </artifacts>
 XML;
         $xml         = new SimpleXMLElement($xml_content);
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->andReturn($xml);
+        $this->xml_exporter->method('exportSnapshotWithoutComments')->willReturn($xml);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
-        $this->tracker->shouldReceive('getWorkflow')->andReturn(Mockery::spy(\Workflow::class));
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($this->tracker);
-        $this->xml_importer->shouldReceive('importBareArtifact')->andReturn($this->a_mocked_artifact);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
+        $workflow = $this->createMock(\Workflow::class);
+        $workflow->method('disable');
+        $this->tracker->method('getWorkflow')->willReturn($workflow);
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $this->xml_importer->method('importBareArtifact')->willReturn($this->a_mocked_artifact);
+        $this->xml_importer->method('importChangesets');
 
-        $this->a_mocked_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')
-            ->withArgs([[], Mockery::any(), $this->user, true, CommentFormatIdentifier::TEXT])
-            ->once();
+        $this->a_mocked_artifact
+            ->expects(self::once())
+            ->method('createNewChangesetWithoutRequiredValidation')
+            ->with([], self::anything(), $this->user, true, CommentFormatIdentifier::TEXT);
 
         $this->event_manager->expects(self::once())->method('dispatch');
+
+        $this->xml_updater->method('update');
+        $this->file_updater->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -406,118 +424,74 @@ XML;
             </artifacts>
 XML;
         $xml         = new SimpleXMLElement($xml_content);
-        $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->andReturn($xml);
+        $this->xml_exporter->method('exportSnapshotWithoutComments')->willReturn($xml);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
+        $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(true);
 
-        $tracker1 = Mockery::mock(Tracker::class);
-        $tracker1->shouldReceive('getId')->andReturn(1);
-        $tracker1->shouldReceive('getWorkflow')->andReturn(Mockery::spy(\Workflow::class));
-        $tracker2 = Mockery::mock(Tracker::class);
-        $tracker2->shouldReceive('getId')->andReturn(2);
-        $tracker2->shouldReceive('getWorkflow')->andReturn(Mockery::spy(\Workflow::class));
-        $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([1])->andReturn($tracker1);
-        $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([2])->andReturn($tracker2);
+        $tracker1 = $this->createMock(Tracker::class);
+        $tracker1->method('getId')->willReturn(1);
+        $workflow1 = $this->createMock(\Workflow::class);
+        $workflow1->method('disable');
+        $tracker1->method('getWorkflow')->willReturn($workflow1);
+        $tracker2 = $this->createMock(Tracker::class);
+        $tracker2->method('getId')->willReturn(2);
+        $workflow2 = $this->createMock(\Workflow::class);
+        $workflow2->method('disable');
+        $tracker2->method('getWorkflow')->willReturn($workflow2);
+        $this->tracker_factory->method('getTrackerById')->willReturnCallback(static fn ($id) => match ($id) {
+            1 => $tracker1,
+            2 => $tracker2,
+        });
 
-        $artifact123 = Mockery::mock(Artifact::class);
-        $artifact123->shouldReceive('getId')->andReturn(123);
-        $artifact123->shouldReceive('getTracker')->andReturn($tracker1);
-        $artifact456 = Mockery::mock(Artifact::class);
-        $artifact456->shouldReceive('getId')->andReturn(456);
-        $artifact456->shouldReceive('getTracker')->andReturn($tracker1);
-        $artifact789 = Mockery::mock(Artifact::class);
-        $artifact789->shouldReceive('getId')->andReturn(789);
-        $artifact789->shouldReceive('getTracker')->andReturn($tracker2);
+        $artifact123 = $this->createMock(Artifact::class);
+        $artifact123->method('getId')->willReturn(123);
+        $artifact123->method('getTracker')->willReturn($tracker1);
+        $artifact456 = $this->createMock(Artifact::class);
+        $artifact456->method('getId')->willReturn(456);
+        $artifact456->method('getTracker')->willReturn($tracker1);
+        $artifact789 = $this->createMock(Artifact::class);
+        $artifact789->method('getId')->willReturn(789);
+        $artifact789->method('getTracker')->willReturn($tracker2);
 
-        $artifact123->shouldReceive('createNewChangesetWithoutRequiredValidation')->once();
+        $artifact123->expects(self::once())->method('createNewChangesetWithoutRequiredValidation');
 
-        $this->xml_importer->shouldReceive('importBareArtifact')
-            ->with(
-                $tracker1,
-                Mockery::on(
-                    function (SimpleXMLElement $val) {
-                        return (int) $val['id'] === 123;
-                    }
-                ),
-                Mockery::on(
-                    function ($element) {
-                        return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
-                    }
-                )
-            )
-            ->andReturn($artifact123)->once();
-        $this->xml_importer->shouldReceive('importBareArtifact')
-            ->with(
-                $tracker1,
-                Mockery::on(
-                    function (SimpleXMLElement $val) {
-                        return (int) $val['id'] === 456;
-                    }
-                ),
-                Mockery::on(
-                    function ($element) {
-                        return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
-                    }
-                )
-            )
-            ->andReturn($artifact456)->once();
-        $this->xml_importer->shouldReceive('importBareArtifact')
-            ->with(
-                $tracker2,
-                Mockery::on(
-                    function (SimpleXMLElement $val) {
-                        return (int) $val['id'] === 789;
-                    }
-                ),
-                Mockery::on(
-                    function ($element) {
-                        return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
-                    }
-                )
-            )
-            ->andReturn($artifact789)->once();
+        $this->xml_importer
+            ->expects(self::exactly(3))
+            ->method('importBareArtifact')
+            ->willReturnCallback(
+                static fn (
+                    Tracker $tracker,
+                    SimpleXMLElement $xml_artifact,
+                    TrackerXmlImportConfig $tracker_xml_config,
+                ) => match (true) {
+                    (int) $xml_artifact['id'] === 123 => $artifact123,
+                    (int) $xml_artifact['id'] === 456 => $artifact456,
+                    (int) $xml_artifact['id'] === 789 => $artifact789,
+                }
+            );
 
-        $this->xml_importer->shouldReceive('importChangesets')
-            ->with(
-                $artifact123,
-                Mockery::on(
-                    function (SimpleXMLElement $val) {
-                        return (int) $val['id'] === 123;
-                    }
-                ),
-                Mockery::any(),
-                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
-                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
-            )->once();
-        $this->xml_importer->shouldReceive('importChangesets')
-            ->with(
-                $artifact456,
-                Mockery::on(
-                    function (SimpleXMLElement $val) {
-                        return (int) $val['id'] === 456;
-                    }
-                ),
-                Mockery::any(),
-                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
-                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
-            )->once();
-        $this->xml_importer->shouldReceive('importChangesets')
-            ->with(
-                $artifact789,
-                Mockery::on(
-                    function (SimpleXMLElement $val) {
-                        return (int) $val['id'] === 789;
-                    }
-                ),
-                Mockery::any(),
-                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
-                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
-            )->once();
+        $this->xml_importer
+            ->expects(self::exactly(3))
+            ->method('importChangesets')
+            ->willReturnCallback(
+                static fn (
+                    Artifact $artifact,
+                    SimpleXMLElement $xml_artifact,
+                    Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder,
+                    CreatedFileURLMapping $url_mapping,
+                    ImportedChangesetMapping $changeset_id_mapping,
+                    TrackerImportConfig $tracker_import_config,
+                ) => match (true) {
+                    $artifact === $artifact123 && (int) $xml_artifact['id'] === 123,
+                    $artifact === $artifact456 && (int) $xml_artifact['id'] === 456,
+                    $artifact === $artifact789 && (int) $xml_artifact['id'] === 789 => true,
+                }
+            );
 
         $this->event_manager->expects(self::once())->method('dispatch');
+
+        $this->xml_updater->method('update');
+        $this->file_updater->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
