@@ -71,6 +71,9 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
+        $tracker_builder->setViewPermissionOnTracker($this->release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($this->sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($this->task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_ugroup_field_id = $tracker_builder->buildUserGroupListField($this->release_tracker->getId(), 'ugroup_field', 'sb');
         $release_bind_ids        = $tracker_builder->buildValuesForUserGroupListField($release_ugroup_field_id, [

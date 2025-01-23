@@ -67,6 +67,9 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
         $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
+        $tracker_builder->setViewPermissionOnTracker($this->release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($this->sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($this->task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_status_field_id = $tracker_builder->buildStaticListField($this->release_tracker->getId(), 'release_status', 'sb');
         $release_status_values   = $tracker_builder->buildOpenAndClosedValuesForField($release_status_field_id, $this->release_tracker->getId(), ['Open'], ['Closed']);
