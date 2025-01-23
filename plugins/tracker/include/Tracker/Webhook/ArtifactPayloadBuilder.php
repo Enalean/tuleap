@@ -22,18 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Webhook;
 
+use Tuleap\Project\ProjectUserUGroupMembershipsRetriever;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\TuleapFunctionsUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-class ArtifactPayloadBuilder
+readonly class ArtifactPayloadBuilder
 {
     public function __construct(
-        private readonly ChangesetRepresentationBuilder $changeset_representation_builder,
-        private readonly BuildCompleteTrackerRESTRepresentation $tracker_representation_builder,
-        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+        private ChangesetRepresentationBuilder $changeset_representation_builder,
+        private BuildCompleteTrackerRESTRepresentation $tracker_representation_builder,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
+        private ProjectUserUGroupMembershipsRetriever $project_user_group_memberships_retriever,
     ) {
     }
 
@@ -63,6 +66,7 @@ class ArtifactPayloadBuilder
                 'id'                       => $artifact_id,
                 'action'                   => $previous_changeset === null ? 'create' : 'update',
                 'user'                     => $user_representation,
+                'submitter_user_groups'    => $this->buildSubmitterUserGroups($user, $last_changeset->getTracker()->getProject()),
                 'current'                  => $last_changeset_content,
                 'previous'                 => $previous_changeset_content,
                 'is_custom_code_execution' => $user->getId() === TuleapFunctionsUser::ID,
@@ -72,5 +76,20 @@ class ArtifactPayloadBuilder
                 ),
             ]
         );
+    }
+
+    /**
+     * @return list<MinimalUserGroupRepresentation>
+     */
+    private function buildSubmitterUserGroups(\PFUser $user, \Project $project): array
+    {
+        $ugroups         = $this->project_user_group_memberships_retriever->getMembershipsInAProject($project, $user);
+        $project_id      = (int) $project->getID();
+        $representations = [];
+        foreach ($ugroups as $ugroup) {
+            $representations[] = new MinimalUserGroupRepresentation($project_id, $ugroup);
+        }
+
+        return $representations;
     }
 }

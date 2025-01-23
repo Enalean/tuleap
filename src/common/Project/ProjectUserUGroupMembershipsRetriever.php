@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub\Tracker\Webhook;
+namespace Tuleap\Project;
 
-use Tuleap\Tracker\Webhook\ArtifactPayload;
-use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
-
-final readonly class ArtifactPayloadBuilderStub extends ArtifactPayloadBuilder
+interface ProjectUserUGroupMembershipsRetriever
 {
-    private function __construct(
-        private ArtifactPayload $payload,
-    ) {
-    }
-
-    public static function withEmptyPayload(): self
-    {
-        return new self(new ArtifactPayload([]));
-    }
-
-    public function buildPayload(\Tracker_Artifact_Changeset $last_changeset): ArtifactPayload
-    {
-        return $this->payload;
-    }
+    /**
+     * @return list<\ProjectUGroup>
+     */
+    public function getMembershipsInAProject(\Project $project, \PFUser $user): array;
 }

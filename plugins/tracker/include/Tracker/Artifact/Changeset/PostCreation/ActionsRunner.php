@@ -231,6 +231,7 @@ class ActionsRunner
                         new WorkflowRestBuilder(),
                     ),
                     new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UGroupManager(),
                 ),
             ),
         );

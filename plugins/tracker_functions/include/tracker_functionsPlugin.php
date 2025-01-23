@@ -225,6 +225,7 @@ final class tracker_functionsPlugin extends Plugin
                     new WorkflowRestBuilder(),
                 ),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UGroupManager(),
             ),
             new FindWASMFunctionPath(),
             new CallWASMFunction(

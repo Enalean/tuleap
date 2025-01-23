@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\Tracker\Webhook\ArtifactPayload;
-use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
@@ -48,8 +48,7 @@ final class WebhookNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $webhook_2 = \Mockery::mock(Webhook::class);
         $factory->shouldReceive('getWebhooksForTracker')->andReturns([$webhook_1, $webhook_2]);
 
-        $builder = \Mockery::mock(ArtifactPayloadBuilder::class);
-        $builder->shouldReceive('buildPayload')->andReturn(new ArtifactPayload([]));
+        $builder = ArtifactPayloadBuilderStub::withEmptyPayload();
 
         $webhook_notification_task = new WebhookNotificationTask($logger, $emitter, $factory, $builder);
 
