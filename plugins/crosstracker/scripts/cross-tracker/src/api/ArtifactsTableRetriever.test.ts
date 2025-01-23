@@ -25,6 +25,7 @@ import type { RetrieveArtifactsTable } from "../domain/RetrieveArtifactsTable";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import { SelectableReportContentRepresentationStub } from "../../tests/builders/SelectableReportContentRepresentationStub";
 import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
+import { uri } from "@tuleap/fetch-result";
 
 describe(`ArtifactsTableRetriever`, () => {
     describe(`getSelectableQueryResult()`, () => {
@@ -132,6 +133,57 @@ describe(`ArtifactsTableRetriever`, () => {
             const table = result.value.table;
             expect(table.columns).toHaveLength(2);
             expect(table.rows).toHaveLength(2);
+        });
+        it(`will return organized in ArtifactsTable
+            from an already existing report and not from a saved query`, async () => {
+            const date_field_name = "start_date";
+            const first_date_value = "2022-04-27T11:54:15+07:00";
+            const report_content = SelectableReportContentRepresentationStub.build(
+                [{ type: "date", name: date_field_name }],
+                [
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: first_date_value, with_time: true },
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: null, with_time: false },
+                    }),
+                ],
+            );
+            const end_date_field_name = "end_date";
+            const second_date_value = "2025-04-10T11:54:15+07:00";
+            const report_content_second_page = SelectableReportContentRepresentationStub.build(
+                [{ type: "date", name: end_date_field_name }],
+                [
+                    ArtifactRepresentationStub.build({
+                        [end_date_field_name]: { value: null, with_time: false },
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [end_date_field_name]: { value: null, with_time: false },
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [end_date_field_name]: { value: second_date_value, with_time: true },
+                    }),
+                ],
+            );
+            const getAllJSON = vi
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([report_content, report_content_second_page]));
+
+            const result = await getRetriever().getSelectableFullReport();
+
+            expect(getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                {
+                    params: {
+                        limit: 50,
+                    },
+                },
+            );
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            const table = result.value;
+            expect(table).toHaveLength(2);
         });
     });
 });

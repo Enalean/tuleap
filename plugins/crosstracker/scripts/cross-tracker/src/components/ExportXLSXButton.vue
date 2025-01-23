@@ -36,19 +36,29 @@
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
-import { CLEAR_FEEDBACKS } from "../injection-symbols";
+import { CLEAR_FEEDBACKS, REPORT_ID, RETRIEVE_ARTIFACTS_TABLE } from "../injection-symbols";
+
+const report_id = strictInject(REPORT_ID);
+const artifact_table_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 
 const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
 
 const is_loading = ref(false);
 const { $gettext } = useGettext();
 
-function exportXSLX(): void {
+async function exportXSLX(): Promise<void> {
     is_loading.value = true;
     clearFeedbacks();
-    //Temporary to test the button functionally
-    // eslint-disable-next-line no-console
-    console.log("XLSX export pressed, this feature is under development");
+    const export_document_module = import("../helpers/exporter/export-document");
+    const download_xlsx_module = import("../helpers/exporter/xlsx/download-xlsx");
+
+    const { downloadXLSXDocument } = await export_document_module;
+    const { downloadXLSX } = await download_xlsx_module;
+    await downloadXLSXDocument(artifact_table_retriever, report_id, downloadXLSX).mapErr(
+        (fault) => {
+            throw new Error(fault.getStackTraceAsString());
+        },
+    );
     is_loading.value = false;
 }
 </script>

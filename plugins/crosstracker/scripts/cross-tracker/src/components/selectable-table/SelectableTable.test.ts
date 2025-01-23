@@ -160,6 +160,7 @@ describe(`SelectableTable`, () => {
             const table_retriever = RetrieveArtifactsTableStub.withContent(
                 table_result,
                 table_result,
+                [table_result.table],
             );
 
             const wrapper = getWrapper(table_retriever);
@@ -275,6 +276,7 @@ describe(`SelectableTable`, () => {
             const table_retriever = RetrieveArtifactsTableStub.withContent(
                 query_report_with_total,
                 initial_report_with_total,
+                [initial_report_with_total.table],
             );
             report_state = "result-preview";
             const wrapper = getWrapper(table_retriever);
@@ -290,6 +292,7 @@ describe(`SelectableTable`, () => {
             const table_retriever = RetrieveArtifactsTableStub.withContent(
                 query_report_with_total,
                 initial_report_with_total,
+                [initial_report_with_total.table],
             );
 
             const wrapper = getWrapper(table_retriever);
@@ -313,6 +316,7 @@ describe(`SelectableTable`, () => {
             const table_retriever = RetrieveArtifactsTableStub.withContent(
                 table_result,
                 table_result,
+                [table_result.table],
             );
 
             const wrapper = getWrapper(table_retriever);
@@ -339,7 +343,9 @@ describe(`SelectableTable`, () => {
                 table,
                 total: 1,
             };
-            table_retriever = RetrieveArtifactsTableStub.withContent(table_result, table_result);
+            table_retriever = RetrieveArtifactsTableStub.withContent(table_result, table_result, [
+                table_result.table,
+            ]);
         });
         it(`does not show the CSV export button when told not to`, () => {
             is_xslx_export_allowed = false;

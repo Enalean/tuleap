@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/option':
     specifier: workspace:^
     version: link:../../../../lib/frontend/option
+  '@tuleap/plugin-docgen-xlsx':
+    specifier: workspace:^
+    version: link:../../../document_generation/scripts/lib/xlsx
   '@tuleap/plugin-tracker-tql-codemirror':
     specifier: workspace:*
     version: link:../../../tracker/scripts/lib/TQL-CodeMirror
@@ -47,6 +50,9 @@ dependencies:
   vue3-gettext:
     specifier: 2.4.0
     version: 2.4.0(vue@3.3.4)
+  xlsx:
+    specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#a0bed2a97dcb1e3b76049be91abf3747f333c975
+    version: tuleap.net/plugins/git/tuleap/deps/sheetjs/a0bed2a97dcb1e3b76049be91abf3747f333c975
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -714,4 +720,12 @@ packages:
   /yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
+    dev: false
+
+  tuleap.net/plugins/git/tuleap/deps/sheetjs/a0bed2a97dcb1e3b76049be91abf3747f333c975:
+    resolution: {commit: a0bed2a97dcb1e3b76049be91abf3747f333c975, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}
+    name: xlsx
+    version: 0.20.2
+    engines: {node: '>=0.8'}
+    hasBin: true
     dev: false
