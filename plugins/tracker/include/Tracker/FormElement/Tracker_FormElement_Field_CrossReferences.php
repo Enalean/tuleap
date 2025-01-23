@@ -226,12 +226,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '';
     }
 
-    /**
-     * Fetch the html code to display the field value in masschange submission form
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }

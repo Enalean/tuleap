@@ -178,7 +178,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }

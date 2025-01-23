@@ -105,11 +105,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         return $html;
     }
 
-    /**
-     * Fetch the html code to display the field value in masschange submission form
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         $html  = '';
         $value = dgettext('tuleap-tracker', 'Unchanged');

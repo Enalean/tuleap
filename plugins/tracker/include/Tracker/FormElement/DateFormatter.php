@@ -98,7 +98,7 @@ class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclar
         return $is_valid;
     }
 
-    public function fetchSubmitValueMasschange()
+    public function fetchSubmitValueMasschange(): string
     {
         return $this->getDatePicker(
             $GLOBALS['Language']->getText('global', 'unchanged'),

@@ -207,11 +207,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return $html;
     }
 
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         $html  = '';
         $value = dgettext('tuleap-tracker', 'Unchanged');

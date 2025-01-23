@@ -174,8 +174,7 @@ final class ExternalFieldBuilder
                 return '';
             }
 
-            /** @return string */
-            protected function fetchSubmitValueMasschange()
+            protected function fetchSubmitValueMasschange(): string
             {
                 return '';
             }

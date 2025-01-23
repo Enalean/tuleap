@@ -519,8 +519,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return '';
     }
 
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
+        return '';
     }
 
     protected function getValueDao()

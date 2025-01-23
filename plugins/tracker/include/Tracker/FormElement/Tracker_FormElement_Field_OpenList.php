@@ -97,10 +97,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @param array $values The existing values. default is empty
      * @param mixed $name   A string for a given name or true for the default name (artifact[123]), false for no name.
-     *
-     * @return string html
      */
-    public function fetchOpenListMasschange($values = [], $name = true)
+    public function fetchOpenListMasschange($values = [], $name = true): string
     {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -142,12 +140,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $this->getBind()->getBindValuesForIds($default_values_ids);
     }
 
-     /**
-     * Fetch the html code to display the field value in masschange submission form
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         return $this->fetchOpenListMasschange();
     }

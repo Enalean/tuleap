@@ -659,11 +659,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $this->getFormatter()->fetchSubmitValue($submitted_values, $errors);
     }
 
-     /**
-     * Fetch the html code to display the field value in masschange submission form
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         return $this->getFormatter()->fetchSubmitValueMasschange();
     }

@@ -239,8 +239,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return '';
     }
 
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
+        return '';
     }
 
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
