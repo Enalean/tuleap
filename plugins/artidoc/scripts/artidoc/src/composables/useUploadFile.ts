@@ -40,7 +40,7 @@ export type UseUploadFileType = {
 
 export function useUploadFile(
     section_id: string,
-    upload_url: string,
+    post_information: FileUploadOptions["post_information"],
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"],
 ): UseUploadFileType {
     const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
@@ -100,7 +100,7 @@ export function useUploadFile(
     };
 
     const file_upload_options: FileUploadOptions = {
-        upload_url: upload_url,
+        post_information,
         max_size_upload: upload_max_size,
         onStartUploadCallback,
         onErrorCallback,

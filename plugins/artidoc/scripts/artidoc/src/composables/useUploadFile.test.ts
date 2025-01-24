@@ -21,7 +21,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useUploadFile } from "@/composables/useUploadFile";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
-import { UploadError } from "@tuleap/prose-mirror-editor";
+import { type FileUploadOptions, UploadError } from "@tuleap/prose-mirror-editor";
 import type { GetText } from "@tuleap/gettext";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
@@ -30,6 +30,7 @@ import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
 import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
 import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
 import { mockFileList } from "@/helpers/mock-file-list";
+import { noop } from "@/helpers/noop";
 
 const gettext_provider = {
     gettext: (msgid: string) => msgid,
@@ -59,9 +60,14 @@ describe("useUploadFile", () => {
 
     describe("file_upload_options", () => {
         it("should be initialized properly", () => {
-            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
 
-            expect(file_upload_options.upload_url).toBe("upload_url");
+            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
+
+            expect(file_upload_options.post_information).toStrictEqual(post_information);
             expect(file_upload_options.max_size_upload).toBe(222);
             expect(file_upload_options.onErrorCallback).toBeDefined();
             expect(file_upload_options.onStartUploadCallback).toBeDefined();
@@ -81,7 +87,12 @@ describe("useUploadFile", () => {
                     { ...mocked_notifications_data, addNotification: mocked_add_notification },
                 ],
             ]);
-            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
+
+            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
 
             file_upload_options.onErrorCallback(new UploadError(gettext_provider), "file_name");
 
@@ -97,7 +108,12 @@ describe("useUploadFile", () => {
                 [UPLOAD_FILE_STORE, { ...mocked_upload_data, deleteUpload: mocked_delete_upload }],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
-            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
+
+            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
 
             const current_file = mocked_upload_data.pending_uploads.value[0];
             file_upload_options.onErrorCallback(
@@ -112,7 +128,12 @@ describe("useUploadFile", () => {
     describe("is_in_progress", () => {
         describe("when a section upload is in store pending uploads list", () => {
             it("should be true", () => {
-                const { is_in_progress } = useUploadFile(section_id, "upload_url", vi.fn());
+                const post_information: FileUploadOptions["post_information"] = {
+                    upload_url: "upload_url",
+                    getUploadJsonPayload: noop,
+                };
+
+                const { is_in_progress } = useUploadFile(section_id, post_information, vi.fn());
 
                 expect(
                     getCurrentSectionUploads(section_id, mocked_upload_data.pending_uploads.value)
@@ -128,7 +149,12 @@ describe("useUploadFile", () => {
                     [UPLOAD_FILE_STORE, UploadFileStoreStub.uploadNotInProgress()],
                     [NOTIFICATION_STORE, mocked_notifications_data],
                 ]);
-                const { is_in_progress } = useUploadFile(section_id, "upload_url", vi.fn());
+                const post_information: FileUploadOptions["post_information"] = {
+                    upload_url: "upload_url",
+                    getUploadJsonPayload: noop,
+                };
+
+                const { is_in_progress } = useUploadFile(section_id, post_information, vi.fn());
 
                 expect(is_in_progress.value).toBe(false);
             });
@@ -146,7 +172,12 @@ describe("useUploadFile", () => {
                 ],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
-            const { resetProgressCallback } = useUploadFile(section_id, "upload_url", vi.fn());
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
+
+            const { resetProgressCallback } = useUploadFile(section_id, post_information, vi.fn());
 
             resetProgressCallback();
 
@@ -165,7 +196,12 @@ describe("useUploadFile", () => {
                 ],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
-            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
+
+            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
 
             const list: FileList = mockFileList([new File(["123"], "file_1")]);
             file_upload_options.onStartUploadCallback(list);
@@ -177,9 +213,13 @@ describe("useUploadFile", () => {
     describe("onSuccessCallback", () => {
         it("should add the current upload to the store pending uploads", () => {
             const add_attachment_to_waiting_list_mock = vi.fn();
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
             const { file_upload_options } = useUploadFile(
                 section_id,
-                "upload_url",
+                post_information,
                 add_attachment_to_waiting_list_mock,
             );
 
@@ -190,7 +230,12 @@ describe("useUploadFile", () => {
             });
         });
         it("should actualize progress of upload to 100%", () => {
-            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
+
+            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
@@ -215,7 +260,12 @@ describe("useUploadFile", () => {
 
     describe("onProgressCallback", () => {
         it("should actualize progress of upload", () => {
-            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+            const post_information: FileUploadOptions["post_information"] = {
+                upload_url: "upload_url",
+                getUploadJsonPayload: noop,
+            };
+
+            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
@@ -237,7 +287,15 @@ describe("useUploadFile", () => {
         });
         describe("if the file is not found in upload list", () => {
             it("should not actualize upload list state", () => {
-                const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+                const post_information: FileUploadOptions["post_information"] = {
+                    upload_url: "upload_url",
+                    getUploadJsonPayload: noop,
+                };
+                const { file_upload_options } = useUploadFile(
+                    section_id,
+                    post_information,
+                    vi.fn(),
+                );
 
                 const save_upload_files = [...mocked_upload_data.pending_uploads.value];
 

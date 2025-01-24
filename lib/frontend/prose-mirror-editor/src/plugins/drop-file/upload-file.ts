@@ -71,7 +71,7 @@ export async function uploadAndDisplayFileInEditor(
     uploaders: Array<Upload>,
 ): Promise<Option<ReadonlyArray<OngoingUpload>>> {
     const {
-        upload_url,
+        post_information,
         max_size_upload,
         onStartUploadCallback,
         onErrorCallback,
@@ -79,7 +79,7 @@ export async function uploadAndDisplayFileInEditor(
         onProgressCallback,
     } = options;
 
-    if (upload_url === "") {
+    if (post_information.upload_url === "") {
         const error = new NoUploadError(gettext_provider);
         onErrorCallback(error, "");
         return Promise.reject(Fault.fromMessage(error.message));
@@ -101,12 +101,8 @@ export async function uploadAndDisplayFileInEditor(
         }
 
         const optional_ongoing_upload: Option<OngoingUpload> = await postJSON<PostFileResponse>(
-            uri`${rawUri(upload_url)}`,
-            {
-                name: file.name,
-                file_size: file.size,
-                file_type: file.type,
-            },
+            uri`${rawUri(post_information.upload_url)}`,
+            post_information.getUploadJsonPayload(file),
         ).match(
             async (response): Promise<Option<OngoingUpload>> => {
                 if (!response.upload_href) {

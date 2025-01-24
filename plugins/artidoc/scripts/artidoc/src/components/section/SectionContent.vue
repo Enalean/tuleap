@@ -48,7 +48,7 @@
                 v-bind:readonly_description="getReadonlyDescription()"
                 v-bind:is_edit_mode="is_section_in_edit_mode"
                 v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
-                v-bind:upload_url="upload_url"
+                v-bind:post_information="post_information"
                 v-bind:is_image_upload_allowed="is_image_upload_allowed"
                 v-bind:upload_file="upload_file"
                 v-bind:project_id="getProjectId()"
@@ -72,7 +72,6 @@ import SectionDropdown from "./header/SectionDropdown.vue";
 import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
 import SectionFooter from "./footer/SectionFooter.vue";
 import { useAttachmentFile } from "@/composables/useAttachmentFile";
-import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { useUploadFile } from "@/composables/useUploadFile";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
@@ -83,20 +82,22 @@ import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-ke
 import { getSectionsUpdater } from "@/sections/SectionsUpdater";
 import { getSectionsRemover } from "@/sections/SectionsRemover";
 import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositionsForSaveRetriever";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 const props = defineProps<{ section: ArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
+const document_id = strictInject(DOCUMENT_ID);
 
 const {
-    upload_url,
+    post_information,
     addAttachmentToWaitingList,
     mergeArtifactAttachments,
     setWaitingListAttachments,
-} = useAttachmentFile(ref(props.section.attachments ? props.section.attachments.field_id : 0));
+} = useAttachmentFile(props.section, document_id);
 
-const upload_file = useUploadFile(props.section.id, upload_url, addAttachmentToWaitingList);
+const upload_file = useUploadFile(props.section.id, post_information, addAttachmentToWaitingList);
 
 const { $gettext } = useGettext();
 

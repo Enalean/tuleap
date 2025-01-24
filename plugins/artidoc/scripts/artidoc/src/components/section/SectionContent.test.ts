@@ -37,6 +37,7 @@ import { createGettext } from "vue3-gettext";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 describe("SectionContent", () => {
     describe.each([
@@ -59,6 +60,7 @@ describe("SectionContent", () => {
                         [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
                         [IS_LOADING_SECTIONS.valueOf()]: ref(false),
+                        [DOCUMENT_ID.valueOf()]: 123,
                     },
                 },
                 props: {
@@ -99,6 +101,7 @@ describe("SectionContent", () => {
                         ),
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
                         [IS_LOADING_SECTIONS.valueOf()]: ref(true),
+                        [DOCUMENT_ID.valueOf()]: 123,
                     },
                 },
                 props: {
