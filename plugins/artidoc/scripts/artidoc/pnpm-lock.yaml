@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/file-upload':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/file-upload
   '@tuleap/gettext':
     specifier: workspace:^
     version: link:../../../../lib/frontend/gettext

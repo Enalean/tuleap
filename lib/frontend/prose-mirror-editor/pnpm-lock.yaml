@@ -19,6 +19,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:^
     version: link:../fetch-result
+  '@tuleap/file-upload':
+    specifier: workspace:^
+    version: link:../file-upload
   '@tuleap/gettext':
     specifier: workspace:^
     version: link:../gettext

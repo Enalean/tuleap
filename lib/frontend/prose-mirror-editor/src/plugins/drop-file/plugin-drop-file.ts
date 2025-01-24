@@ -21,10 +21,10 @@ import type { EditorView } from "prosemirror-view";
 import type { EditorState } from "prosemirror-state";
 import { Plugin } from "prosemirror-state";
 import { fileUploadHandler } from "./upload-file";
-import type { FileUploadOptions } from "./types";
 import type { GetText } from "@tuleap/gettext";
 import type { Upload } from "tus-js-client";
 import { insertPoint } from "prosemirror-transform";
+import type { FileUploadOptions } from "@tuleap/file-upload";
 
 function insertFile(view: EditorView, insert_point: number, url: string): void {
     const { state, dispatch } = view;

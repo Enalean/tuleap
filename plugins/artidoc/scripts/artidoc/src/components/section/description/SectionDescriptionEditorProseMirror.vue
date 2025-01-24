@@ -28,7 +28,6 @@ import type {
     PluginDropFile,
     PluginInput,
     SerializeDOM,
-    FileUploadOptions,
 } from "@tuleap/prose-mirror-editor";
 import { initPluginDropFile, initPluginInput, useEditor } from "@tuleap/prose-mirror-editor";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
@@ -39,6 +38,7 @@ import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
 import { setupMonoEditorPlugins } from "../mono-editor/setupMonoEditorPlugins";
+import type { FileUploadOptions } from "@tuleap/file-upload";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 

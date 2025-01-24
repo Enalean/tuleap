@@ -17,12 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    FileUploadOptions,
-    MaxSizeUploadExceededError,
-    UploadError,
-    OnGoingUploadFile,
-} from "@tuleap/prose-mirror-editor";
+import type { FileUploadOptions, UploadError, OnGoingUploadFile } from "@tuleap/file-upload";
 import { computed } from "vue";
 import type { Ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -62,10 +57,7 @@ export function useUploadFile(
         return pending_uploads.value;
     };
     const { addNotification } = strictInject(NOTIFICATION_STORE);
-    const onErrorCallback = (
-        error: UploadError | MaxSizeUploadExceededError,
-        file_name: string,
-    ): void => {
+    const onErrorCallback = (error: UploadError, file_name: string): void => {
         addNotification({ message: error.message, type: "danger" });
         const file_to_delete = pending_uploads.value.find(
             (upload) => upload.file_name === file_name && upload.section_id === section_id,

@@ -1,0 +1,10 @@
+{
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "declarationDir": "./types",
+        "outDir": "./dist",
+        "lib": ["dom", "es6"],
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"]
+}

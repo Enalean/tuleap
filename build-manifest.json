@@ -41,6 +41,10 @@
             "src": "src/scripts/main/src/invite-buddies/",
             "po": "src/scripts/main/src/invite-buddies/po"
         },
+        "file-upload": {
+            "src": "lib/frontend/file-upload/src",
+            "po": "lib/frontend/file-upload/po"
+        },
         "prose-mirror": {
             "src": "lib/frontend/prose-mirror-editor/src",
             "po": "lib/frontend/prose-mirror-editor/po"

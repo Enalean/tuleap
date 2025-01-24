@@ -18,7 +18,7 @@
  */
 
 import { ref, type Ref } from "vue";
-import type { OnGoingUploadFile } from "@tuleap/prose-mirror-editor";
+import type { OnGoingUploadFile } from "@tuleap/file-upload";
 import { v4 as uuidv4 } from "uuid";
 
 export type UploadFileStoreType = {

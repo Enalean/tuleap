@@ -18,4 +18,3 @@
  */
 
 export * from "./plugin-drop-file";
-export * from "./types";

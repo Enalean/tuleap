@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ *  Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -17,4 +17,16 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./upload-file.error";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
+
+export default vite.defineLibConfig({
+    plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/FileUpload.ts"),
+            name: "FileUpload",
+        },
+    },
+});
