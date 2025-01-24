@@ -22,18 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
-/**
- * @psalm-readonly
- */
-final class WASMModuleMountPoint
+final readonly class WASMModuleMountPoint
 {
     /**
      * @psalm-param non-empty-string $host_path
      * @psalm-param non-empty-string $guest_path
      */
     public function __construct(
-        public readonly string $host_path,
-        public readonly string $guest_path,
+        public string $host_path,
+        public string $guest_path,
     ) {
     }
 }

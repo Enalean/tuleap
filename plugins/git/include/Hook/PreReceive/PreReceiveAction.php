@@ -35,7 +35,9 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\WebAssembly\WASMCaller;
+use Tuleap\WebAssembly\WASMCallerRuntimeSettings;
 use Tuleap\WebAssembly\WASMModuleMountPoint;
+use Tuleap\WebAssembly\WASMRuntimeLimits;
 
 final class PreReceiveAction
 {
@@ -93,9 +95,10 @@ final class PreReceiveAction
                     if (empty($hook_result->updated_references)) {
                         return Result::ok(null);
                     }
-                    $json_in      = json_encode($hook_result, JSON_THROW_ON_ERROR);
-                    $mount_points = [new WASMModuleMountPoint($repository_path, $guest_dir_path)];
-                    return $this->wasm_caller->call($wasm_path, $json_in, $mount_points)->mapOr(
+                    $json_in          = json_encode($hook_result, JSON_THROW_ON_ERROR);
+                    $mount_points     = [new WASMModuleMountPoint($repository_path, $guest_dir_path)];
+                    $runtime_settings = new WASMCallerRuntimeSettings($mount_points, WASMRuntimeLimits::getDefaultLimits());
+                    return $this->wasm_caller->call($wasm_path, $json_in, $runtime_settings)->mapOr(
                         $this->processResponse(...),
                         Result::ok(null)
                     );

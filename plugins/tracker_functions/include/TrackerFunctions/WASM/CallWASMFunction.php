@@ -28,7 +28,9 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\WebAssembly\WASMCaller;
+use Tuleap\WebAssembly\WASMCallerRuntimeSettings;
 use Tuleap\WebAssembly\WASMExecutionException;
+use Tuleap\WebAssembly\WASMRuntimeLimits;
 
 final class CallWASMFunction implements WASMFunctionCaller
 {
@@ -43,7 +45,11 @@ final class CallWASMFunction implements WASMFunctionCaller
     {
         try {
             return $this->wasm_caller
-                ->call($wasm_function_path, $payload, [])
+                ->call(
+                    $wasm_function_path,
+                    $payload,
+                    new WASMCallerRuntimeSettings([], WASMRuntimeLimits::getDefaultLimits())
+                )
                 ->mapOr(
                     $this->response_processor->processResponse(...),
                     Result::err(Fault::fromMessage('WASM function returns nothing'))

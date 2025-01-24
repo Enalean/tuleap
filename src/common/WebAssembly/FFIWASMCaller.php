@@ -40,9 +40,7 @@ final class FFIWASMCaller implements WASMCaller
     /**
      * @var (\FFI&FFIWASMCallerStub)|null
      */
-    private static ?\FFI $ffi              = null;
-    private const MAX_EXEC_TIME_IN_MS      = 10;
-    private const MAX_MEMORY_SIZE_IN_BYTES = 4194304; /* 4 Mo */
+    private static ?\FFI $ffi = null;
 
     private const RESPONSE_TYPE_NAME = 'wasm_response_total';
     private const RESPONSE_TYPE_HELP = 'Total number of wasm response received';
@@ -58,22 +56,19 @@ final class FFIWASMCaller implements WASMCaller
     private const MEMORY_CONSUMPTION_BUCKETS = [1114112, 2228224, 3342336, 4194304];
 
     public function __construct(
-        private WASMCacheConfigurationBuilder $cache_configuration_builder,
+        private readonly WASMCacheConfigurationBuilder $cache_configuration_builder,
         private readonly TreeMapper $mapper,
         private readonly Prometheus $prometheus,
         private readonly string $caller_name,
     ) {
     }
 
-    public function call(string $wasm_path, string $module_input, array $mount_points): Option
+    public function call(string $wasm_path, string $module_input, WASMCallerRuntimeSettings $runtime_settings): Option
     {
         $config = [
             'wasm_module_path' => $wasm_path,
-            'mount_points'     => $mount_points,
-            'limits'           => [
-                'max_exec_time_in_ms'      => self::MAX_EXEC_TIME_IN_MS,
-                'max_memory_size_in_bytes' => self::MAX_MEMORY_SIZE_IN_BYTES,
-            ],
+            'mount_points'     => $runtime_settings->mount_points,
+            'limits'           => $runtime_settings->limits,
         ];
 
         $config_with_cache = $this->cache_configuration_builder->buildCacheConfiguration()
