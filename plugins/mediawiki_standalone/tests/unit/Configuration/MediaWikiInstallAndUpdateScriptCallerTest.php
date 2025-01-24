@@ -33,14 +33,16 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
 {
     public function testExecutesInstallAndUpdateCommands(): void
     {
-        $install_command           = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
-        $update_farm_command       = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
-        $update_instance_command_1 = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
-        $update_instance_command_2 = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
-        $update_instance_command_3 = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
+        $install_command            = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
+        $update_farm_config_command = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
+        $update_farm_command        = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
+        $update_instance_command_1  = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
+        $update_instance_command_2  = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
+        $update_instance_command_3  = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
 
         $handler = $this->getHandler(
             $install_command,
+            $update_farm_config_command,
             $update_farm_command,
             [
                 $update_instance_command_1,
@@ -52,6 +54,7 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
         $handler->runInstallAndUpdate();
 
         self::assertTrue($install_command->has_been_waited_on);
+        self::assertTrue($update_farm_config_command->has_been_waited_on);
         self::assertTrue($update_farm_command->has_been_waited_on);
         self::assertTrue($update_instance_command_1->has_been_waited_on);
         self::assertTrue($update_instance_command_2->has_been_waited_on);
@@ -61,6 +64,22 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
     public function testFailsWhenInstallCommandDoesNotSucceed(): void
     {
         $handler = $this->getHandler(
+            new MediaWikiManagementCommandAlwaysFail(),
+            new MediaWikiManagementCommandDoNothing(),
+            new MediaWikiManagementCommandDoNothing(),
+            [
+                new MediaWikiManagementCommandDoNothing(),
+            ]
+        );
+
+        $this->expectException(MediaWikiInstallAndUpdateHandlerException::class);
+        $handler->runInstallAndUpdate();
+    }
+
+    public function testFailsWhenUpdateFarmConfigUpdateCommandDoesNotSucceed(): void
+    {
+        $handler = $this->getHandler(
+            new MediaWikiManagementCommandDoNothing(),
             new MediaWikiManagementCommandAlwaysFail(),
             new MediaWikiManagementCommandDoNothing(),
             [
@@ -75,6 +94,7 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
     public function testFailsWhenUpdateFarmCommandDoesNotSucceed(): void
     {
         $handler = $this->getHandler(
+            new MediaWikiManagementCommandDoNothing(),
             new MediaWikiManagementCommandDoNothing(),
             new MediaWikiManagementCommandAlwaysFail(),
             [
@@ -93,6 +113,7 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
         $update_instance_command_3 = new MediaWikiManagementCommandObserver(new MediaWikiManagementCommandDoNothing());
 
         $handler = $this->getHandler(
+            new MediaWikiManagementCommandDoNothing(),
             new MediaWikiManagementCommandDoNothing(),
             new MediaWikiManagementCommandDoNothing(),
             [
@@ -115,9 +136,13 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
     /**
      * @param MediaWikiManagementCommand[] $update_instance_commands
      */
-    private function getHandler(MediaWikiManagementCommand $install_command, MediaWikiManagementCommand $update_farm_command, array $update_instance_commands): MediaWikiInstallAndUpdateScriptCaller
-    {
-        $command_factory = new MediaWikiManagementCommandFactoryStub($install_command, $update_farm_command, $update_instance_commands);
+    private function getHandler(
+        MediaWikiManagementCommand $install_command,
+        MediaWikiManagementCommand $update_farm_config_file,
+        MediaWikiManagementCommand $update_farm_command,
+        array $update_instance_commands,
+    ): MediaWikiInstallAndUpdateScriptCaller {
+        $command_factory = new MediaWikiManagementCommandFactoryStub($install_command, $update_farm_config_file, $update_farm_command, $update_instance_commands);
         $dao             = $this->createStub(ProjectMediaWikiServiceDAO::class);
         $dao->method('searchAllProjectsWithMediaWikiStandaloneServiceReady')->willReturn(
             array_fill(0, count($update_instance_commands), ['project_name' => 'some_project_name'])

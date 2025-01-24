@@ -45,6 +45,7 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
     {
         $this->mainpage_deployer->deployMainPages();
         $this->installFarmInstance();
+        $this->updateFarmInstanceConfigurationFile();
         $this->logger->debug('Update MediaWiki standalone Tuleap managed LocalSettings file');
         $this->local_settings_instantiator->instantiateLocalSettings();
         $this->updateFarmInstance();
@@ -55,6 +56,12 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
     {
         $this->logger->info('Install MediaWiki standalone farm instance');
         $this->executeMediaWikiManagementCommandSynchronously($this->management_command_factory->buildInstallCommand());
+    }
+
+    private function updateFarmInstanceConfigurationFile(): void
+    {
+        $this->logger->debug('Updating MediaWiki standalone farm instance configuration file');
+        $this->executeMediaWikiManagementCommandSynchronously($this->management_command_factory->buildFarmInstanceConfigurationUpdate());
     }
 
     private function updateFarmInstance(): void

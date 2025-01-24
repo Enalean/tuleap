@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,22 +16,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiManagementCommandFactory
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+
+final readonly class MediaWikiManagementCommandCallable implements MediaWikiManagementCommand
 {
-    public function buildInstallCommand(): MediaWikiManagementCommand;
+    /**
+     * @psalm-param \Closure(): (Ok<null>|Err<MediaWikiManagementCommandFailure>) $actions_to_execute
+     */
+    public function __construct(
+        private \Closure $actions_to_execute,
+    ) {
+    }
 
-    public function buildFarmInstanceConfigurationUpdate(): MediaWikiManagementCommand;
-
-    public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand;
-
-    public function buildUpdateProjectInstanceCommand(string $project_name): MediaWikiManagementCommand;
-
-    public function buildUpdateToMediaWiki135ProjectInstanceCommand(string $project_name): MediaWikiManagementCommand;
+    public function wait(): Ok|Err
+    {
+        return ($this->actions_to_execute)();
+    }
 }

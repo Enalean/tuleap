@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,22 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiManagementCommandFactory
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class MediaWikiManagementCommandCallableTest extends TestCase
 {
-    public function buildInstallCommand(): MediaWikiManagementCommand;
-
-    public function buildFarmInstanceConfigurationUpdate(): MediaWikiManagementCommand;
-
-    public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand;
-
-    public function buildUpdateProjectInstanceCommand(string $project_name): MediaWikiManagementCommand;
-
-    public function buildUpdateToMediaWiki135ProjectInstanceCommand(string $project_name): MediaWikiManagementCommand;
+    public function testIsExecuted(): void
+    {
+        $has_been_executed = false;
+        $command           = new MediaWikiManagementCommandCallable(
+            function () use (&$has_been_executed): Ok {
+                $has_been_executed = true;
+                return Result::ok(null);
+            }
+        );
+        self::assertTrue(Result::isOk($command->wait()));
+        self::assertTrue($has_been_executed);
+    }
 }

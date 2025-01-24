@@ -27,7 +27,7 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommand;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandDoNothing;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 
-class MediaWikiManagementCommandFactoryStub implements MediaWikiManagementCommandFactory
+final class MediaWikiManagementCommandFactoryStub implements MediaWikiManagementCommandFactory
 {
     private \ArrayIterator $update_instance_commands_iterator;
 
@@ -36,6 +36,7 @@ class MediaWikiManagementCommandFactoryStub implements MediaWikiManagementComman
      */
     public function __construct(
         private MediaWikiManagementCommand $install_command,
+        private readonly MediaWikiManagementCommand $farm_instance_configuration_update,
         private MediaWikiManagementCommand $update_farm_command,
         array $update_instance_commands,
     ) {
@@ -44,12 +45,22 @@ class MediaWikiManagementCommandFactoryStub implements MediaWikiManagementComman
 
     public static function buildForUpdateInstancesCommandsOnly(array $update_instance_commands): self
     {
-        return new self(new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing(), $update_instance_commands);
+        return new self(
+            new MediaWikiManagementCommandDoNothing(),
+            new MediaWikiManagementCommandDoNothing(),
+            new MediaWikiManagementCommandDoNothing(),
+            $update_instance_commands
+        );
     }
 
     public function buildInstallCommand(): MediaWikiManagementCommand
     {
         return $this->install_command;
+    }
+
+    public function buildFarmInstanceConfigurationUpdate(): MediaWikiManagementCommand
+    {
+        return $this->farm_instance_configuration_update;
     }
 
     public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand
