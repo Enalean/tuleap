@@ -18,10 +18,16 @@
  */
 
 import type { ArtifactsTable, Cell } from "../../../domain/ArtifactsTable";
-import { PROJECT_CELL, NUMERIC_CELL } from "../../../domain/ArtifactsTable";
+import {
+    TEXT_CELL,
+    PROJECT_CELL,
+    NUMERIC_CELL,
+    USER_CELL,
+    TRACKER_CELL,
+} from "../../../domain/ArtifactsTable";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { ARTIFACT_COLUMN_NAME } from "../../../domain/ColumnName";
-import { EmptyCell, TextCell, NumberCell } from "@tuleap/plugin-docgen-xlsx";
+import { EmptyCell, TextCell, NumberCell, HTMLCell } from "@tuleap/plugin-docgen-xlsx";
 
 export type ReportSection = {
     headers: ReadonlyArray<TextCell>;
@@ -73,6 +79,15 @@ function buildXLSXdReportCell(current_artifact_cell: Cell | undefined): ReportCe
                 ? current_artifact_cell.icon + " " + current_artifact_cell.name
                 : current_artifact_cell.name;
         return new TextCell(project_name);
+    }
+    if (current_artifact_cell.type === TEXT_CELL) {
+        return new HTMLCell(current_artifact_cell.value);
+    }
+    if (current_artifact_cell.type === USER_CELL) {
+        return new TextCell(current_artifact_cell.display_name);
+    }
+    if (current_artifact_cell.type === TRACKER_CELL) {
+        return new TextCell(current_artifact_cell.name);
     }
     return new EmptyCell();
 }
