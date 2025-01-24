@@ -128,7 +128,8 @@ final readonly class CrossTrackerArtifactReportFactory
             return $this->getArtifactsFromGivenTrackers(
                 $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
                 $limit,
-                $offset
+                $offset,
+                $current_user,
             );
         }
 
@@ -151,7 +152,7 @@ final readonly class CrossTrackerArtifactReportFactory
     /**
      * @param Tracker[] $trackers
      */
-    private function getArtifactsFromGivenTrackers(array $trackers, int $limit, int $offset): ArtifactMatchingReportCollection
+    private function getArtifactsFromGivenTrackers(array $trackers, int $limit, int $offset, PFUser $current_user): ArtifactMatchingReportCollection
     {
         if (count($trackers) === 0) {
             return new ArtifactMatchingReportCollection([], 0);
@@ -162,7 +163,7 @@ final readonly class CrossTrackerArtifactReportFactory
 
         $result     = $this->artifact_report_dao->searchArtifactsFromTracker($trackers_id, $limit, $offset);
         $total_size = $this->artifact_report_dao->foundRows();
-        return $this->buildCollectionOfArtifacts($result, $total_size);
+        return $this->buildCollectionOfArtifacts($result, $total_size, $current_user);
     }
 
     /**
@@ -191,7 +192,7 @@ final readonly class CrossTrackerArtifactReportFactory
             $offset
         );
         $total_size            = $this->expert_query_dao->foundRows();
-        return $this->buildCollectionOfArtifacts($results, $total_size);
+        return $this->buildCollectionOfArtifacts($results, $total_size, $current_user);
     }
 
     /**
@@ -331,7 +332,7 @@ final readonly class CrossTrackerArtifactReportFactory
         return $artifacts;
     }
 
-    private function buildCollectionOfArtifacts(array $results, int $total_size): ArtifactMatchingReportCollection
+    private function buildCollectionOfArtifacts(array $results, int $total_size, PFUser $current_user): ArtifactMatchingReportCollection
     {
         $artifacts = [];
         foreach ($results as $artifact) {
@@ -341,7 +342,14 @@ final readonly class CrossTrackerArtifactReportFactory
             }
         }
 
-        return new ArtifactMatchingReportCollection($artifacts, $total_size);
+        return new ArtifactMatchingReportCollection(
+            $this->permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
+                $current_user,
+                $artifacts,
+                ArtifactPermissionType::PERMISSION_VIEW,
+            )->allowed,
+            $total_size,
+        );
     }
 
     /**
