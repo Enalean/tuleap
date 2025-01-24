@@ -22,9 +22,9 @@ import type { EditorState } from "prosemirror-state";
 import { Plugin } from "prosemirror-state";
 import { fileUploadHandler } from "./upload-file";
 import type { GetText } from "@tuleap/gettext";
-import type { Upload } from "tus-js-client";
 import { insertPoint } from "prosemirror-transform";
-import type { FileUploadOptions } from "@tuleap/file-upload";
+import type { FileUploadOptions, FileUploader } from "@tuleap/file-upload";
+import { getFileUploader } from "@tuleap/file-upload";
 
 function insertFile(view: EditorView, insert_point: number, url: string): void {
     const { state, dispatch } = view;
@@ -46,15 +46,11 @@ function replaceSelectionWithFile(view: EditorView, url: string): void {
     dispatch(transaction);
 }
 
-export interface OngoingUpload {
-    readonly cancel: () => void;
-}
-
 function handleEvent(
     files: FileList,
     options: FileUploadOptions,
     gettext_provider: GetText,
-    uploaders: Array<Upload>,
+    uploader: FileUploader,
     append_image_callback: (url: string) => void,
 ): void {
     const success_callback_with_insert_file = (
@@ -68,7 +64,7 @@ function handleEvent(
     fileUploadHandler(
         { ...options, onSuccessCallback: success_callback_with_insert_file },
         gettext_provider,
-        uploaders,
+        uploader,
     )(files);
 }
 
@@ -102,7 +98,7 @@ const isPositionValid = (state: EditorState, image_position: number): boolean =>
 };
 
 export class PluginDropFile extends Plugin {
-    uploaders: Array<Upload>;
+    uploader: FileUploader;
 
     constructor(options: FileUploadOptions, gettext_provider: GetText) {
         super({
@@ -128,7 +124,7 @@ export class PluginDropFile extends Plugin {
                             files,
                             options,
                             gettext_provider,
-                            this.uploaders,
+                            this.uploader,
                             (url: string) => insertFile(view, drop_position.pos, url),
                         );
                         event.preventDefault();
@@ -149,7 +145,7 @@ export class PluginDropFile extends Plugin {
                             files,
                             options,
                             gettext_provider,
-                            this.uploaders,
+                            this.uploader,
                             (url: string) => replaceSelectionWithFile(view, url),
                         );
                         event.preventDefault();
@@ -159,7 +155,7 @@ export class PluginDropFile extends Plugin {
                 },
             },
         });
-        this.uploaders = [];
+        this.uploader = getFileUploader();
     }
 
     async destroy(): Promise<void> {
@@ -167,11 +163,7 @@ export class PluginDropFile extends Plugin {
     }
 
     public async cancelOngoingUpload(): Promise<void> {
-        for (let i = 0; i < this.uploaders.length; i++) {
-            await this.uploaders[i].abort(true);
-        }
-
-        this.uploaders = [];
+        await this.uploader.cancelOngoingUpload();
     }
 }
 
