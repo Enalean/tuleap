@@ -23,15 +23,18 @@ import type {
     ArtifactsTableWithTotal,
     RetrieveArtifactsTable,
 } from "../../src/domain/RetrieveArtifactsTable";
+import type { ArtifactsTable } from "../../src/domain/ArtifactsTable";
 
 export const RetrieveArtifactsTableStub = {
     withContent(
         query_table_with_total: ArtifactsTableWithTotal,
         report_table_with_total: ArtifactsTableWithTotal,
+        report_table_with_all_artifact: ReadonlyArray<ArtifactsTable>,
     ): RetrieveArtifactsTable {
         return {
             getSelectableQueryResult: () => okAsync(query_table_with_total),
             getSelectableReportContent: () => okAsync(report_table_with_total),
+            getSelectableFullReport: () => okAsync(report_table_with_all_artifact),
         };
     },
 
@@ -39,6 +42,7 @@ export const RetrieveArtifactsTableStub = {
         return {
             getSelectableReportContent: () => errAsync(fault),
             getSelectableQueryResult: () => errAsync(fault),
+            getSelectableFullReport: () => errAsync(fault),
         };
     },
 };

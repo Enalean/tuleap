@@ -19,13 +19,14 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { decodeJSON, getResponse, uri } from "@tuleap/fetch-result";
+import { decodeJSON, getResponse, uri, getAllJSON } from "@tuleap/fetch-result";
 import type { SelectableReportContentRepresentation } from "./cross-tracker-rest-api-types";
 import type {
     ArtifactsTableWithTotal,
     RetrieveArtifactsTable,
 } from "../domain/RetrieveArtifactsTable";
 import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
+import type { ArtifactsTable } from "../domain/ArtifactsTable";
 
 export const ArtifactsTableRetriever = (
     table_builder: ArtifactsTableBuilder,
@@ -66,6 +67,19 @@ export const ArtifactsTableRetriever = (
                 return decodeJSON<SelectableReportContentRepresentation>(response).map((report) => {
                     return { table: table_builder.mapReportToArtifactsTable(report), total };
                 });
+            });
+        },
+
+        getSelectableFullReport(): ResultAsync<readonly ArtifactsTable[], Fault> {
+            return getAllJSON<SelectableReportContentRepresentation>(
+                uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                {
+                    params: {
+                        limit: 50,
+                    },
+                },
+            ).map((report) => {
+                return report.map((table) => table_builder.mapReportToArtifactsTable(table));
             });
         },
     };

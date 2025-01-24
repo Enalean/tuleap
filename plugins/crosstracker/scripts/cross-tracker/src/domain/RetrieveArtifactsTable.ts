@@ -38,4 +38,6 @@ export type RetrieveArtifactsTable = {
         limit: number,
         offset: number,
     ): ResultAsync<ArtifactsTableWithTotal, Fault>;
+
+    getSelectableFullReport(): ResultAsync<ReadonlyArray<ArtifactsTable>, Fault>;
 };

@@ -11,6 +11,7 @@
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/option": "workspace:^",
+    "@tuleap/plugin-docgen-xlsx": "workspace:^",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/tlp-badge": "workspace:^",
     "@tuleap/tooltip": "workspace:^",
@@ -19,7 +20,8 @@
     "neverthrow": "6.0.0",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^5.1.0",
-    "vue3-gettext": "2.4.0"
+    "vue3-gettext": "2.4.0",
+    "xlsx": "git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#a0bed2a97dcb1e3b76049be91abf3747f333c975"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
