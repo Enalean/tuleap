@@ -26,6 +26,7 @@ import type {
     JustCreatedArtifactResponse,
     PostFileResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
+import type { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
@@ -39,7 +40,6 @@ import type { CreateArtifact } from "../../domain/submit/CreateArtifact";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import { ArtifactCreationFault } from "../../domain/ArtifactCreationFault";
 import type { InterpretCommonMark } from "../../domain/common/InterpretCommonMark";
-import type { CurrentProjectIdentifier } from "../../domain/CurrentProjectIdentifier";
 
 type TuleapAPIClientType = RetrieveParent &
     CreateFileUpload &

@@ -17,29 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
+import { Fault } from "@tuleap/fault";
+import { Option } from "@tuleap/option";
+import { en_US_LOCALE } from "@tuleap/core-constants";
+import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { ArtifactCreatedEvent, HostElement } from "./ArtifactCreatorElement";
 import {
-    renderArtifactCreatorElement,
     getTrackerSelectClasses,
     onClickCancel,
     onProjectChange,
     onSubmit,
     onTrackerChange,
+    renderArtifactCreatorElement,
     setErrorMessage,
 } from "./ArtifactCreatorElement";
 import { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
 import { setCatalog } from "../../../../../gettext-catalog";
-import { selectOrThrow } from "@tuleap/dom";
 import { RetrieveProjectsStub } from "../../../../../../tests/stubs/RetrieveProjectsStub";
 import type { Project } from "../../../../../domain/Project";
-import { Option } from "@tuleap/option";
 import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "../CollectionOfAllowedLinksTypesPresenters";
 import { RetrieveProjectTrackersStub } from "../../../../../../tests/stubs/RetrieveProjectTrackersStub";
-import { en_US_LOCALE } from "@tuleap/core-constants";
 import type { Tracker } from "../../../../../domain/Tracker";
-import { CurrentProjectIdentifierStub } from "../../../../../../tests/stubs/CurrentProjectIdentifierStub";
 import { ProjectIdentifierStub } from "../../../../../../tests/stubs/ProjectIdentifierStub";
 import { TrackerStub } from "../../../../../../tests/stubs/TrackerStub";
 import { ProjectStub } from "../../../../../../tests/stubs/ProjectStub";
@@ -49,7 +50,6 @@ import { CurrentTrackerIdentifierStub } from "../../../../../../tests/stubs/Curr
 import { CreateLinkableArtifactStub } from "../../../../../../tests/stubs/CreateLinkableArtifactStub";
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { CreateLinkableArtifact } from "../../../../../domain/fields/link-field/creation/CreateLinkableArtifact";
-import { Fault } from "@tuleap/fault";
 
 describe(`ArtifactCreatorElement`, () => {
     let doc: Document;
@@ -76,7 +76,7 @@ describe(`ArtifactCreatorElement`, () => {
                     TrackerStub.withDefaults({ id: TRACKER_ID }),
                 ),
                 artifact_creator,
-                CurrentProjectIdentifierStub.withId(144),
+                CurrentProjectIdentifier.fromId(144),
                 CurrentTrackerIdentifierStub.withId(209),
                 en_US_LOCALE,
             );

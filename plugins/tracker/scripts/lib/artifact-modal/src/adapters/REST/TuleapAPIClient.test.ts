@@ -26,7 +26,10 @@ import type {
     ArtifactCreationPayload,
     ChangesetWithCommentRepresentation,
 } from "@tuleap/plugin-tracker-rest-api-types";
-import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import {
+    CurrentArtifactIdentifier,
+    CurrentProjectIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
@@ -37,20 +40,12 @@ import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builde
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
 import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
-import { CurrentProjectIdentifierStub } from "../../../tests/stubs/CurrentProjectIdentifierStub";
-import type { CurrentProjectIdentifier } from "../../domain/CurrentProjectIdentifier";
 
 const PROJECT_ID = 179;
 
 describe(`TuleapAPIClient`, () => {
-    let current_project_identifier: CurrentProjectIdentifier;
-
-    beforeEach(() => {
-        current_project_identifier = CurrentProjectIdentifierStub.withId(PROJECT_ID);
-    });
-
     const getClient = (): ReturnType<typeof TuleapAPIClient> =>
-        TuleapAPIClient(current_project_identifier);
+        TuleapAPIClient(CurrentProjectIdentifier.fromId(PROJECT_ID));
 
     describe(`getParent()`, () => {
         const ARTIFACT_ID = 90,

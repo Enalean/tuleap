@@ -19,6 +19,7 @@
 
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
+import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { HostElement } from "./LinkField";
 import { getLinkedArtifactPresenters } from "./LinkField";
@@ -55,7 +56,6 @@ import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStu
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
 import type { ParentArtifactIdentifier } from "src/domain/parent/ParentArtifactIdentifier";
 
 describe(`LinkedArtifactTemplate`, () => {
@@ -216,7 +216,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair(),
-                CurrentProjectIdentifierStub.withId(10),
+                CurrentProjectIdentifier.fromId(101),
                 Option.nothing<ParentArtifactIdentifier>(),
             );
 
