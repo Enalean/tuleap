@@ -33,6 +33,7 @@ import { describe, expect, it } from "vitest";
 import type { ReportSection } from "./data-formater";
 import { formatData } from "./data-formater";
 import { NumberCell, TextCell, EmptyCell, HTMLCell } from "@tuleap/plugin-docgen-xlsx";
+import { USER_GROUP_LIST_CELL, USER_LIST_CELL } from "../../../domain/ArtifactsTable";
 
 describe("data-formater", () => {
     const artifact_column = ARTIFACT_COLUMN_NAME;
@@ -60,6 +61,25 @@ describe("data-formater", () => {
     const first_tracker = "Twin-Turbo";
     const second_tracker = "Supercharged";
 
+    const user_list_column = "User Comp List";
+    const second_user_in_list = "Buick";
+    const first_user_list = [
+        { display_name: first_user, user_url: null },
+        { display_name: second_user_in_list, user_url: null },
+    ];
+    const second_user_in_second_list = "Fiat";
+    const second_user_list = [
+        { display_name: second_user, user_url: null },
+        { display_name: second_user_in_second_list, user_url: null },
+    ];
+
+    const user_group_column = "Group";
+    const first_user_group = "GM";
+    const second_user_group = "FCA";
+    const third_user_group = "PSA";
+    const first_user_group_list = [{ label: first_user_group }];
+    const second_user_group_list = [{ label: second_user_group }, { label: third_user_group }];
+
     it("generates the formatted data with that will be used to create the XLSX document with rows", () => {
         const table = [
             ArtifactsTableBuilder().mapReportToArtifactsTable(
@@ -70,6 +90,8 @@ describe("data-formater", () => {
                         { type: TEXT_SELECTABLE_TYPE, name: text_column },
                         { type: USER_SELECTABLE_TYPE, name: user_column },
                         { type: TRACKER_SELECTABLE_TYPE, name: tracker_column },
+                        { type: USER_LIST_CELL, name: user_list_column },
+                        { type: USER_GROUP_LIST_CELL, name: user_group_column },
                     ],
                     [
                         ArtifactRepresentationStub.build({
@@ -82,6 +104,8 @@ describe("data-formater", () => {
                                 name: first_tracker,
                                 color: "tlp-swatch-fiesta-red",
                             },
+                            [user_list_column]: { value: first_user_list },
+                            [user_group_column]: { value: first_user_group_list },
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: second_artifact_uri },
@@ -93,6 +117,8 @@ describe("data-formater", () => {
                                 name: first_tracker,
                                 color: "tlp-swatch-fiesta-red",
                             },
+                            [user_list_column]: { value: first_user_list },
+                            [user_group_column]: { value: first_user_group_list },
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: third_artifact_uri },
@@ -103,6 +129,10 @@ describe("data-formater", () => {
                             [tracker_column]: {
                                 name: second_tracker,
                                 color: "tlp-swatch-deep-blue",
+                            },
+                            [user_list_column]: { value: second_user_list },
+                            [user_group_column]: {
+                                value: second_user_group_list,
                             },
                         }),
                     ],
@@ -118,6 +148,8 @@ describe("data-formater", () => {
                 new TextCell(text_column),
                 new TextCell(user_column),
                 new TextCell(tracker_column),
+                new TextCell(user_list_column),
+                new TextCell(user_group_column),
             ],
             rows: [
                 [
@@ -126,6 +158,8 @@ describe("data-formater", () => {
                     new HTMLCell(first_text),
                     new TextCell(first_user),
                     new TextCell(first_tracker),
+                    new TextCell(first_user + ", " + second_user_in_list),
+                    new TextCell(first_user_group),
                 ],
                 [
                     new NumberCell(int_value),
@@ -133,6 +167,8 @@ describe("data-formater", () => {
                     new HTMLCell(""),
                     new TextCell(first_user),
                     new TextCell(first_tracker),
+                    new TextCell(first_user + ", " + second_user_in_list),
+                    new TextCell(first_user_group),
                 ],
                 [
                     new EmptyCell(),
@@ -140,6 +176,8 @@ describe("data-formater", () => {
                     new HTMLCell(second_text),
                     new TextCell(second_user),
                     new TextCell(second_tracker),
+                    new TextCell(second_user + ", " + second_user_in_second_list),
+                    new TextCell(second_user_group + ", " + third_user_group),
                 ],
             ],
         };
