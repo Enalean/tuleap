@@ -21,6 +21,7 @@ import { loadTooltips } from "@tuleap/tooltip";
 import { Option } from "@tuleap/option";
 import { en_US_LOCALE } from "@tuleap/core-constants";
 import { EVENT_TLP_MODAL_WILL_HIDE } from "@tuleap/tlp-modal";
+import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
@@ -56,7 +57,6 @@ import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesC
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
 import { CommentsController } from "./domain/comments/CommentsController";
-import { CurrentProjectIdentifierProxy } from "./adapters/REST/CurrentProjectIdentifierProxy";
 import { EventDispatcher } from "./domain/EventDispatcher";
 import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
@@ -104,8 +104,8 @@ function ArtifactModalController(
 
     const event_dispatcher = EventDispatcher();
     const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
-    const current_project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(
-        modal_model.tracker,
+    const current_project_identifier = CurrentProjectIdentifier.fromId(
+        modal_model.tracker.project.id,
     );
     const current_artifact_option = Option.fromNullable(modal_model.current_artifact_identifier);
     const api_client = TuleapAPIClient(current_project_identifier);

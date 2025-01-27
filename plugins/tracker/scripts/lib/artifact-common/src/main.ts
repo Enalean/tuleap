@@ -18,4 +18,5 @@
  */
 
 export { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
+export { CurrentProjectIdentifier } from "./CurrentProjectIdentifier";
 export type { Identifier } from "./Identifier";

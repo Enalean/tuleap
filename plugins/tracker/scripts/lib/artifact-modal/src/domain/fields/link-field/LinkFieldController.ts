@@ -19,6 +19,7 @@
 
 import type { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
+import type { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
 import type { LinkedArtifact, LinkedArtifactIdentifier } from "./LinkedArtifact";
 import type { AddLinkMarkedForRemoval } from "./AddLinkMarkedForRemoval";
@@ -45,7 +46,6 @@ import { WillNotifyFault } from "../../WillNotifyFault";
 import type { ChangeNewLinkType } from "./ChangeNewLinkType";
 import type { ChangeLinkType } from "./ChangeLinkType";
 import type { ParentTrackerIdentifier } from "./ParentTrackerIdentifier";
-import type { CurrentProjectIdentifier } from "../../CurrentProjectIdentifier";
 import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdentifier";
 
 export type LinkFieldController = {
