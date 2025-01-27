@@ -26,9 +26,9 @@ import type {
     ArtifactCreationPayload,
     ChangesetWithCommentRepresentation,
 } from "@tuleap/plugin-tracker-rest-api-types";
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
-import { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";

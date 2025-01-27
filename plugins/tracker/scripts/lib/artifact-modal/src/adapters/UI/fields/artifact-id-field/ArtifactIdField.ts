@@ -20,7 +20,7 @@
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import { ARTIFACT_ID_FIELD } from "@tuleap/plugin-tracker-constants";
-import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 
 import type {
     ArtifactIdFieldIdentifier,

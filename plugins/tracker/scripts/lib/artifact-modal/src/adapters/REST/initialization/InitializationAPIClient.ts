@@ -20,8 +20,8 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { decodeJSON, getResponse, uri } from "@tuleap/fetch-result";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveCurrentArtifactWithTrackerStructure } from "../../../domain/initialization/RetrieveCurrentArtifactWithTrackerStructure";
-import type { CurrentArtifactIdentifier } from "../../../domain/CurrentArtifactIdentifier";
 import type {
     CurrentArtifactWithTrackerStructure,
     TrackerStructure,

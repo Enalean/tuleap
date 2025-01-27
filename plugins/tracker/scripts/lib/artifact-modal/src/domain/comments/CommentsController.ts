@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { FollowUpComment } from "./FollowUpComment";
 import type { RetrieveComments } from "./RetrieveComments";
-import type { CurrentArtifactIdentifier } from "../CurrentArtifactIdentifier";
 import type { CommentUserPreferences } from "./CommentUserPreferences";
 import { CommentsRetrievalFault } from "./CommentsRetrievalFault";
 import type { DispatchEvents } from "../DispatchEvents";

@@ -1,0 +1,24 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-artifact-common",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/plugin-tracker-artifact-common.js",
+      "require": "./dist/plugin-tracker-artifact-common.umd.cjs"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

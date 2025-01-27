@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { HostElement } from "./BurndownField";
 import { renderBurndownField } from "./BurndownField";
-import { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 describe("BurndownField", () => {
     it("should render the burndown field", () => {
@@ -29,7 +29,7 @@ describe("BurndownField", () => {
                 label: "Burndown",
             },
             currentArtifactIdentifier: CurrentArtifactIdentifier.fromId(1060),
-        } as unknown as HostElement;
+        } as HostElement;
 
         const target = document.implementation
             .createHTMLDocument()

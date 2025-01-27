@@ -22,13 +22,13 @@ import type { Fault } from "@tuleap/fault";
 import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
 import type { ChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { InitializationAPIClient } from "./InitializationAPIClient";
 import type {
     ArtifactResponseFromREST,
     ReducedTrackerRepresentation,
 } from "./InitializationAPIClient";
 import type { CurrentArtifactWithTrackerStructure } from "../../../domain/initialization/CurrentArtifactWithTrackerStructure";
-import { CurrentArtifactIdentifier } from "../../../domain/CurrentArtifactIdentifier";
 
 describe(`InitializationAPIClient`, () => {
     const getClient = (): ReturnType<typeof InitializationAPIClient> => InitializationAPIClient();

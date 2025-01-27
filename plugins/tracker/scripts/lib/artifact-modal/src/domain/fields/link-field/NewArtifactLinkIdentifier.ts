@@ -18,7 +18,7 @@
  */
 
 import type { LinkableArtifact } from "./LinkableArtifact";
-import type { Identifier } from "../../Identifier";
+import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
 
 /**
  * I identify an artifact that is about to be linked to the current artifact under edition.

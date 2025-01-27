@@ -20,9 +20,9 @@
 import type { GroupCollection, GroupOfItems } from "@tuleap/lazybox";
 import type { Fault } from "@tuleap/fault";
 import type { Option } from "@tuleap/option";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
-import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
 import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
 import { MatchingArtifactRetrievalFault } from "../../../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
 import { LinkType } from "../../../../../domain/fields/link-field/LinkType";

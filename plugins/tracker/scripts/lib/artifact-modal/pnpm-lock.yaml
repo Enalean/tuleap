@@ -38,6 +38,9 @@ dependencies:
   '@tuleap/option':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/option
+  '@tuleap/plugin-tracker-artifact-common':
+    specifier: workspace:^
+    version: link:../artifact-common
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:*
     version: link:../constants

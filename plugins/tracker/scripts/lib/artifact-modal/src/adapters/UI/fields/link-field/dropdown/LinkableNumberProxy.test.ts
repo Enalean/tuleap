@@ -18,8 +18,8 @@
  */
 
 import { Option } from "@tuleap/option";
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
-import { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
 import type { LinkableNumber } from "../../../../../domain/fields/link-field/LinkableNumber";
 
 describe("LinkableNumberProxy", () => {

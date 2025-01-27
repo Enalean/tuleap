@@ -20,11 +20,11 @@
 import type { ResultAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { LinksRetriever } from "./LinksRetriever";
 import { RetrieveLinkTypesStub } from "../../../../tests/stubs/RetrieveLinkTypesStub";
 import { RetrieveLinkedArtifactsByTypeStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
 import type { LinkedArtifact } from "./LinkedArtifact";
-import { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import { AddLinkedArtifactCollectionStub } from "../../../../tests/stubs/AddLinkedArtifactCollectionStub";
