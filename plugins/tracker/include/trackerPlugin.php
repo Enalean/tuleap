@@ -152,6 +152,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder;
 use Tuleap\Tracker\Config\ConfigController;
@@ -2593,6 +2594,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(PromotedTrackerConfiguration::class);
         $event->addConfigClass(TrackersPermissionsRetriever::class);
         $event->addConfigClass(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Query::class);
+        $event->addConfigClass(ArtifactViewCollectionBuilder::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
