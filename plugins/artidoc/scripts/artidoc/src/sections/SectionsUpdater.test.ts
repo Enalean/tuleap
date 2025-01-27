@@ -29,10 +29,11 @@ import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { getSectionsUpdater } from "@/sections/SectionsUpdater";
 import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("SectionsUpdater", () => {
     const getCollectionWithSections = (sections: ArtidocSection[]): SectionsCollection => {
-        const collections = buildSectionsCollection();
+        const collections = buildSectionsCollection(SectionsStatesCollectionStub.build());
         collections.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
         return collections;
     };
@@ -69,10 +70,10 @@ describe("SectionsUpdater", () => {
             }),
         );
 
-        const section_0: SectionBasedOnArtifact = collection.sections
-            .value[0] as SectionBasedOnArtifact;
-        const section_1: SectionBasedOnArtifact = collection.sections
-            .value[1] as SectionBasedOnArtifact;
+        const section_0: SectionBasedOnArtifact = collection.sections.value[0]
+            .value as SectionBasedOnArtifact;
+        const section_1: SectionBasedOnArtifact = collection.sections.value[1]
+            .value as SectionBasedOnArtifact;
 
         expect(collection.sections.value).toHaveLength(2);
         expect(section_0.title.value).toBe("Section A");
@@ -102,8 +103,8 @@ describe("SectionsUpdater", () => {
             }),
         );
 
-        const section_0: FreetextSection = collection.sections.value[0] as FreetextSection;
-        const section_1: FreetextSection = collection.sections.value[1] as FreetextSection;
+        const section_0: FreetextSection = collection.sections.value[0].value as FreetextSection;
+        const section_1: FreetextSection = collection.sections.value[1].value as FreetextSection;
 
         expect(collection.sections.value).toHaveLength(2);
         expect(section_0.title).toBe("Section A");

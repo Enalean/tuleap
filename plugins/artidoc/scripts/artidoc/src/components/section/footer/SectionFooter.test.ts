@@ -23,16 +23,19 @@ import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionFooter from "./SectionFooter.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import type { SectionState } from "@/sections/SectionStateBuilder";
+import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 
 describe("SectionFooter", () => {
-    function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
+    function getWrapper(section_state: SectionState): VueWrapper<ComponentPublicInstance> {
         return shallowMount(SectionFooter, {
             propsData: {
-                editor,
-                section: ArtifactSectionFactory.create(),
+                editor: SectionEditorStub.build(),
+                section: CreateStoredSections.fromArtidocSection(ArtifactSectionFactory.create()),
+                section_state,
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -42,17 +45,13 @@ describe("SectionFooter", () => {
 
     describe("when the section is not editable", () => {
         it("should hide the footer", () => {
-            expect(
-                getWrapper(SectionEditorStub.withoutEditableSection()).find("div").exists(),
-            ).toBe(false);
+            expect(getWrapper(SectionStateStub.notEditable()).find("div").exists()).toBe(false);
         });
     });
 
     describe("when the section is editable", () => {
         it("should display the footer", () => {
-            expect(getWrapper(SectionEditorStub.withEditableSection()).find("div").exists()).toBe(
-                true,
-            );
+            expect(getWrapper(SectionStateStub.inEditMode()).find("div").exists()).toBe(true);
         });
     });
 });

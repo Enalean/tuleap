@@ -24,17 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import SectionContent from "./SectionContent.vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { computed } from "vue";
+import SectionContent from "./SectionContent.vue";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 
-const props = defineProps<{ section: ArtidocSection }>();
+const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const additional_class = computed(() => {
-    const color = isArtifactSection(props.section)
-        ? props.section.artifact.tracker.color
-        : isPendingArtifactSection(props.section)
-          ? props.section.tracker.color
+    const color = isArtifactSection(props.section.value)
+        ? props.section.value.artifact.tracker.color
+        : isPendingArtifactSection(props.section.value)
+          ? props.section.value.tracker.color
           : "";
 
     return color !== "" ? `tlp-swatch-${color}` : "artidoc-section-container-without-border";

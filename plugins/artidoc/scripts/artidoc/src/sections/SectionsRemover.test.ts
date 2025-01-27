@@ -18,8 +18,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import * as rest from "@/helpers/rest-querier";
 import { okAsync } from "neverthrow";
+import * as rest from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
@@ -27,6 +27,8 @@ import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { getSectionsRemover } from "@/sections/SectionsRemover";
+import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 const section1 = ArtifactSectionFactory.create();
 const section2 = PendingArtifactSectionFactory.create();
@@ -34,10 +36,11 @@ const section3 = ArtifactSectionFactory.create();
 const section4 = PendingArtifactSectionFactory.create();
 
 describe("SectionsRemover", () => {
-    let sections_collection: SectionsCollection;
+    let sections_collection: SectionsCollection, states_collection: SectionsStatesCollection;
 
     beforeEach(() => {
-        sections_collection = buildSectionsCollection();
+        states_collection = SectionsStatesCollectionStub.build();
+        sections_collection = buildSectionsCollection(states_collection);
         sections_collection.replaceAll(
             CreateStoredSections.fromArtidocSectionsCollection([
                 section1,
@@ -48,42 +51,52 @@ describe("SectionsRemover", () => {
         );
     });
 
-    it("should remove the section", async () => {
+    it("should remove the section and delete its state", async () => {
         vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
-        const sections_remover = getSectionsRemover(sections_collection);
+        const sections_remover = getSectionsRemover(sections_collection, states_collection);
 
-        sections_remover.removeSection(section2);
-        sections_remover.removeSection(section3);
+        const stored_section2 = CreateStoredSections.fromArtidocSection(section2);
+        const stored_section3 = CreateStoredSections.fromArtidocSection(section3);
+
+        sections_remover.removeSection(stored_section2);
+        sections_remover.removeSection(stored_section3);
         await flushPromises();
 
         expect(sections_collection.sections.value).not.toBeUndefined();
         expect(sections_collection.sections.value).toHaveLength(2);
-        expect(sections_collection.sections.value[0].id).toBe(section1.id);
-        expect(sections_collection.sections.value[1].id).toBe(section4.id);
+        expect(sections_collection.sections.value[0].value.id).toBe(section1.id);
+        expect(sections_collection.sections.value[1].value.id).toBe(section4.id);
+
+        expect(() => states_collection.getSectionState(stored_section2)).toThrow();
+        expect(() => states_collection.getSectionState(stored_section3)).toThrow();
     });
 
     it("should do nothing when there is no sections", async () => {
         sections_collection.replaceAll([]);
 
-        const sections_remover = getSectionsRemover(sections_collection);
+        const sections_remover = getSectionsRemover(sections_collection, states_collection);
 
-        sections_remover.removeSection(ArtifactSectionFactory.create());
+        sections_remover.removeSection(
+            CreateStoredSections.fromArtidocSection(ArtifactSectionFactory.create()),
+        );
         await flushPromises();
 
         expect(sections_collection.sections.value).toHaveLength(0);
     });
 
     it("should do nothing when section cannot be found", async () => {
-        const sections_remover = getSectionsRemover(sections_collection);
+        const sections_remover = getSectionsRemover(sections_collection, states_collection);
 
-        sections_remover.removeSection(ArtifactSectionFactory.create());
+        sections_remover.removeSection(
+            CreateStoredSections.fromArtidocSection(ArtifactSectionFactory.create()),
+        );
         await flushPromises();
 
         expect(sections_collection.sections.value).toHaveLength(4);
-        expect(sections_collection.sections.value[0].id).toBe(section1.id);
-        expect(sections_collection.sections.value[1].id).toBe(section2.id);
-        expect(sections_collection.sections.value[2].id).toBe(section3.id);
-        expect(sections_collection.sections.value[3].id).toBe(section4.id);
+        expect(sections_collection.sections.value[0].value.id).toBe(section1.id);
+        expect(sections_collection.sections.value[1].value.id).toBe(section2.id);
+        expect(sections_collection.sections.value[2].value.id).toBe(section3.id);
+        expect(sections_collection.sections.value[3].value.id).toBe(section4.id);
     });
 });

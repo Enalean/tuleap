@@ -17,35 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
 import { createGettext } from "vue3-gettext";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
-import type { SectionEditorsStore } from "@/stores/useSectionEditorsStore";
-import { EDITORS_COLLECTION, useSectionEditorsStore } from "@/stores/useSectionEditorsStore";
-import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 import { TITLE } from "@/title-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 
 describe("PdfExportMenuItem", () => {
-    let editors_collection: SectionEditorsStore;
-
-    beforeEach(() => {
-        editors_collection = useSectionEditorsStore();
-    });
-
     it("should display disabled menuitem if user is anonymous", () => {
         const wrapper = shallowMount(PdfExportMenuItem, {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: true,
-                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [TITLE.valueOf()]: "Test document",
                     [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
                         PdfTemplateStub.blueTemplate(),
@@ -71,7 +67,8 @@ describe("PdfExportMenuItem", () => {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [IS_USER_ANONYMOUS.valueOf()]: false,
-                        [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                        [SECTIONS_STATES_COLLECTION.valueOf()]:
+                            SectionsStatesCollectionStub.build(),
                         [TITLE.valueOf()]: "Test document",
                         [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore(templates),
                     },
@@ -88,29 +85,38 @@ describe("PdfExportMenuItem", () => {
         },
     );
 
-    it("should display disabled menuitem when at least one section is in edition mode", () => {
-        editors_collection.addEditor(
-            ArtifactSectionFactory.create(),
-            SectionEditorStub.inEditMode(),
-        );
+    it.each([
+        [FreetextSectionFactory.create()],
+        [FreetextSectionFactory.pending()],
+        [ArtifactSectionFactory.create()],
+        [PendingArtifactSectionFactory.create()],
+    ])(
+        "should display disabled menuitem when at least one section is in edition mode",
+        (section) => {
+            const sections_states = SectionsStatesCollectionStub.build();
+            const stored_section = CreateStoredSections.fromArtidocSection(section);
 
-        const wrapper = shallowMount(PdfExportMenuItem, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-                provide: {
-                    [IS_USER_ANONYMOUS.valueOf()]: false,
-                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
-                    [TITLE.valueOf()]: "Test document",
-                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
-                        PdfTemplateStub.blueTemplate(),
-                    ]),
+            sections_states.createStateForSection(stored_section);
+            sections_states.getSectionState(stored_section).is_section_in_edit_mode.value = true;
+
+            const wrapper = shallowMount(PdfExportMenuItem, {
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [IS_USER_ANONYMOUS.valueOf()]: false,
+                        [SECTIONS_STATES_COLLECTION.valueOf()]: sections_states,
+                        [TITLE.valueOf()]: "Test document",
+                        [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                            PdfTemplateStub.blueTemplate(),
+                        ]),
+                    },
                 },
-            },
-        });
+            });
 
-        expect(wrapper.findAll("[role=menuitem]")).toHaveLength(1);
-        expect(wrapper.findComponent(PrinterVersion).exists()).toBe(false);
-    });
+            expect(wrapper.findAll("[role=menuitem]")).toHaveLength(1);
+            expect(wrapper.findComponent(PrinterVersion).exists()).toBe(false);
+        },
+    );
 
     it("should display one menuitem if one template", () => {
         const wrapper = shallowMount(PdfExportMenuItem, {
@@ -118,7 +124,7 @@ describe("PdfExportMenuItem", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
-                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [TITLE.valueOf()]: "Test document",
                     [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
                         PdfTemplateStub.blueTemplate(),
@@ -137,7 +143,7 @@ describe("PdfExportMenuItem", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
-                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [TITLE.valueOf()]: "Test document",
                     [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
                         PdfTemplateStub.blueTemplate(),

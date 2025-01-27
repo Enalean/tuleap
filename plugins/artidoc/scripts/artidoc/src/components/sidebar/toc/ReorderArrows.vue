@@ -46,14 +46,17 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
-import type { InternalArtidocSectionId, StoredArtidocSection } from "@/sections/SectionsCollection";
+import type {
+    InternalArtidocSectionId,
+    ReactiveStoredArtidocSection,
+} from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { SectionsReorderer } from "@/sections/SectionsReorderer";
 
 const props = defineProps<{
     is_first: boolean;
     is_last: boolean;
-    section: StoredArtidocSection;
+    section: ReactiveStoredArtidocSection;
     sections_reorderer: SectionsReorderer;
 }>();
 
@@ -71,11 +74,11 @@ const emit = defineEmits<{
 }>();
 
 const dispatchMovedSection = (): void => {
-    emit("moved-section-up-or-down", props.section);
+    emit("moved-section-up-or-down", props.section.value);
 };
 
 const dispatchMovingSection = (): void => {
-    emit("moving-section-up-or-down", props.section);
+    emit("moving-section-up-or-down", props.section.value);
 };
 
 const dispatchFault = (fault: Fault): void => {

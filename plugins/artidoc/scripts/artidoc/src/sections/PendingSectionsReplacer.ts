@@ -36,15 +36,15 @@ export const getPendingSectionsReplacer = (
 ): ReplacePendingSections => ({
     replacePendingSection(pending, section): void {
         const index = sections_collection.sections.value.findIndex(
-            (element) => element.id === pending.id,
+            (element) => element.value.id === pending.id,
         );
         if (index === -1) {
             return;
         }
 
-        sections_collection.sections.value[index] = {
+        sections_collection.sections.value[index].value = {
             ...section,
-            internal_id: sections_collection.sections.value[index].internal_id,
+            internal_id: sections_collection.sections.value[index].value.internal_id,
         };
     },
 });

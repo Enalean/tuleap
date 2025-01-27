@@ -17,29 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InternalArtidocSectionId } from "@/sections/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
 import { AT_THE_END } from "@/sections/SectionsInserter";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 
 export function getInsertionPositionExcludingPendingSections(
     add_position: PositionForSection,
-    sections: readonly (ArtidocSection & InternalArtidocSectionId)[],
+    sections_collection: SectionsCollection,
 ): PositionForSection {
     if (add_position === AT_THE_END) {
         return add_position;
     }
 
-    const index = sections.findIndex((sibling) => sibling.id === add_position?.before);
+    const index = sections_collection.sections.value.findIndex(
+        (sibling) => sibling.value.id === add_position?.before,
+    );
     if (index === -1) {
         return AT_THE_END;
     }
 
     let before: string | null = null;
-    for (let i = index; i < sections.length; i++) {
-        if (!isPendingSection(sections[i])) {
-            before = sections[i].id;
+    for (let i = index; i < sections_collection.sections.value.length; i++) {
+        if (!isPendingSection(sections_collection.sections.value[i].value)) {
+            before = sections_collection.sections.value[i].value.id;
             break;
         }
     }

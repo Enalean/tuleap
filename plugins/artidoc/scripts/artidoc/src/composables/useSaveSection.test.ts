@@ -35,23 +35,22 @@ import { PendingSectionsReplacerStub } from "@/sections/stubs/PendingSectionsRep
 import { noop } from "@/helpers/noop";
 import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
 import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/SectionsPositionsForSaveRetrieverStub";
+import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
 
 describe("useSaveSection", () => {
     let editor_errors: EditorErrors;
-    let callbacks: Parameters<typeof useSaveSection>[4];
+    let callbacks: Parameters<typeof useSaveSection>[5];
 
     beforeEach(() => {
         editor_errors = {
-            ...SectionEditorStub.withoutEditableSection().editor_error,
+            ...SectionEditorStub.build().editor_error,
             handleError: vi.fn(),
         };
         callbacks = {
-            updateCurrentSection: noop,
             closeEditor: noop,
-            setEditMode: vi.fn(),
             mergeArtifactAttachments: vi.fn(),
         };
         mockStrictInject([
@@ -66,6 +65,7 @@ describe("useSaveSection", () => {
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = useSaveSection(
+                SectionStateStub.inEditMode(),
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
@@ -84,6 +84,7 @@ describe("useSaveSection", () => {
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = useSaveSection(
+                SectionStateStub.inEditMode(),
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
@@ -105,7 +106,9 @@ describe("useSaveSection", () => {
         });
         describe("when the new description and title are the same as the original one", () => {
             it("should disable edit mode with artifact section", () => {
+                const section_state = SectionStateStub.inEditMode();
                 const { save } = useSaveSection(
+                    section_state,
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
@@ -118,10 +121,12 @@ describe("useSaveSection", () => {
                     title: artifact_section.display_title,
                 });
 
-                expect(callbacks.setEditMode).toBeCalledWith(false);
+                expect(section_state.is_section_in_edit_mode.value).toBe(false);
             });
             it("should disable edit mode with freetext section", () => {
+                const section_state = SectionStateStub.inEditMode();
                 const { save } = useSaveSection(
+                    section_state,
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
@@ -134,11 +139,12 @@ describe("useSaveSection", () => {
                     title: freetext_section.display_title,
                 });
 
-                expect(callbacks.setEditMode).toBeCalledWith(false);
+                expect(section_state.is_section_in_edit_mode.value).toBe(false);
             });
             it("should not save artifact section", async () => {
                 const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
                 const { save } = useSaveSection(
+                    SectionStateStub.inEditMode(),
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
@@ -159,6 +165,7 @@ describe("useSaveSection", () => {
             it("should not save freetext section", async () => {
                 const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
                 const { save } = useSaveSection(
+                    SectionStateStub.inEditMode(),
                     editor_errors,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
@@ -181,6 +188,7 @@ describe("useSaveSection", () => {
             const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
 
             const { save } = useSaveSection(
+                SectionStateStub.inEditMode(),
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
@@ -198,6 +206,7 @@ describe("useSaveSection", () => {
             const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
 
             const { save } = useSaveSection(
+                SectionStateStub.inEditMode(),
                 editor_errors,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
@@ -214,6 +223,7 @@ describe("useSaveSection", () => {
         it("When the saved section is a pending artifact section, Then it should create it and replace it by the saved one.", async () => {
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
+                SectionStateStub.inEditMode(),
                 editor_errors,
                 replacer,
                 SectionsUpdaterStub.withNoExpectedCall(),
@@ -240,6 +250,7 @@ describe("useSaveSection", () => {
         it("When the saved section is a pending freetext section, Then it should create it and replace it by the saved one.", async () => {
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
+                SectionStateStub.inEditMode(),
                 editor_errors,
                 replacer,
                 SectionsUpdaterStub.withNoExpectedCall(),

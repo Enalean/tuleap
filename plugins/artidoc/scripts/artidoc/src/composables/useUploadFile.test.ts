@@ -125,42 +125,6 @@ describe("useUploadFile", () => {
         });
     });
 
-    describe("is_in_progress", () => {
-        describe("when a section upload is in store pending uploads list", () => {
-            it("should be true", () => {
-                const post_information: FileUploadOptions["post_information"] = {
-                    upload_url: "upload_url",
-                    getUploadJsonPayload: noop,
-                };
-
-                const { is_in_progress } = useUploadFile(section_id, post_information, vi.fn());
-
-                expect(
-                    getCurrentSectionUploads(section_id, mocked_upload_data.pending_uploads.value)
-                        .length,
-                ).toBeGreaterThan(0);
-                expect(is_in_progress.value).toBe(true);
-            });
-        });
-        describe("when there is no section upload in pending upload store list", () => {
-            it("should be false", () => {
-                mockStrictInject([
-                    [UPLOAD_MAX_SIZE, 222],
-                    [UPLOAD_FILE_STORE, UploadFileStoreStub.uploadNotInProgress()],
-                    [NOTIFICATION_STORE, mocked_notifications_data],
-                ]);
-                const post_information: FileUploadOptions["post_information"] = {
-                    upload_url: "upload_url",
-                    getUploadJsonPayload: noop,
-                };
-
-                const { is_in_progress } = useUploadFile(section_id, post_information, vi.fn());
-
-                expect(is_in_progress.value).toBe(false);
-            });
-        });
-    });
-
     describe("resetProgressCallback", () => {
         it("should reset progress", () => {
             const cancelSectionUploadsMock = vi.fn();

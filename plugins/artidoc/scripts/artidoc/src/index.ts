@@ -37,7 +37,6 @@ import {
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { preventPageLeave } from "@/helpers/on-before-unload";
-import { EDITORS_COLLECTION, useSectionEditorsStore } from "@/stores/useSectionEditorsStore";
 import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import { useUploadFileStore } from "@/stores/useUploadFileStore";
@@ -56,6 +55,10 @@ import {
 } from "@/composables/useRemoveFreetextSectionModal";
 import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
 import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { getSectionsStatesCollection } from "@/sections/SectionsStatesCollection";
+import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
+import { getSectionStateBuilder } from "@/sections/SectionStateBuilder";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -84,7 +87,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selected_tracker = JSON.parse(
         getDatasetItemOrThrow(vue_mount_point, "data-selected-tracker"),
     );
-    const sections_collection = buildSectionsCollection();
+    const upload_file_store = useUploadFileStore();
+    const states_collection = getSectionsStatesCollection(
+        getSectionStateBuilder(can_user_edit_document, upload_file_store.pending_uploads),
+    );
+    const sections_collection = buildSectionsCollection(states_collection);
+    const notifications_store = useNotificationsStore();
+
+    sections_collection.replaceAll(skeleton_sections_collection);
+
     const configuration_store = initConfigurationStore(
         item_id,
         selected_tracker,
@@ -93,15 +104,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     watchForNeededPendingSectionInsertion(
         sections_collection,
+        states_collection,
         configuration_store.selected_tracker,
         can_user_edit_document,
     );
 
-    const upload_file_store = useUploadFileStore();
-    const notifications_store = useNotificationsStore();
-    const editors_store = useSectionEditorsStore();
-    app.provide(EDITORS_COLLECTION, editors_store);
     app.provide(SECTIONS_COLLECTION, sections_collection);
+    app.provide(SECTIONS_STATES_COLLECTION, states_collection);
     app.provide(UPLOAD_FILE_STORE, upload_file_store);
     app.provide(NOTIFICATION_STORE, notifications_store);
     app.provide(CURRENT_LOCALE, current_locale);
@@ -135,5 +144,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);
 
-    preventPageLeave(editors_store);
+    preventPageLeave(states_collection);
 });

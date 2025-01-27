@@ -23,12 +23,15 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("SectionContainer", () => {
     it("should use the color of the artifact tracker", () => {
         const wrapper = shallowMount(SectionContainer, {
             props: {
-                section: ArtifactSectionFactory.create(),
+                section: ReactiveStoredArtidocSectionStub.fromSection(
+                    ArtifactSectionFactory.create(),
+                ),
             },
         });
 
@@ -41,7 +44,9 @@ describe("SectionContainer", () => {
     it("should use the color of the pending artifact tracker", () => {
         const wrapper = shallowMount(SectionContainer, {
             props: {
-                section: PendingArtifactSectionFactory.create(),
+                section: ReactiveStoredArtidocSectionStub.fromSection(
+                    PendingArtifactSectionFactory.create(),
+                ),
             },
         });
 
@@ -54,7 +59,7 @@ describe("SectionContainer", () => {
     it("should not use the tlp-swatch palette if it is not an artifact section", () => {
         const wrapper = shallowMount(SectionContainer, {
             props: {
-                section: {} as ArtidocSection,
+                section: ReactiveStoredArtidocSectionStub.fromSection({} as ArtidocSection),
             },
         });
 
@@ -67,7 +72,9 @@ describe("SectionContainer", () => {
     it("should not use the tlp-swatch palette if it is a skeleton", () => {
         const wrapper = shallowMount(SectionContainer, {
             props: {
-                section: ArtifactSectionFactory.skeleton(),
+                section: ReactiveStoredArtidocSectionStub.fromSection(
+                    ArtifactSectionFactory.skeleton(),
+                ),
             },
         });
 
@@ -80,7 +87,9 @@ describe("SectionContainer", () => {
     it("should not use the tlp-swatch palette if it is a Freetext section", () => {
         const wrapper = shallowMount(SectionContainer, {
             props: {
-                section: FreetextSectionFactory.create(),
+                section: ReactiveStoredArtidocSectionStub.fromSection(
+                    FreetextSectionFactory.create(),
+                ),
             },
         });
 

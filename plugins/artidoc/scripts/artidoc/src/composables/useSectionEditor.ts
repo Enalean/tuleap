@@ -16,17 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { computed, ref } from "vue";
-import type { Ref, ComputedRef } from "vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import {
-    isFreetextSection,
-    isArtifactSection,
-    isPendingArtifactSection,
-    isPendingSection,
-} from "@/helpers/artidoc-section.type";
+
+import { isPendingSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import useSaveSection from "@/composables/useSaveSection";
 import type { EditorErrors } from "@/composables/useEditorErrors";
 import { useEditorErrors } from "@/composables/useEditorErrors";
@@ -35,16 +27,16 @@ import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { RefreshSection } from "@/composables/useRefreshSection";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
-import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
 import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
 import type { UpdateSections } from "@/sections/SectionsUpdater";
 import type { RemoveSections } from "@/sections/SectionsRemover";
 import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
+import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 export type SectionEditorActions = {
-    enableEditor: () => void;
     saveEditor: () => void;
     forceSaveEditor: () => void;
     cancelEditor: () => void;
@@ -52,92 +44,38 @@ export type SectionEditorActions = {
     deleteSection: () => void;
 };
 
-export type EditorState = {
-    is_image_upload_allowed: ComputedRef<boolean>;
-    is_section_editable: ComputedRef<boolean>;
-    is_section_in_edit_mode: Ref<boolean>;
-    is_save_allowed: Ref<boolean>;
-    isJustRefreshed: () => boolean;
-    isBeingSaved: () => boolean;
-    isJustSaved: () => boolean;
-};
-
 export type SectionEditor = {
-    editor_state: EditorState;
     editor_error: EditorErrors;
     editor_actions: SectionEditorActions;
     editor_section_content: EditorSectionContent;
 };
 
 export function useSectionEditor(
-    section: ArtidocSection,
+    section: ReactiveStoredArtidocSection,
+    section_state: SectionState,
     mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
     remove_sections: RemoveSections,
     retrieve_positions: RetrieveSectionsPositionForSave,
-    is_upload_in_progress: Ref<boolean>,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
-    const editors_collection = strictInject(EDITORS_COLLECTION);
-    const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-
-    const current_section: Ref<ArtidocSection> = ref(section);
     const editor_errors_handler = useEditorErrors();
 
-    const is_image_upload_allowed = computed(() => {
-        if (isFreetextSection(section)) {
-            return false;
-        }
-        return (
-            current_section.value.attachments !== null &&
-            undefined !== current_section.value.attachments.field_id &&
-            0 !== current_section.value.attachments?.field_id
-        );
-    });
-    const is_section_in_edit_mode = ref(isPendingSection(current_section.value));
-    const is_section_editable = computed(() => {
-        if (
-            isPendingArtifactSection(current_section.value) ||
-            isFreetextSection(current_section.value)
-        ) {
-            return can_user_edit_document;
-        }
-
-        if (
-            isArtifactSection(current_section.value) &&
-            current_section.value.can_user_edit_section
-        ) {
-            return can_user_edit_document;
-        }
-
-        return false;
-    });
-
-    const updateCurrentSection = (new_value: ArtidocSection): void => {
-        current_section.value = new_value;
-    };
-
-    const { refreshSection, isJustRefreshed } = useRefreshSection(
-        current_section.value,
+    const { refreshSection } = useRefreshSection(
+        section,
+        section_state,
         editor_errors_handler,
         update_sections,
-        {
-            closeEditor: closeEditor,
-            updateCurrentSection: updateCurrentSection,
-        },
+        closeEditor,
     );
 
     const setEditMode = (new_value: boolean): void => {
-        if (is_section_in_edit_mode.value === new_value) {
-            return;
-        }
-
-        is_section_in_edit_mode.value = new_value;
+        section_state.is_section_in_edit_mode.value = new_value;
     };
 
-    const editor_section_content = useEditorSectionContent(current_section, {
+    const editor_section_content = useEditorSectionContent(section, {
         showActionsButtons: () => {
             setEditMode(true);
         },
@@ -146,22 +84,17 @@ export function useSectionEditor(
         },
     });
 
-    const { save, forceSave, isBeingSaved, isJustSaved } = useSaveSection(
+    const { save, forceSave } = useSaveSection(
+        section_state,
         editor_errors_handler,
         replace_pending_sections,
         update_sections,
         retrieve_positions,
         {
-            updateCurrentSection,
             closeEditor,
-            setEditMode,
             mergeArtifactAttachments,
         },
     );
-
-    const enableEditor = (): void => {
-        setEditMode(true);
-    };
 
     function closeEditor(): void {
         editor_section_content.resetContent();
@@ -174,24 +107,22 @@ export function useSectionEditor(
     const { cancelSectionUploads } = strictInject(UPLOAD_FILE_STORE);
     function cancelEditor(): void {
         closeEditor();
-        cancelSectionUploads(current_section.value.id);
+        cancelSectionUploads(section.value.id);
 
-        if (isPendingSection(current_section.value)) {
-            editors_collection.removeEditor(current_section.value);
-            remove_sections.removeSection(current_section.value);
+        if (isPendingSection(section.value)) {
+            remove_sections.removeSection(section.value);
         }
     }
 
     function deleteSection(): void {
-        remove_sections.removeSection(current_section.value).match(
+        remove_sections.removeSection(section.value).match(
             () => {
-                if (is_section_in_edit_mode.value) {
+                if (section_state.is_section_in_edit_mode.value) {
                     closeEditor();
                 }
-                editors_collection.removeEditor(current_section.value);
             },
             (fault: Fault) => {
-                if (is_section_in_edit_mode.value) {
+                if (section_state.is_section_in_edit_mode.value) {
                     editor_errors_handler.handleError(fault);
                 } else {
                     raise_delete_section_error_callback(String(fault));
@@ -200,29 +131,28 @@ export function useSectionEditor(
         );
     }
 
-    const is_save_allowed = computed(() => !is_upload_in_progress.value);
     const forceSaveEditor = (): void => {
-        if (!is_save_allowed.value) {
+        if (!section_state.is_save_allowed.value) {
             return;
         }
-        forceSave(current_section.value, {
+        forceSave(section.value, {
             title: editor_section_content.editable_title.value,
             description: editor_section_content.editable_description.value,
         });
     };
 
     const saveEditor = (): void => {
-        if (!is_save_allowed.value) {
+        if (!section_state.is_save_allowed.value) {
             return;
         }
-        save(current_section.value, {
+
+        save(section.value, {
             title: editor_section_content.editable_title.value,
             description: editor_section_content.editable_description.value,
         });
     };
 
     const editor_actions: SectionEditorActions = {
-        enableEditor,
         saveEditor,
         forceSaveEditor,
         cancelEditor,
@@ -230,22 +160,9 @@ export function useSectionEditor(
         deleteSection,
     };
 
-    const editor: SectionEditor = {
-        editor_state: {
-            is_image_upload_allowed: is_image_upload_allowed,
-            is_section_editable,
-            is_section_in_edit_mode,
-            is_save_allowed,
-            isJustRefreshed,
-            isJustSaved,
-            isBeingSaved,
-        },
+    return {
         editor_actions,
         editor_error: editor_errors_handler,
         editor_section_content,
     };
-
-    editors_collection.addEditor(section, editor);
-
-    return editor;
 }

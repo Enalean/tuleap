@@ -42,11 +42,10 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { EditorErrors } from "@/composables/useEditorErrors";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
-import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
-import { ref } from "vue";
 import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
 import type { UpdateSections } from "@/sections/SectionsUpdater";
 import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
+import type { SectionState } from "@/sections/SectionStateBuilder";
 
 export type SaveEditor = {
     forceSave: (
@@ -63,24 +62,19 @@ export type SaveEditor = {
             title: string;
         },
     ) => void;
-    isBeingSaved: () => boolean;
-    isJustSaved: () => boolean;
 };
 
 export default function useSaveSection(
+    section_state: SectionState,
     editor_errors: EditorErrors,
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
     retrieve_positions: RetrieveSectionsPositionForSave,
     callbacks: {
-        updateCurrentSection: (new_value: ArtidocSection) => void;
         closeEditor: () => void;
-        setEditMode: (new_value: boolean) => void;
         mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"];
     },
 ): SaveEditor {
-    const is_just_saved = ref(false);
-    const is_being_saved = ref(false);
     const document_id = strictInject(DOCUMENT_ID);
 
     function getLatestVersionOfCurrentSection(
@@ -91,13 +85,6 @@ export default function useSaveSection(
         }
 
         return okAsync(section);
-    }
-
-    function addTemporaryJustSavedFlag(): void {
-        is_just_saved.value = true;
-        setTimeout(() => {
-            is_just_saved.value = false;
-        }, TEMPORARY_FLAG_DURATION_IN_MS);
     }
 
     function forceSave(
@@ -112,7 +99,7 @@ export default function useSaveSection(
         }
 
         editor_errors.is_outdated.value = false;
-        is_being_saved.value = true;
+        section_state.is_being_saved.value = true;
 
         const put = isFreetextSection(section)
             ? putSection(section.id, new_value.title, new_value.description)
@@ -126,17 +113,16 @@ export default function useSaveSection(
               );
         put.andThen(() => getLatestVersionOfCurrentSection(section)).match(
             (artidoc_section: ArtidocSection) => {
-                callbacks.updateCurrentSection(artidoc_section);
                 if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
                     update_sections.updateSection(artidoc_section);
                 }
                 callbacks.closeEditor();
-                is_being_saved.value = false;
-                addTemporaryJustSavedFlag();
+                section_state.is_being_saved.value = false;
+                section_state.is_just_saved.value = true;
             },
             (fault: Fault) => {
                 editor_errors.handleError(fault);
-                is_being_saved.value = false;
+                section_state.is_being_saved.value = false;
             },
         );
     }
@@ -160,8 +146,8 @@ export default function useSaveSection(
                 return;
             }
 
-            callbacks.setEditMode(false);
-            addTemporaryJustSavedFlag();
+            section_state.is_section_in_edit_mode.value = false;
+            section_state.is_just_saved.value = true;
             return;
         }
 
@@ -170,12 +156,12 @@ export default function useSaveSection(
             new_value.description === section.description &&
             new_value.title === section.title
         ) {
-            callbacks.setEditMode(false);
-            addTemporaryJustSavedFlag();
+            section_state.is_section_in_edit_mode.value = false;
+            section_state.is_just_saved.value = true;
             return;
         }
 
-        is_being_saved.value = true;
+        section_state.is_being_saved.value = true;
 
         saveSection(section, { description: new_value.description, title: new_value.title }).match(
             (artidoc_section: ArtidocSection) => {
@@ -187,15 +173,14 @@ export default function useSaveSection(
                 ) {
                     update_sections.updateSection(artidoc_section);
                 }
-                callbacks.updateCurrentSection(artidoc_section);
 
                 callbacks.closeEditor();
-                is_being_saved.value = false;
-                addTemporaryJustSavedFlag();
+                section_state.is_being_saved.value = false;
+                section_state.is_just_saved.value = true;
             },
             (fault: Fault) => {
                 editor_errors.handleError(fault);
-                is_being_saved.value = false;
+                section_state.is_being_saved.value = false;
             },
         );
     };
@@ -262,7 +247,5 @@ export default function useSaveSection(
     return {
         forceSave,
         save,
-        isJustSaved: () => is_just_saved.value,
-        isBeingSaved: () => is_being_saved.value,
     };
 }

@@ -17,7 +17,6 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ref } from "vue";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { noop } from "@/helpers/noop";
 
@@ -34,23 +33,6 @@ export const UploadFileStub = {
             onSuccessCallback: noop,
             onProgressCallback: noop,
         },
-        is_in_progress: ref(false),
-        resetProgressCallback: noop,
-    }),
-
-    uploadInProgress: (): UseUploadFileType => ({
-        file_upload_options: {
-            post_information: {
-                upload_url: "https://upload_url",
-                getUploadJsonPayload: noop,
-            },
-            max_size_upload: 12345678,
-            onStartUploadCallback: () => [],
-            onErrorCallback: noop,
-            onSuccessCallback: noop,
-            onProgressCallback: noop,
-        },
-        is_in_progress: ref(true),
         resetProgressCallback: noop,
     }),
 };

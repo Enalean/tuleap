@@ -97,11 +97,11 @@ import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import { TITLE } from "@/title-injection-key";
 import { createModal } from "@tuleap/tlp-modal";
 import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
-import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
 
 const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
-const editors_collection = strictInject(EDITORS_COLLECTION);
+const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const title = strictInject(TITLE);
 
 const has_more_than_one_template = pdf_templates.list.value.length > 1;
@@ -115,10 +115,12 @@ const has_pdf_templates = pdf_templates.list.value.length > 0;
 
 const is_option_disabled = computed(
     (): boolean =>
-        is_user_anonymous || !has_pdf_templates || editors_collection.hasAtLeastOneEditorOpened(),
+        is_user_anonymous ||
+        !has_pdf_templates ||
+        states_collection.has_at_least_one_section_in_edit_mode.value,
 );
 const getDisabledOptionTitle = (): string => {
-    if (editors_collection.hasAtLeastOneEditorOpened()) {
+    if (states_collection.has_at_least_one_section_in_edit_mode.value) {
         return $gettext("The document is being edited. Please save your work beforehand.");
     }
 

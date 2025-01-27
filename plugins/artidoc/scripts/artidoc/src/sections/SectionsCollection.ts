@@ -21,12 +21,14 @@ import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
+import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 
 export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
+export type ReactiveStoredArtidocSection = Ref<StoredArtidocSection>;
 
 export interface SectionsCollection {
-    sections: Ref<StoredArtidocSection[]>;
-    saved_sections: ComputedRef<readonly ArtidocSection[]>;
+    sections: Ref<Ref<StoredArtidocSection>[]>;
+    saved_sections: ComputedRef<readonly ReactiveStoredArtidocSection[]>;
     replaceAll: (sections_collection: StoredArtidocSection[]) => void;
 }
 
@@ -34,14 +36,18 @@ export interface InternalArtidocSectionId {
     internal_id: string;
 }
 
-export function buildSectionsCollection(): SectionsCollection {
-    const sections: Ref<StoredArtidocSection[]> = ref([]);
+export function buildSectionsCollection(
+    states_collection: SectionsStatesCollection,
+): SectionsCollection {
+    const sections: Ref<ReactiveStoredArtidocSection[]> = ref([]);
 
     function replaceAll(sections_collection: StoredArtidocSection[]): void {
-        sections.value = sections_collection;
+        sections.value = sections_collection.map((section) => ref(section));
+        states_collection.destroyAll();
+        states_collection.createAllSectionsStates(sections_collection);
     }
 
-    const saved_sections: ComputedRef<readonly ArtidocSection[]> = computed(() => {
+    const saved_sections: ComputedRef<readonly ReactiveStoredArtidocSection[]> = computed(() => {
         return extractSavedSectionsFromArtidocSections(sections.value);
     });
 

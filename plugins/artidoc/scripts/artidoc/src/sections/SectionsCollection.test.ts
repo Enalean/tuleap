@@ -22,37 +22,42 @@ import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("SectionsCollection", () => {
     it("should have no sections by default", () => {
-        const collection = buildSectionsCollection();
+        const collection = buildSectionsCollection(SectionsStatesCollectionStub.build());
 
         expect(collection.sections.value).toHaveLength(0);
     });
 
     describe("replaceAll", () => {
-        it("should store loaded sections", () => {
-            const collection = buildSectionsCollection();
-
-            collection.replaceAll(
-                CreateStoredSections.fromArtidocSectionsCollection([
-                    ArtifactSectionFactory.create(),
-                    FreetextSectionFactory.create(),
-                ]),
+        it("should store loaded sections and create their states", () => {
+            const states_collection = SectionsStatesCollectionStub.build();
+            const collection = buildSectionsCollection(states_collection);
+            const artifact_section = CreateStoredSections.fromArtidocSection(
+                ArtifactSectionFactory.create(),
+            );
+            const freetext_section = CreateStoredSections.fromArtidocSection(
+                FreetextSectionFactory.create(),
             );
 
+            collection.replaceAll([artifact_section, freetext_section]);
+
             expect(collection.sections.value).toHaveLength(2);
+            expect(states_collection.getSectionState(freetext_section)).toBeDefined();
+            expect(states_collection.getSectionState(artifact_section)).toBeDefined();
         });
 
         it("should create an internal id because when section are replaced (pending section -> artifact section) the fake id is replaced by the real one and it could mess up the v-for.key", () => {
-            const collection = buildSectionsCollection();
+            const collection = buildSectionsCollection(SectionsStatesCollectionStub.build());
             const section = ArtifactSectionFactory.create();
 
             collection.replaceAll([CreateStoredSections.fromArtidocSection(section)]);
 
-            expect(collection.sections.value[0]?.internal_id).toBeDefined();
-            expect(collection.sections.value[0]?.id).toBe(section.id);
-            expect(collection.sections.value[0]?.internal_id).not.toBe(section.id);
+            expect(collection.sections.value[0].value.internal_id).toBeDefined();
+            expect(collection.sections.value[0].value.id).toBe(section.id);
+            expect(collection.sections.value[0].value.internal_id).not.toBe(section.id);
         });
     });
 });

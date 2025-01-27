@@ -25,15 +25,15 @@
         <ol>
             <li
                 v-for="section in sections_collection.sections.value"
-                v-bind:key="section.internal_id"
-                v-bind:id="getId(section)"
+                v-bind:key="section.value.internal_id"
+                v-bind:id="getId(section.value)"
                 v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
                 data-test="artidoc-section"
             >
                 <add-new-section-button
                     class="artidoc-button-add-section-container"
                     v-if="has_add_button"
-                    v-bind:position="{ before: section.id }"
+                    v-bind:position="{ before: section.value.id }"
                     v-bind:sections_inserter="sections_inserter"
                 />
                 <section-container v-bind:section="section" />
@@ -63,12 +63,14 @@ import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
 import { getSectionsRemover } from "@/sections/SectionsRemover";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
 
 const sections_collection = strictInject(SECTIONS_COLLECTION);
+const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const sections_inserter = getSectionsInserter(sections_collection);
-const sections_remover = getSectionsRemover(sections_collection);
+const sections_inserter = getSectionsInserter(sections_collection, states_collection);
+const sections_remover = getSectionsRemover(sections_collection, states_collection);
 const has_add_button = can_user_edit_document;
 
 function getId(section: ArtidocSection): string {

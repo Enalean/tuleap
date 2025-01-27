@@ -25,14 +25,15 @@
     <ol ref="list" data-is-container="true">
         <li
             data-test="section-in-toc"
-            v-for="(section, index) in sections"
-            v-bind:key="section.id"
+            v-for="(section, index) in sections_collection.sections.value"
+            v-bind:key="section.value.id"
             v-bind:draggable="section_being_moved === null"
-            v-bind:data-internal-id="section.internal_id"
+            v-bind:data-internal-id="section.value.internal_id"
             v-bind:class="{
                 'section-moved-with-success':
-                    just_moved_section?.internal_id === section.internal_id,
-                'section-being-moved': section_being_moved?.internal_id === section.internal_id,
+                    just_moved_section?.internal_id === section.value.internal_id,
+                'section-being-moved':
+                    section_being_moved?.internal_id === section.value.internal_id,
             }"
         >
             <span
@@ -46,15 +47,17 @@
 
             <span v-if="is_loading_sections" class="tlp-skeleton-text"></span>
             <a
-                v-else-if="isArtifactSection(section) || !isSectionBasedOnArtifact(section)"
-                v-bind:href="`#section-${section.id}`"
+                v-else-if="
+                    isArtifactSection(section.value) || !isSectionBasedOnArtifact(section.value)
+                "
+                v-bind:href="`#section-${section.value.id}`"
                 class="table-of-content-section-title"
                 data-not-drag-handle="true"
             >
-                {{ section.display_title }}
+                {{ section.value.display_title }}
             </a>
             <span v-else class="table-of-content-section-title" data-not-drag-handle="true">
-                {{ section.display_title }}
+                {{ section.value.display_title }}
             </span>
             <span
                 class="reorder-arrows"
@@ -65,7 +68,7 @@
             >
                 <reorder-arrows
                     v-bind:is_first="index === 0"
-                    v-bind:is_last="index === (sections?.length || 0) - 1"
+                    v-bind:is_last="index === sections_collection.sections.value.length - 1"
                     v-bind:section="section"
                     v-bind:sections_reorderer="sections_reorderer"
                     v-on:moved-section-up-or-down="showJustSavedTemporaryFeedback"
@@ -102,12 +105,12 @@ import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 const { $gettext } = useGettext();
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
-const { sections } = strictInject(SECTIONS_COLLECTION);
+const sections_collection = strictInject(SECTIONS_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const document_id = strictInject(DOCUMENT_ID);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 
-const sections_reorderer = buildSectionsReorderer(sections);
+const sections_reorderer = buildSectionsReorderer(sections_collection);
 
 const is_reorder_allowed = can_user_edit_document;
 

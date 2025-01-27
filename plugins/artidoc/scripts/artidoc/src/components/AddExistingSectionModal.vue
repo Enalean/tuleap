@@ -103,7 +103,7 @@ const close_title = $gettext("Close");
 
 const documentId = strictInject(DOCUMENT_ID);
 const configuration = strictInject(CONFIGURATION_STORE);
-const { sections } = strictInject(SECTIONS_COLLECTION);
+const sections_collection = strictInject(SECTIONS_COLLECTION);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 
@@ -187,7 +187,7 @@ function openModal(
                     autocompleter,
                     configuration.selected_tracker.value,
                     title_field.value,
-                    sections.value,
+                    sections_collection,
                     gettext_provider,
                 ).orElse((fault) => {
                     error_message.value = String(fault);
@@ -243,7 +243,7 @@ function onSubmit(event: Event): void {
     createArtifactSection(
         documentId,
         selected.value.id,
-        getInsertionPositionExcludingPendingSections(add_position, sections.value),
+        getInsertionPositionExcludingPendingSections(add_position, sections_collection),
     ).match(
         (section: ArtidocSection) => {
             on_successful_addition_callback(section);

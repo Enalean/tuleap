@@ -77,7 +77,6 @@
 <script setup lang="ts">
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import {
     isSectionBasedOnArtifact,
     isPendingSection,
@@ -89,17 +88,22 @@ import { computed, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
 import { moveDropdownMenuInDocumentBody } from "@/helpers/move-dropdownmenu-in-document-body";
+import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { SectionState } from "@/sections/SectionStateBuilder";
 
 const remove_freetext_section = strictInject(REMOVE_FREETEXT_SECTION_MODAL);
 
 const { $gettext } = useGettext();
 const props = defineProps<{
     editor: SectionEditor;
-    section: ArtidocSection;
+    section: StoredArtidocSection;
+    section_state: SectionState;
 }>();
 
 const { deleteSection } = props.editor.editor_actions;
-const is_section_editable = props.editor.editor_state.is_section_editable;
+
+const { is_section_editable } = props.section_state;
+
 const is_pending = computed(() => isPendingSection(props.section));
 const artifact_url = computed(() =>
     isArtifactSection(props.section) ? `/plugins/tracker/?aid=${props.section.artifact.id}` : "",

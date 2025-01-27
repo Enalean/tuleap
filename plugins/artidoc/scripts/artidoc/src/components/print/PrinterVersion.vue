@@ -41,16 +41,16 @@
                             <ol>
                                 <li
                                     v-for="section in saved_sections"
-                                    v-bind:key="'toc-' + section.id"
+                                    v-bind:key="'toc-' + section.value.id"
                                 >
                                     <a
                                         v-if="are_internal_links_allowed"
-                                        v-bind:href="`#pdf-section-${section.id}`"
+                                        v-bind:href="`#pdf-section-${section.value.id}`"
                                     >
-                                        {{ section.display_title }}
+                                        {{ section.value.display_title }}
                                     </a>
                                     <template v-else>
-                                        {{ section.display_title }}
+                                        {{ section.value.display_title }}
                                     </template>
                                 </li>
                             </ol>
@@ -64,9 +64,9 @@
                                 <ol>
                                     <li
                                         v-for="section in saved_sections"
-                                        v-bind:key="section.id"
+                                        v-bind:key="section.value.id"
                                         class="document-section"
-                                        v-bind:id="`pdf-section-${section.id}`"
+                                        v-bind:id="`pdf-section-${section.value.id}`"
                                     >
                                         <section-printer-version v-bind:section="section" />
                                     </li>

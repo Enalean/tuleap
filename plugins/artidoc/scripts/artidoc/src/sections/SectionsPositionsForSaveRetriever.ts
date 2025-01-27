@@ -35,7 +35,7 @@ export const getSectionsPositionsForSaveRetriever = (
 ): RetrieveSectionsPositionForSave => ({
     getSectionPositionForSave(section): PositionForSection {
         const index = sections_collection.sections.value.findIndex(
-            (element) => element.id === section.id,
+            (element) => element.value.id === section.id,
         );
         if (index === -1) {
             return null;
@@ -46,8 +46,8 @@ export const getSectionsPositionsForSaveRetriever = (
         }
 
         for (let i = index + 1; i < sections_collection.sections.value.length; i++) {
-            if (!isPendingSection(sections_collection.sections.value[i])) {
-                return { before: sections_collection.sections.value[i].id };
+            if (!isPendingSection(sections_collection.sections.value[i].value)) {
+                return { before: sections_collection.sections.value[i].value.id };
             }
         }
 

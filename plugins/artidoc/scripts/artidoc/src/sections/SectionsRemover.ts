@@ -20,24 +20,28 @@
 import { okAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { SectionsCollection } from "@/sections/SectionsCollection";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { SectionsCollection, StoredArtidocSection } from "@/sections/SectionsCollection";
 import { deleteSection } from "@/helpers/rest-querier";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
+import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 
 export type RemoveSections = {
-    removeSection: (section: ArtidocSection) => ResultAsync<boolean, Fault>;
+    removeSection: (section: StoredArtidocSection) => ResultAsync<boolean, Fault>;
 };
 
-export const getSectionsRemover = (sections_collection: SectionsCollection): RemoveSections => ({
-    removeSection(section: ArtidocSection): ResultAsync<boolean, Fault> {
+export const getSectionsRemover = (
+    sections_collection: SectionsCollection,
+    states_collection: SectionsStatesCollection,
+): RemoveSections => ({
+    removeSection(section: StoredArtidocSection): ResultAsync<boolean, Fault> {
         const index = sections_collection.sections.value.findIndex(
-            (element) => element.id === section.id,
+            (element) => element.value.id === section.id,
         );
         if (index === -1) {
             return okAsync(true);
         }
 
+        states_collection.destroySectionState(section);
         if (isPendingSection(section)) {
             sections_collection.sections.value.splice(index, 1);
 

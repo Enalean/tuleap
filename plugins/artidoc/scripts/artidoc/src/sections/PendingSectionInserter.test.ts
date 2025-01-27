@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { ref } from "vue";
+import { ref, unref } from "vue";
 import type { Ref } from "vue";
 import { flushPromises } from "@vue/test-utils";
 import { isPendingArtifactSection, isPendingFreetextSection } from "@/helpers/artidoc-section.type";
@@ -29,14 +29,18 @@ import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
 import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("PendingSectionInserter", () => {
     let sections_collection: SectionsCollection,
+        sections_states: SectionsStatesCollection,
         selected_tracker: Ref<Tracker | null>,
         can_user_edit_document: boolean;
 
     beforeEach(() => {
-        sections_collection = buildSectionsCollection();
+        sections_states = SectionsStatesCollectionStub.build();
+        sections_collection = buildSectionsCollection(sections_states);
         sections_collection.replaceAll(
             CreateStoredSections.fromArtidocSectionsCollection([ArtifactSectionFactory.create()]),
         );
@@ -48,6 +52,7 @@ describe("PendingSectionInserter", () => {
     const watchAndInsertPendingSectionIfNeeded = (): void => {
         watchForNeededPendingSectionInsertion(
             sections_collection,
+            sections_states,
             ref(selected_tracker),
             can_user_edit_document,
         );
@@ -73,7 +78,7 @@ describe("PendingSectionInserter", () => {
         await removeAllDocumentSections();
 
         expect(sections_collection.sections.value).toHaveLength(1);
-        expect(isPendingArtifactSection(sections_collection.sections.value[0])).toBe(true);
+        expect(isPendingArtifactSection(sections_collection.sections.value[0].value)).toBe(true);
     });
 
     it(`Given a document that:
@@ -91,7 +96,7 @@ describe("PendingSectionInserter", () => {
         await removeAllDocumentSections();
 
         expect(sections_collection.sections.value).toHaveLength(1);
-        expect(isPendingFreetextSection(sections_collection.sections.value[0])).toBe(true);
+        expect(isPendingFreetextSection(sections_collection.sections.value[0].value)).toBe(true);
     });
 
     it(`Given a document that:
@@ -109,7 +114,7 @@ describe("PendingSectionInserter", () => {
         await removeAllDocumentSections();
 
         expect(sections_collection.sections.value).toHaveLength(1);
-        expect(isPendingFreetextSection(sections_collection.sections.value[0])).toBe(true);
+        expect(isPendingFreetextSection(sections_collection.sections.value[0].value)).toBe(true);
     });
 
     it(`Given a document that:
@@ -127,7 +132,7 @@ describe("PendingSectionInserter", () => {
         await removeAllDocumentSections();
 
         expect(sections_collection.sections.value).toHaveLength(1);
-        expect(isPendingFreetextSection(sections_collection.sections.value[0])).toBe(true);
+        expect(isPendingFreetextSection(sections_collection.sections.value[0].value)).toBe(true);
     });
 
     it(`Given a document that:
@@ -144,7 +149,7 @@ describe("PendingSectionInserter", () => {
 
         sections_collection.replaceAll(
             CreateStoredSections.fromArtidocSectionsCollection([
-                ...sections_collection.sections.value,
+                ...sections_collection.sections.value.map(unref),
                 ArtifactSectionFactory.create(),
             ]),
         );
@@ -164,6 +169,6 @@ describe("PendingSectionInserter", () => {
         await flushPromises();
 
         expect(sections_collection.sections.value).toHaveLength(1);
-        expect(isPendingArtifactSection(sections_collection.sections.value[0])).toBe(true);
+        expect(isPendingArtifactSection(sections_collection.sections.value[0].value)).toBe(true);
     });
 });
