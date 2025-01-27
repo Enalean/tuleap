@@ -34,19 +34,16 @@
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Getter, namespace } from "vuex-class";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
-import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import AddCard from "../Card/Add/AddCard.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
+import { useClassesForCollapsedColumn } from "./classes-for-collapsed-column-composable";
 
 const column_store = namespace("column");
 
 @Component({
     components: { AddCard },
 })
-export default class InvalidMappingCell extends Mixins(
-    HoveringStateForCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin,
-) {
+export default class InvalidMappingCell extends Mixins(HoveringStateForCollapsedColumnMixin) {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
@@ -61,6 +58,10 @@ export default class InvalidMappingCell extends Mixins(
 
     get is_add_card_rendered(): boolean {
         return this.can_add_in_place(this.swimlane);
+    }
+
+    get classes(): string[] {
+        return useClassesForCollapsedColumn(this.column).getClasses();
     }
 }
 </script>
