@@ -20,10 +20,7 @@
 <template>
     <section class="git-repository-branch-tag-selector-refs" v-if="is_displaying_branches">
         <div class="git-repository-branch-tag-selector-is-loading" v-if="is_loading_branches"></div>
-        <div
-            class="git-repository-branch-tag-selector-filter"
-            v-if="!is_loading_branches && branches.length"
-        >
+        <div class="tlp-dropdown-menu-actions" v-if="!is_loading_branches && branches.length">
             <refs-filter
                 v-bind:placeholder="$gettext('Branch name')"
                 v-on:update-filter="updateFilter"

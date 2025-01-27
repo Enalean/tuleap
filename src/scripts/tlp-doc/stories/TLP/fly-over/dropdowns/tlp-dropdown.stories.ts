@@ -27,6 +27,7 @@ type DropdownProps = {
         | "base"
         | "with submenu"
         | "with tabs"
+        | "with filter"
         | "split button"
         | "large split button"
         | "unique icon trigger";
@@ -97,24 +98,51 @@ function getTemplate(args: DropdownProps): TemplateResult {
     } else if (args.story === "with tabs") {
         // prettier-ignore
         return html`
-<div class="tlp-dropdown">
-    <button type="button" id="dropdown-example" class="tlp-button-primary">
-        with tabs
-        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
-    </button>
-    <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" id="dropdown-menu-example" role="menu">
-        <nav class="tlp-tabs">
-            <a href="https://example.com" class="tlp-tab tlp-tab-active">Branches</a>
-            <a href="https://example.com" class="tlp-tab">Tags</a>
-        </nav>
-        <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
-            <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-rebel" aria-hidden="true"></i> Send a email to the Rebel Alliance
-        </a>
-        <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
-            <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-empire" aria-hidden="true"></i> Send a email to the Empire
-        </a>
-    </div>
-</div>`;
+            <div class="tlp-dropdown">
+                <button type="button" id="dropdown-example" class="tlp-button-primary">
+                    with tabs
+                    <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+                </button>
+                <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" id="dropdown-menu-example" role="menu">
+                    <nav class="tlp-tabs">
+                        <a href="https://example.com" class="tlp-tab tlp-tab-active">Branches</a>
+                        <a href="https://example.com" class="tlp-tab">Tags</a>
+                    </nav>
+                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+                        <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-rebel" aria-hidden="true"></i> Send a email to the Rebel Alliance
+                    </a>
+                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+                        <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-empire" aria-hidden="true"></i> Send a email to the Empire
+                    </a>
+                </div>
+            </div>`;
+    } else if (args.story === "with filter") {
+        // prettier-ignore
+        return html`
+            <div class="tlp-dropdown">
+                <button type="button" id="dropdown-example" class="tlp-button-primary">
+                    with filter
+                    <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+                </button>
+                <div class="tlp-dropdown-menu dropdown-menu-example-filter" id="dropdown-menu-example" role="menu">
+                    <div class="tlp-dropdown-menu-actions">
+                        <input type="search" class="tlp-search tlp-search-small" placeholder="Filter…">
+                        <button class="tlp-button-primary tlp-button-small">
+                            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                            Create new item
+                        </button>
+                    </div>
+                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+                        Open the last 10 days
+                    </a>
+                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+                        All about me
+                    </a>
+                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+                        Waiting for action
+                    </a>
+                </div>
+            </div>`;
     } else if (args.story === "split button") {
         // prettier-ignore
         return html`
@@ -282,6 +310,11 @@ export const WithTab: Story = {
     },
 };
 
+export const WithFilter: Story = {
+    args: {
+        story: "with filter",
+    },
+};
 export const SplitButton: Story = {
     args: {
         story: "split button",
