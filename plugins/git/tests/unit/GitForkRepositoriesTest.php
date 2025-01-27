@@ -23,19 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\Git;
 
 use Codendi_Request;
+use Exception;
+use Git;
 use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepositoryFactory;
 use PFUser;
-use Project;
 use ProjectManager;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class GitForkRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitForkRepositoriesTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
@@ -53,20 +55,22 @@ final class GitForkRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = HTTPRequestBuilder::get()->withParams(['choose_destination' => 'personal', 'repos' => '10'])->build();
 
-        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git = $this->createPartialMock(Git::class, ['addView']);
         $git->setRequest($request);
-        $git->shouldReceive('addView')->with('forkRepositories')->once();
+        $git->expects(self::once())->method('addView')->with('forkRepositories');
 
-        $factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $factory = $this->createMock(GitRepositoryFactory::class);
+        $factory->method('getRepositoryById')->willReturn(GitRepositoryTestBuilder::aProjectRepository()->build());
         $git->setFactory($factory);
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isMember')->andReturns(true);
-        $user->shouldReceive('getUserName')->andReturns('testman');
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId');
+        $user->method('isMember')->willReturn(true);
+        $user->method('getUserName')->willReturn('testman');
         $git->user = $user;
 
-        $project_manager = Mockery::spy(ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->andReturn(Mockery::spy(Project::class));
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
         $git->setProjectManager($project_manager);
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
@@ -83,24 +87,25 @@ final class GitForkRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
         $path            = PathJoinUtil::userRepoPath('Ben', 'toto');
         $forkPermissions = [];
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturns($groupId);
-        $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
+        $project = ProjectTestBuilder::aProject()->withId($groupId)->withUnixName('projectname')->build();
 
-        $projectManager = \Mockery::spy(\ProjectManager::class);
-        $projectManager->shouldReceive('getProject')->with($groupId)->andReturns($project);
+        $projectManager = $this->createMock(ProjectManager::class);
+        $projectManager->method('getProject')->with($groupId)->willReturn($project);
 
-        $factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $factory->shouldReceive('getRepositoryById')->andReturns($repo);
+        $factory = $this->createMock(GitRepositoryFactory::class);
+        $factory->method('getRepositoryById')->willReturn($repo);
 
-        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git = $this->createPartialMock(Git::class, ['addAction']);
         $git->setProject($project);
         $git->setProjectManager($projectManager);
-        $git->shouldReceive('addAction')->with('getProjectRepositoryList', [$groupId])->ordered()->atLeast()->once();
-        $git->shouldReceive('addAction')->with('fork', [$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions])->ordered()->atLeast()->once();
+        $git->expects(self::atLeast(2))->method('addAction')
+            ->withConsecutive(
+                ['getProjectRepositoryList', [$groupId]],
+                ['fork', [$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions]],
+            );
         $request = new Codendi_Request([
-            'repos' => '1001',
-            'path'  => 'toto',
+            'repos'       => '1001',
+            'path'        => 'toto',
             'repo_access' => $forkPermissions,
         ]);
         $git->setFactory($factory);
@@ -109,9 +114,9 @@ final class GitForkRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks(): void
     {
-        $git       = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $exception = new \Exception();
-        $git->shouldReceive('checkSynchronizerToken')->andThrow($exception);
+        $git       = $this->createPartialMock(Git::class, ['checkSynchronizerToken']);
+        $exception = new Exception();
+        $git->method('checkSynchronizerToken')->willThrowException($exception);
         $this->expectExceptionObject($exception);
         $git->_doDispatchForkRepositories(null, null);
     }

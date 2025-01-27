@@ -19,33 +19,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitActionsProjectPrivacyTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git;
+
+use GitActions;
+use GitDao;
+use GitRepository;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitActionsProjectPrivacyTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var GitDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var GitRepositoryFactory&\Mockery\MockInterface
-     */
-    private $factory;
+    private GitDao&MockObject $dao;
+    private GitRepositoryFactory&MockObject $factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->dao     = \Mockery::spy(\GitDao::class);
-        $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->dao     = $this->createMock(GitDao::class);
+        $this->factory = $this->createMock(GitRepositoryFactory::class);
     }
 
     public function testItDoesNothingWhenThereAreNoRepositories(): void
     {
         $project_id = 99;
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([])->atLeast()->once();
+        $this->dao->expects(self::atLeastOnce())->method('getProjectRepositoryList')->with($project_id)->willReturn([]);
         $this->changeProjectRepositoriesAccess($project_id, true);
         $this->changeProjectRepositoriesAccess($project_id, false);
     }
@@ -53,82 +52,70 @@ class GitActionsProjectPrivacyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNothingWeAreMakingItTheProjectPublic(): void
     {
         $project_id = 99;
-        $is_private = false;
         $repo_id    = 333;
-        $repo       = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
-        $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
-        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+        $repo       = $this->createMock(GitRepository::class);
+        $repo->expects(self::never())->method('setAccess');
+        $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id => null]);
+        $this->factory->method('getRepositoryById')->with($repo_id)->willReturn($repo);
+        $this->changeProjectRepositoriesAccess($project_id, false);
     }
 
     public function testItMakesRepositoriesPrivateWhenProjectBecomesPrivate(): void
     {
         $project_id = 99;
-        $is_private = true;
         $repo_id    = 333;
-        $repo       = Mockery::mock(\GitRepository::class)
-            ->shouldReceive('setAccess')
-            ->with(GitRepository::PRIVATE_ACCESS)
-            ->once()
-            ->andReturns('whatever')
-            ->getMock();
+        $repo       = $this->createMock(GitRepository::class);
+        $repo->expects(self::once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
 
-        $repo->shouldReceive('getAccess');
-        $repo->shouldReceive('changeAccess')->once();
+        $repo->method('getAccess');
+        $repo->expects(self::once())->method('changeAccess');
 
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
-        $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
-        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+        $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id => null]);
+        $this->factory->method('getRepositoryById')->with($repo_id)->willReturn($repo);
+        $this->changeProjectRepositoriesAccess($project_id, true);
     }
 
     public function testItDoesNothingIfThePermissionsAreAlreadyCorrect(): void
     {
         $project_id = 99;
-        $is_private = true;
         $repo_id    = 333;
-        $repo       = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
-        $repo->shouldReceive('getAccess')->andReturns(GitRepository::PRIVATE_ACCESS);
-        $repo->shouldReceive('changeAccess')->andReturns('whatever');
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
-        $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
-        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+        $repo       = $this->createMock(GitRepository::class);
+        $repo->expects(self::never())->method('setAccess');
+        $repo->method('getAccess')->willReturn(GitRepository::PRIVATE_ACCESS);
+        $repo->method('changeAccess')->willReturn('whatever');
+        $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id => null]);
+        $this->factory->method('getRepositoryById')->with($repo_id)->willReturn($repo);
+        $this->changeProjectRepositoriesAccess($project_id, true);
     }
 
     public function testItHandlesAllRepositoriesOfTheProject(): void
     {
         $project_id = 99;
-        $is_private = true;
         $repo_id1   = 333;
         $repo_id2   = 444;
 
-        $repo1 = Mockery::mock(\GitRepository::class)
-            ->shouldReceive('setAccess')
-            ->with(GitRepository::PRIVATE_ACCESS)
-            ->once()
-            ->andReturns('whatever')
-            ->getMock();
+        $repo1 = $this->createMock(GitRepository::class);
+        $repo1->expects(self::once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
 
-        $repo2 = Mockery::mock(\GitRepository::class)
-            ->shouldReceive('setAccess')
-            ->with(GitRepository::PRIVATE_ACCESS)
-            ->once()
-            ->andReturns('whatever')
-            ->getMock();
+        $repo2 = $this->createMock(GitRepository::class);
+        $repo2->expects(self::once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
 
-        $repo1->shouldReceive('getAccess');
-        $repo2->shouldReceive('getAccess');
+        $repo1->method('getAccess');
+        $repo2->method('getAccess');
 
-        $repo1->shouldReceive('changeAccess')->once();
-        $repo2->shouldReceive('changeAccess')->once();
+        $repo1->expects(self::once())->method('changeAccess');
+        $repo2->expects(self::once())->method('changeAccess');
 
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id1 => null, $repo_id2 => null]);
-        $this->factory->shouldReceive('getRepositoryById')->with($repo_id1)->andReturns($repo1);
-        $this->factory->shouldReceive('getRepositoryById')->with($repo_id2)->andReturns($repo2);
-        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+        $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id1 => null, $repo_id2 => null]);
+        $this->factory->method('getRepositoryById')->willReturnCallback(static fn(int $id) => match ($id) {
+            $repo_id1 => $repo1,
+            $repo_id2 => $repo2,
+        });
+        $this->changeProjectRepositoriesAccess($project_id, true);
     }
 
-    private function changeProjectRepositoriesAccess($project_id, $is_private)
+    private function changeProjectRepositoriesAccess(int $project_id, bool $is_private): void
     {
-        return GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
+        GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
     }
 }
