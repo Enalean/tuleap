@@ -23,6 +23,8 @@ import {
     PROJECT_CELL,
     NUMERIC_CELL,
     USER_CELL,
+    USER_LIST_CELL,
+    USER_GROUP_LIST_CELL,
     TRACKER_CELL,
 } from "../../../domain/ArtifactsTable";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
@@ -88,6 +90,26 @@ function buildXLSXdReportCell(current_artifact_cell: Cell | undefined): ReportCe
     }
     if (current_artifact_cell.type === TRACKER_CELL) {
         return new TextCell(current_artifact_cell.name);
+    }
+    if (current_artifact_cell.type === USER_LIST_CELL) {
+        let user_list = "";
+        current_artifact_cell.value.forEach((user, index) => {
+            user_list +=
+                index >= current_artifact_cell.value.length - 1
+                    ? user.display_name
+                    : user.display_name + ", ";
+        });
+        return new TextCell(user_list);
+    }
+    if (current_artifact_cell.type === USER_GROUP_LIST_CELL) {
+        let user_group_list = "";
+        current_artifact_cell.value.forEach((user_group, index) => {
+            user_group_list +=
+                index >= current_artifact_cell.value.length - 1
+                    ? user_group.label
+                    : user_group.label + ", ";
+        });
+        return new TextCell(user_group_list);
     }
     return new EmptyCell();
 }
