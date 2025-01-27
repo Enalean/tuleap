@@ -23,11 +23,13 @@
         class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-actions-element"
         v-bind:disabled="is_loading"
         v-on:click="exportXSLX()"
+        data-test="export-xlsx-button"
     >
         <i
             aria-hidden="true"
             class="tlp-button-icon fa-solid"
             v-bind:class="{ 'fa-spin fa-circle-notch': is_loading, 'fa-download': !is_loading }"
+            data-test="export-xlsx-button-icon"
         ></i>
         {{ $gettext("Export XSLX") }}
     </button>
@@ -36,12 +38,18 @@
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
-import { CLEAR_FEEDBACKS, REPORT_ID, RETRIEVE_ARTIFACTS_TABLE } from "../injection-symbols";
+import {
+    CLEAR_FEEDBACKS,
+    NOTIFY_FAULT,
+    REPORT_ID,
+    RETRIEVE_ARTIFACTS_TABLE,
+} from "../injection-symbols";
+import { XLSXExportFault } from "../domain/XLSXExportFault";
 
 const report_id = strictInject(REPORT_ID);
 const artifact_table_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
-
 const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
+const notifyFault = strictInject(NOTIFY_FAULT);
 
 const is_loading = ref(false);
 const { $gettext } = useGettext();
@@ -56,7 +64,7 @@ async function exportXSLX(): Promise<void> {
     const { downloadXLSX } = await download_xlsx_module;
     await downloadXLSXDocument(artifact_table_retriever, report_id, downloadXLSX).mapErr(
         (fault) => {
-            throw new Error(fault.getStackTraceAsString());
+            notifyFault(XLSXExportFault(fault));
         },
     );
     is_loading.value = false;
