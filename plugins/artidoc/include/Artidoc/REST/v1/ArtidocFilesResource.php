@@ -27,11 +27,10 @@ use ForgeConfig;
 use Luracast\Restler\RestException;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
-use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
+use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\Artidoc\Upload\Section\File\CannotWriteFileFault;
 use Tuleap\Artidoc\Upload\Section\File\EmptyFileToUploadFinisher;
@@ -84,14 +83,14 @@ final class ArtidocFilesResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $retriever = new ArtidocWithContextRetriever(
+        $retriever_builder = new ArtidocWithContextRetrieverBuilder(
             new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
-            CurrentUserHasArtidocPermissionsChecker::withCurrentUser($user),
             new ArtidocWithContextDecorator(
                 \ProjectManager::instance(),
                 new DocumentServiceFromAllowedProjectRetriever($plugin),
             ),
         );
+        $retriever         = $retriever_builder->buildForUser($user);
 
         $ongoing_upload_dao = new OngoingUploadDao(new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()));
         $file_creator       = new FileCreator(

@@ -24,7 +24,6 @@ use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
-use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
@@ -33,7 +32,6 @@ use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
@@ -153,15 +151,16 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     {
         $file_identifier_factory = new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory());
 
-        return new ArtidocAttachmentController(
-            new ArtidocWithContextRetriever(
-                new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
-                CurrentUserHasArtidocPermissionsChecker::withCurrentUser(HTTPRequest::instance()->getCurrentUser()),
-                new ArtidocWithContextDecorator(
-                    ProjectManager::instance(),
-                    new DocumentServiceFromAllowedProjectRetriever($this),
-                ),
+        $retriever_builder = new ArtidocWithContextRetrieverBuilder(
+            new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($this),
             ),
+        );
+
+        return new ArtidocAttachmentController(
+            $retriever_builder->buildForUser(HTTPRequest::instance()->getCurrentUser()),
             $file_identifier_factory,
             new OngoingUploadDao($file_identifier_factory),
             new BinaryFileResponseBuilder(
@@ -221,15 +220,17 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         $logger              = BackendLogger::getDefaultLogger();
 
         $form_element_factory = Tracker_FormElementFactory::instance();
-        return new ArtidocController(
-            new ArtidocWithContextRetriever(
-                new ArtidocRetriever(new SearchArtidocDocumentDao(), $docman_item_factory),
-                CurrentUserHasArtidocPermissionsChecker::withCurrentUser(HTTPRequest::instance()->getCurrentUser()),
-                new ArtidocWithContextDecorator(
-                    ProjectManager::instance(),
-                    new DocumentServiceFromAllowedProjectRetriever($this),
-                ),
+
+        $retriever_builder = new ArtidocWithContextRetrieverBuilder(
+            new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
+            new ArtidocWithContextDecorator(
+                \ProjectManager::instance(),
+                new DocumentServiceFromAllowedProjectRetriever($this),
             ),
+        );
+
+        return new ArtidocController(
+            $retriever_builder->buildForUser(HTTPRequest::instance()->getCurrentUser()),
             new ConfiguredTrackerRetriever(
                 $dao,
                 $tracker_factory,
