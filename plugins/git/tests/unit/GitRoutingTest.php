@@ -19,9 +19,9 @@
  *
  */
 
-namespace Tuleap\Git;
+declare(strict_types=1);
 
-require_once __DIR__ . '/bootstrap.php';
+namespace Tuleap\Git;
 
 use FastRoute;
 use Git_RemoteServer_GerritServerFactory;
@@ -35,14 +35,12 @@ use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Test\PHPUnit\TestCase;
 use UserDao;
 
-/**
- * @group GitRoutingTest
- */
-class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitRoutingTest extends TestCase
 {
-    public static function smartHTTPRoutesProvider()
+    public static function smartHTTPRoutesProvider(): array
     {
         return [
             ['GET', '/plugins/git/gpig/goldfish/HEAD'],
@@ -60,12 +58,12 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider smartHTTPRoutesProvider
      */
-    public function testSmartURLs($method, $uri)
+    public function testSmartURLs($method, $uri): void
     {
-        $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, HTTP\HTTPController::class);
+        $this->runTestOnURL($method, $uri, HTTP\HTTPController::class);
     }
 
-    public static function legacyRepositoryBrowsingURLs()
+    public static function legacyRepositoryBrowsingURLs(): array
     {
         return [
             ['GET', '/plugins/git/index.php/101/view/26/'],
@@ -78,12 +76,12 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider legacyRepositoryBrowsingURLs
      */
-    public function testLegacyRepositoryBrowsingURLsHandledByRedirectController($method, $uri)
+    public function testLegacyRepositoryBrowsingURLsHandledByRedirectController($method, $uri): void
     {
-        $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitLegacyURLRedirectController::class);
+        $this->runTestOnURL($method, $uri, GitLegacyURLRedirectController::class);
     }
 
-    public static function friendlyURLsProvider()
+    public static function friendlyURLsProvider(): array
     {
         return [
             ['GET', '/plugins/git/gpig/repo'],
@@ -96,12 +94,12 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider friendlyURLsProvider
      */
-    public function testFriendlyURLs($method, $uri)
+    public function testFriendlyURLs($method, $uri): void
     {
-        $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitRepositoryBrowserController::class);
+        $this->runTestOnURL($method, $uri, GitRepositoryBrowserController::class);
     }
 
-    public static function friendlyProjectURLsProvider()
+    public static function friendlyProjectURLsProvider(): array
     {
         return [
             ['GET', '/plugins/git/gpig/'],
@@ -112,12 +110,12 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider friendlyProjectURLsProvider
      */
-    public function testFriendlyProjectURLs($method, $uri)
+    public function testFriendlyProjectURLs($method, $uri): void
     {
-        $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitRepositoryListController::class);
+        $this->runTestOnURL($method, $uri, GitRepositoryListController::class);
     }
 
-    public static function legacyGitGodControllerURLsProvider()
+    public static function legacyGitGodControllerURLsProvider(): array
     {
         return [
             ['GET', '/plugins/git/?group_id=101'],
@@ -128,12 +126,15 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider legacyGitGodControllerURLsProvider
      */
-    public function testLegacyUrls($method, $uri)
+    public function testLegacyUrls($method, $uri): void
     {
-        $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitPluginDefaultController::class);
+        $this->runTestOnURL($method, $uri, GitPluginDefaultController::class);
     }
 
-    private function runTestOnURL($method, $uri, $expected_dispatch_status, $expected_dispatch_handler)
+    /**
+     * @param class-string $expected_dispatch_handler
+     */
+    private function runTestOnURL(string $method, string $uri, string $expected_dispatch_handler): void
     {
         $git_plugin = $this->createPartialMock(
             GitPlugin::class,
@@ -173,9 +174,9 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $route_info = $dispatcher->dispatch($method, $uri);
 
-        $this->assertEquals($expected_dispatch_status, $route_info[0]);
+        self::assertEquals(FastRoute\Dispatcher::FOUND, $route_info[0]);
         $handler_name = $route_info[1]['handler'];
         $controller   = $git_plugin->$handler_name();
-        $this->assertInstanceOf($expected_dispatch_handler, $controller);
+        self::assertInstanceOf($expected_dispatch_handler, $controller);
     }
 }
