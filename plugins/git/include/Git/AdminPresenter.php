@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
 class Git_AdminPresenter
 {
     public $title;
@@ -32,7 +34,7 @@ class Git_AdminPresenter
     public $gerrit_active           = '';
     public $gitolite_config_active  = '';
 
-    public function __construct($title, CSRFSynchronizerToken $csrf_token)
+    public function __construct($title, CSRFSynchronizerTokenInterface $csrf_token)
     {
         $this->title      = $title;
         $this->csrf_token = $csrf_token;

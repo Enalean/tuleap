@@ -26,6 +26,7 @@ use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -34,7 +35,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
 
-    /** @var CSRFSynchronizerToken */
+    /** @var CSRFSynchronizerTokenInterface */
     private $csrf;
 
     /** @var AdminPageRenderer */
@@ -56,7 +57,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     private JavascriptAssetGeneric $asset;
 
     public function __construct(
-        CSRFSynchronizerToken $csrf,
+        CSRFSynchronizerTokenInterface $csrf,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         AdminPageRenderer $admin_page_renderer,
         GerritServerResourceRestrictor $gerrit_ressource_restrictor,

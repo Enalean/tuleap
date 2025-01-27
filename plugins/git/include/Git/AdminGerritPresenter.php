@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
 class Git_AdminGerritPresenter extends Git_AdminPresenter
 {
     public $manage_gerrit = true;
@@ -70,7 +72,7 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
 
     public $gerrit_label_replication_password_edit;
 
-    public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits)
+    public function __construct($title, CSRFSynchronizerTokenInterface $csrf_token, array $list_of_gerrits)
     {
         parent::__construct($title, $csrf_token);
 
