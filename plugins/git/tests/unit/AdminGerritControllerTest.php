@@ -19,45 +19,42 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git;
 
-use CSRFSynchronizerToken;
+use Codendi_Request;
+use Git_AdminGerritController;
 use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use Response;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use User_SSHKeyValidator;
 
-class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdminGerritControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
-    /**
-     * @var \Codendi_Request
-     */
-    private $request;
-    private $csrf;
-    /**
-     * @var MockInterface|Git_RemoteServer_GerritServerFactory
-     */
-    private $factory;
-    private $admin_page_renderer;
-    private $admin;
-    private $a_brand_new_server;
-    private $an_existing_server;
+    private Codendi_Request $request;
+    private CSRFSynchronizerTokenStub $csrf;
+    private Git_RemoteServer_GerritServerFactory&MockObject $factory;
+    private Git_AdminGerritController $admin;
+    private Git_RemoteServer_GerritServer $a_brand_new_server;
+    private Git_RemoteServer_GerritServer $an_existing_server;
 
     public function setUp(): void
     {
-        $GLOBALS['Response'] = \Mockery::spy(Response::class);
-        $this->csrf          = \Mockery::spy(CSRFSynchronizerToken::class);
+        $this->csrf = CSRFSynchronizerTokenStub::buildSelf();
 
-        $this->request = new \Codendi_Request([], \Mockery::spy(\ProjectManager::class));
+        $this->request = new Codendi_Request([], $this->createMock(ProjectManager::class));
         $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
         $this->request->set('action', 'add-gerrit-server');
-
-        $this->admin_page_renderer = \Mockery::spy(\Tuleap\Admin\AdminPageRenderer::class);
 
         $this->a_brand_new_server = new Git_RemoteServer_GerritServer(
             0,
@@ -87,45 +84,32 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'azerty',
         );
 
-        $this->factory = \Mockery::spy(
-            Git_RemoteServer_GerritServerFactory::class,
-            [
-                'getServers'    => [1 => $this->an_existing_server],
-                'getServerById' => $this->an_existing_server,
-            ]
-        );
+        $this->factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->factory->method('getServers')->willReturn([1 => $this->an_existing_server]);
+        $this->factory->method('getServerById')->willReturn($this->an_existing_server);
 
-        $this->admin = new \Git_AdminGerritController(
+        $ssh_key_validator = $this->createMock(User_SSHKeyValidator::class);
+        $ssh_key_validator->method('validateAllKeys');
+        $this->admin = new Git_AdminGerritController(
             $this->csrf,
             $this->factory,
-            $this->admin_page_renderer,
-            \Mockery::spy(GerritServerResourceRestrictor::class),
-            \Mockery::spy(RemoteServer\Gerrit\Restrictor::class),
-            new AdminGerritBuilder(\Mockery::spy(User_SSHKeyValidator::class)),
-            JavascriptAssetGenericBuilder::build()
+            $this->createMock(AdminPageRenderer::class),
+            $this->createMock(GerritServerResourceRestrictor::class),
+            $this->createMock(Restrictor::class),
+            new AdminGerritBuilder($ssh_key_validator),
+            JavascriptAssetGenericBuilder::build(),
         );
     }
 
-    public function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
-    }
-
-    /**
-     * @test
-     */
-    public function itDoesNotSaveAnythingIfTheRequestIsNotValid()
+    public function testItDoesNotSaveAnythingIfTheRequestIsNotValid(): void
     {
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('server', false);
-        $this->factory->shouldReceive('save')->never();
+        $this->factory->expects(self::never())->method('save');
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itDoesNotSaveAServerIfNoDataIsGiven()
+    public function testItDoesNotSaveAServerIfNoDataIsGiven(): void
     {
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('host', '');
@@ -137,14 +121,11 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->set('use_ssl', '');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
-        $this->factory->shouldReceive('save')->never();
+        $this->factory->expects(self::never())->method('save');
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itDoesNotSaveAServerIfItsHostIsEmpty()
+    public function testItDoesNotSaveAServerIfItsHostIsEmpty(): void
     {
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('host', '');
@@ -156,14 +137,11 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->set('use_ssl', 0);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->factory->shouldReceive('save')->never();
+        $this->factory->expects(self::never())->method('save');
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itNotSavesAServerIfItsHostIsNotEmptyAndAllOtherDataAreEmpty()
+    public function testItNotSavesAServerIfItsHostIsNotEmptyAndAllOtherDataAreEmpty(): void
     {
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('host', 'awesome_host');
@@ -175,14 +153,11 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->set('use_ssl', '');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
-        $this->factory->shouldReceive('save')->never();
+        $this->factory->expects(self::never())->method('save');
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itCheckWithCSRFIfTheRequestIsForged()
+    public function testItCheckWithCSRFIfTheRequestIsForged(): void
     {
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('host', 'host');
@@ -194,14 +169,13 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->csrf->shouldReceive('check')->once();
+        $this->factory->method('save');
+        $this->factory->method('updateReplicationPassword');
         $this->admin->process($this->request);
+        self::assertTrue($this->csrf->hasBeenChecked());
     }
 
-    /**
-     * @test
-     */
-    public function itSavesNewGerritServer()
+    public function testItSavesNewGerritServer(): void
     {
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('host', 'host');
@@ -214,26 +188,19 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $s = $this->a_brand_new_server;
-        $this->factory->shouldReceive('save')->with(\Mockery::on(function (Git_RemoteServer_GerritServer $param) use ($s) {
-            return $s == $param;
-        }))->once();
+        $this->factory->expects(self::once())->method('save')->with($s);
+        $this->factory->method('updateReplicationPassword');
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itRedirectsAfterSave()
+    public function testItRedirectsAfterSave(): void
     {
         $this->request->set('action', 'add-gerrit-server');
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect');
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itUpdatesExistingGerritServer()
+    public function testItUpdatesExistingGerritServer(): void
     {
         $this->request->set('action', 'edit-gerrit-server');
         $this->request->set('gerrit_server_id', 1);
@@ -246,14 +213,11 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->factory->shouldReceive('save')->with($this->an_existing_server)->once();
+        $this->factory->expects(self::once())->method('save')->with($this->an_existing_server);
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itUpdatesExistingGerritServerIfNoAuthentificationType()
+    public function testItUpdatesExistingGerritServerIfNoAuthentificationType(): void
     {
         $this->request->set('action', 'edit-gerrit-server');
         $this->request->set('gerrit_server_id', 1);
@@ -266,19 +230,16 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->factory->shouldReceive('save')->with($this->an_existing_server)->once();
+        $this->factory->expects(self::once())->method('save')->with($this->an_existing_server);
         $this->admin->process($this->request);
     }
 
-    /**
-     * @test
-     */
-    public function itDeletesGerritServer()
+    public function testItDeletesGerritServer(): void
     {
         $this->request->set('action', 'delete-gerrit-server');
         $this->request->set('gerrit_server_id', 1);
-        $this->factory->shouldReceive('delete')->with($this->an_existing_server)->once();
-        $this->factory->shouldReceive('save')->with($this->an_existing_server)->never();
+        $this->factory->expects(self::once())->method('delete')->with($this->an_existing_server);
+        $this->factory->expects(self::never())->method('save')->with($this->an_existing_server);
         $this->admin->process($this->request);
     }
 }
