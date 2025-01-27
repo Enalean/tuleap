@@ -35,21 +35,25 @@ use Tuleap\Option\Option;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class HeaderOptionsForPlanningProviderTest extends TestCase
 {
     private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder&MockObject $submilestone_finder;
+    private VerifySubmissionPermissions&MockObject $submission_permissions_verifier;
     private HeaderOptionsForPlanningProvider $provider;
 
     protected function setUp(): void
     {
-        $this->submilestone_finder = $this->createMock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
+        $this->submilestone_finder             = $this->createMock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
+        $this->submission_permissions_verifier = $this->createMock(VerifySubmissionPermissions::class);
 
         $this->provider = new HeaderOptionsForPlanningProvider(
             $this->submilestone_finder,
             new TrackerNewDropdownLinkPresenterBuilder(),
             new CurrentContextSectionToHeaderOptionsInserter(),
+            $this->submission_permissions_verifier,
         );
     }
 
@@ -58,10 +62,10 @@ final class HeaderOptionsForPlanningProviderTest extends TestCase
         $user           = UserTestBuilder::buildWithDefaults();
         $sprint_tracker = TrackerTestBuilder::aTracker()
             ->withId(102)
-            ->withUserCanSubmit(true)
             ->withShortName('sprint')
             ->build();
         $this->submilestone_finder->method('findFirstSubmilestoneTracker')->willReturn($sprint_tracker);
+        $this->submission_permissions_verifier->method('canUserSubmitArtifact')->with($user, $sprint_tracker)->willReturn(true);
 
         $new_dropdown_current_context_section = $this->provider
             ->getCurrentContextSection($user, $this->aMilestone(), Option::nothing(NewDropdownLinkSectionPresenter::class))
@@ -78,9 +82,9 @@ final class HeaderOptionsForPlanningProviderTest extends TestCase
         $sprint_tracker = TrackerTestBuilder::aTracker()
             ->withId(102)
             ->withShortName('sprint')
-            ->withUserCanSubmit(true)
             ->build();
         $this->submilestone_finder->method('findFirstSubmilestoneTracker')->willReturn($sprint_tracker);
+        $this->submission_permissions_verifier->method('canUserSubmitArtifact')->with($user, $sprint_tracker)->willReturn(true);
 
         $existing_section                     = Option::fromValue(new NewDropdownLinkSectionPresenter(
             'Current section',
@@ -102,9 +106,9 @@ final class HeaderOptionsForPlanningProviderTest extends TestCase
         $sprint_tracker = TrackerTestBuilder::aTracker()
             ->withId(102)
             ->withShortName('sprint')
-            ->withUserCanSubmit(false)
             ->build();
         $this->submilestone_finder->method('findFirstSubmilestoneTracker')->willReturn($sprint_tracker);
+        $this->submission_permissions_verifier->method('canUserSubmitArtifact')->with($user, $sprint_tracker)->willReturn(false);
 
         self::assertTrue(
             $this->provider
@@ -119,8 +123,8 @@ final class HeaderOptionsForPlanningProviderTest extends TestCase
         $sprint_tracker = TrackerTestBuilder::aTracker()
             ->withId(102)
             ->withShortName('sprint')
-            ->withUserCanSubmit(true)
             ->build();
+        $this->submission_permissions_verifier->method('canUserSubmitArtifact')->with($user, $sprint_tracker)->willReturn(true);
 
         $new_dropdown_current_context_section = $this->provider
             ->getCurrentContextSection(

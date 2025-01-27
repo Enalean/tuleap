@@ -44,7 +44,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
         $this->planning_factory  = $planning_factory;
     }
 
-    public function findFirstSubmilestoneTracker(PFUser $user, Planning_Milestone $milestone)
+    public function findFirstSubmilestoneTracker(PFUser $user, Planning_Milestone $milestone): ?Tracker
     {
         $tracker_id = $milestone->getTrackerId();
         if (is_array($tracker_id)) {
@@ -67,17 +67,19 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 
                 $planning_backlog_trackers = $planning->getBacklogTrackers();
                 foreach ($planning_backlog_trackers as $planning_backlog_tracker) {
-                    if ((int) $milestone_backlog_tracker->getId() === (int) $planning_backlog_tracker->getId()) {
+                    if ($milestone_backlog_tracker->getId() === $planning_backlog_tracker->getId()) {
                         return $tracker;
                     }
 
                     foreach ($this->hierarchy_factory->getAllParents($planning_backlog_tracker) as $backlog_tracker_ancestor) {
-                        if ((int) $milestone_backlog_tracker->getId() === (int) $backlog_tracker_ancestor->getId()) {
+                        if ($milestone_backlog_tracker->getId() === $backlog_tracker_ancestor->getId()) {
                             return $tracker;
                         }
                     }
                 }
             }
         }
+
+        return null;
     }
 }

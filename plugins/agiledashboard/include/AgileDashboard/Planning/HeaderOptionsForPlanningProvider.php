@@ -30,6 +30,7 @@ use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 
 class HeaderOptionsForPlanningProvider
 {
@@ -50,6 +51,7 @@ class HeaderOptionsForPlanningProvider
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
         CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
+        private readonly VerifySubmissionPermissions $submission_permissions_verifier,
     ) {
         $this->submilestone_finder     = $submilestone_finder;
         $this->presenter_builder       = $presenter_builder;
@@ -81,7 +83,7 @@ class HeaderOptionsForPlanningProvider
         Option $current_context_section,
     ): Option {
         $tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($user, $milestone);
-        if (! $tracker || ! $tracker->userCanSubmitArtifact($user)) {
+        if ($tracker === null || ! $this->submission_permissions_verifier->canUserSubmitArtifact($user, $tracker)) {
             return $current_context_section;
         }
 
