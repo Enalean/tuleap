@@ -29,57 +29,6 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Sidebar/AgileDashboardPromotedMilestonesRetriever.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[Option::fromValue([
-            'uri'         => $uri,
-            'title'       => $title,
-            'description' => $description,
-        ])]]></code>
-    </InvalidReturnStatement>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/PaneIconLinkPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$icon]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$uri]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/PaneInfoFactory.php">
-    <MissingReturnType>
-      <code><![CDATA[getDetailsPaneInfo]]></code>
-      <code><![CDATA[getPlanningV2PaneInfo]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/Admin/PlanningEditionPresenterBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $planning->getId()]]></code>
-      <code><![CDATA[(int) $root_planning->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/Admin/UpdateRequestValidator.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $original_planning->getPlanningTrackerId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/NearestPlanningTrackerProvider.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$planning_factory]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MissingReturnType>
-      <code><![CDATA[getAllPlanningTrackersIds]]></code>
-      <code><![CDATA[getPlanningTrackersInRightOrder]]></code>
-      <code><![CDATA[sortPlanningTrackersIdsUsingHierarchy]]></code>
-      <code><![CDATA[sortPlanningTrackersUsingAReference]]></code>
-    </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $nearest_planning_tracker]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedDocblockClass>
-      <code><![CDATA[$this->planning_factory]]></code>
-      <code><![CDATA[PlanninqFactory]]></code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Planning/PlanningDao.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->getDB()->safeQuery($sql, $in_statement->values())]]></code>

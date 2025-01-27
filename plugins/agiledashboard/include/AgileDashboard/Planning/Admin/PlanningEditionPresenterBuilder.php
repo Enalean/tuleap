@@ -173,6 +173,6 @@ class PlanningEditionPresenterBuilder
             return false;
         }
 
-        return (int) $planning->getId() === (int) $root_planning->getId();
+        return $planning->getId() === $root_planning->getId();
     }
 }

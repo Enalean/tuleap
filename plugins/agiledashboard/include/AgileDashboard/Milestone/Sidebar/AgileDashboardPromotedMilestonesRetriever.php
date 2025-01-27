@@ -122,6 +122,7 @@ final class AgileDashboardPromotedMilestonesRetriever
 
         $description = $artifact->getDescription();
 
+        /** @var non-empty-string $uri */
         $uri = '/plugins/agiledashboard/?' . http_build_query([
             'group_id'    => $this->project->getID(),
             'planning_id' => $milestone->getPlanningId(),

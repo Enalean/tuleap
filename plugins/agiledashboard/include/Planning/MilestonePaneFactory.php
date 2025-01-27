@@ -34,7 +34,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
     /** @var array<int, array<PaneInfo>> */
     private $list_of_pane_info = [];
 
-    /** @var PaneInfo[] */
+    /** @var DetailsPaneInfo[] */
     private $list_of_default_pane_info = [];
 
     /** @var array<AgileDashboard_Pane|null> */
@@ -168,7 +168,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
 
         $pane_info = $this->pane_info_factory->getPlanningV2PaneInfo($user, $milestone);
-        if ($this->request->get('pane') == PlanningV2PaneInfo::IDENTIFIER) {
+        if ($this->request->get('pane') == PlanningV2PaneInfo::IDENTIFIER && $pane_info !== null) {
             $pane_info->setActive(true);
             $this->active_pane[$milestone->getArtifactId() ?? 0] = $this->getPlanningV2Pane($pane_info, $milestone);
         }
