@@ -78,7 +78,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
     /**
      * @see templates/pane-planning-v2.mustache
      */
-    private function getPaneContent()
+    private function getPaneContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
         return $renderer->renderToString('pane-planning-v2', $this->presenter);

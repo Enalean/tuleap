@@ -46,17 +46,17 @@ class DetailsChartPresentersRetriever implements Dispatchable
         $this->user      = $user;
     }
 
-    public function getMilestone()
+    public function getMilestone(): Planning_Milestone
     {
         return $this->milestone;
     }
 
-    public function getUser()
+    public function getUser(): PFUser
     {
         return $this->user;
     }
 
-    public function addEscapedChart($escaped_chart)
+    public function addEscapedChart(string $escaped_chart): void
     {
         $this->escaped_charts[] = $escaped_chart;
     }

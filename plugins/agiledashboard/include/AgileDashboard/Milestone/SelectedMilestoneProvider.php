@@ -80,7 +80,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider
         $this->milestone_has_been_loaded = true;
     }
 
-    public function getMilestoneId()
+    public function getMilestoneId(): int|string
     {
         if (! $this->milestone_has_been_loaded) {
             $this->loadMilestone();
@@ -90,10 +90,11 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider
             return self::ANY;
         }
 
-        if (! $this->milestone->getArtifactId()) {
+        $artifact_id = $this->milestone->getArtifactId();
+        if ($artifact_id === null) {
             return self::TOP_BACKLOG_IDENTIFIER;
         }
 
-        return $this->milestone->getArtifactId();
+        return $artifact_id;
     }
 }

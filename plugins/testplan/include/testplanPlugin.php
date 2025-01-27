@@ -50,6 +50,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormate
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -199,6 +200,7 @@ final class testplanPlugin extends Plugin
                         ),
                         $tracker_new_dropdown_link_presenter_builder,
                         $header_options_inserter,
+                        SubmissionPermissionVerifier::instance(),
                     ),
                     new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
                         $planning_factory,

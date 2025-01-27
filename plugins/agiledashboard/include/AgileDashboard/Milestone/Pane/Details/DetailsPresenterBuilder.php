@@ -61,7 +61,7 @@ class DetailsPresenterBuilder
         $this->event_manager      = $event_manager;
     }
 
-    public function getMilestoneDetailsPresenter(PFUser $user, Planning_Milestone $milestone)
+    public function getMilestoneDetailsPresenter(PFUser $user, Planning_Milestone $milestone): DetailsPresenter
     {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
         $backlog            = $this->backlog_factory->getBacklog($user, $milestone);
@@ -72,7 +72,6 @@ class DetailsPresenterBuilder
         $chart_presenter = $this->getChartPresenter($milestone, $user);
 
         return new DetailsPresenter(
-            $milestone,
             $this->collection_factory->getOpenClosedAndInconsistentCollection(
                 $user,
                 $milestone,
@@ -82,12 +81,11 @@ class DetailsPresenterBuilder
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
             $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
-            $user,
             $chart_presenter
         );
     }
 
-    private function getChartPresenter(Planning_Milestone $milestone, PFUser $user)
+    private function getChartPresenter(Planning_Milestone $milestone, PFUser $user): DetailsChartPresenter
     {
         $artifact = $milestone->getArtifact();
 
@@ -125,7 +123,7 @@ class DetailsPresenterBuilder
         );
     }
 
-    private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, $redirect_to_self)
+    private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, string $redirect_to_self): string
     {
         return AGILEDASHBOARD_BASE_URL .
             '/?group_id=' . $milestone->getGroupId() .

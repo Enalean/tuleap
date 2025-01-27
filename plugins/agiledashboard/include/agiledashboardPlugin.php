@@ -549,7 +549,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
         if ($milestone_provider->getMilestone()) {
-            $dao->save($params['report']->getId(), $milestone_provider->getMilestoneId());
+            $dao->save($params['report']->getId(), (int) $milestone_provider->getMilestoneId());
         } else {
             $dao->delete($params['report']->getId());
         }

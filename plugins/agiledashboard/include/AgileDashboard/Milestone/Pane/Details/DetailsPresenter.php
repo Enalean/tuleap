@@ -25,12 +25,10 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
-use PFUser;
-use Planning_Milestone;
 
 class DetailsPresenter
 {
-    public $no_items_label;
+    public string $no_items_label;
 
     /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection */
     public $items_collection;
@@ -54,12 +52,10 @@ class DetailsPresenter
     public $chart_presenter;
 
     public function __construct(
-        Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_IBacklogItemCollection $items,
         AgileDashboard_Milestone_Backlog_IBacklogItemCollection $inconsistent_collection,
-        $trackers,
-        $solve_inconsistencies_url,
-        PFUser $user,
+        array $trackers,
+        string $solve_inconsistencies_url,
         DetailsChartPresenter $chart_presenter,
     ) {
         $this->items_collection          = $items;
@@ -72,7 +68,7 @@ class DetailsPresenter
         $this->chart_presenter            = $chart_presenter;
     }
 
-    private function getTrackerNames($trackers)
+    private function getTrackerNames(array $trackers): string
     {
         $tracker_names = [];
 
@@ -83,37 +79,37 @@ class DetailsPresenter
         return implode(', ', $tracker_names);
     }
 
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         return 'pane-details';
     }
 
-    public function solve_inconsistencies_button()
+    public function solve_inconsistencies_button(): string
     {
         return dgettext('tuleap-agiledashboard', 'Import them in the backlog');
     }
 
-    public function solve_inconsistencies_url()
+    public function solve_inconsistencies_url(): string
     {
         return $this->solve_inconsistencies_url;
     }
 
-    public function status_title()
+    public function status_title(): string
     {
         return dgettext('plugin-agiledashboard', 'Status');
     }
 
-    public function has_something()
+    public function has_something(): bool
     {
         return $this->items_collection->count() > 0;
     }
 
-    public function inconsistent_items_intro()
+    public function inconsistent_items_intro(): string
     {
         return dgettext('tuleap-agiledashboard', 'Some items are not linked to this milestone.');
     }
 
-    public function has_something_inconsistent()
+    public function has_something_inconsistent(): bool
     {
         return count($this->inconsistent_collection) > 0;
     }

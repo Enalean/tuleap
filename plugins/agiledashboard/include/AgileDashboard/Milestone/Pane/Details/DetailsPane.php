@@ -66,7 +66,7 @@ class DetailsPane extends AgileDashboard_Pane
         return '';
     }
 
-    private function getPaneContent()
+    private function getPaneContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
 
