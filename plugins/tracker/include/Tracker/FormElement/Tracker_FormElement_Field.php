@@ -738,10 +738,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the html code to display the field value in tooltip
-     * @param Tracker_Artifact_ChangesetValue $value The changeset value of the field
-     * @return string
      */
-    abstract protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null);
+    abstract protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string;
 
     /**
      * Fetch the html code to display the field value in card

@@ -179,8 +179,7 @@ final class ExternalFieldBuilder
                 return '';
             }
 
-            /** @return string */
-            protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+            protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
             {
                 return '';
             }

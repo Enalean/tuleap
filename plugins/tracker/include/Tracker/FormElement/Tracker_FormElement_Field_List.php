@@ -1089,12 +1089,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     * @param Tracker_Artifact_ChangesetValue_List $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html           = '';
         $last_changeset = $artifact->getLastChangeset();

@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[fetchTooltipValue]]></code>
       <code><![CDATA[getDao]]></code>
       <code><![CDATA[getQueryFrom]]></code>
       <code><![CDATA[keepValue]]></code>
@@ -38620,9 +38619,6 @@
       <code><![CDATA[renderPresenter]]></code>
       <code><![CDATA[setHierarchyFactory]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$artifact->getTracker()->getGroupId()]]></code>
     </PossiblyInvalidArgument>
@@ -38750,9 +38746,6 @@
       <code><![CDATA[getCrossReferencesFactory]]></code>
       <code><![CDATA[getValueDao]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <NullableReturnStatement>
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
@@ -38815,9 +38808,6 @@
       <code><![CDATA[isTimeDisplayed]]></code>
       <code><![CDATA[setCriteriaValueFromREST]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <NullableReturnStatement>
       <code><![CDATA[$changeset_value]]></code>
       <code><![CDATA[null]]></code>
@@ -38839,7 +38829,6 @@
     </PossiblyUndefinedArrayOffset>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! strtotime($date)]]></code>
-      <code><![CDATA[$value->getTimestamp()]]></code>
       <code><![CDATA[strtotime($criteria_dates[0])]]></code>
       <code><![CDATA[strtotime($criteria_dates[1])]]></code>
     </RiskyTruthyFalsyComparison>
@@ -38859,14 +38848,10 @@
     </DeprecatedMethod>
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$csv_value]]></code>
-      <code><![CDATA[$value]]></code>
     </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$value]]></code>
     </InvalidArgument>
-    <MismatchingDocblockParamType>
-      <code><![CDATA[Tracker_ChangesetValue_File]]></code>
-    </MismatchingDocblockParamType>
     <MissingParamType>
       <code><![CDATA[$artifact]]></code>
       <code><![CDATA[$artifact_id]]></code>
@@ -38938,7 +38923,6 @@
       <code><![CDATA[! $this->has_errors]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedDocblockClass>
-      <code><![CDATA[Tracker_ChangesetValue_File]]></code>
       <code><![CDATA[type]]></code>
     </UndefinedDocblockClass>
     <UndefinedMethod>
@@ -38962,9 +38946,6 @@
       <code><![CDATA[cast]]></code>
       <code><![CDATA[getValueDao]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <NullableReturnStatement>
       <code><![CDATA[$changeset_value]]></code>
     </NullableReturnStatement>
@@ -38980,9 +38961,6 @@
       <code><![CDATA[accept]]></code>
       <code><![CDATA[getValueDao]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <NullableReturnStatement>
       <code><![CDATA[$changeset_value]]></code>
     </NullableReturnStatement>
@@ -39113,9 +39091,6 @@
       <code><![CDATA[setCriteriaValueFromREST]]></code>
       <code><![CDATA[setCriteriaValueFromXML]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <PossiblyNullArgument>
       <code><![CDATA[$display_preferences]]></code>
     </PossiblyNullArgument>
@@ -39779,9 +39754,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_OpenList.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$value]]></code>
-    </ArgumentTypeCoercion>
     <InvalidScalarArgument>
       <code><![CDATA[$project->getID()]]></code>
     </InvalidScalarArgument>
@@ -39907,9 +39879,6 @@
       <code><![CDATA[getPermissionsValidator]]></code>
       <code><![CDATA[isAtLeastOneUGroupSelected]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <PossiblyNullReference>
       <code><![CDATA[useArtifactPermissions]]></code>
     </PossiblyNullReference>
@@ -39998,10 +39967,6 @@
       <code><![CDATA[getRuleNoCr]]></code>
       <code><![CDATA[isEmpty]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <NullableReturnStatement>
       <code><![CDATA[$changeset_value]]></code>
     </NullableReturnStatement>
@@ -40083,9 +40048,6 @@
       <code><![CDATA[getValueDao]]></code>
       <code><![CDATA[isEmpty]]></code>
     </MissingReturnType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
     <NullableReturnStatement>
       <code><![CDATA[$changeset_value]]></code>
     </NullableReturnStatement>

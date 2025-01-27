@@ -162,16 +162,10 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-float--plus.png');
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Tracker_Artifact_ChangesetValue_Float $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html = '';
-        if ($value) {
+        if ($value && $value instanceof Tracker_Artifact_ChangesetValue_Float) {
             $html .= $value->getFloat();
         }
         return $html;

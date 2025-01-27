@@ -622,15 +622,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $GLOBALS['HTML']->getImagePath('ic/attach--plus.png');
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Artifact                    $artifact The artifact
-     * @param Tracker_ChangesetValue_File $value    The changeset value of this field
-     *
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html = '';
         if ($value) {
@@ -1033,15 +1025,15 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $visitor->visitFile($this);
     }
 
-    protected function isPreviousChangesetEmpty(Artifact $artifact, $value)
+    protected function isPreviousChangesetEmpty(Artifact $artifact, $value): bool
     {
         $last_changeset = $artifact->getLastChangeset();
+        if (! $last_changeset || is_a($last_changeset, Tracker_Artifact_Changeset_Null::class)) {
+            return true;
+        }
 
-        if (
-            $last_changeset &&
-            ! is_a($last_changeset, Tracker_Artifact_Changeset_Null::class) &&
-            count($last_changeset->getValue($this)->getFiles()) > 0
-        ) {
+        $last_value = $last_changeset->getValue($this);
+        if ($last_value instanceof Tracker_Artifact_ChangesetValue_File && count($last_value->getFiles()) > 0) {
             return $this->areAllFilesDeletedFromPreviousChangeset($last_changeset, $value);
         }
         return true;
