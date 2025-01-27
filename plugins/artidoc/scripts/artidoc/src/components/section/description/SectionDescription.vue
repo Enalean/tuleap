@@ -54,7 +54,7 @@ import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
-import type { FileUploadOptions } from "@tuleap/prose-mirror-editor";
+import type { FileUploadOptions } from "@tuleap/file-upload";
 
 defineProps<{
     title: string;

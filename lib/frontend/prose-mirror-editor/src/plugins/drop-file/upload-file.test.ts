@@ -20,19 +20,15 @@ import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { uploadAndDisplayFileInEditor } from "./upload-file";
-import {
-    InvalidFileUploadError,
-    MaxSizeUploadExceededError,
-    NoUploadError,
-    UploadError,
-} from "./types";
-import type { FileUploadOptions, OnGoingUploadFile } from "./types";
+import { InvalidFileUploadError, MaxSizeUploadExceededError, NoUploadError } from "./types";
 import * as fetch_result from "@tuleap/fetch-result";
 import * as download_file from "./helpers/upload-file-helper";
 import { okAsync } from "neverthrow";
 import { Option } from "@tuleap/option";
 import type { OngoingUpload } from "./plugin-drop-file";
 import type { GetText } from "@tuleap/gettext";
+import type { FileUploadOptions, OnGoingUploadFile } from "@tuleap/file-upload";
+import { UploadError } from "@tuleap/file-upload";
 
 const gettext_provider = {
     gettext: vi.fn(),

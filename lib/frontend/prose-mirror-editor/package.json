@@ -18,6 +18,7 @@
     "@tuleap/copy-to-clipboard": "workspace:^",
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
+    "@tuleap/file-upload": "workspace:^",
     "@tuleap/gettext": "workspace:^",
     "@tuleap/option": "workspace:^",
     "@tuleap/tlp-popovers": "workspace:^",

@@ -21,7 +21,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useUploadFile } from "@/composables/useUploadFile";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
-import { type FileUploadOptions, UploadError } from "@tuleap/prose-mirror-editor";
+import { type FileUploadOptions, UploadError } from "@tuleap/file-upload";
 import type { GetText } from "@tuleap/gettext";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";

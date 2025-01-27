@@ -17,11 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    InvalidFileUploadError,
-    MaxSizeUploadExceededError,
-    UploadError,
-} from "./upload-file.error";
+import type { UploadError } from "./upload-file.error";
 
 export type OnGoingUploadFile = {
     file_name: string;
@@ -36,10 +32,7 @@ export type UploadPostInformation = {
 export type FileUploadOptions = {
     readonly post_information: UploadPostInformation;
     max_size_upload: number;
-    onErrorCallback: (
-        error: UploadError | MaxSizeUploadExceededError | InvalidFileUploadError,
-        file_name: string,
-    ) => void;
+    onErrorCallback: (error: UploadError, file_name: string) => void;
     onSuccessCallback: (id: number, download_href: string, file_name: string) => void;
     onProgressCallback: (file_name: string, global_progress: number) => void;
     onStartUploadCallback: (files: FileList) => OnGoingUploadFile[];

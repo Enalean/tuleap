@@ -18,36 +18,29 @@
  */
 
 import type { GetText } from "@tuleap/gettext";
+import { UploadError } from "@tuleap/file-upload";
 
-export class MaxSizeUploadExceededError extends Error {
+export class MaxSizeUploadExceededError extends UploadError {
     public max_size_upload: number;
     constructor(max_size_upload: number, gettext_provider: GetText) {
-        super();
+        super(gettext_provider);
         this.name = "MaxSizeUploadExceededError";
         this.max_size_upload = max_size_upload;
         this.message = gettext_provider.gettext("Max upload size exceeded");
     }
 }
 
-export class UploadError extends Error {
+export class NoUploadError extends UploadError {
     constructor(gettext_provider: GetText) {
-        super();
-        this.name = "UploadError";
-        this.message = gettext_provider.gettext("An error occurred during upload");
-    }
-}
-
-export class NoUploadError extends Error {
-    constructor(gettext_provider: GetText) {
-        super();
+        super(gettext_provider);
         this.name = "NoUploadError";
         this.message = gettext_provider.gettext("You are not allowed to upload file here");
     }
 }
 
-export class InvalidFileUploadError extends Error {
+export class InvalidFileUploadError extends UploadError {
     constructor(gettext_provider: GetText) {
-        super();
+        super(gettext_provider);
         this.name = "InvalidFileUploadError";
         this.message = gettext_provider.gettext("File type is invalid, you can only upload images");
     }

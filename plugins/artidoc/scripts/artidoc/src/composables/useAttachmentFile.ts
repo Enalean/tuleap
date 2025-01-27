@@ -22,7 +22,7 @@ import { ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import { noop } from "@/helpers/noop";
-import type { FileUploadOptions } from "@tuleap/prose-mirror-editor";
+import type { FileUploadOptions } from "@tuleap/file-upload";
 
 type PendingAttachment = { id: number; upload_url: string };
 export interface AttachmentFile {

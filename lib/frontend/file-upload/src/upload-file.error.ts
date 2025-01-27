@@ -17,4 +17,12 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./upload-file.error";
+import type { GetText } from "@tuleap/gettext";
+
+export class UploadError extends Error {
+    constructor(gettext_provider: GetText) {
+        super();
+        this.name = "UploadError";
+        this.message = gettext_provider.gettext("An error occurred during upload");
+    }
+}

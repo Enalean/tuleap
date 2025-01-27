@@ -17,11 +17,11 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FileUploadOptions, OnGoingUploadFile } from "../types";
 import { type DetailedError, Upload } from "tus-js-client";
 import { computedProgress } from "./progress-computation-helper";
 import { Option } from "@tuleap/option";
 import type { OngoingUpload } from "../plugin-drop-file";
+import type { FileUploadOptions, OnGoingUploadFile } from "@tuleap/file-upload";
 
 export function uploadFile(
     files: OnGoingUploadFile[],
