@@ -46,15 +46,7 @@ class OpenListFieldDao extends SpecificPropertiesDao
         return $this->update($sql);
     }
 
-    /**
-     * Duplicate specific properties of field
-     *
-     * @param int $from_field_id the field id source
-     * @param int $to_field_id   the field id target
-     *
-     * @return bool true if ok, false otherwise
-     */
-    public function duplicate($from_field_id, $to_field_id)
+    public function duplicate(int $from_field_id, int $to_field_id): bool
     {
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
