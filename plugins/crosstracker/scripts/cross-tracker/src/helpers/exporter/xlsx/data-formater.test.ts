@@ -23,6 +23,7 @@ import {
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
+    STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
     USER_GROUP_LIST_SELECTABLE_TYPE,
@@ -87,6 +88,10 @@ describe("data-formater", () => {
     const datetime_column = "Date time";
     const first_datetime = "2024-09-24T15:55:00+02:00";
 
+    const static_list_column = "Static list Column";
+    const first_value = { label: "AWD", color: null };
+    const second_value = { label: "RWD", color: null };
+
     it("generates the formatted data with that will be used to create the XLSX document with rows", () => {
         const table = [
             ArtifactsTableBuilder().mapReportToArtifactsTable(
@@ -101,6 +106,7 @@ describe("data-formater", () => {
                         { type: USER_GROUP_LIST_SELECTABLE_TYPE, name: user_group_column },
                         { type: DATE_SELECTABLE_TYPE, name: date_column },
                         { type: DATE_SELECTABLE_TYPE, name: datetime_column },
+                        { type: STATIC_LIST_SELECTABLE_TYPE, name: static_list_column },
                     ],
                     [
                         ArtifactRepresentationStub.build({
@@ -117,6 +123,9 @@ describe("data-formater", () => {
                             [user_group_column]: { value: first_user_group_list },
                             [date_column]: { value: first_date, with_time: false },
                             [datetime_column]: { value: null, with_time: false },
+                            [static_list_column]: {
+                                value: [first_value, second_value],
+                            },
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: second_artifact_uri },
@@ -132,6 +141,7 @@ describe("data-formater", () => {
                             [user_group_column]: { value: first_user_group_list },
                             [date_column]: { value: null, with_time: false },
                             [datetime_column]: { value: null, with_time: false },
+                            [static_list_column]: { value: [] },
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: third_artifact_uri },
@@ -149,6 +159,7 @@ describe("data-formater", () => {
                             },
                             [date_column]: { value: null, with_time: false },
                             [datetime_column]: { value: first_datetime, with_time: true },
+                            [static_list_column]: { value: [second_value] },
                         }),
                     ],
                 ),
@@ -167,6 +178,7 @@ describe("data-formater", () => {
                 new TextCell(user_group_column),
                 new TextCell(date_column),
                 new TextCell(datetime_column),
+                new TextCell(static_list_column),
             ],
             rows: [
                 [
@@ -179,6 +191,7 @@ describe("data-formater", () => {
                     new TextCell(first_user_group),
                     new DateCell(first_date),
                     new EmptyCell(),
+                    new TextCell(first_value.label + ", " + second_value.label),
                 ],
                 [
                     new NumberCell(int_value),
@@ -190,6 +203,7 @@ describe("data-formater", () => {
                     new TextCell(first_user_group),
                     new EmptyCell(),
                     new EmptyCell(),
+                    new TextCell(""),
                 ],
                 [
                     new EmptyCell(),
@@ -201,6 +215,7 @@ describe("data-formater", () => {
                     new TextCell(second_user_group + ", " + third_user_group),
                     new EmptyCell(),
                     new DateCell(first_datetime),
+                    new TextCell(second_value.label),
                 ],
             ],
         };
