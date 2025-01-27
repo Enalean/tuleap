@@ -28,6 +28,7 @@ import {
     USER_GROUP_LIST_CELL,
     TRACKER_CELL,
     DATE_CELL,
+    PRETTY_TITLE_CELL,
 } from "../../../domain/ArtifactsTable";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { ARTIFACT_COLUMN_NAME } from "../../../domain/ColumnName";
@@ -126,6 +127,15 @@ function buildXLSXdReportCell(current_artifact_cell: Cell | undefined): ReportCe
                 index >= current_artifact_cell.value.length - 1 ? value.label : value.label + ", ";
         });
         return new TextCell(values);
+    }
+    if (current_artifact_cell.type === PRETTY_TITLE_CELL) {
+        return new TextCell(
+            current_artifact_cell.tracker_name +
+                "#" +
+                current_artifact_cell.artifact_id +
+                " " +
+                current_artifact_cell.title,
+        );
     }
     return new EmptyCell();
 }

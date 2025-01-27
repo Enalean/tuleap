@@ -22,6 +22,7 @@ import { SelectableReportContentRepresentationStub } from "../../../../tests/bui
 import {
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
+    PRETTY_TITLE_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
     STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
@@ -92,6 +93,26 @@ describe("data-formater", () => {
     const first_value = { label: "AWD", color: null };
     const second_value = { label: "RWD", color: null };
 
+    const pretty_title_column = "Artifact";
+    const first_pretty_title = {
+        tracker_name: first_tracker,
+        color: null,
+        artifact_id: 6,
+        title: "Boost 1.2bar",
+    };
+    const second_pretty_title = {
+        tracker_name: first_tracker,
+        color: null,
+        artifact_id: 8,
+        title: "Fuel Injector",
+    };
+    const third_pretty_title = {
+        tracker_name: second_tracker,
+        color: null,
+        artifact_id: 8,
+        title: "Big Rotary-screw compressor",
+    };
+
     it("generates the formatted data with that will be used to create the XLSX document with rows", () => {
         const table = [
             ArtifactsTableBuilder().mapReportToArtifactsTable(
@@ -107,6 +128,7 @@ describe("data-formater", () => {
                         { type: DATE_SELECTABLE_TYPE, name: date_column },
                         { type: DATE_SELECTABLE_TYPE, name: datetime_column },
                         { type: STATIC_LIST_SELECTABLE_TYPE, name: static_list_column },
+                        { type: PRETTY_TITLE_SELECTABLE_TYPE, name: pretty_title_column },
                     ],
                     [
                         ArtifactRepresentationStub.build({
@@ -126,6 +148,7 @@ describe("data-formater", () => {
                             [static_list_column]: {
                                 value: [first_value, second_value],
                             },
+                            [pretty_title_column]: first_pretty_title,
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: second_artifact_uri },
@@ -142,6 +165,7 @@ describe("data-formater", () => {
                             [date_column]: { value: null, with_time: false },
                             [datetime_column]: { value: null, with_time: false },
                             [static_list_column]: { value: [] },
+                            [pretty_title_column]: second_pretty_title,
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: third_artifact_uri },
@@ -160,6 +184,7 @@ describe("data-formater", () => {
                             [date_column]: { value: null, with_time: false },
                             [datetime_column]: { value: first_datetime, with_time: true },
                             [static_list_column]: { value: [second_value] },
+                            [pretty_title_column]: third_pretty_title,
                         }),
                     ],
                 ),
@@ -179,6 +204,7 @@ describe("data-formater", () => {
                 new TextCell(date_column),
                 new TextCell(datetime_column),
                 new TextCell(static_list_column),
+                new TextCell(pretty_title_column),
             ],
             rows: [
                 [
@@ -192,6 +218,13 @@ describe("data-formater", () => {
                     new DateCell(first_date),
                     new EmptyCell(),
                     new TextCell(first_value.label + ", " + second_value.label),
+                    new TextCell(
+                        first_pretty_title.tracker_name +
+                            "#" +
+                            first_pretty_title.artifact_id +
+                            " " +
+                            first_pretty_title.title,
+                    ),
                 ],
                 [
                     new NumberCell(int_value),
@@ -204,6 +237,13 @@ describe("data-formater", () => {
                     new EmptyCell(),
                     new EmptyCell(),
                     new TextCell(""),
+                    new TextCell(
+                        second_pretty_title.tracker_name +
+                            "#" +
+                            second_pretty_title.artifact_id +
+                            " " +
+                            second_pretty_title.title,
+                    ),
                 ],
                 [
                     new EmptyCell(),
@@ -216,6 +256,13 @@ describe("data-formater", () => {
                     new EmptyCell(),
                     new DateCell(first_datetime),
                     new TextCell(second_value.label),
+                    new TextCell(
+                        third_pretty_title.tracker_name +
+                            "#" +
+                            third_pretty_title.artifact_id +
+                            " " +
+                            third_pretty_title.title,
+                    ),
                 ],
             ],
         };
