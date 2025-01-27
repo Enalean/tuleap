@@ -26,10 +26,11 @@ import {
     USER_LIST_CELL,
     USER_GROUP_LIST_CELL,
     TRACKER_CELL,
+    DATE_CELL,
 } from "../../../domain/ArtifactsTable";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { ARTIFACT_COLUMN_NAME } from "../../../domain/ColumnName";
-import { EmptyCell, TextCell, NumberCell, HTMLCell } from "@tuleap/plugin-docgen-xlsx";
+import { EmptyCell, TextCell, NumberCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
 
 export type ReportSection = {
     headers: ReadonlyArray<TextCell>;
@@ -110,6 +111,12 @@ function buildXLSXdReportCell(current_artifact_cell: Cell | undefined): ReportCe
                     : user_group.label + ", ";
         });
         return new TextCell(user_group_list);
+    }
+    if (current_artifact_cell.type === DATE_CELL) {
+        return current_artifact_cell.value.mapOr(
+            (date: string) => new DateCell(date),
+            new EmptyCell(),
+        );
     }
     return new EmptyCell();
 }

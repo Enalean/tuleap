@@ -20,10 +20,13 @@
 import { ArtifactsTableBuilder } from "../../../api/ArtifactsTableBuilder";
 import { SelectableReportContentRepresentationStub } from "../../../../tests/builders/SelectableReportContentRepresentationStub";
 import {
+    DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    USER_GROUP_LIST_SELECTABLE_TYPE,
+    USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
 } from "../../../api/cross-tracker-rest-api-types";
 import { ArtifactRepresentationStub } from "../../../../tests/builders/ArtifactRepresentationStub";
@@ -32,8 +35,7 @@ import { ARTIFACT_COLUMN_NAME } from "../../../domain/ColumnName";
 import { describe, expect, it } from "vitest";
 import type { ReportSection } from "./data-formater";
 import { formatData } from "./data-formater";
-import { NumberCell, TextCell, EmptyCell, HTMLCell } from "@tuleap/plugin-docgen-xlsx";
-import { USER_GROUP_LIST_CELL, USER_LIST_CELL } from "../../../domain/ArtifactsTable";
+import { NumberCell, TextCell, EmptyCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
 
 describe("data-formater", () => {
     const artifact_column = ARTIFACT_COLUMN_NAME;
@@ -80,6 +82,11 @@ describe("data-formater", () => {
     const first_user_group_list = [{ label: first_user_group }];
     const second_user_group_list = [{ label: second_user_group }, { label: third_user_group }];
 
+    const date_column = "Date";
+    const first_date = "2024-09-03T00:00:00+02:00";
+    const datetime_column = "Date time";
+    const first_datetime = "2024-09-24T15:55:00+02:00";
+
     it("generates the formatted data with that will be used to create the XLSX document with rows", () => {
         const table = [
             ArtifactsTableBuilder().mapReportToArtifactsTable(
@@ -90,8 +97,10 @@ describe("data-formater", () => {
                         { type: TEXT_SELECTABLE_TYPE, name: text_column },
                         { type: USER_SELECTABLE_TYPE, name: user_column },
                         { type: TRACKER_SELECTABLE_TYPE, name: tracker_column },
-                        { type: USER_LIST_CELL, name: user_list_column },
-                        { type: USER_GROUP_LIST_CELL, name: user_group_column },
+                        { type: USER_LIST_SELECTABLE_TYPE, name: user_list_column },
+                        { type: USER_GROUP_LIST_SELECTABLE_TYPE, name: user_group_column },
+                        { type: DATE_SELECTABLE_TYPE, name: date_column },
+                        { type: DATE_SELECTABLE_TYPE, name: datetime_column },
                     ],
                     [
                         ArtifactRepresentationStub.build({
@@ -106,6 +115,8 @@ describe("data-formater", () => {
                             },
                             [user_list_column]: { value: first_user_list },
                             [user_group_column]: { value: first_user_group_list },
+                            [date_column]: { value: first_date, with_time: false },
+                            [datetime_column]: { value: null, with_time: false },
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: second_artifact_uri },
@@ -119,6 +130,8 @@ describe("data-formater", () => {
                             },
                             [user_list_column]: { value: first_user_list },
                             [user_group_column]: { value: first_user_group_list },
+                            [date_column]: { value: null, with_time: false },
+                            [datetime_column]: { value: null, with_time: false },
                         }),
                         ArtifactRepresentationStub.build({
                             [artifact_column]: { uri: third_artifact_uri },
@@ -134,6 +147,8 @@ describe("data-formater", () => {
                             [user_group_column]: {
                                 value: second_user_group_list,
                             },
+                            [date_column]: { value: null, with_time: false },
+                            [datetime_column]: { value: first_datetime, with_time: true },
                         }),
                     ],
                 ),
@@ -150,6 +165,8 @@ describe("data-formater", () => {
                 new TextCell(tracker_column),
                 new TextCell(user_list_column),
                 new TextCell(user_group_column),
+                new TextCell(date_column),
+                new TextCell(datetime_column),
             ],
             rows: [
                 [
@@ -160,6 +177,8 @@ describe("data-formater", () => {
                     new TextCell(first_tracker),
                     new TextCell(first_user + ", " + second_user_in_list),
                     new TextCell(first_user_group),
+                    new DateCell(first_date),
+                    new EmptyCell(),
                 ],
                 [
                     new NumberCell(int_value),
@@ -169,6 +188,8 @@ describe("data-formater", () => {
                     new TextCell(first_tracker),
                     new TextCell(first_user + ", " + second_user_in_list),
                     new TextCell(first_user_group),
+                    new EmptyCell(),
+                    new EmptyCell(),
                 ],
                 [
                     new EmptyCell(),
@@ -178,6 +199,8 @@ describe("data-formater", () => {
                     new TextCell(second_tracker),
                     new TextCell(second_user + ", " + second_user_in_second_list),
                     new TextCell(second_user_group + ", " + third_user_group),
+                    new EmptyCell(),
+                    new DateCell(first_datetime),
                 ],
             ],
         };
