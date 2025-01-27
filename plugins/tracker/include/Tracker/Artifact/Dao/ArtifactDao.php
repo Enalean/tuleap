@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Dao;
 use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactDao extends DataAccessObject
 {
@@ -500,5 +501,29 @@ class ArtifactDao extends DataAccessObject
         SQL;
 
         return $this->getDB()->row($sql, ...[...$artifact_ids_statement->values(), $tracker_id]);
+    }
+
+    /**
+     * Return artifact status (open/closed)
+     *
+     * @param int[] $artifact_ids
+     * @return array<array{id: int, status: string}>
+     */
+    public function getArtifactsStatusByIds(array $artifact_ids): array
+    {
+        $artifact_ids_statement = EasyStatement::open()->in('A.id IN (?*)', $artifact_ids);
+
+        $sql = <<<SQL
+        SELECT A.id, IF(CVL.bindvalue_id IS NULL, ?, ?) AS status
+        FROM tracker_artifact AS A
+        LEFT JOIN (
+            tracker_changeset_value AS CV
+            INNER JOIN tracker_semantic_status SS ON (CV.field_id = SS.field_id)
+            INNER JOIN tracker_changeset_value_list CVL ON (CV.id = CVL.changeset_value_id AND CVL.bindvalue_id = SS.open_value_id)
+        ) ON (A.last_changeset_id = CV.changeset_id)
+        WHERE $artifact_ids_statement
+        SQL;
+
+        return $this->getDB()->run($sql, Artifact::STATUS_CLOSED, Artifact::STATUS_OPEN, ...$artifact_ids);
     }
 }

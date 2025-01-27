@@ -24,16 +24,14 @@ use Tuleap\Tracker\Artifact\Artifact;
 class AgileDashboard_Milestone_MilestoneStatusCounter
 {
     private $backlog_item_dao;
-    private $artifact_dao;
     private $artifact_factory;
 
     public function __construct(
         BacklogItemDao $backlog_item_dao,
-        Tracker_ArtifactDao $artifact_dao,
+        private readonly \Tuleap\Tracker\Artifact\Dao\ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->backlog_item_dao = $backlog_item_dao;
-        $this->artifact_dao     = $artifact_dao;
         $this->artifact_factory = $artifact_factory;
     }
 
@@ -46,19 +44,19 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
      *
      * @return array
      */
-    public function getStatus(PFUser $user, $milestone_artifact_id)
+    public function getStatus(PFUser $user, ?int $milestone_artifact_id)
     {
         $status = [
             Artifact::STATUS_OPEN   => 0,
             Artifact::STATUS_CLOSED => 0,
         ];
-        if ($milestone_artifact_id) {
+        if ($milestone_artifact_id !== null) {
             $this->getStatusForMilestoneArtifactId($user, $milestone_artifact_id, $status);
         }
         return $status;
     }
 
-    private function getStatusForMilestoneArtifactId(PFUser $user, $milestone_artifact_id, array &$status)
+    private function getStatusForMilestoneArtifactId(PFUser $user, int $milestone_artifact_id, array &$status): void
     {
         $artifact_id_list = $this->getBacklogArtifactsUserCanView($user, $milestone_artifact_id);
         $this->countStatus($artifact_id_list, $status);
@@ -70,7 +68,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
         }
     }
 
-    private function countStatus(array $artifact_id_list, array &$status)
+    private function countStatus(array $artifact_id_list, array &$status): void
     {
         if (count($artifact_id_list)) {
             $artifact_status = $this->artifact_dao->getArtifactsStatusByIds($artifact_id_list);
@@ -80,7 +78,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
         }
     }
 
-    private function getBacklogArtifactsUserCanView(PFUser $user, $milestone_artifact_id)
+    private function getBacklogArtifactsUserCanView(PFUser $user, int $milestone_artifact_id): array
     {
         return $this->getIdsUserCanView(
             $user,
@@ -88,7 +86,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
         );
     }
 
-    private function getChildrenUserCanView(PFUser $user, array $artifact_ids)
+    private function getChildrenUserCanView(PFUser $user, array $artifact_ids): array
     {
         return $this->getIdsUserCanView(
             $user,
