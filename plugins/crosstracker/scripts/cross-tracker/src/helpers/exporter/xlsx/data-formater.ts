@@ -19,6 +19,7 @@
 
 import type { ArtifactsTable, Cell } from "../../../domain/ArtifactsTable";
 import {
+    STATIC_LIST_CELL,
     TEXT_CELL,
     PROJECT_CELL,
     NUMERIC_CELL,
@@ -117,6 +118,14 @@ function buildXLSXdReportCell(current_artifact_cell: Cell | undefined): ReportCe
             (date: string) => new DateCell(date),
             new EmptyCell(),
         );
+    }
+    if (current_artifact_cell.type === STATIC_LIST_CELL) {
+        let values = "";
+        current_artifact_cell.value.forEach((value, index) => {
+            values +=
+                index >= current_artifact_cell.value.length - 1 ? value.label : value.label + ", ";
+        });
+        return new TextCell(values);
     }
     return new EmptyCell();
 }
