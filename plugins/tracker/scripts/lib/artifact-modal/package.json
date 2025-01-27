@@ -22,6 +22,7 @@
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/mention": "workspace:^",
     "@tuleap/option": "workspace:*",
+    "@tuleap/plugin-tracker-artifact-common": "workspace:^",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",

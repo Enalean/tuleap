@@ -19,7 +19,7 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { CurrentArtifactIdentifier } from "../CurrentArtifactIdentifier";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { FollowUpComment } from "./FollowUpComment";
 
 export type RetrieveComments = {

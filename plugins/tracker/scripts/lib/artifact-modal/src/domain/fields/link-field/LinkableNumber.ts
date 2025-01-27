@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "../../Identifier";
+import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { ArtifactCreated } from "../../ArtifactCreated";
 
 // I hold a number that is maybe an artifact id that can be linked to the current artifact

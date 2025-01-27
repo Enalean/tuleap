@@ -19,6 +19,7 @@
 
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import { selectOrThrow } from "@tuleap/dom";
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { CommentUserPreferencesBuilder } from "../../../../tests/builders/CommentUserPreferencesBuilder";
 import type { HostElement } from "./ModalCommentsSection";
 import {
@@ -33,7 +34,6 @@ import { setCatalog } from "../../../gettext-catalog";
 import type { CommentEditor } from "./CommentEditor";
 import { CommentsController } from "../../../domain/comments/CommentsController";
 import { RetrieveCommentsStub } from "../../../../tests/stubs/RetrieveCommentsStub";
-import { CurrentArtifactIdentifier } from "../../../domain/CurrentArtifactIdentifier";
 import type { CommentUserPreferences } from "../../../domain/comments/CommentUserPreferences";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 

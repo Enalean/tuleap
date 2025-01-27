@@ -21,6 +21,7 @@ import "./tuleap-artifact-modal.tpl.html";
 import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js";
 
 import { has } from "lodash-es";
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.ts";
 import { getTracker, getUserPreference } from "./rest/rest-service";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
@@ -30,7 +31,6 @@ import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracke
 import { getSelectedValues } from "./model/field-values-formatter.js";
 import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
 import { InitializationAPIClient } from "./adapters/REST/initialization/InitializationAPIClient";
-import { CurrentArtifactIdentifier } from "./domain/CurrentArtifactIdentifier";
 
 export default ArtifactModalService;
 

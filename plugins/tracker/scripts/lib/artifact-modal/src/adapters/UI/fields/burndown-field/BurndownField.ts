@@ -19,7 +19,7 @@
 
 import { html, define } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 
 export type HostElement = BurndownField & HTMLElement;
 

@@ -19,7 +19,7 @@
 
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import type { Option } from "@tuleap/option";
-import type { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { TrackerShortname } from "./TrackerShortname";
 
 export type ArtifactCrossReference = {

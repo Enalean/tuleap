@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { renderArtifactIdField } from "./ArtifactIdField";
 import { ARTIFACT_ID_FIELD, ARTIFACT_ID_IN_TRACKER_FIELD } from "@tuleap/plugin-tracker-constants";
-
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { HostElement } from "./ArtifactIdField";
+import { renderArtifactIdField } from "./ArtifactIdField";
 
 const field_label = "Artifact Id",
     artifact_id_in_tracker = 60,
@@ -33,8 +33,8 @@ function getHost(type: string): HostElement {
             value: artifact_id_in_tracker,
             type,
         },
-        currentArtifactIdentifier: { id: current_artifact_id },
-    } as unknown as HostElement;
+        currentArtifactIdentifier: CurrentArtifactIdentifier.fromId(current_artifact_id),
+    } as HostElement;
 }
 
 describe("ArtifactIdField", () => {

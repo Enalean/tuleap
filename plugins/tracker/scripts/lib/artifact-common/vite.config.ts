@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerShortname } from "../../src/domain/TrackerShortname";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-export const TrackerShortnameStub = {
-    withShortname: (shortname: string): TrackerShortname => ({
-        shortname,
-    }),
-};
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/main.ts"),
+            name: "PluginTrackerArtifactCommon",
+        },
+    },
+});

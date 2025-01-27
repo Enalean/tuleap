@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { SearchResultEntry, UserHistoryEntry } from "@tuleap/core-rest-api-types";
 import { ARTIFACT_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { Option } from "@tuleap/option";

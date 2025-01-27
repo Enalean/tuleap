@@ -26,13 +26,13 @@ import BaseModalController from "./tuleap-artifact-modal-controller.js";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import { Option } from "@tuleap/option";
+import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./adapters/UI/fields/file-field/file-field-detector";
 import * as fields_validator from "./validate-artifact-field-value.js";
 import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 import { setCatalog } from "./gettext-catalog";
-import { CurrentArtifactIdentifier } from "./domain/CurrentArtifactIdentifier";
 
 const PROJECT_ID = 133;
 

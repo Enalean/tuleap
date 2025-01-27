@@ -18,8 +18,8 @@
  */
 
 import { Option } from "@tuleap/option";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { LinkableNumber } from "../../../../../domain/fields/link-field/LinkableNumber";
-import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
 
 export const LinkableNumberProxy = {
     fromQueryString: (

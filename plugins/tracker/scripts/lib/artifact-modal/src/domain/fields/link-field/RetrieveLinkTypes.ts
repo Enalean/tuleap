@@ -19,8 +19,8 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import type { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { LinkType } from "./LinkType";
-import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 
 export interface RetrieveLinkTypes {
     getAllLinkTypes(

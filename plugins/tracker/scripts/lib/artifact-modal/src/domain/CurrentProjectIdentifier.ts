@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "./Identifier";
+import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
 
 // I identify the project of the artifact currently under creation/edition
 export type CurrentProjectIdentifier = Identifier<"CurrentProjectIdentifier">;

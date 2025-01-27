@@ -18,7 +18,7 @@
  */
 
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
-import type { Identifier } from "../../Identifier";
+import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
 import type { LinkType } from "./LinkType";
 import type { Project } from "../../Project";

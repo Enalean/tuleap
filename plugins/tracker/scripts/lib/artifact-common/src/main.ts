@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
-
-// I identify the tracker of the artifact currently under creation or edition
-export type CurrentTrackerIdentifier = Identifier<"CurrentTrackerIdentifier">;
+export { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
+export type { Identifier } from "./Identifier";

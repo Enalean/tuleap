@@ -27,7 +27,7 @@ export type Identifier<TypeOfIdentifier extends string> = {
 };
 
 /*
- * PHP uses a "nominal type system" wherein instance of different classes with the same "id" field are not compatibles.
+ * PHP uses a "nominal type system" wherein instances of different classes with the same "id" field are not compatible.
  * For example, an instance of ArtifactIdentifier is not compatible with TrackerIdentifier even though they have the
  * same "shape" with a public "id" field. Their "names" are not compatible.
  *
