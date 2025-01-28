@@ -96,6 +96,6 @@ class PlanningUpdater
             (int) $project->getID()
         );
 
-        return $root_planning && (int) $root_planning->getId() === $updated_planning_id;
+        return $root_planning && $root_planning->getId() === $updated_planning_id;
     }
 }

@@ -892,8 +892,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             return;
         }
 
-        $planning_representation = new \Tuleap\AgileDashboard\REST\v1\PlanningRepresentation();
-        $planning_representation->build($root_planning);
+        $planning_representation = new \Tuleap\AgileDashboard\REST\v1\PlanningRepresentation($root_planning);
 
         $params['informations'][$this->getName()]['root_planning'] = $planning_representation;
     }

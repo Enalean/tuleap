@@ -27,9 +27,9 @@ use Tuleap\Project\REST\ProjectResourceReference;
 /**
  * Inject resource into restler
  */
-class AgileDashboard_REST_ResourcesInjector
+class AgileDashboard_REST_ResourcesInjector // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function populate(Luracast\Restler\Restler $restler)
+    public function populate(Luracast\Restler\Restler $restler): void
     {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\AgileDashboardProjectResource', ProjectRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource', MilestoneRepresentation::ROUTE);
@@ -37,7 +37,7 @@ class AgileDashboard_REST_ResourcesInjector
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource', BacklogItemRepresentation::ROUTE);
     }
 
-    public function declareProjectPlanningResource(array &$resources, Project $project)
+    public function declareProjectPlanningResource(array &$resources, Project $project): void
     {
         $routes = [
             BacklogItemRepresentation::BACKLOG_ROUTE,

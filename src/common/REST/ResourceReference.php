@@ -19,7 +19,10 @@
 
 namespace Tuleap\REST;
 
-class ResourceReference
+/**
+ * @psalm-immutable
+ */
+final readonly class ResourceReference
 {
     /** Use this variable as a placeholder for future route implementation */
     public const NO_ROUTE = 'route-not-yet-implemented';
@@ -27,14 +30,14 @@ class ResourceReference
     /**
      * @var int ID of the resource
      */
-    public $id;
+    public int $id;
 
     /**
      * @var string URI of the resource
      */
-    public $uri;
+    public string $uri;
 
-    public function build($id, $base_uri)
+    public function __construct(int $id, string $base_uri)
     {
         $this->id  = JsonCast::toInt($id);
         $this->uri = $base_uri . '/' . $id;
