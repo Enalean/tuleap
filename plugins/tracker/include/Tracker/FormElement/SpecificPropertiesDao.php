@@ -47,11 +47,6 @@ abstract class SpecificPropertiesDao extends DataAccessObject
 
     /**
      * Duplicate specific properties of field
-     *
-     * @param int $from_field_id the field id source
-     * @param int $to_field_id   the field id target
-     *
-     * @return bool true if ok, false otherwise
      */
-    abstract public function duplicate($from_field_id, $to_field_id);
+    abstract public function duplicate(int $from_field_id, int $to_field_id): bool;
 }
