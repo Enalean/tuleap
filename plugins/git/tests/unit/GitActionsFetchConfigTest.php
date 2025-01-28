@@ -19,147 +19,138 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\GlobalResponseMock;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git;
+
+use Codendi_Request;
+use Git;
+use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_Exception;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_Driver_Gerrit_ProjectCreator;
+use Git_Driver_Gerrit_Template_TemplateFactory;
+use Git_Driver_Gerrit_UserAccountManager;
+use Git_GitRepositoryUrlManager;
+use Git_RemoteServer_GerritServer;
+use Git_RemoteServer_GerritServerFactory;
+use Git_SystemEventManager;
+use GitActions;
+use GitPermissionsManager;
+use GitPlugin;
+use GitRepository;
+use GitRepositoryFactory;
+use GitRepositoryManager;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectHistoryDao;
+use ProjectManager;
+use Psr\Log\NullLogger;
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpPermissionFilter;
+use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
+
+final class GitActionsFetchConfigTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var GitActions
-     */
-    private $actions;
+    private GitActions $actions;
     private int $project_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project|(Project&\Mockery\LegacyMockInterface)|(Project&\Mockery\MockInterface)
-     */
-    private Project|\Mockery\MockInterface|\Mockery\LegacyMockInterface $project;
+    private Project $project;
     private int $repo_id;
-    /**
-     * @var GitRepository&\Mockery\MockInterface
-     */
-    private $repo;
-    /**
-     * @var \PFUser&\Mockery\MockInterface
-     */
-    private $user;
-    /**
-     * @var Codendi_Request&\Mockery\MockInterface
-     */
-    private $request;
-    /**
-     * @var Git_SystemEventManager&\Mockery\MockInterface
-     */
-    private $system_event_manager;
-    /**
-     * @var Git&\Mockery\MockInterface
-     */
-    private $controller;
-    /**
-     * @var Git_Driver_Gerrit&\Mockery\MockInterface
-     */
-    private $driver;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $gerrit_server_factory;
-    /**
-     * @var \Mockery\MockInterface&GitRepositoryFactory
-     */
-    private $factory;
-    /**
-     * @var Git_Driver_Gerrit_ProjectCreator&\Mockery\MockInterface
-     */
-    private $project_creator;
-    /**
-     * @var GitPermissionsManager&\Mockery\MockInterface
-     */
-    private $git_permissions_manager;
+    private GitRepository $repo;
+    private PFUser&MockObject $user;
+    private Git_Driver_Gerrit&MockObject $driver;
+    private GitRepositoryFactory&MockObject $factory;
+    private Git_Driver_Gerrit_ProjectCreator&MockObject $project_creator;
+    private GitPermissionsManager&MockObject $git_permissions_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->project_id = 458;
-        $this->project    = \Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getId')->andReturns($this->project_id);
+        $this->project    = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
+        $this->repo_id    = 14;
+        $this->repo       = GitRepositoryTestBuilder::aProjectRepository()->withId($this->repo_id)->inProject($this->project)->build();
+        $this->user       = $this->createMock(PFUser::class);
 
-        $this->repo_id = 14;
-        $this->repo    = \Mockery::spy(\GitRepository::class);
-        $this->repo->shouldReceive('getId')->andReturns($this->repo_id);
-        $this->repo->shouldReceive('belongsToProject')->with($this->project)->andReturns(true);
+        $controller   = $this->createMock(Git::class);
+        $this->driver = $this->createMock(Git_Driver_Gerrit::class);
 
-        $this->user = \Mockery::spy(\PFUser::class);
+        $gerrit_server = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $gerrit_server->method('getCloneSSHUrl');
 
-        $this->request              = \Mockery::spy(\Codendi_Request::class);
-        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->controller           = \Mockery::spy(\Git::class);
-        $this->driver               = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $gerrit_server_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $gerrit_server_factory->method('getServerById')->willReturn($gerrit_server);
 
-        $gerrit_server = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $this->factory = $this->createMock(GitRepositoryFactory::class);
+        $this->factory->method('getRepositoryById')->willReturnCallback(fn(int $id) => match ($id) {
+            14      => $this->repo,
+            default => null,
+        });
 
-        $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns($gerrit_server);
+        $this->project_creator         = $this->createMock(Git_Driver_Gerrit_ProjectCreator::class);
+        $this->git_permissions_manager = $this->createMock(GitPermissionsManager::class);
 
-        $this->factory = Mockery::mock(\GitRepositoryFactory::class)
-            ->shouldReceive('getRepositoryById')
-            ->with(14)
-            ->andReturn($this->repo)
-            ->getMock();
+        $controller->method('getRequest')->willReturn(new Codendi_Request([]));
+        $controller->method('getUser')->willReturn($this->user);
 
-        $this->project_creator         = \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class);
-        $this->git_permissions_manager = \Mockery::spy(\GitPermissionsManager::class);
+        $git_plugin = $this->createMock(GitPlugin::class);
+        $git_plugin->method('areFriendlyUrlsActivated')->willReturn(false);
 
-        $this->controller->shouldReceive('getRequest')->andReturns($this->request);
-
-        $git_plugin = Mockery::mock(\GitPlugin::class)
-            ->shouldReceive('areFriendlyUrlsActivated')
-            ->andReturnFalse()
-            ->getMock();
-
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+        $server_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $server_factory->method('getDriver')->willReturn($this->driver);
 
         $this->actions = new GitActions(
-            $this->controller,
-            $this->system_event_manager,
+            $controller,
+            $this->createMock(Git_SystemEventManager::class),
             $this->factory,
-            \Mockery::spy(\GitRepositoryManager::class),
-            $this->gerrit_server_factory,
-            Mockery::mock(\Git_Driver_Gerrit_GerritDriverFactory::class)
-                ->shouldReceive('getDriver')
-                ->andReturn($this->driver)
-                ->getMock(),
-            \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
+            $this->createMock(GitRepositoryManager::class),
+            $gerrit_server_factory,
+            $server_factory,
+            $this->createMock(Git_Driver_Gerrit_UserAccountManager::class),
             $this->project_creator,
-            \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
-            \Mockery::spy(\ProjectManager::class),
+            $this->createMock(Git_Driver_Gerrit_Template_TemplateFactory::class),
+            $this->createMock(ProjectManager::class),
             $this->git_permissions_manager,
-            $url_manager,
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            \Mockery::spy(\ProjectHistoryDao::class),
-            \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
-            \Mockery::spy(\Tuleap\Git\RemoteServer\GerritCanMigrateChecker::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
-            \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
-            \Mockery::spy(\UGroupManager::class)
+            new Git_GitRepositoryUrlManager($git_plugin),
+            new NullLogger(),
+            $this->createMock(ProjectHistoryDao::class),
+            $this->createMock(MigrationHandler::class),
+            $this->createMock(GerritCanMigrateChecker::class),
+            $this->createMock(FineGrainedUpdater::class),
+            $this->createMock(FineGrainedPermissionSaver::class),
+            $this->createMock(FineGrainedRetriever::class),
+            $this->createMock(HistoryValueFormatter::class),
+            $this->createMock(PermissionChangesDetector::class),
+            $this->createMock(RegexpFineGrainedEnabler::class),
+            $this->createMock(RegexpFineGrainedDisabler::class),
+            $this->createMock(RegexpPermissionFilter::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $this->createMock(UsersToNotifyDao::class),
+            $this->createMock(UgroupsToNotifyDao::class),
+            $this->createMock(UGroupManager::class)
         );
     }
 
     public function testItReturnsAnErrorIfRepoDoesNotExist(): void
     {
-        $this->factory->shouldReceive('getRepositoryById')->andReturns(null);
+        $this->factory->method('getRepositoryById')->willReturn(null);
         $repo_id = 458;
 
         $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(404);
@@ -169,8 +160,7 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnErrorIfRepoDoesNotBelongToProject(): void
     {
-        $project = \Mockery::spy(\Project::class);
-        $this->repo->shouldReceive('belongsToProject')->with($project)->andReturns(false);
+        $project = ProjectTestBuilder::aProject()->withId($this->project_id + 1)->build();
 
         $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(403);
 
@@ -179,8 +169,9 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnErrorIfUserIsNotProjectAdmin(): void
     {
-        $this->user->shouldReceive('isAdmin')->with($this->project_id)->andReturns(false);
-        $this->repo->shouldReceive('isMigratedToGerrit')->andReturns(true);
+        $this->user->method('isAdmin')->with($this->project_id)->willReturn(false);
+        $this->git_permissions_manager->method('userIsGitAdmin')->willReturn(false);
+        $this->repo->setRemoteServerId(1);
         $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(401);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
@@ -188,8 +179,7 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnErrorIfRepoIsNotMigratedToGerrit(): void
     {
-        $this->user->shouldReceive('isAdmin')->with($this->project_id)->andReturns(true);
-        $this->repo->shouldReceive('isMigratedToGerrit')->andReturns(false);
+        $this->user->method('isAdmin')->with($this->project_id)->willReturn(true);
         $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(500);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
@@ -197,10 +187,12 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnErrorIfRepoIsGerritServerIsDown(): void
     {
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')->andReturns(true);
-        $this->repo->shouldReceive('isMigratedToGerrit')->andReturns(true);
-        $this->project_creator->shouldReceive('getGerritConfig')->andThrows(new Git_Driver_Gerrit_Exception());
+        $this->git_permissions_manager->method('userIsGitAdmin')->willReturn(true);
+        $this->repo->setRemoteServerId(1);
+        $this->project_creator->method('getGerritConfig')->willThrowException(new Git_Driver_Gerrit_Exception());
+        $this->project_creator->method('removeTemporaryDirectory');
         $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(500);
+        $this->driver->method('getGerritProjectName');
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
