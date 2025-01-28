@@ -35,16 +35,16 @@ class AgileDashboard_PaneInfoFactory
         $this->submilestone_finder = $submilestone_finder;
     }
 
-    public function getDetailsPaneInfo(Planning_Milestone $milestone)
+    public function getDetailsPaneInfo(Planning_Milestone $milestone): DetailsPaneInfo
     {
         return new DetailsPaneInfo($milestone);
     }
 
-    public function getPlanningV2PaneInfo(PFUser $user, Planning_Milestone $milestone)
+    public function getPlanningV2PaneInfo(PFUser $user, Planning_Milestone $milestone): ?PlanningV2PaneInfo
     {
         $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($user, $milestone);
         if (! $submilestone_tracker) {
-            return;
+            return null;
         }
 
         return new PlanningV2PaneInfo($milestone, $submilestone_tracker);

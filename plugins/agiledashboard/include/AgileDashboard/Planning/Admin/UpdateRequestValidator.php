@@ -112,7 +112,7 @@ class UpdateRequestValidator
         \Planning $original_planning,
         \PlanningParameters $updated_planning,
     ): bool {
-        return (int) $original_planning->getPlanningTrackerId() === (int) $updated_planning->planning_tracker_id;
+        return $original_planning->getPlanningTrackerId() === (int) $updated_planning->planning_tracker_id;
     }
 
     /**

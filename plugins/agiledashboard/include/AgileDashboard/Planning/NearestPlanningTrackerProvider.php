@@ -32,19 +32,15 @@
  */
 class AgileDashboard_Planning_NearestPlanningTrackerProvider
 {
-    /** @var PlanninqFactory */
-    private $planning_factory;
-
-    public function __construct(PlanningFactory $planning_factory)
+    public function __construct(private readonly PlanningFactory $planning_factory)
     {
-        $this->planning_factory = $planning_factory;
     }
 
     public function getNearestPlanningTracker(PFUser $user, Tracker $backlog_tracker, Tracker_HierarchyFactory $hierarchy_factory): ?Tracker
     {
         $current_backlog_tracker  = $backlog_tracker;
         $nearest_planning_tracker = null;
-        while ($current_backlog_tracker && ! $nearest_planning_tracker) {
+        while ($current_backlog_tracker && $nearest_planning_tracker === null) {
             $plannings = $this->getPlanningTrackersInRightOrder($user, $current_backlog_tracker, $hierarchy_factory);
             if (! $plannings) {
                 $current_backlog_tracker = $current_backlog_tracker->getParent();
@@ -56,7 +52,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
         return $nearest_planning_tracker;
     }
 
-    private function getPlanningTrackersInRightOrder(PFUser $user, Tracker $backlog_tracker, Tracker_HierarchyFactory $hierarchy_factory)
+    private function getPlanningTrackersInRightOrder(PFUser $user, Tracker $backlog_tracker, Tracker_HierarchyFactory $hierarchy_factory): array
     {
         $planning_trackers = $this->planning_factory->getPlanningsByBacklogTracker($user, $backlog_tracker);
 
@@ -66,7 +62,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
         return $this->sortPlanningTrackersUsingAReference($trackers_ids, $planning_trackers);
     }
 
-    private function getAllPlanningTrackersIds(array $planning_trackers)
+    private function getAllPlanningTrackersIds(array $planning_trackers): array
     {
         $trackers_ids = [];
 
@@ -77,7 +73,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
         return $trackers_ids;
     }
 
-    private function sortPlanningTrackersIdsUsingHierarchy(array $trackers_ids, Tracker_HierarchyFactory $hierarchy_factory)
+    private function sortPlanningTrackersIdsUsingHierarchy(array $trackers_ids, Tracker_HierarchyFactory $hierarchy_factory): array
     {
         $hierarchy    = $hierarchy_factory->getHierarchy($trackers_ids);
         $trackers_ids = $hierarchy->sortTrackerIds($trackers_ids);
@@ -85,7 +81,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
         return $trackers_ids;
     }
 
-    private function sortPlanningTrackersUsingAReference(array $reference, array $planning_trackers)
+    private function sortPlanningTrackersUsingAReference(array $reference, array $planning_trackers): array
     {
         $ordered_plannings = [];
 
