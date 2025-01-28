@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 
-class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId
+class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
@@ -146,13 +146,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         return $GLOBALS['HTML']->getImagePath('ic/ui-perTrackerId--plus.png');
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html  = '';
         $html .= $artifact->getPerTrackerArtifactId();

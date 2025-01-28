@@ -456,13 +456,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return $GLOBALS['HTML']->getImagePath('ic/ui-spin--plus.png');
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Tracker_Artifact_ChangesetValue_Text $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html = '';
 

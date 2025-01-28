@@ -265,10 +265,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return '';
     }
 
-    /**
-     * @return string
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return '';
     }

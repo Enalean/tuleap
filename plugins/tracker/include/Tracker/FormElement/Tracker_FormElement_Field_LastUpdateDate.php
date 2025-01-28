@@ -251,13 +251,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return $output;
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Tracker_Artifact_ChangesetValue $value The changeset value for this field
-     * @return string
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         if (! $value) {
             // TODO use $changeset instead of $artifact->getLastChangeset()

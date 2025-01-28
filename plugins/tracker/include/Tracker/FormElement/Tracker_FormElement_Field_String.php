@@ -213,13 +213,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field--plus.png');
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Tracker_Artifact_ChangesetValue_String $value The ChangesetValue_String
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';

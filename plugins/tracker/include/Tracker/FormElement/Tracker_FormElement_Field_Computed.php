@@ -496,13 +496,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return (string) ($computed_value ?? '-');
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $changeset      = $artifact->getLastChangesetWithFieldValue($this);
         $computed_value = null;

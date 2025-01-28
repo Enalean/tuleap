@@ -781,16 +781,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $GLOBALS['HTML']->getImagePath('calendar/cal--plus.png');
     }
 
-    /**
-     * Fetch the html code to display the field value in tooltip
-     *
-     * @param Tracker_Artifact_ChangesetValue_Date $value The changeset value for this field
-     * @return string
-     */
-    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html = '';
-        if ($value && $value->getTimestamp()) {
+        if ($value && $value instanceof Tracker_Artifact_ChangesetValue_Date && $value->getTimestamp() !== null) {
             $user  = HTTPRequest::instance()->getCurrentUser();
             $html .= $this->isTimeDisplayed()
                 ? DateHelper::relativeDateInlineContext($value->getTimestamp() ?? 0, $user)
@@ -827,6 +821,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      */
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
+        if (! $old_value instanceof Tracker_Artifact_ChangesetValue_Date) {
+            return false;
+        }
         return strtotime($this->formatDate($old_value->getTimestamp())) != strtotime($new_value);
     }
 
