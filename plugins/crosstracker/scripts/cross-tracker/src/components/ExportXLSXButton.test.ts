@@ -23,6 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import {
     CLEAR_FEEDBACKS,
+    GET_COLUMN_NAME,
     NOTIFY_FAULT,
     REPORT_ID,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -31,6 +32,8 @@ import ExportXLSXButton from "./ExportXLSXButton.vue";
 import { RetrieveArtifactsTableStub } from "../../tests/stubs/RetrieveArtifactsTableStub";
 import { Fault } from "@tuleap/fault";
 import { errAsync, okAsync } from "neverthrow";
+import { ColumnNameGetter } from "../domain/ColumnNameGetter";
+import { createVueGettextProviderPassThrough } from "../helpers/vue-gettext-provider-for-test";
 vi.useFakeTimers();
 
 const downloadXLSXDocument = vi.fn();
@@ -68,6 +71,9 @@ describe("ExportXLSXButton", () => {
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]:
                         RetrieveArtifactsTableStub.withDefaultContent(),
                     [REPORT_ID.valueOf()]: report_id,
+                    [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
+                        createVueGettextProviderPassThrough(),
+                    ),
                 },
             },
         });

@@ -40,6 +40,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
 import {
     CLEAR_FEEDBACKS,
+    GET_COLUMN_NAME,
     NOTIFY_FAULT,
     REPORT_ID,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -48,6 +49,8 @@ import { XLSXExportFault } from "../domain/XLSXExportFault";
 
 const report_id = strictInject(REPORT_ID);
 const artifact_table_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
+const column_name_getter = strictInject(GET_COLUMN_NAME);
+
 const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
 const notifyFault = strictInject(NOTIFY_FAULT);
 
@@ -62,11 +65,14 @@ async function exportXSLX(): Promise<void> {
 
     const { downloadXLSXDocument } = await export_document_module;
     const { downloadXLSX } = await download_xlsx_module;
-    await downloadXLSXDocument(artifact_table_retriever, report_id, downloadXLSX).mapErr(
-        (fault) => {
-            notifyFault(XLSXExportFault(fault));
-        },
-    );
+    await downloadXLSXDocument(
+        artifact_table_retriever,
+        report_id,
+        column_name_getter,
+        downloadXLSX,
+    ).mapErr((fault) => {
+        notifyFault(XLSXExportFault(fault));
+    });
     is_loading.value = false;
 }
 </script>
