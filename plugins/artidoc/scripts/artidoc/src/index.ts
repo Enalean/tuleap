@@ -55,6 +55,7 @@ import {
     useRemoveFreetextSectionModal,
 } from "@/composables/useRemoveFreetextSectionModal";
 import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
+import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -71,21 +72,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const current_locale = userLocale(user_locale);
 
-    const item_id = Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "itemId"), 10);
+    const item_id = Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-item-id"), 10);
 
     const app = createApp(App);
 
     app.provide(TOOLBAR_BUS, buildToolbarBus());
 
     const can_user_edit_document = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument"),
+        getDatasetItemOrThrow(vue_mount_point, "data-can-user-edit-document"),
     );
-    const selected_tracker = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "selectedTracker"));
+    const selected_tracker = JSON.parse(
+        getDatasetItemOrThrow(vue_mount_point, "data-selected-tracker"),
+    );
     const sections_collection = buildSectionsCollection();
     const configuration_store = initConfigurationStore(
         item_id,
         selected_tracker,
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "allowedTrackers")),
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-allowed-trackers")),
     );
 
     watchForNeededPendingSectionInsertion(
@@ -107,17 +110,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus());
     app.provide(REMOVE_FREETEXT_SECTION_MODAL, useRemoveFreetextSectionModal());
     app.provide(DOCUMENT_ID, item_id);
-    app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
+    app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "data-title"));
     app.provide(
         UPLOAD_MAX_SIZE,
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "uploadMaxSize"), 10),
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-upload-max-size"), 10),
+    );
+    app.provide(
+        IS_FREETEXT_ALLOWED,
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-is-freetext-allowed"), 10),
     );
     app.provide(CONFIGURATION_STORE, configuration_store);
     app.provide(
         PDF_TEMPLATES_STORE,
-        initPdfTemplatesStore(JSON.parse(getDatasetItemOrThrow(vue_mount_point, "pdfTemplates"))),
+        initPdfTemplatesStore(
+            JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-pdf-templates")),
+        ),
     );
-    app.provide(IS_USER_ANONYMOUS, Number(getDatasetItemOrThrow(document.body, "userId")) === 0);
+    app.provide(
+        IS_USER_ANONYMOUS,
+        Number(getDatasetItemOrThrow(document.body, "data-user-id")) === 0,
+    );
 
     app.use(gettext);
     app.use(VueDOMPurifyHTML);

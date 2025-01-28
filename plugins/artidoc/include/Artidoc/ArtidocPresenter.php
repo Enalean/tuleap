@@ -44,6 +44,7 @@ final readonly class ArtidocPresenter
         array $allowed_trackers,
         public int $upload_max_size,
         ?array $pdf_templates,
+        public bool $is_freetext_allowed,
     ) {
         $this->selected_tracker = encode($selected_tracker);
         $this->allowed_trackers = encode($allowed_trackers);

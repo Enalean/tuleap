@@ -50,13 +50,13 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     #[FeatureFlagConfigKey(<<<'EOF'
-    Feature flag to allow edition of artidoc documents.
-    0 to deactivate
-    1 to activate (default)
+    Feature flag to allow freetext in artidoc documents.
+    0 to deactivate (default)
+    1 to activate
     EOF
     )]
-    #[ConfigKeyString('1')]
-    public const EDIT_FEATURE_FLAG = 'enable_artidoc_edition';
+    #[ConfigKeyString('0')]
+    public const FREETEXT_FEATURE_FLAG = 'enable_artidoc_freetext';
 
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
@@ -126,7 +126,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                 'artidoc',
                 new ArtidocPresenter(
                     $document_information->document->getId(),
-                    $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
+                    $user_can_write,
                     $title,
                     $this->getTrackerRepresentation($this->configured_tracker_retriever->getTracker($document_information->document), $user),
                     array_map(
@@ -135,6 +135,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     ),
                     $allowed_max_size,
                     $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent($user))->getTemplates(),
+                    \ForgeConfig::getFeatureFlag(self::FREETEXT_FEATURE_FLAG) === '1',
                 )
             );
         $service->displayFooter();
