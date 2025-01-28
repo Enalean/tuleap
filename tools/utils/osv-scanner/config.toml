@@ -104,3 +104,14 @@ reason = "No exploitation path in the Tuleap context for this prototype pollutio
 id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 ignoreUntil = 2025-04-12
+
+# Go stdlib
+[[IgnoredVulns]]
+id = "GO-2025-3373"
+reason = "No impact in Tuleap situation"
+ignoreUntil = 2025-02-28
+
+[[IgnoredVulns]]
+id = "GO-2025-3420"
+reason = "No impact in Tuleap situation"
+ignoreUntil = 2025-02-28
