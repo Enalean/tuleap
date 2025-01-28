@@ -20,45 +20,35 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once __DIR__ . '/bootstrap.php';
+namespace Tuleap\Git;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitBackendGitoliteDisconnectGerritTest extends \Tuleap\Test\PHPUnit\TestCase
+use Git_Backend_Gitolite;
+use GitDao;
+use GitRepository;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitBackendGitoliteDisconnectGerritTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $repo_id = 123;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|GitRepository
-     */
-    private $repository;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Git_Backend_Gitolite
-     */
-    private $backend;
-
-    /**
-     * @var GitDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $dao;
+    private int $repo_id = 123;
+    private GitRepository $repository;
+    private Git_Backend_Gitolite&MockObject $backend;
+    private GitDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->repository = Mockery::mock(GitRepository::class)->shouldReceive('getId')->andReturn($this->repo_id)->getMock();
-        $this->dao        = \Mockery::spy(GitDao::class);
-        $this->backend    = \Mockery::mock(\Git_Backend_Gitolite::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId($this->repo_id)->build();
+        $this->dao        = $this->createMock(GitDao::class);
+        $this->backend    = $this->createPartialMock(Git_Backend_Gitolite::class, []);
         $this->backend->setDao($this->dao);
     }
 
     public function testItAsksToDAOToDisconnectFromGerrit(): void
     {
-        $this->dao->shouldReceive('disconnectFromGerrit')->with($this->repo_id)->once();
+        $this->dao->expects(self::once())->method('disconnectFromGerrit')->with($this->repo_id);
 
         $this->backend->disconnectFromGerrit($this->repository);
     }
