@@ -38,6 +38,8 @@ import { describe, expect, it } from "vitest";
 import type { ReportSection } from "./data-formater";
 import { formatData } from "./data-formater";
 import { NumberCell, TextCell, EmptyCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
+import { ColumnNameGetter } from "../../../domain/ColumnNameGetter";
+import { createVueGettextProviderPassThrough } from "../../vue-gettext-provider-for-test";
 
 describe("data-formater", () => {
     const artifact_column = ARTIFACT_COLUMN_NAME;
@@ -190,7 +192,7 @@ describe("data-formater", () => {
                 ),
             ),
         ];
-        const result = formatData(table);
+        const result = formatData(table, ColumnNameGetter(createVueGettextProviderPassThrough()));
 
         const report_cell_result: ReportSection = {
             headers: [

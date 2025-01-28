@@ -33,19 +33,25 @@ import {
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { ARTIFACT_COLUMN_NAME } from "../../../domain/ColumnName";
 import { EmptyCell, TextCell, NumberCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
+import type { GetColumnName } from "../../../domain/ColumnNameGetter";
 
 export type ReportSection = {
     headers: ReadonlyArray<TextCell>;
     rows: ReadonlyArray<ReadonlyArray<ReportCell>>;
 };
 
-export function formatData(artifact_table: ReadonlyArray<ArtifactsTable>): ReportSection {
+export function formatData(
+    artifact_table: ReadonlyArray<ArtifactsTable>,
+    column_name_getter: GetColumnName,
+): ReportSection {
     const first_row_column_names: TextCell[] = [];
     artifact_table[0].columns.forEach((column_name) => {
         if (column_name === ARTIFACT_COLUMN_NAME) {
             return;
         }
-        first_row_column_names.push(new TextCell(column_name));
+        first_row_column_names.push(
+            new TextCell(column_name_getter.getTranslatedColumnName(column_name)),
+        );
     });
 
     const rows: ReportCell[][] = [];
