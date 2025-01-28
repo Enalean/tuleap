@@ -19,7 +19,7 @@
 
 import { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
-import type { EventDispatcher } from "../EventDispatcher";
+import type { ObserveEvents } from "../AllEvents";
 
 export type OnFaultHandler = (fault_option: Option<Fault>) => void;
 
@@ -28,7 +28,7 @@ export type FaultFeedbackControllerType = {
 };
 
 export const FaultFeedbackController = (
-    event_dispatcher: EventDispatcher,
+    event_dispatcher: ObserveEvents,
 ): FaultFeedbackControllerType => ({
     registerFaultListener: (handler: OnFaultHandler): void => {
         event_dispatcher.addObserver("WillNotifyFault", (event) => {

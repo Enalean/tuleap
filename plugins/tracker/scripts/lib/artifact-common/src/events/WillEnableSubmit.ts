@@ -17,13 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DomainEvent } from "../DomainEvent";
+import type { DomainEvent } from "./EventDispatcher";
 
-export type WillDisableSubmit = DomainEvent<"WillDisableSubmit"> & {
-    readonly reason: string;
-};
+export type WillEnableSubmit = DomainEvent<"WillEnableSubmit">;
 
-export const WillDisableSubmit = (reason: string): WillDisableSubmit => ({
-    type: "WillDisableSubmit",
-    reason,
+export const WillEnableSubmit = (): WillEnableSubmit => ({
+    type: "WillEnableSubmit",
 });

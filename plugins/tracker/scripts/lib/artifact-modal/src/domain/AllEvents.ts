@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,28 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type {
+    CommonEvents,
+    DispatchEvents as DispatchCommon,
+    EventDispatcher as CommonDispatcher,
+    ObserveEvents as ObserveCommon,
+} from "@tuleap/plugin-tracker-artifact-common";
 import type { DidChangeListFieldValue } from "./fields/select-box-field/DidChangeListFieldValue";
-import type { WillDisableSubmit } from "./submit/WillDisableSubmit";
-import type { WillEnableSubmit } from "./submit/WillEnableSubmit";
-import type { WillNotifyFault } from "./WillNotifyFault";
-import type { WillClearFaultNotification } from "./WillClearFaultNotification";
 import type { DidChangeAllowedValues } from "./fields/select-box-field/DidChangeAllowedValues";
-import type { WillGetFileUploadSetup } from "./fields/file-field/WillGetFileUploadSetup";
 import type { DidUploadImage } from "./fields/file-field/DidUploadImage";
+import type { WillGetFileUploadSetup } from "./fields/file-field/WillGetFileUploadSetup";
 
-export type AllEvents = {
-    DidChangeAllowedValues: DidChangeAllowedValues;
+export {
+    EventDispatcher,
+    WillClearFaultNotification,
+    WillDisableSubmit,
+    WillEnableSubmit,
+    WillNotifyFault,
+} from "@tuleap/plugin-tracker-artifact-common";
+export type { DomainEvent } from "@tuleap/plugin-tracker-artifact-common";
+
+export interface AllEvents extends CommonEvents {
     DidChangeListFieldValue: DidChangeListFieldValue;
-    WillClearFaultNotification: WillClearFaultNotification;
-    WillDisableSubmit: WillDisableSubmit;
-    WillEnableSubmit: WillEnableSubmit;
-    WillNotifyFault: WillNotifyFault;
-    WillGetFileUploadSetup: WillGetFileUploadSetup;
+    DidChangeAllowedValues: DidChangeAllowedValues;
     DidUploadImage: DidUploadImage;
-};
+    WillGetFileUploadSetup: WillGetFileUploadSetup;
+}
 
-export type EventType = keyof AllEvents;
-
-export type DomainEvent<TypeOfEvent extends EventType> = {
-    readonly type: TypeOfEvent;
-};
+export type DispatchEvents = DispatchCommon<AllEvents>;
+export type ObserveEvents = ObserveCommon<AllEvents>;
+export type EventDispatcherType = CommonDispatcher<AllEvents>;

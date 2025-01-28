@@ -27,10 +27,11 @@ import { FileFieldController } from "./FileFieldController";
 import type { FileFieldValueModel } from "./FileFieldValueModel";
 import type { FileFieldType } from "./FileFieldType";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
-import { EventDispatcher } from "../../EventDispatcher";
 import { WillGetFileUploadSetup } from "./WillGetFileUploadSetup";
 import { DidUploadImage } from "./DidUploadImage";
 import type { UploadedImage } from "./UploadedImage";
+import type { EventDispatcherType } from "../../AllEvents";
+import { EventDispatcher } from "../../AllEvents";
 
 const FIELD_ID = 588;
 const MAX_SIZE_UPLOAD = 2500;
@@ -40,7 +41,7 @@ const IMAGE_DOWNLOAD_URI = "https://example.com/download/42";
 
 describe(`FileFieldController`, () => {
     describe(`Events`, () => {
-        let event_dispatcher: EventDispatcher,
+        let event_dispatcher: EventDispatcherType,
             value_model: FileFieldValueModel,
             uploaded_image: UploadedImage;
 

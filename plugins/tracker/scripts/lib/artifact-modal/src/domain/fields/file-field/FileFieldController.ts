@@ -22,7 +22,7 @@ import type { FileFieldValueModel } from "./FileFieldValueModel";
 import { NewFileToAttach } from "./NewFileToAttach";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
 import type { FileFieldType } from "./FileFieldType";
-import type { EventDispatcher } from "../../EventDispatcher";
+import type { EventDispatcherType } from "../../AllEvents";
 
 export type NewFileToAttachCollection = ReadonlyArray<NewFileToAttach>;
 export type AttachedFileCollection = ReadonlyArray<AttachedFileDescription> | undefined;
@@ -44,7 +44,7 @@ export interface FileFieldControllerType {
 export const FileFieldController = (
     field: FileFieldType,
     value_model: FileFieldValueModel,
-    event_dispatcher: EventDispatcher,
+    event_dispatcher: EventDispatcherType,
 ): FileFieldControllerType => {
     let attached_files: AttachedFileCollection = field.file_descriptions;
 

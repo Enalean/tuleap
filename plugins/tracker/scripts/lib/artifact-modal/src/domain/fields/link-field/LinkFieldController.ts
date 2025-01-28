@@ -38,11 +38,13 @@ import type { DeleteNewLink } from "./DeleteNewLink";
 import type { RetrievePossibleParents } from "./RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../CurrentTrackerIdentifier";
 import type { LinkTypesCollection } from "./LinkTypesCollection";
-import type { DispatchEvents } from "../../DispatchEvents";
-import { WillDisableSubmit } from "../../submit/WillDisableSubmit";
-import { WillEnableSubmit } from "../../submit/WillEnableSubmit";
-import { WillClearFaultNotification } from "../../WillClearFaultNotification";
-import { WillNotifyFault } from "../../WillNotifyFault";
+import type { DispatchEvents } from "../../AllEvents";
+import {
+    WillClearFaultNotification,
+    WillDisableSubmit,
+    WillEnableSubmit,
+    WillNotifyFault,
+} from "../../AllEvents";
 import type { ChangeNewLinkType } from "./ChangeNewLinkType";
 import type { ChangeLinkType } from "./ChangeLinkType";
 import type { ParentTrackerIdentifier } from "./ParentTrackerIdentifier";

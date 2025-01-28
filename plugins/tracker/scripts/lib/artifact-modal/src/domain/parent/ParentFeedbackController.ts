@@ -21,8 +21,8 @@ import { Option } from "@tuleap/option";
 import type { ParentArtifact } from "./ParentArtifact";
 import type { ParentArtifactIdentifier } from "./ParentArtifactIdentifier";
 import type { RetrieveParent } from "./RetrieveParent";
-import type { DispatchEvents } from "../DispatchEvents";
-import { WillNotifyFault } from "../WillNotifyFault";
+import type { DispatchEvents } from "../AllEvents";
+import { WillNotifyFault } from "../AllEvents";
 
 export type ParentFeedbackControllerType = {
     getParentArtifact(): PromiseLike<Option<ParentArtifact>>;

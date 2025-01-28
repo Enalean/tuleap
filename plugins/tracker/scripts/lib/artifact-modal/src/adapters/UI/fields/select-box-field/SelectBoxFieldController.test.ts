@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as list_picker_lib from "@tuleap/list-picker";
 import type { ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { SelectBoxFieldValueModelType } from "./SelectBoxFieldValueModelType";
 import type { ControlSelectBoxField } from "./SelectBoxFieldController";
-
 import { SelectBoxFieldController } from "./SelectBoxFieldController";
-import { EventDispatcher } from "../../../../domain/EventDispatcher";
-
-import * as list_picker_lib from "@tuleap/list-picker";
-import type { DidChangeListFieldValue } from "../../../../domain/fields/select-box-field/DidChangeListFieldValue";
+import type { EventDispatcherType } from "../../../../domain/AllEvents";
+import { EventDispatcher } from "../../../../domain/AllEvents";
 import { DidChangeAllowedValues } from "../../../../domain/fields/select-box-field/DidChangeAllowedValues";
+import type { DidChangeListFieldValue } from "../../../../domain/fields/select-box-field/DidChangeListFieldValue";
 
 const option_1_value = 101,
     option_2_value = 102;
@@ -37,7 +36,7 @@ describe("SelectBoxFieldController", () => {
         select: HTMLSelectElement,
         option_1: HTMLOptionElement,
         option_2: HTMLOptionElement,
-        event_dispatcher: EventDispatcher,
+        event_dispatcher: EventDispatcherType,
         did_change_allowed_values_events: DidChangeAllowedValues[],
         did_change_list_field_value_events: DidChangeListFieldValue[];
 

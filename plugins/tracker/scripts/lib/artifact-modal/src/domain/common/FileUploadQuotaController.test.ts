@@ -19,11 +19,12 @@
 
 import { Option } from "@tuleap/option";
 import { FileUploadQuotaController } from "./FileUploadQuotaController";
-import { EventDispatcher } from "../EventDispatcher";
+import type { EventDispatcherType } from "../AllEvents";
+import { EventDispatcher } from "../AllEvents";
 
 const MAX_SIZE_UPLOAD = 7000;
 describe(`FileUploadQuotaController`, () => {
-    let event_dispatcher: EventDispatcher;
+    let event_dispatcher: EventDispatcherType;
 
     beforeEach(() => {
         event_dispatcher = EventDispatcher();

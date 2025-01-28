@@ -4,6 +4,14 @@ settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
+dependencies:
+  '@tuleap/fault':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/fault
+  '@tuleap/option':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/option
+
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*

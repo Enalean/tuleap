@@ -39,8 +39,8 @@ import { UserHistoryRetrievalFault } from "../../../../../domain/fields/link-fie
 import type { SearchArtifacts } from "../../../../../domain/fields/link-field/SearchArtifacts";
 import { SearchArtifactsFault } from "../../../../../domain/fields/link-field/SearchArtifactsFault";
 import { ArtifactLinkListDuplicateRemover } from "../ArtifactLinkListDuplicateRemover";
-import type { DispatchEvents } from "../../../../../domain/DispatchEvents";
-import { WillNotifyFault } from "../../../../../domain/WillNotifyFault";
+import type { DispatchEvents } from "../../../../../domain/AllEvents";
+import { WillNotifyFault } from "../../../../../domain/AllEvents";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;

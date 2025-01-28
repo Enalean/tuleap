@@ -22,8 +22,8 @@ import type { FollowUpComment } from "./FollowUpComment";
 import type { RetrieveComments } from "./RetrieveComments";
 import type { CommentUserPreferences } from "./CommentUserPreferences";
 import { CommentsRetrievalFault } from "./CommentsRetrievalFault";
-import type { DispatchEvents } from "../DispatchEvents";
-import { WillNotifyFault } from "../WillNotifyFault";
+import type { DispatchEvents } from "../AllEvents";
+import { WillNotifyFault } from "../AllEvents";
 
 export type CommentsControllerType = {
     getPreferences(): CommentUserPreferences;

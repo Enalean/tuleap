@@ -20,19 +20,20 @@
 import { Option } from "@tuleap/option";
 import { fr_FR_LOCALE } from "@tuleap/core-constants";
 import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
-import { EventDispatcher } from "../EventDispatcher";
+import type { EventDispatcherType } from "../AllEvents";
+import { EventDispatcher, WillDisableSubmit } from "../AllEvents";
 import type { FormattedTextControllerType } from "./FormattedTextController";
 import { FormattedTextController } from "./FormattedTextController";
 import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 import { DidUploadImage } from "../fields/file-field/DidUploadImage";
 import { InterpretCommonMarkStub } from "../../../tests/stubs/InterpretCommonMarkStub";
-import { WillDisableSubmit } from "../submit/WillDisableSubmit";
 import { FormattedTextUserPreferences } from "./FormattedTextUserPreferences";
 
 const HTML_STRING = "<strong>HTML</strong>";
 
 describe(`FormattedTextController`, () => {
-    let dispatcher: EventDispatcher | DispatchEventsStub, preferences: FormattedTextUserPreferences;
+    let dispatcher: EventDispatcherType | DispatchEventsStub,
+        preferences: FormattedTextUserPreferences;
 
     beforeEach(() => {
         dispatcher = DispatchEventsStub.withRecordOfEventTypes();

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DomainEvent } from "./DomainEvent";
 import type { Fault } from "@tuleap/fault";
+import type { DomainEvent } from "./EventDispatcher";
 
 export type WillNotifyFault = DomainEvent<"WillNotifyFault"> & {
     readonly fault: Fault;

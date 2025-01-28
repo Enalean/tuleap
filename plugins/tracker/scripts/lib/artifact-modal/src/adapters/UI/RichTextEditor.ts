@@ -47,7 +47,7 @@ import {
 } from "../../gettext-catalog";
 import type { FormattedTextControllerType } from "../../domain/common/FormattedTextController";
 import type { FileUploadSetup } from "../../domain/fields/file-field/FileUploadSetup";
-import { WillDisableSubmit } from "../../domain/submit/WillDisableSubmit";
+import { WillDisableSubmit } from "../../domain/AllEvents";
 import { DidUploadImage } from "../../domain/fields/file-field/DidUploadImage";
 
 export interface RichTextEditor {

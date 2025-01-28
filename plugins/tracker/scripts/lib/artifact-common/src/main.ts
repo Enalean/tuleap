@@ -20,3 +20,15 @@
 export { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
 export { CurrentProjectIdentifier } from "./CurrentProjectIdentifier";
 export type { Identifier } from "./Identifier";
+export type { CommonEvents } from "./events/CommonEvents";
+export type {
+    DispatchEvents,
+    DomainEvent,
+    EventsMap,
+    ObserveEvents,
+} from "./events/EventDispatcher";
+export { EventDispatcher } from "./events/EventDispatcher";
+export { WillClearFaultNotification } from "./events/WillClearFaultNotification";
+export { WillDisableSubmit } from "./events/WillDisableSubmit";
+export { WillEnableSubmit } from "./events/WillEnableSubmit";
+export { WillNotifyFault } from "./events/WillNotifyFault";

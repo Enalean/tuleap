@@ -35,7 +35,7 @@ import { TrackerIdentifierStub } from "../../../../../tests/stubs/TrackerIdentif
 import { CreateLinkableArtifactStub } from "../../../../../tests/stubs/CreateLinkableArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { CreateLinkableArtifact } from "./CreateLinkableArtifact";
-import { WillDisableSubmit } from "../../../submit/WillDisableSubmit";
+import { WillDisableSubmit } from "../../../AllEvents";
 
 const isProjectsRetrieval = (fault: Fault): boolean =>
     "isProjectsRetrieval" in fault && fault.isProjectsRetrieval() === true;

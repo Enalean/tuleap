@@ -20,6 +20,8 @@
 import type { UpdateFunction } from "hybrids";
 import { define, dispatch, html } from "hybrids";
 import { Option } from "@tuleap/option";
+import { selectOrThrow } from "@tuleap/dom";
+import { createListPicker } from "@tuleap/list-picker";
 import {
     getArtifactCreationFeedbackErrorMessage,
     getArtifactCreationInputPlaceholderText,
@@ -40,14 +42,12 @@ import type { ArtifactCrossReference } from "../../../../../domain/ArtifactCross
 import "../LinkTypeSelectorElement";
 import { FaultDisplayer } from "./FaultDisplayer";
 import type { Tracker } from "../../../../../domain/Tracker";
-import { selectOrThrow } from "@tuleap/dom";
 import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
-import { createListPicker } from "@tuleap/list-picker";
 import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { TrackerIdentifierProxy } from "./TrackerIdentifierProxy";
 import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
-import { WillDisableSubmit } from "../../../../../domain/submit/WillDisableSubmit";
+import { WillDisableSubmit } from "../../../../../domain/AllEvents";
 
 export type ArtifactCreatorElement = {
     readonly controller: ArtifactCreatorController;

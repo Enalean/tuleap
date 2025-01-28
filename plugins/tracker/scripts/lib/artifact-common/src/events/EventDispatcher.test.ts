@@ -17,33 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { Fault } from "@tuleap/fault";
 import { EventDispatcher } from "./EventDispatcher";
-import { DidChangeListFieldValue } from "./fields/select-box-field/DidChangeListFieldValue";
-import { WillEnableSubmit } from "./submit/WillEnableSubmit";
+import { WillNotifyFault } from "./WillNotifyFault";
+import { WillEnableSubmit } from "./WillEnableSubmit";
+import type { CommonEvents } from "./CommonEvents";
 
 const FIRST_EVENT_TYPE = "WillEnableSubmit",
-    SECOND_EVENT_TYPE = "DidChangeListFieldValue";
+    SECOND_EVENT_TYPE = "WillNotifyFault";
 
 describe(`EventDispatcher`, () => {
     let first_event: WillEnableSubmit,
-        second_event: DidChangeListFieldValue,
-        dispatcher: EventDispatcher;
+        second_event: WillNotifyFault,
+        dispatcher: EventDispatcher<CommonEvents>;
 
     beforeEach(() => {
         first_event = WillEnableSubmit();
-        second_event = DidChangeListFieldValue(12, [123]);
+        second_event = WillNotifyFault(Fault.fromMessage("Oooops"));
         dispatcher = EventDispatcher();
     });
 
     it(`does nothing when no observers have been added`, () => {
-        const observer = jest.fn();
+        const observer = vi.fn();
         dispatcher.dispatch(first_event);
 
         expect(observer).not.toHaveBeenCalled();
     });
 
     it(`does nothing when dispatching an event but observers for another event have been added`, () => {
-        const other_observer = jest.fn();
+        const other_observer = vi.fn();
         dispatcher.addObserver(SECOND_EVENT_TYPE, other_observer);
         dispatcher.dispatch(first_event);
 
@@ -51,8 +54,8 @@ describe(`EventDispatcher`, () => {
     });
 
     it(`dispatches an event to all its observers`, () => {
-        const first_observer = jest.fn();
-        const second_observer = jest.fn();
+        const first_observer = vi.fn();
+        const second_observer = vi.fn();
         dispatcher.addObserver(FIRST_EVENT_TYPE, first_observer);
         dispatcher.addObserver(FIRST_EVENT_TYPE, second_observer);
         dispatcher.dispatch(first_event);
@@ -71,8 +74,8 @@ describe(`EventDispatcher`, () => {
     });
 
     it(`does nothing when dispatching an event after observers have been removed`, () => {
-        const first_observer = jest.fn();
-        const second_observer = jest.fn();
+        const first_observer = vi.fn();
+        const second_observer = vi.fn();
         dispatcher.addObserver(FIRST_EVENT_TYPE, first_observer);
         dispatcher.addObserver(FIRST_EVENT_TYPE, second_observer);
         dispatcher.removeObserver(FIRST_EVENT_TYPE, first_observer);
@@ -84,10 +87,10 @@ describe(`EventDispatcher`, () => {
     });
 
     it(`dispatches several events to all their respective observers`, () => {
-        const first_observer = jest.fn();
-        const second_observer = jest.fn();
-        const third_observer = jest.fn();
-        const fourth_observer = jest.fn();
+        const first_observer = vi.fn();
+        const second_observer = vi.fn();
+        const third_observer = vi.fn();
+        const fourth_observer = vi.fn();
         dispatcher.addObserver(FIRST_EVENT_TYPE, first_observer);
         dispatcher.addObserver(FIRST_EVENT_TYPE, second_observer);
         dispatcher.addObserver(SECOND_EVENT_TYPE, third_observer);

@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DispatchEvents } from "../../src/domain/DispatchEvents";
-import type { EventType } from "../../src/domain/DomainEvent";
+import type { AllEvents, DispatchEvents } from "../../src/domain/AllEvents";
+
+type EventType = keyof AllEvents;
 
 export type DispatchEventsStub = DispatchEvents & {
     getDispatchedEventTypes(): EventType[];
