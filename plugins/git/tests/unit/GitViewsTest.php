@@ -18,81 +18,87 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once 'bootstrap.php';
+namespace Tuleap\Git;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitViewsTest extends \Tuleap\Test\PHPUnit\TestCase
+use GitPlugin;
+use GitViews;
+use PFUser;
+use Project;
+use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitViewsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCanReturnOptionsListOfProjectsTheUserIsAdminOf(): void
     {
-        $user    = $this->givenAUserWithProjects();
-        $project = $this->givenAProject('123', 'Guinea Pig');
+        $project = $this->givenAProject('Guinea Pig');
+        $user    = $this->givenAUserWithProjects($project);
         $manager = $this->givenAProjectManager($project);
 
-        $view   = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $view   = $this->createPartialMock(GitViews::class, []);
         $output = $view->getUserProjectsAsOptions($user, $manager, '50');
-        $this->assertMatchesRegularExpression('/<option value="123"/', $output);
-        $this->assertDoesNotMatchRegularExpression('/<option value="456"/', $output);
+        self::assertMatchesRegularExpression('/<option value="123"/', $output);
+        self::assertDoesNotMatchRegularExpression('/<option value="456"/', $output);
     }
 
     public function testOptionsShouldContainThePublicNameOfTheProject(): void
     {
-        $user    = $this->givenAUserWithProjects();
-        $project = $this->givenAProject('123', 'Guinea Pig');
+        $project = $this->givenAProject('Guinea Pig');
+        $user    = $this->givenAUserWithProjects($project);
         $manager = $this->givenAProjectManager($project);
 
-        $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertMatchesRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $view = $this->createPartialMock(GitViews::class, []);
+        self::assertMatchesRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
     public function testOptionsShouldContainTheUnixNameOfTheProjectAsTitle(): void
     {
-        $user    = $this->givenAUserWithProjects();
-        $project = $this->givenAProject('123', 'Guinea Pig', 'gpig');
+        $project = $this->givenAProject('Guinea Pig', 'gpig');
+        $user    = $this->givenAUserWithProjects($project);
         $manager = $this->givenAProjectManager($project);
 
-        $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertMatchesRegularExpression('/title="gpig"/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $view = $this->createPartialMock(GitViews::class, []);
+        self::assertMatchesRegularExpression('/title="gpig"/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
     public function testOptionsShouldPurifyThePublicNameOfTheProject(): void
     {
-        $user    = $this->givenAUserWithProjects();
-        $project = $this->givenAProject('123', 'Guinea < Pig');
+        $project = $this->givenAProject('Guinea < Pig');
+        $user    = $this->givenAUserWithProjects($project);
         $manager = $this->givenAProjectManager($project);
 
-        $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertMatchesRegularExpression('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $view = $this->createPartialMock(GitViews::class, []);
+        self::assertMatchesRegularExpression('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
     public function testCurrentProjectMustNotBeInProjectList(): void
     {
-        $user    = $this->givenAUserWithProjects();
-        $project = $this->givenAProject('123', 'Guinea Pig');
+        $project = $this->givenAProject('Guinea Pig');
+        $user    = $this->givenAUserWithProjects($project);
         $manager = $this->givenAProjectManager($project);
 
-        $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertDoesNotMatchRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
+        $view = $this->createPartialMock(GitViews::class, []);
+        self::assertDoesNotMatchRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, 123));
     }
 
     public function testProjectListMustContainsOnlyProjectsWithGitEnabled(): void
     {
-        $user    = $this->givenAUserWithProjects();
-        $project = $this->givenAProjectWithoutGitService('123', 'Guinea Pig');
+        $project = $this->givenAProjectWithoutGitService();
+        $user    = $this->givenAUserWithProjects($project);
         $manager = $this->givenAProjectManager($project);
 
-        $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertDoesNotMatchRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $view = $this->createPartialMock(GitViews::class, []);
+        self::assertDoesNotMatchRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
-    private function givenAProject($id, $name, $unixName = null, $useGit = true): Project
+    private function givenAProject(string $name, ?string $unixName = null, bool $useGit = true): Project
     {
-        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()
-            ->withId($id)
+        $project = ProjectTestBuilder::aProject()
+            ->withId(123)
             ->withPublicName($name)
             ->withoutServices();
 
@@ -107,25 +113,28 @@ class GitViewsTest extends \Tuleap\Test\PHPUnit\TestCase
         return $project->build();
     }
 
-    private function givenAProjectWithoutGitService($id, $name): Project
+    private function givenAProjectWithoutGitService(): Project
     {
-        return $this->givenAProject($id, $name, null, false);
+        return $this->givenAProject('Guinea Pig', null, false);
     }
 
-    private function givenAProjectManager($project): ProjectManager
+    private function givenAProjectManager(Project $project): ProjectManager
     {
-        $manager = \Mockery::spy(\ProjectManager::class);
-        $manager->shouldReceive('getProject')->with($project->getId())->andReturns($project);
+        $manager = $this->createMock(ProjectManager::class);
+        $manager->method('getProject')->willReturnCallback(static fn($id) => match ((int) $id) {
+            (int) $project->getID() => $project,
+            default                 => null,
+        });
 
         return $manager;
     }
 
-    private function givenAUserWithProjects(): PFUser
+    private function givenAUserWithProjects(Project $project): PFUser
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getAllProjects')->andReturns(['123', '456']);
-        $user->shouldReceive('isMember')->with('123', 'A')->andReturns(true);
-        $user->shouldReceive('isMember')->with('456', 'A')->andReturns(false);
-        return $user;
+        return UserTestBuilder::aUser()
+            ->withProjects([123, 456])
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
     }
 }
