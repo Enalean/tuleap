@@ -50,15 +50,12 @@ final class BacklogItemRepresentationFactory
             $current_user
         );
 
-        $backlog_item_representation = new BacklogItemRepresentation();
-        $backlog_item_representation->build(
+        return BacklogItemRepresentation::build(
             $backlog_item,
             $card_fields,
             $background_color,
-            $this->project_background_configuration
+            $this->project_background_configuration,
         );
-
-        return $backlog_item_representation;
     }
 
     private function getCardFields(

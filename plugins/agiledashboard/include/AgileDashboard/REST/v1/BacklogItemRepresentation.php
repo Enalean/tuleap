@@ -22,12 +22,15 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
-use Tuleap\REST\JsonCast;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 
-class BacklogItemRepresentation
+/**
+ * @psalm-immutable
+ */
+final readonly class BacklogItemRepresentation
 {
     public const BACKLOG_ROUTE = 'backlog';
 
@@ -35,124 +38,58 @@ class BacklogItemRepresentation
 
     public const ROUTE = 'backlog_items';
 
-    /**
-     * @var Int
-     */
-    public $id;
+    private function __construct(
+        public int $id,
+        public string $label,
+        public string $type,
+        public string $short_type,
+        public string $status,
+        public string $color,
+        public string $background_color_name,
+        public ?float $initial_effort,
+        public ?float $remaining_effort,
+        public ArtifactReference $artifact,
+        public ?BacklogItemParentReference $parent,
+        public ProjectReference $project,
+        public bool $has_children,
+        public array $accept,
+        public array $card_fields,
+    ) {
+    }
 
-    /**
-     * @var String
-     */
-    public $label;
-
-    /**
-     * @var String
-     */
-    public $type;
-
-    /**
-     * @var String
-     */
-    public $short_type;
-
-    /**
-     * @var String
-     */
-    public $status;
-
-    /**
-     * @var String
-     */
-    public $color;
-
-    /**
-     * @var String
-     */
-    public $background_color_name;
-
-    /**
-     * @var Float
-     */
-    public $initial_effort;
-
-    /** @var float */
-    public $remaining_effort;
-
-    /**
-     * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
-     */
-    public $artifact;
-
-    /**
-     * @var BacklogItemParentReference
-     */
-    public $parent;
-
-    /**
-     * @var \Tuleap\Project\REST\ProjectReference
-     */
-    public $project;
-
-    /**
-     * @var bool
-     */
-    public $has_children;
-
-    /**
-     * @var array
-     */
-    public $accept;
-
-    /**
-     * @var array
-     */
-    public $card_fields;
-
-    public function build(
+    public static function build(
         IBacklogItem $backlog_item,
         array $card_fields,
         BackgroundColor $background_color,
         ProjectBackgroundConfiguration $project_background_configuration,
-    ) {
-        $this->id               = JsonCast::toInt($backlog_item->id());
-        $this->label            = $backlog_item->title();
-        $this->status           = $backlog_item->getNormalizedStatusLabel();
-        $this->type             = $backlog_item->type();
-        $this->short_type       = $backlog_item->getShortType();
-        $this->initial_effort   = JsonCast::toFloat($backlog_item->getInitialEffort());
-        $this->remaining_effort = JsonCast::toFloat($backlog_item->getRemainingEffort());
-        $this->color            = $backlog_item->color();
+    ): self {
+        $item_parent = $backlog_item->getParent();
 
-        $this->artifact = ArtifactReference::build($backlog_item->getArtifact());
-
-        $this->project = new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject());
-
-        $this->parent = null;
-        $item_parent  = $backlog_item->getParent();
-        if ($item_parent !== null) {
-            $this->parent = BacklogItemParentReference::build($item_parent, $project_background_configuration);
-        }
-
-        $this->has_children = $backlog_item->hasChildren();
-
-        $this->addAllowedSubItemTypes($backlog_item);
-
-        if ($card_fields) {
-            $this->card_fields = $card_fields;
-        }
-
-        $this->background_color_name = $background_color->getBackgroundColorName();
-    }
-
-    private function addAllowedSubItemTypes(IBacklogItem $backlog_item)
-    {
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 
-        $this->accept = ['trackers' => []];
+        $accept = ['trackers' => []];
         foreach ($child_trackers as $child_tracker) {
             $reference = TrackerReference::build($child_tracker);
 
-            $this->accept['trackers'][] = $reference;
+            $accept['trackers'][] = $reference;
         }
+
+        return new self(
+            JsonCast::toInt($backlog_item->id()),
+            $backlog_item->title(),
+            $backlog_item->type(),
+            $backlog_item->getShortType(),
+            $backlog_item->getNormalizedStatusLabel(),
+            $backlog_item->color(),
+            $background_color->getBackgroundColorName(),
+            JsonCast::toFloat($backlog_item->getInitialEffort()),
+            JsonCast::toFloat($backlog_item->getRemainingEffort()),
+            ArtifactReference::build($backlog_item->getArtifact()),
+            $item_parent !== null ? BacklogItemParentReference::build($item_parent, $project_background_configuration) : null,
+            new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject()),
+            $backlog_item->hasChildren(),
+            $accept,
+            $card_fields,
+        );
     }
 }

@@ -28,58 +28,6 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/PlanningDao.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->getDB()->safeQuery($sql, $in_statement->values())]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string}>]]></code>
-    </MoreSpecificReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $backlog_tracker_id]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/PlanningUpdater.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $root_planning->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/RootPlanning/UpdateIsAllowedChecker.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $planning->getId()]]></code>
-      <code><![CDATA[(int) $root_planning->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/QueryToCriterionStatusConverter.php">
-    <MissingParamType>
-      <code><![CDATA[$query]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[convert]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/ResourcesInjector.php">
-    <MissingReturnType>
-      <code><![CDATA[declareProjectPlanningResource]]></code>
-      <code><![CDATA[populate]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/AgileDashboardProjectResource.php">
-    <InvalidDocblock>
-      <code><![CDATA[public function getBacklog($id, $limit = 10, $offset = 0)]]></code>
-      <code><![CDATA[public function getMilestones(]]></code>
-      <code><![CDATA[public function getPlannings($id, $limit = 10, $offset = 0)]]></code>
-    </InvalidDocblock>
-    <MissingReturnType>
-      <code><![CDATA[getBacklog]]></code>
-      <code><![CDATA[getMilestones]]></code>
-      <code><![CDATA[getPlannings]]></code>
-      <code><![CDATA[optionsBacklog]]></code>
-      <code><![CDATA[optionsMilestones]]></code>
-      <code><![CDATA[patchBacklog]]></code>
-      <code><![CDATA[putBacklog]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Artifact/BurnupCountElementsPointRepresentation.php">
     <InvalidDocblock>
       <code><![CDATA[public $date;]]></code>
@@ -172,13 +120,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/BacklogItemRepresentation.php">
-    <MissingReturnType>
-      <code><![CDATA[addAllowedSubItemTypes]]></code>
-      <code><![CDATA[build]]></code>
-    </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[null]]></code>
-    </PossiblyNullPropertyAssignmentValue>
     <UndefinedInterfaceMethod>
       <code><![CDATA[type]]></code>
     </UndefinedInterfaceMethod>
@@ -476,11 +417,6 @@
       <code><![CDATA[getIdsToAddThatAreNotInRemoveArray]]></code>
       <code><![CDATA[getIdsToRemoveThatAreNotInAddArray]]></code>
       <code><![CDATA[validate]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/PlanningRepresentation.php">
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/PlanningResource.php">
@@ -34791,7 +34727,6 @@
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[getLinkedArtifactsByIds]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[getRow]]></code>
@@ -34802,7 +34737,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -34845,10 +34779,8 @@
     <FalsableReturnStatement>
       <code><![CDATA[$this->retrieve($sql)]]></code>
       <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
     </InvalidFalsableReturnType>
@@ -38717,7 +38649,6 @@
     </UndefinedDocblockClass>
     <UndefinedMethod>
       <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_File.php">
@@ -38784,7 +38715,6 @@
       <code><![CDATA[getValueDao]]></code>
       <code><![CDATA[getVisioningAttributeForLink]]></code>
       <code><![CDATA[isEmpty]]></code>
-      <code><![CDATA[isPreviousChangesetEmpty]]></code>
       <code><![CDATA[previewAttachment]]></code>
       <code><![CDATA[showAttachment]]></code>
       <code><![CDATA[validateDataFromREST]]></code>
@@ -38792,9 +38722,6 @@
     <PossiblyFalseIterator>
       <code><![CDATA[$dao->retrieve($sql)]]></code>
     </PossiblyFalseIterator>
-    <PossiblyNullReference>
-      <code><![CDATA[getFiles]]></code>
-    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $file_info->getId()]]></code>
     </RedundantCastGivenDocblockType>
@@ -38928,7 +38855,6 @@
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$parent_id]]></code>
-      <code><![CDATA[$selected_values]]></code>
       <code><![CDATA[$selected_values]]></code>
       <code><![CDATA[$to]]></code>
       <code><![CDATA[$transition_id]]></code>
@@ -58082,15 +58008,6 @@
       <code><![CDATA[getLogger]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/REST/ResourceReference.php">
-    <MissingParamType>
-      <code><![CDATA[$base_uri]]></code>
-      <code><![CDATA[$id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/REST/ResourcesInjector.php">
     <MissingReturnType>
       <code><![CDATA[declareHeartbeatResource]]></code>
@@ -58197,14 +58114,6 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $page->getId()]]></code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/REST/v1/PlanningRepresentationBase.php">
-    <InvalidDocblock>
-      <code><![CDATA[public $backlog_trackers;]]></code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code><![CDATA[$backlog_trackers]]></code>
-    </MissingPropertyType>
   </file>
   <file src="src/common/REST/v1/SvnRepositoryRepresentationBase.php">
     <InvalidDocblock>

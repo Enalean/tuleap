@@ -16,40 +16,37 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Planning;
+use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\REST\ResourceReference;
-use Tuleap\REST\v1\PlanningRepresentationBase;
-use Tuleap\Project\REST\ProjectReference;
-use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\TrackerReference;
 
 /**
  * Basic representation of a planning
+ *
+ * @psalm-immutable
  */
-class PlanningRepresentation extends PlanningRepresentationBase
+final readonly class PlanningRepresentation extends PlanningRepresentationBase
 {
-    public function build(Planning $planning)
+    public function __construct(Planning $planning)
     {
-        $this->id             = JsonCast::toInt($planning->getId());
-        $this->uri            = ResourceReference::NO_ROUTE;
-        $this->label          = $planning->getName();
-        $this->milestones_uri = self::ROUTE . '/' . $this->id . '/' . MilestoneRepresentation::ROUTE;
-
-        $this->milestone_tracker = TrackerReference::build($planning->getPlanningTracker());
-
-        $this->project = new ProjectReference($planning->getGroupId());
-
-        $this->backlog_trackers = array_map(
-            function ($id) {
-                $reference = new ResourceReference();
-                $reference->build($id, CompleteTrackerRepresentation::ROUTE);
-
-                return $reference;
-            },
-            $planning->getBacklogTrackersIds()
+        $planning_id = JsonCast::toInt($planning->getId());
+        parent::__construct(
+            $planning_id,
+            ResourceReference::NO_ROUTE,
+            $planning->getName(),
+            new ProjectReference($planning->getGroupId()),
+            TrackerReference::build($planning->getPlanningTracker()),
+            array_map(
+                static fn(int $id) => new ResourceReference($id, CompleteTrackerRepresentation::ROUTE),
+                $planning->getBacklogTrackersIds(),
+            ),
+            self::ROUTE . '/' . $planning_id . '/' . MilestoneRepresentation::ROUTE,
         );
     }
 }

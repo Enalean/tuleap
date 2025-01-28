@@ -40,8 +40,7 @@ class ProjectPlanningsResource
         $plannings     = array_slice($all_plannings, $offset, $limit);
 
         foreach ($plannings as $planning) {
-            $planning_representation = new PlanningRepresentation();
-            $planning_representation->build($planning);
+            $planning_representation    = new PlanningRepresentation($planning);
             $planning_representations[] = $planning_representation;
         }
 

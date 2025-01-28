@@ -17,51 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\REST\v1;
+namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\TrackerReference;
 
 /**
  * Basic representation of a planning
+ *
+ * @psalm-immutable
  */
-class PlanningRepresentationBase
+readonly class PlanningRepresentationBase
 {
     public const ROUTE = 'plannings';
 
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $uri;
-
-    /**
-     * @var String
-     */
-    public $label;
-
-    /**
-     * @var ProjectReference
-     */
-    public $project;
-
-    /**
-     * @var \Tuleap\REST\ResourceReference
-     *
-     * @psalm-var \Tuleap\Tracker\REST\TrackerReference
-     */
-    public $milestone_tracker;
-
-    /**
-     * @var Array {@type \Tuleap\REST\ResourceReference}
-     */
-    public $backlog_trackers;
-
-    /**
-     * @var string
-     */
-    public $milestones_uri;
+    public function __construct(
+        public int $id,
+        public string $uri,
+        public string $label,
+        public ProjectReference $project,
+        public TrackerReference $milestone_tracker,
+        public array $backlog_trackers,
+        public string $milestones_uri,
+    ) {
+    }
 }

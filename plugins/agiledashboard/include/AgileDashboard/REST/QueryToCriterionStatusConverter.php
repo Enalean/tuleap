@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\REST;
 
 use stdClass;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
@@ -33,7 +34,7 @@ use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
  */
 class QueryToCriterionStatusConverter
 {
-    public function convert($query)
+    public function convert(string $query): ISearchOnStatus
     {
         if ($query === '') {
             return new StatusAll();

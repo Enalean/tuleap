@@ -77,7 +77,7 @@ class UpdateIsAllowedChecker
 
     private function isPlanningTheRootPlanning(\Planning $planning, \Planning $root_planning): bool
     {
-        return (int) $planning->getId() === (int) $root_planning->getId();
+        return $planning->getId() === $root_planning->getId();
     }
 
     /**

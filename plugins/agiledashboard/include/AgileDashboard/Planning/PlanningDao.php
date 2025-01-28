@@ -108,7 +108,7 @@ class PlanningDao extends DataAccessObject
     {
         $in_statement = EasyStatement::open()->in('planning_tracker_id IN (?*)', $milestone_tracker_ids);
         $sql          = "SELECT * FROM plugin_agiledashboard_planning WHERE $in_statement";
-        return $this->getDB()->safeQuery($sql, $in_statement->values());
+        return $this->getDB()->run($sql, ...$in_statement->values());
     }
 
     /**
@@ -212,7 +212,7 @@ class PlanningDao extends DataAccessObject
     private function createBacklogTrackers(EasyDB $db, int $planning_id, PlanningParameters $planning_parameters): void
     {
         foreach ($planning_parameters->backlog_tracker_ids as $backlog_tracker_id) {
-            $this->createBacklogTracker($db, $planning_id, (int) $backlog_tracker_id);
+            $this->createBacklogTracker($db, $planning_id, $backlog_tracker_id);
         }
     }
 
