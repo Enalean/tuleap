@@ -83,6 +83,13 @@ const error_message = computed<Option<string>>(() =>
                 true,
             );
         }
+        if ("isXLSXExport" in fault && fault.isXLSXExport() === true) {
+            return $gettext(
+                "Error while exporting the report as .xlsx: %{error}",
+                { error: String(fault) },
+                true,
+            );
+        }
         if ("isMaxTrackersSelected" in fault && fault.isMaxTrackersSelected() === true) {
             return $gettext("Tracker selection is limited to 25 trackers");
         }

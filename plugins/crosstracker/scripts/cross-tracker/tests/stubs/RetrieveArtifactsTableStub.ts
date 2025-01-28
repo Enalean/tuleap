@@ -24,6 +24,9 @@ import type {
     RetrieveArtifactsTable,
 } from "../../src/domain/RetrieveArtifactsTable";
 import type { ArtifactsTable } from "../../src/domain/ArtifactsTable";
+import { TEXT_CELL } from "../../src/domain/ArtifactsTable";
+import { ArtifactsTableBuilder } from "../builders/ArtifactsTableBuilder";
+import { ArtifactRowBuilder } from "../builders/ArtifactRowBuilder";
 
 export const RetrieveArtifactsTableStub = {
     withContent(
@@ -44,5 +47,27 @@ export const RetrieveArtifactsTableStub = {
             getSelectableQueryResult: () => errAsync(fault),
             getSelectableFullReport: () => errAsync(fault),
         };
+    },
+    withDefaultContent(): RetrieveArtifactsTable {
+        const column_name = "SL65 AMG";
+        const table = new ArtifactsTableBuilder()
+            .withColumn(column_name)
+            .withArtifactRow(
+                new ArtifactRowBuilder()
+                    .addCell(column_name, {
+                        type: TEXT_CELL,
+                        value: "<p>V12 goes brrr</p>",
+                    })
+                    .build(),
+            )
+            .build();
+
+        const table_result = {
+            table,
+            total: 1,
+        };
+        return RetrieveArtifactsTableStub.withContent(table_result, table_result, [
+            table_result.table,
+        ]);
     },
 };

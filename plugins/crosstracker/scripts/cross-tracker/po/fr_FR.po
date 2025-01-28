@@ -43,6 +43,9 @@ msgstr "Description"
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Error while exporting the report as .xlsx: %{error}"
+msgstr "Erreur pendant l'export du rapport au format .xlsx: %{error}"
+
 msgid "Error while exporting the report to CSV: %{error}"
 msgstr "Erreur pendant l'export du rapport en CSV : %{error}"
 
