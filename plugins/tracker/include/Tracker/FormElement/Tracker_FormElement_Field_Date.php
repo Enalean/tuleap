@@ -22,6 +22,7 @@
 use Tuleap\Date\DateHelper;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -254,6 +255,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     protected function getDao()
     {
         return new DateFieldDao();
+    }
+
+    protected function getDuplicateSpecificPropertiesDao(): ?DateFieldSpecificPropertiesDAO
+    {
+        return new DateFieldSpecificPropertiesDAO();
     }
 
     /**

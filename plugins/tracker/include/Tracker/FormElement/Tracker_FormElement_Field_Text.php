@@ -29,6 +29,8 @@ use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\TextFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -224,6 +226,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     protected function getDao()
     {
         return new TextFieldDao();
+    }
+
+    protected function getDuplicateSpecificPropertiesDao(): ?DuplicateSpecificProperties
+    {
+        return new TextFieldSpecificPropertiesDAO();
     }
 
     /**

@@ -21,6 +21,7 @@
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\ComputedFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
@@ -611,6 +612,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getDao(): ComputedFieldDao
     {
         return new ComputedFieldDao();
+    }
+
+    protected function getDuplicateSpecificPropertiesDao(): ?ComputedFieldSpecificPropertiesDAO
+    {
+        return new ComputedFieldSpecificPropertiesDAO();
     }
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option

@@ -58,14 +58,4 @@ class TextFieldDao extends SpecificPropertiesDao
                 VALUES ($field_id, $rows, $cols, $default_value)";
         return $this->retrieve($sql);
     }
-
-    public function duplicate(int $from_field_id, int $to_field_id): bool
-    {
-        $from_field_id = $this->da->escapeInt($from_field_id);
-        $to_field_id   = $this->da->escapeInt($to_field_id);
-
-        $sql = "REPLACE INTO tracker_field_text (field_id, `rows`, cols, default_value)
-                SELECT $to_field_id, `rows`, cols, default_value FROM tracker_field_text WHERE field_id = $from_field_id";
-        return $this->update($sql);
-    }
 }

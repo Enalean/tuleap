@@ -44,9 +44,4 @@ abstract class SpecificPropertiesDao extends DataAccessObject
     }
 
     abstract public function save($field_id, $row);
-
-    /**
-     * Duplicate specific properties of field
-     */
-    abstract public function duplicate(int $from_field_id, int $to_field_id): bool;
 }

@@ -22,9 +22,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
-use DataAccessObject;
+use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
-class ListFieldDao extends DataAccessObject
+class ListFieldDao extends SpecificPropertiesDao
 {
     public function __construct()
     {
@@ -39,17 +39,6 @@ class ListFieldDao extends DataAccessObject
                 FROM $this->table_name
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
-    }
-
-    public function duplicate($from_field_id, $to_field_id)
-    {
-        $from_field_id = $this->da->escapeInt($from_field_id);
-        $to_field_id   = $this->da->escapeInt($to_field_id);
-        $sql           = "INSERT INTO $this->table_name (field_id, bind_type)
-                SELECT $to_field_id, bind_type
-                FROM $this->table_name
-                WHERE field_id = $from_field_id";
-        return $this->update($sql);
     }
 
     public function save($field_id, $bind_type)

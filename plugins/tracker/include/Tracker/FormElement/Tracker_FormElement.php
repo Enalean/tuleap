@@ -20,10 +20,12 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
+use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
 use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementImpl;
-use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**
@@ -401,18 +403,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Duplicate a field. If the field has custom properties,
      * they should be propagated to the new one
-     *
-     * @param int $from_field_id The id of the field
-     *
-     * @return array the mapping between old values and new ones
      */
-    public function duplicate($from_field_id)
+    public function duplicate(int $from_field_id): SpecificPropertiesWithMappingDuplicator
     {
-        $dao = $this->getDao();
-        if ($dao) {
-            $dao->duplicate($from_field_id, $this->getId());
-        }
-        return [];
+        $duplicator = new SpecificPropertiesWithMappingDuplicator($this->getDuplicateSpecificPropertiesDao());
+        $duplicator->duplicate($from_field_id, $this->getId());
+
+        return $duplicator;
     }
 
     /**
@@ -559,6 +556,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return DataAccessObject
      */
     protected function getDao()
+    {
+        return null;
+    }
+
+    /**
+     * Get the dao enabling specific properties to be duplicated
+     */
+    protected function getDuplicateSpecificPropertiesDao(): ?DuplicateSpecificProperties
     {
         return null;
     }

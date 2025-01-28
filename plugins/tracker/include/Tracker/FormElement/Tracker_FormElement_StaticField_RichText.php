@@ -19,9 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\RichTextFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\Field\StaticField\RichText\RichTextFieldDao;
 
-class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField
+class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public array $default_properties = [
         'static_value' => [
@@ -49,6 +50,11 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     protected function getDao()
     {
         return new RichTextFieldDao();
+    }
+
+    protected function getDuplicateSpecificPropertiesDao(): ?RichTextFieldSpecificPropertiesDAO
+    {
+        return new RichTextFieldSpecificPropertiesDAO();
     }
 
     protected function fetchReadOnly()
