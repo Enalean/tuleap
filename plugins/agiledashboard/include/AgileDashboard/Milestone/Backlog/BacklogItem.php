@@ -35,12 +35,12 @@ class BacklogItem implements IBacklogItem
     private readonly string $type;
     private readonly string $short_type;
     private readonly string $color;
-    private string $status;
-    private string $normalized_status_label;
-    private ?int $initial_effort     = null;
-    private ?float $remaining_effort = null;
-    private ?Artifact $parent        = null;
-    private ?bool $has_children      = null;
+    private string $status                  = '';
+    private string $normalized_status_label = '';
+    private ?int $initial_effort            = null;
+    private ?float $remaining_effort        = null;
+    private ?Artifact $parent               = null;
+    private ?bool $has_children             = null;
 
     public function __construct(
         private readonly Artifact $artifact,
