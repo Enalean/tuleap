@@ -42,16 +42,10 @@ class ComputedFieldDao extends SpecificPropertiesDao
         }
         $target_field_name = $this->da->quoteSmart($target_field_name);
 
-        $fast_compute = 0;
-        if (isset($row['fast_compute'])) {
-            $fast_compute = $row['fast_compute'];
-        }
-        $fast_compute = $this->da->escapeInt($fast_compute);
-
         $default_value = $this->da->escapeFloat($row['default_value'] ?? '');
 
-        $sql = "REPLACE INTO tracker_field_computed (field_id, default_value, target_field_name, fast_compute)
-                VALUES ($field_id, $default_value, $target_field_name, $fast_compute)";
+        $sql = "REPLACE INTO tracker_field_computed (field_id, default_value, target_field_name)
+                VALUES ($field_id, $default_value, $target_field_name)";
 
         return $this->retrieve($sql);
     }
@@ -61,8 +55,8 @@ class ComputedFieldDao extends SpecificPropertiesDao
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
 
-        $sql = "REPLACE INTO $this->table_name (field_id, target_field_name, fast_compute)
-                SELECT $to_field_id, target_field_name, fast_compute FROM $this->table_name WHERE field_id = $from_field_id";
+        $sql = "REPLACE INTO $this->table_name (field_id, target_field_name)
+                SELECT $to_field_id, target_field_name FROM $this->table_name WHERE field_id = $from_field_id";
 
         return $this->update($sql);
     }

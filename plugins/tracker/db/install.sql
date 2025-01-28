@@ -201,8 +201,7 @@ DROP TABLE IF EXISTS tracker_field_computed;
 CREATE TABLE tracker_field_computed (
     field_id INT(11) NOT NULL PRIMARY KEY,
     default_value DOUBLE NULL,
-    target_field_name VARCHAR(255) NULL,
-    fast_compute TINYINT DEFAULT 0
+    target_field_name VARCHAR(255) NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_field_openlist_value;

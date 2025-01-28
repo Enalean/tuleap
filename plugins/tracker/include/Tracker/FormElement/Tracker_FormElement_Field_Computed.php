@@ -42,10 +42,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             'type'  => 'string',
             'size'  => 40,
         ],
-        'fast_compute' => [
-            'value' => null,
-            'type'  => 'upgrade_button',
-        ],
         'default_value' => [
             'value' => '',
             'type'  => 'string',
@@ -85,18 +81,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $this->doNotDisplaySpecialPropertiesAtFieldCreation();
     }
 
-    private function doNotDisplaySpecialPropertiesAtFieldCreation()
+    private function doNotDisplaySpecialPropertiesAtFieldCreation(): void
     {
-        $this->clearFastCompute();
         $this->clearTargetFieldName();
         $this->clearCache();
-    }
-
-    private function clearFastCompute()
-    {
-        if ($this->getProperty('fast_compute') === null) {
-            unset($this->default_properties['fast_compute']);
-        }
     }
 
     private function clearTargetFieldName()
@@ -259,7 +247,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         if ($formElement_data !== false) {
             $default_specific_properties   = [
-                'fast_compute'      => '1',
                 'target_field_name' => $formElement_data['name'],
             ];
             $submitted_specific_properties = isset($formElement_data['specific_properties']) ? $formElement_data['specific_properties'] : [];
@@ -288,7 +275,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
-        $form_element_data['specific_properties']['fast_compute']      = '1';
         $form_element_data['specific_properties']['target_field_name'] = $this->name;
         $this->storeProperties($form_element_data['specific_properties']);
 
