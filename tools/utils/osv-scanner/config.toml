@@ -115,3 +115,10 @@ ignoreUntil = 2025-02-28
 id = "GO-2025-3420"
 reason = "No impact in Tuleap situation"
 ignoreUntil = 2025-02-28
+
+# vault-tuleap-plugin
+## github.com/hashicorp/yamux
+[[IgnoredVulns]]
+id = "GO-2025-3408"
+reason = "vault-tuleap-plugin is not exposed to untrusted connections"
+ignoreUntil = 2025-02-28
