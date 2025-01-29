@@ -22,12 +22,8 @@
         {{ message_error_rest }}
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component
-export default class ErrorDisplayer extends Vue {
-    message_error_rest = "";
-}
+<script setup lang="ts">
+defineProps<{
+    message_error_rest: string;
+}>();
 </script>
