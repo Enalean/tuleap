@@ -38,12 +38,12 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
     private readonly string $url;
     private readonly string $color;
     private readonly string $short_type;
-    private string $status;
-    private string $normalized_status_label;
-    private ?int $initial_effort     = null;
-    private ?float $remaining_effort = null;
-    private ?Artifact $parent        = null;
-    private ?bool $has_children      = null;
+    private string $status                  = '';
+    private string $normalized_status_label = '';
+    private ?int $initial_effort            = null;
+    private ?float $remaining_effort        = null;
+    private ?Artifact $parent               = null;
+    private ?bool $has_children             = null;
 
     public function __construct(
         private readonly Artifact $artifact,
