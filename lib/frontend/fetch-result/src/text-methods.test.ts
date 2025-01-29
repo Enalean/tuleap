@@ -20,16 +20,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import { GET_METHOD, POST_METHOD } from "./constants";
+import { POST_METHOD } from "./constants";
 import { FetchInterfaceStub } from "../tests/stubs/FetchInterfaceStub";
-import { buildGetTextResponse, buildSendFormAndReceiveText } from "./text-methods";
+import { buildSendFormAndReceiveText } from "./text-methods";
 import { ResponseRetriever } from "./ResponseRetriever";
 import { uri as uriTag } from "./uri-string-template";
 
-type Parameters = {
-    readonly [key: string]: string | number | boolean;
-};
-type ResponseResult = ResultAsync<Response, Fault>;
 type TextResult = ResultAsync<string, Fault>;
 
 const isTuleapAPIFault = (fault: Fault): boolean =>
@@ -41,13 +37,11 @@ describe(`text-methods`, () => {
     let fetcher: FetchInterfaceStub,
         request_payload: FormData,
         success_response: Response,
-        text_response: string,
-        params: Parameters;
+        text_response: string;
 
     const uri = uriTag`https://example.com/text-method-test/${"démo"}`;
 
     beforeEach(() => {
-        params = { penciliform: "showboard", "J&C": 113, Pulveraceous: false };
         request_payload = new FormData();
         request_payload.set("id", String(ID));
         request_payload.set("value", "overstoping protephemeroid");
@@ -57,28 +51,6 @@ describe(`text-methods`, () => {
             text: () => Promise.resolve(text_response),
         } as Response;
         fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response);
-    });
-
-    it(`getTextResponse will encode the given URI in addition to the given parameters
-        and set the GET method
-        and will return a ResultAsync with the Response`, async () => {
-        const getTextResponse = buildGetTextResponse(ResponseRetriever(fetcher));
-        const result = await getTextResponse(uri, { params });
-        if (!result.isOk()) {
-            throw Error("Expected an Ok");
-        }
-
-        expect(result.value).toBe(success_response);
-        expect(fetcher.getRequestInfo(0)).toBe(
-            "https://example.com/text-method-test/d%C3%A9mo?penciliform=showboard&J%26C=113&Pulveraceous=false",
-        );
-
-        const request_init = fetcher.getRequestInit(0);
-        if (request_init === undefined) {
-            throw Error("Expected request init to be defined");
-        }
-        expect(request_init.method).toBe(GET_METHOD);
-        expect(request_init.credentials).toBe("same-origin");
     });
 
     function* provideMethodsSendingFormData(): Generator<[string, () => TextResult]> {
@@ -122,7 +94,6 @@ describe(`text-methods`, () => {
     );
 
     function* provideMethodsReturningFaults(): Generator<[() => ResultAsync<unknown, Fault>]> {
-        yield [(): ResponseResult => buildGetTextResponse(ResponseRetriever(fetcher))(uri)];
         yield [
             (): TextResult =>
                 buildSendFormAndReceiveText(ResponseRetriever(fetcher), POST_METHOD)(

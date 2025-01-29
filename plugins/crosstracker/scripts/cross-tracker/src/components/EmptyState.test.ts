@@ -20,8 +20,6 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { WritingCrossTrackerReport } from "../domain/WritingCrossTrackerReport";
-import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
-import { TrackerInfoStub } from "../../tests/stubs/TrackerInfoStub";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { expect, describe, it } from "vitest";
 import EmptyState from "./EmptyState.vue";
@@ -40,78 +38,9 @@ describe("EmptyState", () => {
         });
     };
 
-    it(`invites the user to create a new query and add trackers
-        when nothing is selected`, () => {
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
-
-        const wrapper = getWrapper(writing_cross_tracker_report);
-
-        expect(wrapper.find("[data-test=selectable-empty-state-title]").text()).toContain(
-            "Query is empty",
-        );
-        expect(wrapper.find("[data-test=selectable-empty-state-text]").text()).toContain(
-            "Please create a new query by clicking",
-        );
-    });
-
-    it(`invites the user to create a new query
-        when a the query is empty
-        and at least one tracker is selected`, () => {
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
-        writing_cross_tracker_report.addTracker(
-            ProjectInfoStub.withId(116),
-            TrackerInfoStub.withId(186),
-        );
-
-        const wrapper = getWrapper(writing_cross_tracker_report);
-
-        expect(wrapper.find("[data-test=selectable-empty-state-title]").text()).toContain(
-            "Query is empty",
-        );
-        expect(wrapper.find("[data-test=selectable-empty-state-text]").text()).toContain(
-            "Please create a new query",
-        );
-    });
-
-    it(`invites the user to add tracker
-        when a the query is given
-        and no tracker is selected`, () => {
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
-        writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
-
-        const wrapper = getWrapper(writing_cross_tracker_report);
-
-        expect(wrapper.find("[data-test=selectable-empty-state-title]").text()).toContain(
-            "No artifact found",
-        );
-        expect(wrapper.find("[data-test=selectable-empty-state-text]").text()).toContain(
-            "Please add trackers by clicking",
-        );
-    });
-
-    it(`invites the user to update the query
-        when a the query is given
-        and some trackers are selected`, () => {
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
-        writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
-        writing_cross_tracker_report.addTracker(
-            ProjectInfoStub.withId(116),
-            TrackerInfoStub.withId(186),
-        );
-        const wrapper = getWrapper(writing_cross_tracker_report);
-
-        expect(wrapper.find("[data-test=selectable-empty-state-title]").text()).toContain(
-            "No artifact found",
-        );
-        expect(wrapper.find("[data-test=selectable-empty-state-text]").text()).toContain(
-            "There is no artifact matching the query",
-        );
-    });
-
     it(`display no artifact message if expert mode when no tracker`, () => {
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = `SELECT start_date FROM @project='self' WHERE start_date != ''`;
-        writing_cross_tracker_report.expert_mode = true;
         const wrapper = getWrapper(writing_cross_tracker_report);
         expect(wrapper.find("[data-test=selectable-empty-state-title]").text()).toContain(
             "No artifact found",

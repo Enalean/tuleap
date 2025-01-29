@@ -26,7 +26,6 @@
             v-bind:fault="current_fault"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         />
-        <error-inactive-project-message v-bind:invalid_trackers="invalid_trackers" />
         <div
             class="tlp-alert-success cross-tracker-report-success"
             v-if="current_success.isValue()"
@@ -52,30 +51,21 @@
         />
     </section>
     <section class="tlp-pane-section" v-if="!is_loading">
-        <artifact-table
-            v-if="!isExpertMode()"
-            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-        />
-        <selectable-table
-            v-if="isExpertMode()"
-            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-        />
+        <selectable-table v-bind:writing_cross_tracker_report="writing_cross_tracker_report" />
     </section>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, provide, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import ArtifactTable from "./components/table/ArtifactTable.vue";
 import ReadingMode from "./components/reading-mode/ReadingMode.vue";
 import WritingMode from "./components/writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
-import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
 import { getReport } from "./api/rest-querier";
 import type { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
 import type { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
 import type { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
-import type { InvalidTracker, Report } from "./type";
+import type { Report } from "./type";
 import SelectableTable from "./components/selectable-table/SelectableTable.vue";
 import type { ReportState } from "./domain/ReportState";
 import {
@@ -103,7 +93,6 @@ const props = defineProps<{
 const report_state = ref<ReportState>("report-saved");
 provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
-const invalid_trackers = ref<ReadonlyArray<InvalidTracker>>([]);
 
 const is_reading_mode_shown = computed(
     () =>
@@ -124,7 +113,7 @@ const is_export_allowed = computed<boolean>(() => {
     if (!is_user_admin) {
         return true;
     }
-    return invalid_trackers.value.length === 0;
+    return current_fault.value.isNothing();
 });
 
 provide(IS_EXPORT_ALLOWED, is_export_allowed);
@@ -139,15 +128,8 @@ function loadBackendReport(): void {
     getReport(report_id)
         .match(
             (report: Report) => {
-                props.backend_cross_tracker_report.init(
-                    report.trackers,
-                    report.expert_query,
-                    report.expert_mode,
-                );
+                props.backend_cross_tracker_report.init(report.expert_query);
                 initReports();
-                if (!report.expert_mode && report.invalid_trackers.length > 0) {
-                    invalid_trackers.value = report.invalid_trackers;
-                }
             },
             (fault) => {
                 notifyFault(ReportRetrievalFault(fault));
@@ -161,12 +143,6 @@ function loadBackendReport(): void {
 onMounted(() => {
     loadBackendReport();
 });
-
-function isExpertMode(): boolean {
-    return is_reading_mode_shown.value
-        ? props.reading_cross_tracker_report.expert_mode
-        : props.writing_cross_tracker_report.expert_mode;
-}
 
 function handleSwitchWriting(): void {
     if (!is_user_admin) {
@@ -194,7 +170,6 @@ function handleCancelQueryEdition(): void {
 
 function reportSaved(): void {
     initReports();
-    invalid_trackers.value = [];
     report_state.value = "report-saved";
     clearFeedbacks();
     notifySuccess(gettext_provider.$gettext("Report has been successfully saved"));

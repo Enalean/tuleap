@@ -18,22 +18,12 @@
  */
 
 import type { TrackerResponseWithProject } from "@tuleap/plugin-tracker-rest-api-types";
-import type { Artifact } from "../type";
 import type { ColorName } from "@tuleap/core-constants";
 
 export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
 
-export const EXPERT_MODE = "expert";
-export const DEFAULT_MODE = "default";
-
 export type ReportRepresentation = {
-    readonly trackers: ReadonlyArray<TrackerReference>;
     readonly expert_query: string;
-    readonly invalid_trackers: ReadonlyArray<TrackerReference>;
-};
-
-export type ReportContentRepresentation = {
-    readonly artifacts: ReadonlyArray<Artifact>;
 };
 
 export const DATE_SELECTABLE_TYPE = "date";

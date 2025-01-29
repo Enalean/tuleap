@@ -28,8 +28,6 @@ import { nextTick, ref } from "vue";
 import SelectableTable from "./SelectableTable.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
-import { ProjectInfoStub } from "../../../tests/stubs/ProjectInfoStub";
-import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
@@ -75,11 +73,6 @@ describe(`SelectableTable`, () => {
 
         writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
-        writing_cross_tracker_report.addTracker(
-            ProjectInfoStub.withId(116),
-            TrackerInfoStub.withId(186),
-        );
-        writing_cross_tracker_report.toggleExpertMode();
     });
 
     const getWrapper = (
@@ -192,19 +185,6 @@ describe(`SelectableTable`, () => {
 
             expect(errorSpy).toHaveBeenCalled();
             expect(errorSpy.mock.calls[0][0].isArtifactsRetrieval()).toBe(true);
-        });
-
-        it(`does nothing when the report mode is not expert`, async () => {
-            const table_retriever = RetrieveArtifactsTableStub.withFault(
-                Fault.fromMessage("Invalid query"),
-            );
-            writing_cross_tracker_report.toggleExpertMode();
-
-            getWrapper(table_retriever);
-
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(errorSpy).not.toHaveBeenCalled();
         });
     });
     describe("loadArtifact()", () => {
@@ -324,7 +304,7 @@ describe(`SelectableTable`, () => {
             expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
         });
     });
-    describe(`render XSLX button`, () => {
+    describe(`render XLSX button`, () => {
         let table_retriever: RetrieveArtifactsTable;
         beforeEach(() => {
             const table = new ArtifactsTableBuilder()
@@ -347,14 +327,14 @@ describe(`SelectableTable`, () => {
                 table_result.table,
             ]);
         });
-        it(`does not show the CSV export button when told not to`, () => {
+        it(`does not show the XLSX export button when told not to`, () => {
             is_xslx_export_allowed = false;
 
             const wrapper = getWrapper(table_retriever);
             expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
         });
 
-        it(`shows the CSV export button otherwise`, async () => {
+        it(`shows the XLSX export button otherwise`, async () => {
             const wrapper = getWrapper(table_retriever);
             await vi.runOnlyPendingTimersAsync();
             expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(true);

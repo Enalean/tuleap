@@ -24,26 +24,18 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\REST\TrackerReference;
 
 /**
  * @psalm-immutable
  */
 final readonly class CrossTrackerExpertReportRepresentation
 {
-    public const MODE_EXPERT = 'expert';
-
-    /**
-     * @param TrackerReference[] $trackers
-     */
     private function __construct(
         public int $id,
         public string $uri,
         public string $expert_query,
         public string $title,
         public string $description,
-        public array $trackers = [],
-        public string $report_mode = self::MODE_EXPERT,
     ) {
     }
 

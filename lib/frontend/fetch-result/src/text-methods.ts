@@ -20,24 +20,12 @@
 import type { ResultAsync } from "neverthrow";
 import type { RetrieveResponse } from "./ResponseRetriever";
 import type { PostMethod } from "./constants";
-import { GET_METHOD } from "./constants";
 import { getURI } from "./auto-encoder";
 import type { EncodedURI } from "./uri-string-template";
 import { credentials } from "./headers";
 import type { Fault } from "@tuleap/fault";
 import { TextErrorHandler } from "./faults/TextErrorHandler";
 import { decodeAsText } from "./text-decoder";
-import type { OptionsWithAutoEncodedParameters } from "./options";
-
-export const buildGetTextResponse =
-    (response_retriever: RetrieveResponse) =>
-    (uri: EncodedURI, options?: OptionsWithAutoEncodedParameters): ResultAsync<Response, Fault> =>
-        response_retriever
-            .retrieveResponse(getURI(uri, options?.params), {
-                method: GET_METHOD,
-                credentials,
-            })
-            .andThen(TextErrorHandler().handleErrorResponse);
 
 export const buildSendFormAndReceiveText =
     (response_retriever: RetrieveResponse, method: PostMethod) =>

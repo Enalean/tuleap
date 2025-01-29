@@ -21,16 +21,10 @@ import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { err } from "neverthrow";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import WritingMode from "./WritingMode.vue";
 import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
-import type { ProjectInfo, TrackerInfo, TrackerToUpdate } from "../../type";
-import TrackerListWritingMode from "./TrackerListWritingMode.vue";
-import TrackerSelection from "./TrackerSelection.vue";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../../injection-symbols";
-import { TooManyTrackersSelectedFault } from "../../domain/TooManyTrackersSelectedFault";
-import { nextTick } from "vue";
 describe("WritingMode", () => {
     let resetSpy: Mock, errorSpy: Mock;
 
@@ -56,35 +50,6 @@ describe("WritingMode", () => {
         });
     }
 
-    describe("mounted()", () => {
-        it("on init, the selected trackers will be formatted from the writing report", () => {
-            const writing_cross_tracker_report = new WritingCrossTrackerReport();
-            writing_cross_tracker_report.addTracker(
-                { id: 804, label: "fanatical" } as ProjectInfo,
-                { id: 29, label: "charry" } as TrackerInfo,
-            );
-            writing_cross_tracker_report.addTracker(
-                { id: 146, label: "surly" } as ProjectInfo,
-                { id: 51, label: "monodynamism" } as TrackerInfo,
-            );
-
-            const wrapper = getWrapper(writing_cross_tracker_report);
-
-            expect(wrapper.vm.selected_trackers).toStrictEqual([
-                {
-                    tracker_id: 29,
-                    tracker_label: "charry",
-                    project_label: "fanatical",
-                },
-                {
-                    tracker_id: 51,
-                    tracker_label: "monodynamism",
-                    project_label: "surly",
-                },
-            ]);
-        });
-    });
-
     describe("cancel()", () => {
         it("when I hit cancel, then an event will be emitted to cancel the query edition and switch the widget back to reading mode", () => {
             const writing_cross_tracker_report = new WritingCrossTrackerReport();
@@ -105,100 +70,5 @@ describe("WritingMode", () => {
             const emitted = wrapper.emitted("preview-result");
             expect(emitted).toBeDefined();
         });
-    });
-
-    describe("removeTrackerFromSelection()", () => {
-        it("when I remove a tracker, then the writing report will be updated and the errors hidden", () => {
-            const writing_cross_tracker_report = new WritingCrossTrackerReport();
-            writing_cross_tracker_report.addTracker(
-                { id: 172, label: "undiuretic" } as ProjectInfo,
-                { id: 61, label: "Dipneumona" } as TrackerInfo,
-            );
-            writing_cross_tracker_report.addTracker(
-                { id: 288, label: "defectless" } as ProjectInfo,
-                { id: 46, label: "knothorn" } as TrackerInfo,
-            );
-            vi.spyOn(writing_cross_tracker_report, "removeTracker");
-            const wrapper = getWrapper(writing_cross_tracker_report);
-
-            wrapper
-                .findComponent(TrackerListWritingMode)
-                .vm.$emit("tracker-removed", { tracker_id: 46 } as TrackerToUpdate);
-
-            expect(writing_cross_tracker_report.removeTracker).toHaveBeenCalledWith(46);
-            expect(resetSpy).toHaveBeenCalled();
-            expect(wrapper.vm.selected_trackers).toStrictEqual([
-                {
-                    tracker_id: 61,
-                    tracker_label: "Dipneumona",
-                    project_label: "undiuretic",
-                },
-            ]);
-        });
-    });
-
-    describe("addTrackerToSelection()", () => {
-        it("when I add a tracker, then the writing report will be updated", () => {
-            const writing_cross_tracker_report = new WritingCrossTrackerReport();
-            vi.spyOn(writing_cross_tracker_report, "addTracker");
-            const wrapper = getWrapper(writing_cross_tracker_report);
-            const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
-            const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
-
-            wrapper.findComponent(TrackerSelection).vm.$emit("tracker-added", {
-                selected_project,
-                selected_tracker,
-            });
-
-            expect(writing_cross_tracker_report.addTracker).toHaveBeenCalledWith(
-                selected_project,
-                selected_tracker,
-            );
-            expect(wrapper.vm.selected_trackers).toStrictEqual([
-                {
-                    tracker_id: 53,
-                    tracker_label: "observingly",
-                    project_label: "ergatogyne",
-                },
-            ]);
-        });
-
-        it("Given I had already added 25 trackers, when I try to add another, then an error will be shown", () => {
-            const writing_cross_tracker_report = new WritingCrossTrackerReport();
-            vi.spyOn(writing_cross_tracker_report, "addTracker").mockReturnValue(
-                err(TooManyTrackersSelectedFault()),
-            );
-            const wrapper = getWrapper(writing_cross_tracker_report);
-            const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
-            const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
-
-            wrapper.findComponent(TrackerSelection).vm.$emit("tracker-added", {
-                selected_project,
-                selected_tracker,
-            });
-
-            expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][0].isMaxTrackersSelected()).toBe(true);
-        });
-    });
-    describe("Tracker selection display", () => {
-        it.each([
-            ["displays", false, true],
-            ["does display", true, false],
-        ])(
-            `%s display the tracker list according to the expert mode`,
-            async (format_title, is_expert_mode, is_tracker_list_component_exist) => {
-                const writing_cross_tracker_report = new WritingCrossTrackerReport();
-                writing_cross_tracker_report.expert_mode = is_expert_mode;
-                const wrapper = getWrapper(writing_cross_tracker_report);
-                await nextTick();
-                expect(wrapper.findComponent(TrackerSelection).exists()).toBe(
-                    is_tracker_list_component_exist,
-                );
-                expect(wrapper.findComponent(TrackerListWritingMode).exists()).toBe(
-                    is_tracker_list_component_exist,
-                );
-            },
-        );
     });
 });

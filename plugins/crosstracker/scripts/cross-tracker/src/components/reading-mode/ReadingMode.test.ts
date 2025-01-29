@@ -28,10 +28,9 @@ import ReadingMode from "./ReadingMode.vue";
 import { BackendCrossTrackerReport } from "../../domain/BackendCrossTrackerReport";
 import { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
 import * as rest_querier from "../../api/rest-querier";
-import type { Report, TrackerAndProject } from "../../type";
+import type { Report } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../../injection-symbols";
-import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 
 describe("ReadingMode", () => {
     let backend_cross_tracker_report: BackendCrossTrackerReport,
@@ -75,7 +74,6 @@ describe("ReadingMode", () => {
 
             const emitted = wrapper.emitted("switch-to-writing-mode");
             expect(emitted).toBeDefined();
-            expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBe(true);
         });
 
         it(`Given I am browsing as project member,
@@ -87,7 +85,6 @@ describe("ReadingMode", () => {
 
             const emitted = wrapper.emitted("switch-to-writing-mode");
             expect(emitted).toBeUndefined();
-            expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBe(true);
         });
     });
 
@@ -96,12 +93,9 @@ describe("ReadingMode", () => {
             const initBackend = vi.spyOn(backend_cross_tracker_report, "init");
             initBackend.mockImplementation(() => Promise.resolve());
             const duplicateBackend = vi.spyOn(backend_cross_tracker_report, "duplicateFromReport");
-            const trackers: ReadonlyArray<TrackerAndProject> = [
-                { tracker: { id: 36 }, project: { id: 180 } } as TrackerAndProject,
-                { tracker: { id: 17 }, project: { id: 138 } } as TrackerAndProject,
-            ];
-            const expert_query = '@description != ""';
-            const report = { trackers, expert_query, expert_mode: false } as Report;
+            const expert_query =
+                'SELECT @description FROM @project.name="TOTOYA" WHERE @ddescription != ""';
+            const report = { expert_query } as Report;
 
             const updateReport = vi
                 .spyOn(rest_querier, "updateReport")
@@ -112,7 +106,7 @@ describe("ReadingMode", () => {
 
             expect(duplicateBackend).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(updateReport).toHaveBeenCalled();
-            expect(initBackend).toHaveBeenCalledWith(trackers, expert_query, false);
+            expect(initBackend).toHaveBeenCalledWith(expert_query);
             const emitted = wrapper.emitted("saved");
             expect(emitted).toBeDefined();
         });
@@ -149,20 +143,5 @@ describe("ReadingMode", () => {
 
             expect(wrapper.emitted("discard-unsaved-report")).toBeDefined();
         });
-    });
-    describe("Tracker selection display", () => {
-        it.each([
-            ["displays", false, true],
-            ["does display", true, false],
-        ])(
-            `%s display the tracker list according to the expert mode`,
-            (format_title, is_expert_mode, is_tracker_list_component_exist) => {
-                reading_cross_tracker_report.expert_mode = is_expert_mode;
-                const wrapper = instantiateComponent();
-                expect(wrapper.findComponent(TrackerListReadingMode).exists()).toBe(
-                    is_tracker_list_component_exist,
-                );
-            },
-        );
     });
 });

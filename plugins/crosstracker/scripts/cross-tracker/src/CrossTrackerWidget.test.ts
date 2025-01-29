@@ -32,7 +32,6 @@ import { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
 import * as rest_querier from "./api/rest-querier";
 import ReadingMode from "./components/reading-mode/ReadingMode.vue";
 import WritingMode from "./components/writing-mode/WritingMode.vue";
-import type { InvalidTracker, TrackerAndProject } from "./type";
 import { IS_USER_ADMIN, REPORT_ID } from "./injection-symbols";
 
 vi.useFakeTimers();
@@ -199,27 +198,15 @@ describe("CrossTrackerWidget", () => {
 
     describe("loadBackendReport()", () => {
         it("When I load the report, then the reports will be initialized", async () => {
-            const first_tracker: TrackerAndProject = {
-                tracker: { id: 25, label: "alveolitis" },
-                project: { id: 182, label: "betide" },
-            };
-            const second_tracker: TrackerAndProject = {
-                tracker: { id: 956, label: "Stephanoceros" },
-                project: { id: 248, label: "methodic" },
-            };
-            const trackers = [first_tracker, second_tracker];
-            const invalid_trackers = [{ id: 956 } as InvalidTracker];
-            const expert_query = '@title != ""';
-            vi.spyOn(rest_querier, "getReport").mockReturnValue(
-                okAsync({ trackers, expert_query, invalid_trackers, expert_mode: false }),
-            );
+            const expert_query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
+            vi.spyOn(rest_querier, "getReport").mockReturnValue(okAsync({ expert_query }));
             const init = vi.spyOn(backend_cross_tracker_report, "init");
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(init).toHaveBeenCalledWith(trackers, expert_query, false);
+            expect(init).toHaveBeenCalledWith(expert_query);
             expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
             expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
         });
@@ -235,7 +222,7 @@ describe("CrossTrackerWidget", () => {
         });
     });
 
-    describe(`isCSVExportAllowed`, () => {
+    describe(`isXLSXExportAllowed`, () => {
         it(`when the report state is not "report-saved", it does not allow CSV export`, async () => {
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
@@ -246,7 +233,7 @@ describe("CrossTrackerWidget", () => {
             expect(wrapper.vm.is_export_allowed).toBe(false);
         });
 
-        it(`when there was an error, it does not allow CSV export`, () => {
+        it(`when there was an error, it does not allow XLSX export`, () => {
             const wrapper = getWrapper();
             wrapper.vm.current_fault = Option.fromValue(Fault.fromMessage("Ooops"));
 
@@ -254,21 +241,20 @@ describe("CrossTrackerWidget", () => {
         });
 
         it(`when user is NOT admin and there is no error,
-            it allows CSV export`, () => {
+            it allows XLSX export`, () => {
             is_user_admin = false;
             const wrapper = getWrapper();
 
             expect(wrapper.vm.is_export_allowed).toBe(true);
         });
 
-        it(`when user is admin and there are invalid trackers selected in the report,
-            it does not allow CSV export`, async () => {
-            const invalid_trackers: ReadonlyArray<InvalidTracker> = [{ id: 315 } as InvalidTracker];
-            vi.spyOn(rest_querier, "getReport").mockReturnValue(
-                okAsync({ trackers: [], expert_query: "", invalid_trackers, expert_mode: false }),
-            );
+        it(`when user is admin and there is an error selected in the report,
+            it does not allow XLSX export`, async () => {
+            vi.spyOn(rest_querier, "getReport").mockReturnValue(okAsync({ expert_query: "" }));
 
             const wrapper = getWrapper();
+            wrapper.vm.current_fault = Option.fromValue(Fault.fromMessage("Ooops"));
+
             await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.is_export_allowed).toBe(false);

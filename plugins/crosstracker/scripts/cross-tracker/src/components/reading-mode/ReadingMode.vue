@@ -24,11 +24,6 @@
         v-on:click="switchToWritingMode"
         data-test="cross-tracker-reading-mode"
     >
-        <tracker-list-reading-mode
-            v-bind:reading_cross_tracker_report="props.reading_cross_tracker_report"
-            data-test="tracker-list-reading-mode"
-            v-if="!props.reading_cross_tracker_report.expert_mode"
-        />
         <tlp-syntax-highlighting v-if="!isExpertQueryEmpty()" data-test="tql-reading-mode-query">
             <code class="language-tql cross-tracker-reading-mode-query">{{
                 props.reading_cross_tracker_report.expert_query
@@ -67,7 +62,6 @@
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { updateReport } from "../../api/rest-querier";
 import type { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
 import type { Report } from "../../type";
@@ -112,21 +106,15 @@ function saveReport(): void {
     if (is_save_disabled.value) {
         return;
     }
-
     is_loading.value = true;
 
     props.backend_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
-    const tracker_ids = props.backend_cross_tracker_report.getTrackerIds();
     const new_expert_query = props.backend_cross_tracker_report.getExpertQuery();
 
-    updateReport(report_id, tracker_ids, new_expert_query)
+    updateReport(report_id, new_expert_query)
         .match(
             (report: Report) => {
-                props.backend_cross_tracker_report.init(
-                    report.trackers,
-                    report.expert_query,
-                    report.expert_mode,
-                );
+                props.backend_cross_tracker_report.init(report.expert_query);
                 emit("saved");
             },
             (fault) => {

@@ -45,21 +45,8 @@ const props = defineProps<{
 const { $gettext } = useGettext();
 
 function getEmptyStateMessage(): string {
-    if (
-        props.writing_cross_tracker_report.expert_query === "" &&
-        props.writing_cross_tracker_report.getTrackers().length === 0 &&
-        !props.writing_cross_tracker_report.expert_mode
-    ) {
-        return $gettext(`Please create a new query by clicking on "No tracker selected" above.`);
-    }
     if (props.writing_cross_tracker_report.expert_query === "") {
         return $gettext("Please create a new query.");
-    }
-    if (
-        props.writing_cross_tracker_report.getTrackers().length === 0 &&
-        !props.writing_cross_tracker_report.expert_mode
-    ) {
-        return $gettext(`Please add trackers by clicking on "No tracker selected" above.`);
     }
     return $gettext("There is no artifact matching the query.");
 }

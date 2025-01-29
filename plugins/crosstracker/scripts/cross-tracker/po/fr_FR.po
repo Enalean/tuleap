@@ -16,9 +16,6 @@ msgstr ""
 msgid "%{from} – %{to} of %{total}"
 msgstr "%{from} – %{to} sur %{total}"
 
-msgid "Add"
-msgstr "Ajouter"
-
 msgid "An error occurred: %{error}"
 msgstr "Une erreur s'est produite : %{error}"
 
@@ -34,9 +31,6 @@ msgstr "Assigné à"
 msgid "Cancel"
 msgstr "Annuler"
 
-msgid "Click to see the documentation for advanced mode"
-msgstr "Cliquer pour consulter la documentation du mode expert"
-
 msgid "Description"
 msgstr "Description"
 
@@ -46,22 +40,9 @@ msgstr "Éditer"
 msgid "Error while exporting the report as .xlsx: %{error}"
 msgstr "Erreur pendant l'export du rapport au format .xlsx: %{error}"
 
-msgid "Error while exporting the report to CSV: %{error}"
-msgstr "Erreur pendant l'export du rapport en CSV : %{error}"
-
 msgid "Error while fetching the artifacts matching the query: %{error}"
 msgstr ""
 "Erreur à la récupération des artéfacts correspondant à la requête : %{error}"
-
-msgid "Error while fetching the list of projects you are member of: %{error}"
-msgstr ""
-"Erreur à la récupération de la liste des projets dont vous êtes membre : "
-"%{error}"
-
-msgid "Error while fetching the list of trackers of this project: %{error}"
-msgstr ""
-"Erreur à la récupération de la liste des outils de suivi de ce projet : "
-"%{error}"
 
 msgid "Error while fetching the report: %{error}"
 msgstr "Erreur à la récupération du rapport : %{error}"
@@ -69,21 +50,12 @@ msgstr "Erreur à la récupération du rapport : %{error}"
 msgid "Error while saving the report: %{error}"
 msgstr "Erreur pendant la sauvegarde du rapport : %{error}"
 
-msgid "Example: @title = 'value'"
-msgstr "Exemple : @title = 'valeur'"
-
 msgid ""
 "Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title "
 "= 'value'"
 msgstr ""
 "Exemple: SELECT @pretty_title FROM @project.name = 'mon-projet' WHERE @title "
 "= 'valeur'"
-
-msgid "Expert mode"
-msgstr "Mode expert"
-
-msgid "Export CSV"
-msgstr "Export CSV"
 
 msgid "Export XSLX"
 msgstr "Export XSLX"
@@ -94,11 +66,6 @@ msgstr "Premier"
 msgid "Id"
 msgstr "Id"
 
-msgid "If you update the query, these trackers will be removed from it."
-msgstr ""
-"Si vous modifiez cette requête, ces outils de suivi seront supprimés de la "
-"recherche."
-
 msgid "Last"
 msgstr "Dernier"
 
@@ -108,30 +75,11 @@ msgstr "Mis à jour par"
 msgid "Last update date"
 msgstr "Mis à jour le"
 
-msgid "Load more"
-msgstr "Voir plus"
-
 msgid "Next"
 msgstr "Suivant"
 
 msgid "No artifact found"
 msgstr "Aucun artéfact trouvé"
-
-msgid "No trackers selected"
-msgstr "Aucun élément sélectionné"
-
-msgid "Please add trackers by clicking on \"No tracker selected\" above."
-msgstr ""
-"Ajoutez des outils de suivi en cliquant sur \"Aucun élément sélectionné\" ci-"
-"dessus."
-
-msgid "Please choose…"
-msgstr "Veuillez choisir…"
-
-msgid "Please create a new query by clicking on \"No tracker selected\" above."
-msgstr ""
-"Veuillez créer une nouvelle requête en cliquant sur \"Aucun élément "
-"sélectionné\" ci-dessus."
 
 msgid "Please create a new query."
 msgstr "Veuillez créer une nouvelle requête."
@@ -169,11 +117,6 @@ msgstr "Auteur"
 msgid "Submitted on"
 msgstr "Date de soumission"
 
-msgid "The initial query contains trackers from inactive projects:"
-msgstr ""
-"La requête initiale comporte des outils de suivi provenant de projets "
-"inactifs :"
-
 msgid "There is no artifact matching the query."
 msgstr "Aucun artéfact ne correspond à la requête."
 
@@ -182,9 +125,6 @@ msgstr "Titre"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
-
-msgid "Tracker selection is limited to 25 trackers"
-msgstr "Vous ne pouvez pas sélectionner plus de 25 outils de suivi"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
