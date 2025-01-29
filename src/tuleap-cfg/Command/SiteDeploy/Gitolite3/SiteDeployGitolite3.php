@@ -100,21 +100,41 @@ final class SiteDeployGitolite3
         }
 
         \Psl\Filesystem\change_permissions($dot_gitolite_dir, 0750);
-        $this->changeDirectoryAndFirstLevelFilesPermissions($dot_gitolite_dir . '/hooks');
-        $this->changeDirectoryAndFirstLevelFilesPermissions($dot_gitolite_dir . '/hooks/common');
-        $this->changeDirectoryAndFirstLevelFilesPermissions($dot_gitolite_dir . '/logs');
+        \Psl\Filesystem\change_permissions($dot_gitolite_dir . '/hooks', 0750);
+        \Psl\Filesystem\change_permissions($dot_gitolite_dir . '/hooks/common', 0750);
+        $this->changeHooksPermissions($dot_gitolite_dir . '/hooks/common');
+        \Psl\Filesystem\change_permissions($dot_gitolite_dir . '/logs', 0750);
+        $this->changeLogsPermissions($dot_gitolite_dir . '/logs');
     }
 
     /**
      * @psalm-param non-empty-string $path
      */
-    private function changeDirectoryAndFirstLevelFilesPermissions(string $path): void
+    private function changeLogsPermissions(string $path): void
     {
-        \Psl\Filesystem\change_permissions($path, 0750);
         $files = \Psl\Filesystem\read_directory($path);
         foreach ($files as $file) {
-            if (\Psl\Filesystem\is_file($file) && ! \Psl\Filesystem\is_symbolic_link($file)) {
+            if (\Psl\Filesystem\is_symbolic_link($file)) {
+                continue;
+            }
+            if (\Psl\Filesystem\is_file($file)) {
                 \Psl\Filesystem\change_permissions($file, 0640);
+            }
+        }
+    }
+
+    /**
+     * @psalm-param non-empty-string $path
+     */
+    private function changeHooksPermissions(string $path): void
+    {
+        $files = \Psl\Filesystem\read_directory($path);
+        foreach ($files as $file) {
+            if (\Psl\Filesystem\is_symbolic_link($file)) {
+                continue;
+            }
+            if (\Psl\Filesystem\is_file($file)) {
+                \Psl\Filesystem\change_permissions($file, 0755);
             }
         }
     }
