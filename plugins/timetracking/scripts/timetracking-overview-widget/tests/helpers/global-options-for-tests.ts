@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { jest } from "@jest/globals";
+import { createGettext } from "vue3-gettext";
+import type { GlobalMountOptions } from "@vue/test-utils/dist/types";
+import type { Pinia } from "pinia";
+import { createTestingPinia as officialCreateTestingPinia } from "@pinia/testing";
 
-import type { Vue } from "vue/types/vue";
-import { config, createLocalVue } from "@vue/test-utils";
-import { PiniaVuePlugin } from "pinia";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
+export function createTestingPinia(
+    option?: Parameters<typeof officialCreateTestingPinia>[0],
+): ReturnType<typeof officialCreateTestingPinia> {
+    return officialCreateTestingPinia({ ...option, createSpy: jest.fn });
+}
 
-export const createLocalVueForTests = async (): Promise<typeof Vue> => {
-    const local_vue = createLocalVue();
-    local_vue.use(PiniaVuePlugin);
-
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    config.provide.report_id = 1;
-
-    return local_vue;
-};
+export function getGlobalTestOptions(pinia: Pinia): GlobalMountOptions {
+    return {
+        plugins: [createGettext({ silent: true }), pinia],
+        provide: { report_id: 1 },
+    };
+}

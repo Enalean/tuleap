@@ -25,7 +25,9 @@
         v-on:change="getTrackers()"
         data-test="overview-project-list"
     >
-        <option selected v-bind:value="null">{{ $gettext("Please choose...") }}</option>
+        <option selected value="">
+            {{ $gettext("Please choose...") }}
+        </option>
         <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">
             {{ project.label }}
         </option>
@@ -51,7 +53,7 @@ export default {
     methods: {
         getTrackers() {
             let opt = this.$refs.select_project.options;
-            if (opt[opt.selectedIndex] && opt[opt.selectedIndex].value) {
+            if (opt[opt.selectedIndex] && opt[opt.selectedIndex].value !== "") {
                 this.overview_store.getTrackers(opt[opt.selectedIndex].value);
             }
         },

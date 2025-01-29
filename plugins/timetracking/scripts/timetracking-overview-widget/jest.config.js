@@ -19,7 +19,12 @@
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
+const jest_base_config = defineJestConfiguration();
 export default {
-    ...defineJestConfiguration(),
+    ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
     displayName: "timetracking-overview-widget",
 };

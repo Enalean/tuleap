@@ -22,7 +22,7 @@ import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
-import { createLocalVueForTests } from "../../tests/helpers/local-vue";
+import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
 
 describe("Given a timetracking overview widget", () => {
     let are_void_trackers_hidden, is_tracker_total_sum_equals_zero;
@@ -32,7 +32,7 @@ describe("Given a timetracking overview widget", () => {
         is_tracker_total_sum_equals_zero = false;
     });
 
-    const getWrapper = async () => {
+    const getWrapper = () => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 are_void_trackers_hidden,
@@ -46,8 +46,8 @@ describe("Given a timetracking overview widget", () => {
         useStore(pinia);
 
         return shallowMount(TimeTrackingOverviewTableRow, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
+            global: getGlobalTestOptions(pinia),
+            props: {
                 time: {
                     id: "16",
                     label: "tracker",
@@ -65,34 +65,34 @@ describe("Given a timetracking overview widget", () => {
         });
     };
 
-    it("When tracker total sum not equal zero, then table row is displayed", async () => {
-        const wrapper = await getWrapper();
+    it("When tracker total sum not equal zero, then table row is displayed", () => {
+        const wrapper = getWrapper();
 
-        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBe(true);
     });
 
-    it("When tracker total sum equal zero and void trackers displayed, then table row is displayed", async () => {
+    it("When tracker total sum equal zero and void trackers displayed, then table row is displayed", () => {
         is_tracker_total_sum_equals_zero = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
-        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBe(true);
     });
 
-    it("When tracker total sum not equal zero and void trackers not displayed, then table row is displayed", async () => {
+    it("When tracker total sum not equal zero and void trackers not displayed, then table row is displayed", () => {
         are_void_trackers_hidden = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
-        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBe(true);
     });
 
-    it("When tracker total sum equal zero and void trackers not displayed, then table row is not displayed", async () => {
+    it("When tracker total sum equal zero and void trackers not displayed, then table row is not displayed", () => {
         is_tracker_total_sum_equals_zero = true;
         are_void_trackers_hidden = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
-        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBe(false);
     });
 });

@@ -22,7 +22,7 @@ import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
-import { createLocalVueForTests } from "../../tests/helpers/local-vue";
+import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
 
 describe("Given a timetracking overview widget", () => {
     let is_loading,
@@ -43,7 +43,7 @@ describe("Given a timetracking overview widget", () => {
         is_sum_of_times_equals_zero = true;
     });
 
-    const getWrapper = async () => {
+    const getWrapper = () => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 is_loading,
@@ -64,14 +64,14 @@ describe("Given a timetracking overview widget", () => {
         useStore(pinia);
 
         return shallowMount(TimeTrackingOverviewTable, {
-            localVue: await createLocalVueForTests(),
+            global: getGlobalTestOptions(pinia),
         });
     };
 
-    it("When trackers times are available, then table is displayed", async () => {
+    it("When trackers times are available, then table is displayed", () => {
         is_sum_of_times_equals_zero = false;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBe(false);
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBe(false);
@@ -83,9 +83,9 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBe(true);
     });
 
-    it("When trackers times sum not equal zero, then table with rows is displayed and an error feedback is not displayed", async () => {
+    it("When trackers times sum not equal zero, then table with rows is displayed and an error feedback is not displayed", () => {
         is_sum_of_times_equals_zero = false;
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBe(false);
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBe(false);
@@ -96,11 +96,11 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBe(true);
     });
 
-    it("When trackers times sum equal zero and void trackers are hidden, then table with empty cell is displayed and an error feedback is not displayed", async () => {
+    it("When trackers times sum equal zero and void trackers are hidden, then table with empty cell is displayed and an error feedback is not displayed", () => {
         is_sum_of_times_equals_zero = true;
         are_void_trackers_hidden = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBe(false);
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBe(false);
@@ -111,10 +111,10 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBe(false);
     });
 
-    it("When trackers times are not available, then table is displayed and an error feedback is not displayed", async () => {
+    it("When trackers times are not available, then table is displayed and an error feedback is not displayed", () => {
         trackers_times = [];
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBe(false);
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBe(false);
@@ -125,38 +125,38 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBe(false);
     });
 
-    it("When widget is loading, then a spinner is displayed", async () => {
+    it("When widget is loading, then a spinner is displayed", () => {
         is_loading = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBe(false);
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBe(true);
     });
 
-    it("When results can't be displayed, then table is not displayed", async () => {
+    it("When results can't be displayed, then table is not displayed", () => {
         can_results_be_displayed = false;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBe(false);
         expect(wrapper.find("[data-test=overview-table]").exists()).toBe(false);
     });
 
-    it("When results can't be displayed, then danger's div is displayed and table is not displayed", async () => {
+    it("When results can't be displayed, then danger's div is displayed and table is not displayed", () => {
         error_message = "error";
         can_results_be_displayed = false;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBe(true);
         expect(wrapper.find("[data-test=overview-table]").exists()).toBe(false);
     });
 
-    it("When no users, then user list is not displayed", async () => {
+    it("When no users, then user list is not displayed", () => {
         users = [];
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=user-list-component]").exists()).toBe(false);
     });

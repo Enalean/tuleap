@@ -22,7 +22,7 @@ import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
-import { createLocalVueForTests } from "../../tests/helpers/local-vue";
+import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
 
 const user = {
     user_name: "user_1",
@@ -36,7 +36,7 @@ describe("Given a timetracking overview widget", () => {
         setSelectedUserId = jest.fn();
     });
 
-    const getWrapper = async () => {
+    const getWrapper = () => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 users: [user],
@@ -50,12 +50,12 @@ describe("Given a timetracking overview widget", () => {
         useStore(pinia);
 
         return shallowMount(TimeTrackingOverviewUserList, {
-            localVue: await createLocalVueForTests(),
+            global: getGlobalTestOptions(pinia),
         });
     };
 
-    it("When tracker total sum not equal zero, then table row is displayed", async () => {
-        const wrapper = await getWrapper();
+    it("When tracker total sum not equal zero, then table row is displayed", () => {
+        const wrapper = getWrapper();
         const input = wrapper.find("[data-test=timetracking-overview-users-selector]");
 
         input.setValue(user.user_id);
