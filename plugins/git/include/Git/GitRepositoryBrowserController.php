@@ -30,6 +30,9 @@ use GitViews_ShowRepo_Content;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\Repository\View\FilesHeaderPresenterBuilder;
@@ -41,49 +44,22 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 
-class GitRepositoryBrowserController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+#[ConfigKeyCategory('Git')]
+final readonly class GitRepositoryBrowserController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    /**
-     * @var \GitRepositoryFactory
-     */
-    private $repository_factory;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var History\GitPhpAccessLogger
-     */
-    private $access_logger;
-    /**
-     * @var GitRepositoryHeaderDisplayer
-     */
-    private $header_displayer;
-    /**
-     * @var FilesHeaderPresenterBuilder
-     */
-    private $files_header_presenter_builder;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
+    #[ConfigKey('Allow anonymous users to browse git repositories (useful to protect from bot scrapping)')]
+    #[ConfigKeyLegacyBool(true)]
+    public const CONFIG_IS_ANONYMOUS_GIT_BROWSING_ALLOWED = 'git_anonymous_browsing_allowed';
 
     public function __construct(
-        \GitRepositoryFactory $repository_factory,
-        \ProjectManager $project_manager,
-        History\GitPhpAccessLogger $access_logger,
-        GitRepositoryHeaderDisplayer $header_displayer,
-        FilesHeaderPresenterBuilder $files_header_presenter_builder,
-        private readonly ProvideCurrentUserWithLoggedInInformation $current_user_provider,
-        EventManager $event_manager,
+        private \GitRepositoryFactory $repository_factory,
+        private \ProjectManager $project_manager,
+        private History\GitPhpAccessLogger $access_logger,
+        private GitRepositoryHeaderDisplayer $header_displayer,
+        private FilesHeaderPresenterBuilder $files_header_presenter_builder,
+        private ProvideCurrentUserWithLoggedInInformation $current_user_provider,
+        private EventManager $event_manager,
     ) {
-        $this->repository_factory             = $repository_factory;
-        $this->project_manager                = $project_manager;
-        $this->access_logger                  = $access_logger;
-        $this->header_displayer               = $header_displayer;
-        $this->files_header_presenter_builder = $files_header_presenter_builder;
-        $this->event_manager                  = $event_manager;
     }
 
     /**
@@ -124,6 +100,11 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         }
 
         $current_user = $request->getCurrentUser();
+
+        if (\ForgeConfig::getStringAsBool(self::CONFIG_IS_ANONYMOUS_GIT_BROWSING_ALLOWED) === false && $current_user->isAnonymous()) {
+            throw new ForbiddenException('Anonymous browsing is currently forbidden due to rogue AI bot scrapping. Please login to see the repository content.');
+        }
+
         if (! $repository->userCanRead($current_user)) {
             throw new ForbiddenException();
         }

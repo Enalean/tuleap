@@ -58,6 +58,7 @@ use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\GitRepositoryBrowserController;
 use Tuleap\Git\SystemCheck;
 use Tuleap\Git\GitPHP\Controller_Snapshot;
 use Tuleap\Git\GitXMLImportDefaultBranchRetriever;
@@ -484,10 +485,11 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function getConfigKeys(ConfigClassProvider $event): void
     {
+        $event->addConfigClass(LegacyConfigInc::class);
         $event->addConfigClass(PreReceiveCommand::class);
         $event->addConfigClass(GitoliteAccessURLGenerator::class);
         $event->addConfigClass(Controller_Snapshot::class);
-        $event->addConfigClass(LegacyConfigInc::class);
+        $event->addConfigClass(GitRepositoryBrowserController::class);
     }
 
     public function cssFile($params)
@@ -2566,7 +2568,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function routeGetPostRepositoryView()
     {
-        return new \Tuleap\Git\GitRepositoryBrowserController(
+        return new GitRepositoryBrowserController(
             $this->getRepositoryFactory(),
             $this->getProjectManager(),
             $this->getGitPhpAccessLogger(),
