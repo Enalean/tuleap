@@ -17,7 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div>
         <input
@@ -26,7 +25,7 @@
             v-bind:value="step.id"
         />
         <step-definition-actions
-            v-bind:value="step.description_format"
+            v-bind:value="description_format"
             v-bind:format_select_id="format_select_id"
             v-bind:is_in_preview_mode="is_in_preview_mode"
             v-bind:is_preview_loading="is_preview_loading"
@@ -38,7 +37,7 @@
         <input
             type="hidden"
             v-bind:name="'artifact[' + field_id + '][description_format][]'"
-            v-bind:value="step.description_format"
+            v-bind:value="description_format"
         />
         <textarea
             ref="description"
@@ -51,8 +50,9 @@
             v-bind:data-upload-max-size="upload_max_size"
             data-test="description-textarea"
             rows="3"
-            v-model="step.raw_description"
-            v-show="!is_in_preview_mode && !is_preview_in_error"
+            v-bind:value="raw_description"
+            v-on:input="updateDescription"
+            v-show="is_in_edit_mode_without_error"
             v-bind:disabled="is_preview_loading"
         ></textarea>
         <div
@@ -76,7 +76,7 @@
                 <input
                     type="hidden"
                     v-bind:name="'artifact[' + field_id + '][expected_results_format][]'"
-                    v-bind:value="step.description_format"
+                    v-bind:value="description_format"
                 />
                 <textarea
                     ref="expected_results"
@@ -88,8 +88,9 @@
                     v-bind:data-upload-field-name="upload_field_name"
                     v-bind:data-upload-max-size="upload_max_size"
                     rows="3"
-                    v-model="step.raw_expected_results"
-                    v-show="!is_in_preview_mode && !is_preview_in_error"
+                    v-bind:value="raw_expected_results"
+                    v-on:input="updateExpectedResults"
+                    v-show="is_in_edit_mode_without_error"
                     data-test="expected-results-textarea"
                     v-bind:disabled="is_preview_loading"
                 ></textarea>
@@ -115,7 +116,6 @@
     </div>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import StepDeletionActionButtonMarkAsDeleted from "./StepDeletionActionButtonMarkAsDeleted.vue";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
@@ -151,6 +151,9 @@ export default {
             is_preview_in_error: false,
             error_text: "",
             editors: [],
+            raw_description: this.step.raw_description,
+            raw_expected_results: this.step.raw_expected_results,
+            description_format: this.step.description_format,
         };
     },
     computed: {
@@ -175,10 +178,13 @@ export default {
             return this.expected_results_id + "-help";
         },
         is_current_step_in_html_format() {
-            return this.step.description_format === TEXT_FORMAT_HTML;
+            return this.description_format === TEXT_FORMAT_HTML;
         },
         format_select_id() {
             return "format_" + this.step.uuid + "_" + this.field_id;
+        },
+        is_in_edit_mode_without_error() {
+            return !this.is_in_preview_mode && !this.is_preview_in_error;
         },
     },
     watch: {
@@ -190,7 +196,7 @@ export default {
             }
         },
     },
-    beforeUnmount() {
+    onUnmounted() {
         if (this.editors) {
             this.editors[0].destroy();
             this.editors[1].destroy();
@@ -202,12 +208,12 @@ export default {
     methods: {
         getEditorsContent() {
             if (this.is_current_step_in_html_format && this.areRTEEditorsSet()) {
-                this.step.raw_description = this.editors[1].getContent();
-                this.step.raw_expected_results = this.editors[0].getContent();
+                this.raw_description = this.editors[1].getContent();
+                this.raw_expected_results = this.editors[0].getContent();
             }
         },
         toggleRTE(event, value) {
-            this.step.description_format = value;
+            this.description_format = value;
         },
         areRTEEditorsSet() {
             return this.editors[0] && this.editors[1];
@@ -227,7 +233,7 @@ export default {
 
             const options = {
                 format_selectbox_id: this.format_select_id,
-                format_selectbox_value: this.step.description_format,
+                format_selectbox_value: this.description_format,
                 getAdditionalOptions: (textarea) => getUploadImageOptions(textarea),
                 onFormatChange: (new_format) => {
                     if (help_block) {
@@ -243,6 +249,12 @@ export default {
         loadEditor() {
             this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];
         },
+        updateDescription(event) {
+            this.raw_description = event.target.value;
+        },
+        updateExpectedResults(event) {
+            this.raw_expected_results = event.target.value;
+        },
         togglePreview() {
             this.is_preview_in_error = false;
             this.error_text = "";
@@ -254,8 +266,8 @@ export default {
 
             this.is_preview_loading = true;
             return Promise.all([
-                postInterpretCommonMark(this.step.raw_description),
-                postInterpretCommonMark(this.step.raw_expected_results),
+                postInterpretCommonMark(this.raw_description),
+                postInterpretCommonMark(this.raw_expected_results),
             ])
                 .then((interpreted_fields) => {
                     this.interpreted_description = interpreted_fields[0];
