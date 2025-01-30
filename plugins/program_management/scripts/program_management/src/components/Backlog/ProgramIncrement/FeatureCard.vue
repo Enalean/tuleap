@@ -26,13 +26,9 @@
         <div
             v-bind:data-tlp-tooltip="reason_why_feature_is_not_draggable"
             v-bind:class="additional_tooltip_classnames"
+            data-test="card-tooltip"
         >
-            <div
-                class="element-card"
-                v-bind:class="additional_classnames"
-                data-test="feature-card"
-                ref="feature_card"
-            >
+            <div class="element-card" v-bind:class="additional_classnames" data-test="feature-card">
                 <div class="element-card-content">
                     <div class="element-card-xref-label">
                         <a
@@ -58,11 +54,10 @@
         />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { Feature } from "../../../type";
@@ -71,77 +66,63 @@ import {
     showAccessibilityPattern,
 } from "../../../helpers/element-card-css-extractor";
 
-const configuration = namespace("configuration");
+const { $gettext } = useGettext();
 
-@Component({
-    components: { FeatureCardBacklogItems },
-})
-export default class FeatureCard extends Vue {
-    @Prop({ required: true })
-    readonly feature!: Feature;
+const { accessibility, can_create_program_increment, has_plan_permissions } = useNamespacedState<{
+    accessibility: boolean;
+    can_create_program_increment: boolean;
+    has_plan_permissions: boolean;
+}>("configuration", ["accessibility", "can_create_program_increment", "has_plan_permissions"]);
 
-    @Prop({ required: true })
-    readonly program_increment!: ProgramIncrement;
+const props = defineProps<{
+    feature: Feature;
+    program_increment: ProgramIncrement;
+}>();
 
-    @configuration.State
-    readonly accessibility!: boolean;
+const show_accessibility_pattern = computed((): boolean =>
+    showAccessibilityPattern(props.feature, accessibility.value),
+);
 
-    @configuration.State
-    readonly can_create_program_increment!: boolean;
+const is_draggable = computed(
+    (): boolean => props.program_increment.user_can_plan && has_plan_permissions.value,
+);
 
-    @configuration.State
-    readonly has_plan_permissions!: boolean;
+const additional_classnames = computed((): string => {
+    const classnames = getAccessibilityClasses(props.feature, accessibility.value);
 
-    @Ref("feature_card")
-    readonly feature_card!: Element;
-
-    private is_moving = false;
-
-    get show_accessibility_pattern(): boolean {
-        return showAccessibilityPattern(this.feature, this.accessibility);
+    if (!props.feature.is_open) {
+        classnames.push("element-card-closed");
     }
 
-    get additional_classnames(): string {
-        const classnames = getAccessibilityClasses(this.feature, this.accessibility);
-
-        if (!this.feature.is_open) {
-            classnames.push("element-card-closed");
-        }
-
-        if (this.can_create_program_increment && this.is_draggable) {
-            classnames.push("element-draggable-item");
-        }
-
-        return classnames.join(" ");
+    if (can_create_program_increment.value && is_draggable.value) {
+        classnames.push("element-draggable-item");
     }
 
-    get additional_tooltip_classnames(): string {
-        const classnames = ["element-card-container"];
+    return classnames.join(" ");
+});
 
-        if (!this.is_draggable) {
-            classnames.push("tlp-tooltip");
-            classnames.push("tlp-tooltip-left");
-        }
+const additional_tooltip_classnames = computed((): string => {
+    const classnames = ["element-card-container"];
 
-        return classnames.join(" ");
+    if (!is_draggable.value) {
+        classnames.push("tlp-tooltip");
+        classnames.push("tlp-tooltip-left");
     }
 
-    get is_draggable(): boolean {
-        return this.program_increment.user_can_plan && this.has_plan_permissions;
+    return classnames.join(" ");
+});
+
+const reason_why_feature_is_not_draggable = computed((): string => {
+    if (is_draggable.value) {
+        return "";
     }
 
-    get reason_why_feature_is_not_draggable(): string {
-        if (this.is_draggable) {
-            return "";
-        }
-
-        if (!this.has_plan_permissions) {
-            return this.$gettext("You cannot plan items");
-        }
-
-        return this.$gettext(
-            "The feature is not plannable, user does not have permission to update artifact or field link.",
-        );
+    if (!has_plan_permissions.value) {
+        return $gettext("You cannot plan items");
     }
-}
+
+    return $gettext(
+        "The feature is not plannable, user does not have permission to update artifact or field link.",
+    );
+});
 </script>
