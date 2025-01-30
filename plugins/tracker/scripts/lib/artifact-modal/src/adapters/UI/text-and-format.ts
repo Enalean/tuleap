@@ -19,7 +19,7 @@
 
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { getCommonMarkPreviewErrorIntroduction } from "../../gettext-catalog";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type { FormattedTextControllerType } from "../../domain/common/FormattedTextController";
@@ -118,7 +118,7 @@ export const getTextAndFormatTemplate = (
     ${isPreviewShown(host) &&
     html`
         <div
-            innerHTML="${sanitize(host.interpreted_commonmark)}"
+            innerHTML="${DOMPurify.sanitize(host.interpreted_commonmark)}"
             data-test="text-field-commonmark-preview"
         ></div>
     `}

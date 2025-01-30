@@ -261,11 +261,6 @@ packages:
   /@jridgewell/sourcemap-codec@1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
 
-  /@nolyfill/abab@1.0.29:
-    resolution: {integrity: sha512-QDy0aWy02tJIq83D+HVnggeiff0+21nF9/mzbslIm02m+oY80Ju0Y9itxdfe++7N48O8wPjegBrEPuxn/W4q7g==}
-    engines: {node: '>=12.4.0'}
-    dev: true
-
   /@pinia/testing@0.0.14(pinia@2.0.33)(vue@3.3.4):
     resolution: {integrity: sha512-ZmZwVNd/NnKYLIfjfuKl0zlJ3UdiXFpsHzSlL6wCeezSlyrqGMxsIQKv0J6fleu38gyCNTPBEipfxrt8V4+VIg==}
     peerDependencies:
@@ -356,6 +351,12 @@ packages:
   /@types/tough-cookie@4.0.2:
     resolution: {integrity: sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==}
     dev: true
+
+  /@types/trusted-types@2.0.7:
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+    requiresBuild: true
+    dev: false
+    optional: true
 
   /@types/web-bluetooth@0.0.14:
     resolution: {integrity: sha512-5d2RhCard1nQUC3aHcq/gHzWYO6K0WJmAbjO7mQJgCQKtZpgXxv1rOM6O/dBDhDYYVutk1sciOgNSe+5YyfM8A==}
@@ -546,6 +547,11 @@ packages:
       vue: 3.3.4
       vue-demi: 0.13.11(vue@3.3.4)
     dev: false
+
+  /abab@2.0.6:
+    resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
+    deprecated: Use your platform's native atob() and btoa() methods instead
+    dev: true
 
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -757,7 +763,7 @@ packages:
     resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
     engines: {node: '>=12'}
     dependencies:
-      abab: /@nolyfill/abab@1.0.29
+      abab: 2.0.6
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
     dev: true
@@ -790,8 +796,10 @@ packages:
       webidl-conversions: 7.0.0
     dev: true
 
-  /dompurify@3.1.4:
-    resolution: {integrity: sha512-2gnshi6OshmuKil8rMZuQCGiUF3cUxHY3NGDzUAdUx/NPEe5DVnO8BDoAQouvgwnx0R/+a6jUn36Z0FSdq8vww==}
+  /dompurify@3.2.4:
+    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
     dev: false
 
   /editorconfig@0.15.3:
@@ -1116,7 +1124,7 @@ packages:
       canvas:
         optional: true
     dependencies:
-      abab: /@nolyfill/abab@1.0.29
+      abab: 2.0.6
       acorn: 8.10.0
       acorn-globals: 7.0.1
       cssom: 0.5.0
@@ -1650,7 +1658,7 @@ packages:
     peerDependencies:
       vue: ^3.0.0
     dependencies:
-      dompurify: 3.1.4
+      dompurify: 3.2.4
       vue: 3.3.4
     dev: false
 

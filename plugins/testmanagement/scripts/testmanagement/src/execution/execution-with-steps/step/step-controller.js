@@ -7,7 +7,7 @@ import {
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { resetError, setError } from "../../../feedback-state.js";
 import { updateStepResults } from "./execution-with-steps-updater.js";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 
 controller.$inject = [
     "$sce",
@@ -104,7 +104,7 @@ export default function controller(
 
     function sanitizedContentWithEnhancedCodeBlocks(html_content) {
         return $sce.trustAsHtml(
-            sanitize(html_content, {
+            DOMPurify.sanitize(html_content, {
                 ADD_TAGS: ["tlp-mermaid-diagram"],
             }),
         );

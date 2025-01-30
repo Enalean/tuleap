@@ -26,15 +26,14 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
-    "dompurify": "^3.1.4",
+    "dompurify": "^3.2.4",
     "hybrids": "^9.1.6",
     "neverthrow": "6.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
-    "@tuleap/po-gettext-plugin": "workspace:*",
-    "@types/dompurify": "^3.0.5"
+    "@tuleap/po-gettext-plugin": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

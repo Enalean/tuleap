@@ -24,7 +24,7 @@
 import { createModal } from "tlp";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { escaper } from "@tuleap/html-escaper";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { sprintf } from "sprintf-js";
 import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 import { initImportMembersPreview } from "./members-import/project-admin-members-import";
@@ -122,7 +122,7 @@ function updateDeleteModalDescription(button: HTMLElement): void {
     modal_description.innerText = "";
     modal_description.insertAdjacentHTML(
         "afterbegin",
-        sanitize(
+        DOMPurify.sanitize(
             sprintf(
                 gettext_provider.gettext(
                     "You're about to remove <b>%s</b> from this project. Please confirm your action.",

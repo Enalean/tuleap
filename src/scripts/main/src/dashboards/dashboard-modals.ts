@@ -18,7 +18,7 @@
  */
 
 import mustache from "mustache";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { get } from "jquery";
 import type { Modal } from "tlp";
 import { createModal } from "tlp";
@@ -140,7 +140,7 @@ function loadDynamicallyEditModalContent(modal: Modal, modal_content: HTMLElemen
     get("/widgets/?widget-id=" + encodeURIComponent(widget_id) + "&action=get-edit-modal-content")
         .done(function (html) {
             button.disabled = false;
-            container.innerHTML = sanitize(html);
+            container.innerHTML = DOMPurify.sanitize(html);
 
             document.dispatchEvent(
                 new CustomEvent("dashboard-edit-widget-modal-content-loaded", {
@@ -149,7 +149,7 @@ function loadDynamicallyEditModalContent(modal: Modal, modal_content: HTMLElemen
             );
         })
         .fail(function (data) {
-            container.innerHTML = sanitize(
+            container.innerHTML = DOMPurify.sanitize(
                 '<div class="tlp-alert-danger">' + data.responseJSON + "</div>",
             );
         })
@@ -197,7 +197,9 @@ function loadDynamicallyWidgetsContent(
             });
 
             if (container) {
-                container.outerHTML = sanitize(mustache.render(widgets_categories_template, data));
+                container.outerHTML = DOMPurify.sanitize(
+                    mustache.render(widgets_categories_template, data),
+                );
                 initializeWidgets(table, data);
             }
         })
@@ -207,7 +209,7 @@ function loadDynamicallyWidgetsContent(
                 throw new Error("dashboard-add-widget-error-message element does not exist");
             }
             alert.classList.add("tlp-alert-danger");
-            alert.innerHTML = sanitize(data.responseJSON);
+            alert.innerHTML = DOMPurify.sanitize(data.responseJSON);
 
             const header_filter = document.getElementById(
                 "dashboard-add-widget-list-header-filter",
@@ -272,7 +274,7 @@ function displayWidgetSettings(
         throw new Error("dashboard-add-widget-settings element does not exist");
     }
 
-    settings.innerHTML = sanitize(mustache.render(widget_settings_template, widget_data));
+    settings.innerHTML = DOMPurify.sanitize(mustache.render(widget_settings_template, widget_data));
     document.dispatchEvent(
         new CustomEvent("dashboard-add-widget-settings-loaded", {
             detail: { target: settings },

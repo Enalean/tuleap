@@ -18,14 +18,13 @@
     "@tuleap/gettext": "workspace:^",
     "@tuleap/prose-mirror-editor": "workspace:^",
     "@tuleap/tlp-popovers": "workspace:^",
-    "dompurify": "^3.1.4",
+    "dompurify": "^3.2.4",
     "hybrids": "9.1.6",
     "sprintf-js": "^1.1.3"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
-    "@types/dompurify": "^3.0.5",
     "@types/sprintf-js": "^1.1.2"
   },
   "scripts": {

@@ -19,7 +19,7 @@
 
 import type { DataFormat, GroupedDataFormat, IdTextPair, LoadingData } from "tlp";
 import { select2 } from "tlp";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import mustache from "mustache";
 import $ from "jquery";
 
@@ -39,7 +39,7 @@ function initThemeColorSelector(): void {
     select2(selector, {
         minimumResultsForSearch: Infinity,
         data: colors,
-        escapeMarkup: sanitize,
+        escapeMarkup: DOMPurify.sanitize,
         templateResult(result: LoadingData | DataFormat | GroupedDataFormat): string {
             return mustache.render(
                 `<i class="fa fa-circle user-preferences-color-selector-selection-{{ id }}" aria-hidden="true"></i>

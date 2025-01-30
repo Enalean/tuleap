@@ -18,7 +18,7 @@
  */
 
 import { get } from "@tuleap/tlp-fetch";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { init as togglerInit } from "../tuleap/toggler";
 import { loadTooltips } from "@tuleap/tooltip";
 
@@ -36,7 +36,7 @@ export default async function init(): Promise<void> {
         const response = await get(url);
         const html = await response.text();
 
-        widget.innerHTML = sanitize(html);
+        widget.innerHTML = DOMPurify.sanitize(html);
         widget.classList.remove("dashboard-widget-asynchronous-loading");
         loadTooltips();
         togglerInit(widget, false, false);

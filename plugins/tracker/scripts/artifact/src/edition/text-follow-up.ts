@@ -18,7 +18,7 @@
  */
 
 import { get } from "@tuleap/tlp-fetch";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 
 document.addEventListener("DOMContentLoaded", () => {
     const markup_buttons = document.getElementsByClassName("toggle-diff");
@@ -132,7 +132,7 @@ export async function toggleDiffContent(
             const response = await get(url);
 
             const generated_diff = await response.json();
-            diff.innerHTML = sanitize(generated_diff);
+            diff.innerHTML = DOMPurify.sanitize(generated_diff);
 
             if (generated_diff === "") {
                 const only_formatted_message = getFormattedDiffDiv(
