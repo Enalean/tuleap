@@ -17,99 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Feature, TrackerMinimalRepresentation } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
-import type { DefaultData } from "vue/types/options";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
 jest.useFakeTimers();
 
 describe("FeatureCardBacklogItems", () => {
-    let component_options: ShallowMountOptions<FeatureCardBacklogItems>;
-    let store: Store;
+    let store: Store, feature: Feature;
     beforeEach(() => {
-        store = createStoreMock({
-            state: {},
-        });
+        store = createStoreMock({ state: {} });
+        feature = { id: 100 } as Feature;
     });
-    it("Displays a skeleton during get user stories", async () => {
-        component_options = {
+
+    async function getWrapper(): Promise<Wrapper<Vue>> {
+        return shallowMount(FeatureCardBacklogItems, {
+            localVue: await createProgramManagementLocalVue(),
             propsData: {
-                feature: {
-                    id: 100,
-                } as Feature,
+                feature,
                 program_increment: { id: 11 } as ProgramIncrement,
             },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: store,
-            },
-        };
+            mocks: { $store: store },
+        });
+    }
 
+    it("Displays a skeleton during get user stories", async () => {
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([]));
 
-        const wrapper = shallowMount(FeatureCardBacklogItems, component_options);
+        const wrapper = await getWrapper();
 
         await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
-        await wrapper.setData({
-            user_stories: [],
-            is_loading_user_story: true,
-            message_error_rest: "",
-        });
-
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
     });
 
     it("Displays error message if api rest error exists", async () => {
-        component_options = {
-            data(): DefaultData<FeatureCardBacklogItems> {
-                return {
-                    message_error_rest: "404 Not Found",
-                };
-            },
-            propsData: {
-                feature: {
-                    id: 100,
-                    user_stories: [{ id: 14 } as UserStory],
-                } as Feature,
-                program_increment: { id: 11 } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-        };
+        const wrapper = await getWrapper();
+        wrapper.setData({ message_error_rest: "404 Not Found" });
 
-        const wrapper = shallowMount(FeatureCardBacklogItems, component_options);
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await jest.runOnlyPendingTimersAsync();
 
-        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeTruthy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(true);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(false);
     });
 
     it("When user stories are loaded, Then UserStoryDisplayer is rendered", async () => {
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                } as Feature,
-                program_increment: { id: 11 } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: store,
-            },
-        };
-
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve([
                 {
@@ -117,113 +80,82 @@ describe("FeatureCardBacklogItems", () => {
                     title: "My US",
                     xref: "us #14",
                     background_color: "lake-placid-blue",
-                    tracker: {
-                        color_name: "fiesta-red",
-                    } as TrackerMinimalRepresentation,
+                    tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
                     is_open: true,
                     uri: "tracker?aid=14",
-                    project: {
-                        label: "project",
-                    },
+                    project: { label: "project" },
                 } as UserStory,
             ]),
         );
 
-        const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);
+        const wrapper = await getWrapper();
 
-        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await jest.runOnlyPendingTimersAsync();
 
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(true);
     });
 
     it("No rest call when user stories are already loaded in feature", async () => {
-        store.state = { configuration: { accessibility: true } };
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                    user_stories: [
-                        {
-                            id: 14,
-                            title: "My US",
-                            xref: "us #14",
-                            background_color: "lake-placid-blue",
-                            tracker: {
-                                color_name: "fiesta-red",
-                            } as TrackerMinimalRepresentation,
-                            is_open: true,
-                            uri: "tracker?aid=14",
-                            project: {
-                                label: "project",
-                            },
-                        } as UserStory,
-                    ],
-                } as Feature,
-                program_increment: { id: 11 } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: store,
-            },
-        };
+        feature = {
+            id: 100,
+            user_stories: [
+                {
+                    id: 14,
+                    title: "My US",
+                    xref: "us #14",
+                    background_color: "lake-placid-blue",
+                    tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
+                    is_open: true,
+                    uri: "tracker?aid=14",
+                    project: { label: "project" },
+                } as UserStory,
+            ],
+        } as Feature;
 
         const dispatchSpy = jest.spyOn(store, "dispatch");
 
-        const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);
+        const wrapper = await getWrapper();
 
         await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
         expect(dispatchSpy).not.toHaveBeenCalled();
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(true);
     });
 
     it("When user stories are loaded, Then user can hide stories", async () => {
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                    user_stories: [
-                        {
-                            id: 14,
-                            title: "My US",
-                            xref: "us #14",
-                            background_color: "lake-placid-blue",
-                            tracker: {
-                                color_name: "fiesta-red",
-                            } as TrackerMinimalRepresentation,
-                            is_open: true,
-                            uri: "tracker?aid=14",
-                            project: {
-                                label: "project",
-                            },
-                        } as UserStory,
-                    ],
-                } as Feature,
-                program_increment: { id: 11 } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: store,
-            },
-        };
+        feature = {
+            id: 100,
+            user_stories: [
+                {
+                    id: 14,
+                    title: "My US",
+                    xref: "us #14",
+                    background_color: "lake-placid-blue",
+                    tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
+                    is_open: true,
+                    uri: "tracker?aid=14",
+                    project: { label: "project" },
+                } as UserStory,
+            ],
+        } as Feature;
 
-        const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);
+        const wrapper = await getWrapper();
 
         await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(true);
 
         await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(false);
     });
 });
