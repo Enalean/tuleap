@@ -18,125 +18,115 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Action;
+
+use Codendi_Request;
+use EventManager;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
+use Tracker;
+use Tracker_Action_UpdateArtifact;
+use Tracker_Artifact_Redirect;
+use Tracker_FormElement_Field_Computed;
+use Tracker_FormElementFactory;
+use Tracker_HierarchyFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Action_UpdateArtifactTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalResponseMock;
 
-    /** @var Artifact */
-    protected $task;
+    private const ARTIFACT_ID = 123;
+    private const TRACKER_ID  = 101;
 
-    /** @var Artifact */
-    protected $user_story;
-
-    /** @var int */
-    protected $artifact_id = 123;
-
-    /** @var int */
-    protected $tracker_id = 101;
-
-    /** @var Tracker_FormElement_Field_Computed */
-    protected $computed_field;
-
-    /** @var Tracker_FormElement_Field_Computed */
-    protected $us_computed_field;
-
-    protected $old_request_with = null;
-
-    /** @var  TypeIsChildLinkRetriever */
-    protected $artifact_retriever;
-
-    /** @var  Tracker_IDisplayTrackerLayout */
-    protected $layout;
-
-    protected $request;
-
-    /** @var  PFUser */
-    protected $user;
-
-    /** @var  Tracker_FormElementFactory */
-    protected $formelement_factory;
-
-    /** @var  Tracker_HierarchyFactory */
-    protected $hierarchy_factory;
-
-    /** @var  EventManager */
-    protected $event_manager;
-
-    /** @var  Tracker_Action_UpdateArtifact */
-    protected $action;
-
-    /** @var HiddenFieldsetsDetector */
-    protected $hidden_fieldsets_detector;
+    private Artifact&MockObject $task;
+    private Artifact&MockObject $user_story;
+    private Tracker_FormElement_Field_Computed&MockObject $computed_field;
+    private Tracker_FormElement_Field_Computed&MockObject $us_computed_field;
+    private ?string $old_request_with = null;
+    private TypeIsChildLinkRetriever&MockObject $artifact_retriever;
+    private Tracker_IDisplayTrackerLayout&MockObject $layout;
+    private Codendi_Request $request;
+    private PFUser $user;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
+    private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
+    private EventManager&MockObject $event_manager;
+    private Tracker_Action_UpdateArtifact $action;
+    private HiddenFieldsetsDetector&MockObject $hidden_fieldsets_detector;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $tracker_user_story_id = 103;
+        $tracker               = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('augmentDataFromRequest');
+        $tracker->method('getItemName');
+        $tracker->method('hasFormElementWithNameAndType');
+        $this->layout              = $this->createMock(Tracker_IDisplayTrackerLayout::class);
+        $this->request             = new Codendi_Request(['func' => 'artifact-update'], $this->createMock(ProjectManager::class));
+        $this->user                = UserTestBuilder::buildWithDefaults();
+        $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $this->hierarchy_factory   = $this->createMock(Tracker_HierarchyFactory::class);
+        $this->computed_field      = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $this->us_computed_field   = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $this->user_story          = $this->createMock(Artifact::class);
+        $tracker_user_story        = $this->createMock(Tracker::class);
+        $tracker_user_story->method('getId')->willReturn($tracker_user_story_id);
+        $tracker_user_story->method('hasFormElementWithNameAndType');
 
-        $tracker_user_story_id    = 103;
-        $user_story_id            = 107;
-        $submitted_by             = 102;
-        $submitted_on             = 1234567890;
-        $use_artifact_permissions = false;
-        $tracker                  = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
-        $this->layout              = \Mockery::spy(\Tracker_IDisplayTrackerLayout::class);
-        $this->request             = new Codendi_Request(['func' => 'artifact-update'], \Mockery::spy(ProjectManager::class));
-        $this->user                = \Mockery::spy(\PFUser::class);
-        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->hierarchy_factory   = \Mockery::spy(\Tracker_HierarchyFactory::class);
-        $this->computed_field      = \Mockery::spy(\Tracker_FormElement_Field_Computed::class);
-        $this->us_computed_field   = \Mockery::spy(\Tracker_FormElement_Field_Computed::class);
-        $this->user_story          = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker_user_story        = Mockery::spy(Tracker::class);
-        $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
+        $this->user_story->method('getTrackerId')->willReturn($tracker_user_story_id);
+        $this->user_story->method('getTracker')->willReturn($tracker_user_story);
+        $this->user_story->method('getId')->willReturn(107);
 
-        $this->user_story->shouldReceive('getTrackerId')->andReturns($tracker_user_story_id);
-        $this->user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);
-        $this->user_story->shouldReceive('getId')->andReturns($user_story_id);
-
-        $this->task = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->task = $this->createPartialMock(Artifact::class, ['createNewChangeset']);
         $this->task->setHierarchyFactory($this->hierarchy_factory);
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
-        $this->task->setId($this->artifact_id);
-        $this->task->shouldReceive('createNewChangeset')->andReturns(true)->byDefault();
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')->with($tracker_user_story_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->andReturns($this->us_computed_field);
+        $this->task->setId(self::ARTIFACT_ID);
+        $this->task->method('createNewChangeset')->willReturn(true);
 
-        $this->computed_field->shouldReceive('fetchCardValue')->with($this->task)->andReturns(42);
-        $this->us_computed_field->shouldReceive('fetchCardValue')->with($this->user_story)->andReturns(23);
+        $this->computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
+        $this->us_computed_field->method('fetchCardValue')->with($this->user_story)->willReturn(23);
+        $this->us_computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
 
-        $this->event_manager             = \Mockery::spy(\EventManager::class);
-        $this->artifact_retriever        = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever::class);
-        $visit_recorder                  = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
-        $this->hidden_fieldsets_detector = \Mockery::spy(HiddenFieldsetsDetector::class);
+        $this->event_manager             = $this->createMock(EventManager::class);
+        $this->artifact_retriever        = $this->createMock(TypeIsChildLinkRetriever::class);
+        $this->hidden_fieldsets_detector = $this->createMock(HiddenFieldsetsDetector::class);
 
         $this->action = new Tracker_Action_UpdateArtifact(
             $this->task,
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
-            $visit_recorder,
+            $this->createMock(VisitRecorder::class),
             $this->hidden_fieldsets_detector
         );
     }
 
     private function setUpAjaxRequestHeaders(): void
     {
-        $this->old_request_with           = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
+        $this->old_request_with           = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
     }
 
     /**
      * @after
      */
-    protected function restoreAjaxRequestHeaders()
+    protected function restoreAjaxRequestHeaders(): void
     {
         if ($this->old_request_with === null) {
             unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -148,7 +138,8 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItDoesNotSendAnythingIfNoRemainingEffortFieldIsDefinedOnTask(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns(null);
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->with(self::TRACKER_ID, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->willReturn(null);
 
         $expected = [];
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
@@ -159,7 +150,13 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItSendsParentsRemainingEffortEvenIfTaskDontHaveOne(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($this->user_story);
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($this->user_story);
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturnCallback(
+            fn(int $tracker_id) => match ($tracker_id) {
+                self::TRACKER_ID => null,
+                103              => $this->us_computed_field,
+            }
+        );
 
         $user_story_id = $this->user_story->getId();
         $expected      = [$user_story_id => ['remaining_effort' => 23]];
@@ -171,18 +168,13 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItDoesNotSendParentWhenParentHasNoRemainingEffortField(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $tracker_user_story_id = 110;
-        $tracker_user_story    = Mockery::spy(Tracker::class);
-        $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
-        $user_story_id = 111;
-        $user_story    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $tracker_user_story = TrackerTestBuilder::aTracker()->withId(110)->build();
+        $user_story         = ArtifactTestBuilder::anArtifact(111)->inTracker($tracker_user_story)->build();
 
-        $user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);
-        $user_story->shouldReceive('getId')->andReturns($user_story_id);
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($user_story);
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($user_story);
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturn(null);
 
-        $expected = [];
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with([]);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -190,14 +182,19 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItSendTheAutocomputedValueOfTheArtifact(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')->with($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->andReturns($this->computed_field);
-        $tracker = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
-        $task = Mockery::spy(Artifact::class);
-        $task->shouldReceive('getId')->andReturn($this->artifact_id);
-        $task->shouldReceive('getTracker')->andReturn($tracker);
-        $task->shouldReceive('validateCommentFormat')->andReturn(CommentFormatIdentifier::COMMONMARK);
-        $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->with(self::TRACKER_ID, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->willReturn($this->computed_field);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('augmentDataFromRequest');
+        $task = $this->createMock(Artifact::class);
+        $task->method('getId')->willReturn(self::ARTIFACT_ID);
+        $task->method('getTracker')->willReturn($tracker);
+        $task->method('validateCommentFormat')->willReturn(CommentFormatIdentifier::COMMONMARK);
+        $task->method('createNewChangeset');
+        $task->method('fetchDirectLinkToArtifact');
+        $task->method('summonArtifactRedirectors');
+        $task->method('getParent');
+        $visit_recorder = $this->createMock(VisitRecorder::class);
 
         $action = new Tracker_Action_UpdateArtifact(
             $task,
@@ -208,14 +205,14 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
             $this->hidden_fieldsets_detector
         );
 
-        $this->computed_field->shouldReceive('getName')->andReturns(Tracker::REMAINING_EFFORT_FIELD_NAME);
-        $task->shouldReceive('getTracker')->andReturns($tracker);
-        $this->computed_field->shouldReceive('fetchCardValue')->with($task)->andReturns(42);
-        $tracker->shouldReceive('hasFormElementWithNameAndType')->andReturns(true);
-        $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(true);
+        $this->computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
+        $task->method('getTracker')->willReturn($tracker);
+        $this->computed_field->method('fetchCardValue')->with($task)->willReturn(42);
+        $tracker->method('hasFormElementWithNameAndType')->willReturn(true);
+        $this->computed_field->method('isArtifactValueAutocomputed')->willReturn(true);
 
         $expected = [
-            $this->artifact_id => ['remaining_effort' => '42 (autocomputed)'],
+            self::ARTIFACT_ID => ['remaining_effort' => '42 (autocomputed)'],
         ];
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
@@ -225,14 +222,20 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItSendsTheRemainingEffortOfTheArtifactAndItsParent(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')->with($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->andReturns($this->computed_field);
-        $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(false);
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($this->user_story);
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturnCallback(
+            fn(int $tracker_id) => match ($tracker_id) {
+                self::TRACKER_ID => $this->computed_field,
+                103              => $this->us_computed_field,
+            }
+        );
+        $this->computed_field->method('isArtifactValueAutocomputed')->willReturn(false);
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($this->user_story);
+        $this->computed_field->method('fetchCardValue')->with($this->task)->willReturn(42);
 
         $user_story_id = $this->user_story->getId();
         $expected      = [
-            $this->artifact_id => ['remaining_effort' => 42],
-            $user_story_id     => ['remaining_effort' => 23],
+            self::ARTIFACT_ID => ['remaining_effort' => 42],
+            $user_story_id    => ['remaining_effort' => 23],
         ];
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
@@ -242,12 +245,13 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItDoesNotSendParentsRemainingEffortWhenThereIsNoParent(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')->with($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->andReturns($this->computed_field);
-        $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(false);
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns(null);
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->with(self::TRACKER_ID, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->willReturn($this->computed_field);
+        $this->computed_field->method('isArtifactValueAutocomputed')->willReturn(false);
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
+        $this->computed_field->method('fetchCardValue')->with($this->task)->willReturn(42);
 
         $expected = [
-            $this->artifact_id => ['remaining_effort' => 42],
+            self::ARTIFACT_ID => ['remaining_effort' => 42],
         ];
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
@@ -257,20 +261,21 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testSendCardInfoOnUpdateWithRemainingEffortItDoesNotSendParentWhenParentHasNoRemainingEffortField(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')->with($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->andReturns($this->computed_field);
-        $tracker_user_story_id = 110;
-        $tracker_user_story    = Mockery::spy(Tracker::class);
-        $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
-        $user_story_id = 111;
-        $user_story    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturnCallback(
+            fn(int $tracker_id) => match ($tracker_id) {
+                self::TRACKER_ID => $this->computed_field,
+                110              => null,
+            }
+        );
+        $tracker_user_story = TrackerTestBuilder::aTracker()->withId(110)->build();
+        $user_story         = ArtifactTestBuilder::anArtifact(111)->inTracker($tracker_user_story)->build();
 
-        $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(false);
-        $user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);
-        $user_story->shouldReceive('getId')->andReturns($user_story_id);
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($user_story);
+        $this->computed_field->method('isArtifactValueAutocomputed')->willReturn(false);
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($user_story);
+        $this->computed_field->method('fetchCardValue')->with($this->task)->willReturn(42);
 
         $expected = [
-            $this->artifact_id => ['remaining_effort' => 42],
+            self::ARTIFACT_ID => ['remaining_effort' => 42],
         ];
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
@@ -286,18 +291,18 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItCreatesAChangeset(): void
     {
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns(null);
-        $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], Mockery::spy(ProjectManager::class));
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
+        $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
 
-        $this->task->shouldReceive('createNewChangeset')->once()->andReturns(true);
+        $this->task->expects(self::once())->method('createNewChangeset')->willReturn(true);
 
         $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
     }
 
     public function testItReturnsTheScriptTagIfRequestIsFromOverlay(): void
     {
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($this->user_story);
-        $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], Mockery::spy(ProjectManager::class));
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($this->user_story);
+        $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
 
         $from_overlay = $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
         $expected     = '<script type="text/javascript" nonce="">window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition(' . $this->task->getId() . ');</script>';
@@ -307,26 +312,30 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItDoesntReturnScriptWhenInAjax(): void
     {
         $this->setUpAjaxRequestHeaders();
-        $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns(null);
-        $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], Mockery::spy(ProjectManager::class));
+        $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturnCallback(
+            fn(int $tracker_id) => match ($tracker_id) {
+                self::TRACKER_ID => null,
+                103              => $this->us_computed_field,
+            }
+        );
+        $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
+        $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
 
         $from_overlay = $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
         $this->assertStringNotContainsStringIgnoringCase('<script>', $from_overlay);
     }
 
-    private function getRedirectUrlFor(array $request_data)
+    private function getRedirectUrlFor(array $request_data): Tracker_Artifact_Redirect
     {
-        $request        = new Codendi_Request($request_data, Mockery::spy(ProjectManager::class));
-        $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
-        $action         = new class (
+        $request = new Codendi_Request($request_data, $this->createMock(ProjectManager::class));
+        $action  = new class (
             $this->task,
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
-            $visit_recorder,
+            $this->createMock(VisitRecorder::class),
             $this->hidden_fieldsets_detector
-        ) extends Tracker_Action_UpdateArtifact
-        {
+        ) extends Tracker_Action_UpdateArtifact {
             public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request)
             {
                 return parent::getRedirectUrlAfterArtifactUpdate($request);
@@ -339,14 +348,14 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request_data = [];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertEquals(TRACKER_BASE_URL . "/?tracker=$this->tracker_id", $redirect_uri->toUrl());
+        $this->assertEquals(TRACKER_BASE_URL . '/?tracker=' . self::TRACKER_ID, $redirect_uri->toUrl());
     }
 
     public function testItStaysOnTheCurrentArtifactWhenSubmitAndStayIsSpecified(): void
     {
         $request_data = ['submit_and_stay' => true];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertEquals(TRACKER_BASE_URL . "/?aid=$this->artifact_id", $redirect_uri->toUrl());
+        $this->assertEquals(TRACKER_BASE_URL . '/?aid=' . self::ARTIFACT_ID, $redirect_uri->toUrl());
     }
 
     public function testItReturnsToThePreviousArtifactWhenFromAidIsGiven(): void
@@ -368,18 +377,19 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     public function testSubmitAndStayHasPrecedenceOverFromAid(): void
     {
         $from_aid     = 33;
-        $request_data = ['from_aid' => $from_aid,
+        $request_data = [
+            'from_aid'        => $from_aid,
             'submit_and_stay' => true,
         ];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertUriHasArgument($redirect_uri->toUrl(), 'aid', $this->artifact_id);
-        $this->assertUriHasArgument($redirect_uri->toUrl(), 'from_aid', $from_aid);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'aid', (string) self::ARTIFACT_ID);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'from_aid', (string) $from_aid);
     }
 
     public function testSubmitAndStayHasPrecedenceOverReturnToAid(): void
     {
         $request_data = ['submit_and_stay' => true];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertUriHasArgument($redirect_uri->toUrl(), 'aid', $this->artifact_id);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'aid', (string) self::ARTIFACT_ID);
     }
 }
