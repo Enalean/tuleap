@@ -1,5 +1,5 @@
 ARG DOCKER_REGISTRY
-FROM ${DOCKER_REGISTRY}/cypress/base@sha256:61ef29cc0d4955097c19807055e9d5155c08113d14bdbefdbfb41985f6c28132 AS cypress_bin_downloader
+FROM ${DOCKER_REGISTRY}/cypress/base@sha256:48610d161ad6dc28a6d92fbfe50d86b07c55b66290de6d910a85c049a249c031 AS cypress_bin_downloader
 ARG CYPRESS_VERSION
 RUN apt-get update \
     && apt-get install --yes unzip \
@@ -7,7 +7,7 @@ RUN apt-get update \
     && wget https://download.cypress.io/desktop/${CYPRESS_VERSION}?platform=linux -O cypress_bin.zip \
     && unzip cypress_bin.zip
 
-FROM ${DOCKER_REGISTRY}/cypress/base@sha256:61ef29cc0d4955097c19807055e9d5155c08113d14bdbefdbfb41985f6c28132
+FROM ${DOCKER_REGISTRY}/cypress/base@sha256:48610d161ad6dc28a6d92fbfe50d86b07c55b66290de6d910a85c049a249c031
 RUN apt-get update \
     && apt-get install --yes curl \
     && rm -rf /var/lib/apt/lists/*
