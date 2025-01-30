@@ -1532,9 +1532,6 @@ msgstr ""
 msgid "Fail to retrieve the full collection of projects."
 msgstr "Echec lors de la récupération de la collection de tous les projets."
 
-msgid "Fast computation"
-msgstr "Calcul automatique"
-
 msgid "Field"
 msgstr "Champs"
 

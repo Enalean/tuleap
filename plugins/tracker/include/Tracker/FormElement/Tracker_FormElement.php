@@ -792,8 +792,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                 return dgettext('tuleap-tracker', 'Display time');
             case 'use_cache':
                 return dgettext('tuleap-tracker', 'Use cache');
-            case 'fast_compute':
-                return dgettext('tuleap-tracker', 'Fast computation');
             case 'default_value':
             default:
                 return dgettext('tuleap-tracker', 'Default value');

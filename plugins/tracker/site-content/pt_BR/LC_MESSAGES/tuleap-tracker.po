@@ -1348,9 +1348,6 @@ msgstr ""
 msgid "Fail to retrieve the full collection of projects."
 msgstr ""
 
-msgid "Fast computation"
-msgstr ""
-
 msgid "Field"
 msgstr ""
 
