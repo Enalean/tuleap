@@ -34,10 +34,18 @@ describe("App", () => {
                         configuration: {
                             has_plan_permissions: true,
                             is_configured: is_configured,
-                            is_admin: is_admin,
+                            is_program_admin: is_admin,
+                            public_name: "Fibrovasal phrenesis",
+                            short_name: "fibrovasal-phrenesis",
+                            project_icon: "",
+                            privacy: {},
+                            flags: [],
                         },
                     },
                 }),
+            },
+            directives: {
+                "dompurify-html": jest.fn(),
             },
             localVue: await createProgramManagementLocalVue(),
         });
@@ -61,8 +69,8 @@ describe("App", () => {
         const wrapper = await createWrapper(false, true);
         expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(false);
         expect(wrapper.find("[data-test=configuration-empty-state]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=administrator-empty-state]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=regular-user-empty-state]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=administrator-empty-state]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=regular-user-empty-state]").exists()).toBe(false);
     });
 
     describe(`mounted()`, () => {

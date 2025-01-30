@@ -17,46 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import Breadcrumb from "./Breadcrumb.vue";
+import AppBreadcrumb from "./AppBreadcrumb.vue";
 import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
 
-describe("Breadcrumb", () => {
-    let component_options: ShallowMountOptions<Breadcrumb>;
-
-    it("When user is not program admin, Then breadcrumb does not contain administration link", async () => {
-        component_options = {
+describe("AppBreadcrumb", () => {
+    async function getWrapper(is_program_admin: boolean): Promise<Wrapper<Vue>> {
+        return shallowMount(AppBreadcrumb, {
+            localVue: await createProgramManagementLocalVue(),
             propsData: {
                 project_public_name: "Public name",
                 project_short_name: "short-name",
                 project_privacy: {},
                 project_flags: [],
-                is_program_admin: false,
                 project_icon: "",
+                is_program_admin,
             },
-            localVue: await createProgramManagementLocalVue(),
-        };
+        });
+    }
 
-        const wrapper = shallowMount(Breadcrumb, component_options);
+    it("When user is not program admin, Then breadcrumb does not contain administration link", async () => {
+        const wrapper = await getWrapper(false);
+        expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).not.toContain(
+            "breadcrumb-switchable",
+        );
         expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBe(false);
     });
 
     it("When user is program admin, Then administration link is displayed", async () => {
-        component_options = {
-            propsData: {
-                project_public_name: "Public name",
-                project_short_name: "short-name",
-                project_privacy: {},
-                project_flags: [],
-                is_program_admin: true,
-                project_icon: "",
-            },
-            localVue: await createProgramManagementLocalVue(),
-        };
-
-        const wrapper = shallowMount(Breadcrumb, component_options);
-        expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).toContainEqual(
+        const wrapper = await getWrapper(true);
+        expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).toContain(
             "breadcrumb-switchable",
         );
         expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBe(true);
