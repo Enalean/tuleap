@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AllEvents, EventType } from "./DomainEvent";
+import type { WillDisableSubmit } from "./WillDisableSubmit";
+import type { WillEnableSubmit } from "./WillEnableSubmit";
+import type { WillNotifyFault } from "./WillNotifyFault";
+import type { WillClearFaultNotification } from "./WillClearFaultNotification";
+import type { EventsMap } from "./EventDispatcher";
 
-export type EventObserver<TypeOfEvent extends EventType> = (event: AllEvents[TypeOfEvent]) => void;
-
-export type DispatchEvents = {
-    /**
-     * Calls all observers of each event. There might be no observer. Events might be mutated by observers.
-     */
-    dispatch(
-        event: AllEvents[EventType],
-        ...other_events: ReadonlyArray<AllEvents[EventType]>
-    ): void;
-};
+export interface CommonEvents extends EventsMap {
+    WillClearFaultNotification: WillClearFaultNotification;
+    WillDisableSubmit: WillDisableSubmit;
+    WillEnableSubmit: WillEnableSubmit;
+    WillNotifyFault: WillNotifyFault;
+}

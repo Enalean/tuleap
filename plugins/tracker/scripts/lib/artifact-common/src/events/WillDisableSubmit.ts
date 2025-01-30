@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DomainEvent } from "./DomainEvent";
+import type { DomainEvent } from "./EventDispatcher";
 
-export type WillClearFaultNotification = DomainEvent<"WillClearFaultNotification">;
+export type WillDisableSubmit = DomainEvent<"WillDisableSubmit"> & {
+    readonly reason: string;
+};
 
-export const WillClearFaultNotification = (): WillClearFaultNotification => ({
-    type: "WillClearFaultNotification",
+export const WillDisableSubmit = (reason: string): WillDisableSubmit => ({
+    type: "WillDisableSubmit",
+    reason,
 });

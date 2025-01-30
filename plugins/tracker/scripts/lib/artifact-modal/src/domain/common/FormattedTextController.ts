@@ -20,11 +20,10 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { Option } from "@tuleap/option";
-import type { DispatchEvents } from "../DispatchEvents";
+import type { DispatchEvents, WillDisableSubmit } from "../AllEvents";
+import { WillEnableSubmit } from "../AllEvents";
 import type { FileUploadSetup } from "../fields/file-field/FileUploadSetup";
 import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSetup";
-import type { WillDisableSubmit } from "../submit/WillDisableSubmit";
-import { WillEnableSubmit } from "../submit/WillEnableSubmit";
 import type { DidUploadImage } from "../fields/file-field/DidUploadImage";
 import type { InterpretCommonMark } from "./InterpretCommonMark";
 import type { FormattedTextUserPreferences } from "./FormattedTextUserPreferences";

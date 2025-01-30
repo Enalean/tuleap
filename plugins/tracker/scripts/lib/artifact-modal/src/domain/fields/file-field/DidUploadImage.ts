@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DomainEvent } from "../../DomainEvent";
+import type { DomainEvent } from "../../AllEvents";
 import type { UploadedImage } from "./UploadedImage";
 
 export type DidUploadImage = DomainEvent<"DidUploadImage"> & {

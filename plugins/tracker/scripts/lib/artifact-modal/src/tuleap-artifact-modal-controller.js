@@ -57,15 +57,17 @@ import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesC
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
 import { CommentsController } from "./domain/comments/CommentsController";
-import { EventDispatcher } from "./domain/EventDispatcher";
 import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 import { FormattedTextController } from "./domain/common/FormattedTextController";
 import { ParentTrackerIdentifierProxy } from "./adapters/REST/fields/link-field/ParentTrackerIdentifierProxy";
 import { ArtifactCreatorController } from "./domain/fields/link-field/creation/ArtifactCreatorController";
-import { WillNotifyFault } from "./domain/WillNotifyFault";
-import { WillDisableSubmit } from "./domain/submit/WillDisableSubmit";
-import { WillEnableSubmit } from "./domain/submit/WillEnableSubmit";
+import {
+    EventDispatcher,
+    WillDisableSubmit,
+    WillEnableSubmit,
+    WillNotifyFault,
+} from "./domain/AllEvents";
 import { ProjectsCache } from "./adapters/Memory/fields/link-field/ProjectsCache";
 import { LinkableArtifactCreator } from "./adapters/REST/fields/link-field/creation/LinkableArtifactCreator";
 import { StaticOpenListFieldController } from "./adapters/UI/fields/open-list-field/static/StaticOpenListFieldController";

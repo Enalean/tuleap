@@ -13,12 +13,17 @@
       "require": "./dist/plugin-tracker-artifact-common.umd.cjs"
     }
   },
+  "dependencies": {
+    "@tuleap/fault": "workspace:^",
+    "@tuleap/option": "workspace:^"
+  },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false"
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
   }
 }

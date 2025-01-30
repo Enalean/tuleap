@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EventDispatcher } from "../../EventDispatcher";
+import type { EventDispatcherType } from "../../AllEvents";
 import { DidChangeAllowedValues } from "./DidChangeAllowedValues";
 import type { FieldDependenciesRule } from "../../initialization/CurrentArtifactWithTrackerStructure";
 
 export const FieldDependenciesValuesHelper = (
-    event_dispatcher: EventDispatcher,
+    event_dispatcher: EventDispatcherType,
     field_dependencies_rules: readonly FieldDependenciesRule[],
 ): void => {
     event_dispatcher.addObserver("DidChangeListFieldValue", (event) => {

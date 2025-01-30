@@ -18,7 +18,7 @@
  */
 
 import { Option } from "@tuleap/option";
-import type { DomainEvent } from "../../DomainEvent";
+import type { DomainEvent } from "../../AllEvents";
 import type { FileUploadSetup } from "./FileUploadSetup";
 
 export type WillGetFileUploadSetup = DomainEvent<"WillGetFileUploadSetup"> & {

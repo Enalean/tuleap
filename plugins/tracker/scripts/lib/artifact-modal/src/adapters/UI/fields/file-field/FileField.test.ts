@@ -34,7 +34,7 @@ import type { FileFieldType } from "../../../../domain/fields/file-field/FileFie
 import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
 import type { AttachedFileCollection } from "../../../../domain/fields/file-field/FileFieldController";
 import { FileFieldController } from "../../../../domain/fields/file-field/FileFieldController";
-import { EventDispatcher } from "../../../../domain/EventDispatcher";
+import { EventDispatcher } from "../../../../domain/AllEvents";
 
 jest.mock("pretty-kibibytes", () => {
     return {

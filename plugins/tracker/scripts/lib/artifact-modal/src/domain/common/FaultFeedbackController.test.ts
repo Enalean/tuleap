@@ -19,12 +19,11 @@
 
 import { Fault } from "@tuleap/fault";
 import { FaultFeedbackController } from "./FaultFeedbackController";
-import { EventDispatcher } from "../EventDispatcher";
-import { WillNotifyFault } from "../WillNotifyFault";
-import { WillClearFaultNotification } from "../WillClearFaultNotification";
+import type { EventDispatcherType } from "../AllEvents";
+import { EventDispatcher, WillClearFaultNotification, WillNotifyFault } from "../AllEvents";
 
 describe(`FaultFeedbackController`, () => {
-    let event_dispatcher: EventDispatcher;
+    let event_dispatcher: EventDispatcherType;
     beforeEach(() => {
         event_dispatcher = EventDispatcher();
     });

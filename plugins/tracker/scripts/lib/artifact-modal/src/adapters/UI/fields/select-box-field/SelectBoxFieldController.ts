@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SelectBoxFieldValueModelType } from "./SelectBoxFieldValueModelType";
-import { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
-import type { EventDispatcher } from "../../../../domain/EventDispatcher";
-import { DidChangeListFieldValue } from "../../../../domain/fields/select-box-field/DidChangeListFieldValue";
-import type { ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
+import type { ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { SelectBoxFieldValueModelType } from "./SelectBoxFieldValueModelType";
+import { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
+import type { EventDispatcherType } from "../../../../domain/AllEvents";
+import { DidChangeListFieldValue } from "../../../../domain/fields/select-box-field/DidChangeListFieldValue";
 import type { BindValueId } from "../../../../domain/fields/select-box-field/BindValueId";
 
 export interface ControlSelectBoxField {
@@ -41,7 +41,7 @@ export interface ControlSelectBoxField {
 }
 
 export const SelectBoxFieldController = (
-    event_dispatcher: EventDispatcher,
+    event_dispatcher: EventDispatcherType,
     field: ListFieldStructure,
     value_model: SelectBoxFieldValueModelType,
     is_field_disabled: boolean,

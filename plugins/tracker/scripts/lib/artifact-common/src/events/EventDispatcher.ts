@@ -17,21 +17,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DispatchEvents, EventObserver } from "./DispatchEvents";
-import type { EventType } from "./DomainEvent";
+type EventKey = string;
 
-export type EventDispatcher = DispatchEvents & {
-    addObserver<TypeOfEvent extends EventType>(
-        type: TypeOfEvent,
-        callback: EventObserver<TypeOfEvent>,
-    ): void;
-    removeObserver<TypeOfEvent extends EventType>(
-        type: TypeOfEvent,
-        callback: EventObserver<TypeOfEvent>,
+export interface DomainEvent<EventType extends EventKey> {
+    readonly type: EventType;
+}
+
+export type EventsMap = {
+    [Key in EventKey]: DomainEvent<Key>;
+};
+
+type EventHandler<HandledEvent> = (event: HandledEvent) => void;
+
+export type DispatchEvents<AllEvents extends EventsMap> = {
+    /**
+     * Calls all observers of each event. There might be no observer. Events might be mutated by observers.
+     */
+    dispatch(
+        event: AllEvents[keyof AllEvents],
+        ...other_events: ReadonlyArray<AllEvents[keyof AllEvents]>
     ): void;
 };
 
-export const EventDispatcher = (): EventDispatcher => {
+export type ObserveEvents<AllEvents extends EventsMap> = {
+    addObserver<TypeOfEvent extends keyof AllEvents>(
+        type: TypeOfEvent,
+        callback: EventHandler<AllEvents[TypeOfEvent]>,
+    ): void;
+    removeObserver<TypeOfEvent extends keyof AllEvents>(
+        type: TypeOfEvent,
+        callback: EventHandler<AllEvents[TypeOfEvent]>,
+    ): void;
+};
+
+export type EventDispatcher<AllEvents extends EventsMap> = DispatchEvents<AllEvents> &
+    ObserveEvents<AllEvents>;
+
+export const EventDispatcher = <AllEvents extends EventsMap>(): EventDispatcher<AllEvents> => {
     const event_observers = new Map();
 
     return {
@@ -55,9 +77,11 @@ export const EventDispatcher = (): EventDispatcher => {
                 if (!set_of_observers) {
                     return;
                 }
-                set_of_observers.forEach((callback: EventObserver<typeof current_event.type>) => {
-                    callback(current_event);
-                });
+                set_of_observers.forEach(
+                    (callback: (event: AllEvents[keyof AllEvents]) => void) => {
+                        callback(current_event);
+                    },
+                );
             }
         },
     };

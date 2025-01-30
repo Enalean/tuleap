@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DispatchEvents } from "../DispatchEvents";
+import type { DispatchEvents } from "../AllEvents";
 import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSetup";
 
 export interface FileUploadQuotaControllerType {
