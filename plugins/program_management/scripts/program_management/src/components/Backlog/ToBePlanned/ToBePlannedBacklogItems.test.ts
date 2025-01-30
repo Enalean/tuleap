@@ -17,96 +17,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Feature, TrackerMinimalRepresentation } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
-import type { DefaultData } from "vue/types/options";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
 jest.useFakeTimers();
 
 describe("ToBePlannedBacklogItems", () => {
-    let component_options: ShallowMountOptions<ToBePlannedBacklogItems>;
-    let store: Store;
-
+    let store: Store, feature: Feature;
     beforeEach(() => {
-        store = createStoreMock({
-            state: {},
-        });
+        store = createStoreMock({ state: {} });
+        feature = { id: 100 } as Feature;
     });
-    it("Displays a skeleton during get user stories", async () => {
-        component_options = {
-            propsData: {
-                to_be_planned_element: {
-                    id: 100,
-                } as Feature,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: store,
-            },
-        };
 
+    async function getWrapper(): Promise<Wrapper<Vue>> {
+        return shallowMount(ToBePlannedBacklogItems, {
+            localVue: await createProgramManagementLocalVue(),
+            propsData: { to_be_planned_element: feature },
+            mocks: { $store: store },
+        });
+    }
+
+    it("Displays a skeleton during get user stories", async () => {
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([]));
 
-        const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
+        const wrapper = await getWrapper();
 
         await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
-        await wrapper.setData({
-            user_stories: [],
-            is_loading_user_story: true,
-            message_error_rest: "",
-        });
-
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
     });
 
     it("Displays error message if api rest error exists", async () => {
-        component_options = {
-            data(): DefaultData<ToBePlannedBacklogItems> {
-                return {
-                    message_error_rest: "404 Not Found",
-                };
-            },
-            propsData: {
-                to_be_planned_element: {
-                    id: 100,
-                    user_stories: [{ id: 14 } as UserStory],
-                } as Feature,
-            },
-            localVue: await createProgramManagementLocalVue(),
-        };
+        const wrapper = await getWrapper();
+        wrapper.setData({ message_error_rest: "404 Not Found" });
 
-        const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await jest.runOnlyPendingTimersAsync();
 
-        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeTruthy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(true);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(false);
     });
 
     it("When user stories are loaded, Then UserStoryDisplayer is rendered", async () => {
-        component_options = {
-            propsData: {
-                to_be_planned_element: {
-                    id: 100,
-                } as Feature,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: store,
-            },
-        };
-
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve([
                 {
@@ -114,71 +76,56 @@ describe("ToBePlannedBacklogItems", () => {
                     title: "My US",
                     xref: "us #14",
                     background_color: "lake-placid-blue",
-                    tracker: {
-                        color_name: "fiesta-red",
-                    } as TrackerMinimalRepresentation,
+                    tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
                     is_open: true,
                     uri: "tracker?aid=14",
-                    project: {
-                        label: "project",
-                    },
+                    project: { label: "project" },
                 } as UserStory,
             ]),
         );
 
-        const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
+        const wrapper = await getWrapper();
 
-        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await jest.runOnlyPendingTimersAsync();
 
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(true);
     });
 
     it("No rest call when user stories are already loaded in feature and user can hide user stories", async () => {
-        component_options = {
-            propsData: {
-                to_be_planned_element: {
-                    id: 100,
-                    user_stories: [
-                        {
-                            id: 14,
-                            title: "My US",
-                            xref: "us #14",
-                            background_color: "lake-placid-blue",
-                            tracker: {
-                                color_name: "fiesta-red",
-                            } as TrackerMinimalRepresentation,
-                            is_open: true,
-                            uri: "tracker?aid=14",
-                            project: {
-                                label: "project",
-                            },
-                        } as UserStory,
-                    ],
-                } as Feature,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: store,
-            },
-        };
+        feature = {
+            id: 100,
+            user_stories: [
+                {
+                    id: 14,
+                    title: "My US",
+                    xref: "us #14",
+                    background_color: "lake-placid-blue",
+                    tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
+                    is_open: true,
+                    uri: "tracker?aid=14",
+                    project: { label: "project" },
+                } as UserStory,
+            ],
+        } as Feature;
+
         const dispatchSpy = jest.spyOn(store, "dispatch");
 
-        const wrapper = await shallowMount(ToBePlannedBacklogItems, component_options);
+        const wrapper = await getWrapper();
+
+        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+
         expect(dispatchSpy).not.toHaveBeenCalled();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(true);
 
         await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
-
-        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-
-        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(false);
     });
 });

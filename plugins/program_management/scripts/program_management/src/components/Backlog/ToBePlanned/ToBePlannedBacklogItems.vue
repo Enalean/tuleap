@@ -26,7 +26,6 @@
                 v-bind:message_error_rest="message_error_rest"
             />
             <user-story-displayer
-                v-else
                 v-for="user_story in user_stories"
                 v-bind:key="user_story.id"
                 v-bind:user_story="user_story"
@@ -34,7 +33,7 @@
         </div>
         <div
             class="backlog-items-children-container-handle"
-            ref="openCloseButton"
+            v-on:click="toggle"
             data-test="backlog-items-open-close-button"
         >
             <i
@@ -44,10 +43,10 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
+import { useActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { Feature } from "../../../type";
@@ -55,51 +54,40 @@ import { handleError } from "../../../helpers/error-handler";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 
-@Component({
-    components: { UserStoryDisplayer, ErrorDisplayer, BacklogElementSkeleton },
-})
-export default class ToBePlannedBacklogItems extends Vue {
-    @Prop({ required: true })
-    readonly to_be_planned_element!: Feature;
+const { linkUserStoriesToBePlannedElements } = useActions(["linkUserStoriesToBePlannedElements"]);
 
-    user_stories: UserStory[] = [];
-    is_loading_user_story = false;
-    message_error_rest = "";
-    is_opened = false;
+const gettext_provider = useGettext();
 
-    mounted(): void {
-        const button_close_stories = this.$refs.openCloseButton;
+const props = defineProps<{ to_be_planned_element: Feature }>();
 
-        if (!(button_close_stories instanceof HTMLElement)) {
-            throw Error("No openCloseButton in component");
-        }
+const user_stories = ref<UserStory[]>([]);
+const is_loading_user_story = ref(false);
+const message_error_rest = ref("");
+const is_opened = ref(false);
 
-        button_close_stories.addEventListener("click", async () => {
-            this.is_opened = !this.is_opened;
-            if (this.is_opened && this.user_stories.length === 0) {
-                await this.loadUserStories();
-            }
-        });
+function toggle(): void {
+    is_opened.value = !is_opened.value;
+    if (is_opened.value && user_stories.value.length === 0) {
+        loadUserStories();
+    }
+}
+
+async function loadUserStories(): Promise<void> {
+    if (props.to_be_planned_element.user_stories) {
+        user_stories.value = props.to_be_planned_element.user_stories;
+        return;
     }
 
-    async loadUserStories(): Promise<void> {
-        if (this.to_be_planned_element.user_stories) {
-            this.user_stories = this.to_be_planned_element.user_stories;
-            return;
-        }
-
-        try {
-            this.is_loading_user_story = true;
-            this.user_stories = await this.$store.dispatch(
-                "linkUserStoriesToBePlannedElements",
-                this.to_be_planned_element.id,
-            );
-        } catch (rest_error) {
-            this.message_error_rest = await handleError(rest_error, this);
-            throw rest_error;
-        } finally {
-            this.is_loading_user_story = false;
-        }
+    try {
+        is_loading_user_story.value = true;
+        user_stories.value = await linkUserStoriesToBePlannedElements(
+            props.to_be_planned_element.id,
+        );
+    } catch (rest_error) {
+        message_error_rest.value = await handleError(rest_error, gettext_provider);
+        throw rest_error;
+    } finally {
+        is_loading_user_story.value = false;
     }
 }
 </script>
