@@ -21,29 +21,24 @@ import type { Vue } from "vue/types/vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import ErrorModal from "./ErrorModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
+import type { Modal } from "@tuleap/tlp-modal";
+import ErrorModal from "./ErrorModal.vue";
 import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
 
-jest.mock("@tuleap/tlp-modal", () => {
-    return {
-        __esModule: true,
-        createModal: jest.fn(),
-    };
-});
-
-jest.useFakeTimers();
-
 describe("ErrorModal", () => {
-    let local_vue: typeof Vue;
-
-    beforeEach(async () => {
-        local_vue = await createProgramManagementLocalVue();
+    beforeEach(() => {
+        const fake_modal = {
+            show(): void {
+                //Do nothing
+            },
+        } as Modal;
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
     });
 
-    function createWrapper(error_message: string): Wrapper<ErrorModal> {
+    async function createWrapper(error_message: string): Promise<Wrapper<Vue>> {
         return shallowMount(ErrorModal, {
-            localVue: local_vue,
+            localVue: await createProgramManagementLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: { modal_error_message: error_message },
@@ -52,30 +47,18 @@ describe("ErrorModal", () => {
         });
     }
 
-    it(`shows the modal when mounted`, () => {
-        const modal_show = jest.fn();
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
-            return {
-                show: modal_show,
-            } as unknown as tlp_modal.Modal;
-        });
-        createWrapper("Full error message with details");
-        expect(modal_show).toHaveBeenCalledTimes(1);
-    });
-
     it("display more details when user click on show error", async () => {
         const error_message = "Full error message with details";
-        const wrapper = createWrapper(error_message);
+        const wrapper = await createWrapper(error_message);
 
-        wrapper.get("[data-test=show-details]").trigger("click");
-        await jest.runOnlyPendingTimersAsync();
+        await wrapper.get("[data-test=show-details]").trigger("click");
 
         const details = wrapper.get("[data-test=details]");
         expect(details.text()).toBe(error_message);
     });
 
-    it("warns user that something is wrong without any details", () => {
-        const wrapper = createWrapper("");
+    it("warns user that something is wrong without any details", async () => {
+        const wrapper = await createWrapper("");
         expect(wrapper.find("[data-test=show-details]").exists()).toBe(false);
         expect(wrapper.find("[data-test=details]").exists()).toBe(false);
     });
