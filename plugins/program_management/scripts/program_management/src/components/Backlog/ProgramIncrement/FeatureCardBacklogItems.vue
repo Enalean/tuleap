@@ -26,7 +26,6 @@
                 v-bind:message_error_rest="message_error_rest"
             />
             <user-story-displayer
-                v-else
                 v-for="user_story in user_stories"
                 v-bind:key="user_story.id"
                 v-bind:user_story="user_story"
@@ -34,7 +33,7 @@
         </div>
         <div
             class="backlog-items-children-container-handle"
-            ref="openCloseButton"
+            v-on:click="toggle"
             data-test="backlog-items-open-close-button"
         >
             <i
@@ -44,10 +43,11 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { useActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
@@ -55,58 +55,47 @@ import { handleError } from "../../../helpers/error-handler";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { Feature } from "../../../type";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-@Component({
-    components: { UserStoryDisplayer, ErrorDisplayer, BacklogElementSkeleton },
-})
-export default class FeatureCardBacklogItems extends Vue {
-    @Prop({ required: true })
-    readonly feature!: Feature;
+const { linkUserStoriesToFeature } = useActions(["linkUserStoriesToFeature"]);
 
-    @Prop({ required: true })
-    readonly program_increment!: ProgramIncrement;
+const gettext_provider = useGettext();
 
-    user_stories: UserStory[] = [];
-    is_loading_user_story = false;
-    message_error_rest = "";
-    is_opened = false;
+const props = defineProps<{
+    feature: Feature;
+    program_increment: ProgramIncrement;
+}>();
 
-    mounted(): void {
-        const button_close_stories = this.$refs.openCloseButton;
+const user_stories = ref<UserStory[]>([]);
+const is_loading_user_story = ref(false);
+const message_error_rest = ref("");
+const is_opened = ref(false);
 
-        if (!(button_close_stories instanceof HTMLElement)) {
-            throw Error("No openCloseButton in component");
-        }
+function toggle(): void {
+    is_opened.value = !is_opened.value;
+    if (is_opened.value && user_stories.value.length === 0) {
+        loadUserStories();
+    }
+}
 
-        button_close_stories.addEventListener("click", async () => {
-            this.is_opened = !this.is_opened;
-            if (this.is_opened && this.user_stories.length === 0) {
-                await this.loadUserStories();
-            }
-        });
+async function loadUserStories(): Promise<void> {
+    if (props.feature.user_stories) {
+        user_stories.value = props.feature.user_stories;
+        return;
     }
 
-    async loadUserStories(): Promise<void> {
-        if (this.feature.user_stories) {
-            this.user_stories = this.feature.user_stories;
-            return;
+    try {
+        is_loading_user_story.value = true;
+        user_stories.value = await linkUserStoriesToFeature({
+            artifact_id: props.feature.id,
+            program_increment: props.program_increment,
+        });
+    } catch (rest_error) {
+        if (rest_error instanceof FetchWrapperError) {
+            message_error_rest.value = await handleError(rest_error, gettext_provider);
         }
-
-        try {
-            this.is_loading_user_story = true;
-            this.user_stories = await this.$store.dispatch("linkUserStoriesToFeature", {
-                artifact_id: this.feature.id,
-                program_increment: this.program_increment,
-            });
-        } catch (rest_error) {
-            if (rest_error instanceof FetchWrapperError) {
-                this.message_error_rest = await handleError(rest_error, this);
-            }
-            throw rest_error;
-        } finally {
-            this.is_loading_user_story = false;
-        }
+        throw rest_error;
+    } finally {
+        is_loading_user_story.value = false;
     }
 }
 </script>
