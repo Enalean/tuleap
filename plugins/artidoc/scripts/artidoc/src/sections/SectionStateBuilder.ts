@@ -36,6 +36,10 @@ export type SectionState = {
     is_just_refreshed: Ref<boolean>;
     is_being_saved: Ref<boolean>;
     is_just_saved: Ref<boolean>;
+    is_in_error: Ref<boolean>;
+    is_outdated: Ref<boolean>;
+    is_not_found: Ref<boolean>;
+    error_message: Ref<string>;
 };
 
 export type BuildSectionState = {
@@ -79,5 +83,9 @@ export const getSectionStateBuilder = (
         is_just_refreshed: ref(false),
         is_being_saved: ref(false),
         is_just_saved: ref(false),
+        is_in_error: ref(false),
+        is_outdated: ref(false),
+        is_not_found: ref(false),
+        error_message: ref(""),
     }),
 });

@@ -23,14 +23,6 @@ import { noop } from "@/helpers/noop";
 
 export const SectionEditorStub = {
     build: (): SectionEditor => ({
-        editor_error: {
-            handleError: noop,
-            is_in_error: ref(false),
-            is_outdated: ref(false),
-            is_not_found: ref(false),
-            error_message: ref(""),
-            resetErrorStates: noop,
-        },
         editor_actions: {
             saveEditor: noop,
             forceSaveEditor: noop,

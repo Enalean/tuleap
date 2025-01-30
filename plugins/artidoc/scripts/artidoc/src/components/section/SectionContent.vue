@@ -97,6 +97,7 @@ import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
+import { getSectionErrorManager } from "@/sections/SectionErrorManager";
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -160,6 +161,7 @@ const { $gettext } = useGettext();
 const editor = useSectionEditor(
     props.section,
     section_state,
+    getSectionErrorManager(section_state),
     mergeArtifactAttachments,
     setWaitingListAttachments,
     getPendingSectionsReplacer(sections_collection),
@@ -174,7 +176,7 @@ const editor = useSectionEditor(
     },
 );
 
-const { is_in_error, is_outdated } = editor.editor_error;
+const { is_in_error, is_outdated } = section_state;
 
 const { inputSectionContent, is_there_any_change, editable_description, getReadonlyDescription } =
     editor.editor_section_content;

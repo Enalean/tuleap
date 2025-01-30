@@ -163,4 +163,28 @@ describe("SectionStateBuilder", () => {
             expect(createState(FreetextSectionFactory.create()).is_just_saved.value).toBe(false);
         });
     });
+
+    describe("is_in_error", () => {
+        it("should be false by default", () => {
+            expect(createState(FreetextSectionFactory.create()).is_in_error.value).toBe(false);
+        });
+    });
+
+    describe("is_outdated", () => {
+        it("should be false by default", () => {
+            expect(createState(FreetextSectionFactory.create()).is_outdated.value).toBe(false);
+        });
+    });
+
+    describe("is_not_found", () => {
+        it("should be false by default", () => {
+            expect(createState(FreetextSectionFactory.create()).is_not_found.value).toBe(false);
+        });
+    });
+
+    describe("error_message", () => {
+        it("should be an empty string by default", () => {
+            expect(createState(FreetextSectionFactory.create()).error_message.value).toBe("");
+        });
+    });
 });

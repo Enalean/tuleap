@@ -40,12 +40,12 @@ import { errAsync, okAsync } from "neverthrow";
 import { getSectionInItsLatestVersion } from "@/helpers/get-section-in-its-latest-version";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { EditorErrors } from "@/composables/useEditorErrors";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
 import type { UpdateSections } from "@/sections/SectionsUpdater";
 import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
 import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { ManageErrorState } from "@/sections/SectionErrorManager";
 
 export type SaveEditor = {
     forceSave: (
@@ -66,7 +66,7 @@ export type SaveEditor = {
 
 export default function useSaveSection(
     section_state: SectionState,
-    editor_errors: EditorErrors,
+    manage_error_state: ManageErrorState,
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
     retrieve_positions: RetrieveSectionsPositionForSave,
@@ -98,7 +98,7 @@ export default function useSaveSection(
             return;
         }
 
-        editor_errors.is_outdated.value = false;
+        section_state.is_outdated.value = false;
         section_state.is_being_saved.value = true;
 
         const put = isFreetextSection(section)
@@ -121,7 +121,7 @@ export default function useSaveSection(
                 section_state.is_just_saved.value = true;
             },
             (fault: Fault) => {
-                editor_errors.handleError(fault);
+                manage_error_state.handleError(fault);
                 section_state.is_being_saved.value = false;
             },
         );
@@ -134,8 +134,7 @@ export default function useSaveSection(
             title: string;
         },
     ): void => {
-        editor_errors.is_in_error.value = false;
-        editor_errors.is_outdated.value = false;
+        manage_error_state.resetErrorStates();
 
         if (
             isSectionBasedOnArtifact(section) &&
@@ -179,7 +178,7 @@ export default function useSaveSection(
                 section_state.is_just_saved.value = true;
             },
             (fault: Fault) => {
-                editor_errors.handleError(fault);
+                manage_error_state.handleError(fault);
                 section_state.is_being_saved.value = false;
             },
         );
