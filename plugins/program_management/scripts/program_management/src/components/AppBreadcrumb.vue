@@ -26,7 +26,7 @@
         />
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
-                <a v-bind:href="projectUrl()" class="breadcrumb-link">
+                <a v-bind:href="program_url" class="breadcrumb-link">
                     <span aria-hidden="true">{{ project_icon }}</span>
                     {{ project_public_name }}
                 </a>
@@ -36,7 +36,7 @@
                 class="breadcrumb-item"
                 v-bind:class="{ 'breadcrumb-switchable': is_program_admin }"
             >
-                <a v-bind:href="pluginUrl()" class="breadcrumb-link">{{ $gettext("Program") }}</a>
+                <a v-bind:href="plugin_url" class="breadcrumb-link">{{ $gettext("Program") }}</a>
                 <div
                     class="breadcrumb-switch-menu-container"
                     v-if="is_program_admin"
@@ -46,7 +46,7 @@
                         <span class="breadcrumb-dropdown-item">
                             <a
                                 class="breadcrumb-dropdown-link"
-                                v-bind:href="pluginAdministrationUrl()"
+                                v-bind:href="plugin_administration_url"
                                 v-bind:title="$gettext('Administration')"
                             >
                                 <i class="fa fa-cog fa-fw"></i>
@@ -59,44 +59,21 @@
         </nav>
     </div>
 </template>
-
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
 import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
-@Component({ components: { BreadcrumbPrivacy } })
-export default class Breadcrumb extends Vue {
-    @Prop({ required: true })
-    readonly project_public_name!: string;
+const props = defineProps<{
+    project_public_name: string;
+    project_short_name: string;
+    project_icon: string;
+    project_privacy: ProjectPrivacy;
+    project_flags: ProjectFlag[];
+    is_program_admin: boolean;
+}>();
 
-    @Prop({ required: true })
-    readonly project_short_name!: string;
-
-    @Prop({ required: true })
-    readonly project_icon!: string;
-
-    @Prop({ required: true })
-    readonly project_privacy!: ProjectPrivacy;
-
-    @Prop({ required: true })
-    readonly project_flags!: Array<ProjectFlag>;
-
-    @Prop({ required: true })
-    readonly is_program_admin!: boolean;
-
-    public projectUrl(): string {
-        return `/projects/${this.project_short_name}`;
-    }
-
-    public pluginUrl(): string {
-        return `/program_management/${encodeURIComponent(this.project_short_name)}`;
-    }
-
-    pluginAdministrationUrl(): string {
-        return `/program_management/admin/${encodeURIComponent(this.project_short_name)}`;
-    }
-}
+const program_url = `/projects/${encodeURIComponent(props.project_short_name)}`;
+const plugin_url = `/program_management/${encodeURIComponent(props.project_short_name)}`;
+const plugin_administration_url = `/program_management/admin/${encodeURIComponent(props.project_short_name)}`;
 </script>

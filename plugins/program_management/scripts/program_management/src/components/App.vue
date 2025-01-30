@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <breadcrumb
+        <app-breadcrumb
             v-bind:project_public_name="public_name"
             v-bind:project_short_name="short_name"
             v-bind:project_icon="project_icon"
@@ -67,7 +67,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import Breadcrumb from "./Breadcrumb.vue";
+import AppBreadcrumb from "./AppBreadcrumb.vue";
 import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
 import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
@@ -97,8 +97,8 @@ const configuration = namespace("configuration");
     components: {
         ConfigurationEmptyState,
         ToBePlanned,
-        ProgramIncrementList: ProgramIncrementList,
-        Breadcrumb,
+        ProgramIncrementList,
+        AppBreadcrumb,
         ErrorModal,
     },
 })
