@@ -18,86 +18,89 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
+declare(strict_types=1);
+
+namespace Tuleap\Git;
+
+use Git_Backend_Gitolite;
+use Git_GitoliteDriver;
+use Psr\Log\NullLogger;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/bootstrap.php';
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_Backend_GitoliteAccessURLTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Git_Backend_GitoliteAccessURLTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testGetAccessURLIsEmptyWhenGenerationReturnsEmptyURLs()
+    public function testGetAccessURLIsEmptyWhenGenerationReturnsEmptyURLs(): void
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
+        $url_generator = $this->createMock(GitoliteAccessURLGenerator::class);
         $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
+            $this->createMock(Git_GitoliteDriver::class),
             $url_generator,
             new DefaultBranchUpdateExecutorStub(),
-            Mockery::mock(\Psr\Log\LoggerInterface::class)
+            new NullLogger()
         );
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('');
+        $url_generator->method('getSSHURL')->willReturn('');
+        $url_generator->method('getHTTPURL')->willReturn('');
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
+        $access_urls = $backend->getAccessURL(GitRepositoryTestBuilder::aProjectRepository()->build());
 
-        $this->assertEquals([], $access_urls);
+        self::assertEquals([], $access_urls);
     }
 
-    public function testGetAccessURLWithOnlySSHURLSet()
+    public function testGetAccessURLWithOnlySSHURLSet(): void
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
+        $url_generator = $this->createMock(GitoliteAccessURLGenerator::class);
         $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
+            $this->createMock(Git_GitoliteDriver::class),
             $url_generator,
             new DefaultBranchUpdateExecutorStub(),
-            Mockery::mock(\Psr\Log\LoggerInterface::class)
+            new NullLogger(),
         );
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('ssh://gitolite@example.com/');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('');
+        $url_generator->method('getSSHURL')->willReturn('ssh://gitolite@example.com/');
+        $url_generator->method('getHTTPURL')->willReturn('');
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
+        $access_urls = $backend->getAccessURL(GitRepositoryTestBuilder::aProjectRepository()->build());
 
-        $this->assertEquals(['ssh' => 'ssh://gitolite@example.com/'], $access_urls);
+        self::assertEquals(['ssh' => 'ssh://gitolite@example.com/'], $access_urls);
     }
 
-    public function testGetAccessURLWithOnlyHTTPURLSet()
+    public function testGetAccessURLWithOnlyHTTPURLSet(): void
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
+        $url_generator = $this->createMock(GitoliteAccessURLGenerator::class);
         $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
+            $this->createMock(Git_GitoliteDriver::class),
             $url_generator,
             new DefaultBranchUpdateExecutorStub(),
-            Mockery::mock(\Psr\Log\LoggerInterface::class)
+            new NullLogger(),
         );
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('https://example.com/');
+        $url_generator->method('getSSHURL')->willReturn('');
+        $url_generator->method('getHTTPURL')->willReturn('https://example.com/');
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
+        $access_urls = $backend->getAccessURL(GitRepositoryTestBuilder::aProjectRepository()->build());
 
-        $this->assertEquals(['http' => 'https://example.com/'], $access_urls);
+        self::assertEquals(['http' => 'https://example.com/'], $access_urls);
     }
 
-    public function testGetAccessURLWithSSHAndHTTPURLs()
+    public function testGetAccessURLWithSSHAndHTTPURLs(): void
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
+        $url_generator = $this->createMock(GitoliteAccessURLGenerator::class);
         $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
+            $this->createMock(Git_GitoliteDriver::class),
             $url_generator,
             new DefaultBranchUpdateExecutorStub(),
-            Mockery::mock(\Psr\Log\LoggerInterface::class)
+            new NullLogger(),
         );
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('ssh://gitolite@example.com/');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('https://example.com/');
+        $url_generator->method('getSSHURL')->willReturn('ssh://gitolite@example.com/');
+        $url_generator->method('getHTTPURL')->willReturn('https://example.com/');
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
+        $access_urls = $backend->getAccessURL(GitRepositoryTestBuilder::aProjectRepository()->build());
 
-        $this->assertEquals(['ssh' => 'ssh://gitolite@example.com/', 'http' => 'https://example.com/'], $access_urls);
+        self::assertEquals(['ssh' => 'ssh://gitolite@example.com/', 'http' => 'https://example.com/'], $access_urls);
     }
 }
