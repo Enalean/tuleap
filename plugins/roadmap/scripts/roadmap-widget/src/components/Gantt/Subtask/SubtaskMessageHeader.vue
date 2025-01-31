@@ -25,18 +25,14 @@
     ></div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { ErrorRow } from "../../../type";
+const props = defineProps<{
+    row: ErrorRow;
+}>();
 
-@Component
-export default class SubtaskMessageHeader extends Vue {
-    @Prop({ required: true })
-    readonly row!: ErrorRow;
-
-    get classes(): string {
-        return "roadmap-gantt-task-header-" + this.row.for_task.color_name;
-    }
-}
+const classes = computed((): string => {
+    return "roadmap-gantt-task-header-" + props.row.for_task.color_name;
+});
 </script>

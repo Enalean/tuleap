@@ -25,7 +25,11 @@
             v-bind:class="icon"
             aria-hidden="true"
         ></i>
-        {{ message }}
+        {{
+            isErrorRow(row)
+                ? $gettext("An error occurred while retrieving the children.")
+                : $gettext("Actually there isn't any children you can see here.")
+        }}
         <button
             type="button"
             class="tlp-button-primary tlp-button-mini roadmap-gantt-subtask-header-message-button"
@@ -39,78 +43,63 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
 import { Styles } from "../../../helpers/styles";
 import type {
     EmptySubtasksRow,
     ErrorRow,
     Row,
-    Task,
     TaskDimension,
     TaskDimensionMap,
 } from "../../../type";
 import { getDimensions } from "../../../helpers/tasks-dimensions";
-import { namespace } from "vuex-class";
+import { useNamespacedMutations } from "vuex-composition-helpers";
 
-const tasks = namespace("tasks");
+onMounted((): void => {});
 
-@Component
-export default class SubtaskMessage extends Vue {
-    @Prop({ required: true })
-    readonly row!: ErrorRow | EmptySubtasksRow;
+const props = defineProps<{
+    row: ErrorRow | EmptySubtasksRow;
+    dimensions_map: TaskDimensionMap;
+    nb_iterations_ribbons: number;
+}>();
 
-    @Prop({ required: true })
-    readonly dimensions_map!: TaskDimensionMap;
+const { removeSubtasksDisplayForTask } = useNamespacedMutations("tasks", [
+    "removeSubtasksDisplayForTask",
+]);
 
-    @Prop({ required: true })
-    readonly nb_iterations_ribbons!: number;
+const message_class = computed((): string => {
+    return isErrorRow(props.row)
+        ? "roadmap-gantt-subtask-header-error-message"
+        : "roadmap-gantt-subtask-header-info-message";
+});
 
-    @tasks.Mutation
-    readonly removeSubtasksDisplayForTask!: (task: Task) => void;
+const dimensions = computed(
+    (): TaskDimension => getDimensions(props.row.for_task, props.dimensions_map),
+);
 
-    get message_class(): string {
-        return this.isErrorRow(this.row)
-            ? "roadmap-gantt-subtask-header-error-message"
-            : "roadmap-gantt-subtask-header-info-message";
-    }
+const style = computed((): string => {
+    const top =
+        (dimensions.value.index + 1) * Styles.TASK_HEIGHT_IN_PX +
+        2 * Styles.TIME_UNIT_HEIGHT_IN_PX +
+        Styles.TODAY_PIN_HEAD_SIZE_IN_PX +
+        props.nb_iterations_ribbons * Styles.ITERATION_HEIGHT_IN_PX +
+        1;
 
-    get style(): string {
-        const top =
-            (this.dimensions.index + 1) * Styles.TASK_HEIGHT_IN_PX +
-            2 * Styles.TIME_UNIT_HEIGHT_IN_PX +
-            Styles.TODAY_PIN_HEAD_SIZE_IN_PX +
-            this.nb_iterations_ribbons * Styles.ITERATION_HEIGHT_IN_PX +
-            1;
+    return `top: ${top}px`;
+});
 
-        return `top: ${top}px`;
-    }
+const should_button_be_displayed = computed((): boolean => !isErrorRow(props.row));
 
-    get dimensions(): TaskDimension {
-        return getDimensions(this.row.for_task, this.dimensions_map);
-    }
+const icon = computed((): string => {
+    return isErrorRow(props.row) ? "fa-exclamation-circle" : "fa-info-circle";
+});
 
-    get icon(): string {
-        return this.isErrorRow(this.row) ? "fa-exclamation-circle" : "fa-info-circle";
-    }
+function userUndestandsThatThereAreNoSubtasksToBeDisplayed(): void {
+    removeSubtasksDisplayForTask(props.row.for_task);
+}
 
-    get message(): string {
-        return this.isErrorRow(this.row)
-            ? this.$gettext("An error occurred while retrieving the children.")
-            : this.$gettext("Actually there isn't any children you can see here.");
-    }
-
-    get should_button_be_displayed(): boolean {
-        return !this.isErrorRow(this.row);
-    }
-
-    userUndestandsThatThereAreNoSubtasksToBeDisplayed(): void {
-        this.removeSubtasksDisplayForTask(this.row.for_task);
-    }
-
-    isErrorRow(row: Row): row is ErrorRow {
-        return "is_error" in row && row.is_error;
-    }
+function isErrorRow(row: Row): row is ErrorRow {
+    return "is_error" in row && row.is_error;
 }
 </script>
