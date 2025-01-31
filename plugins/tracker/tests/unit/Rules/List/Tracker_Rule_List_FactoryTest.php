@@ -20,31 +20,23 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Rule_List_Dao
-     */
-    private $list_rule_dao;
-
-    /**
-     *
-     * @var Tracker_Rule_List_Factory
-     */
-    private $list_rule_factory;
+    private Tracker_Rule_List_Dao&MockObject $list_rule_dao;
+    private Tracker_Rule_List_Factory $list_rule_factory;
 
     protected function setUp(): void
     {
-        $this->list_rule_dao     = \Mockery::spy(\Tracker_Rule_List_Dao::class);
+        $this->list_rule_dao     = $this->createMock(\Tracker_Rule_List_Dao::class);
         $this->list_rule_factory = new Tracker_Rule_List_Factory($this->list_rule_dao);
     }
 
     public function testCreateRuleListGeneratesANewObjectThatContainsAllValuesPassed(): void
     {
-        $this->list_rule_dao->shouldReceive('insert')->andReturns(true);
+        $this->list_rule_dao->method('insert')->willReturn(1);
 
         $source_field_id = 10;
         $target_field_id = 11;
@@ -65,7 +57,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        $this->list_rule_dao->shouldReceive('searchById')->andReturns([]);
+        $this->list_rule_dao->method('searchById')->willReturn([]);
         $list_rule = $this->list_rule_factory
             ->searchById(999);
 
@@ -82,7 +74,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'target_value_id'   => '465',
         ];
 
-        $this->list_rule_dao->shouldReceive('searchById')->andReturns($data);
+        $this->list_rule_dao->method('searchById')->willReturn($data);
         $list_rule = $this->list_rule_factory
             ->searchById(999);
 
@@ -91,7 +83,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns([]);
+        $this->list_rule_dao->method('searchByTrackerId')->willReturn([]);
         $list_rule = $this->list_rule_factory
             ->searchByTrackerId(999);
 
@@ -109,7 +101,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'target_value_id'   => '465',
         ];
 
-        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns([$data]);
+        $this->list_rule_dao->method('searchByTrackerId')->willReturn([$data]);
         $list_rules = $this->list_rule_factory
             ->searchByTrackerId(999);
 
@@ -133,9 +125,9 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns([]);
-        $dao->shouldReceive('create')->never();
+        $dao = $this->createMock(\Tracker_Rule_List_Dao::class);
+        $dao->method('searchByTrackerId')->willReturn([]);
+        $dao->expects(self::never())->method('create');
 
         $factory = new Tracker_Rule_List_Factory($dao);
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
@@ -199,11 +191,13 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'target_value_id' => 1005,
         ];
 
-        $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data1, $db_data2, $db_data3]);
-        $dao->shouldReceive('create')->with($to_tracker_id, 888, 777, 999, 666)->once();
-        $dao->shouldReceive('create')->with($to_tracker_id, 9999, 9998, 9997, 9996)->once();
-        $dao->shouldReceive('create')->with($to_tracker_id, 9999, 9998, 9997, 9995)->once();
+        $dao = $this->createMock(\Tracker_Rule_List_Dao::class);
+        $dao->method('searchByTrackerId')->willReturn([$db_data1, $db_data2, $db_data3]);
+        $dao->expects(self::exactly(3))->method('create')->willReturnCallback(static fn ($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id) => match (true) {
+            $tracker_id === $to_tracker_id && $source_field_id === 888 && $source_value_id === 777 && $target_field_id === 999 && $target_value_id === 666,
+            $tracker_id === $to_tracker_id && $source_field_id === 9999 && $source_value_id === 9998 && $target_field_id === 9997 && $target_value_id === 9996,
+            $tracker_id === $to_tracker_id && $source_field_id === 9999 && $source_value_id === 9998 && $target_field_id === 9997 && $target_value_id === 9995 => true
+        });
 
         $factory = new Tracker_Rule_List_Factory($dao);
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
@@ -211,22 +205,30 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExport(): void
     {
-        $f1 = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $f2 = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(103)->getMock();
+        $f1 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $f1->method('getId')->willReturn(102);
+        $f2 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $f2->method('getId')->willReturn(103);
 
-        $form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $form_element_factory->shouldReceive('getFormElementById')->with(102)->andReturns($f1);
-        $form_element_factory->shouldReceive('getFormElementById')->with(103)->andReturns($f2);
+        $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $form_element_factory
+            ->method('getFormElementById')
+            ->willReturnCallback(
+                static fn (int $form_element_id) => match ($form_element_id) {
+                    102 => $f1,
+                    103 => $f2,
+                }
+            );
 
-        $bind_f1 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_f2 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind_f1 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind_f2 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
 
-        $f1->shouldReceive('getBind')->andReturns($bind_f1);
-        $f2->shouldReceive('getBind')->andReturns($bind_f2);
+        $f1->method('getBind')->willReturn($bind_f1);
+        $f2->method('getBind')->willReturn($bind_f2);
 
-        $bf = \Mockery::spy(\Tracker_FormElement_Field_List_BindFactory::class);
-        $bf->shouldReceive('getType')->with($bind_f1)->andReturns('static');
-        $bf->shouldReceive('getType')->with($bind_f2)->andReturns('static');
+        $bf = $this->createMock(\Tracker_FormElement_Field_List_BindFactory::class);
+        $bf->method('getType')->with($bind_f1)->willReturn('static');
+        $bf->method('getType')->with($bind_f2)->willReturn('static');
 
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = ['F25' => 102,
@@ -246,8 +248,8 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $r1 = new Tracker_Rule_List(1, 101, 103, 806, 102, 803);
         $r2 = new Tracker_Rule_List(1, 101, 103, 806, 102, 804);
 
-        $trm = \Mockery::mock(\Tracker_Rule_List_Factory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $trm->shouldReceive('searchByTrackerId')->andReturns([$r1, $r2]);
+        $trm = $this->createPartialMock(\Tracker_Rule_List_Factory::class, ['searchByTrackerId']);
+        $trm->method('searchByTrackerId')->willReturn([$r1, $r2]);
 
         $trm->exportToXML($root, $array_xml_mapping, $form_element_factory, 666);
         $this->assertNull($root->dependencies->rule);
