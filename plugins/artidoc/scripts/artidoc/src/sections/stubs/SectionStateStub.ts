@@ -28,6 +28,10 @@ const initial_state = {
     is_just_refreshed: ref(false),
     is_being_saved: ref(false),
     is_just_saved: ref(false),
+    is_in_error: ref(false),
+    is_outdated: ref(false),
+    is_not_found: ref(false),
+    error_message: ref(""),
 };
 
 export const SectionStateStub = {

@@ -21,10 +21,10 @@ import { isArtifactSection, isFreetextSection } from "@/helpers/artidoc-section.
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { getSection } from "@/helpers/rest-querier";
 import type { Fault } from "@tuleap/fault";
-import type { EditorErrors } from "@/composables/useEditorErrors";
 import type { UpdateSections } from "@/sections/SectionsUpdater";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ManageErrorState } from "@/sections/SectionErrorManager";
 
 export type RefreshSection = {
     refreshSection: () => void;
@@ -33,7 +33,7 @@ export type RefreshSection = {
 export function useRefreshSection(
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
-    editor_errors: EditorErrors,
+    manage_error_state: ManageErrorState,
     update_sections: UpdateSections,
     close_editor_callback: () => void,
 ): RefreshSection {
@@ -51,8 +51,8 @@ export function useRefreshSection(
                 section_state.is_just_refreshed.value = true;
             },
             (fault: Fault) => {
-                editor_errors.handleError(fault);
-                editor_errors.is_outdated.value = false;
+                manage_error_state.handleError(fault);
+                section_state.is_outdated.value = false;
             },
         );
     }

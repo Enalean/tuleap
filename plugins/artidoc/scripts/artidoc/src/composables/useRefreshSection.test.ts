@@ -21,8 +21,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { MockedFunction } from "vitest";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import type { EditorErrors } from "@/composables/useEditorErrors";
-import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import { errAsync, okAsync } from "neverthrow";
 import * as rest from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
@@ -31,13 +29,10 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = ArtifactSectionFactory.create();
-const editor_errors: EditorErrors = {
-    ...SectionEditorStub.build().editor_error,
-    handleError: vi.fn(),
-};
 
 describe("useRefreshSection", () => {
     let closeEditor: MockedFunction<() => void>;
@@ -60,7 +55,7 @@ describe("useRefreshSection", () => {
                 const { refreshSection } = useRefreshSection(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
-                    editor_errors,
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     updater,
                     closeEditor,
                 );
@@ -75,7 +70,7 @@ describe("useRefreshSection", () => {
                 const { refreshSection } = useRefreshSection(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
-                    editor_errors,
+                    SectionErrorManagerStub.withExpectedFault(),
                     updater,
                     closeEditor,
                 );
@@ -94,7 +89,7 @@ describe("useRefreshSection", () => {
                             ArtifactSectionFactory.create(),
                         ),
                         SectionStateStub.inEditMode(),
-                        editor_errors,
+                        SectionErrorManagerStub.withExpectedFault(),
                         updater,
                         closeEditor,
                     );
@@ -117,33 +112,36 @@ describe("useRefreshSection", () => {
             });
 
             it(`should call handle error from editor with ${name}`, async () => {
+                const error_manager = SectionErrorManagerStub.withExpectedFault();
+
                 const { refreshSection } = useRefreshSection(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
-                    editor_errors,
+                    error_manager,
                     SectionsUpdaterStub.withNoExpectedCall(),
                     closeEditor,
                 );
                 refreshSection();
                 await flushPromises();
 
-                expect(editor_errors.handleError).toHaveBeenCalledWith(fault);
+                expect(error_manager.getLastHandledFault()).toBe(fault);
             });
             it(`should update is_outdated with ${name}`, async () => {
+                const section_state = SectionStateStub.inEditMode();
                 const { refreshSection } = useRefreshSection(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
-                    SectionStateStub.inEditMode(),
-                    editor_errors,
+                    section_state,
+                    SectionErrorManagerStub.withExpectedFault(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     closeEditor,
                 );
-                editor_errors.is_outdated.value = true;
-                expect(editor_errors.is_outdated.value).toBe(true);
+                section_state.is_outdated.value = true;
+                expect(section_state.is_outdated.value).toBe(true);
 
                 refreshSection();
                 await flushPromises();
 
-                expect(editor_errors.is_outdated.value).toBe(false);
+                expect(section_state.is_outdated.value).toBe(false);
             });
         });
     });

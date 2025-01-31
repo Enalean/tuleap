@@ -20,8 +20,6 @@
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import useSaveSection from "@/composables/useSaveSection";
-import type { EditorErrors } from "@/composables/useEditorErrors";
-import { useEditorErrors } from "@/composables/useEditorErrors";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { RefreshSection } from "@/composables/useRefreshSection";
@@ -35,6 +33,7 @@ import type { RemoveSections } from "@/sections/SectionsRemover";
 import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ManageErrorState } from "@/sections/SectionErrorManager";
 
 export type SectionEditorActions = {
     saveEditor: () => void;
@@ -45,7 +44,6 @@ export type SectionEditorActions = {
 };
 
 export type SectionEditor = {
-    editor_error: EditorErrors;
     editor_actions: SectionEditorActions;
     editor_section_content: EditorSectionContent;
 };
@@ -53,6 +51,7 @@ export type SectionEditor = {
 export function useSectionEditor(
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
+    manage_error_state: ManageErrorState,
     mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
     replace_pending_sections: ReplacePendingSections,
@@ -61,12 +60,10 @@ export function useSectionEditor(
     retrieve_positions: RetrieveSectionsPositionForSave,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
-    const editor_errors_handler = useEditorErrors();
-
     const { refreshSection } = useRefreshSection(
         section,
         section_state,
-        editor_errors_handler,
+        manage_error_state,
         update_sections,
         closeEditor,
     );
@@ -86,7 +83,7 @@ export function useSectionEditor(
 
     const { save, forceSave } = useSaveSection(
         section_state,
-        editor_errors_handler,
+        manage_error_state,
         replace_pending_sections,
         update_sections,
         retrieve_positions,
@@ -101,7 +98,7 @@ export function useSectionEditor(
         setEditMode(false);
         setWaitingListAttachments([]);
 
-        editor_errors_handler.resetErrorStates();
+        manage_error_state.resetErrorStates();
     }
 
     const { cancelSectionUploads } = strictInject(UPLOAD_FILE_STORE);
@@ -123,7 +120,7 @@ export function useSectionEditor(
             },
             (fault: Fault) => {
                 if (section_state.is_section_in_edit_mode.value) {
-                    editor_errors_handler.handleError(fault);
+                    manage_error_state.handleError(fault);
                 } else {
                     raise_delete_section_error_callback(String(fault));
                 }
@@ -162,7 +159,6 @@ export function useSectionEditor(
 
     return {
         editor_actions,
-        editor_error: editor_errors_handler,
         editor_section_content,
     };
 }

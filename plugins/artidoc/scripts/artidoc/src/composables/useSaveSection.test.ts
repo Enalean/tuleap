@@ -19,15 +19,12 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import useSaveSection from "@/composables/useSaveSection";
-import type { EditorErrors } from "@/composables/useEditorErrors";
-import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { flushPromises } from "@vue/test-utils";
 import * as rest_querier from "@/helpers/rest-querier";
-import * as latest from "@/helpers/get-section-in-its-latest-version";
 import { okAsync } from "neverthrow";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
@@ -36,19 +33,15 @@ import { noop } from "@/helpers/noop";
 import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
 import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/SectionsPositionsForSaveRetrieverStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
+import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
 
 describe("useSaveSection", () => {
-    let editor_errors: EditorErrors;
     let callbacks: Parameters<typeof useSaveSection>[5];
 
     beforeEach(() => {
-        editor_errors = {
-            ...SectionEditorStub.build().editor_error,
-            handleError: vi.fn(),
-        };
         callbacks = {
             closeEditor: noop,
             mergeArtifactAttachments: vi.fn(),
@@ -60,15 +53,17 @@ describe("useSaveSection", () => {
     });
     describe("forceSave", () => {
         it("should save artifact section", async () => {
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putArtifact")
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = useSaveSection(
                 SectionStateStub.inEditMode(),
-                editor_errors,
+                SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
@@ -79,15 +74,17 @@ describe("useSaveSection", () => {
             expect(mock_put_artifact_description).toHaveBeenCalledOnce();
         });
         it("should save freetext section", async () => {
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+
             const mock_put_freetext_description = vi
                 .spyOn(rest_querier, "putSection")
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = useSaveSection(
                 SectionStateStub.inEditMode(),
-                editor_errors,
+                SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
@@ -99,19 +96,16 @@ describe("useSaveSection", () => {
         });
     });
     describe("save", () => {
-        beforeEach(() => {
-            vi.spyOn(latest, "getSectionInItsLatestVersion").mockReturnValue(
-                okAsync(PendingArtifactSectionFactory.create()),
-            );
-        });
         describe("when the new description and title are the same as the original one", () => {
             it("should disable edit mode with artifact section", () => {
+                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+
                 const section_state = SectionStateStub.inEditMode();
                 const { save } = useSaveSection(
                     section_state,
-                    editor_errors,
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
@@ -124,12 +118,14 @@ describe("useSaveSection", () => {
                 expect(section_state.is_section_in_edit_mode.value).toBe(false);
             });
             it("should disable edit mode with freetext section", () => {
+                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+
                 const section_state = SectionStateStub.inEditMode();
                 const { save } = useSaveSection(
                     section_state,
-                    editor_errors,
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
@@ -142,12 +138,14 @@ describe("useSaveSection", () => {
                 expect(section_state.is_section_in_edit_mode.value).toBe(false);
             });
             it("should not save artifact section", async () => {
+                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+
                 const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
                 const { save } = useSaveSection(
                     SectionStateStub.inEditMode(),
-                    editor_errors,
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
@@ -163,12 +161,14 @@ describe("useSaveSection", () => {
             });
 
             it("should not save freetext section", async () => {
+                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+
                 const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
                 const { save } = useSaveSection(
                     SectionStateStub.inEditMode(),
-                    editor_errors,
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withNoExpectedCall(),
+                    SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                     callbacks,
                 );
@@ -185,13 +185,17 @@ describe("useSaveSection", () => {
         });
 
         it("should save artifact section", async () => {
-            const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+
+            const mock_put_artifact_description = vi
+                .spyOn(rest_querier, "putArtifact")
+                .mockReturnValue(okAsync({} as Response));
 
             const { save } = useSaveSection(
                 SectionStateStub.inEditMode(),
-                editor_errors,
+                SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
@@ -203,13 +207,17 @@ describe("useSaveSection", () => {
         });
 
         it("should save freetext section", async () => {
-            const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+
+            const mock_put_freetext_description = vi
+                .spyOn(rest_querier, "putSection")
+                .mockReturnValue(okAsync({} as Response));
 
             const { save } = useSaveSection(
                 SectionStateStub.inEditMode(),
-                editor_errors,
+                SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
@@ -221,12 +229,14 @@ describe("useSaveSection", () => {
         });
 
         it("When the saved section is a pending artifact section, Then it should create it and replace it by the saved one.", async () => {
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
                 SectionStateStub.inEditMode(),
-                editor_errors,
+                SectionErrorManagerStub.withNoExpectedFault(),
                 replacer,
-                SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );
@@ -248,12 +258,14 @@ describe("useSaveSection", () => {
         });
 
         it("When the saved section is a pending freetext section, Then it should create it and replace it by the saved one.", async () => {
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
                 SectionStateStub.inEditMode(),
-                editor_errors,
+                SectionErrorManagerStub.withNoExpectedFault(),
                 replacer,
-                SectionsUpdaterStub.withNoExpectedCall(),
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 callbacks,
             );

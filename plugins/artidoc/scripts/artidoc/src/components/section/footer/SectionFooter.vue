@@ -53,7 +53,7 @@ const props = defineProps<{
     section_state: SectionState;
 }>();
 
-const { error_message, is_outdated, is_in_error, is_not_found } = props.editor.editor_error;
+const { error_message, is_outdated, is_in_error, is_not_found } = props.section_state;
 </script>
 
 <style scoped lang="scss">

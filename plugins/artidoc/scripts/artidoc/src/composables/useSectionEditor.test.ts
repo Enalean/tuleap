@@ -28,7 +28,6 @@ import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import * as saveSection from "@/composables/useSaveSection";
 import * as refreshSection from "@/composables/useRefreshSection";
-import * as editorError from "@/composables/useEditorErrors";
 import * as editorContent from "@/composables/useEditorSectionContent";
 import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
@@ -42,6 +41,7 @@ import { SectionsRemoverStub } from "@/sections/stubs/SectionsRemoverStub";
 import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/SectionsPositionsForSaveRetrieverStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
@@ -92,6 +92,7 @@ describe("useSectionEditor", () => {
                 const { editor_actions } = useSectionEditor(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     merge_artifacts,
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
@@ -113,6 +114,7 @@ describe("useSectionEditor", () => {
                 const { editor_actions } = useSectionEditor(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     merge_artifacts,
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
@@ -134,6 +136,7 @@ describe("useSectionEditor", () => {
                 const { editor_actions } = useSectionEditor(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     merge_artifacts,
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
@@ -156,6 +159,7 @@ describe("useSectionEditor", () => {
                 const { editor_actions, editor_section_content } = useSectionEditor(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     section_state,
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     merge_artifacts,
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
@@ -192,6 +196,7 @@ describe("useSectionEditor", () => {
                 const { editor_actions } = useSectionEditor(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     merge_artifacts,
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
@@ -214,6 +219,7 @@ describe("useSectionEditor", () => {
                 const { editor_actions } = useSectionEditor(
                     section,
                     SectionStateStub.inEditMode(),
+                    SectionErrorManagerStub.withNoExpectedFault(),
                     merge_artifacts,
                     set_waiting_list,
                     PendingSectionsReplacerStub.withNoExpectedCall(),
@@ -227,28 +233,7 @@ describe("useSectionEditor", () => {
             });
         });
     });
-    describe("editor_error", () => {
-        it.each([
-            ["artifact_section", artifact_section],
-            ["freetext_section", freetext_section],
-        ])("should enable editor with %s", (name, section) => {
-            const editor_error_handler = vi.spyOn(editorError, "useEditorErrors");
 
-            const { editor_error } = useSectionEditor(
-                ReactiveStoredArtidocSectionStub.fromSection(section),
-                SectionStateStub.inEditMode(),
-                merge_artifacts,
-                set_waiting_list,
-                PendingSectionsReplacerStub.withNoExpectedCall(),
-                SectionsUpdaterStub.withNoExpectedCall(),
-                SectionsRemoverStub.withNoExpectedCall(),
-                SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                () => {},
-            );
-            expect(editor_error_handler).toHaveBeenCalledOnce();
-            expect(editor_error).toBeDefined();
-        });
-    });
     describe("editor_section_content", () => {
         it.each([
             ["artifact_section", artifact_section],
@@ -259,6 +244,7 @@ describe("useSectionEditor", () => {
             const { editor_section_content } = useSectionEditor(
                 ReactiveStoredArtidocSectionStub.fromSection(section),
                 SectionStateStub.inEditMode(),
+                SectionErrorManagerStub.withNoExpectedFault(),
                 merge_artifacts,
                 set_waiting_list,
                 PendingSectionsReplacerStub.withNoExpectedCall(),
