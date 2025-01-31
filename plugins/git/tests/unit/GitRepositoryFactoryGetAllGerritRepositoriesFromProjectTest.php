@@ -18,99 +18,78 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Git;
+
+use Git;
+use GitDao;
+use GitRepository;
+use GitRepositoryFactory;
+use GitRepositoryWithPermissions;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectManager;
+use ProjectUGroup;
+use TestHelper;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var GitDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var ProjectManager&\Mockery\MockInterface
-     */
-    private $project_manager;
-    /**
-     * @var \Mockery\MockInterface&GitRepositoryFactory
-     */
-    private $factory;
-    /**
-     * @var GitRepository&\Mockery\MockInterface
-     */
-    private $repository;
+    private GitDao&MockObject $dao;
+    private GitRepositoryFactory&MockObject $factory;
+    private GitRepository $repository;
     private int $project_id;
-    private int $ugroup_id;
-    /**
-     * @var int[]
-     */
-    private array $user_ugroups;
-    /**
-     * @var \Mockery\MockInterface&PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\MockInterface&Project
-     */
-    private $project;
-    /**
-     * @var \Mockery\MockInterface&ProjectUGroup
-     */
-    private $ugroup;
+    private PFUser $user;
+    private Project $project;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->dao             = \Mockery::mock(GitDao::class);
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
+        $this->dao       = $this->createMock(GitDao::class);
+        $project_manager = $this->createMock(ProjectManager::class);
 
-        $this->factory = \Mockery::mock(
-            \GitRepositoryFactory::class,
-            [
-                $this->dao,
-                $this->project_manager,
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->factory = $this->getMockBuilder(GitRepositoryFactory::class)
+            ->setConstructorArgs([$this->dao, $project_manager])
+            ->onlyMethods(['instanciateFromRow', 'getGerritRepositoriesWithPermissionsForUGroupAndProject'])
+            ->getMock();
 
-        $this->repository = \Mockery::spy(\GitRepository::class);
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->build();
 
         $this->project_id = 320;
-        $this->ugroup_id  = 115;
 
-        $this->user_ugroups = [404, 416];
-        $this->user         = \Mockery::spy(\PFUser::class)->shouldReceive('getUgroups')->with($this->project_id, null)->andReturns($this->user_ugroups)->getMock();
-
-        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns($this->project_id)->getMock();
-        $this->ugroup  = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns($this->ugroup_id)->getMock();
+        $this->project = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
+        $this->user    = UserTestBuilder::aUser()
+            ->withUserGroupMembership($this->project, 404, true)
+            ->withUserGroupMembership($this->project, 416, true)
+            ->build();
     }
 
-    public function testItFetchAllGerritRepositoriesFromDao()
+    public function testItFetchAllGerritRepositoriesFromDao(): void
     {
-        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->with($this->project_id)->andReturn([])->once();
+        $this->dao->expects(self::once())->method('searchAllGerritRepositoriesOfProject')->with($this->project_id)->willReturn([]);
         $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
     }
 
-    public function testItInstanciateGitRepositoriesObjects()
+    public function testItInstanciateGitRepositoriesObjects(): void
     {
-        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->andReturns(\TestHelper::arrayToDar(['repository_id' => 12], ['repository_id' => 23]));
-        $this->factory->shouldReceive('instanciateFromRow')->with(['repository_id' => 12])->andReturns(\Mockery::spy(\GitRepository::class));
-        $this->factory->shouldReceive('instanciateFromRow')->with(['repository_id' => 23])->andReturns(\Mockery::spy(\GitRepository::class));
+        $this->dao->method('searchAllGerritRepositoriesOfProject')->willReturn(TestHelper::arrayToDar(['repository_id' => 12], ['repository_id' => 23]));
+        $this->factory->method('instanciateFromRow')->willReturn(GitRepositoryTestBuilder::aProjectRepository()->build());
 
-        $this->factory->shouldReceive('getGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns([]);
+        $this->factory->method('getGerritRepositoriesWithPermissionsForUGroupAndProject')->willReturn([]);
 
         self::assertCount(2, $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user));
     }
 
-    public function testItMergesPermissions()
+    public function testItMergesPermissions(): void
     {
-        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->andReturns(\TestHelper::arrayToDar(['repository_id' => 12]));
-        $this->factory->shouldReceive('instanciateFromRow')->andReturns($this->repository);
+        $this->dao->method('searchAllGerritRepositoriesOfProject')->willReturn(TestHelper::arrayToDar(['repository_id' => 12]));
+        $this->factory->method('instanciateFromRow')->willReturn($this->repository);
 
-        $this->factory->shouldReceive('getGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns([
+        $this->factory->method('getGerritRepositoriesWithPermissionsForUGroupAndProject')->willReturn([
             12 => new GitRepositoryWithPermissions(
                 $this->repository,
                 [
@@ -124,19 +103,16 @@ class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends \Tulea
 
         $repositories_with_permissions = $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
 
-        $this->assertEquals(
-            [
-                12 => new GitRepositoryWithPermissions(
-                    $this->repository,
-                    [
-                        Git::PERM_READ          => [],
-                        Git::PERM_WRITE         => [ProjectUGroup::PROJECT_ADMIN, 404],
-                        Git::PERM_WPLUS         => [],
-                        Git::SPECIAL_PERM_ADMIN => [ProjectUGroup::PROJECT_ADMIN],
-                    ]
-                ),
-            ],
-            $repositories_with_permissions
-        );
+        self::assertEquals([
+            12 => new GitRepositoryWithPermissions(
+                $this->repository,
+                [
+                    Git::PERM_READ          => [],
+                    Git::PERM_WRITE         => [ProjectUGroup::PROJECT_ADMIN, 404],
+                    Git::PERM_WPLUS         => [],
+                    Git::SPECIAL_PERM_ADMIN => [ProjectUGroup::PROJECT_ADMIN],
+                ]
+            ),
+        ], $repositories_with_permissions);
     }
 }

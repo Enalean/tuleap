@@ -18,102 +18,106 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Git;
+
+use EventManager;
+use Git_SystemEventManager;
+use GitDao;
+use GitRepository;
+use GitRepositoryFactory;
+use GitRepositoryManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectHistoryDao;
+use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitRepositoryManagerRepositoryNameTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $factory;
-    private $project;
-    private $manager;
-    private $project_id;
-    private $project_name;
-    private $dao;
-    private $backup_directory;
+    private GitRepositoryFactory&MockObject $factory;
+    private Project $project;
+    private GitRepositoryManager $manager;
+    private string $project_name;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->project_id   = 12;
+        $project_id         = 12;
         $this->project_name = 'garden';
-        $this->project      = \Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getID')->andReturns($this->project_id);
-        $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
+        $this->project      = ProjectTestBuilder::aProject()->withId($project_id)->withUnixName($this->project_name)->build();
 
-        $this->dao              = Mockery::mock(GitDao::class);
-        $this->backup_directory = '/tmp/';
-
-        $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->factory = $this->createMock(GitRepositoryFactory::class);
         $this->manager = new GitRepositoryManager(
             $this->factory,
-            \Mockery::spy(\Git_SystemEventManager::class),
-            $this->dao,
-            $this->backup_directory,
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
-            \Mockery::spy(\ProjectHistoryDao::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-            \Mockery::spy(EventManager::class),
+            $this->createMock(Git_SystemEventManager::class),
+            $this->createMock(GitDao::class),
+            '/tmp/',
+            $this->createMock(FineGrainedPermissionReplicator::class),
+            $this->createMock(ProjectHistoryDao::class),
+            $this->createMock(HistoryValueFormatter::class),
+            $this->createMock(EventManager::class),
             $this->createMock(OngoingDeletionDAO::class),
         );
     }
 
-    private function aRepoWithPath($path)
+    private function aRepoWithPath($path): GitRepository
     {
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getPath')->andReturn($this->project_name . '/' . $path . '.git');
-        $repository->shouldReceive('getPathWithoutLazyLoading')->andReturn($this->project_name . '/' . $path . '.git');
-        $repository->shouldReceive('getProject')->andReturn($this->project);
-        return $repository;
+        return GitRepositoryTestBuilder::aProjectRepository()
+            ->inProject($this->project)
+            ->withPath($this->project_name . '/' . $path . '.git')
+            ->build();
     }
 
-    public function testItCannotCreateARepositoryWithSamePath()
+    public function testItCannotCreateARepositoryWithSamePath(): void
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('bla')]);
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla')));
+        $this->factory->method('getAllRepositories')->with($this->project)->willReturn([$this->aRepoWithPath('bla')]);
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla')));
     }
 
-    public function testItCannotCreateARepositoryWithSamePathThatIsNotAtRoot()
+    public function testItCannotCreateARepositoryWithSamePathThatIsNotAtRoot(): void
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('foo/bla')]);
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla')));
+        $this->factory->method('getAllRepositories')->with($this->project)->willReturn([$this->aRepoWithPath('foo/bla')]);
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla')));
     }
 
-    public function testItForbidCreationOfRepositoriesWhenPathAlreadyExists()
+    public function testItForbidCreationOfRepositoriesWhenPathAlreadyExists(): void
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('bla')]);
+        $this->factory->method('getAllRepositories')->with($this->project)->willReturn([$this->aRepoWithPath('bla')]);
 
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/zoum')));
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/zoum/zaz')));
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/zoum')));
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/zoum/zaz')));
 
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('zoum/bla')));
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('zoum/bla/top')));
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('blafoo')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('zoum/bla')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('zoum/bla/top')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('blafoo')));
     }
 
-    public function testItForbidCreationOfRepositoriesWhenPathAlreadyExistsAndHasParents()
+    public function testItForbidCreationOfRepositoriesWhenPathAlreadyExistsAndHasParents(): void
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('foo/bla')]);
+        $this->factory->method('getAllRepositories')->with($this->project)->willReturn([$this->aRepoWithPath('foo/bla')]);
 
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla/stuff')));
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla/stuff/zaz')));
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla/stuff')));
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla/stuff/zaz')));
 
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bar')));
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/foo')));
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bar')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/foo')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla')));
     }
 
-    public function testItForbidCreationWhenNewRepoIsInsideExistingPath()
+    public function testItForbidCreationWhenNewRepoIsInsideExistingPath(): void
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('foo/bar/bla')]);
+        $this->factory->method('getAllRepositories')->with($this->project)->willReturn([$this->aRepoWithPath('foo/bar/bla')]);
 
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo')));
-        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bar')));
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo')));
+        self::assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bar')));
 
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bar/zorg')));
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/zorg')));
-        $this->assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foobar/zorg')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bar/zorg')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/zorg')));
+        self::assertFalse($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foobar/zorg')));
     }
 }
