@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <table class="tlp-table">
+    <table class="tlp-table" data-test="loading-row">
         <thead>
             <tr>
                 <slot />

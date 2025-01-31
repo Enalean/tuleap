@@ -31,6 +31,7 @@ describe("Keyboard navigation in Document", () => {
         cy.createNewPublicProject(project_unixname, "issues");
         cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=document-header-actions]").should("be.visible");
+        cy.get("[data-test=loading-row]").should("not.exist");
 
         const folder_title = "Folder title " + now;
         const item_title = "Item title " + now;

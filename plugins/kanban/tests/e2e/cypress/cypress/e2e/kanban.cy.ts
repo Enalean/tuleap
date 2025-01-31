@@ -21,7 +21,7 @@ const now = Date.now();
 
 function createCardInColumn(column_name: string, drag_to_collapsed_column_label: string): void {
     cy.intercept("POST", "/api/v1/kanban_items").as("createCard");
-    cy.get(`[data-test=${column_name}]`).within(() => {
+    cy.getContains("[data-test=kanban-column]", column_name).within(() => {
         cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
 
         cy.get("[data-test=add-in-place-button]").click();
@@ -176,8 +176,9 @@ describe("Kanban service", () => {
             });
             cy.get("[data-test=expert-mode]").click();
 
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".cm-editor").type("title='title'");
+            cy.get("[data-test=expert-report-form]")
+                .find("[role=textbox][contenteditable=true]")
+                .invoke("text", `title="title"`);
             cy.get("[data-test=expert-query-submit-button]").click();
             cy.get("[data-test=tracker_report_save_dropdown]").click();
             cy.get("[data-test=tracker_report_options]").first().click();
@@ -217,6 +218,7 @@ describe("Kanban service", () => {
             cy.get("body").type("{esc}");
 
             cy.get("[data-test=kanban-filter]").select(`My custom report`);
+            cy.get("[data-test=column-loading-count]").should("not.exist");
 
             cy.get("[data-test=show-report-modal]").click();
             // eslint-disable-next-line cypress/require-data-selectors
@@ -270,7 +272,7 @@ describe("Kanban service", () => {
             cy.get('[data-test="go-to-kanban"]').click();
 
             cy.log("I can move cards");
-            cy.get("[data-test=kanban-column-to_be_done]").within(() => {
+            cy.getContains("[data-test=kanban-column]", "To be done").within(() => {
                 cy.get("[data-test=tuleap-simple-field-name]").spread(
                     (first_card, second_card, third_card) => {
                         cy.wrap(first_card.innerText).as("first_title");
@@ -313,7 +315,7 @@ describe("Kanban service", () => {
             cy.get("[data-test=kanban-item]").its("length").should("be.gte", 4);
 
             cy.log(`I can check that WIP limit is reached`);
-            cy.get("[data-test=kanban-column-in_progress]").within(() => {
+            cy.getContains("[data-test=kanban-column]", "In progress").within(() => {
                 cy.get("[data-test=kanban-column-header-wip-count]").contains("2");
                 cy.get("[data-test=kanban-column-header-wip-limit]").should(
                     "have.class",
@@ -321,7 +323,7 @@ describe("Kanban service", () => {
                 );
             });
 
-            cy.get("[data-test=kanban-column-to_be_done]").within(() => {
+            cy.getContains("[data-test=kanban-column]", "To be done").within(() => {
                 cy.get("[data-test=kanban-column-header-wip-count]").contains("3");
                 cy.get("[data-test=kanban-column-header-wip-limit]").should(
                     "not.have.class",
@@ -334,8 +336,8 @@ describe("Kanban service", () => {
             const drag_label = `drag${now}`;
             const drop_label = `drop${now}`;
 
-            createCardInColumn("kanban-column-backlog", drag_label);
-            createCardInColumn("kanban-column-review", drop_label);
+            createCardInColumn("Backlog", drag_label);
+            createCardInColumn("Review", drop_label);
 
             cy.dragAndDrop(
                 `[data-test=kanban-item-content-${drag_label}]`,
@@ -348,9 +350,10 @@ describe("Kanban service", () => {
             cy.get("body").type("{esc}");
 
             cy.get("[data-test=kanban-warning-modal]").should("not.exist");
-            cy.get("[data-test=kanban-column-review]").within(() => {
-                cy.get("[data-test=kanban-item]").its("length").should("be.gte", 1);
-            });
+            cy.getContains("[data-test=kanban-column]", "Review")
+                .find("[data-test=kanban-item]")
+                .its("length")
+                .should("be.gte", 1);
 
             cy.log(`Cumulative flow diagram is displayed`);
             cy.get("[data-test=show-report-modal]").click();
@@ -396,15 +399,16 @@ describe("Kanban service", () => {
 
             cy.get('[data-test="go-to-kanban"]').click();
 
-            cy.get('[data-test="kanban-column-header-toggle-in_progress"]').within(() => {
+            cy.getContains("[data-test=kanban-column]", "In progress").within(() => {
                 cy.log("The `in progress` column is opened");
-                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                cy.get("[data-test=kanban-column-header-toggle-icon]").should(
                     "have.class",
                     "fa-minus-square",
                 );
-                cy.root().click();
+                // Cypress says the toggle button is covered by another element
+                cy.get("[data-test=kanban-column-header-toggle]").click({ force: true });
                 cy.log("The `in progress` column is now closed");
-                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                cy.get("[data-test=kanban-column-header-toggle-icon]").should(
                     "have.class",
                     "fa-plus-square",
                 );
@@ -412,19 +416,17 @@ describe("Kanban service", () => {
 
             cy.reload();
             cy.log("The `in progress` column is still closed");
-            cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
-                "have.class",
-                "fa-plus-square",
-            );
+            cy.getContains("[data-test=kanban-column]", "In progress")
+                .find("[data-test=kanban-column-header-toggle-icon]")
+                .should("have.class", "fa-plus-square");
 
             cy.log("I can drop card in collapsed column");
 
-            cy.get('[data-test="kanban-column-label-count-at-init-in_progress"]').should(
-                "have.text",
-                "2",
-            );
+            cy.getContains("[data-test=kanban-column-closed]", "In progress")
+                .find("[data-test=column-count]")
+                .should("have.text", "2");
             const drag_to_collapsed_column_label = `drag_to_collapsed_column${now}`;
-            createCardInColumn("kanban-column-backlog", drag_to_collapsed_column_label);
+            createCardInColumn("Backlog", drag_to_collapsed_column_label);
 
             cy.intercept("PATCH", "/api/v1/kanban/*/items?column_id=*").as("dropCard");
             cy.dragAndDrop(
@@ -433,20 +435,20 @@ describe("Kanban service", () => {
                 "center",
             );
             cy.wait("@dropCard");
-            cy.get('[data-test="kanban-column-label-count-at-init-in_progress"]').should(
-                "have.text",
-                "3",
-            );
+            cy.getContains("[data-test=kanban-column-closed]", "In progress")
+                .find("[data-test=column-count]")
+                .should("have.text", "3");
 
-            cy.get("[data-test=kanban-column-in_progress]").within(() => {
+            cy.getContains("[data-test=kanban-column]", "In progress").within(() => {
                 cy.log("The `in progress` column is closed");
-                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                cy.get("[data-test=kanban-column-header-toggle-icon]").should(
                     "have.class",
                     "fa-plus-square",
                 );
-                cy.root().click();
+                // Cypress says the toggle button is covered by another element
+                cy.get("[data-test=kanban-column-header-toggle]").click({ force: true });
                 cy.log("The `in progress` column is opened");
-                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                cy.get("[data-test=kanban-column-header-toggle-icon]").should(
                     "have.class",
                     "fa-minus-square",
                 );

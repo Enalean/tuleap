@@ -47,18 +47,10 @@ function getSummaryFieldId(tracker_id: string): Cypress.Chainable<string> {
     });
 }
 
-function clearCodeMirror(): void {
-    // ignore for code mirror
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".cm-editor").type("{ctrl}a{del}");
-}
-
 function findArtifactsWithExpertQuery(query: string): void {
-    clearCodeMirror();
-
-    // ignore for code mirror
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".cm-editor").type(query);
+    cy.get("[data-test=expert-report-form]")
+        .find("[role=textbox][contenteditable=true]")
+        .invoke("text", query);
     cy.get("[data-test=expert-query-submit-button]").click();
 }
 

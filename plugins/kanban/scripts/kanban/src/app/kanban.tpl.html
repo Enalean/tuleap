@@ -107,8 +107,8 @@
     <div class="backlog kanban-column"
          ng-class="{'kanban-column-open': kanban.backlog.is_open, 'kanban-column-closed': ! kanban.backlog.is_open}"
          ng-click="kanban.expandBacklog()"
-         data-test="kanban-column-backlog"
          ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
+         data-test="kanban-column"
     >
         <div class="kanban-column-header">
             <span class="kanban-column-header-toggle"
@@ -133,6 +133,7 @@
                     ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded"
                     class="kanban-column-label-count"
                     ng-class="{ loading: kanban.backlog.loading_items }"
+                    data-test="column-loading-count"
             >{{ kanban.backlog.content.length }}</span>
             <span
                     ng-if="! kanban.backlog.loading_items && ! kanban.backlog.fully_loaded"
@@ -150,16 +151,17 @@
          ng-click="kanban.expandColumn(column)"
          ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
          data-column-id="{{ column.id }}"
-         data-test="kanban-column-{{kanban.slugifyLabel(column.label)}}"
+         data-test="kanban-column"
     >
         <div class="kanban-column-header"
              data-test="kanban-column-header"
         >
-            <span class="kanban-column-header-toggle" data-test="kanban-column-header-toggle-{{kanban.slugifyLabel(column.label)}}"
+            <span class="kanban-column-header-toggle"
                   title="{{ 'Toggle this column' | translate }}"
                   ng-click="kanban.toggleColumn(column); $event.stopPropagation();"
+                  data-test="kanban-column-header-toggle"
             >
-                <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa fa-plus-square'" data-test="kanban-column-header-toggle-icon-{{kanban.slugifyLabel(column.label)}}"></i>
+                <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa fa-plus-square'" data-test="kanban-column-header-toggle-icon"></i>
             </span>
             <span class="kanban-column-header-wip-warning"
                   ng-if="column.is_open && kanban.isColumnWipReached(column)"
@@ -182,18 +184,18 @@
         </div>
         <kanban-column ng-init="$ctrl.column=column" ng-class="{'created-in-closed-column': $ctrl.column.have_new_item }"></kanban-column>
         <add-in-place column="column" create-item="kanban.createItemInPlace" ng-if="column.user_can_add_in_place && column.is_open"  data-test="add-in-place" class="add-in-place kanban-add-in-place-element"></add-in-place>
-        <div ng-if="! column.is_open" class="kanban-column-label">
+        <div ng-if="! column.is_open" class="kanban-column-label" data-test="kanban-column-closed">
             <span class="kanban-column-label-title">{{ column.label }}</span>
             <span
                     ng-if="column.loading_items || column.fully_loaded"
                     class="kanban-column-label-count"
                     ng-class="{ loading: column.loading_items }"
-                    data-test="kanban-column-label-count-{{kanban.slugifyLabel(column.label)}}"
+                    data-test="column-loading-count"
             >{{ column.content.length }}</span>
             <span
                     ng-if="! column.loading_items && ! column.fully_loaded"
                     class="kanban-column-label-count"
-                    data-test="kanban-column-label-count-at-init-{{kanban.slugifyLabel(column.label)}}"
+                    data-test="column-count"
             >{{ column.nb_items_at_kanban_init }}</span>
         </div>
     </div>
@@ -225,6 +227,7 @@
                     ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded"
                     class="kanban-column-label-count"
                     ng-class="{ loading: kanban.archive.loading_items }"
+                    data-test="column-loading-count"
             >{{ kanban.archive.content.length }}</span>
             <span
                     ng-if="! kanban.archive.loading_items && ! kanban.archive.fully_loaded"
