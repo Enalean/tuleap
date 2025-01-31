@@ -22,52 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Tracker;
+use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticProgressDao
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var MethodBuilder
-     */
-    private $method_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TypePresenterFactory
-     */
-    private $natures_factory;
+    private SemanticProgressDao&MockObject $dao;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private MethodBuilder $method_builder;
+    private \Tracker $tracker;
+    private Project $project;
+    private TypePresenterFactory&MockObject $natures_factory;
 
     protected function setUp(): void
     {
-        $this->dao                  = \Mockery::mock(SemanticProgressDao::class);
-        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->natures_factory      = \Mockery::mock(TypePresenterFactory::class);
+        $this->dao                  = $this->createMock(SemanticProgressDao::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->natures_factory      = $this->createMock(TypePresenterFactory::class);
         $this->method_builder       = new MethodBuilder(
             $this->form_element_factory,
             $this->dao,
             $this->natures_factory
         );
 
-        $this->project = \Mockery::mock(\Project::class);
-        $this->tracker = \Mockery::mock(\Tracker::class, ['getName' => 'User Stories', 'getProject' => $this->project]);
+        $this->project = ProjectTestBuilder::aProject()->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withName('User Stories')->withProject($this->project)->build();
     }
 
     public function testItBuildsAnInvalidMethodWhenTotalAndRemainingEffortFieldsAreTheSameField(): void
@@ -86,8 +72,14 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodWhenTotalEffortFieldIdTargetsANonNumericField(): void
     {
-        $this->mockField(1001, \Tracker_FormElement_Field_Date::class);
-        $this->mockField(1002, \Tracker_FormElement_Field_Numeric::class);
+        $this->form_element_factory
+            ->method('getUsedFieldByIdAndType')
+            ->willReturnCallback(
+                fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
+                    1001 => $this->createMock(\Tracker_FormElement_Field_Date::class),
+                    1002 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                }
+            );
 
         $method = $this->method_builder->buildMethodBasedOnEffort(
             $this->tracker,
@@ -103,8 +95,14 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodWhenRemainingEffortFieldIdTargetsANonNumericField(): void
     {
-        $this->mockField(1001, \Tracker_FormElement_Field_Numeric::class);
-        $this->mockField(1002, \Tracker_FormElement_Field_Date::class);
+        $this->form_element_factory
+            ->method('getUsedFieldByIdAndType')
+            ->willReturnCallback(
+                fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
+                    1001 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                    1002 => $this->createMock(\Tracker_FormElement_Field_Date::class),
+                }
+            );
 
         $method = $this->method_builder->buildMethodBasedOnEffort(
             $this->tracker,
@@ -120,8 +118,14 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAMethodBasedOnEffort(): void
     {
-        $this->mockField(1001, \Tracker_FormElement_Field_Numeric::class);
-        $this->mockField(1002, \Tracker_FormElement_Field_Numeric::class);
+        $this->form_element_factory
+            ->method('getUsedFieldByIdAndType')
+            ->willReturnCallback(
+                fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
+                    1001 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                    1002 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                }
+            );
 
         $method = $this->method_builder->buildMethodBasedOnEffort(
             $this->tracker,
@@ -137,13 +141,21 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAMethodBasedOnEffortFromRequest(): void
     {
-        $request = \Mockery::mock(\Codendi_Request::class);
-        $request->shouldReceive('get')->with('computation-method')->andReturn(MethodBasedOnEffort::getMethodName());
-        $request->shouldReceive('get')->with('total-effort-field-id')->andReturn('1001');
-        $request->shouldReceive('get')->with('remaining-effort-field-id')->andReturn('1002');
+        $request = HTTPRequestBuilder::get()
+            ->withParams([
+                'computation-method' => MethodBasedOnEffort::getMethodName(),
+                'total-effort-field-id' => '1001',
+                'remaining-effort-field-id' => '1002',
+            ])->build();
 
-        $this->mockField(1001, \Tracker_FormElement_Field_Numeric::class);
-        $this->mockField(1002, \Tracker_FormElement_Field_Numeric::class);
+        $this->form_element_factory
+            ->method('getUsedFieldByIdAndType')
+            ->willReturnCallback(
+                fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
+                    1001 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                    1002 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                }
+            );
 
         $method = $this->method_builder->buildMethodFromRequest(
             $this->tracker,
@@ -158,20 +170,24 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAMethodBasedOnLinksCountFromRequest(): void
     {
-        $request = \Mockery::mock(\Codendi_Request::class);
-        $request->shouldReceive('get')->with('computation-method')->andReturn(MethodBasedOnLinksCount::getMethodName());
+        $request = HTTPRequestBuilder::get()
+            ->withParams([
+                'computation-method' => MethodBasedOnLinksCount::getMethodName(),
+            ])->build();
 
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
-            ->once()
-            ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
+            ->willReturn([
+                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
-        $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
+        $this->natures_factory
+            ->expects(self::once())
+            ->method('getTypeEnabledInProjectFromShortname')
             ->with($this->project, '_is_child')
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new TypePresenter('_is_child', 'Parent', 'Child', true)
             );
 
@@ -188,13 +204,20 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodFromRequestWhenTotalEffortIdIsMissing(): void
     {
-        $request = \Mockery::mock(\Codendi_Request::class);
-        $request->shouldReceive('get')->with('computation-method')->andReturn(MethodBasedOnEffort::getMethodName());
-        $request->shouldReceive('get')->with('total-effort-field-id')->andReturn(false);
-        $request->shouldReceive('get')->with('remaining-effort-field-id')->andReturn('1002');
+        $request = HTTPRequestBuilder::get()
+            ->withParams([
+                'computation-method' => MethodBasedOnEffort::getMethodName(),
+                'remaining-effort-field-id' => '1002',
+            ])->build();
 
-        $this->mockField(0, null);
-        $this->mockField(1002, \Tracker_FormElement_Field_Numeric::class);
+        $this->form_element_factory
+            ->method('getUsedFieldByIdAndType')
+            ->willReturnCallback(
+                fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
+                    0 => null,
+                    1002 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                }
+            );
 
         $method = $this->method_builder->buildMethodFromRequest(
             $this->tracker,
@@ -209,13 +232,20 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodFromRequestWhenRemainingEffortIdIsMissing(): void
     {
-        $request = \Mockery::mock(\Codendi_Request::class);
-        $request->shouldReceive('get')->with('computation-method')->andReturn(MethodBasedOnEffort::getMethodName());
-        $request->shouldReceive('get')->with('total-effort-field-id')->andReturn('1001');
-        $request->shouldReceive('get')->with('remaining-effort-field-id')->andReturn(false);
+        $request = HTTPRequestBuilder::get()
+            ->withParams([
+                'computation-method' => MethodBasedOnEffort::getMethodName(),
+                'total-effort-field-id' => '1001',
+            ])->build();
 
-        $this->mockField(1001, \Tracker_FormElement_Field_Numeric::class);
-        $this->mockField(0, null);
+        $this->form_element_factory
+            ->method('getUsedFieldByIdAndType')
+            ->willReturnCallback(
+                fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
+                    0 => null,
+                    1001 => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                }
+            );
 
         $method = $this->method_builder->buildMethodFromRequest(
             $this->tracker,
@@ -230,8 +260,8 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodFromRequestWhenABadMethodNameIsProvided(): void
     {
-        $request = \Mockery::mock(\Codendi_Request::class);
-        $request->shouldReceive('get')->with('computation-method')->andReturn('random-float');
+        $request = $this->createMock(\Codendi_Request::class);
+        $request->method('get')->with('computation-method')->willReturn('random-float');
 
         $method = $this->method_builder->buildMethodFromRequest(
             $this->tracker,
@@ -246,17 +276,19 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAMethodBasedOnChildCount(): void
     {
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
-            ->once()
-            ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
+            ->willReturn([
+                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
-        $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
+        $this->natures_factory
+            ->expects(self::once())
+            ->method('getTypeEnabledInProjectFromShortname')
             ->with($this->project, '_is_child')
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new TypePresenter('_is_child', 'Parent', 'Child', true)
             );
 
@@ -273,10 +305,11 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodWhenThereIsNoArtifactLinkFieldInTracker(): void
     {
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $method = $this->method_builder->buildMethodBasedOnChildCount(
             $this->tracker,
@@ -291,11 +324,12 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodWhenLinkNatureIsNotIsChild(): void
     {
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
-            ->once()
-            ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
+            ->willReturn([
+                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
         $method = $this->method_builder->buildMethodBasedOnChildCount(
@@ -311,17 +345,19 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodWhenLinkNatureIsChildIsNotEnabledInProject(): void
     {
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
-            ->once()
-            ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
+            ->willReturn([
+                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
-        $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
+        $this->natures_factory
+            ->expects(self::once())
+            ->method('getTypeEnabledInProjectFromShortname')
             ->with($this->project, '_is_child')
-            ->once()
-            ->andReturn(null);
+            ->willReturn(null);
 
         $method = $this->method_builder->buildMethodBasedOnChildCount(
             $this->tracker,
@@ -332,21 +368,5 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             InvalidMethod::class,
             $method
         );
-    }
-
-    private function mockField(int $field_id, ?string $field_type): void
-    {
-        $mocked_value = ($field_type !== null)
-            ? \Mockery::mock($field_type)
-            : null;
-
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                $field_id,
-                ['int', 'float', 'computed']
-            )
-            ->once()
-            ->andReturn($mocked_value);
     }
 }

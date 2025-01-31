@@ -22,38 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 
-class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface|SemanticProgressDao
-     */
-    private $dao;
-    /**
-     * @var SemanticProgressDuplicator
-     */
-    private $duplicator;
+    private SemanticProgressDao&MockObject $dao;
+    private SemanticProgressDuplicator $duplicator;
 
     protected function setUp(): void
     {
-        $this->dao        = \Mockery::mock(SemanticProgressDao::class);
+        $this->dao        = $this->createMock(SemanticProgressDao::class);
         $this->duplicator = new SemanticProgressDuplicator($this->dao);
     }
 
     public function testItDoesNotDuplicateIfThereIsNoExistingConfig(): void
     {
         $this->dao
-            ->shouldReceive('searchByTrackerId')
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(1)
-            ->once()
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->dao
-            ->shouldReceive('save')
-            ->never();
+            ->expects(self::never())
+            ->method('save');
 
         $this->duplicator->duplicate(1, 2, [
             ['from' => 101, 'to' => 1001],
@@ -72,18 +64,18 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ?string $link_type,
     ): void {
         $this->dao
-            ->shouldReceive('searchByTrackerId')
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(1)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'total_effort_field_id' => $total_effort_field_id,
                 'remaining_effort_field_id' => $remaining_effort_field_id,
                 'artifact_link_type' => $link_type,
             ]);
 
         $this->dao
-            ->shouldReceive('save')
-            ->never();
+            ->expects(self::never())
+            ->method('save');
 
         $this->duplicator->duplicate(1, 2, [
             ['from' => 101, 'to' => 1001],
@@ -94,19 +86,19 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesEffortBasedSemantics(): void
     {
         $this->dao
-            ->shouldReceive('searchByTrackerId')
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(1)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'total_effort_field_id' => 101,
                 'remaining_effort_field_id' => 102,
                 'artifact_link_type' => null,
             ]);
 
         $this->dao
-            ->shouldReceive('save')
-            ->with(2, 1001, 1002, null)
-            ->once();
+            ->expects(self::once())
+            ->method('save')
+            ->with(2, 1001, 1002, null);
 
         $this->duplicator->duplicate(
             1,
@@ -121,19 +113,19 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesLinksCountBasedSemantics(): void
     {
         $this->dao
-            ->shouldReceive('searchByTrackerId')
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(1)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'total_effort_field_id' => null,
                 'remaining_effort_field_id' => null,
                 'artifact_link_type' => '_is_child',
             ]);
 
         $this->dao
-            ->shouldReceive('save')
-            ->with(2, null, null, '_is_child')
-            ->once();
+            ->expects(self::once())
+            ->method('save')
+            ->with(2, null, null, '_is_child');
 
         $this->duplicator->duplicate(
             1,
