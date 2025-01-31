@@ -22,34 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Semantic\Progress\InvalidMethod;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnLinksCount;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var SemanticProgressAdminPresenterBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private SemanticProgressAdminPresenterBuilder $builder;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {
-        $this->tracker              = \Mockery::mock(\Tracker::class, ['getId' => 113]);
-        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->tracker              = TrackerTestBuilder::aTracker()->build();
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->builder              = new SemanticProgressAdminPresenterBuilder(
             $this->form_element_factory
         );
@@ -64,7 +57,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             'Used in the Roadmap widget',
             false,
             'url/to/updater',
-            \Mockery::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
             new MethodNotConfigured()
         );
 
@@ -106,7 +99,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             'Used in the Roadmap widget',
             false,
             'url/to/updater',
-            \Mockery::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
             new InvalidMethod('This is broken')
         );
 
@@ -148,11 +141,11 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             'Used in the Roadmap widget',
             false,
             'url/to/updater',
-            \Mockery::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
             new MethodBasedOnEffort(
-                \Mockery::mock(SemanticProgressDao::class),
-                $this->getNumericFieldMock(3, 'Total effort'),
-                $this->getNumericFieldMock(2, 'Remaining effort')
+                $this->createMock(SemanticProgressDao::class),
+                $this->getNumericField(3, 'Total effort'),
+                $this->getNumericField(2, 'Remaining effort')
             )
         );
 
@@ -194,9 +187,9 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             'Used in the Roadmap widget',
             false,
             'url/to/updater',
-            \Mockery::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
             new MethodBasedOnLinksCount(
-                \Mockery::mock(SemanticProgressDao::class),
+                $this->createMock(SemanticProgressDao::class),
                 '_is_child'
             )
         );
@@ -212,35 +205,31 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertTrue($presenter->has_a_link_field);
     }
 
-    private function getNumericFieldMock(int $id, string $label)
+    private function getNumericField(int $id, string $label): \Tracker_FormElement_Field_Numeric
     {
-        return \Mockery::mock(
-            \Tracker_FormElement_Field_Numeric::class,
-            [
-                'getId' => $id,
-                'getLabel' => $label,
-            ]
-        );
+        return IntFieldBuilder::anIntField($id)->withLabel($label)->build();
     }
 
     private function mockFormElementFactory(bool $has_a_links_field = true): void
     {
-        $links_fields = $has_a_links_field ? [\Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)] : [];
+        $links_fields = $has_a_links_field ? [$this->createMock(\Tracker_FormElement_Field_ArtifactLink::class)] : [];
 
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+        $this->form_element_factory->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
-            ->andReturn($links_fields);
+            ->willReturn($links_fields);
 
-        $this->form_element_factory->shouldReceive('getUsedFormElementsByType')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedFormElementsByType')
             ->with(
                 $this->tracker,
                 ['int', 'float', 'computed']
-            )->andReturn(
+            )->willReturn(
                 [
-                    $this->getNumericFieldMock(1, 'Velocity'),
-                    $this->getNumericFieldMock(2, 'Remaining effort'),
-                    $this->getNumericFieldMock(3, 'Total effort'),
+                    $this->getNumericField(1, 'Velocity'),
+                    $this->getNumericField(2, 'Remaining effort'),
+                    $this->getNumericField(3, 'Total effort'),
                 ]
-            )->once();
+            );
     }
 }
