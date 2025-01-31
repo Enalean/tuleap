@@ -20,94 +20,120 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
+declare(strict_types=1);
+
+namespace Tuleap\Git;
+
+use Git;
+use Git_Backend_Gitolite;
+use Git_GitoliteDriver;
+use GitRepository;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitBackendGitoliteUserAccessRightsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitBackendGitoliteUserAccessRightsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_Backend_Gitolite
-     */
-    private $backend;
-    /**
-     * @var PFUser&\Mockery\LegacyMockInterface
-     */
-    private $user;
-    /**
-     * @var GitRepository&\Mockery\MockInterface
-     */
-    private $repository;
+    private Git_Backend_Gitolite $backend;
+    private PFUser&MockObject $user;
+    private GitRepository $repository;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $driver        = \Mockery::spy(\Git_GitoliteDriver::class);
-        $this->backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateExecutorStub(), \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $driver        = $this->createMock(Git_GitoliteDriver::class);
+        $this->backend = new Git_Backend_Gitolite(
+            $driver,
+            $this->createMock(GitoliteAccessURLGenerator::class),
+            new DefaultBranchUpdateExecutorStub(),
+            new NullLogger(),
+        );
 
-        $this->user       = \Mockery::spy(\PFUser::class);
-        $this->repository = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns(1);
-        $this->repository->shouldReceive('getProjectId')->andReturns(101);
+        $this->user       = $this->createMock(PFUser::class);
+        $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)
+            ->inProject(ProjectTestBuilder::aProject()->build())->build();
     }
 
     public function testItReturnsTrueIfUserIsProjectAdmin(): void
     {
-        $this->user->shouldReceive('isMember')->with(101, 'A')->andReturns(true);
+        $this->user->method('isMember')->with(101, 'A')->willReturn(true);
 
-        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+        self::assertTrue($this->backend->userCanRead($this->user, $this->repository));
     }
 
     public function testItReturnsTrueIfUserHasReadAccess(): void
     {
-        $this->user->shouldReceive('hasPermission')->with(Git::PERM_READ, 1, 101)->andReturns(true);
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('hasPermission')->with(Git::PERM_READ, 1, 101)->willReturn(true);
 
-        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+        self::assertTrue($this->backend->userCanRead($this->user, $this->repository));
     }
 
     public function testItReturnsTrueIfUserHasReadAccessAndRepositoryIsMigratedToGerrit(): void
     {
-        $this->user->shouldReceive('hasPermission')->with(Git::PERM_READ, 1, 101)->andReturns(true);
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('hasPermission')->with(Git::PERM_READ, 1, 101)->willReturn(true);
+        $this->repository->setRemoteServerId(1);
 
-        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+        self::assertTrue($this->backend->userCanRead($this->user, $this->repository));
     }
 
     public function testItReturnsTrueIfUserHasWriteAccess(): void
     {
-        $this->user->shouldReceive('hasPermission')->with(Git::PERM_WRITE, 1, 101)->andReturns(true);
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('hasPermission')->willReturnCallback(static fn(string $permission) => match ($permission) {
+            Git::PERM_READ  => false,
+            Git::PERM_WRITE => true,
+        });
 
-        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+        self::assertTrue($this->backend->userCanRead($this->user, $this->repository));
     }
 
     public function testItReturnsFalseIfUserHasWriteAccessAndRepositoryIsMigratedToGerrit(): void
     {
-        $this->user->shouldReceive('hasPermission')->with(Git::PERM_WRITE, 1, 101)->andReturns(true);
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
+        $this->user->method('isMember');
+        $this->user->method('hasPermission')->willReturnCallback(static fn(string $permission) => match ($permission) {
+            Git::PERM_READ  => false,
+            Git::PERM_WRITE => true,
+        });
+        $this->repository->setRemoteServerId(1);
 
-        $this->assertFalse($this->backend->userCanRead($this->user, $this->repository));
+        self::assertFalse($this->backend->userCanRead($this->user, $this->repository));
     }
 
     public function testItReturnsTrueIfUserHasRewindAccess(): void
     {
-        $this->user->shouldReceive('hasPermission')->with(Git::PERM_WPLUS, 1, 101)->andReturns(true);
+        $this->user->method('isMember');
+        $this->user->method('hasPermission')->willReturnCallback(static fn(string $permission) => match ($permission) {
+            Git::PERM_READ,
+            Git::PERM_WRITE => false,
+            Git::PERM_WPLUS => true,
+        });
 
-        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+        self::assertTrue($this->backend->userCanRead($this->user, $this->repository));
     }
 
     public function testItReturnsFalseIfUserHasRewindAccessAndRepositoryIsMigratedToGerrit(): void
     {
-        $this->user->shouldReceive('hasPermission')->with(Git::PERM_WPLUS, 1, 101)->andReturns(true);
-        $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
+        $this->user->method('isMember');
+        $this->user->method('hasPermission')->willReturnCallback(static fn(string $permission) => match ($permission) {
+            Git::PERM_READ,
+            Git::PERM_WRITE => false,
+            Git::PERM_WPLUS => true,
+        });
+        $this->repository->setRemoteServerId(1);
 
-        $this->assertFalse($this->backend->userCanRead($this->user, $this->repository));
+        self::assertFalse($this->backend->userCanRead($this->user, $this->repository));
     }
 
     public function testItReturnsFalseIfUserHasNoPermissions(): void
     {
-        $this->assertFalse($this->backend->userCanRead($this->user, $this->repository));
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('hasPermission')->willReturn(false);
+        self::assertFalse($this->backend->userCanRead($this->user, $this->repository));
     }
 }
