@@ -20,8 +20,8 @@
 import type { Ref } from "vue";
 import { computed, ref } from "vue";
 import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 export type EditorSectionContent = {
     inputSectionContent(new_title: string, new_description: string): void;
@@ -33,7 +33,7 @@ export type EditorSectionContent = {
 };
 
 export function useEditorSectionContent(
-    section: Ref<ArtidocSection>,
+    section: ReactiveStoredArtidocSection,
     callbacks: { showActionsButtons: () => void; hideActionsButtons: () => void },
 ): EditorSectionContent {
     const original_description = computed(() =>

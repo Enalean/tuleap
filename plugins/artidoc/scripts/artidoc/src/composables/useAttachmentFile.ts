@@ -23,6 +23,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import { noop } from "@/helpers/noop";
 import type { FileUploadOptions } from "@tuleap/file-upload";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 type PendingAttachment = { id: number; upload_url: string };
 export interface AttachmentFile {
@@ -36,10 +37,13 @@ export interface AttachmentFile {
     setWaitingListAttachments: (new_value: PendingAttachment[]) => void;
 }
 
-export function useAttachmentFile(section: ArtidocSection, artidoc_id: number): AttachmentFile {
+export function useAttachmentFile(
+    section: ReactiveStoredArtidocSection,
+    artidoc_id: number,
+): AttachmentFile {
     const not_saved_yet_description_attachments: Ref<PendingAttachment[]> = ref([]);
 
-    if (isFreetextSection(section)) {
+    if (isFreetextSection(section.value)) {
         return {
             post_information: {
                 upload_url: "/api/v1/artidoc_files",
@@ -59,7 +63,7 @@ export function useAttachmentFile(section: ArtidocSection, artidoc_id: number): 
         };
     }
 
-    const field_id = section.attachments ? section.attachments.field_id : 0;
+    const field_id = section.value.attachments ? section.value.attachments.field_id : 0;
     if (field_id === 0) {
         return {
             post_information: {

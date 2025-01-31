@@ -21,13 +21,12 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { describe, it, expect, beforeEach } from "vitest";
 import { createGettext } from "vue3-gettext";
-import type { SectionsCollection } from "@/sections/SectionsCollection";
+import type { SectionsCollection, StoredArtidocSection } from "@/sections/SectionsCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
-import type { FreetextSection } from "@/helpers/artidoc-section.type";
 import {
     REMOVE_FREETEXT_SECTION_MODAL,
     useRemoveFreetextSectionModal,
@@ -38,14 +37,15 @@ import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { noop } from "@/helpers/noop";
 import type { RemoveSections } from "@/sections/SectionsRemover";
 import { SectionsRemoverStub } from "@/sections/stubs/SectionsRemoverStub";
+import { CreateStoredSections } from "@/sections/CreateStoredSections";
 
 describe("RemoveFreetextSectionModal", () => {
-    let freetext_section: FreetextSection,
+    let freetext_section: StoredArtidocSection,
         sections_collection: SectionsCollection,
         bus: UseRemoveFreetextSectionModal;
 
     beforeEach(() => {
-        freetext_section = FreetextSectionFactory.create();
+        freetext_section = CreateStoredSections.fromArtidocSection(FreetextSectionFactory.create());
         sections_collection = SectionsCollectionStub.withSections([freetext_section]);
 
         bus = useRemoveFreetextSectionModal();

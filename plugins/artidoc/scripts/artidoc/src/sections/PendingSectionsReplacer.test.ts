@@ -27,10 +27,11 @@ import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
 import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("PendingSectionsReplacer", () => {
     const getSectionsCollection = (sections: ArtidocSection[]): SectionsCollection => {
-        const collection = buildSectionsCollection();
+        const collection = buildSectionsCollection(SectionsStatesCollectionStub.build());
         collection.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
 
         return collection;
@@ -46,8 +47,10 @@ describe("PendingSectionsReplacer", () => {
             ArtifactSectionFactory.create(),
         );
 
+        const replacement_section = sections.sections.value[0];
+
         expect(sections.sections.value).toHaveLength(1);
-        expect(sections.sections.value[0].id).toStrictEqual(section.id);
+        expect(replacement_section.value.id).toStrictEqual(section.id);
     });
 
     it("should replace an artifact section", () => {
@@ -63,10 +66,10 @@ describe("PendingSectionsReplacer", () => {
         replacer.replacePendingSection(section2, newone);
 
         expect(sections.sections.value).toHaveLength(4);
-        expect(sections.sections.value[0].id).toStrictEqual(section0.id);
-        expect(sections.sections.value[1].id).toStrictEqual(section1.id);
-        expect(sections.sections.value[2].id).toStrictEqual(newone.id);
-        expect(sections.sections.value[3].id).toStrictEqual(section3.id);
+        expect(sections.sections.value[0].value.id).toStrictEqual(section0.id);
+        expect(sections.sections.value[1].value.id).toStrictEqual(section1.id);
+        expect(sections.sections.value[2].value.id).toStrictEqual(newone.id);
+        expect(sections.sections.value[3].value.id).toStrictEqual(section3.id);
     });
 
     it("should replace a freetext section", () => {
@@ -86,9 +89,9 @@ describe("PendingSectionsReplacer", () => {
         replacer.replacePendingSection(section1, newone);
 
         expect(sections.sections.value).toHaveLength(4);
-        expect(sections.sections.value[0].id).toStrictEqual(section0.id);
-        expect(sections.sections.value[1].id).toStrictEqual(newone.id);
-        expect(sections.sections.value[2].id).toStrictEqual(section2.id);
-        expect(sections.sections.value[3].id).toStrictEqual(section3.id);
+        expect(sections.sections.value[0].value.id).toStrictEqual(section0.id);
+        expect(sections.sections.value[1].value.id).toStrictEqual(newone.id);
+        expect(sections.sections.value[2].value.id).toStrictEqual(section2.id);
+        expect(sections.sections.value[3].value.id).toStrictEqual(section3.id);
     });
 });

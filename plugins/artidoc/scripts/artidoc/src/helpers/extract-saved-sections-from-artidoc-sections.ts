@@ -18,16 +18,19 @@
  */
 
 import { isPendingSection } from "@/helpers/artidoc-section.type";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 export function extractSavedSectionsFromArtidocSections(
-    sections: readonly ArtidocSection[],
-): ReadonlyArray<ArtidocSection> {
-    return sections.reduce((saved: Array<ArtidocSection>, current: ArtidocSection) => {
-        if (!isPendingSection(current)) {
-            saved.push(current);
-        }
+    sections: readonly ReactiveStoredArtidocSection[],
+): ReadonlyArray<ReactiveStoredArtidocSection> {
+    return sections.reduce(
+        (saved: ReactiveStoredArtidocSection[], current: ReactiveStoredArtidocSection) => {
+            if (!isPendingSection(current.value)) {
+                saved.push(current);
+            }
 
-        return saved;
-    }, []);
+            return saved;
+        },
+        [],
+    );
 }

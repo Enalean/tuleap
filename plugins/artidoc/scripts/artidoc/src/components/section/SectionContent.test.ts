@@ -38,6 +38,9 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("SectionContent", () => {
     describe.each([
@@ -46,25 +49,29 @@ describe("SectionContent", () => {
     ])("when the %s sections are loaded", (name, factory) => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            vi.spyOn(editor, "useSectionEditor").mockReturnValue(
-                SectionEditorStub.withEditableSection(),
-            );
+            vi.spyOn(editor, "useSectionEditor").mockReturnValue(SectionEditorStub.build());
             vi.spyOn(upload_file, "useUploadFile").mockReturnValue(
                 UploadFileStub.uploadNotInProgress(),
             );
+
+            const states_collection = SectionsStatesCollectionStub.build();
+            const section = ReactiveStoredArtidocSectionStub.fromSection(factory.create());
+
+            states_collection.createStateForSection(section.value);
 
             wrapper = shallowMount(SectionContent, {
                 global: {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
+                        [SECTIONS_STATES_COLLECTION.valueOf()]: states_collection,
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
                         [IS_LOADING_SECTIONS.valueOf()]: ref(false),
                         [DOCUMENT_ID.valueOf()]: 123,
                     },
                 },
                 props: {
-                    section: factory.create(),
+                    section,
                 },
             });
         });
@@ -79,18 +86,16 @@ describe("SectionContent", () => {
         });
     });
 
-    describe.each([
-        ["artifact", ArtifactSectionFactory],
-        ["freetext", FreetextSectionFactory],
-    ])("when the %s sections are loading", (name, factory) => {
+    describe.each([["artifact"], ["freetext"]])("when the %s sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            vi.spyOn(editor, "useSectionEditor").mockReturnValue(
-                SectionEditorStub.withEditableSection(),
-            );
+            vi.spyOn(editor, "useSectionEditor").mockReturnValue(SectionEditorStub.build());
             vi.spyOn(upload_file, "useUploadFile").mockReturnValue(
                 UploadFileStub.uploadNotInProgress(),
             );
+
+            const states_collection = SectionsStatesCollectionStub.build();
+            states_collection.createStateForSection(skeleton_sections_collection[0]);
 
             wrapper = shallowMount(SectionContent, {
                 global: {
@@ -99,13 +104,14 @@ describe("SectionContent", () => {
                         [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections(
                             skeleton_sections_collection,
                         ),
+                        [SECTIONS_STATES_COLLECTION.valueOf()]: states_collection,
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
                         [IS_LOADING_SECTIONS.valueOf()]: ref(true),
                         [DOCUMENT_ID.valueOf()]: 123,
                     },
                 },
                 props: {
-                    section: factory.create(),
+                    section: ref(skeleton_sections_collection[0]),
                 },
             });
         });

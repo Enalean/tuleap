@@ -31,12 +31,12 @@ export const getSectionsUpdater = (sections_collection: SectionsCollection): Upd
         for (let i = 0; i < length; i++) {
             const current = sections_collection.sections.value[i];
             if (
-                (isArtifactSection(current) || isFreetextSection(current)) &&
-                current.id === section.id
+                (isArtifactSection(current.value) || isFreetextSection(current.value)) &&
+                current.value.id === section.id
             ) {
-                sections_collection.sections.value[i] = {
+                current.value = {
                     ...section,
-                    internal_id: sections_collection.sections.value[i].internal_id,
+                    internal_id: sections_collection.sections.value[i].value.internal_id,
                 };
             }
         }

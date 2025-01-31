@@ -42,7 +42,6 @@ import {
     IS_LOADING_SECTIONS,
     IS_LOADING_SECTIONS_FAILED,
 } from "@/is-loading-sections-injection-key";
-import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const is_loading_failed = strictInject(IS_LOADING_SECTIONS_FAILED);
@@ -53,6 +52,4 @@ const { selected_tracker } = strictInject(CONFIGURATION_STORE);
 const should_display_configuration_panel = computed(
     () => can_user_edit_document && !selected_tracker.value,
 );
-
-sections_collection.replaceAll(skeleton_sections_collection);
 </script>

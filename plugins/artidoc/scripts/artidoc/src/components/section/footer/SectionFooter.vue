@@ -19,7 +19,7 @@
 -->
 
 <template>
-    <div v-if="is_section_editable" class="section-footer">
+    <div v-if="section_state.is_section_editable.value" class="section-footer">
         <not-found-error v-if="is_not_found" />
         <generic-error
             v-else-if="is_in_error"
@@ -31,7 +31,10 @@
             v-bind:editor_actions="editor.editor_actions"
         />
 
-        <section-editor-save-cancel-buttons v-bind:editor="editor" />
+        <section-editor-save-cancel-buttons
+            v-bind:editor="editor"
+            v-bind:section_state="section_state"
+        />
     </div>
 </template>
 
@@ -41,12 +44,16 @@ import SectionEditorSaveCancelButtons from "./SectionEditorSaveCancelButtons.vue
 import NotFoundError from "./NotFoundError.vue";
 import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import GenericError from "./GenericError.vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { SectionState } from "@/sections/SectionStateBuilder";
 
-const props = defineProps<{ section: ArtidocSection; editor: SectionEditor }>();
+const props = defineProps<{
+    section: StoredArtidocSection;
+    editor: SectionEditor;
+    section_state: SectionState;
+}>();
 
 const { error_message, is_outdated, is_in_error, is_not_found } = props.editor.editor_error;
-const { is_section_editable } = props.editor.editor_state;
 </script>
 
 <style scoped lang="scss">

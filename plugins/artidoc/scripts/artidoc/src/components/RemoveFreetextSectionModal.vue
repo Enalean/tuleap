@@ -76,7 +76,7 @@ import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { createModal } from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import type { RemoveSections } from "@/sections/SectionsRemover";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
@@ -94,7 +94,7 @@ strictInject(REMOVE_FREETEXT_SECTION_MODAL).registerHandler(openModal);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 
-let section_to_remove: ArtidocSection | null = null;
+let section_to_remove: StoredArtidocSection | null = null;
 let modal: Modal | null = null;
 
 function closeModal(): void {
@@ -104,7 +104,7 @@ function closeModal(): void {
     modal.hide();
 }
 
-function openModal(section: ArtidocSection): void {
+function openModal(section: StoredArtidocSection): void {
     section_to_remove = section;
     if (modal_element.value) {
         modal = createModal(modal_element.value);

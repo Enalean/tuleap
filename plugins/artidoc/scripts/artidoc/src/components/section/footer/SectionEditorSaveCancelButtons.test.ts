@@ -20,20 +20,21 @@
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { computed } from "vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionEditorSaveCancelButtons from "./SectionEditorSaveCancelButtons.vue";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
+import type { SectionState } from "@/sections/SectionStateBuilder";
+import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 
 describe("SectionEditorSaveCancelButtons", () => {
-    function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
+    function getWrapper(section_state: SectionState): VueWrapper<ComponentPublicInstance> {
         return shallowMount(SectionEditorSaveCancelButtons, {
             propsData: {
-                editor,
+                editor: SectionEditorStub.build(),
+                section_state,
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -47,21 +48,19 @@ describe("SectionEditorSaveCancelButtons", () => {
 
     describe("when the edit mode is off", () => {
         it("should hide buttons", () => {
-            expect(
-                getWrapper(SectionEditorStub.withEditableSection()).find("button").exists(),
-            ).toBe(false);
+            expect(getWrapper(SectionStateStub.withDefaults()).find("button").exists()).toBe(false);
         });
     });
 
     describe("when the edit mode is on", () => {
         it("should display buttons", () => {
-            expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(true);
+            expect(getWrapper(SectionStateStub.inEditMode()).find("button").exists()).toBe(true);
         });
     });
 
     describe("when save is not allowed", () => {
         it("should disable save button", () => {
-            const wrapper = getWrapper(SectionEditorStub.inEditMode());
+            const wrapper = getWrapper(SectionStateStub.withDisallowedSave());
             const save_button = wrapper
                 .findAll("button")
                 .find((button) => button.text().includes("Save"));
@@ -72,14 +71,7 @@ describe("SectionEditorSaveCancelButtons", () => {
 
     describe("when save is allowed", () => {
         it("should enable save button", () => {
-            const editor_stub = SectionEditorStub.inEditMode();
-            const wrapper = getWrapper({
-                ...editor_stub,
-                editor_state: {
-                    ...editor_stub.editor_state,
-                    is_save_allowed: computed(() => true),
-                },
-            });
+            const wrapper = getWrapper(SectionStateStub.inEditMode());
             const save_button = wrapper
                 .findAll("button")
                 .find((button) => button.text().includes("Save"));

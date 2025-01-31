@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ref } from "vue";
+import { getSectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
+import { getSectionStateBuilder } from "@/sections/SectionStateBuilder";
 
-export function preventPageLeave(states_collection: SectionsStatesCollection): void {
-    window.addEventListener("beforeunload", (event) => {
-        if (states_collection.has_at_least_one_section_in_edit_mode.value) {
-            event.preventDefault();
-        }
-    });
-}
+export const SectionsStatesCollectionStub = {
+    build: (): SectionsStatesCollection =>
+        getSectionsStatesCollection(getSectionStateBuilder(true, ref([]))),
+};

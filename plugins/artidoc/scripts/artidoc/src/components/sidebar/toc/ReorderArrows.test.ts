@@ -24,18 +24,17 @@ import { createGettext } from "vue3-gettext";
 import { Fault } from "@tuleap/fault";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { injectInternalId } from "@/helpers/inject-internal-id";
-import type { InternalArtidocSectionId } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { SectionsReorderer } from "@/sections/SectionsReorderer";
 import { SectionsReordererStub } from "@/sections/stubs/SectionsReordererStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("ReorderArrows", () => {
-    let section: ArtidocSection & InternalArtidocSectionId, sections_reorderer: SectionsReorderer;
+    let section: ReactiveStoredArtidocSection, sections_reorderer: SectionsReorderer;
 
     beforeEach(() => {
-        section = injectInternalId(ArtifactSectionFactory.create());
+        section = ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create());
         sections_reorderer = SectionsReordererStub.withGreatSuccess();
     });
 
@@ -106,7 +105,7 @@ describe("ReorderArrows", () => {
                     throw new Error("Expected a moving-section-up-or-down event");
                 }
 
-                expect(event[0]).toStrictEqual([section]);
+                expect(event[0]).toStrictEqual([section.value]);
             },
         );
 
@@ -122,7 +121,7 @@ describe("ReorderArrows", () => {
                     throw new Error("Expected a moved-section-up-or-down event");
                 }
 
-                expect(event[0]).toStrictEqual([section]);
+                expect(event[0]).toStrictEqual([section.value]);
             },
         );
 

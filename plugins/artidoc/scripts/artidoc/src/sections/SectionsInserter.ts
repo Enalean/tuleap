@@ -17,10 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SectionsCollection, StoredArtidocSection } from "@/sections/SectionsCollection";
+import { ref } from "vue";
+import type {
+    ReactiveStoredArtidocSection,
+    SectionsCollection,
+} from "@/sections/SectionsCollection";
 import type { PositionForSection, AtTheEnd } from "@/sections/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 
 export type InsertSections = {
     insertSection(section: ArtidocSection, position: PositionForSection): void;
@@ -28,18 +33,21 @@ export type InsertSections = {
 
 export const AT_THE_END: AtTheEnd = null;
 
-export const getSectionsInserter = (sections_collection: SectionsCollection): InsertSections => {
+export const getSectionsInserter = (
+    sections_collection: SectionsCollection,
+    states_collection: SectionsStatesCollection,
+): InsertSections => {
     const NOT_FOUND = -1;
 
     const getIndexWhereSectionShouldBeInserted = (
-        sections: StoredArtidocSection[],
+        sections: ReactiveStoredArtidocSection[],
         position: PositionForSection,
     ): number => {
         if (position === AT_THE_END) {
             return NOT_FOUND;
         }
 
-        return sections.findIndex((sibling) => sibling.id === position.before);
+        return sections.findIndex((sibling) => sibling.value.id === position.before);
     };
 
     return {
@@ -49,13 +57,14 @@ export const getSectionsInserter = (sections_collection: SectionsCollection): In
                 position,
             );
             const new_section = CreateStoredSections.fromArtidocSection(section);
+            states_collection.createStateForSection(new_section);
 
             if (index === NOT_FOUND) {
-                sections_collection.sections.value.push(new_section);
+                sections_collection.sections.value.push(ref(new_section));
                 return;
             }
 
-            sections_collection.sections.value.splice(index, 0, new_section);
+            sections_collection.sections.value.splice(index, 0, ref(new_section));
         },
     };
 };

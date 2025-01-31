@@ -25,17 +25,21 @@ import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositionsForSaveRetriever";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("SectionsPositionsForSaveRetriever", () => {
-    const getStoreWithSections = (sections: ArtidocSection[]): SectionsCollection => {
-        const collection = buildSectionsCollection();
+    const getEmptySectionsCollection = (): SectionsCollection =>
+        buildSectionsCollection(SectionsStatesCollectionStub.build());
+
+    const getCollectionWithSections = (sections: ArtidocSection[]): SectionsCollection => {
+        const collection = getEmptySectionsCollection();
         collection.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
         return collection;
     };
 
     describe("scenario that should not happen (how can we have a section to get position, but no sections at all in the collection?)", () => {
         it("should return at the end if section is not found", () => {
-            const retriever = getSectionsPositionsForSaveRetriever(buildSectionsCollection());
+            const retriever = getSectionsPositionsForSaveRetriever(getEmptySectionsCollection());
 
             expect(
                 retriever.getSectionPositionForSave(PendingArtifactSectionFactory.create()),
@@ -48,7 +52,7 @@ describe("SectionsPositionsForSaveRetriever", () => {
         const section1 = ArtifactSectionFactory.create();
         const section2 = ArtifactSectionFactory.create();
         const retriever = getSectionsPositionsForSaveRetriever(
-            getStoreWithSections([section0, section1, section2]),
+            getCollectionWithSections([section0, section1, section2]),
         );
 
         expect(retriever.getSectionPositionForSave(section0)).toStrictEqual({
@@ -69,7 +73,7 @@ describe("SectionsPositionsForSaveRetriever", () => {
         const section5 = PendingArtifactSectionFactory.create();
 
         const retriever = getSectionsPositionsForSaveRetriever(
-            getStoreWithSections([section0, section1, section2, section3, section4, section5]),
+            getCollectionWithSections([section0, section1, section2, section3, section4, section5]),
         );
 
         expect(retriever.getSectionPositionForSave(section0)).toStrictEqual({

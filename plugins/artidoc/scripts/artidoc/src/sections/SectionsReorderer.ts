@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Ref } from "vue";
 import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
@@ -25,14 +24,22 @@ import { Option } from "@tuleap/option";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { reorderSections } from "@/helpers/rest-querier";
-import type { InternalArtidocSectionId, StoredArtidocSection } from "@/sections/SectionsCollection";
+import type {
+    InternalArtidocSectionId,
+    SectionsCollection,
+    StoredArtidocSection,
+    ReactiveStoredArtidocSection,
+} from "@/sections/SectionsCollection";
 import { CannotReorderSectionsFault } from "@/sections/CannotReorderSectionsFault";
 
 export type SectionsReorderer = {
-    moveSectionUp(document_id: number, section: StoredArtidocSection): ResultAsync<unknown, Fault>;
+    moveSectionUp(
+        document_id: number,
+        section: ReactiveStoredArtidocSection,
+    ): ResultAsync<unknown, Fault>;
     moveSectionDown(
         document_id: number,
-        section: StoredArtidocSection,
+        section: ReactiveStoredArtidocSection,
     ): ResultAsync<unknown, Fault>;
     moveSectionBefore(
         document_id: number,
@@ -46,13 +53,13 @@ export type SectionsReorderer = {
 };
 
 export const buildSectionsReorderer = (
-    sections: Ref<StoredArtidocSection[]>,
+    sections_collection: SectionsCollection,
 ): SectionsReorderer => {
     function getNextArtifactOrFreetextSection(start: number): Option<ArtidocSection> {
-        for (let i = start; i < sections.value.length; i++) {
-            const next_section = sections.value[i];
-            if (!isPendingSection(next_section)) {
-                return Option.fromValue(next_section);
+        for (let i = start; i < sections_collection.sections.value.length; i++) {
+            const next_section = sections_collection.sections.value[i];
+            if (!isPendingSection(next_section.value)) {
+                return Option.fromValue(next_section.value);
             }
         }
 
@@ -61,9 +68,9 @@ export const buildSectionsReorderer = (
 
     function getPreviousArtifactOrFreetextSection(start: number): Option<ArtidocSection> {
         for (let i = start; i >= 0; i--) {
-            const previous_section = sections.value[i];
-            if (!isPendingSection(previous_section)) {
-                return Option.fromValue(previous_section);
+            const previous_section = sections_collection.sections.value[i];
+            if (!isPendingSection(previous_section.value)) {
+                return Option.fromValue(previous_section.value);
             }
         }
 
@@ -107,25 +114,25 @@ export const buildSectionsReorderer = (
 
     function moveSectionUp(
         document_id: number,
-        section: StoredArtidocSection,
+        section: ReactiveStoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
-        return findIndexOfSection(section).match(
+        return findIndexOfSection(section.value).match(
             (index): ResultAsync<unknown, Fault> => {
                 if (index === 0) {
                     return errAsync(CannotReorderSectionsFault.build());
                 }
 
-                const sections_before_move = [...sections.value];
+                const sections_before_move = [...sections_collection.sections.value];
 
-                sections.value.splice(index, 1);
-                sections.value.splice(index - 1, 0, section);
+                sections_collection.sections.value.splice(index, 1);
+                sections_collection.sections.value.splice(index - 1, 0, section);
 
                 return moveArtifactOrFreetextSectionBeforeSibling(
                     index,
                     document_id,
-                    section,
+                    section.value,
                 ).mapErr((fault) => {
-                    sections.value = sections_before_move;
+                    sections_collection.sections.value = sections_before_move;
 
                     return fault;
                 });
@@ -136,25 +143,25 @@ export const buildSectionsReorderer = (
 
     function moveSectionDown(
         document_id: number,
-        section: StoredArtidocSection,
+        section: ReactiveStoredArtidocSection,
     ): ResultAsync<unknown, Fault> {
-        return findIndexOfSection(section).match(
+        return findIndexOfSection(section.value).match(
             (index) => {
-                if (index >= sections.value.length - 1) {
+                if (index >= sections_collection.sections.value.length - 1) {
                     return errAsync(CannotReorderSectionsFault.build());
                 }
 
-                const sections_before_move = [...sections.value];
+                const sections_before_move = [...sections_collection.sections.value];
 
-                sections.value.splice(index, 1);
-                sections.value.splice(index + 1, 0, section);
+                sections_collection.sections.value.splice(index, 1);
+                sections_collection.sections.value.splice(index + 1, 0, section);
 
                 return moveArtifactOrFreetextSectionAfterSibling(
                     index,
                     document_id,
-                    section,
+                    section.value,
                 ).mapErr((fault) => {
-                    sections.value = sections_before_move;
+                    sections_collection.sections.value = sections_before_move;
 
                     return fault;
                 });
@@ -172,11 +179,11 @@ export const buildSectionsReorderer = (
             (index_section) => {
                 return findIndexOfSection(next_sibling).match(
                     (index_sibling) => {
-                        if (sections.value.length - 1 < index_section) {
+                        if (sections_collection.sections.value.length - 1 < index_section) {
                             return errAsync(CannotReorderSectionsFault.build());
                         }
 
-                        if (sections.value.length - 1 < index_sibling) {
+                        if (sections_collection.sections.value.length - 1 < index_sibling) {
                             return errAsync(CannotReorderSectionsFault.build());
                         }
 
@@ -185,22 +192,22 @@ export const buildSectionsReorderer = (
                             return okAsync(null);
                         }
 
-                        const section = sections.value[index_section];
+                        const section = sections_collection.sections.value[index_section];
 
-                        const sections_before_move = [...sections.value];
+                        const sections_before_move = [...sections_collection.sections.value];
 
                         const new_section_index =
                             index_section > index_sibling ? index_sibling : index_sibling - 1;
 
-                        sections.value.splice(index_section, 1);
-                        sections.value.splice(new_section_index, 0, section);
+                        sections_collection.sections.value.splice(index_section, 1);
+                        sections_collection.sections.value.splice(new_section_index, 0, section);
 
                         return moveArtifactOrFreetextSectionBeforeSibling(
                             new_section_index + 1,
                             document_id,
-                            section,
+                            section.value,
                         ).mapErr((fault) => {
-                            sections.value = sections_before_move;
+                            sections_collection.sections.value = sections_before_move;
 
                             return fault;
                         });
@@ -218,28 +225,28 @@ export const buildSectionsReorderer = (
     ): ResultAsync<unknown, Fault> {
         return findIndexOfSection(section).match(
             (index_section) => {
-                if (sections.value.length - 1 < index_section) {
+                if (sections_collection.sections.value.length - 1 < index_section) {
                     return errAsync(CannotReorderSectionsFault.build());
                 }
 
-                if (index_section === sections.value.length - 1) {
+                if (index_section === sections_collection.sections.value.length - 1) {
                     // same position, do nothing
                     return okAsync(null);
                 }
 
-                const sections_before_move = [...sections.value];
-                const section = sections.value[index_section];
+                const sections_before_move = [...sections_collection.sections.value];
+                const section = sections_collection.sections.value[index_section];
 
-                sections.value.splice(index_section, 1);
-                sections.value.push(section);
+                sections_collection.sections.value.splice(index_section, 1);
+                sections_collection.sections.value.push(section);
 
-                const penultimate_index = sections.value.length - 2;
+                const penultimate_index = sections_collection.sections.value.length - 2;
                 return moveArtifactOrFreetextSectionAfterSibling(
                     penultimate_index,
                     document_id,
-                    section,
+                    section.value,
                 ).mapErr((fault) => {
-                    sections.value = sections_before_move;
+                    sections_collection.sections.value = sections_before_move;
                     return fault;
                 });
             },
@@ -248,8 +255,8 @@ export const buildSectionsReorderer = (
     }
 
     function findIndexOfSection(section: InternalArtidocSectionId): Option<number> {
-        const index = sections.value.findIndex(
-            (element) => element.internal_id === section.internal_id,
+        const index = sections_collection.sections.value.findIndex(
+            (element) => element.value.internal_id === section.internal_id,
         );
         if (index === -1) {
             return Option.nothing();

@@ -19,26 +19,29 @@
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import SectionDropdown from "./SectionDropdown.vue";
 import { createGettext } from "vue3-gettext";
-import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
-import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import type { SectionState } from "@/sections/SectionStateBuilder";
+import SectionDropdown from "./SectionDropdown.vue";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { injectInternalId } from "@/helpers/inject-internal-id";
+import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
+import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 
 vi.mock("@tuleap/tlp-dropdown");
 vi.mock("@/helpers/move-dropdownmenu-in-document-body");
 
 describe("SectionDropdown", () => {
-    function getWrapper(editor: SectionEditor, section: ArtidocSection): VueWrapper {
+    function getWrapper(section: ArtidocSection, section_state: SectionState): VueWrapper {
         return shallowMount(SectionDropdown, {
             propsData: {
-                editor,
-                section,
+                editor: SectionEditorStub.build(),
+                section: injectInternalId(section),
+                section_state,
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -55,7 +58,7 @@ describe("SectionDropdown", () => {
             ["artifact", ArtifactSectionFactory],
             ["freetext", FreetextSectionFactory],
         ])("should display a dropdown menu with a delete item for %s section", (name, factory) => {
-            const wrapper = getWrapper(SectionEditorStub.withEditableSection(), factory.create());
+            const wrapper = getWrapper(factory.create(), SectionStateStub.withDefaults());
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
             expect(wrapper.find("[data-test=delete]").exists()).toBe(true);
@@ -63,8 +66,8 @@ describe("SectionDropdown", () => {
 
         it("should display a dropdown menu with a 'go to artifact' item for artifact section", () => {
             const wrapper = getWrapper(
-                SectionEditorStub.withEditableSection(),
                 ArtifactSectionFactory.create(),
+                SectionStateStub.withDefaults(),
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
@@ -73,8 +76,8 @@ describe("SectionDropdown", () => {
 
         it("should display a dropdown menu without a 'go to artifact' item for freetext section", () => {
             const wrapper = getWrapper(
-                SectionEditorStub.withEditableSection(),
                 FreetextSectionFactory.create(),
+                SectionStateStub.withDefaults(),
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
@@ -85,8 +88,8 @@ describe("SectionDropdown", () => {
     describe("when the user is not allowed to edit the artifact section", () => {
         it("should hide delete menu item", () => {
             const wrapper = getWrapper(
-                SectionEditorStub.withoutEditableSection(),
                 ArtifactSectionFactory.create(),
+                SectionStateStub.notEditable(),
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(true);
@@ -97,8 +100,8 @@ describe("SectionDropdown", () => {
     describe("when the user is not allowed to edit the freetext section", () => {
         it("should not display the dropdown menu at all", () => {
             const wrapper = getWrapper(
-                SectionEditorStub.withoutEditableSection(),
                 FreetextSectionFactory.create(),
+                SectionStateStub.notEditable(),
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);
@@ -108,8 +111,8 @@ describe("SectionDropdown", () => {
     describe("when the section is a pending artifact section", () => {
         it("should not display the dropdown", () => {
             const wrapper = getWrapper(
-                SectionEditorStub.withEditableSection(),
                 PendingArtifactSectionFactory.create(),
+                SectionStateStub.withDefaults(),
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);
@@ -119,8 +122,8 @@ describe("SectionDropdown", () => {
     describe("when the section is a pending freetext section", () => {
         it("should not display the dropdown", () => {
             const wrapper = getWrapper(
-                SectionEditorStub.withEditableSection(),
                 FreetextSectionFactory.pending(),
+                SectionStateStub.withDefaults(),
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);

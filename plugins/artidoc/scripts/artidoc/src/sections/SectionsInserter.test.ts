@@ -25,47 +25,69 @@ import { AT_THE_END, getSectionsInserter } from "@/sections/SectionsInserter";
 import type { InsertSections } from "@/sections/SectionsInserter";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 const section1 = ArtifactSectionFactory.create();
 const section2 = PendingArtifactSectionFactory.create();
 const new_section = PendingArtifactSectionFactory.create();
 
 describe("SectionsInserter", () => {
-    let sections_collection: SectionsCollection, inserter: InsertSections;
+    let sections_collection: SectionsCollection,
+        states_collection: SectionsStatesCollection,
+        inserter: InsertSections;
 
     beforeEach(() => {
-        sections_collection = buildSectionsCollection();
+        states_collection = SectionsStatesCollectionStub.build();
+        sections_collection = buildSectionsCollection(states_collection);
         sections_collection.replaceAll(
             CreateStoredSections.fromArtidocSectionsCollection([section1, section2]),
         );
 
-        inserter = getSectionsInserter(sections_collection);
+        inserter = getSectionsInserter(sections_collection, states_collection);
     });
+
+    const expectSectionStateToHaveBeenCreated = (section_index: number): void => {
+        const section = sections_collection.sections.value[section_index].value;
+        expect(states_collection.getSectionState(section)).toBeDefined();
+    };
 
     it("should insert the section at the beginning", () => {
         inserter.insertSection(new_section, { before: section1.id });
 
         expect(sections_collection.sections.value).toHaveLength(3);
-        expect(sections_collection.sections.value[0].id).toStrictEqual(new_section.id);
-        expect(sections_collection.sections.value[1].id).toStrictEqual(section1.id);
-        expect(sections_collection.sections.value[2].id).toStrictEqual(section2.id);
+        expect(sections_collection.sections.value[0].value.id).toStrictEqual(new_section.id);
+        expect(sections_collection.sections.value[1].value.id).toStrictEqual(section1.id);
+        expect(sections_collection.sections.value[2].value.id).toStrictEqual(section2.id);
+
+        expectSectionStateToHaveBeenCreated(0);
+        expectSectionStateToHaveBeenCreated(1);
+        expectSectionStateToHaveBeenCreated(2);
     });
 
     it("should insert the section before the second one", () => {
         inserter.insertSection(new_section, { before: section2.id });
 
         expect(sections_collection.sections.value).toHaveLength(3);
-        expect(sections_collection.sections.value[0].id).toStrictEqual(section1.id);
-        expect(sections_collection.sections.value[1].id).toStrictEqual(new_section.id);
-        expect(sections_collection.sections.value[2].id).toStrictEqual(section2.id);
+        expect(sections_collection.sections.value[0].value.id).toStrictEqual(section1.id);
+        expect(sections_collection.sections.value[1].value.id).toStrictEqual(new_section.id);
+        expect(sections_collection.sections.value[2].value.id).toStrictEqual(section2.id);
+
+        expectSectionStateToHaveBeenCreated(0);
+        expectSectionStateToHaveBeenCreated(1);
+        expectSectionStateToHaveBeenCreated(2);
     });
 
     it("should insert the section at the end", () => {
         inserter.insertSection(new_section, AT_THE_END);
 
         expect(sections_collection.sections.value).toHaveLength(3);
-        expect(sections_collection.sections.value[0].id).toStrictEqual(section1.id);
-        expect(sections_collection.sections.value[1].id).toStrictEqual(section2.id);
-        expect(sections_collection.sections.value[2].id).toStrictEqual(new_section.id);
+        expect(sections_collection.sections.value[0].value.id).toStrictEqual(section1.id);
+        expect(sections_collection.sections.value[1].value.id).toStrictEqual(section2.id);
+        expect(sections_collection.sections.value[2].value.id).toStrictEqual(new_section.id);
+
+        expectSectionStateToHaveBeenCreated(0);
+        expectSectionStateToHaveBeenCreated(1);
+        expectSectionStateToHaveBeenCreated(2);
     });
 });

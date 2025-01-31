@@ -18,8 +18,6 @@
  */
 
 import type { FileUploadOptions, UploadError, OnGoingUploadFile } from "@tuleap/file-upload";
-import { computed } from "vue";
-import type { Ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
@@ -29,7 +27,6 @@ import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
 
 export type UseUploadFileType = {
     file_upload_options: FileUploadOptions;
-    is_in_progress: Ref<boolean>;
     resetProgressCallback: () => void;
 };
 
@@ -41,14 +38,6 @@ export function useUploadFile(
     const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
     const { addPendingUpload, pending_uploads, deleteUpload, cancelSectionUploads } =
         strictInject(UPLOAD_FILE_STORE);
-
-    const is_in_progress = computed(() => {
-        return (
-            pending_uploads.value.filter(
-                (upload: OnGoingUploadFileWithId) => upload.section_id === section_id,
-            ).length > 0
-        );
-    });
 
     const onStartUploadCallback = (files: FileList): OnGoingUploadFile[] => {
         for (const file of files) {
@@ -101,7 +90,6 @@ export function useUploadFile(
     };
     return {
         file_upload_options,
-        is_in_progress,
         resetProgressCallback,
     };
 }

@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { MockedFunction } from "vitest";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { EditorErrors } from "@/composables/useEditorErrors";
@@ -28,22 +29,23 @@ import { flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
+import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = ArtifactSectionFactory.create();
 const editor_errors: EditorErrors = {
-    ...SectionEditorStub.withoutEditableSection().editor_error,
+    ...SectionEditorStub.build().editor_error,
     handleError: vi.fn(),
 };
 
 describe("useRefreshSection", () => {
-    let callbacks: Parameters<typeof useRefreshSection>[3];
+    let closeEditor: MockedFunction<() => void>;
+
     beforeEach(() => {
-        callbacks = {
-            closeEditor: vi.fn(),
-            updateCurrentSection: vi.fn(),
-        };
+        closeEditor = vi.fn();
     });
+
     describe("refresh_section", () => {
         describe.each([
             ["artifact", artifact_section, ArtifactSectionFactory.create()],
@@ -56,41 +58,45 @@ describe("useRefreshSection", () => {
             it(`should call update section from editor with ${name}`, async () => {
                 const updater = SectionsUpdaterStub.withExpectedCall();
                 const { refreshSection } = useRefreshSection(
-                    section,
+                    ReactiveStoredArtidocSectionStub.fromSection(section),
+                    SectionStateStub.inEditMode(),
                     editor_errors,
                     updater,
-                    callbacks,
+                    closeEditor,
                 );
                 refreshSection();
 
                 await flushPromises();
 
                 expect(updater.getLastUpdatedSection()).toStrictEqual(new_section);
-                expect(callbacks.updateCurrentSection).toHaveBeenCalledWith(new_section);
             });
             it(`should close editor with ${name}`, async () => {
                 const updater = SectionsUpdaterStub.withExpectedCall();
                 const { refreshSection } = useRefreshSection(
-                    section,
+                    ReactiveStoredArtidocSectionStub.fromSection(section),
+                    SectionStateStub.inEditMode(),
                     editor_errors,
                     updater,
-                    callbacks,
+                    closeEditor,
                 );
 
                 refreshSection();
                 await flushPromises();
 
                 expect(updater.getLastUpdatedSection()).toStrictEqual(new_section);
-                expect(callbacks.closeEditor).toHaveBeenCalledOnce();
+                expect(closeEditor).toHaveBeenCalledOnce();
             });
             describe("when the api call returns an artifact section", () => {
                 it("should call update section from store", async () => {
                     const updater = SectionsUpdaterStub.withExpectedCall();
                     const { refreshSection } = useRefreshSection(
-                        ArtifactSectionFactory.create(),
+                        ReactiveStoredArtidocSectionStub.fromSection(
+                            ArtifactSectionFactory.create(),
+                        ),
+                        SectionStateStub.inEditMode(),
                         editor_errors,
                         updater,
-                        callbacks,
+                        closeEditor,
                     );
 
                     refreshSection();
@@ -112,10 +118,11 @@ describe("useRefreshSection", () => {
 
             it(`should call handle error from editor with ${name}`, async () => {
                 const { refreshSection } = useRefreshSection(
-                    section,
+                    ReactiveStoredArtidocSectionStub.fromSection(section),
+                    SectionStateStub.inEditMode(),
                     editor_errors,
                     SectionsUpdaterStub.withNoExpectedCall(),
-                    callbacks,
+                    closeEditor,
                 );
                 refreshSection();
                 await flushPromises();
@@ -124,10 +131,11 @@ describe("useRefreshSection", () => {
             });
             it(`should update is_outdated with ${name}`, async () => {
                 const { refreshSection } = useRefreshSection(
-                    section,
+                    ReactiveStoredArtidocSectionStub.fromSection(section),
+                    SectionStateStub.inEditMode(),
                     editor_errors,
                     SectionsUpdaterStub.withNoExpectedCall(),
-                    callbacks,
+                    closeEditor,
                 );
                 editor_errors.is_outdated.value = true;
                 expect(editor_errors.is_outdated.value).toBe(true);
