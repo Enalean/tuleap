@@ -20,32 +20,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once 'bootstrap.php';
+namespace Tuleap\Git;
 
-final class Git_PostReceiveMailManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+use Git_Backend_Interface;
+use Git_PostReceiveMailDao;
+use Git_PostReceiveMailManager;
+use GitRepository;
+use Tuleap\Test\PHPUnit\TestCase;
+
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Git_PostReceiveMailManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testRemoveMailByRepository(): void
     {
-        $prm = \Mockery::mock(\Git_PostReceiveMailManager::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $prm = $this->createPartialMock(Git_PostReceiveMailManager::class, []);
 
-        $dao      = \Mockery::mock(Git_PostReceiveMailDao::class);
+        $dao      = $this->createMock(Git_PostReceiveMailDao::class);
         $prm->dao = $dao;
 
-        $repo = \Mockery::spy(\GitRepository::class);
+        $repo    = $this->createMock(GitRepository::class);
+        $backend = $this->createMock(Git_Backend_Interface::class);
+        $repo->method('getId');
+        $repo->method('getBackend')->willReturn($backend);
 
-        $backend = \Mockery::spy(\Git_Backend_Interface::class);
-        $repo->shouldReceive('getBackend')->andReturn($backend);
+        $prm->dao->method('removeNotification')->willReturn(true);
 
-        $prm->dao->shouldReceive('removeNotification')->andReturnTrue();
-
-        $repo->shouldReceive('loadNotifiedMails')->once();
-        $backend->shouldReceive('changeRepositoryMailingList')->once();
+        $repo->expects(self::once())->method('loadNotifiedMails');
+        $backend->expects(self::once())->method('changeRepositoryMailingList');
 
         $prm->removeMailByRepository($repo, 'codendiadm@codendi.org');
     }

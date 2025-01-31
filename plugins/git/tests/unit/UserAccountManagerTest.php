@@ -22,50 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
+use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_UserAccountManager;
+use Git_RemoteServer_GerritServerFactory;
 use Git_UserAccountManager;
 use Git_UserSynchronisationException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class UserAccountManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserAccountManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $user;
-    private $gerrit_driver_factory;
-    private $remote_gerrit_factory;
-
-    /**
-     * @var Git_UserAccountManager
-     */
-    private $user_account_manager;
-    /**
-     * @var Git_Driver_Gerrit_UserAccountManager
-     */
-    private $gerrit_user_account_manager;
-    /**
-     * @var string[]
-     */
+    private PFUser $user;
+    private Git_UserAccountManager $user_account_manager;
+    private Git_Driver_Gerrit_UserAccountManager&MockObject $gerrit_user_account_manager;
+    /** @var string[] */
     private array $original_keys;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $new_keys;
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->user                        = new PFUser(['ldap_id' => 'testUser', 'language_id' => 'en']);
-        $this->gerrit_driver_factory       = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class);
-        $this->remote_gerrit_factory       = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->gerrit_user_account_manager = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
+        $gerrit_driver_factory             = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $remote_gerrit_factory             = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
+        $this->gerrit_user_account_manager = $this->createMock(Git_Driver_Gerrit_UserAccountManager::class);
 
-        $this->user_account_manager = new Git_UserAccountManager(
-            $this->gerrit_driver_factory,
-            $this->remote_gerrit_factory
-        );
+        $this->user_account_manager = new Git_UserAccountManager($gerrit_driver_factory, $remote_gerrit_factory);
         $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
 
         $this->original_keys = [
@@ -86,10 +69,9 @@ class UserAccountManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfGerritSynchFails(): void
     {
-        $this->gerrit_user_account_manager->shouldReceive('synchroniseSSHKeys')->once()->andThrows(new Git_UserSynchronisationException());
+        $this->gerrit_user_account_manager->expects(self::once())->method('synchroniseSSHKeys')->willThrowException(new Git_UserSynchronisationException());
 
-        $this->expectException(\Git_UserSynchronisationException::class);
-
+        $this->expectException(Git_UserSynchronisationException::class);
         $this->user_account_manager->synchroniseSSHKeys(
             $this->original_keys,
             $this->new_keys,
@@ -99,12 +81,9 @@ class UserAccountManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfGerritPushFails(): void
     {
-        $this->gerrit_user_account_manager->shouldReceive('pushSSHKeys')->once()->andThrows(new Git_UserSynchronisationException());
+        $this->gerrit_user_account_manager->expects(self::once())->method('pushSSHKeys')->willThrowException(new Git_UserSynchronisationException());
 
-        $this->expectException(\Git_UserSynchronisationException::class);
-
-        $this->user_account_manager->pushSSHKeys(
-            $this->user
-        );
+        $this->expectException(Git_UserSynchronisationException::class);
+        $this->user_account_manager->pushSSHKeys($this->user);
     }
 }
