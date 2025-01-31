@@ -25,100 +25,86 @@ namespace Tuleap\Git;
 use Git_URL;
 use GitRepository;
 use GitRepositoryFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectManager;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class URLTest extends \Tuleap\Test\PHPUnit\TestCase
+final class URLTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ProjectManager * */
-    protected $project_manager;
-
-    /** @var GitRepositoryFactory * */
-    protected $repository_factory;
-
-    /** @var Project */
-    protected $gpig_project;
-
-    /** @var GitRepository */
-    protected $goldfish_repository;
-
-    /** @var GitRepository */
-    protected $apache_repository;
-
-    protected $gpig_project_name = 'gpig';
-    protected $gpig_project_id   = '111';
-    protected $repository_id     = '43';
+    private ProjectManager&MockObject $project_manager;
+    private GitRepositoryFactory&MockObject $repository_factory;
+    private GitRepository $goldfish_repository;
+    private GitRepository $apache_repository;
+    private string $gpig_project_name = 'gpig';
+    private int $gpig_project_id      = 111;
+    private int $repository_id        = 43;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->project_manager    = \Mockery::spy(\ProjectManager::class);
-        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->gpig_project       = \Mockery::spy(\Project::class);
-        $this->gpig_project->shouldReceive('getId')->andReturns($this->gpig_project_id);
-        $this->gpig_project->shouldReceive('getUnixName')->andReturns($this->gpig_project_name);
+        $this->project_manager    = $this->createMock(ProjectManager::class);
+        $this->repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $gpig_project             = ProjectTestBuilder::aProject()->withId($this->gpig_project_id)->withUnixName($this->gpig_project_name)->build();
 
-        $this->goldfish_repository = $this->buildRepository($this->gpig_project, 'device/generic/goldfish');
+        $this->goldfish_repository = $this->buildRepository($gpig_project, 'device/generic/goldfish');
+        $this->apache_repository   = $this->buildRepository($gpig_project, 'apache-2.5');
 
-        $this->repository_factory->shouldReceive('getByProjectNameAndPath')->with($this->gpig_project_name, 'device/generic/goldfish.git')->andReturns($this->goldfish_repository);
+        $this->repository_factory->method('getByProjectNameAndPath')->with($this->gpig_project_name, self::isType('string'))
+            ->willReturnCallback(fn(string $project_name, string $path) => match ($path) {
+                'device/generic/goldfish.git' => $this->goldfish_repository,
+                'apache-2.5.git'              => $this->apache_repository,
+                default                       => null,
+            });
+        $this->repository_factory->method('getRepositoryById')->willReturnCallback(fn(int $id) => match ($id) {
+            $this->repository_id => $this->goldfish_repository,
+            default              => null,
+        });
 
-        $this->repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($this->goldfish_repository);
-
-        $this->apache_repository = $this->buildRepository($this->gpig_project, 'apache-2.5');
-
-        $this->repository_factory->shouldReceive('getByProjectNameAndPath')->with($this->gpig_project_name, 'apache-2.5.git')->andReturns($this->apache_repository);
-
-        $this->project_manager->shouldReceive('getProject')->with($this->gpig_project_id)->andReturns($this->gpig_project);
+        $this->project_manager->method('getProject')->with($this->gpig_project_id)->willReturn($gpig_project);
     }
 
     private function buildRepository(Project $project, string $name): GitRepository
     {
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
-        $repository->shouldReceive('getName')->andReturn($name);
-
-        return $repository;
+        return GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->withName($name)->build();
     }
 
     public function testItRetrievesTheRepository(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
 
-        $this->assertEquals($this->goldfish_repository, $url->getRepository());
+        self::assertEquals($this->goldfish_repository, $url->getRepository());
     }
 
     public function testItGeneratesPathInfoForInfoRefs(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
-        $this->assertEquals('/gpig/device/generic/goldfish.git/info/refs', $url->getPathInfo());
+        self::assertEquals('/gpig/device/generic/goldfish.git/info/refs', $url->getPathInfo());
     }
 
     public function testItGeneratesPathInfoForGitUploadPack(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-upload-pack');
-        $this->assertEquals('/gpig/device/generic/goldfish.git/git-upload-pack', $url->getPathInfo());
+        self::assertEquals('/gpig/device/generic/goldfish.git/git-upload-pack', $url->getPathInfo());
     }
 
     public function testItGeneratesPathInfoForGitReceivePack(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
-        $this->assertEquals('/gpig/device/generic/goldfish.git/git-receive-pack', $url->getPathInfo());
+        self::assertEquals('/gpig/device/generic/goldfish.git/git-receive-pack', $url->getPathInfo());
     }
 
     public function testItGeneratesPathInfoForHEAD(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/HEAD');
-        $this->assertEquals('/gpig/device/generic/goldfish.git/HEAD', $url->getPathInfo());
+        self::assertEquals('/gpig/device/generic/goldfish.git/HEAD', $url->getPathInfo());
     }
 
     public function testItGeneratesPathInfoForObjects(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/objects/f5/30d381822b12f76923bfba729fead27b378bec');
-        $this->assertEquals(
+        self::assertEquals(
             '/gpig/device/generic/goldfish.git/objects/f5/30d381822b12f76923bfba729fead27b378bec',
             $url->getPathInfo()
         );
@@ -127,38 +113,38 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItGeneratesQueryString(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
-        $this->assertEquals('service=git-upload-pack', $url->getQueryString());
+        self::assertEquals('service=git-upload-pack', $url->getQueryString());
     }
 
     public function testItGeneratesAnEmptyQueryStringForGitUploadPack(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-upload-pack');
-        $this->assertEquals('', $url->getQueryString());
+        self::assertEquals('', $url->getQueryString());
     }
 
     public function testItDetectsGitPushWhenServiceIsGitReceivePack(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-receive-pack');
-        $this->assertTrue($url->isWrite());
+        self::assertTrue($url->isWrite());
     }
 
     public function testItDetectsGitPushWhenURIIsGitReceivePack(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
-        $this->assertTrue($url->isWrite());
+        self::assertTrue($url->isWrite());
     }
 
     public function testItRetrievesTheRepositoryWithExplicityDotGit(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/git-receive-pack');
 
-        $this->assertEquals($this->goldfish_repository, $url->getRepository());
+        self::assertEquals($this->goldfish_repository, $url->getRepository());
     }
 
     public function testItGeneratesPathInfoForObjectsWithExplicityDotGit(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/objects/f5/30d381822b12f76923bfba729fead27b378bec');
-        $this->assertEquals(
+        self::assertEquals(
             '/gpig/device/generic/goldfish.git/objects/f5/30d381822b12f76923bfba729fead27b378bec',
             $url->getPathInfo()
         );
@@ -167,7 +153,7 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItGeneratesQueryStringWithExplicityDotGit(): void
     {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/info/refs?service=git-upload-pack');
-        $this->assertEquals('service=git-upload-pack', $url->getQueryString());
+        self::assertEquals('service=git-upload-pack', $url->getQueryString());
     }
 
     private function getUrl($url): Git_URL

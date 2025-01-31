@@ -22,58 +22,65 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Git_GitRepositoryUrlManager;
+use Git_LogDao;
+use GitRepository;
+use GitRepositoryFactory;
 use PFUser;
+use Project;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
 
-final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LatestHeartbeatsCollectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private \GitRepositoryFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface $factory;
     private LatestHeartbeatsCollector $collector;
-    private \Project $project;
+    private Project $project;
     private PFUser $user;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->project = new \Project(['group_id' => 101]);
+        $this->project = new Project(['group_id' => 101]);
         $this->user    = new PFUser(['user_id' => 200, 'language_id' => 'en']);
 
-        $dao = \Mockery::mock(\Git_LogDao::class);
-        $dao->shouldReceive('searchLatestPushesInProject')
+        $dao = $this->createMock(Git_LogDao::class);
+        $dao->method('searchLatestPushesInProject')
             ->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)
-            ->andReturn([
+            ->willReturn([
                 ['repository_id' => 1, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
                 ['repository_id' => 2, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
                 ['repository_id' => 3, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
             ]);
 
-        $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->declareRepository(1, true);
-        $this->declareRepository(2, false);
-        $this->declareRepository(3, true);
+        $factory      = $this->createMock(GitRepositoryFactory::class);
+        $repository_1 = $this->declareRepository(1, true);
+        $repository_2 = $this->declareRepository(2, false);
+        $repository_3 = $this->declareRepository(3, true);
+        $factory->method('getRepositoryById')->willReturnCallback(static fn(int $id) => match ($id) {
+            1 => $repository_1,
+            2 => $repository_2,
+            3 => $repository_3,
+        });
 
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getUserById')->with(101)->willReturn($this->user);
         $this->collector = new LatestHeartbeatsCollector(
-            $this->factory,
+            $factory,
             $dao,
-            \Mockery::spy(\Git_GitRepositoryUrlManager::class),
-            \Mockery::spy(\UserManager::class),
+            $this->createMock(Git_GitRepositoryUrlManager::class),
+            $user_manager,
         );
     }
 
-    private function declareRepository($id, $user_can_read): void
+    private function declareRepository(int $id, bool $user_can_read): GitRepository
     {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns($id)->getMock();
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getId')->willReturn($id);
+        $repository->method('userCanRead')->willReturn($user_can_read);
+        $repository->method('getProject')->willReturn($this->project);
+        $repository->method('getHTMLLink');
 
-        $repository->shouldReceive('userCanRead')->andReturns($user_can_read);
-        $repository->shouldReceive('getProject')->andReturns($this->project);
-
-        $this->factory->shouldReceive('getRepositoryById')->with($id)->andReturns($repository);
+        return $repository;
     }
 
     public function testItCollectsOnlyPushesForRepositoriesUserCanView(): void
@@ -81,7 +88,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection = new HeartbeatsEntryCollection($this->project, $this->user);
         $this->collector->collect($collection);
 
-        $this->assertCount(2, $collection->getLatestEntries());
+        self::assertCount(2, $collection->getLatestEntries());
     }
 
     public function testItInformsThatThereIsAtLeastOneActivityThatUserCannotRead(): void
@@ -89,6 +96,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection = new HeartbeatsEntryCollection($this->project, $this->user);
         $this->collector->collect($collection);
 
-        $this->assertTrue($collection->areThereActivitiesUserCannotSee());
+        self::assertTrue($collection->areThereActivitiesUserCannotSee());
     }
 }
