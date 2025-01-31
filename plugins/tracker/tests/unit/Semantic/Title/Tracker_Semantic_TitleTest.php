@@ -21,27 +21,18 @@
 
 namespace Tuleap\Tracker\Semantic\Title;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
-use Tracker;
-use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Title;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_TitleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var SimpleXMLElement
      */
     private $xml;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
 
     /**
      * @var Tracker_Semantic_Title
@@ -53,21 +44,16 @@ class Tracker_Semantic_TitleTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $root;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_Text
-     */
-    private $field;
-
     public function setUp(): void
     {
         $this->xml = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticTitleTest.xml')
         );
 
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->field   = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->field->shouldReceive('getId')->andReturn(102);
-        $this->semantic_title = new Tracker_Semantic_Title($this->tracker, $this->field);
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $field   = TextFieldBuilder::aTextField(102)->build();
+
+        $this->semantic_title = new Tracker_Semantic_Title($tracker, $field);
         $this->root           = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
     }
 
