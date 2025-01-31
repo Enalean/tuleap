@@ -36,7 +36,7 @@ describe("FeatureCard", () => {
         const defaulted_feature = {
             id: 100,
             title: "My artifact",
-            tracker: { label: "bug", color_name: "lake_placid_blue" },
+            tracker: { label: "bug", color_name: "lake-placid-blue" },
             is_open: true,
             background_color: "",
             has_user_story_planned: false,
