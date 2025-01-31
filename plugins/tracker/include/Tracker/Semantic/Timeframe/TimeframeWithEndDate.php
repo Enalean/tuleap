@@ -47,7 +47,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         $this->end_date_field   = $end_date_field;
     }
 
-    public static function getName(): string
+    public function getName(): string
     {
         return self::NAME;
     }

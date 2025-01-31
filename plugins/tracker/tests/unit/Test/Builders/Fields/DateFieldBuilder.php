@@ -73,7 +73,7 @@ final class DateFieldBuilder
 
     public function build(): Tracker_FormElement_Field_Date
     {
-        $tracker_element = new Tracker_FormElement_Field_Date(
+        $date_element = new Tracker_FormElement_Field_Date(
             $this->id,
             $this->tracker->getId(),
             15,
@@ -88,13 +88,15 @@ final class DateFieldBuilder
             null
         );
 
+        $date_element->setTracker($this->tracker);
+
         $properties = ['display_time' => ['value' => $this->is_time_displayed]];
-        $tracker_element->setCacheSpecificProperties($properties);
+        $date_element->setCacheSpecificProperties($properties);
 
         foreach ($this->user_with_read_permissions as $user) {
-            $tracker_element->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
+            $date_element->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
         }
 
-        return $tracker_element;
+        return $date_element;
     }
 }

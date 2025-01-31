@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Tracker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
-class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var SemanticTimeframeFromXMLBuilder
@@ -51,11 +51,6 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_factory,
             $this->semantic_timeframe_builder,
         );
-    }
-
-    protected function tearDown(): void
-    {
-        \Mockery::close();
     }
 
     public function testBuildsSemanticTimeframeWithDurationFromXML(): void
@@ -134,7 +129,7 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
 
-        $timeframe_with_duration = \Mockery::mock(TimeframeWithDuration::class);
+        $timeframe_with_duration = $this->createMock(TimeframeWithDuration::class);
         $semantic_timeframe      = new SemanticTimeframe($this->mocked_tracker, $timeframe_with_duration);
 
         $this->tracker_factory
@@ -149,7 +144,7 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->mocked_implied_from_tracker)
             ->will(self::returnValue($semantic_timeframe));
 
-        $timeframe_with_duration->shouldReceive('getName');
+        $timeframe_with_duration->method('getName');
 
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
@@ -179,10 +174,10 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
 
-        $timeframe_not_configured = \Mockery::mock(TimeframeNotConfigured::class);
+        $timeframe_not_configured = $this->createMock(TimeframeNotConfigured::class);
         $implied_semantic         = new SemanticTimeframe($this->mocked_tracker, $timeframe_not_configured);
 
-        $timeframe_not_configured->shouldReceive('isDefined')->andReturn(false);
+        $timeframe_not_configured->method('isDefined')->willReturn(false);
 
         $this->tracker_factory
             ->expects(self::any())
@@ -190,7 +185,7 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(111)
             ->will(self::returnValue(null));
 
-        $timeframe_not_configured->shouldReceive('getName');
+        $timeframe_not_configured->method('getName');
 
         $this->semantic_timeframe_builder
             ->expects(self::any())
@@ -225,11 +220,11 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
 
-        $timeframe_implied               = \Mockery::mock(TimeframeNotConfigured::class);
+        $timeframe_implied               = $this->createMock(TimeframeNotConfigured::class);
         $implied_semantic_not_configured = new SemanticTimeframe($this->mocked_tracker, $timeframe_implied);
         $semantic_not_configured         = new SemanticTimeframe($this->mocked_tracker, $timeframe_implied);
 
-        $timeframe_implied->shouldReceive('isDefined')->andReturn(false);
+        $timeframe_implied->method('isDefined')->willReturn(false);
 
         $this->tracker_factory
             ->expects(self::any())
@@ -244,8 +239,8 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->will(self::returnValue($implied_semantic_not_configured));
 
         $timeframe_implied
-            ->shouldReceive('getName')
-            ->andReturn('timeframe-not-configured');
+            ->method('getName')
+            ->willReturn('timeframe-not-configured');
 
 
         $this->semantic_timeframe_builder
@@ -281,12 +276,12 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
 
-        $timeframe_implied        = \Mockery::mock(TimeframeImpliedFromAnotherTracker::class);
+        $timeframe_implied        = $this->createMock(TimeframeImpliedFromAnotherTracker::class);
         $implied_semantic         = new SemanticTimeframe($this->mocked_implied_from_tracker, $timeframe_implied);
-        $timeframe_not_configured = \Mockery::mock(TimeframeNotConfigured::class);
+        $timeframe_not_configured = $this->createMock(TimeframeNotConfigured::class);
         $semantic_not_configured  = new SemanticTimeframe($this->mocked_tracker, $timeframe_not_configured);
 
-        $timeframe_not_configured->shouldReceive('isDefined')->andReturn(false);
+        $timeframe_not_configured->method('isDefined')->willReturn(false);
 
         $this->tracker_factory
             ->expects(self::any())
@@ -301,8 +296,8 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->will(self::returnValue($implied_semantic));
 
         $timeframe_implied
-            ->shouldReceive('getName')
-            ->andReturn('timeframe-implied-from-another-tracker');
+            ->method('getName')
+            ->willReturn('timeframe-implied-from-another-tracker');
 
         $this->semantic_timeframe_builder
             ->expects(self::any())

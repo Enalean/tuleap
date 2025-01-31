@@ -30,7 +30,7 @@ class TimeframeWithDuration implements IComputeTimeframes
 {
     private const NAME = 'timeframe-with-duration';
 
-    public static function getName(): string
+    public function getName(): string
     {
         return self::NAME;
     }

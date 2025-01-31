@@ -32,7 +32,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
 {
     private const NAME = 'timeframe-config-invalid';
 
-    public static function getName(): string
+    public function getName(): string
     {
         return self::NAME;
     }

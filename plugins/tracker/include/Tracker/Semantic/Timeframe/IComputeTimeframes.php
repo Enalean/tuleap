@@ -25,7 +25,7 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 
 interface IComputeTimeframes
 {
-    public static function getName(): string;
+    public function getName(): string;
 
     public function getConfigDescription(): string;
 
