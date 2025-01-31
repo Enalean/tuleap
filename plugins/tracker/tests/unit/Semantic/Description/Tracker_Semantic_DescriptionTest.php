@@ -20,17 +20,14 @@
 
 namespace Tuleap\Tracker;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
-use Tracker;
-use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_DescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var Tracker_Semantic_Description
      */
@@ -44,9 +41,8 @@ class Tracker_Semantic_DescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
-        $tracker = Mockery::mock(Tracker::class);
-        $field   = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $field->shouldReceive('getId')->andReturn(104);
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $field   = TextFieldBuilder::aTextField(104)->build();
 
         $this->semantic = new Tracker_Semantic_Description($tracker, $field);
     }
