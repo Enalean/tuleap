@@ -22,77 +22,59 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
+use EventManager;
+use Exception;
 use ForgeConfig;
 use Git;
 use Git_LogDao;
+use GitPermissionsManager;
 use GitRepository;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepositoryFactory;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\DefaultBranch\RetrieveRepositoryDefaultBranch;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\GitBundle;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\XML\ArchiveException;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
+use UserManager;
+use UserXMLExportedCollection;
+use UserXMLExporter;
+use XML_RNGValidator;
+use XML_SimpleXMLCDATAFactory;
 
-final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitXMLExporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    public const REPOSITORY_ID        = 101;
-    public const EMPTY_REPOSITORY_ID  = 102;
-    public const FORKED_REPOSITORY_IP = 103;
+    private const REPOSITORY_ID        = 101;
+    private const EMPTY_REPOSITORY_ID  = 102;
+    private const FORKED_REPOSITORY_IP = 103;
 
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \Git_LogDao
-     */
-    private $git_log_dao;
-    /**
-     * @var GitXmlExporter
-     */
-    private $xml_exporter;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_tree;
-
-    /**
-     * @var ZipArchive
-     */
-    private $zip;
-
-    /**
-     * @var \GitPermissionsManager
-     */
-    private $permission_manager;
-
-    private $export_folder;
-
-    /**
-     * @var \EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $event_manager;
-    private VerifyArtifactClosureIsAllowed $closure_verifier;
+    private UserManager&MockObject $user_manager;
+    private Git_LogDao&MockObject $git_log_dao;
+    private GitXmlExporter $xml_exporter;
+    private SimpleXMLElement $xml_tree;
+    private ZipArchive $zip;
+    private GitPermissionsManager&MockObject $permission_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->export_folder = $this->getTmpDir();
+        $export_folder = $this->getTmpDir();
 
         if (! is_dir($this->getTmpDir() . '/export')) {
             mkdir($this->getTmpDir() . '/export');
@@ -101,122 +83,100 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $GLOBALS['Language']->method('getText')->willReturn('projects-admins');
 
-        $this->permission_manager = \Mockery::spy(\GitPermissionsManager::class);
-        $this->permission_manager->shouldReceive('getCurrentGitAdminUgroups')->andReturns([
-            4,
-            5,
-        ]);
+        $this->permission_manager = $this->createMock(GitPermissionsManager::class);
+        $this->permission_manager->method('getCurrentGitAdminUgroups')->willReturn([4, 5]);
 
-        $ugroup_manager = \Mockery::spy(\UGroupManager::class);
-        $ugroup         = \Mockery::spy(\ProjectUGroup::class);
-        $ugroup->shouldReceive('getTranslatedName')->andReturns('custom');
-        $ugroup_manager->shouldReceive('getUGroup')->andReturns($ugroup);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $ugroup         = ProjectUGroupTestBuilder::aCustomUserGroup(154)->withName('custom')->build();
+        $ugroup_manager->method('getUGroup')->willReturn($ugroup);
 
-        $repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $repository         = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(self::REPOSITORY_ID);
-        $repository->shouldReceive('getName')->andReturns('MyRepo');
-        $repository->shouldReceive('getDescription')->andReturns('Repository description');
-        $repository->shouldReceive('getFullPath')->andReturns($this->export_folder);
-        $repository->shouldReceive('getParent')->andReturns(false);
-        $repository->shouldReceive('isInitialized')->andReturns(true);
+        $repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $repository         = $this->createMock(GitRepository::class);
+        $repository->method('getId')->willReturn(self::REPOSITORY_ID);
+        $repository->method('getName')->willReturn('MyRepo');
+        $repository->method('getDescription')->willReturn('Repository description');
+        $repository->method('getFullPath')->willReturn($export_folder);
+        $repository->method('getParent')->willReturn(null);
+        $repository->method('isInitialized')->willReturn(true);
 
-        $forked_repository = \Mockery::spy(\GitRepository::class);
-        $forked_repository->shouldReceive('getId')->andReturns(self::FORKED_REPOSITORY_IP);
-        $forked_repository->shouldReceive('getName')->andReturns('MyForkedRepo');
-        $forked_repository->shouldReceive('getDescription')->andReturns('Forked repository');
-        $forked_repository->shouldReceive('getParent')->andReturns(true);
+        $forked_repository = GitRepositoryTestBuilder::aForkOf($repository)
+            ->withId(self::FORKED_REPOSITORY_IP)
+            ->withName('MyForkedRepo')
+            ->build();
 
-        $empty_repository = \Mockery::spy(\GitRepository::class);
-        $empty_repository->shouldReceive('getId')->andReturns(self::EMPTY_REPOSITORY_ID);
-        $empty_repository->shouldReceive('getName')->andReturns('Empty');
-        $empty_repository->shouldReceive('getDescription')->andReturns('Empty repository');
-        $empty_repository->shouldReceive('getFullPath')->andReturns($this->export_folder);
-        $empty_repository->shouldReceive('getParent')->andReturns(false);
-        $empty_repository->shouldReceive('isInitialized')->andReturns(false);
+        $empty_repository = $this->createMock(GitRepository::class);
+        $empty_repository->method('getId')->willReturn(self::EMPTY_REPOSITORY_ID);
+        $empty_repository->method('getName')->willReturn('Empty');
+        $empty_repository->method('getDescription')->willReturn('Empty repository');
+        $empty_repository->method('getFullPath')->willReturn($export_folder);
+        $empty_repository->method('getParent')->willReturn(null);
+        $empty_repository->method('isInitialized')->willReturn(false);
 
-        $repository_factory->shouldReceive('getAllRepositories')->andReturns([$repository, $forked_repository, $empty_repository]);
+        $repository_factory->method('getAllRepositories')->willReturn([$repository, $forked_repository, $empty_repository]);
 
-        $this->user_manager  = \Mockery::spy(\UserManager::class);
-        $this->event_manager = \Mockery::spy(\EventManager::class);
-        $this->git_log_dao   = \Mockery::spy(Git_LogDao::class);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $event_manager      = $this->createMock(EventManager::class);
+        $this->git_log_dao  = $this->createMock(Git_LogDao::class);
 
-        $this->closure_verifier = new class implements VerifyArtifactClosureIsAllowed {
-            public function isArtifactClosureAllowed(int $repository_id): bool
-            {
-                $map = [
-                    GitXMLExporterTest::REPOSITORY_ID        => true,
-                    GitXMLExporterTest::EMPTY_REPOSITORY_ID  => false,
-                    GitXMLExporterTest::FORKED_REPOSITORY_IP => false,
-                ];
-
-                if (! isset($map[$repository_id])) {
-                    throw new \Exception('Unable to find the repository ' . $repository_id);
-                }
-
-                return $map[$repository_id];
-            }
-        };
-        $this->xml_exporter     = new GitXmlExporter(
-            \Mockery::spy(\Project::class),
+        $closure_verifier = $this->createMock(VerifyArtifactClosureIsAllowed::class);
+        $closure_verifier->method('isArtifactClosureAllowed')->willReturnCallback(static fn(int $repository_id) => match ($repository_id) {
+            self::REPOSITORY_ID        => true,
+            self::EMPTY_REPOSITORY_ID,
+            self::FORKED_REPOSITORY_IP => false,
+            default                    => throw new Exception('Unable to find the repository ' . $repository_id),
+        });
+        $default_branch_retriever = $this->createMock(RetrieveRepositoryDefaultBranch::class);
+        $default_branch_retriever->method('getRepositoryDefaultBranch')
+            ->willReturnCallback(fn(GitRepository $repo) => match ((int) $repo->getId()) {
+                (int) $repository->getId()        => Result::ok('main'),
+                (int) $forked_repository->getId() => Result::ok('master'),
+                default                           => Result::err(Fault::fromMessage('Default branch not found')),
+            });
+        $git_bundle = $this->createMock(GitBundle::class);
+        $git_bundle->method('dumpRepository');
+        $this->xml_exporter = new GitXmlExporter(
+            ProjectTestBuilder::aProject()->build(),
             $this->permission_manager,
             $ugroup_manager,
             $repository_factory,
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            \Mockery::spy(\Tuleap\GitBundle::class),
+            new NullLogger(),
+            $git_bundle,
             $this->git_log_dao,
             $this->user_manager,
-            new \UserXMLExporter(
+            new UserXMLExporter(
                 $this->user_manager,
-                new \UserXMLExportedCollection(new \XML_RNGValidator(), new \XML_SimpleXMLCDATAFactory())
+                new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
             ),
-            $this->event_manager,
-            $this->closure_verifier,
-            new class ($forked_repository, $repository) implements RetrieveRepositoryDefaultBranch {
-                public function __construct(
-                    private readonly GitRepository $forked_repository,
-                    private readonly GitRepository $repository,
-                ) {
-                }
-
-                public function getRepositoryDefaultBranch(GitRepository $repository): Ok|Err
-                {
-                    if ($repository->getId() === $this->repository->getId()) {
-                        return Result::Ok('main');
-                    } elseif ($repository->getId() === $this->forked_repository->getId()) {
-                        return Result::Ok('master');
-                    }
-
-                    return Result::err(Fault::fromMessage('Default branch not found'));
-                }
-            },
+            $event_manager,
+            $closure_verifier,
+            $default_branch_retriever,
         );
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $event_manager->expects(self::once())->method('processEvent');
 
         $data           = '<?xml version="1.0" encoding="UTF-8"?>
                  <projects />';
         $this->xml_tree = new SimpleXMLElement($data);
 
-        $this->zip = new ZipArchive($this->export_folder . '/archive.zip');
+        $this->zip = new ZipArchive($export_folder . '/archive.zip');
 
-        ForgeConfig::set('tmp_dir', $this->export_folder);
+        ForgeConfig::set('tmp_dir', $export_folder);
     }
 
     protected function tearDown(): void
     {
         try {
             $this->zip->close();
-        } catch (ArchiveException $e) {
+        } catch (ArchiveException) {
         }
         unlink($this->getTmpDir() . '/export/MyRepo.bundle');
         rmdir($this->getTmpDir() . '/export');
-
-        parent::tearDown();
     }
 
     public function testItExportGitRepositories(): void
     {
+        $this->git_log_dao->method('getLastPushForRepository');
+        $this->permission_manager->method('getRepositoryGlobalPermissions');
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
         self::assertCount(2, $this->xml_tree->git->repository);
@@ -244,6 +204,8 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsUGroupsAdmins(): void
     {
+        $this->git_log_dao->method('getLastPushForRepository');
+        $this->permission_manager->method('getRepositoryGlobalPermissions');
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
         $ugroups_admin = $this->xml_tree->git->{'ugroups-admin'}->ugroup;
@@ -254,7 +216,8 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportRepositoryPermissions(): void
     {
-        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
+        $this->git_log_dao->method('getLastPushForRepository');
+        $this->permission_manager->method('getRepositoryGlobalPermissions')->willReturn([
             Git::PERM_READ  => [3, 5],
             Git::PERM_WRITE => [3],
             Git::PERM_WPLUS => [5],
@@ -275,7 +238,8 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCreateWritePermissionIfRepositoryDontHaveCustomWritePermission(): void
     {
-        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
+        $this->git_log_dao->method('getLastPushForRepository');
+        $this->permission_manager->method('getRepositoryGlobalPermissions')->willReturn([
             Git::PERM_READ  => [3, 5],
             Git::PERM_WPLUS => [5],
         ]);
@@ -295,7 +259,8 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCreateWplusPermissionIfRepositoryDontHaveCustomWplusPermission(): void
     {
-        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
+        $this->git_log_dao->method('getLastPushForRepository');
+        $this->permission_manager->method('getRepositoryGlobalPermissions')->willReturn([
             Git::PERM_READ  => [3, 5],
             Git::PERM_WRITE => [3],
         ]);
@@ -315,7 +280,7 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportGitLastPushDateData(): void
     {
-        $this->git_log_dao->shouldReceive('getLastPushForRepository')->andReturns([
+        $this->git_log_dao->method('getLastPushForRepository')->willReturn([
             'repository_id'  => 2,
             'user_id'        => 102,
             'push_date'      => 1527145976,
@@ -324,10 +289,9 @@ final class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'operation_type' => 'create',
             'refname_type'   => 'branch',
         ]);
+        $this->permission_manager->method('getRepositoryGlobalPermissions');
 
-        $this->user_manager->shouldReceive('getUserById')->andReturns(
-            new PFUser(['user_name' => 'my user name', 'language_id' => 'en'])
-        );
+        $this->user_manager->method('getUserById')->willReturn(new PFUser(['user_name' => 'my user name', 'language_id' => 'en']));
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
