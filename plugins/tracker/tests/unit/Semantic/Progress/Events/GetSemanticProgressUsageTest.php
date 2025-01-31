@@ -22,17 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress\Events;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class GetSemanticProgressUsageTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GetSemanticProgressUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var GetSemanticProgressUsageEvent
-     */
-    private $event;
+    private GetSemanticProgressUsageEvent $event;
 
     protected function setUp(): void
     {
