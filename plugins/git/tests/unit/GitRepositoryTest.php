@@ -18,14 +18,20 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Git;
+
+use GitDao;
+use GitRepository;
+use PFUser;
+use ProjectManager;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once 'bootstrap.php';
-
-class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitRepositoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     public function testDeletionPathShouldBeInProjectPath(): void
@@ -34,12 +40,12 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         symlink(__DIR__ . '/_fixtures/perms', $tmp_folder);
 
         $repo = new GitRepository();
-        $this->assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', __DIR__ . '/_fixtures/perms/default.conf'));
-        $this->assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/default.conf'));
-        $this->assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/coincoin.git.git'));
+        self::assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', __DIR__ . '/_fixtures/perms/default.conf'));
+        self::assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/default.conf'));
+        self::assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/coincoin.git.git'));
 
-        $this->assertFalse($repo->isSubPath(__DIR__ . '/_fixtures/perms/', __DIR__ . '/_fixtures/perms/../../default.conf'));
-        $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
+        self::assertFalse($repo->isSubPath(__DIR__ . '/_fixtures/perms/', __DIR__ . '/_fixtures/perms/../../default.conf'));
+        self::assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
 
         unlink($tmp_folder);
     }
@@ -47,67 +53,63 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeletionShouldAffectDotGit(): void
     {
         $repo = new GitRepository();
-        $this->assertTrue($repo->isDotGit('default.git'));
-        $this->assertTrue($repo->isDotGit('default.git.git'));
+        self::assertTrue($repo->isDotGit('default.git'));
+        self::assertTrue($repo->isDotGit('default.git.git'));
 
-        $this->assertFalse($repo->isDotGit('default.conf'));
-        $this->assertFalse($repo->isDotGit('d'));
-        $this->assertFalse($repo->isDotGit('defaultgit'));
-        $this->assertFalse($repo->isDotGit('default.git.old'));
+        self::assertFalse($repo->isDotGit('default.conf'));
+        self::assertFalse($repo->isDotGit('d'));
+        self::assertFalse($repo->isDotGit('defaultgit'));
+        self::assertFalse($repo->isDotGit('default.git.old'));
     }
 
     public function testGetRepositoryIDByNameSuccess(): void
     {
-        $repo    = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $pm      = \Mockery::spy(\ProjectManager::class);
-        $project = \Mockery::spy(\Project::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns($project);
-        $dao = \Mockery::mock(GitDao::class);
-        $repo->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('getProjectRepositoryByName')->andReturn(['repository_id' => 48])->once();
+        $repo    = $this->createPartialMock(GitRepository::class, ['getDao', '_getProjectManager']);
+        $pm      = $this->createMock(ProjectManager::class);
+        $project = ProjectTestBuilder::aProject()->build();
+        $pm->method('getProjectByUnixName')->willReturn($project);
+        $dao = $this->createMock(GitDao::class);
+        $repo->method('getDao')->willReturn($dao);
+        $dao->expects(self::once())->method('getProjectRepositoryByName')->willReturn(['repository_id' => 48]);
 
-        $repo->shouldReceive('_getProjectManager')->once()->andReturns($pm);
-        $project->shouldReceive('getID')->once();
+        $repo->expects(self::once())->method('_getProjectManager')->willReturn($pm);
 
-        $this->assertEquals(48, $repo->getRepositoryIDByName('repo', 'prj'));
+        self::assertEquals(48, $repo->getRepositoryIDByName('repo', 'prj'));
     }
 
     public function testGetRepositoryIDByNameNoRepository(): void
     {
-        $repo    = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $pm      = \Mockery::spy(\ProjectManager::class);
-        $project = \Mockery::spy(\Project::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns($project);
-        $dao = \Mockery::mock(GitDao::class);
-        $repo->shouldReceive('getDao')->andReturns($dao);
-        $dao->shouldReceive('getProjectRepositoryByName')->andReturnFalse()->once();
+        $repo    = $this->createPartialMock(GitRepository::class, ['getDao', '_getProjectManager']);
+        $pm      = $this->createMock(ProjectManager::class);
+        $project = ProjectTestBuilder::aProject()->build();
+        $pm->method('getProjectByUnixName')->willReturn($project);
+        $dao = $this->createMock(GitDao::class);
+        $repo->method('getDao')->willReturn($dao);
+        $dao->expects(self::once())->method('getProjectRepositoryByName')->willReturn(false);
 
-        $repo->shouldReceive('_getProjectManager')->once()->andReturns($pm);
-        $project->shouldReceive('getID')->once();
+        $repo->expects(self::once())->method('_getProjectManager')->willReturn($pm);
 
-        $this->assertEquals(0, $repo->getRepositoryIDByName('repo', 'prj'));
+        self::assertEquals(0, $repo->getRepositoryIDByName('repo', 'prj'));
     }
 
     public function testGetRepositoryIDByNameNoProjectID(): void
     {
-        $repo    = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $pm      = \Mockery::spy(\ProjectManager::class);
-        $project = \Mockery::spy(\Project::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(false);
+        $repo = $this->createPartialMock(GitRepository::class, ['_getProjectManager']);
+        $pm   = $this->createMock(ProjectManager::class);
+        $pm->method('getProjectByUnixName')->willReturn(false);
 
-        $repo->shouldReceive('_getProjectManager')->once()->andReturns($pm);
-        $project->shouldReceive('getID')->never();
+        $repo->expects(self::once())->method('_getProjectManager')->willReturn($pm);
 
-        $this->assertSame(0, $repo->getRepositoryIDByName('repo', 'prj'));
+        self::assertSame(0, $repo->getRepositoryIDByName('repo', 'prj'));
     }
 
     public function testGetFullNameAppendsNameSpaceToName(): void
     {
         $repo = $this->givenARepositoryWithNameAndNamespace('tulip', null);
-        $this->assertEquals('tulip', $repo->getFullName());
+        self::assertEquals('tulip', $repo->getFullName());
 
         $repo = $this->givenARepositoryWithNameAndNamespace('tulip', 'u/johan');
-        $this->assertEquals('u/johan/tulip', $repo->getFullName());
+        self::assertEquals('u/johan/tulip', $repo->getFullName());
     }
 
     private function givenARepositoryWithNameAndNamespace($name, $namespace): GitRepository
@@ -127,7 +129,7 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->setCreator($user);
         $repo->setScope(GitRepository::REPO_SCOPE_PROJECT);
 
-        $this->assertFalse($repo->belongsTo($user));
+        self::assertFalse($repo->belongsTo($user));
     }
 
     public function testUserRepositoryBelongsToUser(): void
@@ -139,7 +141,7 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->setCreator($user);
         $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
 
-        $this->assertTrue($repo->belongsTo($user));
+        self::assertTrue($repo->belongsTo($user));
     }
 
     public function testUserRepositoryDoesNotBelongToAnotherUser(): void
@@ -154,14 +156,14 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->setCreator($creator);
         $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
 
-        $this->assertFalse($repo->belongsTo($user));
+        self::assertFalse($repo->belongsTo($user));
     }
 
     public function testItIsMigratableIfItIsAGitoliteRepo(): void
     {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
-        $this->assertTrue($repo->canMigrateToGerrit());
+        self::assertTrue($repo->canMigrateToGerrit());
     }
 
     public function testItIsNotMigratableIfAlreadyAGerritRepo(): void
@@ -169,7 +171,7 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
         $repo->setRemoteServerId(34);
-        $this->assertFalse($repo->canMigrateToGerrit());
+        self::assertFalse($repo->canMigrateToGerrit());
     }
 
     public function testItIsMigratableIfItHasAlreadyBeenAGerritRepoInThePastAndRemoteProjectIsNotDeleted(): void
@@ -179,7 +181,7 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->setRemoteServerDisconnectDate(12345677890);
         $repo->setRemoteProjectDeletionDate(null);
         $repo->setRemoteServerId(4154);
-        $this->assertTrue($repo->canMigrateToGerrit());
+        self::assertTrue($repo->canMigrateToGerrit());
     }
 
     public function testItIsMigratableIfItHasAlreadyBeenAGerritRepoInThePastAndRemoteProjectIsDeleted(): void
@@ -189,7 +191,7 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo->setRemoteServerDisconnectDate(12345677890);
         $repo->setRemoteProjectDeletionDate(12345677890);
         $repo->setRemoteServerId(4154);
-        $this->assertTrue($repo->canMigrateToGerrit());
+        self::assertTrue($repo->canMigrateToGerrit());
     }
 
     public function testItIsNotMigratedIfItWasDisconnected(): void
@@ -199,6 +201,6 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->setRemoteServerDisconnectDate(12345677890);
         $repository->setRemoteServerId(1);
 
-        $this->assertFalse($repository->isMigratedToGerrit());
+        self::assertFalse($repository->isMigratedToGerrit());
     }
 }

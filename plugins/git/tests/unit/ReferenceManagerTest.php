@@ -28,34 +28,33 @@ namespace Tuleap\Git;
 
 use Git;
 use Git_ReferenceManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepository;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Reference;
+use ReferenceManager;
 use Tuleap\Git\Reference\ReferenceDao as ReferenceDaoAlias;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferenceManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $project;
-    private $repository_factory;
-    private $reference_manager;
-    private $repository;
-    private $git_reference_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReferenceDaoAlias
-     */
-    private $reference_dao;
+    private Project $project;
+    private GitRepositoryFactory&MockObject $repository_factory;
+    private ReferenceManager&MockObject $reference_manager;
+    private GitRepository $repository;
+    private Git_ReferenceManager $git_reference_manager;
+    private ReferenceDaoAlias&MockObject $reference_dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->project = \Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getId')->andReturns(101);
-        $this->project->shouldReceive('getUnixName')->andReturns('gpig');
-        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->reference_manager  = \Mockery::spy(\ReferenceManager::class);
-        $this->reference_dao      = \Mockery::mock(ReferenceDaoAlias::class);
-        $this->repository         = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns(222);
+        $this->project               = ProjectTestBuilder::aProject()->withId(101)->withUnixName('gpig')->build();
+        $this->repository_factory    = $this->createMock(GitRepositoryFactory::class);
+        $this->reference_manager     = $this->createMock(ReferenceManager::class);
+        $this->reference_dao         = $this->createMock(ReferenceDaoAlias::class);
+        $this->repository            = GitRepositoryTestBuilder::aProjectRepository()->withId(222)->build();
         $this->git_reference_manager = new Git_ReferenceManager(
             $this->repository_factory,
             $this->reference_manager,
@@ -65,51 +64,51 @@ class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLoadsTheRepositoryWhenRootRepo(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryByPath')->with(101, 'gpig/rantanplan.git')->once();
+        $this->repository_factory->expects(self::once())->method('getRepositoryByPath')->with(101, 'gpig/rantanplan.git');
         $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
     }
 
     public function testItLoadsTheRepositoryWhenRepoInHierarchy(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryByPath')->with(101, 'gpig/dev/x86_64/rantanplan.git')->once();
+        $this->repository_factory->expects(self::once())->method('getRepositoryByPath')->with(101, 'gpig/dev/x86_64/rantanplan.git');
         $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'dev/x86_64/rantanplan/469eaa9');
     }
 
     public function testItLoadTheReferenceFromDb(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryByPath')->andReturns($this->repository);
+        $this->repository_factory->method('getRepositoryByPath')->willReturn($this->repository);
 
-        $this->reference_manager->shouldReceive('loadReferenceFromKeywordAndNumArgs')->with(Git::REFERENCE_KEYWORD, 101, 2, 'rantanplan/469eaa9')->once();
+        $this->reference_manager->expects(self::once())->method('loadReferenceFromKeywordAndNumArgs')->with(Git::REFERENCE_KEYWORD, 101, 2, 'rantanplan/469eaa9');
 
         $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
     }
 
     public function testItReturnsTheCommitReference(): void
     {
-        $reference = \Mockery::spy(\Reference::class);
-        $this->repository_factory->shouldReceive('getRepositoryByPath')->andReturns($this->repository);
-        $this->reference_manager->shouldReceive('loadReferenceFromKeywordAndNumArgs')->andReturns($reference);
+        $reference = $this->createMock(Reference::class);
+        $reference->method('replaceLink');
+        $this->repository_factory->method('getRepositoryByPath')->willReturn($this->repository);
+        $this->reference_manager->method('loadReferenceFromKeywordAndNumArgs')->willReturn($reference);
 
         $ref = $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
-        $this->assertEquals($reference, $ref);
+        self::assertEquals($reference, $ref);
     }
 
     public function testItReturnsNullIfTheRepositoryDoesNotExist(): void
     {
-        $this->repository_factory->shouldReceive('getRepositoryByPath')->andReturnNull();
+        $this->repository_factory->method('getRepositoryByPath')->willReturn(null);
 
-        $this->assertNull(
+        self::assertNull(
             $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9')
         );
     }
 
     public function testItReturnsTheRepositoryFromCrossReferenceValue(): void
     {
-        $this->repository_factory
-            ->shouldReceive('getRepositoryByPath')
+        $this->repository_factory->expects(self::once())
+            ->method('getRepositoryByPath')
             ->with(101, 'gpig/rantanplan.git')
-            ->once()
-            ->andReturn($this->repository);
+            ->willReturn($this->repository);
 
         $commit_info = $this->git_reference_manager->getCommitInfoFromReferenceValue(
             $this->project,
@@ -121,40 +120,38 @@ class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheTagReference(): void
     {
-        $reference = \Mockery::spy(\Reference::class);
+        $reference = $this->createMock(Reference::class);
+        $reference->method('replaceLink');
 
-        $this->reference_dao->shouldReceive('searchExistingProjectReference')
-            ->once()
+        $this->reference_dao->expects(self::once())->method('searchExistingProjectReference')
             ->with('git_tag', 101)
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $this->repository_factory->shouldReceive('getRepositoryByPath')->andReturns($this->repository);
-        $this->reference_manager->shouldReceive('loadReferenceFromKeywordAndNumArgs')->andReturns($reference);
+        $this->repository_factory->method('getRepositoryByPath')->willReturn($this->repository);
+        $this->reference_manager->method('loadReferenceFromKeywordAndNumArgs')->willReturn($reference);
 
         $ref = $this->git_reference_manager->getTagReference($this->project, Git::TAG_REFERENCE_KEYWORD, 'rantanplan/v1');
-        $this->assertEquals($reference, $ref);
+        self::assertEquals($reference, $ref);
     }
 
     public function testItReturnsTheExistingProjectTagReference(): void
     {
-        $reference     = \Mockery::spy(\Reference::class);
+        $reference     = $this->createMock(Reference::class);
         $reference_row = [
             'id'      => 33,
             'keyword' => 'git_tag',
         ];
 
-        $this->reference_dao->shouldReceive('searchExistingProjectReference')
-            ->once()
+        $this->reference_dao->expects(self::once())->method('searchExistingProjectReference')
             ->with('git_tag', 101)
-            ->andReturn($reference_row);
+            ->willReturn($reference_row);
 
-        $this->repository_factory->shouldReceive('getRepositoryByPath')->andReturns($this->repository);
-        $this->reference_manager->shouldReceive('buildReference')
-            ->once()
+        $this->repository_factory->method('getRepositoryByPath')->willReturn($this->repository);
+        $this->reference_manager->expects(self::once())->method('buildReference')
             ->with($reference_row)
-            ->andReturns($reference);
+            ->willReturn($reference);
 
         $ref = $this->git_reference_manager->getTagReference($this->project, Git::TAG_REFERENCE_KEYWORD, 'rantanplan/v1');
-        $this->assertEquals($reference, $ref);
+        self::assertEquals($reference, $ref);
     }
 }
