@@ -29,25 +29,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { TimePeriod } from "../../../type";
 import type { DateTime } from "luxon";
+import { computed } from "vue";
 
-@Component
-export default class BackgroundGrid extends Vue {
-    @Prop({ required: true })
-    readonly time_period!: TimePeriod;
+const props = defineProps<{
+    time_period: TimePeriod;
+    nb_additional_units: number;
+}>();
 
-    @Prop({ required: true })
-    readonly nb_additional_units!: number;
-
-    get time_units(): DateTime[] {
-        return [
-            ...this.time_period.units,
-            ...this.time_period.additionalUnits(this.nb_additional_units),
-        ];
-    }
-}
+const time_units = computed((): DateTime[] => {
+    return [
+        ...props.time_period.units,
+        ...props.time_period.additionalUnits(props.nb_additional_units),
+    ];
+});
 </script>
