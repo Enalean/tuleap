@@ -22,31 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_Artifact_ChangesetFactory;
+use Tracker_FormElementFactory;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
-final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChangesetsForDiffRetrieverTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $field_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-    /**
-     * @var ChangesetsForDiffRetriever
-     */
-    private $changeset_for_diff_retriever;
+    private Tracker_FormElementFactory&MockObject $field_factory;
+    private Tracker_Artifact_ChangesetFactory&MockObject $changeset_factory;
+    private ChangesetsForDiffRetriever $changeset_for_diff_retriever;
 
     protected function setUp(): void
     {
-        $this->changeset_factory = Mockery::mock(\Tracker_Artifact_ChangesetFactory::class);
-        $this->field_factory     = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->changeset_factory = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
+        $this->field_factory     = $this->createMock(Tracker_FormElementFactory::class);
 
         $this->changeset_for_diff_retriever = new ChangesetsForDiffRetriever(
             $this->changeset_factory,
@@ -56,8 +52,8 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnErrorWhenChangesetIsNotFound(): void
     {
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturnNull();
+        $artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn(null);
 
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('Changeset is not found.');
@@ -67,11 +63,11 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenFieldIsNotFound(): void
     {
-        $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturn($next_changset);
+        $artifact      = ArtifactTestBuilder::anArtifact(1)->build();
+        $next_changset = ChangesetTestBuilder::aChangeset(789)->build();
+        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn($next_changset);
 
-        $this->field_factory->shouldReceive('getFieldById')->with(123)->andReturnNull();
+        $this->field_factory->method('getFieldById')->with(123)->willReturn(null);
 
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('Field not found.');
@@ -81,13 +77,13 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenFieldIsNotATextField(): void
     {
-        $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturn($next_changset);
+        $artifact      = ArtifactTestBuilder::anArtifact(1)->build();
+        $next_changset = ChangesetTestBuilder::aChangeset(789)->build();
+        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn($next_changset);
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $field = IntFieldBuilder::anIntField(123)->build();
 
-        $this->field_factory->shouldReceive('getFieldById')->with(123)->andReturn($field);
+        $this->field_factory->method('getFieldById')->with(123)->willReturn($field);
 
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('Only text fields are supported for diff.');
@@ -97,16 +93,13 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAChangesetsForDiff(): void
     {
-        $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $next_changset->shouldReceive('getId')->andReturn(12);
-        $this->changeset_factory->shouldReceive('getChangeset')->once()->andReturn($next_changset);
+        $next_changset = ChangesetTestBuilder::aChangeset(12)->build();
+        $artifact      = ArtifactTestBuilder::anArtifact(1)->withChangesets($next_changset)->build();
+        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn($next_changset);
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
+        $field = TextFieldBuilder::aTextField(123)->build();
 
-        $this->field_factory->shouldReceive('getFieldById')->with(123)->andReturn($field);
-
-        $artifact->shouldReceive('getPreviousChangeset')->with(12)->andReturnNull();
+        $this->field_factory->method('getFieldById')->with(123)->willReturn($field);
 
         $expected_changeset = new ChangesetsForDiff($next_changset, $field, null);
 
@@ -116,6 +109,6 @@ final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             789
         );
 
-        $this->assertEquals($expected_changeset, $changesets_for_diff);
+        self::assertEquals($expected_changeset, $changesets_for_diff);
     }
 }

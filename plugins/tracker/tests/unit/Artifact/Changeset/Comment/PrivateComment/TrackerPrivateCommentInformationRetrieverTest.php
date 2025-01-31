@@ -22,31 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerPrivateCommentInformationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerPrivateCommentInformationRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
-     */
-    private $tracker_private_comment_ugroup_enabled_dao;
-    /**
-     * @var TrackerPrivateCommentInformationRetriever
-     */
-    private $retriever;
+    private TrackerPrivateCommentUGroupEnabledDao&MockObject $tracker_private_comment_ugroup_enabled_dao;
+    private TrackerPrivateCommentInformationRetriever $retriever;
 
     protected function setUp(): void
     {
-        $this->tracker_private_comment_ugroup_enabled_dao = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
+        $this->tracker_private_comment_ugroup_enabled_dao = $this->createMock(TrackerPrivateCommentUGroupEnabledDao::class);
         $this->retriever                                  = new TrackerPrivateCommentInformationRetriever($this->tracker_private_comment_ugroup_enabled_dao);
     }
 
     public function testRetrievesInformation(): void
     {
-        $this->tracker_private_comment_ugroup_enabled_dao->shouldReceive('isTrackerEnabledPrivateComment')->andReturn(true);
+        $this->tracker_private_comment_ugroup_enabled_dao->method('isTrackerEnabledPrivateComment')->willReturn(true);
 
         self::assertTrue($this->retriever->doesTrackerAllowPrivateComments(TrackerTestBuilder::aTracker()->build()));
     }
