@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class IntFieldBuilder
 {
     private string $name                        = 'initial_effort';
+    private string $label                       = 'Initial effort';
     private bool $read_permission               = false;
     private ?\PFUser $user_with_read_permission = null;
     private \Tracker $tracker;
@@ -60,6 +61,13 @@ final class IntFieldBuilder
         return $this;
     }
 
+    public function withLabel(string $label): self
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
     public function build(): \Tracker_FormElement_Field_Integer
     {
         $field = new \Tracker_FormElement_Field_Integer(
@@ -67,7 +75,7 @@ final class IntFieldBuilder
             $this->tracker->getId(),
             15,
             $this->name,
-            $this->name,
+            $this->label,
             '',
             true,
             'P',
