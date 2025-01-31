@@ -27,7 +27,8 @@ use Tracker_FormElement_Field;
 
 final class ChangesetValueTextTestBuilder
 {
-    private string $value = '';
+    private string $value  = '';
+    private string $format = 'text';
 
     private function __construct(
         private readonly int $id,
@@ -48,6 +49,13 @@ final class ChangesetValueTextTestBuilder
         return $this;
     }
 
+    public function withFormat(string $format): self
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
     public function build(): \Tracker_Artifact_ChangesetValue_Text
     {
         return new \Tracker_Artifact_ChangesetValue_Text(
@@ -56,7 +64,7 @@ final class ChangesetValueTextTestBuilder
             $this->field,
             true,
             $this->value,
-            'text'
+            $this->format,
         );
     }
 }

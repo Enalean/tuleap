@@ -22,163 +22,150 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_Artifact_Changeset;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ArtifactDescriptionProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactDescriptionProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Semantic_Description
-     */
-    private $semantic_description;
-    /**
-     * @var ArtifactDescriptionProvider
-     */
-    private $provider;
+    private Tracker_Semantic_Description&MockObject $semantic_description;
+    private ArtifactDescriptionProvider $provider;
 
     protected function setUp(): void
     {
-        $this->semantic_description = Mockery::mock(Tracker_Semantic_Description::class);
+        $this->semantic_description = $this->createMock(Tracker_Semantic_Description::class);
         $this->provider             = new ArtifactDescriptionProvider($this->semantic_description);
     }
 
     public function testGetDescriptionReturnNullIfNoFieldInSemantic(): void
     {
-        $this->semantic_description->shouldReceive('getField')->once()->andReturnNull();
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn(null);
 
-        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Artifact::class)));
+        self::assertEquals('', $this->provider->getDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
 
     public function testGetDescriptionReturnNullIfUserCannotReadTheField(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnFalse();
+        $field->expects(self::once())->method('userCanRead')->willReturn(false);
 
-        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Artifact::class)));
+        self::assertEquals('', $this->provider->getDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
 
     public function testGetDescriptionReturnNullIfThereIsNoLastChangeset(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnTrue();
+        $field->expects(self::once())->method('userCanRead')->willReturn(true);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->once()->andReturnNull();
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->expects(self::once())->method('getLastChangeset')->willReturn(null);
 
-        $this->assertEquals('', $this->provider->getDescription($artifact));
+        self::assertEquals('', $this->provider->getDescription($artifact));
     }
 
     public function testGetDescriptionReturnNullIfNoValueForField(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnTrue();
+        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->method('getId')->willReturn(1);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->build();
+        $changeset->setFieldValue($field, null);
 
-        $changeset->shouldReceive('getValue')->with($field)->once()->andReturnNull();
-
-        $this->assertEquals('', $this->provider->getDescription($artifact));
+        self::assertEquals('', $this->provider->getDescription($artifact));
     }
 
     public function testGetDescriptionReturnTheDescriptionAsPlainText(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnTrue();
+        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->method('getId')->willReturn(1);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->build();
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
-        $changeset->shouldReceive('getValue')->with($field)->once()->andReturn($changeset_value);
+        $changeset->setFieldValue($field, ChangesetValueTextTestBuilder::aValue(1, $changeset, $field)->withValue('The description')->build());
 
-        $changeset_value->shouldReceive('getContentAsText')->once()->andReturn('The description');
-
-        $this->assertEquals('The description', $this->provider->getDescription($artifact));
+        self::assertEquals('The description', $this->provider->getDescription($artifact));
     }
 
     public function testGetPostProcessedDescriptionReturnEmptyStringIfNoFieldInSemantic(): void
     {
-        $this->semantic_description->shouldReceive('getField')->once()->andReturnNull();
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn(null);
 
-        $this->assertEquals('', $this->provider->getPostProcessedDescription(Mockery::mock(Artifact::class)));
+        self::assertEquals('', $this->provider->getPostProcessedDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
 
     public function testGetPostProcessedDescriptionReturnEmptyStringIfUserCannotReadTheField(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnFalse();
+        $field->expects(self::once())->method('userCanRead')->willReturn(false);
 
-        $this->assertEquals('', $this->provider->getPostProcessedDescription(Mockery::mock(Artifact::class)));
+        self::assertEquals('', $this->provider->getPostProcessedDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
 
     public function testGetPostProcessedDescriptionReturnEmptyStringIfThereIsNoLastChangeset(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnTrue();
+        $field->expects(self::once())->method('userCanRead')->willReturn(true);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->once()->andReturnNull();
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->expects(self::once())->method('getLastChangeset')->willReturn(null);
 
-        $this->assertEquals('', $this->provider->getPostProcessedDescription($artifact));
+        self::assertEquals('', $this->provider->getPostProcessedDescription($artifact));
     }
 
     public function testGetPostProcessedDescriptionReturnEmptyStringIfNoValueForField(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnTrue();
+        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->method('getId')->willReturn(1);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->build();
+        $changeset->setFieldValue($field, null);
 
-        $changeset->shouldReceive('getValue')->with($field)->once()->andReturnNull();
-
-        $this->assertEquals('', $this->provider->getPostProcessedDescription($artifact));
+        self::assertEquals('', $this->provider->getPostProcessedDescription($artifact));
     }
 
     public function testGetPostProcessedDescriptionReturnTheDescriptionAsFormatHTML(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->shouldReceive('getField')->once()->andReturn($field);
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->once()->andReturnTrue();
+        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->method('getId')->willReturn(1);
 
-        $tracker = Mockery::mock(Artifact::class);
-        $tracker->shouldReceive('getGroupId')->once()->andReturn(101);
+        $tracker = TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build();
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
-        $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->inTracker($tracker)->build();
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
-        $changeset->shouldReceive('getValue')->with($field)->once()->andReturn($changeset_value);
-        $description = "<p>Description&nbsp;:</p>\r\n\r\n<ul>\r\n\t<li>Element 1</li>\r\n\t<li>Element 2</li>\r\n\t<li>Element 3 puce</li>\r\n</ul>\r\n</p>";
-        $changeset_value->shouldReceive('getTextWithReferences')->once()->andReturn($description);
+        $description = "<p>Description:</p>\n\n<ul>\n\t<li>Element 1</li>\n\t<li>Element 2</li>\n\t<li>Element 3 puce</li>\n</ul>\n";
+        $changeset->setFieldValue($field, ChangesetValueTextTestBuilder::aValue(1, $changeset, $field)->withValue($description)->withFormat(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)->build());
 
-        $this->assertEquals($description, $this->provider->getPostProcessedDescription($artifact));
+        self::assertEquals($description, $this->provider->getPostProcessedDescription($artifact));
     }
 }
