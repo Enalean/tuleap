@@ -1,6 +1,6 @@
 module pre-receive-tuleap-git-repo-validation
 
-go 1.23.3
+go 1.23.5
 
 replace github.com/go-git/go-git/v5 v5.13.2-0.20250113153816-134653ff71bf => github.com/Enalean/go-git/v5 v5.0.0-20250114132843-a6a0a592c141
 

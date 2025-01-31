@@ -79,7 +79,7 @@ pub unsafe extern "C" fn callWasmModule(
                         return success_response(out_struct.stdout, out_struct.stats);
                     }
                 }
-                return match e.downcast_ref::<Trap>() {
+                match e.downcast_ref::<Trap>() {
                         Some(&Trap::Interrupt) => user_error(format!(
                             "The module has exceeded the {} ms of allowed computation time",
                             config_json.limits.max_exec_time_in_ms
@@ -91,7 +91,7 @@ pub unsafe extern "C" fn callWasmModule(
                         ),
                         out_struct.stats),
                         _ => user_error(format!("{}", e.root_cause()), out_struct.stats),
-                    };
+                    }
             }
         },
         Err(e) => internal_error(format!("{}", e)),

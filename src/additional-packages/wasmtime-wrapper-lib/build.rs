@@ -18,7 +18,7 @@ fn main() {
             "--manifest-path",
             "./test-wasm-modules/Cargo.toml",
             "--target",
-            "wasm32-wasi",
+            "wasm32-wasip1",
             "--release",
         ])
         .status()

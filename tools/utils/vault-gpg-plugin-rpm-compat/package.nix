@@ -18,5 +18,5 @@ pkgs.buildGoModule {
 
   vendorHash = "sha256-uOWHKVw4IfdWnPoJnD/f69XaPwUj2wSF7P3vIYpMJis=";
 
-  CGO_ENABLED=0;
+  env.CGO_ENABLED=0;
 }
