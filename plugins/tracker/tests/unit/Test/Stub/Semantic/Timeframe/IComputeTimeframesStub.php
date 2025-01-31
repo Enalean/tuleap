@@ -54,7 +54,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         return new self($date_period, $start, null, $duration);
     }
 
-    public static function getName(): string
+    public function getName(): string
     {
         return '';
     }

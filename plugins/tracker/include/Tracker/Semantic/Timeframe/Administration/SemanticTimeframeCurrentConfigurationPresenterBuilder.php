@@ -59,7 +59,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
 
     private function getSemanticsImpliedFromCurrentTracker(): array
     {
-        if ($this->i_compute_timeframes->getName() === TimeframeImpliedFromAnotherTracker::getName()) {
+        if ($this->i_compute_timeframes->getName() === TimeframeImpliedFromAnotherTracker::NAME) {
             return [];
         }
 
@@ -93,7 +93,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
 
     private function getTrackerFromWhichWeImplyTheSemantic(): ?\Tracker
     {
-        if ($this->i_compute_timeframes->getName() !== TimeframeImpliedFromAnotherTracker::getName()) {
+        if ($this->i_compute_timeframes->getName() !== TimeframeImpliedFromAnotherTracker::NAME) {
             return null;
         }
 

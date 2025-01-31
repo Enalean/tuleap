@@ -49,7 +49,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         $this->links_retriever                         = $links_retriever;
     }
 
-    public static function getName(): string
+    public function getName(): string
     {
         return self::NAME;
     }

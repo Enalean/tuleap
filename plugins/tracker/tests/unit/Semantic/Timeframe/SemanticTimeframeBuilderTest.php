@@ -22,56 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const STORY_TRACKER_ID = 42;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $story_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LinksRetriever
-     */
-    private $links_retriever;
+    private MockObject|SemanticTimeframeDao $dao;
+    private MockObject|Tracker_FormElementFactory $form_element_factory;
+    private MockObject|\TrackerFactory $tracker_factory;
+    private Tracker $story_tracker;
+    private MockObject|LinksRetriever $links_retriever;
 
     protected function setUp(): void
     {
-        $this->dao                  = Mockery::mock(SemanticTimeframeDao::class);
-        $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->tracker_factory      = Mockery::mock(\TrackerFactory::class);
-        $this->links_retriever      = Mockery::mock(LinksRetriever::class);
-        $this->story_tracker        = Mockery::mock(Tracker::class, (['getId' => self::STORY_TRACKER_ID]));
+        $this->dao                  = $this->createMock(SemanticTimeframeDao::class);
+        $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $this->tracker_factory      = $this->createMock(\TrackerFactory::class);
+        $this->links_retriever      = $this->createMock(LinksRetriever::class);
+        $this->story_tracker        = TrackerTestBuilder::aTracker()->withId(self::STORY_TRACKER_ID)->build();
     }
 
     public function testItBuildsANotConfiguredSemantic(): void
     {
-        $this->dao->shouldReceive('searchByTrackerId')
+        $this->dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn(null);
+            ->willReturn(null);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
@@ -82,28 +66,27 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsASemanticWithEndDate(): void
     {
-        $this->dao->shouldReceive('searchByTrackerId')
+        $this->dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'start_date_field_id' => 101,
                 'duration_field_id' => null,
                 'end_date_field_id' => 104,
                 'implied_from_tracker_id' => null,
             ]);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
 
-        $this->form_element_factory->shouldReceive('getUsedDateFieldById')
-            ->with($this->story_tracker, 101)
-            ->once()
-            ->andReturn($start_date_field);
-
-        $this->form_element_factory->shouldReceive('getUsedDateFieldById')
-            ->with($this->story_tracker, 104)
-            ->once()
-            ->andReturn($end_date_field);
+        $this->form_element_factory
+            ->expects(self::exactly(2))
+            ->method('getUsedDateFieldById')
+            ->willReturnCallback(fn (Tracker $tracker, $field_id) => match (true) {
+                $tracker === $this->story_tracker && $field_id === 101 => $start_date_field,
+                $tracker === $this->story_tracker && $field_id === 104 => $end_date_field,
+            });
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
@@ -114,28 +97,31 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsASemanticWithDuration(): void
     {
-        $this->dao->shouldReceive('searchByTrackerId')
+        $this->dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'start_date_field_id' => 101,
                 'duration_field_id' => 104,
                 'end_date_field_id' => null,
                 'implied_from_tracker_id' => null,
             ]);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field   = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
 
-        $this->form_element_factory->shouldReceive('getUsedDateFieldById')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedDateFieldById')
             ->with($this->story_tracker, 101)
-            ->once()
-            ->andReturn($start_date_field);
+            ->willReturn($start_date_field);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedFieldByIdAndType')
             ->with($this->story_tracker, 104, ['int', 'float', 'computed'])
-            ->once()
-            ->andReturn($duration_field);
+            ->willReturn($duration_field);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
@@ -146,22 +132,24 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsANotConfiguredSemanticIfThereIsNoDurationNorEndDateField(): void
     {
-        $this->dao->shouldReceive('searchByTrackerId')
+        $this->dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'start_date_field_id' => 101,
                 'duration_field_id' => null,
                 'end_date_field_id' => null,
                 'implied_from_tracker_id' => null,
             ]);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
 
-        $this->form_element_factory->shouldReceive('getUsedDateFieldById')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedDateFieldById')
             ->with($this->story_tracker, 101)
-            ->once()
-            ->andReturn($start_date_field);
+            ->willReturn($start_date_field);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertFalse($builder->getSemantic($this->story_tracker)->isDefined());
@@ -169,20 +157,22 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldReturnANotConfiguredSemanticIfTrackerDoesNotExist(): void
     {
-        $this->dao->shouldReceive('searchByTrackerId')
+        $this->dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'start_date_field_id' => null,
                 'duration_field_id' => null,
                 'end_date_field_id' => null,
                 'implied_from_tracker_id' => 123,
             ]);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')
+        $this->tracker_factory
+            ->expects(self::once())
+            ->method('getTrackerById')
             ->with(123)
-            ->once()
-            ->andReturn(null);
+            ->willReturn(null);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertFalse($builder->getSemantic($this->story_tracker)->isDefined());
@@ -190,58 +180,60 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldReturnASemanticTimeframeImplied(): void
     {
-        $implied_from_tracker_id = 123;
-        $project_id              = 500;
-        $story_project           = Mockery::mock(Project::class, ['getID' => $project_id]);
+        $project_id    = 500;
+        $story_project = ProjectTestBuilder::aProject()->withId($project_id)->build();
 
-        $this->dao->shouldReceive('searchByTrackerId')
-            ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn(
-                [
+        $story_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::STORY_TRACKER_ID)
+            ->withProject($story_project)
+            ->build();
+
+        $implied_from_tracker_id = 123;
+        $implied_from_tracker    = TrackerTestBuilder::aTracker()
+            ->withId($implied_from_tracker_id)
+            ->withProject($story_project)
+            ->build();
+
+        $this->dao
+            ->expects(self::exactly(2))
+            ->method('searchByTrackerId')
+            ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
+                self::STORY_TRACKER_ID => [
                     'start_date_field_id' => null,
                     'duration_field_id' => null,
                     'end_date_field_id' => null,
                     'implied_from_tracker_id' => $implied_from_tracker_id,
+                ],
+                $implied_from_tracker_id => [
+                    'start_date_field_id' => 101,
+                    'duration_field_id' => 104,
+                    'end_date_field_id' => null,
+                    'implied_from_tracker_id' => null,
                 ]
-            );
+            });
 
-        $implied_from_tracker         = \Mockery::mock(\Tracker::class, ['getId' => $implied_from_tracker_id]);
-        $implied_from_tracker_project =  Mockery::mock(Project::class, ['getID' => $project_id]);
-
-        $this->tracker_factory->shouldReceive('getTrackerById')
+        $this->tracker_factory
+            ->expects(self::once())
+            ->method('getTrackerById')
             ->with($implied_from_tracker_id)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 $implied_from_tracker
             );
 
-        $this->dao->shouldReceive('searchByTrackerId')
-            ->with($implied_from_tracker_id)
-            ->once()
-            ->andReturn([
-                'start_date_field_id' => 101,
-                'duration_field_id' => 104,
-                'end_date_field_id' => null,
-                'implied_from_tracker_id' => null,
-            ]);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field   = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
-
-        $this->form_element_factory->shouldReceive('getUsedDateFieldById')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedDateFieldById')
             ->with($implied_from_tracker, 101)
-            ->once()
-            ->andReturn($start_date_field);
+            ->willReturn($start_date_field);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedFieldByIdAndType')
             ->with($implied_from_tracker, 104, ['int', 'float', 'computed'])
-            ->once()
-            ->andReturn($duration_field);
-
-        $implied_from_tracker->shouldReceive('getProject')->andReturn($implied_from_tracker_project);
-        $this->story_tracker->shouldReceive('getProject')->andReturn($story_project);
-        $implied_from_tracker_project->shouldReceive('getID')->andReturn($project_id);
+            ->willReturn($duration_field);
 
         $semantic_implied_from_tracker = new SemanticTimeframe(
             $implied_from_tracker,
@@ -251,141 +243,138 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe(
-                $this->story_tracker,
+                $story_tracker,
                 new TimeframeImpliedFromAnotherTracker(
-                    $this->story_tracker,
+                    $story_tracker,
                     $semantic_implied_from_tracker,
                     $this->links_retriever
                 )
             ),
-            $builder->getSemantic($this->story_tracker)
+            $builder->getSemantic($story_tracker)
         );
     }
 
     public function testItShouldNotReturnASemanticTimeframeImpliedWhenTargetTrackerSemanticIsNotDefined(): void
     {
+        $project_id    = 500;
+        $story_project = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $story_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::STORY_TRACKER_ID)
+            ->withProject($story_project)
+            ->build();
+
         $release_tracker_id = 123;
-        $project_id         = 500;
+        $release_tracker    = TrackerTestBuilder::aTracker()
+            ->withId($release_tracker_id)
+            ->withProject($story_project)
+            ->build();
 
-        $release_tracker = \Mockery::mock(\Tracker::class, ['getId' => $release_tracker_id]);
-        $story_project   = Mockery::mock(Project::class, ['getID' => $project_id]);
-        $release_project = Mockery::mock(Project::class, ['getID' => $project_id]);
+        $this->dao
+            ->expects(self::exactly(2))
+            ->method('searchByTrackerId')
+            ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
+                self::STORY_TRACKER_ID => [
+                    'start_date_field_id' => null,
+                    'duration_field_id' => null,
+                    'end_date_field_id' => null,
+                    'implied_from_tracker_id' => $release_tracker_id,
+                ],
+                $release_tracker_id => null,
+            });
 
-
-        $this->dao->shouldReceive('searchByTrackerId')
-            ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn([
-                'start_date_field_id' => null,
-                'duration_field_id' => null,
-                'end_date_field_id' => null,
-                'implied_from_tracker_id' => $release_tracker_id,
-            ]);
-
-        $this->dao->shouldReceive('searchByTrackerId')
+        $this->tracker_factory
+            ->expects(self::once())
+            ->method('getTrackerById')
             ->with($release_tracker_id)
-            ->once()
-            ->andReturn(null);
-
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with($release_tracker_id)
-            ->once()
-            ->andReturn($release_tracker);
-
-        $this->story_tracker->shouldReceive('getProject')->andReturn($story_project);
-        $release_tracker->shouldReceive('getproject')->andreturn($release_project);
-        $release_project->shouldReceive('getID')->andReturn($project_id);
+            ->willReturn($release_tracker);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe(
-                $this->story_tracker,
+                $story_tracker,
                 new TimeframeNotConfigured()
             ),
-            $builder->getSemantic($this->story_tracker)
+            $builder->getSemantic($story_tracker)
         );
     }
 
     public function testItShouldNotReturnASemanticTimeframeImpliedWhenTargetTrackerSemanticIsAlreadyImpliedFromAnotherTracker(): void
     {
+        $project_id    = 500;
+        $story_project = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $story_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::STORY_TRACKER_ID)
+            ->withProject($story_project)
+            ->build();
+
         $release_tracker_id = 123;
-        $epic_tracker_id    = 456;
-        $project_id         = 500;
+        $release_tracker    = TrackerTestBuilder::aTracker()
+            ->withId($release_tracker_id)
+            ->withProject($story_project)
+            ->build();
 
-        $release_tracker = \Mockery::mock(\Tracker::class, ['getId' => $release_tracker_id]);
-        $epic_tracker    = Mockery::mock(\Tracker::class, ['getId' => $epic_tracker_id]);
+        $epic_tracker_id = 456;
+        $epic_tracker    = TrackerTestBuilder::aTracker()
+            ->withId($epic_tracker_id)
+            ->withProject($story_project)
+            ->build();
 
-        $release_tracker_project = Mockery::mock(Project::class, ['getID' => $project_id]);
-        $epic_tracker_project    = Mockery::mock(Project::class, ['getID' => $project_id]);
-        $story_project           = Mockery::mock(Project::class, ['getID' => $project_id]);
+        $this->dao
+            ->expects(self::exactly(3))
+            ->method('searchByTrackerId')
+            ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
+                self::STORY_TRACKER_ID => [
+                    'start_date_field_id' => null,
+                    'duration_field_id' => null,
+                    'end_date_field_id' => null,
+                    'implied_from_tracker_id' => $release_tracker_id,
+                ],
+                $release_tracker_id => [
+                    'start_date_field_id' => null,
+                    'duration_field_id' => null,
+                    'end_date_field_id' => null,
+                    'implied_from_tracker_id' => $epic_tracker_id,
+                ],
+                $epic_tracker_id => [
+                    'start_date_field_id' => 101,
+                    'duration_field_id' => 102,
+                    'end_date_field_id' => null,
+                    'implied_from_tracker_id' => null,
+                ],
+            });
 
-        $this->dao->shouldReceive('searchByTrackerId')
-            ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn([
-                'start_date_field_id' => null,
-                'duration_field_id' => null,
-                'end_date_field_id' => null,
-                'implied_from_tracker_id' => $release_tracker_id,
-            ]);
+        $this->tracker_factory
+            ->expects(self::exactly(2))
+            ->method('getTrackerById')
+            ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
+                $release_tracker_id => $release_tracker,
+                $epic_tracker_id => $epic_tracker,
+            });
 
-        $this->dao->shouldReceive('searchByTrackerId')
-            ->with($release_tracker_id)
-            ->once()
-            ->andReturn([
-                'start_date_field_id' => null,
-                'duration_field_id' => null,
-                'end_date_field_id' => null,
-                'implied_from_tracker_id' => $epic_tracker_id,
-            ]);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
 
-        $this->dao->shouldReceive('searchByTrackerId')
-            ->with($epic_tracker_id)
-            ->once()
-            ->andReturn([
-                'start_date_field_id' => 101,
-                'duration_field_id' => 102,
-                'end_date_field_id' => null,
-                'implied_from_tracker_id' => null,
-            ]);
-
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with($release_tracker_id)
-            ->once()
-            ->andReturn($release_tracker);
-
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with($epic_tracker_id)
-            ->once()
-            ->andReturn($epic_tracker);
-
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field   = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
-
-        $this->form_element_factory->shouldReceive('getUsedDateFieldById')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedDateFieldById')
             ->with($epic_tracker, 101)
-            ->once()
-            ->andReturn($start_date_field);
+            ->willReturn($start_date_field);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
+        $this->form_element_factory
+            ->expects(self::once())
+            ->method('getUsedFieldByIdAndType')
             ->with($epic_tracker, 102, ['int', 'float', 'computed'])
-            ->once()
-            ->andReturn($duration_field);
-
-        $release_tracker->shouldReceive('getProject')->andReturn($release_tracker_project);
-        $epic_tracker->shouldReceive('getProject')->andReturn($epic_tracker_project);
-        $this->story_tracker->shouldReceive('getProject')->andReturn($story_project);
-
-        $release_tracker_project->shouldReceive('getID')->andReturn($project_id);
-        $epic_tracker_project->shouldReceive('getID')->andReturn($project_id);
+            ->willReturn($duration_field);
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe(
-                $this->story_tracker,
+                $story_tracker,
                 new TimeframeNotConfigured()
             ),
-            $builder->getSemantic($this->story_tracker)
+            $builder->getSemantic($story_tracker)
         );
     }
 
@@ -393,10 +382,11 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $implied_from_tracker_id = 123;
 
-        $this->dao->shouldReceive('searchByTrackerId')
+        $this->dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'start_date_field_id' => null,
                     'duration_field_id' => null,
@@ -405,30 +395,35 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $implied_from_tracker = \Mockery::mock(\Tracker::class, ['getId' => $implied_from_tracker_id]);
-        $this->tracker_factory->shouldReceive('getTrackerById')
+        $implied_from_tracker_project = ProjectTestBuilder::aProject()->withId(12)->build();
+
+        $implied_from_tracker = TrackerTestBuilder::aTracker()
+            ->withId($implied_from_tracker_id)
+            ->withProject($implied_from_tracker_project)
+            ->build();
+
+        $this->tracker_factory
+            ->expects(self::once())
+            ->method('getTrackerById')
             ->with($implied_from_tracker_id)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 $implied_from_tracker
             );
 
-        $implied_from_tracker_project = \Mockery::mock(Project::class);
-        $implied_from_tracker->shouldReceive('getProject')->andReturn($implied_from_tracker_project);
-        $implied_from_tracker_project->shouldReceive('getID')->andReturn(12);
-
-        $story_project = Mockery::mock(Project::class);
-        $this->story_tracker->shouldReceive('getProject')->andReturn($story_project);
-        $story_project->shouldReceive('getID')->andReturn(13);
+        $story_project = ProjectTestBuilder::aProject()->withId(13)->build();
+        $story_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::STORY_TRACKER_ID)
+            ->withProject($story_project)
+            ->build();
 
         $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
 
         $this->assertEquals(
             new SemanticTimeframe(
-                $this->story_tracker,
+                $story_tracker,
                 new TimeframeConfigInvalid()
             ),
-            $builder->getSemantic($this->story_tracker)
+            $builder->getSemantic($story_tracker)
         );
     }
 }

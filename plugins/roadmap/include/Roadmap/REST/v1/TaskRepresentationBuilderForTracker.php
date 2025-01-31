@@ -80,7 +80,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
         $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
         $progress_result   = $this->progress_calculator->computeProgression($artifact, $user);
-        $are_dates_implied = $this->timeframe_calculator->getName() === TimeframeImpliedFromAnotherTracker::getName();
+        $are_dates_implied = $this->timeframe_calculator->getName() === TimeframeImpliedFromAnotherTracker::NAME;
 
         return new TaskRepresentation(
             $artifact->getId(),
