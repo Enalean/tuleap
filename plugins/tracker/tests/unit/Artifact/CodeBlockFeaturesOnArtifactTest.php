@@ -22,16 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class CodeBlockFeaturesOnArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CodeBlockFeaturesOnArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CodeBlockFeaturesOnArtifact
-     */
-    private $code_block_features;
+    private CodeBlockFeaturesOnArtifact $code_block_features;
 
     protected function setUp(): void
     {

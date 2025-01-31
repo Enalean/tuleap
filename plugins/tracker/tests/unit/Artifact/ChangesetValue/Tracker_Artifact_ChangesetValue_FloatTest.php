@@ -23,66 +23,66 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Float;
-use Tracker_FormElement_Field_Float;
+use Tracker_FormElement_Field;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 
-final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:ignore
+final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    private $changeset;
-    private $field;
+    private Tracker_Artifact_Changeset $changeset;
+    private Tracker_FormElement_Field $field;
 
     protected function setUp(): void
     {
-        $this->field     = \Mockery::mock(Tracker_FormElement_Field_Float::class);
-        $this->changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
+        $this->field     = FloatFieldBuilder::aFloatField(45)->withName('field_float')->build();
+        $this->changeset = ChangesetTestBuilder::aChangeset(1)->build();
     }
 
     public function testFloats(): void
     {
         $float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 1.1234);
-        $this->assertEquals(1.1234, $float->getFloat());
-        $this->assertNotSame('1.1234', $float->getFloat());
-        $this->assertSame('1.1234', $float->getValue());
+        self::assertEquals(1.1234, $float->getFloat());
+        self::assertNotSame('1.1234', $float->getFloat());
+        self::assertSame('1.1234', $float->getValue());
 
         $long_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 9.54321);
-        $this->assertEquals(9.54321, $long_float->getFloat());
-        $this->assertNotSame('9.54321', $long_float->getFloat());
-        $this->assertSame('9.5432', $long_float->getValue());
+        self::assertEquals(9.54321, $long_float->getFloat());
+        self::assertNotSame('9.54321', $long_float->getFloat());
+        self::assertSame('9.5432', $long_float->getValue());
 
         $int_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 42);
-        $this->assertEquals(42, $int_float->getFloat());
-        $this->assertEquals(42.000, $int_float->getFloat());
-        $this->assertSame(42.000, $int_float->getFloat());
-        $this->assertNotSame('42', $int_float->getFloat());
-        $this->assertEquals('42', $int_float->getValue());
+        self::assertEquals(42, $int_float->getFloat());
+        self::assertEquals(42.000, $int_float->getFloat());
+        self::assertSame(42.000, $int_float->getFloat());
+        self::assertNotSame('42', $int_float->getFloat());
+        self::assertEquals('42', $int_float->getValue());
 
         $string_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, '123.456');
-        $this->assertEquals(123.456, $string_float->getFloat());
-        $this->assertNotEquals(123.457, $string_float->getFloat());
-        $this->assertEquals('123.456', $string_float->getFloat());
-        $this->assertNotSame('123.456', $string_float->getFloat());
-        $this->assertEquals('123.456', $string_float->getValue());
+        self::assertEquals(123.456, $string_float->getFloat());
+        self::assertNotEquals(123.457, $string_float->getFloat());
+        self::assertEquals('123.456', $string_float->getFloat());
+        self::assertNotSame('123.456', $string_float->getFloat());
+        self::assertEquals('123.456', $string_float->getValue());
 
         $zero_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 0);
-        $this->assertEquals(0, $zero_float->getFloat());
-        $this->assertEquals('0', $zero_float->getValue());
+        self::assertEquals(0, $zero_float->getFloat());
+        self::assertEquals('0', $zero_float->getValue());
 
         $null_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, null);
-        $this->assertNull($null_float->getFloat());
-        $this->assertNull($null_float->getValue());
+        self::assertNull($null_float->getFloat());
+        self::assertNull($null_float->getValue());
     }
 
     public function testNoDiff(): void
     {
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.789);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.789);
-        $this->assertFalse($float_1->diff($float_2));
-        $this->assertFalse($float_2->diff($float_1));
+        self::assertFalse($float_1->diff($float_2));
+        self::assertFalse($float_2->diff($float_1));
     }
 
     public function testDiff(): void
@@ -90,33 +90,30 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.321);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987);
 
-        $this->assertEquals('changed from 987 to 987.321', $float_1->diff($float_2));
-        $this->assertEquals('changed from 987.321 to 987', $float_2->diff($float_1));
+        self::assertEquals('changed from 987 to 987.321', $float_1->diff($float_2));
+        self::assertEquals('changed from 987.321 to 987', $float_2->diff($float_1));
 
         $float_3 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.54321);
         $float_4 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.54322);
-        $this->assertFalse($float_3->diff($float_4));
-        $this->assertFalse($float_4->diff($float_3));
+        self::assertFalse($float_3->diff($float_4));
+        self::assertFalse($float_4->diff($float_3));
 
         $float_5 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.4321);
         $float_6 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.4329);
-        $this->assertEquals('changed from 987.4329 to 987.4321', $float_5->diff($float_6));
-        $this->assertEquals('changed from 987.4321 to 987.4329', $float_6->diff($float_5));
+        self::assertEquals('changed from 987.4329 to 987.4321', $float_5->diff($float_6));
+        self::assertEquals('changed from 987.4321 to 987.4329', $float_6->diff($float_5));
 
         $float_7 = new Tracker_Artifact_ChangesetValue_Float(456, $this->changeset, $this->field, false, 1);
         $float_8 = new Tracker_Artifact_ChangesetValue_Float(789, $this->changeset, $this->field, false, null);
-        $this->assertEquals('set to 1', $float_7->diff($float_8));
-        $this->assertEquals('cleared', $float_8->diff($float_7));
+        self::assertEquals('set to 1', $float_7->diff($float_8));
+        self::assertEquals('cleared', $float_8->diff($float_7));
     }
 
     public function testTheRESTValueIsReturned(): void
     {
-        $this->field->shouldReceive('getId')->andReturns('45');
-        $this->field->shouldReceive('getLabel')->andReturns('field_float');
-
         $changeset_value = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, true, 45.1046);
-        $representation  = $changeset_value->getRESTValue(\Mockery::mock(\PFUser::class));
+        $representation  = $changeset_value->getRESTValue(UserTestBuilder::buildWithDefaults());
 
-        $this->assertEquals($representation->value, 45.1046);
+        self::assertEquals(45.1046, $representation->value);
     }
 }

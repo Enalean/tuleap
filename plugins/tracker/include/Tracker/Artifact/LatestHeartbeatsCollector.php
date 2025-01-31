@@ -30,14 +30,14 @@ use Tracker_ArtifactFactory;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
-use UserManager;
+use Tuleap\User\RetrieveUserById;
 
 final class LatestHeartbeatsCollector
 {
     public function __construct(
         private Tracker_ArtifactDao $dao,
         private Tracker_ArtifactFactory $factory,
-        private UserManager $user_manager,
+        private RetrieveUserById $user_manager,
         private EventDispatcherInterface $event_manager,
     ) {
     }
