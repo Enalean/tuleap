@@ -21,16 +21,12 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     //testing Tooltip import
     public function testImport()
     {
@@ -40,7 +36,7 @@ class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
 
-        $tracker = Mockery::mock(Tracker::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
         $mapping = [
             'F8'  => 108,
             'F9'  => 109,
