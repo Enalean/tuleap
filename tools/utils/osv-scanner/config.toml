@@ -122,3 +122,8 @@ ignoreUntil = 2025-02-28
 id = "GO-2025-3408"
 reason = "vault-tuleap-plugin is not exposed to untrusted connections"
 ignoreUntil = 2025-02-28
+
+[[IgnoredVulns]]
+id = "GHSA-29qp-crvh-w22m"
+reason = "vault-tuleap-plugin is not exposed to untrusted connections"
+ignoreUntil = 2025-02-28
