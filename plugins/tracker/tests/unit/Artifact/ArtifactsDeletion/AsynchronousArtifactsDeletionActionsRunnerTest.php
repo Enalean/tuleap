@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
 use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
@@ -31,33 +30,29 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private AsynchronousArtifactsDeletionActionsRunner $runner;
-    private IsAsyncTaskProcessingAvailable $worker_availability;
-    private QueueFactory|\PHPUnit\Framework\MockObject\MockObject $queue_factory;
-    private ArchiveAndDeleteArtifactTaskBuilder|\PHPUnit\Framework\MockObject\MockObject $task_builder;
-    private PendingArtifactRemovalDao|\PHPUnit\Framework\MockObject\MockObject $pending_artifact_removal_dao;
+    private QueueFactory&\PHPUnit\Framework\MockObject\MockObject $queue_factory;
+    private ArchiveAndDeleteArtifactTaskBuilder&\PHPUnit\Framework\MockObject\MockObject $task_builder;
 
 
     protected function setUp(): void
     {
-        $this->queue_factory       = $this->createMock(QueueFactory::class);
-        $this->task_builder        = $this->createMock(ArchiveAndDeleteArtifactTaskBuilder::class);
-        $this->worker_availability = new class implements IsAsyncTaskProcessingAvailable {
+        $this->queue_factory = $this->createMock(QueueFactory::class);
+        $this->task_builder  = $this->createMock(ArchiveAndDeleteArtifactTaskBuilder::class);
+        $worker_availability = new class implements IsAsyncTaskProcessingAvailable {
             public function canProcessAsyncTasks(): bool
             {
                 return false;
             }
         };
 
-        $this->pending_artifact_removal_dao = $this->createMock(PendingArtifactRemovalDao::class);
-        $this->runner                       = new AsynchronousArtifactsDeletionActionsRunner(
-            $this->pending_artifact_removal_dao,
+        $pending_artifact_removal_dao = $this->createMock(PendingArtifactRemovalDao::class);
+        $this->runner                 = new AsynchronousArtifactsDeletionActionsRunner(
+            $pending_artifact_removal_dao,
             new NullLogger(),
             $this->createMock(\UserManager::class),
             $this->queue_factory,
-            $this->worker_availability,
+            $worker_availability,
             $this->task_builder
         );
     }

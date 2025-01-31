@@ -22,30 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectHistoryDao;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_ArtifactDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ArtifactDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactDeletorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testArtifactBecomePendingDeletionOnDelete(): void
     {
         $artifact_id = 101;
 
-        $dao                          = Mockery::mock(Tracker_ArtifactDao::class);
-        $project_history_dao          = Mockery::mock(ProjectHistoryDao::class);
-        $pending_artifact_removal_dao = Mockery::mock(PendingArtifactRemovalDao::class);
-        $artifact_runnner             = Mockery::mock(AsynchronousArtifactsDeletionActionsRunner::class);
-        $event_dispatcher             = Mockery::mock(EventDispatcherInterface::class);
+        $dao                          = $this->createMock(Tracker_ArtifactDao::class);
+        $project_history_dao          = $this->createMock(ProjectHistoryDao::class);
+        $pending_artifact_removal_dao = $this->createMock(PendingArtifactRemovalDao::class);
+        $artifact_runnner             = $this->createMock(AsynchronousArtifactsDeletionActionsRunner::class);
+        $event_dispatcher             = $this->createMock(EventDispatcherInterface::class);
 
         $artifact_deletor = new ArtifactDeletor(
             $dao,
@@ -61,17 +58,17 @@ final class ArtifactDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact = ArtifactTestBuilder::anArtifact($artifact_id)->inTracker($tracker)->build();
         $user     = UserTestBuilder::anActiveUser()->withId(110)->build();
 
-        $dao->shouldReceive('startTransaction');
-        $pending_artifact_removal_dao->shouldReceive('addArtifactToPendingRemoval')->withArgs([$artifact_id]);
-        $dao->shouldReceive('delete')->withArgs([$artifact_id]);
-        $dao->shouldReceive('commit');
+        $dao->method('startTransaction');
+        $pending_artifact_removal_dao->method('addArtifactToPendingRemoval')->with($artifact_id);
+        $dao->method('delete')->with($artifact_id);
+        $dao->method('commit');
 
         $context = DeletionContext::regularDeletion((int) $project->getID());
-        $artifact_runnner->shouldReceive('executeArchiveAndArtifactDeletion')->withArgs([$artifact, $user, $context]);
+        $artifact_runnner->method('executeArchiveAndArtifactDeletion')->with($artifact, $user, $context);
 
-        $project_history_dao->shouldReceive('groupAddHistory');
+        $project_history_dao->method('groupAddHistory');
 
-        $event_dispatcher->shouldReceive('dispatch')->with(ArtifactDeleted::class)->once();
+        $event_dispatcher->expects(self::once())->method('dispatch')->with(self::isInstanceOf(ArtifactDeleted::class));
 
         $artifact_deletor->delete($artifact, $user, $context);
     }

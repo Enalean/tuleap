@@ -22,50 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
-use Tracker_FormElement_Field_File;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
-class ArtifactFilesDeletorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactFilesDeletorVisitorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var ArtifactFilesDeletorVisitor
-     */
-    private $visitor;
+    private Artifact $artifact;
+    private ArtifactFilesDeletorVisitor $visitor;
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(Artifact::class);
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
         $this->visitor  = new ArtifactFilesDeletorVisitor($this->artifact);
     }
 
     public function testItDeleteFile(): void
     {
-        $formElement = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = FileFieldBuilder::aFileField(25)->build();
 
-        $file1 = Mockery::mock(Tracker_FileInfo::class);
-        $file1->shouldReceive('deleteFiles')->once();
+        $file1 = $this->createMock(Tracker_FileInfo::class);
+        $file1->expects(self::once())->method('deleteFiles');
 
-        $file2 = Mockery::mock(Tracker_FileInfo::class);
-        $file2->shouldReceive('deleteFiles')->once();
+        $file2 = $this->createMock(Tracker_FileInfo::class);
+        $file2->expects(self::once())->method('deleteFiles');
 
         $files = [$file1, $file2];
 
-        $changeset_value_file = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class);
-        $changeset_value_file->shouldReceive('getFiles')->andReturn($files);
+        $changeset = ChangesetTestBuilder::aChangeset(456)->build();
+        $changeset->setFieldValue($field, ChangesetValueFileTestBuilder::aValue(1, $changeset, $field)->withFiles($files)->build());
 
-        $this->artifact->shouldReceive('getValue')->once()->andReturn($changeset_value_file);
+        $this->artifact->setLastChangeset($changeset);
 
-        $this->visitor->visitFile($formElement);
+        $this->visitor->visitFile($field);
     }
 }
