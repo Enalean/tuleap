@@ -27,8 +27,7 @@
             class="element-card"
             v-bind:class="additional_classnames"
             data-test="to-be-planned-card"
-            ref="to_be_planned_card"
-            v-bind:title="userHasNoPermissionTitle()"
+            v-bind:title="user_has_no_permission_title"
         >
             <div class="element-card-content">
                 <div class="element-card-xref-label">
@@ -53,61 +52,43 @@
         />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { Feature } from "../../../type";
-import { namespace } from "vuex-class";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import {
     getAccessibilityClasses,
     showAccessibilityPattern,
 } from "../../../helpers/element-card-css-extractor";
 
-const configuration = namespace("configuration");
+const { $gettext } = useGettext();
 
-@Component({
-    components: { ToBePlannedBacklogItems },
-})
-export default class ToBePlannedCard extends Vue {
-    @Prop({ required: true })
-    readonly feature!: Feature;
+const { accessibility, has_plan_permissions } = useNamespacedState<{
+    accessibility: boolean;
+    has_plan_permissions: boolean;
+}>("configuration", ["accessibility", "has_plan_permissions"]);
 
-    @configuration.State
-    readonly accessibility!: boolean;
+const props = defineProps<{ feature: Feature }>();
 
-    @configuration.State
-    readonly has_plan_permissions!: boolean;
+const show_accessibility_pattern = computed((): boolean =>
+    showAccessibilityPattern(props.feature, accessibility.value),
+);
 
-    @configuration.State
-    readonly can_create_program_increment!: boolean;
+const additional_classnames = computed((): string => {
+    const classnames = getAccessibilityClasses(props.feature, accessibility.value);
 
-    @Ref("to_be_planned_card")
-    readonly to_be_planned_card!: Element;
-
-    get show_accessibility_pattern(): boolean {
-        return showAccessibilityPattern(this.feature, this.accessibility);
+    if (has_plan_permissions.value) {
+        classnames.push("element-draggable-item");
+    } else {
+        classnames.push("element-not-draggable");
     }
 
-    get additional_classnames(): string {
-        const classnames = getAccessibilityClasses(this.feature, this.accessibility);
+    return classnames.join(" ");
+});
 
-        if (this.has_plan_permissions) {
-            classnames.push("element-draggable-item");
-        } else {
-            classnames.push("element-not-draggable");
-        }
-
-        return classnames.join(" ");
-    }
-
-    userHasNoPermissionTitle(): string {
-        if (!this.has_plan_permissions) {
-            return this.$gettext("You cannot plan items");
-        }
-
-        return "";
-    }
-}
+const user_has_no_permission_title = computed((): string =>
+    has_plan_permissions.value ? "" : $gettext("You cannot plan items"),
+);
 </script>
