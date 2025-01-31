@@ -21,7 +21,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 import type { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
 import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
 import { Option } from "@tuleap/option";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import type { LitHTMLAdapter } from "./LitHTMLAdapter";
 import { EditZone } from "./EditZone";
 import type { DOMAdapter, InitDataFromBackend } from "./DOMAdapter";
@@ -78,7 +78,7 @@ export const CommentEditor = (
                         api_client
                             .postComment(changeset_id, editor.getContent(), format_at_submit)
                             .then((response_html) => {
-                                read_only_comment.innerHTML = sanitize(response_html);
+                                read_only_comment.innerHTML = DOMPurify.sanitize(response_html);
                                 dom_adapter.show(edit_button);
                                 dom_adapter.show(read_only_comment);
                                 dom_adapter.highlight(read_only_comment);

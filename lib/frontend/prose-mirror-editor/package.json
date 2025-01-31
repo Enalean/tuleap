@@ -24,7 +24,7 @@
     "@tuleap/tlp-popovers": "workspace:^",
     "@tuleap/tooltip": "workspace:^",
     "@tuleap/url-sanitizer": "workspace:*",
-    "dompurify": "^3.1.4",
+    "dompurify": "^3.2.4",
     "hybrids": "9.1.6",
     "neverthrow": "6.0.0",
     "prosemirror-commands": "^1.5.2",
@@ -43,7 +43,6 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
-    "@types/dompurify": "^3.0.5",
     "@types/uuid": "^9.0.8"
   },
   "scripts": {

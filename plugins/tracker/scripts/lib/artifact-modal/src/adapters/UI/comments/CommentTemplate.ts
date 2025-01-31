@@ -21,7 +21,7 @@ import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import moment from "moment";
 import { sprintf } from "sprintf-js";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import type { FirstDateShown, OtherDatePlacement } from "@tuleap/tlp-relative-date";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
@@ -110,7 +110,7 @@ export const getCommentTemplate = (
         <div
             class="tuleap-artifact-modal-followups-comment-content"
             data-test="comment-body"
-            innerHTML="${sanitize(comment.body)}"
+            innerHTML="${DOMPurify.sanitize(comment.body)}"
         ></div>
     </div>`;
 };

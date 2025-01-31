@@ -16,14 +16,13 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "dompurify": "^3.1.4",
+    "dompurify": "^3.2.4",
     "lit-html": "^2.8.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^3.0.5",
-    "@types/jquery": "^3.5.5",
-    "@types/ckeditor": "4.9.10"
+    "@types/ckeditor": "4.9.10",
+    "@types/jquery": "^3.5.5"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

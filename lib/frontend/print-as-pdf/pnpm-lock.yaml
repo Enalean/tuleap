@@ -17,8 +17,8 @@ dependencies:
     specifier: workspace:^
     version: link:../html-escaper
   dompurify:
-    specifier: ^3.1.4
-    version: 3.1.6
+    specifier: ^3.2.4
+    version: 3.2.4
   neverthrow:
     specifier: ^6.0.0
     version: 6.2.2
@@ -30,24 +30,19 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:^
     version: link:../build-system-configurator
-  '@types/dompurify':
-    specifier: ^3.0.5
-    version: 3.0.5
 
 packages:
 
-  /@types/dompurify@3.0.5:
-    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
-    dependencies:
-      '@types/trusted-types': 2.0.7
-    dev: true
-
   /@types/trusted-types@2.0.7:
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
-    dev: true
+    requiresBuild: true
+    dev: false
+    optional: true
 
-  /dompurify@3.1.6:
-    resolution: {integrity: sha512-cTOAhc36AalkjtBpfG6O8JimdTMWNXjiePT2xQH/ppBGi/4uIpmj8eKyIkMJErXWARyINV/sB38yf8JCLF5pbQ==}
+  /dompurify@3.2.4:
+    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
     dev: false
 
   /neverthrow@6.2.2:

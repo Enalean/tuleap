@@ -75,8 +75,8 @@ dependencies:
     specifier: ^2.4.2
     version: 2.4.2
   dompurify:
-    specifier: ^3.1.4
-    version: 3.1.4
+    specifier: ^3.2.4
+    version: 3.2.4
   hybrids:
     specifier: ^9.1.6
     version: 9.1.6
@@ -109,9 +109,6 @@ devDependencies:
   '@types/ckeditor':
     specifier: ^4.9.10
     version: 4.9.10
-  '@types/dompurify':
-    specifier: ^3.0.5
-    version: 3.0.5
   '@types/sprintf-js':
     specifier: ^1.1.2
     version: 1.1.4
@@ -128,19 +125,15 @@ packages:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
     dev: true
 
-  /@types/dompurify@3.0.5:
-    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
-    dependencies:
-      '@types/trusted-types': 2.0.7
-    dev: true
-
   /@types/sprintf-js@1.1.4:
     resolution: {integrity: sha512-aWK1reDYWxcjgcIIPmQi3u+OQDuYa9b+lr6eIsGWrekJ9vr1NSjr4Eab8oQ1iKuH1ltFHpXGyerAv1a3FMKxzQ==}
     dev: true
 
   /@types/trusted-types@2.0.7:
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
-    dev: true
+    requiresBuild: true
+    dev: false
+    optional: true
 
   /angular-custom-elements@2.1.0:
     resolution: {integrity: sha1-pEiW4XK/IAxYFESHA6GheId/hXU=}
@@ -173,8 +166,10 @@ packages:
     resolution: {integrity: sha512-p6JFxJc3M4OTD2li2qaHkDCw9SfMw82Ldr6OC9Je1aXiGfhx2W8p3GaoeaGrPJTUN9NirTM/KTxHWMUdR1rsUg==}
     dev: false
 
-  /dompurify@3.1.4:
-    resolution: {integrity: sha512-2gnshi6OshmuKil8rMZuQCGiUF3cUxHY3NGDzUAdUx/NPEe5DVnO8BDoAQouvgwnx0R/+a6jUn36Z0FSdq8vww==}
+  /dompurify@3.2.4:
+    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
     dev: false
 
   /graceful-fs@4.2.11:

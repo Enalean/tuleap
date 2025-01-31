@@ -40,7 +40,7 @@ import Vue from "vue";
 import { Component, Ref, Watch } from "vue-property-decorator";
 import { State } from "vuex-class";
 import mustache from "mustache";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import $ from "jquery";
 import type { DataFormat, GroupedDataFormat, LoadingData, Select2Plugin } from "tlp";
 import { select2 } from "tlp";
@@ -79,7 +79,7 @@ export default class FieldTrackerColor extends Vue {
             dropdownCssClass: "tracker-color-results",
             minimumResultsForSearch: Infinity,
             dropdownAutoWidth: true,
-            escapeMarkup: sanitize,
+            escapeMarkup: DOMPurify.sanitize,
             templateResult: this.formatOptionColor,
             templateSelection: this.formatOptionColor,
         });

@@ -12,6 +12,11 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
   },
+  "pnpm": {
+    "overrides": {
+      "dompurify": "^3.2.4"
+    }
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",

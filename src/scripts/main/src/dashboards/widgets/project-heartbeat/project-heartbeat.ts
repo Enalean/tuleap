@@ -19,7 +19,7 @@
 
 import { get } from "@tuleap/tlp-fetch";
 import mustache from "mustache";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import moment from "moment";
 import { loadTooltips } from "@tuleap/tooltip";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
@@ -158,7 +158,9 @@ function getGroupedEntries(widget_content: HTMLElement, entries: Entry[]): { gro
 }
 
 function insertRenderedActivitiesInDOM(rendered_activities: string, parent_element: Element): void {
-    const purified_activities = sanitize(rendered_activities, { RETURN_DOM_FRAGMENT: true });
+    const purified_activities = DOMPurify.sanitize(rendered_activities, {
+        RETURN_DOM_FRAGMENT: true,
+    });
 
     parent_element.appendChild(purified_activities);
 }

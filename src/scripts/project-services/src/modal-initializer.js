@@ -20,7 +20,7 @@
 import { createModal } from "@tuleap/tlp-modal";
 import Vue from "vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { sprintf } from "sprintf-js";
 import { escaper } from "@tuleap/html-escaper";
 import { gettext_provider } from "./helpers/gettext_provider.js";
@@ -95,7 +95,7 @@ function updateDeleteModalDescription(button) {
     modal_description.innerText = "";
     modal_description.insertAdjacentHTML(
         "afterbegin",
-        sanitize(
+        DOMPurify.sanitize(
             sprintf(
                 gettext_provider.$gettext(
                     "You are about to delete the <b>%s</b> service. Please, confirm your action",

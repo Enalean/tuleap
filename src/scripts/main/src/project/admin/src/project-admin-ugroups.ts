@@ -20,7 +20,7 @@
 import { get } from "@tuleap/tlp-fetch";
 import { createModal } from "tlp";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { sprintf } from "sprintf-js";
 import { escaper } from "@tuleap/html-escaper";
 import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
@@ -134,7 +134,7 @@ function updateDeleteModalDescription(button: HTMLElement): void {
     }
     modal_description.insertAdjacentHTML(
         "afterbegin",
-        sanitize(
+        DOMPurify.sanitize(
             sprintf(
                 gettext_provider.gettext(
                     "You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your action.",
@@ -241,7 +241,7 @@ function openConfirmationModal(selected_user_label: string): void {
     if (!(message_confirmation_add_element instanceof HTMLElement)) {
         throw new Error("No message confirmation after add user");
     }
-    message_confirmation_add_element.innerHTML = sanitize(confirmation_message);
+    message_confirmation_add_element.innerHTML = DOMPurify.sanitize(confirmation_message);
 
     modal.show();
 
