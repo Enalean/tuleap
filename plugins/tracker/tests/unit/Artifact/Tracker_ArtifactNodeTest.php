@@ -20,42 +20,44 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\Artifact\Artifact;
+namespace Tuleap\Tracker\Artifact;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_ArtifactNodeTest extends \Tuleap\Test\PHPUnit\TestCase
+use ArtifactNode;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_ArtifactNodeTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $artifact;
-    private $data;
-    private $node;
+    private Artifact $artifact;
+    private array $data;
+    private ArtifactNode $node;
 
     protected function setUp(): void
     {
-        $this->artifact = new Artifact(9787, 123, null, 10, null);
+        $this->artifact = ArtifactTestBuilder::anArtifact(9787)->build();
         $this->data     = ['somekey' => 'somevalue'];
         $this->node     = new ArtifactNode($this->artifact, $this->data);
     }
 
     public function testItHoldsTheArtifact(): void
     {
-        $this->assertSame($this->artifact, $this->node->getArtifact());
-        $this->assertSame($this->artifact, $this->node->getObject());
+        self::assertSame($this->artifact, $this->node->getArtifact());
+        self::assertSame($this->artifact, $this->node->getObject());
     }
 
     public function testItCanHoldData(): void
     {
-        $this->assertSame($this->data, $this->node->getData());
+        self::assertSame($this->data, $this->node->getData());
     }
 
     public function testItUsesTheIdOfTheArtifact(): void
     {
-        $this->assertEquals($this->artifact->getId(), $this->node->getId());
+        self::assertEquals($this->artifact->getId(), $this->node->getId());
     }
 
     public function testItCallsTheSuperConstructor(): void
     {
-        $this->assertIsArray($this->node->getChildren(), 'getChildren should have been initialized to array()');
+        self::assertIsArray($this->node->getChildren(), 'getChildren should have been initialized to array()');
     }
 }
