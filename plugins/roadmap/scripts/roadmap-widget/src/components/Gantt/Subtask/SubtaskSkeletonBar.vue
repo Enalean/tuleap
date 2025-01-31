@@ -32,46 +32,39 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import { Styles } from "../../../helpers/styles";
 import BackgroundGrid from "../Task/BackgroundGrid.vue";
-import type { TimePeriod } from "../../../type";
-import { namespace } from "vuex-class";
+import { useNamespacedGetters } from "vuex-composition-helpers";
+import type { TimeperiodGetters } from "../../../store/timeperiod/type";
 
-const timeperiod = namespace("timeperiod");
+defineProps<{
+    nb_additional_units: number;
+}>();
 
-@Component({
-    components: { BackgroundGrid },
-})
-export default class SubtaskSkeletonBar extends Vue {
-    @timeperiod.Getter
-    readonly time_period!: TimePeriod;
+const { time_period } = useNamespacedGetters<Pick<TimeperiodGetters, "time_period">>("timeperiod", [
+    "time_period",
+]);
 
-    @Prop({ required: true })
-    readonly nb_additional_units!: number;
+function randomStyleLeft(): string {
+    const left = getRandomInt(
+        40,
+        (time_period.value.units.length - 3) * Styles.TIME_UNIT_WIDTH_IN_PX,
+    );
 
-    randomStyleLeft(): string {
-        const left = this.getRandomInt(
-            40,
-            (this.time_period.units.length - 3) * Styles.TIME_UNIT_WIDTH_IN_PX,
-        );
+    return `left: ${left}px;`;
+}
 
-        return `left: ${left}px;`;
-    }
+function randomStyleWidth(): string {
+    const width = getRandomInt(
+        30,
+        (time_period.value.units.length * Styles.TIME_UNIT_WIDTH_IN_PX) / 3,
+    );
 
-    randomStyleWidth(): string {
-        const width = this.getRandomInt(
-            30,
-            (this.time_period.units.length * Styles.TIME_UNIT_WIDTH_IN_PX) / 3,
-        );
+    return `width: ${width}px;`;
+}
 
-        return `width: ${width}px;`;
-    }
-
-    getRandomInt(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min) + min);
-    }
+function getRandomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min) + min);
 }
 </script>
