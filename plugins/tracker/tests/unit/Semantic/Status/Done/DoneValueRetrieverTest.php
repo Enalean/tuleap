@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
@@ -33,30 +32,20 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
-class DoneValueRetrieverTest extends TestCase
+final class DoneValueRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var DoneValueRetriever
-     */
-    private $retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticDoneFactory
-     */
-    private $semantic_done_factory;
+    private DoneValueRetriever $retriever;
+    private SemanticDoneFactory&MockObject $semantic_done_factory;
     private Tracker $tracker;
     private Artifact $artifact;
     private Tracker_Semantic_Status $semantic_status;
     private PFUser $user;
-    /**
-     * @var FirstPossibleValueInListRetriever&Mockery\MockInterface
-     */
-    private $first_possible_value_retriever;
+    private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
 
     protected function setUp(): void
     {
@@ -66,8 +55,8 @@ class DoneValueRetrieverTest extends TestCase
         $this->tracker  = $this->buildTracker();
         $this->artifact = ArtifactTestBuilder::anArtifact(112)->inTracker($this->tracker)->build();
 
-        $this->first_possible_value_retriever = Mockery::mock(FirstPossibleValueInListRetriever::class);
-        $this->semantic_done_factory          = Mockery::mock(SemanticDoneFactory::class);
+        $this->first_possible_value_retriever = $this->createMock(FirstPossibleValueInListRetriever::class);
+        $this->semantic_done_factory          = $this->createMock(SemanticDoneFactory::class);
 
         $this->retriever = new DoneValueRetriever(
             $this->semantic_done_factory,
@@ -127,9 +116,12 @@ class DoneValueRetrieverTest extends TestCase
     {
         $this->mockDoneSemanticDefinedWithDoneValue();
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
-        )->andReturn(45);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact,
+            $this->semantic_status->getField(),
+            self::anything(),
+            $this->user
+        )->willReturn(45);
 
         $field_value = $this->retriever->getFirstDoneValueUserCanRead(
             $this->artifact,
@@ -144,9 +136,12 @@ class DoneValueRetrieverTest extends TestCase
     {
         $this->mockDoneSemanticDefinedWithDoneValue();
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
-        )->andThrow(NoPossibleValueException::class);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact,
+            $this->semantic_status->getField(),
+            self::anything(),
+            $this->user
+        )->willThrowException(new NoPossibleValueException());
 
         $this->expectException(NoPossibleValueException::class);
 
@@ -158,10 +153,11 @@ class DoneValueRetrieverTest extends TestCase
 
     private function mockSemanticStatusNotDefined(): void
     {
-        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
-            ->once()
+        $this->semantic_done_factory
+            ->expects(self::once())
+            ->method('getInstanceByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticDone(
                     $this->tracker,
                     new Tracker_Semantic_Status(
@@ -169,8 +165,8 @@ class DoneValueRetrieverTest extends TestCase
                         null,
                         []
                     ),
-                    Mockery::mock(SemanticDoneDao::class),
-                    Mockery::mock(SemanticDoneValueChecker::class),
+                    $this->createMock(SemanticDoneDao::class),
+                    $this->createMock(SemanticDoneValueChecker::class),
                     []
                 )
             );
@@ -178,11 +174,7 @@ class DoneValueRetrieverTest extends TestCase
 
     private function mockSemanticStatusNotDefinedWithFieldNonReadable(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
-            ->with($this->user)
-            ->andReturnFalse();
+        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
 
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
@@ -190,10 +182,11 @@ class DoneValueRetrieverTest extends TestCase
             []
         );
 
-        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
-            ->once()
+        $this->semantic_done_factory
+            ->expects(self::once())
+            ->method('getInstanceByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticDone(
                     $this->tracker,
                     new Tracker_Semantic_Status(
@@ -201,8 +194,8 @@ class DoneValueRetrieverTest extends TestCase
                         $field,
                         []
                     ),
-                    Mockery::mock(SemanticDoneDao::class),
-                    Mockery::mock(SemanticDoneValueChecker::class),
+                    $this->createMock(SemanticDoneDao::class),
+                    $this->createMock(SemanticDoneValueChecker::class),
                     []
                 )
             );
@@ -210,22 +203,24 @@ class DoneValueRetrieverTest extends TestCase
 
     private function mockSemanticStatusDefinedWithAllValuesHidden(): void
     {
-        $hidden_done_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $hidden_done_value->shouldReceive('isHidden')->andReturnTrue();
-        $hidden_done_value->shouldReceive('getId')->andReturn(45);
-
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
+        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
+            ->willReturn(true);
+
+        $value1 = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
+        $value1->method('isHidden')->willReturn(false);
+
+        $hidden_done_value = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
+        $hidden_done_value->method('isHidden')->willReturn(true);
+        $hidden_done_value->method('getId')->willReturn(45);
+
+        $field
+            ->expects(self::once())
+            ->method('getAllValues')
+            ->willReturn([
+                44 => $value1,
                 45 => $hidden_done_value,
             ]);
 
@@ -235,10 +230,11 @@ class DoneValueRetrieverTest extends TestCase
             [45]
         );
 
-        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
-            ->once()
+        $this->semantic_done_factory
+            ->expects(self::once())
+            ->method('getInstanceByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticDone(
                     $this->tracker,
                     new Tracker_Semantic_Status(
@@ -246,8 +242,8 @@ class DoneValueRetrieverTest extends TestCase
                         $field,
                         [45]
                     ),
-                    Mockery::mock(SemanticDoneDao::class),
-                    Mockery::mock(SemanticDoneValueChecker::class),
+                    $this->createMock(SemanticDoneDao::class),
+                    $this->createMock(SemanticDoneValueChecker::class),
                     [
                         $hidden_done_value,
                     ]
@@ -257,22 +253,24 @@ class DoneValueRetrieverTest extends TestCase
 
     private function mockDoneSemanticDefinedWithDoneValue(): void
     {
-        $done_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $done_value->shouldReceive('isHidden')->andReturnFalse();
-        $done_value->shouldReceive('getId')->andReturn(45);
-
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
+        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
+            ->willReturn(true);
+
+        $value1 = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
+        $value1->method('isHidden')->willReturn(false);
+
+        $done_value = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
+        $done_value->method('isHidden')->willReturn(false);
+        $done_value->method('getId')->willReturn(45);
+
+        $field
+            ->expects(self::once())
+            ->method('getAllValues')
+            ->willReturn([
+                44 => $value1,
                 45 => $done_value,
             ]);
 
@@ -282,15 +280,16 @@ class DoneValueRetrieverTest extends TestCase
             [45]
         );
 
-        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
-            ->once()
+        $this->semantic_done_factory
+            ->expects(self::once())
+            ->method('getInstanceByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticDone(
                     $this->tracker,
                     $this->semantic_status,
-                    Mockery::mock(SemanticDoneDao::class),
-                    Mockery::mock(SemanticDoneValueChecker::class),
+                    $this->createMock(SemanticDoneDao::class),
+                    $this->createMock(SemanticDoneValueChecker::class),
                     [
                         $done_value,
                     ]
@@ -300,22 +299,23 @@ class DoneValueRetrieverTest extends TestCase
 
     private function mockDoneSemanticDefinedWithoutDoneValue(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
+        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
+            ->willReturn(true);
+
+        $value1 = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
+        $value1->method('isHidden')->willReturn(false);
+        $value2 = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
+        $value2->method('isHidden')->willReturn(false);
+
+        $field
+            ->expects(self::once())
+            ->method('getAllValues')
+            ->willReturn([
+                44 => $value1,
+                45 => $value2,
             ]);
 
         $this->semantic_status = new Tracker_Semantic_Status(
@@ -324,15 +324,16 @@ class DoneValueRetrieverTest extends TestCase
             [45]
         );
 
-        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
-            ->once()
+        $this->semantic_done_factory
+            ->expects(self::once())
+            ->method('getInstanceByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticDone(
                     $this->tracker,
                     $this->semantic_status,
-                    Mockery::mock(SemanticDoneDao::class),
-                    Mockery::mock(SemanticDoneValueChecker::class),
+                    $this->createMock(SemanticDoneDao::class),
+                    $this->createMock(SemanticDoneValueChecker::class),
                     []
                 )
             );
