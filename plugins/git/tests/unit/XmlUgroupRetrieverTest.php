@@ -18,42 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git;
 
-require_once 'bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ColinODell\PsrTestLogger\TestLogger;
+use Project;
 use ProjectUGroup;
 use SimpleXMLElement;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UGroupManager;
 
-final class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XmlUgroupRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var XmlUgroupRetriever
-     */
-    private $retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Psr\Log\LoggerInterface
-     */
-    private $logger;
-    private \Project $project;
+    private XmlUgroupRetriever $retriever;
+    private TestLogger $logger;
+    private Project $project;
     private ProjectUGroup $ugroup_01;
     private ProjectUGroup $ugroup_02;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->logger   = $this->createMock(\Psr\Log\LoggerInterface::class);
-        $ugroup_manager = \Mockery::spy(\UGroupManager::class);
-
-        $this->retriever = new XmlUgroupRetriever(
-            $this->logger,
-            $ugroup_manager
-        );
+        $this->logger    = new TestLogger();
+        $ugroup_manager  = $this->createMock(UGroupManager::class);
+        $this->retriever = new XmlUgroupRetriever($this->logger, $ugroup_manager);
 
         $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
 
@@ -69,8 +58,12 @@ final class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'group_id'  => 101,
         ]);
 
-        $ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'Contributors')->andReturns($this->ugroup_01);
-        $ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'project_members')->andReturns($this->ugroup_02);
+        $ugroup_manager->method('getUGroupByName')->with($this->project, self::isType('string'))
+            ->willReturnCallback(fn(Project $project, string $name) => match ($name) {
+                'Contributors'    => $this->ugroup_01,
+                'project_members' => $this->ugroup_02,
+                default           => null,
+            });
     }
 
     public function testItRetrievesUgroupIdsForAPermission(): void
@@ -85,7 +78,7 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = [101, 3];
 
-        $this->assertEquals($expected, $this->retriever->getUgroupIdsForPermissionNode($this->project, $xml_node));
+        self::assertEquals($expected, $this->retriever->getUgroupIdsForPermissionNode($this->project, $xml_node));
     }
 
     public function testItRetrievesUgroupsForAPermission(): void
@@ -100,7 +93,7 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = [$this->ugroup_01, $this->ugroup_02];
 
-        $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
+        self::assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
     }
 
     public function testItSkipsIfUgroupDoesNotExist(): void
@@ -116,8 +109,8 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = [$this->ugroup_01, $this->ugroup_02];
 
-        $this->logger->expects(self::once())->method('warning');
-        $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
+        self::assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
+        self::assertTrue($this->logger->hasWarningRecords());
     }
 
     public function testItDoesNotReturnMultipleTimeTheSameUgroup(): void
@@ -133,7 +126,7 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = [$this->ugroup_01, $this->ugroup_02];
 
-        $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
+        self::assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
     }
 
     public function testItDoesNotReturnMultipleTimeTheSameUgroupId(): void
@@ -149,6 +142,6 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = [101, 3];
 
-        $this->assertEquals($expected, $this->retriever->getUgroupIdsForPermissionNode($this->project, $xml_node));
+        self::assertEquals($expected, $this->retriever->getUgroupIdsForPermissionNode($this->project, $xml_node));
     }
 }

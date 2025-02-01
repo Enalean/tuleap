@@ -18,78 +18,76 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once 'bootstrap.php';
+namespace Tuleap\Git;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitRepositoryFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+use Git_Backend_Interface;
+use GitDao;
+use GitRepositoryFactory;
+use GitRepositoryGitoliteAdmin;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitRepositoryFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $dao;
-    private $project_manager;
-    private $project;
-    private $factory;
+    private GitDao&MockObject $dao;
+    private GitRepositoryFactory $factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->dao       = $this->createMock(GitDao::class);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project         = ProjectTestBuilder::aProject()->withId(101)->withUnixName('garden')->build();
 
-        $this->dao             = Mockery::mock(GitDao::class);
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
-        $this->project         = \Mockery::spy(\Project::class);
+        $project_manager->method('getProjectByUnixName')->with('garden')->willReturn($project);
 
-        $this->project->shouldReceive('getID')->andReturns(101);
-        $this->project->shouldReceive('getUnixName')->andReturns('garden');
-
-        $this->project_manager->shouldReceive('getProjectByUnixName')->with('garden')->andReturns($this->project);
-
-        $this->factory = new GitRepositoryFactory($this->dao, $this->project_manager);
+        $this->factory = new GitRepositoryFactory($this->dao, $project_manager);
     }
 
     public function testGetRepositoryFromFullPath(): void
     {
-        $this->dao->shouldReceive('searchProjectRepositoryByPath')
-            ->with(101, 'garden/u/manuel/grou/ping/diskinstaller.git')
-            ->once()
-            ->andReturns([]);
+        $this->dao->expects(self::once())->method('searchProjectRepositoryByPath')
+            ->with(101, 'garden/u/manuel/grou/ping/diskinstaller.git')->willReturn([]);
 
         $this->factory->getFromFullPath('/data/tuleap/gitolite/repositories/garden/u/manuel/grou/ping/diskinstaller.git');
     }
 
     public function testGetRepositoryFromFullPathAndGitRoot(): void
     {
-        $this->dao->shouldReceive('searchProjectRepositoryByPath')->with(101, 'garden/diskinstaller.git')->once();
-        $this->dao->shouldReceive('searchProjectRepositoryByPath')->andReturns([]);
+        $this->dao->expects(self::once())->method('searchProjectRepositoryByPath')
+            ->with(101, 'garden/diskinstaller.git')->willReturn([]);
 
         $this->factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');
     }
 
     public function testItReturnsSpecialRepositoryWhenIdMatches(): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             GitRepositoryGitoliteAdmin::class,
-            $this->factory->getRepositoryById(GitRepositoryGitoliteAdmin::ID)
+            $this->factory->getRepositoryById((int) GitRepositoryGitoliteAdmin::ID)
         );
     }
 
     public function testItCanonicalizesRepositoryName(): void
     {
-        $user    = \Mockery::spy(\PFUser::class);
-        $project = \Mockery::spy(\Project::class);
-        $backend = \Mockery::spy(\Git_Backend_Interface::class);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $project = ProjectTestBuilder::aProject()->build();
+        $backend = $this->createMock(Git_Backend_Interface::class);
 
         $repository = $this->factory->buildRepository($project, 'a', $user, $backend);
-        $this->assertEquals('a', $repository->getName());
+        self::assertEquals('a', $repository->getName());
 
         $repository = $this->factory->buildRepository($project, 'a/b', $user, $backend);
-        $this->assertEquals('a/b', $repository->getName());
+        self::assertEquals('a/b', $repository->getName());
 
         $repository = $this->factory->buildRepository($project, 'a//b', $user, $backend);
-        $this->assertEquals('a/b', $repository->getName());
+        self::assertEquals('a/b', $repository->getName());
 
         $repository = $this->factory->buildRepository($project, 'a///b', $user, $backend);
-        $this->assertEquals('a/b', $repository->getName());
+        self::assertEquals('a/b', $repository->getName());
     }
 }

@@ -22,45 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Git_GitoliteDriver;
+use Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc;
+use PHPUnit\Framework\MockObject\MockObject;
+use Plugin;
 use PluginConfigChecker;
+use Psr\Log\NullLogger;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemCheckTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $driver;
-    private $gitgc;
-    /** @var SystemCheck */
-    private $system_check;
+    private Git_GitoliteDriver&MockObject $driver;
+    private Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc&MockObject $gitgc;
+    private SystemCheck $system_check;
+    private Plugin&MockObject $plugin;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->driver   = \Mockery::spy(\Git_GitoliteDriver::class);
-        $this->gitgc    = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class);
-        $logger         = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $config_checker = new PluginConfigChecker($logger);
-        $plugin         = \Mockery::spy(\Plugin::class);
-
+        $this->driver       = $this->createMock(Git_GitoliteDriver::class);
+        $this->gitgc        = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class);
+        $this->plugin       = $this->createMock(Plugin::class);
         $this->system_check = new SystemCheck(
             $this->gitgc,
             $this->driver,
-            $config_checker,
-            $plugin
+            new PluginConfigChecker(new NullLogger()),
+            $this->plugin,
         );
     }
 
-    public function testItAsksToCheckAuthorizedKeys(): void
+    public function testItAsksToCheckAuthorizedKeysAndToCleanUpGitoliteAdminRepository(): void
     {
-        $this->driver->shouldReceive('checkAuthorizedKeys')->once();
-
-        $this->system_check->process();
-    }
-
-    public function testItAsksToCleanUpGitoliteAdminRepository(): void
-    {
-        $this->gitgc->shouldReceive('cleanUpGitoliteAdminWorkingCopy')->once();
+        $this->driver->expects(self::once())->method('checkAuthorizedKeys');
+        $this->gitgc->expects(self::once())->method('cleanUpGitoliteAdminWorkingCopy');
+        $this->plugin->method('getPluginEtcRoot');
 
         $this->system_check->process();
     }

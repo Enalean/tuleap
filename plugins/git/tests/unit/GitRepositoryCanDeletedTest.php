@@ -18,24 +18,26 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-require_once 'bootstrap.php';
+namespace Tuleap\Git;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class GitRepositoryCanDeletedTest extends \Tuleap\Test\PHPUnit\TestCase
+use Git_Backend_Interface;
+use GitRepository;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class GitRepositoryCanDeletedTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $backend;
+    private Git_Backend_Interface&MockObject $backend;
     private GitRepository $repo;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->backend = \Mockery::spy(Git_Backend_Interface::class)->shouldReceive('getGitRootPath')->andReturns(dirname(__FILE__) . '/_fixtures')->getMock();
-        $project       = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('perms')->build();
+        $this->backend = $this->createMock(Git_Backend_Interface::class);
+        $this->backend->method('getGitRootPath')->willReturn(dirname(__FILE__) . '/_fixtures');
+        $project = ProjectTestBuilder::aProject()->withUnixName('perms')->build();
 
         $this->repo = new GitRepository();
         $this->repo->setBackend($this->backend);
@@ -44,25 +46,25 @@ final class GitRepositoryCanDeletedTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed(): void
     {
-        $this->backend->shouldReceive('canBeDeleted')->andReturns(true);
+        $this->backend->method('canBeDeleted')->willReturn(true);
         $this->repo->setPath('perms/coincoin.git.git');
 
-        $this->assertTrue($this->repo->canBeDeleted());
+        self::assertTrue($this->repo->canBeDeleted());
     }
 
     public function testItCanBeDeletedWithWrongRepositoryPathShouldFail(): void
     {
-        $this->backend->shouldReceive('canBeDeleted')->andReturns(true);
+        $this->backend->method('canBeDeleted')->willReturn(true);
         $this->repo->setPath('perms/coincoin');
 
-        $this->assertFalse($this->repo->canBeDeleted());
+        self::assertFalse($this->repo->canBeDeleted());
     }
 
     public function testItCannotBeDeletedIfBackendForbidIt(): void
     {
-        $this->backend->shouldReceive('canBeDeleted')->andReturns(false);
+        $this->backend->method('canBeDeleted')->willReturn(false);
 
         $this->repo->setPath('perms/coincoin.git.git');
-        $this->assertFalse($this->repo->canBeDeleted());
+        self::assertFalse($this->repo->canBeDeleted());
     }
 }

@@ -26,9 +26,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
+use Git_Backend_Gitolite;
+use Git_RemoteServer_GerritServer;
 use Git_SystemEventManager;
 use GitRepository;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SystemEvent;
 use SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP;
 use SystemEvent_GIT_GERRIT_MIGRATION;
@@ -36,75 +38,79 @@ use SystemEvent_GIT_REPO_DELETE;
 use SystemEvent_GIT_REPO_FORK;
 use SystemEvent_GIT_REPO_UPDATE;
 use SystemEventManager;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEventManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var SystemEventManager */
-    private $system_event_manager;
-    /** @var Git_SystemEventManager */
-    private $git_system_event_manager;
-    /** @var GitRepository */
-    private $gitolite_repository;
+    private SystemEventManager&MockObject $system_event_manager;
+    private Git_SystemEventManager $git_system_event_manager;
+    private GitRepository $gitolite_repository;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->system_event_manager     = \Mockery::spy(\SystemEventManager::class);
+        $this->system_event_manager     = $this->createMock(SystemEventManager::class);
         $this->git_system_event_manager = new Git_SystemEventManager($this->system_event_manager);
 
-        $this->gitolite_repository = \Mockery::spy(\GitRepository::class);
-        $this->gitolite_repository->shouldReceive('getId')->andReturns(54);
-        $this->gitolite_repository->shouldReceive('getProjectId')->andReturns(116);
-        $this->gitolite_repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\Git_Backend_Gitolite::class));
+        $this->gitolite_repository = GitRepositoryTestBuilder::aProjectRepository()->withId(54)
+            ->inProject(ProjectTestBuilder::aProject()->withId(116)->build())
+            ->withBackend($this->createMock(Git_Backend_Gitolite::class))
+            ->build();
     }
 
     public function testItCreatesRepositoryUpdateEvent(): void
     {
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_UPDATE::NAME, 54, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP)->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent')
+            ->with(SystemEvent_GIT_REPO_UPDATE::NAME, 54, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP);
+        $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter');
 
         $this->git_system_event_manager->queueRepositoryUpdate($this->gitolite_repository);
     }
 
     public function testItCreatesRepositoryDeletionEvent(): void
     {
-        $repository = \Mockery::spy(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(54);
-        $repository->shouldReceive('getProjectId')->andReturns(116);
-        $repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\Git_Backend_Gitolite::class));
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_DELETE::NAME, '116' . SystemEvent::PARAMETER_SEPARATOR . '54', \Mockery::any(), SystemEvent::OWNER_APP)->once();
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->withId(54)
+            ->inProject(ProjectTestBuilder::aProject()->withId(116)->build())
+            ->withBackend($this->createMock(Git_Backend_Gitolite::class))
+            ->build();
+        $this->system_event_manager->expects(self::once())->method('createEvent')
+            ->with(SystemEvent_GIT_REPO_DELETE::NAME, '116' . SystemEvent::PARAMETER_SEPARATOR . '54', self::anything(), SystemEvent::OWNER_APP);
 
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
 
     public function testItCreatesRepositoryForkEvent(): void
     {
-        $old_repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(554)->getMock();
-        $new_repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(667)->getMock();
+        $old_repository = GitRepositoryTestBuilder::aProjectRepository()->withId(554)->build();
+        $new_repository = GitRepositoryTestBuilder::aProjectRepository()->withId(667)->build();
 
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_FORK::NAME, '554' . SystemEvent::PARAMETER_SEPARATOR . '667', SystemEvent::PRIORITY_MEDIUM, SystemEvent::OWNER_APP)->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent')
+            ->with(SystemEvent_GIT_REPO_FORK::NAME, '554' . SystemEvent::PARAMETER_SEPARATOR . '667', SystemEvent::PRIORITY_MEDIUM, SystemEvent::OWNER_APP);
 
         $this->git_system_event_manager->queueRepositoryFork($old_repository, $new_repository);
     }
 
     public function testItCreatesGerritMigrationEvent(): void
     {
-        $repository           = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(54)->getMock();
-        $remote_server_id     = 3;
-        $migrate_access_right = true;
-        $requester            = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns(1001)->getMock();
+        $repository       = GitRepositoryTestBuilder::aProjectRepository()->withId(54)->build();
+        $remote_server_id = 3;
+        $requester        = UserTestBuilder::buildWithId(1001);
 
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_GERRIT_MIGRATION::NAME, 54 . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . true . SystemEvent::PARAMETER_SEPARATOR . 1001, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP)->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent')
+            ->with(SystemEvent_GIT_GERRIT_MIGRATION::NAME, 54 . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . true . SystemEvent::PARAMETER_SEPARATOR . 1001, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP);
 
-        $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $migrate_access_right, $requester);
+        $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, true, $requester);
     }
 
     public function testItCreatesGerritReplicationKeyUpdateEvent(): void
     {
-        $server = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(9)->getMock();
+        $server = $this->createMock(Git_RemoteServer_GerritServer::class);
+        $server->method('getId')->willReturn(9);
 
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME, 9, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP)->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent')
+            ->with(SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME, 9, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP);
 
         $this->git_system_event_manager->queueGerritReplicationKeyUpdate($server);
     }

@@ -22,37 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ForgeConfig;
+use Git_GitRepositoryUrlManager;
+use GitPlugin;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class GitRepositoryUrlManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitRepositoryUrlManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var \GitPlugin|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $git_plugin;
-
-    /**
-     * @var \Git_GitRepositoryUrlManager
-     */
-    private $url_manager;
+    private Git_GitRepositoryUrlManager $url_manager;
 
     protected function setUp(): void
     {
-        $this->git_plugin = \Mockery::mock(\GitPlugin::class);
-
-        $this->url_manager = new \Git_GitRepositoryUrlManager($this->git_plugin);
+        $this->url_manager = new Git_GitRepositoryUrlManager($this->createMock(GitPlugin::class));
     }
 
     public function testBuildsURLToACommit(): void
     {
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getRelativeHTTPUrl')->andReturn('/plugins/git/project1/repo1');
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->withName('repo1')
+            ->inProject(ProjectTestBuilder::aProject()->withUnixName('project1')->build())->build();
 
-        $this->assertEquals(
+        self::assertEquals(
             '/plugins/git/project1/repo1?a=commit&h=fbe4dade4f744aa203ec35bf09f71475ecc3f9d6',
             $this->url_manager->getCommitURL($repository, 'fbe4dade4f744aa203ec35bf09f71475ecc3f9d6')
         );
@@ -60,9 +54,9 @@ final class GitRepositoryUrlManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildsAbsoluteURLToACommit(): void
     {
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getRelativeHTTPUrl')->andReturn('/plugins/git/project1/repo1');
-        \ForgeConfig::set('sys_default_domain', 'example.com');
+        $repository = GitRepositoryTestBuilder::aProjectRepository()->withName('repo1')
+            ->inProject(ProjectTestBuilder::aProject()->withUnixName('project1')->build())->build();
+        ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->assertEquals(
             'https://example.com/plugins/git/project1/repo1?a=commit&h=fbe4dade4f744aa203ec35bf09f71475ecc3f9d6',
