@@ -23,50 +23,27 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var MethodBasedOnEffort
-     */
-    private $method;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_Numeric
-     */
-    private $total_effort_field;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_Numeric
-     */
-    private $remaining_effort_field;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticProgressDao
-     */
-    private $dao;
+    private \PFUser $user;
+    private Artifact $artifact;
+    private SemanticProgressDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao                    = \Mockery::mock(SemanticProgressDao::class);
-        $this->total_effort_field     = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1001]);
-        $this->remaining_effort_field = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
-        $this->method                 = new MethodBasedOnEffort(
-            $this->dao,
-            $this->total_effort_field,
-            $this->remaining_effort_field
-        );
-
-        $this->user     = \Mockery::mock(\PFUser::class);
-        $this->artifact = \Mockery::mock(Artifact::class);
+        $this->dao      = $this->createMock(SemanticProgressDao::class);
+        $this->user     = UserTestBuilder::buildWithDefaults();
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
     }
 
     /**
@@ -84,26 +61,32 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         ?float $expected_progress_value,
         string $expected_error_message,
     ): void {
-        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
-        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
 
-        $total_effort_last_changeset     = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Integer::class);
-        $remaining_effort_last_changeset = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Float::class);
+        $total_effort_last_changeset     = $this->createMock(\Tracker_Artifact_ChangesetValue_Integer::class);
+        $remaining_effort_last_changeset = $this->createMock(\Tracker_Artifact_ChangesetValue_Float::class);
 
-        $total_effort_last_changeset->shouldReceive('getNumeric')->andReturn($total_effort);
-        $remaining_effort_last_changeset->shouldReceive('getNumeric')->andReturn($remaining_effort);
+        $total_effort_last_changeset->method('getNumeric')->willReturn($total_effort);
+        $remaining_effort_last_changeset->method('getNumeric')->willReturn($remaining_effort);
 
-        $this->total_effort_field
-            ->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturn($total_effort_last_changeset);
+        $changeset = ChangesetTestBuilder::aChangeset(101)->build();
+        $changeset->setFieldValue($total_effort_field, $total_effort_last_changeset);
+        $changeset->setFieldValue($remaining_effort_field, $remaining_effort_last_changeset);
 
-        $this->remaining_effort_field
-            ->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturn($remaining_effort_last_changeset);
+        $artifact = $changeset->getArtifact();
+        $artifact->setChangesets([$changeset]);
 
-        $progression_result = $this->method->computeProgression($this->artifact, $this->user);
+        $progression_result = $method->computeProgression($artifact, $this->user);
 
         $this->assertEquals($expected_progress_value, $progression_result->getValue());
         $this->assertEquals($expected_error_message, $progression_result->getErrorMessage());
@@ -124,14 +107,22 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         ?float $expected_progress_value,
         string $expected_error_message,
     ): void {
-        $computed_field_total_effort     = \Mockery::mock(\Tracker_FormElement_Field_Computed::class);
-        $computed_field_remaining_effort = \Mockery::mock(\Tracker_FormElement_Field_Computed::class);
+        $computed_field_total_effort     = $this->createMock(\Tracker_FormElement_Field_Computed::class);
+        $computed_field_remaining_effort = $this->createMock(\Tracker_FormElement_Field_Computed::class);
 
-        $computed_field_total_effort->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
-        $computed_field_remaining_effort->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
+        $computed_field_total_effort
+            ->expects(self::once())
+            ->method('userCanRead')
+            ->with($this->user)
+            ->willReturn(true);
+        $computed_field_remaining_effort
+            ->expects(self::once())
+            ->method('userCanRead')
+            ->with($this->user)
+            ->willReturn(true);
 
-        $computed_field_total_effort->shouldReceive('getComputedValue')->with($this->user, $this->artifact)->andReturn($total_effort);
-        $computed_field_remaining_effort->shouldReceive('getComputedValue')->with($this->user, $this->artifact)->andReturn($remaining_effort);
+        $computed_field_total_effort->method('getComputedValue')->with($this->user, $this->artifact)->willReturn($total_effort);
+        $computed_field_remaining_effort->method('getComputedValue')->with($this->user, $this->artifact)->willReturn($remaining_effort);
 
         $method = new MethodBasedOnEffort(
             $this->dao,
@@ -147,9 +138,19 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenUserHasNotPermissionToReadTotalEffortField(): void
     {
-        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(false);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+            ->withReadPermission($this->user, false)
+            ->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+            ->withReadPermission($this->user, true)
+            ->build();
 
-        $progression_result = $this->method->computeProgression($this->artifact, $this->user);
+        $method             = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
+        $progression_result = $method->computeProgression($this->artifact, $this->user);
 
         $this->assertEquals(null, $progression_result->getValue());
         $this->assertEquals('', $progression_result->getErrorMessage());
@@ -157,10 +158,19 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenUserHasNotPermissionToReadRemainingEffortField(): void
     {
-        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
-        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(false);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+            ->withReadPermission($this->user, false)
+            ->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
 
-        $progression_result = $this->method->computeProgression($this->artifact, $this->user);
+        $progression_result = $method->computeProgression($this->artifact, $this->user);
 
         $this->assertEquals(null, $progression_result->getValue());
         $this->assertEquals('', $progression_result->getErrorMessage());
@@ -168,37 +178,72 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsToREST(): void
     {
-        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
-        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
 
         self::assertEquals(
             new SemanticProgressBasedOnEffortRepresentation(1001, 1002),
-            $this->method->exportToREST($this->user),
+            $method->exportToREST($this->user),
         );
     }
 
     public function testItExportsNothingToRESTIfUserCannotReadTotalEffortField(): void
     {
-        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(false);
-        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(true);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+            ->withReadPermission($this->user, false)
+            ->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
 
-        self::assertNull($this->method->exportToREST($this->user));
+        self::assertNull($method->exportToREST($this->user));
     }
 
     public function testItExportsNothingToRESTIfUserCannotReadRemainingEffortField(): void
     {
-        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(true);
-        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(false);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+            ->withReadPermission($this->user, false)
+            ->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
 
-        self::assertNull($this->method->exportToREST($this->user));
+        self::assertNull($method->exportToREST($this->user));
     }
 
     public function testItExportsSemanticConfigurationToXml(): void
     {
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
+
         $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
         $root     = new \SimpleXMLElement($xml_data);
 
-        $this->method->exportToXMl($root, [
+        $method->exportToXMl($root, [
             'F201' => 1001,
             'F202' => 1002,
         ]);
@@ -211,10 +256,18 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportToXMLWhenThereIsNoReferenceToTotalEffortField(): void
     {
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
+
         $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
         $root     = new \SimpleXMLElement($xml_data);
 
-        $this->method->exportToXMl($root, [
+        $method->exportToXMl($root, [
             'F202' => 1002,
         ]);
 
@@ -223,10 +276,18 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportToXMLWhenThereIsNoReferenceToRemainingEffortField(): void
     {
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
+
         $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
         $root     = new \SimpleXMLElement($xml_data);
 
-        $this->method->exportToXMl($root, [
+        $method->exportToXMl($root, [
             'F201' => 1001,
         ]);
 
@@ -235,21 +296,37 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSavesItsConfiguration(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
 
-        $this->dao->shouldReceive('save')->with(113, 1001, 1002, null)->once()->andReturn(true);
+        $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $this->method->saveSemanticForTracker($tracker);
+        $this->dao->expects(self::once())->method('save')->with(113, 1001, 1002, null)->willReturn(true);
+
+        $method->saveSemanticForTracker($tracker);
     }
 
     public function testItDeletesItsConfiguration(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
+        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $method                 = new MethodBasedOnEffort(
+            $this->dao,
+            $total_effort_field,
+            $remaining_effort_field
+        );
 
-        $this->dao->shouldReceive('delete')->with(113)->once()->andReturn(true);
+        $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
+
+        $this->dao->expects(self::once())->method('delete')->with(113)->willReturn(true);
 
         $this->assertTrue(
-            $this->method->deleteSemanticForTracker($tracker)
+            $method->deleteSemanticForTracker($tracker)
         );
     }
 }

@@ -20,31 +20,28 @@
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_ArtifactLink
-     */
-    private $links_field;
-    /**
-     * @var MethodBasedOnLinksCount
-     */
-    private $method;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticProgressDao
-     */
-    private $dao;
+    private Tracker_FormElement_Field_ArtifactLink&MockObject $links_field;
+    private MethodBasedOnLinksCount $method;
+    private SemanticProgressDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao         = \Mockery::mock(SemanticProgressDao::class);
-        $this->links_field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class, ['getId' => 1003]);
-        $this->method      = new MethodBasedOnLinksCount(
+        $this->dao         = $this->createMock(SemanticProgressDao::class);
+        $this->links_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->links_field->method('getId')->willReturn(1003);
+
+        $this->method = new MethodBasedOnLinksCount(
             $this->dao,
             '_is_child'
         );
@@ -57,22 +54,18 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfFieldIsNotUsed(): void
     {
-        $random_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $random_field = DateFieldBuilder::aDateField(1001)->build();
 
         $this->assertFalse($this->method->isFieldUsedInComputation($random_field));
     }
 
     public function testItDoesComputesTheProgressWhenItHasOpenAndClosedLinkedArtifacts(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class, [
-            'getItemName' => 'stories',
-            'getGroupId' => 104,
-            'getId' => 113,
-        ]);
+        $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $last_artifact_changeset = \Mockery::mock(
-            \Tracker_Artifact_ChangesetValue_ArtifactLink::class,
-            ['getValue' => [
+        $last_artifact_changeset = $this->createMock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $last_artifact_changeset->method('getValue')->willReturn(
+            [
                 '141' => $this->buildArtifactLinkInfo(141, '_is_child', $tracker, false), // 1 out of 4 children is closed
                 '142' => $this->buildArtifactLinkInfo(142, 'is_subtask', $tracker, true),
                 '143' => $this->buildArtifactLinkInfo(143, 'covered_by', $tracker, true),
@@ -80,23 +73,18 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
                 '145' => $this->buildArtifactLinkInfo(145, '_is_child', $tracker, true),
                 '146' => $this->buildArtifactLinkInfo(146, '_is_child', $tracker, true),
             ],
-            ]
         );
 
-        $artifact = \Mockery::mock(
-            Artifact::class,
-            [
-                'getAnArtifactLinkField' => $this->links_field,
-            ]
-        );
-        $this->links_field->shouldReceive('getLastChangesetValue')
-            ->once()
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getAnArtifactLinkField')->willReturn($this->links_field);
+
+        $this->links_field->expects(self::once())->method('getLastChangesetValue')
             ->with($artifact)
-            ->andReturn($last_artifact_changeset);
+            ->willReturn($last_artifact_changeset);
 
         $progression_result = $this->method->computeProgression(
             $artifact,
-            \Mockery::mock(\PFUser::class)
+            UserTestBuilder::buildWithDefaults()
         );
 
         $this->assertEquals(0.25, $progression_result->getValue());
@@ -104,16 +92,12 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotComputeTheProgressWhenThereIsNoLinkField(): void
     {
-        $artifact = \Mockery::mock(
-            Artifact::class,
-            [
-                'getAnArtifactLinkField' => null,
-            ]
-        );
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getAnArtifactLinkField')->willReturn(null);
 
         $progression_result = $this->method->computeProgression(
             $artifact,
-            \Mockery::mock(\PFUser::class)
+            UserTestBuilder::buildWithDefaults()
         );
 
         $this->assertEquals(null, $progression_result->getValue());
@@ -125,19 +109,17 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItConsidersAnArtifactWithoutArtifactLinkValueAsHavingNoLinks(bool $is_artifact_open, float $expected_progress_value): void
     {
-        $artifact = \Mockery::mock(Artifact::class, [
-            'isOpen' => $is_artifact_open,
-            'getAnArtifactLinkField' => $this->links_field,
-        ]);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('isOpen')->willReturn($is_artifact_open);
+        $artifact->method('getAnArtifactLinkField')->willReturn($this->links_field);
 
-        $this->links_field->shouldReceive('getLastChangesetValue')
-            ->once()
+        $this->links_field->expects(self::once())->method('getLastChangesetValue')
             ->with($artifact)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $progression_result = $this->method->computeProgression(
             $artifact,
-            \Mockery::mock(\PFUser::class)
+            UserTestBuilder::buildWithDefaults()
         );
 
         $this->assertEquals($expected_progress_value, $progression_result->getValue());
@@ -149,24 +131,20 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItComputesWhenItHasNoLinksOfGivenType(bool $is_artifact_open, float $expected_progress_value): void
     {
-        $last_artifact_changeset = \Mockery::mock(
-            \Tracker_Artifact_ChangesetValue_ArtifactLink::class,
-            ['getValue' => []]
-        );
+        $last_artifact_changeset = $this->createMock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $last_artifact_changeset->method('getValue')->willReturn([]);
 
-        $artifact = \Mockery::mock(Artifact::class, [
-            'isOpen' => $is_artifact_open,
-            'getAnArtifactLinkField' => $this->links_field,
-        ]);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('isOpen')->willReturn($is_artifact_open);
+        $artifact->method('getAnArtifactLinkField')->willReturn($this->links_field);
 
-        $this->links_field->shouldReceive('getLastChangesetValue')
-            ->once()
+        $this->links_field->expects(self::once())->method('getLastChangesetValue')
             ->with($artifact)
-            ->andReturn($last_artifact_changeset);
+            ->willReturn($last_artifact_changeset);
 
         $progression_result = $this->method->computeProgression(
             $artifact,
-            \Mockery::mock(\PFUser::class)
+            UserTestBuilder::buildWithDefaults()
         );
 
         $this->assertEquals($expected_progress_value, $progression_result->getValue());
@@ -174,15 +152,11 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildArtifactLinkInfo(int $artifact_id, string $type, \Tracker $tracker, bool $is_artifact_open): \Tracker_ArtifactLinkInfo
     {
-        $artifact = \Mockery::mock(
-            Artifact::class,
-            [
-                'getId'            => $artifact_id,
-                'getTracker'       => $tracker,
-                'getLastChangeset' => \Mockery::mock(\Tracker_Artifact_Changeset::class, ['getId' => 12451]),
-                'isOpen'           => $is_artifact_open,
-            ]
-        );
+        $artifact = ArtifactTestBuilder::anArtifact($artifact_id)
+            ->inTracker($tracker)
+            ->withChangesets(ChangesetTestBuilder::aChangeset($artifact_id * 1000)->build())
+            ->isOpen($is_artifact_open)
+            ->build();
 
         return \Tracker_ArtifactLinkInfo::buildFromArtifact($artifact, $type);
     }
@@ -196,7 +170,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertEquals(
             new SemanticProgressBasedOnLinksCountRepresentation('_is_child'),
-            $this->method->exportToREST(\Mockery::mock(\PFUser::class))
+            $this->method->exportToREST(UserTestBuilder::buildWithDefaults())
         );
     }
 
@@ -214,18 +188,18 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSavesItsConfiguration(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
+        $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $this->dao->shouldReceive('save')->with(113, null, null, '_is_child')->once()->andReturn(true);
+        $this->dao->expects(self::once())->method('save')->with(113, null, null, '_is_child')->willReturn(true);
 
         $this->assertTrue($this->method->saveSemanticForTracker($tracker));
     }
 
     public function testItDeletesItsConfiguration(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
+        $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $this->dao->shouldReceive('delete')->with(113)->once()->andReturn(true);
+        $this->dao->expects(self::once())->method('delete')->with(113)->willReturn(true);
 
         $this->assertTrue(
             $this->method->deleteSemanticForTracker($tracker)
