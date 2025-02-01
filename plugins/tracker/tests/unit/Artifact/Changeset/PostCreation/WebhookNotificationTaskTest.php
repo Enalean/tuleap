@@ -18,43 +18,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ColinODell\PsrTestLogger\TestLogger;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\Tracker\Webhook\ArtifactPayload;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
-final class WebhookNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookNotificationTaskTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testConfiguredWebhooksAreSent(): void
     {
-        $logger  = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $emitter = \Mockery::mock(Emitter::class);
-        $factory = \Mockery::mock(WebhookFactory::class);
+        $logger  = new TestLogger();
+        $emitter = $this->createMock(Emitter::class);
+        $factory = $this->createMock(WebhookFactory::class);
 
-        $logger->shouldReceive('debug')->atLeast(1);
+        $tracker   = TrackerTestBuilder::aTracker()->build();
+        $changeset = ChangesetTestBuilder::aChangeset(1)
+            ->ofArtifact(ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build())
+            ->build();
 
-        $tracker   = \Mockery::mock(\Tracker::class);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getId')->andReturns(1);
-        $changeset->shouldReceive('getTracker')->andReturns($tracker);
-
-        $webhook_1 = \Mockery::mock(Webhook::class);
-        $webhook_2 = \Mockery::mock(Webhook::class);
-        $factory->shouldReceive('getWebhooksForTracker')->andReturns([$webhook_1, $webhook_2]);
+        $webhook_1 = $this->createMock(Webhook::class);
+        $webhook_2 = $this->createMock(Webhook::class);
+        $factory->method('getWebhooksForTracker')->willReturn([$webhook_1, $webhook_2]);
 
         $builder = ArtifactPayloadBuilderStub::withEmptyPayload();
 
         $webhook_notification_task = new WebhookNotificationTask($logger, $emitter, $factory, $builder);
 
-        $emitter->shouldReceive('emit')
-            ->with(\Mockery::type(ArtifactPayload::class), $webhook_1, $webhook_2)->once();
+        $emitter->expects(self::once())->method('emit')
+            ->with(self::isInstanceOf(ArtifactPayload::class), $webhook_1, $webhook_2);
 
         $webhook_notification_task->execute($changeset, new PostCreationTaskConfiguration(true, []));
+
+        self::assertTrue($logger->hasDebugRecords());
     }
 }

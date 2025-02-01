@@ -23,37 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use TemplateRenderer;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
 
-final class ChangesetFromXmlDisplayerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChangesetFromXmlDisplayerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var ChangesetFromXmlDisplayer
-     */
-    private $displayer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ChangesetFromXmlDao
-     */
-    private $dao;
+    private ChangesetFromXmlDisplayer $displayer;
+    private TemplateRenderer&MockObject $renderer;
+    private UserManager&MockObject $user_manager;
+    private ChangesetFromXmlDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao          = \Mockery::mock(ChangesetFromXmlDao::class);
-        $this->user_manager = Mockery::mock(\UserManager::class);
-        $this->renderer     = Mockery::mock(\TemplateRenderer::class);
+        $this->dao          = $this->createMock(ChangesetFromXmlDao::class);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $this->renderer     = $this->createMock(TemplateRenderer::class);
         $this->displayer    = new ChangesetFromXmlDisplayer(
             $this->dao,
             $this->user_manager,
@@ -65,31 +55,28 @@ final class ChangesetFromXmlDisplayerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnEmptyStringIfChangesetDoesNotComeFromXmlImport(): void
     {
-        $this->dao->shouldReceive('searchChangeset')->andReturn(null);
-        $this->user_manager->shouldReceive('getUserById')->never();
-        $this->renderer->shouldReceive('renderToString')->never();
+        $this->dao->method('searchChangeset')->willReturn(null);
+        $this->user_manager->expects(self::never())->method('getUserById');
+        $this->renderer->expects(self::never())->method('renderToString');
 
-        $this->assertEquals('', $this->displayer->display(1234));
+        self::assertEquals('', $this->displayer->display(1234));
     }
 
     public function testItReturnsAnEmptyStringIfUserWhoPerfomTheImportDoesNotExisit(): void
     {
-        $this->dao->shouldReceive('searchChangeset')->andReturn(['user_id' => 101, 'timestamp' => 123456789]);
-        $this->user_manager->shouldReceive('getUserById')->once()->andReturn(null);
-        $this->renderer->shouldReceive('renderToString')->never();
+        $this->dao->method('searchChangeset')->willReturn(['user_id' => 101, 'timestamp' => 123456789]);
+        $this->user_manager->expects(self::once())->method('getUserById')->willReturn(null);
+        $this->renderer->expects(self::never())->method('renderToString');
 
-        $this->assertEquals('', $this->displayer->display(1234));
+        self::assertEquals('', $this->displayer->display(1234));
     }
 
     public function testItRendersTheChangeset(): void
     {
-        $this->dao->shouldReceive('searchChangeset')->andReturn(['user_id' => 101, 'timestamp' => 123456789]);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturn('user');
-        $user->shouldReceive('getPublicProfileUrl')->andReturn('user');
-        $this->user_manager->shouldReceive('getUserById')->once()->andReturn($user);
-        $this->renderer->shouldReceive('renderToString')->once()->andReturn('Imported by user on 2020-04-20');
+        $this->dao->method('searchChangeset')->willReturn(['user_id' => 101, 'timestamp' => 123456789]);
+        $this->user_manager->expects(self::once())->method('getUserById')->willReturn(UserTestBuilder::aUser()->withUserName('user')->build());
+        $this->renderer->expects(self::once())->method('renderToString')->willReturn('Imported by user on 2020-04-20');
 
-        $this->assertEquals('Imported by user on 2020-04-20', $this->displayer->display(1234));
+        self::assertEquals('Imported by user on 2020-04-20', $this->displayer->display(1234));
     }
 }
