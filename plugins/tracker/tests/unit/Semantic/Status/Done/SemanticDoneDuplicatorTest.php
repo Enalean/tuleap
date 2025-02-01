@@ -22,36 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tracker_Semantic_StatusDao;
 
-class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private SemanticDoneDuplicator $duplicator;
 
-    /**
-     * @var SemanticDoneDuplicator
-     */
-    private $duplicator;
+    private SemanticDoneDao&MockObject $done_dao;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticDoneDao
-     */
-    private $done_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Semantic_StatusDao
-     */
-    private $status_dao;
+    private Tracker_Semantic_StatusDao&MockObject $status_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->done_dao   = Mockery::mock(SemanticDoneDao::class);
-        $this->status_dao = Mockery::mock(Tracker_Semantic_StatusDao::class);
+        $this->done_dao   = $this->createMock(SemanticDoneDao::class);
+        $this->status_dao = $this->createMock(Tracker_Semantic_StatusDao::class);
 
         $this->duplicator = new SemanticDoneDuplicator(
             $this->done_dao,
@@ -73,17 +61,24 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
-            ['value_id' => '462'],
-        ]);
+        $this->done_dao
+            ->expects(self::once())
+            ->method('getSelectedValues')
+            ->willReturn([
+                ['value_id' => '462'],
+            ]);
 
-        $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::arrayToDar([
-            'field_id' => '712',
-        ]));
+        $this->status_dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
+            ->willReturn(TestHelper::arrayToDar([
+                'field_id' => '712',
+            ]));
 
-        $this->done_dao->shouldReceive('addForTracker')
-            ->with(201, [6228])
-            ->once();
+        $this->done_dao
+            ->expects(self::once())
+            ->method('addForTracker')
+            ->with(201, [6228]);
 
         $this->duplicator->duplicate(101, 201, $mapping);
     }
@@ -102,10 +97,13 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([]);
+        $this->done_dao
+            ->expects(self::once())
+            ->method('getSelectedValues')
+            ->willReturn([]);
 
-        $this->status_dao->shouldNotReceive('searchByTrackerId');
-        $this->done_dao->shouldNotReceive('addForTracker');
+        $this->status_dao->expects(self::never())->method('searchByTrackerId');
+        $this->done_dao->expects(self::never())->method('addForTracker');
 
         $this->duplicator->duplicate(101, 201, $mapping);
     }
@@ -124,13 +122,19 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
-            ['value_id' => '462'],
-        ]);
+        $this->done_dao
+            ->expects(self::once())
+            ->method('getSelectedValues')
+            ->willReturn([
+                ['value_id' => '462'],
+            ]);
 
-        $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::emptyDar());
+        $this->status_dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
+            ->willReturn(TestHelper::emptyDar());
 
-        $this->done_dao->shouldNotReceive('addForTracker');
+        $this->done_dao->expects(self::never())->method('addForTracker');
 
         $this->duplicator->duplicate(101, 201, $mapping);
     }
@@ -149,15 +153,21 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
-            ['value_id' => '463'],
-        ]);
+        $this->done_dao
+            ->expects(self::once())
+            ->method('getSelectedValues')
+            ->willReturn([
+                ['value_id' => '463'],
+            ]);
 
-        $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::arrayToDar([
-            'field_id' => '712',
-        ]));
+        $this->status_dao
+            ->expects(self::once())
+            ->method('searchByTrackerId')
+            ->willReturn(TestHelper::arrayToDar([
+                'field_id' => '712',
+            ]));
 
-        $this->done_dao->shouldNotReceive('addForTracker');
+        $this->done_dao->expects(self::never())->method('addForTracker');
 
         $this->duplicator->duplicate(101, 201, $mapping);
     }

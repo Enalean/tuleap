@@ -20,43 +20,21 @@
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
+use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticDoneValueChecker
-     */
-    private $value_checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticDoneDao
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Semantic_Status
-     */
-    private $semantic_status;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $done_value;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $on_going_value;
-
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $to_do_value;
+    private SemanticDoneValueChecker&MockObject $value_checker;
+    private SemanticDoneDao&MockObject $dao;
+    private \Tracker_Semantic_Status&MockObject $semantic_status;
+    private Tracker $tracker;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $on_going_value;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $to_do_value;
 
     protected function setUp(): void
     {
@@ -64,28 +42,29 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->on_going_value = new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'on-going', '', 2, false);
         $this->done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(3, 'done', '', 3, false);
 
-        $this->tracker         = \Mockery::mock(\Tracker::class);
-        $this->semantic_status = \Mockery::spy(\Tracker_Semantic_Status::class);
-        $this->dao             = \Mockery::spy(SemanticDoneDao::class);
-        $this->value_checker   = \Mockery::spy(SemanticDoneValueChecker::class);
+        $this->tracker         = TrackerTestBuilder::aTracker()->build();
+        $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->dao             = $this->createMock(SemanticDoneDao::class);
+        $this->value_checker   = $this->createMock(SemanticDoneValueChecker::class);
     }
 
     public function testItExportsTheSemanticInXml(): void
     {
-        $this->semantic_status->shouldReceive('getOpenValues')->andReturns([
+        $this->semantic_status->method('getOpenValues')->willReturn([
             1,
             2,
         ]);
 
-        $field = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $field = $this->createMock(\Tracker_FormElement_Field_List::class);
 
-        $field->shouldReceive('getAllVisibleValues')->andReturns([
+        $field->method('getId')->willReturn(101);
+        $field->method('getAllVisibleValues')->willReturn([
             1 => $this->to_do_value,
             2 => $this->on_going_value,
             3 => $this->done_value,
         ]);
 
-        $this->semantic_status->shouldReceive('getField')->andReturns($field);
+        $this->semantic_status->method('getField')->willReturn($field);
 
         $xml               = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = [
@@ -114,7 +93,7 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsNothingIfNoSemanticStatusDefined(): void
     {
-        $this->semantic_status->shouldReceive('getField')->andReturns(null);
+        $this->semantic_status->method('getField')->willReturn(null);
 
         $xml               = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = [

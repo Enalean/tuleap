@@ -20,16 +20,13 @@
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_Semantic_Status;
 
-class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private Tracker_FormElement_Field_List_Bind_StaticValue $to_do_value;
     private Tracker_FormElement_Field_List_Bind_StaticValue $on_going_value;
     private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
@@ -40,10 +37,7 @@ class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_FormElement_Field_List_Bind_StaticValue $xml_hidden_value;
     private SimpleXMLElement $xml_semantic_status;
     private SemanticDoneValueChecker $value_checker;
-    /**
-     * @var Tracker_Semantic_Status&Mockery\MockInterface
-     */
-    private $semantic_status;
+    private Tracker_Semantic_Status&MockObject $semantic_status;
 
     public function setUp(): void
     {
@@ -59,8 +53,8 @@ class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue('F3', 'done', '', 3, false);
         $this->xml_hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue('F4', 'hidden', '', 4, true);
 
-        $this->semantic_status = Mockery::spy(Tracker_Semantic_Status::class);
-        $this->semantic_status->shouldReceive('getOpenValues')->andReturn([
+        $this->semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $this->semantic_status->method('getOpenValues')->willReturn([
             1,
             2,
         ]);

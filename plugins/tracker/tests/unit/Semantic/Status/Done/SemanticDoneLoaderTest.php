@@ -22,47 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Semantic_Status;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface|SemanticDoneValueChecker
-     */
-    private $value_checker;
-    /**
-     * @var \Mockery\MockInterface|SemanticDoneDao
-     */
-    private $dao;
-    /**
-     * @var SemanticDoneLoader
-     */
-    private $loader;
-    /**
-     * @var Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Mockery\MockInterface|Tracker_Semantic_Status
-     */
-    private $semantic_status;
+    private SemanticDoneValueChecker&MockObject $value_checker;
+    private SemanticDoneDao&MockObject $dao;
+    private SemanticDoneLoader $loader;
+    private Tracker $tracker;
+    private Tracker_Semantic_Status&MockObject $semantic_status;
 
     public function setUp(): void
     {
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(101);
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
+        $this->semantic_status = $this->createMock(Tracker_Semantic_Status::class);
 
-        $this->dao           = Mockery::mock(SemanticDoneDao::class);
-        $this->value_checker = Mockery::mock(SemanticDoneValueChecker::class);
+        $this->dao           = $this->createMock(SemanticDoneDao::class);
+        $this->value_checker = $this->createMock(SemanticDoneValueChecker::class);
 
         $this->loader = new SemanticDoneLoader($this->dao, $this->value_checker);
     }
@@ -74,7 +56,7 @@ class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadWhenStatusIsNotDefined(): void
     {
-        $this->semantic_status->shouldReceive('getField')->andReturn(null);
+        $this->semantic_status->method('getField')->willReturn(null);
 
         $semantic_done = $this->loader->load($this->tracker, $this->semantic_status);
 
@@ -83,23 +65,25 @@ class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadWhenStatusIsDefined(): void
     {
-        $done_value = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $done_value->shouldReceive('getId')->andReturn(3);
+        $done_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
+        $done_value->method('getId')->willReturn(3);
 
-        $delivered_value = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $delivered_value->shouldReceive('getId')->andReturn(4);
+        $delivered_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
+        $delivered_value->method('getId')->willReturn(4);
 
-        $this->value_checker->shouldReceive('isValueAPossibleDoneValue')->andReturn(true);
+        $this->value_checker->method('isValueAPossibleDoneValue')->willReturn(true);
 
-        $bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind->shouldReceive('getValue')->with(3)->andReturn($done_value);
-        $bind->shouldReceive('getValue')->with(4)->andReturn($delivered_value);
+        $bind = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind->method('getValue')->willReturnCallback(static fn (int $id) => match ($id) {
+            3 => $done_value,
+            4 => $delivered_value,
+        });
 
-        $status_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $status_field->shouldReceive('getBind')->andReturn($bind);
+        $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $status_field->method('getBind')->willReturn($bind);
 
-        $this->semantic_status->shouldReceive('getField')->andReturn($status_field);
-        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id' => 3], ['value_id' => 4]]);
+        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->dao->method('getSelectedValues')->willReturn([['value_id' => 3], ['value_id' => 4]]);
 
         $semantic_done = $this->loader->load($this->tracker, $this->semantic_status);
 
@@ -108,30 +92,30 @@ class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadIgnoreValuesThatCannotBeDone(): void
     {
-        $done_value = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $done_value->shouldReceive('getId')->andReturn(3);
+        $done_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
+        $done_value->method('getId')->willReturn(3);
 
-        $delivered_value = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $delivered_value->shouldReceive('getId')->andReturn(4);
+        $delivered_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
+        $delivered_value->method('getId')->willReturn(4);
 
         $this->value_checker
-            ->shouldReceive('isValueAPossibleDoneValue')
+            ->method('isValueAPossibleDoneValue')
             ->with($done_value, $this->semantic_status)
-            ->andReturn(true);
-        $this->value_checker
-            ->shouldReceive('isValueAPossibleDoneValue')
-            ->with($delivered_value, $this->semantic_status)
-            ->andReturn(false);
+            ->willReturnCallback(
+                static fn(Tracker_FormElement_Field_List_Value $value) => $value === $done_value
+            );
 
-        $bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind->shouldReceive('getValue')->with(3)->andReturn($done_value);
-        $bind->shouldReceive('getValue')->with(4)->andReturn($delivered_value);
+        $bind = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind->method('getValue')->willReturnCallback(static fn (int $id) => match ($id) {
+            3 => $done_value,
+            4 => $delivered_value,
+        });
 
-        $status_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $status_field->shouldReceive('getBind')->andReturn($bind);
+        $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $status_field->method('getBind')->willReturn($bind);
 
-        $this->semantic_status->shouldReceive('getField')->andReturn($status_field);
-        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id' => 3], ['value_id' => 4]]);
+        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->dao->method('getSelectedValues')->willReturn([['value_id' => 3], ['value_id' => 4]]);
 
         $semantic_done = $this->loader->load($this->tracker, $this->semantic_status);
 
@@ -140,20 +124,22 @@ class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadIgnoreUnknownValues(): void
     {
-        $done_value = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $done_value->shouldReceive('getId')->andReturn(3);
+        $done_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
+        $done_value->method('getId')->willReturn(3);
 
-        $this->value_checker->shouldReceive('isValueAPossibleDoneValue')->andReturn(true);
+        $this->value_checker->method('isValueAPossibleDoneValue')->willReturn(true);
 
-        $bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind->shouldReceive('getValue')->with(3)->andReturn($done_value);
-        $bind->shouldReceive('getValue')->with(4)->andThrow(Tracker_FormElement_InvalidFieldValueException::class);
+        $bind = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind->method('getValue')->willReturnCallback(static fn (int $id) => match ($id) {
+            3 => $done_value,
+            4 => throw new Tracker_FormElement_InvalidFieldValueException(),
+        });
 
-        $status_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $status_field->shouldReceive('getBind')->andReturn($bind);
+        $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $status_field->method('getBind')->willReturn($bind);
 
-        $this->semantic_status->shouldReceive('getField')->andReturn($status_field);
-        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id' => 3], ['value_id' => 4]]);
+        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->dao->method('getSelectedValues')->willReturn([['value_id' => 3], ['value_id' => 4]]);
 
         $semantic_done = $this->loader->load($this->tracker, $this->semantic_status);
 
