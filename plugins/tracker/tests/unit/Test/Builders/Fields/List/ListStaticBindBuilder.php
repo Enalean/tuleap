@@ -49,8 +49,9 @@ final class ListStaticBindBuilder
 
     /**
      * @psalm-param array<int, string> $values_labels
+     * @psalm-param array<int, bool> $hidden_values
      */
-    public function withStaticValues(array $values_labels): self
+    public function withStaticValues(array $values_labels, array $hidden_values = []): self
     {
         foreach ($values_labels as $id => $label) {
             $bind_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
@@ -58,7 +59,7 @@ final class ListStaticBindBuilder
                 $label,
                 'A static bind value',
                 $id,
-                false,
+                isset($hidden_values[$id]),
             );
 
             $this->bind_values[$id] = $bind_value;

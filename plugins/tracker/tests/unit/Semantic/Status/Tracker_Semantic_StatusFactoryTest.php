@@ -21,17 +21,13 @@
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
-use Tracker_FormElement_Field_List;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testImport()
     {
         $xml = simplexml_load_string(
@@ -40,14 +36,11 @@ class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
 
-        $tracker = Mockery::mock(Tracker::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $f1 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $f1->shouldReceive('getId')->andReturns(111);
-        $f2 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $f2->shouldReceive('getId')->andReturns(112);
-        $f3 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $f3->shouldReceive('getId')->andReturns(113);
+        $f1 = ListFieldBuilder::aListField(111)->build();
+        $f2 = ListFieldBuilder::aListField(112)->build();
+        $f3 = ListFieldBuilder::aListField(113)->build();
 
         $mapping         = [
             'F9'  => $f1,

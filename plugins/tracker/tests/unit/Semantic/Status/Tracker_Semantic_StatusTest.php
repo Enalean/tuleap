@@ -21,32 +21,23 @@
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_Semantic_StatusTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Semantic_StatusTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $field;
+    private Tracker $tracker;
+    private Tracker_FormElement_Field_List $field;
 
     public function setUp(): void
     {
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->field   = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->field->shouldReceive('getId')->andReturn(103);
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
+        $this->field   = ListFieldBuilder::aListField(103)->build();
     }
 
     public function testExport()
