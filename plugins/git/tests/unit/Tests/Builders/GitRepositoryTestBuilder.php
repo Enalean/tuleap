@@ -36,6 +36,7 @@ final class GitRepositoryTestBuilder
     private string $backend_type     = GitDao::BACKEND_GITOLITE;
     private ?\GitRepository $parent_repository;
     private ?Git_Backend_Interface $backend = null;
+    private string $path                    = 'path/to/repo';
 
     private function __construct(?\GitRepository $parent_repository)
     {
@@ -83,6 +84,12 @@ final class GitRepositoryTestBuilder
         return $this;
     }
 
+    public function withPath(string $path): self
+    {
+        $this->path = $path;
+        return $this;
+    }
+
     public function build(): \GitRepository
     {
         $repository = new \GitRepository();
@@ -92,6 +99,7 @@ final class GitRepositoryTestBuilder
         $repository->setName($this->name);
         $repository->setRemoteServerId($this->migrated_to_gerrit);
         $repository->setBackendType($this->backend_type);
+        $repository->setPath($this->path);
 
         if ($this->parent_repository) {
             $repository->setParent($this->parent_repository);
