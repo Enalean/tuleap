@@ -23,146 +23,149 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Container_Fieldset;
+use Transition;
+use Transition_PostAction_CIBuild;
+use Transition_PostAction_Field_Date;
+use Transition_PostAction_Field_Float;
+use Transition_PostAction_Field_Int;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
-use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
+use Workflow_Transition_Condition_CommentNotEmpty;
+use Workflow_Transition_Condition_FieldNotEmpty;
+use Workflow_Transition_Condition_Permissions;
+use Workflow_Transition_ConditionFactory;
 
-class TransitionReplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TransitionReplicatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var TransitionReplicator */
-    private $transition_replicator;
-    /** @var Mockery\MockInterface */
-    private $condition_factory;
-    /** @var Mockery\MockInterface */
-    private $conditions_updater;
-    /** @var Mockery\MockInterface */
-    private $post_actions_retriever;
-    /** @var Mockery\MockInterface */
-    private $post_actions_updater;
-    /** @var PostActionsMapper */
-    private $post_actions_mapper;
+    private TransitionReplicator $transition_replicator;
+    private Workflow_Transition_ConditionFactory&MockObject $condition_factory;
+    private ConditionsUpdater&MockObject $conditions_updater;
+    private PostActionsRetriever&MockObject $post_actions_retriever;
+    private PostActionCollectionUpdater&MockObject $post_actions_updater;
+    private PostActionsMapper $post_actions_mapper;
 
     protected function setUp(): void
     {
-        $this->condition_factory      = Mockery::mock(\Workflow_Transition_ConditionFactory::class);
-        $this->conditions_updater     = Mockery::mock(ConditionsUpdater::class);
-        $this->post_actions_retriever = Mockery::mock(PostActionsRetriever::class);
-        $this->post_actions_updater   = Mockery::mock(PostActionCollectionUpdater::class);
+        $this->condition_factory      = $this->createMock(Workflow_Transition_ConditionFactory::class);
+        $this->conditions_updater     = $this->createMock(ConditionsUpdater::class);
+        $this->post_actions_retriever = $this->createMock(PostActionsRetriever::class);
+        $this->post_actions_updater   = $this->createMock(PostActionCollectionUpdater::class);
         $this->post_actions_mapper    = new PostActionsMapper();
-        $this->transition_replicator  = new TransitionReplicator(
+
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->expects(self::once())->method('processEvent');
+
+        $this->transition_replicator = new TransitionReplicator(
             $this->condition_factory,
             $this->conditions_updater,
             $this->post_actions_retriever,
             $this->post_actions_updater,
             $this->post_actions_mapper,
-            Mockery::mock(EventManager::class)->shouldReceive('processEvent')->once()->getMock()
+            $event_manager
         );
     }
 
     public function testReplicateCopiesConditionsAndPostActionsFromTransitionToTransition()
     {
-        $from_transition     = Mockery::mock(\Transition::class);
-        $to_transition       = Mockery::mock(\Transition::class);
+        $from_transition     = $this->createMock(Transition::class);
+        $to_transition       = $this->createMock(Transition::class);
         $not_empty_ids       = [195, 305];
-        $not_empty_condition = Mockery::mock(\Workflow_Transition_Condition_FieldNotEmpty::class)
-            ->shouldReceive('getFieldIds')
-            ->andReturn($not_empty_ids)
-            ->getMock();
+        $not_empty_condition = $this->createMock(Workflow_Transition_Condition_FieldNotEmpty::class);
+        $not_empty_condition
+            ->method('getFieldIds')
+            ->willReturn($not_empty_ids);
         $this->condition_factory
-            ->shouldReceive('getFieldNotEmptyCondition')
-            ->andReturn($not_empty_condition);
+            ->method('getFieldNotEmptyCondition')
+            ->willReturn($not_empty_condition);
         $is_comment_required = true;
-        $comment_condition   = Mockery::mock(\Workflow_Transition_Condition_CommentNotEmpty::class)
-            ->shouldReceive('isCommentRequired')
-            ->andReturn($is_comment_required)
-            ->getMock();
+        $comment_condition   = $this->createMock(Workflow_Transition_Condition_CommentNotEmpty::class);
+        $comment_condition
+            ->method('isCommentRequired')
+            ->willReturn($is_comment_required);
         $this->condition_factory
-            ->shouldReceive('getCommentNotEmptyCondition')
+            ->method('getCommentNotEmptyCondition')
             ->with($from_transition)
-            ->andReturn($comment_condition);
-        $permission_condition = Mockery::mock(\Workflow_Transition_Condition_Permissions::class)
-            ->shouldReceive('getAuthorizedUGroupsAsArray')
-            ->andReturn([['ugroup_id' => '191'], ['ugroup_id' => '154_3']])
-            ->getMock();
+            ->willReturn($comment_condition);
+        $permission_condition = $this->createMock(Workflow_Transition_Condition_Permissions::class);
+        $permission_condition
+            ->method('getAuthorizedUGroupsAsArray')
+            ->willReturn([['ugroup_id' => '191'], ['ugroup_id' => '154_3']]);
         $this->condition_factory
-            ->shouldReceive('getPermissionsCondition')
-            ->andReturn($permission_condition);
+            ->method('getPermissionsCondition')
+            ->willReturn($permission_condition);
 
-        $ci_build = Mockery::mock(\Transition_PostAction_CIBuild::class);
-        $ci_build->shouldReceive('getJobUrl')->andReturn('https://example.com');
+        $ci_build = $this->createMock(Transition_PostAction_CIBuild::class);
+        $ci_build->method('getJobUrl')->willReturn('https://example.com');
         $this->post_actions_retriever
-            ->shouldReceive('getCIBuilds')
-            ->andReturn([$ci_build]);
+            ->method('getCIBuilds')
+            ->willReturn([$ci_build]);
 
-        $date_field = Mockery::mock(\Transition_PostAction_Field_Date::class);
-        $date_field->shouldReceive('getFieldId')->andReturn('197');
-        $date_field->shouldReceive('getValueType')->andReturn(\Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
+        $date_field = $this->createMock(Transition_PostAction_Field_Date::class);
+        $date_field->method('getFieldId')->willReturn('197');
+        $date_field->method('getValueType')->willReturn(Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
         $this->post_actions_retriever
-            ->shouldReceive('getSetDateFieldValues')
-            ->andReturn([$date_field]);
+            ->method('getSetDateFieldValues')
+            ->willReturn([$date_field]);
 
-        $float_field = Mockery::mock(\Transition_PostAction_Field_Float::class);
-        $float_field->shouldReceive('getFieldId')->andReturn('201');
-        $float_field->shouldReceive('getValue')->andReturn(48.97);
+        $float_field = $this->createMock(Transition_PostAction_Field_Float::class);
+        $float_field->method('getFieldId')->willReturn('201');
+        $float_field->method('getValue')->willReturn(48.97);
         $this->post_actions_retriever
-            ->shouldReceive('getSetFloatFieldValues')
-            ->andReturn([$float_field]);
+            ->method('getSetFloatFieldValues')
+            ->willReturn([$float_field]);
 
-        $int_field = Mockery::mock(\Transition_PostAction_Field_Int::class);
-        $int_field->shouldReceive('getFieldId')->andReturn('247');
-        $int_field->shouldReceive('getValue')->andReturn(-128);
+        $int_field = $this->createMock(Transition_PostAction_Field_Int::class);
+        $int_field->method('getFieldId')->willReturn('247');
+        $int_field->method('getValue')->willReturn(-128);
         $this->post_actions_retriever
-            ->shouldReceive('getSetIntFieldValues')
-            ->andReturn([$int_field]);
+            ->method('getSetIntFieldValues')
+            ->willReturn([$int_field]);
 
-        $frozen_fields = Mockery::mock(FrozenFields::class);
-        $frozen_fields->shouldReceive('getFieldIds')->andReturn([999]);
+        $frozen_fields = $this->createMock(FrozenFields::class);
+        $frozen_fields->method('getFieldIds')->willReturn([999]);
         $this->post_actions_retriever
-            ->shouldReceive('getFrozenFields')
-            ->andReturn($frozen_fields);
+            ->method('getFrozenFields')
+            ->willReturn($frozen_fields);
 
-        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $fieldset_01->shouldReceive('getID')->andReturn('648');
-        $fieldset_02->shouldReceive('getID')->andReturn('701');
+        $fieldset_01->method('getID')->willReturn('648');
+        $fieldset_02->method('getID')->willReturn('701');
 
-        $hidden_fieldsets = Mockery::mock(HiddenFieldsets::class);
-        $hidden_fieldsets->shouldReceive('getFieldsets')->andReturn([
+        $hidden_fieldsets = $this->createMock(HiddenFieldsets::class);
+        $hidden_fieldsets->method('getFieldsets')->willReturn([
             $fieldset_01,
             $fieldset_02,
         ]);
 
         $this->post_actions_retriever
-            ->shouldReceive('getHiddenFieldsets')
-            ->andReturn($hidden_fieldsets);
+            ->method('getHiddenFieldsets')
+            ->willReturn($hidden_fieldsets);
 
         $this->conditions_updater
-            ->shouldReceive('update')
+            ->method('update')
             ->with($to_transition, ['191', '154_3'], $not_empty_ids, $is_comment_required);
         $this->post_actions_updater
-            ->shouldReceive('updateByTransition', $to_transition, new PostActionCollection(
-                new CIBuildValue('https://example.com'),
-                new SetDateValue(197, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
-                new SetFloatValue(201, 48.97),
-                new SetIntValue(247, -128),
-                new FrozenFieldsValue([999]),
-                new HiddenFieldsetsValue([648, 701])
-            ));
+            ->method('updateByTransition')
+            ->with($to_transition, self::callback(static fn (PostActionCollection $collection) =>
+                $collection->getCIBuildPostActions()[0]->getJobUrl() === 'https://example.com'
+                    && $collection->getSetDateValuePostActions()[0]->getFieldId() === 197
+                    && $collection->getSetDateValuePostActions()[0]->getValue() === Transition_PostAction_Field_Date::FILL_CURRENT_TIME
+                    && $collection->getSetFloatValuePostActions()[0]->getFieldId() === 201
+                    && $collection->getSetFloatValuePostActions()[0]->getValue() === 48.97
+                    && $collection->getSetIntValuePostActions()[0]->getFieldId() === 247
+                    && $collection->getSetIntValuePostActions()[0]->getValue() === -128
+                    && $collection->getFrozenFieldsPostActions()[0]->getFieldIds() === [999]
+                    && $collection->getHiddenFieldsetsPostActions()[0]->getFieldsetIds() === [648, 701]));
 
         $this->transition_replicator->replicate($from_transition, $to_transition);
     }
