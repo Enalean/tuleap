@@ -35,4 +35,4 @@ msgid "Directory group %s does not exist."
 msgstr "Le groupe de l'annuaire %s n'existe pas."
 
 msgid "There aren't any users to add nor to remove."
-msgstr "Il n'y a aucun utilisateur à enlever ou supprimer."
+msgstr "Il n'y a aucun utilisateur à ajouter ou supprimer."
