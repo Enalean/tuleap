@@ -38,7 +38,6 @@ final readonly class ExpertQueryValidator
     }
 
     /**
-     * @throws InvalidSelectException
      * @throws LimitSizeIsExceededException
      * @throws OrderByIsInvalidException
      * @throws SearchablesAreInvalidException
@@ -51,7 +50,6 @@ final readonly class ExpertQueryValidator
      */
     public function validateExpertQuery(
         string $expert_query,
-        bool $expert_mode,
         IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
         IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
         IBuildInvalidOrderBy $invalid_order_by_builder,
@@ -61,7 +59,7 @@ final readonly class ExpertQueryValidator
         $this->size_validator->checkSizeOfTree($condition);
 
         $this->checkSearchables($condition, $invalid_searchables_collection_builder);
-        $this->checkSelectables($query->getSelect(), $expert_mode, $invalid_selectables_collection_builder);
+        $this->checkSelectables($query->getSelect(), $invalid_selectables_collection_builder);
         $this->checkOrderBy($query->getOrderBy(), $invalid_order_by_builder);
     }
 
@@ -134,7 +132,6 @@ final readonly class ExpertQueryValidator
 
     /**
      * @param Selectable[] $selectables
-     * @throws InvalidSelectException
      * @throws SelectLimitExceededException
      * @throws SelectablesAreInvalidException
      * @throws SelectablesDoNotExistException
@@ -142,13 +139,8 @@ final readonly class ExpertQueryValidator
      */
     private function checkSelectables(
         array $selectables,
-        bool $expert_mode,
         IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
     ): void {
-        if (! $expert_mode && $selectables !== []) {
-            throw new InvalidSelectException();
-        }
-
         $invalid_selectables_collection = $invalid_selectables_collection_builder->buildCollectionOfInvalidSelectables($selectables);
         if ($invalid_selectables_collection->getNonExistentSelectables() !== []) {
             throw new SelectablesDoNotExistException($invalid_selectables_collection->getNonExistentSelectables());

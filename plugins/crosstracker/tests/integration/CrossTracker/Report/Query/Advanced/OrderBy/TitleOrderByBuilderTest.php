@@ -28,8 +28,6 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -97,19 +95,10 @@ final class TitleOrderByBuilderTest extends CrossTrackerFieldTestCase
         $this->result_ascending  = [$release_artifact_1_id, $release_artifact_2_id, $sprint_artifact_3_id];
     }
 
-    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return $result;
-    }
-
     public function testLastUpdateDateDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @title DESC'),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @title DESC', '', ''),
             $this->user,
         );
 
@@ -127,7 +116,7 @@ final class TitleOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testLastUpdateDateAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @title ASC'),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @title ASC', '', ''),
             $this->user,
         );
 

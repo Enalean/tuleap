@@ -60,8 +60,10 @@ final class ReportInheritanceHandlerTest extends TestCase
     public function testItClonesExpertReport(): void
     {
         $this->template_report = [
-            'id'    => self::TEMPLATE_REPORT_ID,
-            'query' => "SELECT @title FROM @tracker.name IN('stories', 'bugs') WHERE @assigned_to = MYSELF()",
+            'id'          => self::TEMPLATE_REPORT_ID,
+            'query'       => "SELECT @title FROM @tracker.name IN('stories', 'bugs') WHERE @assigned_to = MYSELF()",
+            'title'       => '',
+            'description' => '',
         ];
 
         $result = $this->handle();
@@ -72,7 +74,7 @@ final class ReportInheritanceHandlerTest extends TestCase
 
     public function testItWritesLogsAndReturnsZeroToAvoidCrashingTheProjectCreationWhenTemplateReportIsNotFound(): void
     {
-        $this->template_report = ['id' => 404, 'query' => ''];
+        $this->template_report = ['id' => 404, 'query' => '', 'title' => '', 'description' => ''];
 
         $result = $this->handle();
 

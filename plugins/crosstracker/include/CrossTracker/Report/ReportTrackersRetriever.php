@@ -26,7 +26,7 @@ use LogicException;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
@@ -60,9 +60,9 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
     ) {
     }
 
-    public function getReportTrackers(CrossTrackerReport $report, PFUser $current_user, int $limit): array
+    public function getReportTrackers(CrossTrackerExpertReport $report, PFUser $current_user, int $limit): array
     {
-        return $report->isExpert() ? $this->retrieveForExpertReport($report, $current_user, $limit) : $report->getTrackers();
+        return $this->retrieveForExpertReport($report, $current_user, $limit);
     }
 
     /**
@@ -71,9 +71,9 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
      * @throws FromIsInvalidException
      * @throws MissingFromException
      */
-    private function retrieveForExpertReport(CrossTrackerReport $report, PFUser $current_user, int $limit): array
+    private function retrieveForExpertReport(CrossTrackerExpertReport $report, PFUser $current_user, int $limit): array
     {
-        $query = $this->parser->parse($report->getExpertQuery());
+        $query = $this->parser->parse($report->getQuery());
 
         $this->expert_query_validator->validateFromQuery(
             $query,

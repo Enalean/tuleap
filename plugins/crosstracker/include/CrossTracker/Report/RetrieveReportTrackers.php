@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Report;
 
 use PFUser;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
@@ -37,5 +37,5 @@ interface RetrieveReportTrackers
      * @throws MissingFromException
      * @throws FromIsInvalidException
      */
-    public function getReportTrackers(CrossTrackerReport $report, PFUser $current_user, int $limit): array;
+    public function getReportTrackers(CrossTrackerExpertReport $report, PFUser $current_user, int $limit): array;
 }

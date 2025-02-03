@@ -32,7 +32,7 @@ final class CrossTrackerReportFactoryTest extends TestCase
     /**
      * @throws CrossTrackerReportNotFoundException
      */
-    private function getById(int $report_id): CrossTrackerReport
+    private function getById(int $report_id): CrossTrackerExpertReport
     {
         $report_retriever = RetrieveReportStub::withReports([
             'id'          => self::REPORT_ID,
@@ -52,7 +52,7 @@ final class CrossTrackerReportFactoryTest extends TestCase
 
     public function testItReturnsAnExpertCrossTrackerReport(): void
     {
-        $expected_result = new CrossTrackerExpertReport(self::REPORT_ID, '');
+        $expected_result = new CrossTrackerExpertReport(self::REPORT_ID, '', '', '');
 
         $result = $this->getById(self::REPORT_ID);
 

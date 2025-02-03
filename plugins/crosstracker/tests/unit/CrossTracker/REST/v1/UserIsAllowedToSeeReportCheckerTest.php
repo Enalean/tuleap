@@ -24,20 +24,13 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
-use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\SearchCrossTrackerWidgetStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnTrackersStub;
 
 final class UserIsAllowedToSeeReportCheckerTest extends TestCase
 {
@@ -60,28 +53,24 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
 
         $this->user             = UserTestBuilder::buildWithId(self::USER_ID);
         $this->project_manager  = ProjectByIDFactoryStub::buildWithoutProject();
-        $this->url_verification =  CheckUserCanAccessProjectStub::build();
+        $this->url_verification = CheckUserCanAccessProjectStub::build();
     }
 
-    private function checkUserIsAllowedToSeeReport(Tracker $tracker): void
+    private function checkUserIsAllowedToSeeReport(): void
     {
         $user_is_allowed_to_see_report_checker = new UserIsAllowedToSeeReportChecker(
             $this->cross_tracker_dao,
             $this->project_manager,
-            $this->url_verification,
-            new CrossTrackerPermissionGate(
-                $this->url_verification,
-                RetrieveUserPermissionOnFieldsStub::build(),
-                RetrieveUserPermissionOnTrackersStub::build()
-            )
+            $this->url_verification
         );
 
         $user_is_allowed_to_see_report_checker->checkUserIsAllowedToSeeReport(
             $this->user,
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
                 '',
-                [$tracker],
+                '',
+                '',
             ),
         );
     }
@@ -93,26 +82,27 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
         self::expectException(RestException::class);
         self::expectExceptionCode(403);
 
-        $this->checkUserIsAllowedToSeeReport(TrackerTestBuilder::aTracker()->withId(1)->build());
+        $this->checkUserIsAllowedToSeeReport();
     }
 
-    public function testItThrowsExceptionWhenTheCrossTrackerCheckFails(): void
+    public function testItThrowsExceptionWhenTheCurrentUserWantToSeeFromPrivateProjectWithoutAccess(): void
     {
-        $project = ProjectTestBuilder::aProject()->withId(105)->build();
-
-        $this->url_verification = CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser(
-            $project,
+        $this->cross_tracker_dao = SearchCrossTrackerWidgetStub::withExistingWidget(
+            [
+                'dashboard_type' => 'project',
+                'project_id'     => 105,
+            ]
+        );
+        $this->project_manager   = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(105)->build());
+        $this->url_verification  = CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser(
+            ProjectTestBuilder::aProject()->withId(105)->build(),
             $this->user,
         );
 
         self::expectException(RestException::class);
         self::expectExceptionCode(403);
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('userCanView')->willReturn(false);
-        $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->withId(115)->build());
-
-        $this->checkUserIsAllowedToSeeReport($tracker);
+        $this->checkUserIsAllowedToSeeReport();
     }
 
     public function testTheUserCanViewTheProjectReport(): void
@@ -120,35 +110,12 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
         $this->cross_tracker_dao = SearchCrossTrackerWidgetStub::withExistingWidget(
             [
                 'dashboard_type' => 'project',
-                'project_id'        => 105,
+                'project_id'     => 105,
             ]
         );
+        $this->project_manager   = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(105)->build());
 
-        $this->project_manager = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(201)->build());
-
-        $project                = ProjectTestBuilder::aProject()->withId(105)->build();
-        $this->url_verification = CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser(
-            $project,
-            $this->user,
-        );
-
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('getId')->willReturn(15);
-        $tracker->method('userCanView')->willReturn(true);
-        $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->withId(115)->build());
-        $tracker->method('getTitleField')->willReturn(
-            TextFieldBuilder::aTextField(10)->inTracker($tracker)->withReadPermission($this->user, true)->build()
-        );
-        $tracker->method('getStatusField')->willReturn(
-            ListFieldBuilder::aListField(11)->inTracker($tracker)->withReadPermission($this->user, true)->build()
-        );
-        $tracker->method('getContributorField')->willReturn(
-            ListFieldBuilder::aListField(12)->inTracker($tracker)->withReadPermission($this->user, true)->build()
-        );
-
-        $this->checkUserIsAllowedToSeeReport(
-            $tracker
-        );
+        $this->checkUserIsAllowedToSeeReport();
 
         self::expectNotToPerformAssertions();
     }

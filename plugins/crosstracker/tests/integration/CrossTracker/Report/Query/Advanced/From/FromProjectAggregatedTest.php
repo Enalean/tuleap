@@ -32,7 +32,6 @@ use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProjectsCollection;
@@ -89,15 +88,6 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         EventManager::clearInstance();
     }
 
-    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return $result;
-    }
-
     /**
      * @param list<string> $expected
      */
@@ -127,7 +117,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturn($new_event);
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1'),
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1', '', ''),
             $this->user,
         );
         $this->assertItContainsTrackers(['Tracker 2', 'Tracker 3'], $result);
@@ -145,7 +135,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturn($new_event);
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project IN("aggregated", "self") WHERE @id >= 1'),
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project IN("aggregated", "self") WHERE @id >= 1', '', ''),
             $this->user,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2', 'Tracker 3'], $result);

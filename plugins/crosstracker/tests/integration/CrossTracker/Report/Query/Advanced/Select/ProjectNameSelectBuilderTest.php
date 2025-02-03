@@ -28,8 +28,6 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\ProjectRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -86,21 +84,14 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
         ];
     }
 
-    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return $result;
-    }
-
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
             new CrossTrackerExpertReport(
                 1,
                 'SELECT @project.name FROM @project = "self" WHERE @id >= 1',
+                '',
+                '',
             ),
             $this->user,
         );

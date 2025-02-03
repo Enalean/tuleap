@@ -24,9 +24,7 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\CrossTracker\CrossTrackerReport;
-use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
-use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\Project\ProjectByIDFactory;
@@ -38,14 +36,13 @@ final readonly class UserIsAllowedToSeeReportChecker
         private SearchCrossTrackerWidget $cross_tracker_dao,
         private ProjectByIDFactory $project_manager,
         private CheckUserCanAccessProject $url_verification,
-        private CrossTrackerPermissionGate $cross_tracker_permission_gate,
     ) {
     }
 
     /**
      * @throws RestException
      */
-    public function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report): void
+    public function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerExpertReport $report): void
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
         if ($widget !== null && $widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
@@ -55,12 +52,6 @@ final readonly class UserIsAllowedToSeeReportChecker
         if ($widget !== null && $widget['dashboard_type'] === 'project') {
             $project = $this->project_manager->getProjectById($widget['project_id']);
             ProjectAuthorization::userCanAccessProject($user, $project, $this->url_verification);
-        }
-
-        try {
-            $this->cross_tracker_permission_gate->check($user, $report);
-        } catch (CrossTrackerUnauthorizedException $ex) {
-            throw new RestException(403, null, ['i18n_error_message' => $ex->getMessage()]);
         }
     }
 }

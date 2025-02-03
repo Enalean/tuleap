@@ -34,13 +34,13 @@ final readonly class CrossTrackerReportFactory
     /**
      * @throws CrossTrackerReportNotFoundException
      */
-    public function getById($id): CrossTrackerReport
+    public function getById($id): CrossTrackerExpertReport
     {
         $report_row = $this->report_retriever->searchReportById($id);
         if (! $report_row) {
             throw new CrossTrackerReportNotFoundException();
         }
 
-        return new CrossTrackerExpertReport($id, $report_row['query']);
+        return new CrossTrackerExpertReport($id, $report_row['query'], $report_row['title'], $report_row['description']);
     }
 }

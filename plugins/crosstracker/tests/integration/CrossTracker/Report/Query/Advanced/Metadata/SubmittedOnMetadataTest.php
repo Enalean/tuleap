@@ -26,24 +26,16 @@ use DateTime;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
 {
     private PFUser $project_member;
     private PFUser $project_admin;
-    private Tracker $release_tracker;
-    private Tracker $sprint_tracker;
-    private Tracker $task_tracker;
     private int $release_artifact_past_1_id;
     private int $release_artifact_today_id;
     private int $sprint_artifact_past_2_id;
@@ -64,27 +56,28 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
-        $this->release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
-        $tracker_builder->setViewPermissionOnTracker($this->release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnTracker($this->task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($task_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $task_subon_field_id = $tracker_builder->buildSubmittedOnField($this->task_tracker->getId());
+        $task_subon_field_id = $tracker_builder->buildSubmittedOnField($task_tracker->getId());
         $tracker_builder->grantReadPermissionOnField($task_subon_field_id, ProjectUGroup::PROJECT_ADMIN);
 
         $today_timestamp  = (new DateTime('now'))->getTimestamp();
         $past_1_timestamp = (new DateTime('2023-03-08 10:25'))->getTimestamp();
         $past_2_timestamp = (new DateTime('2023-03-08 15:52'))->getTimestamp();
 
-        $this->release_artifact_past_1_id = $tracker_builder->buildArtifact($this->release_tracker->getId(), $past_1_timestamp);
-        $this->release_artifact_today_id  = $tracker_builder->buildArtifact($this->release_tracker->getId(), $today_timestamp);
-        $this->sprint_artifact_past_2_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId(), $past_2_timestamp);
-        $this->sprint_artifact_today_id   = $tracker_builder->buildArtifact($this->sprint_tracker->getId(), $today_timestamp);
-        $this->task_artifact_past_1_id    = $tracker_builder->buildArtifact($this->task_tracker->getId(), $past_1_timestamp);
-        $this->task_artifact_today_id     = $tracker_builder->buildArtifact($this->task_tracker->getId(), $today_timestamp);
+        $this->release_artifact_past_1_id = $tracker_builder->buildArtifact($release_tracker->getId(), $past_1_timestamp);
+        $this->release_artifact_today_id  = $tracker_builder->buildArtifact($release_tracker->getId(), $today_timestamp);
+        $this->sprint_artifact_past_2_id  = $tracker_builder->buildArtifact($sprint_tracker->getId(), $past_2_timestamp);
+        $this->sprint_artifact_today_id   = $tracker_builder->buildArtifact($sprint_tracker->getId(), $today_timestamp);
+        $this->task_artifact_past_1_id    = $tracker_builder->buildArtifact($task_tracker->getId(), $past_1_timestamp);
+        $this->task_artifact_today_id     = $tracker_builder->buildArtifact($task_tracker->getId(), $today_timestamp);
 
         $tracker_builder->buildLastChangeset($this->release_artifact_past_1_id);
         $tracker_builder->buildLastChangeset($this->release_artifact_today_id);
@@ -94,27 +87,14 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($this->task_artifact_today_id);
     }
 
-    /**
-     * @return list<int>
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     */
-    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof ArtifactMatchingReportCollection);
-        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
-    }
-
     public function testEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on = '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on = '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -126,10 +106,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on = '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on = '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -141,10 +122,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on = '2023-03-08 10:25'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on = '2023-03-08 10:25'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -156,10 +138,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on = '2023-03-08' OR @submitted_on = '1970-01-01'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on = '2023-03-08' OR @submitted_on = '1970-01-01'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -171,10 +154,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on != '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on != '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -186,10 +170,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on != '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on != '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -201,10 +186,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on != '2023-03-08 10:25'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on != '2023-03-08 10:25'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -216,10 +202,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on != '2023-03-08' AND @submitted_on != '1970-01-01'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on != '2023-03-08' AND @submitted_on != '1970-01-01'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -231,10 +218,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on < '2023-03-09'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on < '2023-03-09'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -246,10 +234,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on < '2023-03-09'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on < '2023-03-09'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -261,10 +250,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on < '2023-03-08 15:52'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on < '2023-03-08 15:52'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -276,10 +266,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_on < NOW()',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on < NOW()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -291,10 +282,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on < NOW() OR @submitted_on < '1970-01-01'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on < NOW() OR @submitted_on < '1970-01-01'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -306,10 +298,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on <= '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on <= '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -321,10 +314,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on <= '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on <= '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -336,10 +330,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on <= '2023-03-08 15:52'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on <= '2023-03-08 15:52'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -351,10 +346,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_on <= NOW()',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on <= NOW()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -369,10 +365,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on <= NOW() OR @submitted_on <= '1970-01-01'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on <= NOW() OR @submitted_on <= '1970-01-01'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -387,10 +384,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on > '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on > '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -402,10 +400,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on > '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on > '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -417,10 +416,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on > '2023-03-08 10:25'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on > '2023-03-08 10:25'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -432,10 +432,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanYesterday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_on > NOW() - 1d',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on > NOW() - 1d",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -447,10 +448,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on > '2023-03-08' OR @submitted_on > NOW()",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on > '2023-03-08' OR @submitted_on > NOW()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -462,10 +464,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on >= '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on >= '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -480,10 +483,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on >= '2023-03-08'",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on >= '2023-03-08'",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -499,10 +503,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on >= '2023-03-08 10:25'",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on >= '2023-03-08 10:25'",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -517,10 +522,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_on >= NOW()',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on >= NOW()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -532,10 +538,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on >= '2023-03-08' OR @submitted_on >= NOW()",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on >= '2023-03-08' OR @submitted_on >= NOW()",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -550,10 +557,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -565,10 +573,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
-                [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
+                '',
+                '',
             ),
             $this->project_admin
         );
@@ -580,10 +589,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on BETWEEN('2023-03-01', '2023-03-31')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on BETWEEN('2023-03-01', '2023-03-31')",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -595,10 +605,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenYesterdayAndTomorrow(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                '@submitted_on BETWEEN(NOW() - 1d, NOW() + 1d)',
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on BETWEEN(NOW() - 1d, NOW() + 1d)",
+                '',
+                '',
             ),
             $this->project_member
         );
@@ -610,10 +621,11 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
-                "@submitted_on BETWEEN(NOW() - 1d, NOW() + 1d) OR @submitted_on BETWEEN('2023-03-01', '2023-03-31')",
-                [$this->release_tracker, $this->sprint_tracker],
+                "SELECT @id FROM @project = 'self' WHERE @submitted_on BETWEEN(NOW() - 1d, NOW() + 1d) OR @submitted_on BETWEEN('2023-03-01', '2023-03-31')",
+                '',
+                '',
             ),
             $this->project_member
         );

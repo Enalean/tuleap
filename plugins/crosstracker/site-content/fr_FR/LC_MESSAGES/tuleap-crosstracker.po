@@ -85,12 +85,6 @@ msgstr ""
 "Le champ '%s' est déjà lié a une metadata dejà existante, veuillez utiliser "
 "'%s' si vous voulez récuperer ce champ."
 
-msgid ""
-"'limit' and 'offset' are required parameters. Please add them in the query."
-msgstr ""
-"'limit' et 'offset' sont des paramètres requis. Merci de les ajouter à la "
-"requête."
-
 msgid "@project IN(...) cannot contain multiple times the same value"
 msgstr "@project IN(...) ne peut pas contenir plusieurs fois la même valeur"
 
@@ -179,9 +173,6 @@ msgstr ""
 msgid "Anonymous user"
 msgstr "Utilisateur anonyme"
 
-msgid "CSV export of expert report is not supported"
-msgstr "L'export CSV d'un rapport expert n'est pas supporté"
-
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
 
@@ -211,12 +202,6 @@ msgstr ""
 "Dans le contexte d'un tableau de bord personnel, vous devez fournir une "
 "condition sur @project dans la partie FROM de votre requête"
 
-msgid "Invalid value for 'limit'. It must be an integer"
-msgstr "La valeur pour 'limit' est incorrecte. 'limit' doit être un entier"
-
-msgid "Invalid value for 'offset'. It must be an integer"
-msgstr "La valeur pour 'offset' est incorrecte. 'offset' doit être un entier"
-
 msgid "No tracker found"
 msgstr "Aucun outils de suivi trouvé"
 
@@ -225,9 +210,6 @@ msgstr "Seulement 'self' et 'aggregated' sont supportés pour @project IN(...)"
 
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr "Seulement @project = 'self' et @project = 'aggregated' sont supportés"
-
-msgid "Project not found"
-msgstr "Le projet n'a pas été trouvé"
 
 msgid "Report not found"
 msgstr "Le rapport n'a pas été trouvé"
@@ -260,31 +242,10 @@ msgstr ""
 "projets, veuillez utiliser l'opérateur 'IN' à la place (ex @tracker.name "
 "IN('t1', ...))"
 
-#, php-format
-msgid "The maximum value for 'limit' is %d"
-msgstr "La valeur maximum pour 'limit' est %d"
-
 msgid "You can use @project with 'aggregated' only in a Program project"
 msgstr ""
 "Vous ne pouvez utiliser @project avec 'aggregated' que dans un projet "
 "Programme"
-
-msgid "You cannot access all projects of the search"
-msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"
-
-msgid "You cannot access all the columns displayed in this search"
-msgstr ""
-"Vous ne pouvez pas accéder à toutes les colonnes affichées dans cette "
-"recherche"
-
-msgid "You cannot access all the fields used to filter the search"
-msgstr ""
-"Vous ne pouvez pas accéder à tous les champs utilisés pour filtrer cette "
-"recherche"
-
-msgid "You cannot access all trackers of the search"
-msgstr ""
-"Vous ne pouvez pas accéder à tous les outils de suivi de cette recherche"
 
 #, php-format
 msgid ""
@@ -320,9 +281,6 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas utiliser @project avec 'self' dans le contexte d'un "
 "tableau de bord personnel"
-
-msgid "You don't have permission to access this project"
-msgstr "Vous n'avez pas la permission d'accéder à ce projet"
 
 msgid "end of input"
 msgstr "fin du texte"

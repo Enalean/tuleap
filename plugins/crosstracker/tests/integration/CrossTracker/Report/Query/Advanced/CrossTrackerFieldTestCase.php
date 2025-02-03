@@ -24,13 +24,21 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use EventManager;
 use ForgeConfig;
+use LogicException;
+use PFUser;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -77,5 +85,33 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         $column_id    = $widget_dao->createColumn($line_id, 0);
         self::assertTrue($widget_dao->insertWidgetInColumnWithRank(ProjectCrossTrackerSearch::NAME, $report_id, $column_id, 0));
         self::assertNotNull((new CrossTrackerReportDao())->searchCrossTrackerWidgetByCrossTrackerReportId($report_id));
+    }
+
+    /**
+     * @return list<int>
+     * @throws SearchablesDoNotExistException
+     * @throws SearchablesAreInvalidException
+     */
+    final protected function getMatchingArtifactIds(CrossTrackerExpertReport $report, PFUser $user): array
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
+        return array_values(array_map(static function (array $artifact): int {
+            if (! isset($artifact['@id']) || ! ($artifact['@id'] instanceof NumericResultRepresentation)) {
+                throw new LogicException('Query result should contains @id column');
+            }
+
+            return (int) $artifact['@id']->value;
+        }, $result->artifacts));
+    }
+
+    final protected function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 }

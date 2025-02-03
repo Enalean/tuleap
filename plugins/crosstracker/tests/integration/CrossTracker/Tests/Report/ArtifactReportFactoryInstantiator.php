@@ -37,7 +37,6 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleDao;
 use Tracker_Semantic_TitleFactory;
 use TrackerFactory;
-use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
@@ -376,8 +375,6 @@ final class ArtifactReportFactoryInstantiator
 
         $expert_query_dao = new CrossTrackerExpertQueryReportDao();
         return new CrossTrackerArtifactReportFactory(
-            new CrossTrackerArtifactReportDao(),
-            $artifact_factory,
             $validator,
             $query_builder_visitor,
             $select_builder_visitor,

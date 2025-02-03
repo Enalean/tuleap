@@ -29,7 +29,6 @@ use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -70,15 +69,6 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
         $this->addReportToProject(1, $project_1_id);
     }
 
-    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return $result;
-    }
-
     /**
      * @param list<string> $expected
      */
@@ -97,7 +87,7 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     public function testTrackerNameEqual(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @tracker.name = "release" WHERE @id >= 1'),
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @tracker.name = "release" WHERE @id >= 1', '', ''),
             $this->user,
         );
         $this->assertItContainsTrackers(['Release'], $result);
@@ -106,7 +96,7 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     public function testTrackerNameIn(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @tracker.name IN("release", "sprint") WHERE @id >= 1'),
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @tracker.name IN("release", "sprint") WHERE @id >= 1', '', ''),
             $this->user,
         );
         $this->assertItContainsTrackers(['Release', 'Sprint'], $result);
@@ -118,6 +108,8 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 'SELECT @tracker.name FROM @tracker.name = "sprint" AND @project.category = "foo" WHERE @id >= 1',
+                '',
+                '',
             ),
             $this->user,
         );
@@ -130,6 +122,8 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 'SELECT @tracker.name FROM @tracker.name IN("sprint", "release") AND @project.category = "foo" WHERE @id >= 1',
+                '',
+                '',
             ),
             $this->user,
         );

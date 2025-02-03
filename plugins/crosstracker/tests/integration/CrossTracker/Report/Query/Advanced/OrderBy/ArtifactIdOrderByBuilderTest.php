@@ -28,8 +28,6 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -69,19 +67,10 @@ final class ArtifactIdOrderByBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($artifact_3);
     }
 
-    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
-    {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
-        return $result;
-    }
-
     public function testNoOrderBy(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1'),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1', '', ''),
             $this->user,
         );
 
@@ -99,7 +88,7 @@ final class ArtifactIdOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testArtifactIdDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @id DESC'),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @id DESC', '', ''),
             $this->user,
         );
 
@@ -117,7 +106,7 @@ final class ArtifactIdOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testArtifactIdAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @id ASC'),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @id ASC', '', ''),
             $this->user,
         );
 

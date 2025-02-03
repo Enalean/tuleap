@@ -27,7 +27,6 @@ use Codendi_HTMLPurifier;
 use EventManager;
 use Exception;
 use ForgeConfig;
-use LogicException;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
@@ -43,15 +42,12 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleDao;
 use Tracker_Semantic_TitleFactory;
 use TrackerFactory;
-use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
-use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
-use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
@@ -161,9 +157,9 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNo
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectException;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectException;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
@@ -176,11 +172,8 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
-use Tuleap\Tracker\Report\TrackerDuplicateException;
-use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
-use Tuleap\Tracker\Report\TrackerReportExtractor;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use UGroupManager;
@@ -224,7 +217,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws RestException 404
      */
-    public function getId(int $id): CrossTrackerReportRepresentation
+    public function getId(int $id): CrossTrackerExpertReportRepresentation
     {
         $this->checkAccess();
         try {
@@ -278,7 +271,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $expert_query = $this->getExpertQueryFromRoute($query, $report, $query_parser);
 
-            $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query);
+            $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query, $report->getTitle(), $report->getDescription());
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
@@ -296,8 +289,6 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             return $artifacts;
         } catch (CrossTrackerReportNotFoundException) {
             throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Report not found'));
-        } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
-            throw new I18NRestException(400, $exception->getMessage());
         } catch (SyntaxError $error) {
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         } catch (LimitSizeIsExceededException | InvalidSelectException | SelectablesMustBeUniqueException | SelectLimitExceededException | MissingFromException $exception) {
@@ -343,22 +334,20 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put(int $id, array $trackers_id, string $expert_query = ''): CrossTrackerReportRepresentation
+    protected function put(int $id, array $trackers_id, string $expert_query = ''): CrossTrackerExpertReportRepresentation
     {
         $this->sendAllowHeaders();
 
         $current_user = $this->user_manager->getCurrentUser();
         try {
             $report          = $this->getReport($id);
-            $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query);
+            $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query, $report->getTitle(), $report->getDescription());
             $trackers        = $this->getReportTrackersRetriever()->getReportTrackers($expected_report, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
             $this->checkQueryIsValid($trackers, $expert_query, $current_user, $id);
 
             $this->getCrossTrackerDao()->updateQuery($id, $expert_query);
         } catch (CrossTrackerReportNotFoundException) {
             throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $id));
-        } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
-            throw new RestException(400, $exception->getMessage());
         } catch (FromIsInvalidException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (SyntaxError $error) {
@@ -379,13 +368,12 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         }
 
         try {
-            $report = new CrossTrackerExpertReport($report_id, $expert_query);
+            $report = new CrossTrackerExpertReport($report_id, $expert_query, '', '');
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($user, $report);
             $field_checker    = $this->getDuckTypedFieldChecker();
             $metadata_checker = $this->getMetadataChecker();
             $this->getExpertQueryValidator()->validateExpertQuery(
                 $expert_query,
-                true,
                 new InvalidSearchablesCollectionBuilder($this->getInvalidComparisonsCollector(), $trackers, $user),
                 new InvalidSelectablesCollectionBuilder(
                     new InvalidSelectablesCollectorVisitor($field_checker, $metadata_checker),
@@ -400,7 +388,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         } catch (OrderByIsInvalidException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (LimitSizeIsExceededException | SelectLimitExceededException | InvalidSelectException | SelectablesMustBeUniqueException $exception) {
+        } catch (LimitSizeIsExceededException | SelectLimitExceededException | SelectablesMustBeUniqueException $exception) {
             throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
         } catch (Exception $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -412,12 +400,9 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         Header::allowOptionsGetPut();
     }
 
-    private function getReportRepresentation(CrossTrackerReport $report, PFUser $user): CrossTrackerReportRepresentation
+    private function getReportRepresentation(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerExpertReportRepresentation
     {
-        return match ($report::class) {
-            CrossTrackerExpertReport::class  => CrossTrackerExpertReportRepresentation::fromReport($report, $user),
-            default                          => throw new LogicException('Unexpected report type'),
-        };
+        return CrossTrackerExpertReportRepresentation::fromReport($report);
     }
 
     private function sendPaginationHeaders($limit, $offset, $size): void
@@ -426,43 +411,16 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     }
 
     /**
-     *
-     * @return Tracker[]
-     * @throws RestException
-     * @throws TrackerDuplicateException
-     * @throws TrackerNotFoundException
-     */
-    private function getTrackersFromRoute(
-        ?string $query,
-        CrossTrackerReport $report,
-        QueryParameterParser $query_parser,
-    ): array {
-        if ($query === null || $query === '') {
-            return $report->getTrackers();
-        }
-
-        $query = trim($query);
-
-        try {
-            $trackers_id = $query_parser->getArrayOfInt($query, 'trackers_id');
-        } catch (QueryParameterException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        }
-        $tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
-        return $tracker_extractor->extractTrackers($trackers_id);
-    }
-
-    /**
      * @throws InvalidJsonException
      * @throws RestException
      */
     private function getExpertQueryFromRoute(
         ?string $query_parameter,
-        CrossTrackerReport $report,
+        CrossTrackerExpertReport $report,
         QueryParameterParser $query_parser,
     ): string {
         if ($query_parameter === null || $query_parameter === '') {
-            return $report->getExpertQuery();
+            return $report->getQuery();
         }
         $query_parameter = trim($query_parameter);
 
@@ -480,18 +438,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
     private function getUserIsAllowedToSeeReportChecker(): UserIsAllowedToSeeReportChecker
     {
-        $trackers_permissions_retriever = TrackersPermissionsRetriever::build();
-        $cross_tracker_permission_gate  = new CrossTrackerPermissionGate(
-            new URLVerification(),
-            $trackers_permissions_retriever,
-            $trackers_permissions_retriever,
-        );
-
         return new UserIsAllowedToSeeReportChecker(
             $this->getCrossTrackerDao(),
             ProjectManager::instance(),
-            new URLVerification(),
-            $cross_tracker_permission_gate
+            new URLVerification()
         );
     }
 
@@ -499,7 +449,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws CrossTrackerReportNotFoundException
      * @throws RestException 403
      */
-    private function getReport(int $id): CrossTrackerReport
+    private function getReport(int $id): CrossTrackerExpertReport
     {
         $report_dao     = new CrossTrackerReportDao();
         $report_factory = new CrossTrackerReportFactory(
@@ -751,8 +701,6 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         $field_checker             = $this->getDuckTypedFieldChecker();
         $metadata_checker          = $this->getMetadataChecker();
         return new CrossTrackerArtifactReportFactory(
-            new CrossTrackerArtifactReportDao(),
-            $tracker_artifact_factory,
             $this->getExpertQueryValidator(),
             $this->getQueryBuilderVisitor(),
             $select_builder_visitor,
