@@ -26,6 +26,9 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 use Psr\Log\LoggerInterface;
 use Tuleap\DB\DBConfig;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagementCommandFactory
 {
@@ -60,6 +63,40 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
                 'DBPASS' => new ConcealedString(\ForgeConfig::get(DBConfig::CONF_DBPASSWORD)),
                 'PASS' => new ConcealedString(base64_encode(random_bytes(32))),
             ],
+        );
+    }
+
+    public function buildFarmInstanceConfigurationUpdate(): MediaWikiManagementCommand
+    {
+        $farm_instance_configuration_path =  $this->path_setting_directory . '/' . self::LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI;
+        return new MediaWikiManagementCommandCallable(
+            function () use ($farm_instance_configuration_path): Ok|Err {
+                try {
+                    $configuration_content = \Psl\File\read($farm_instance_configuration_path);
+                } catch (\Psl\File\Exception\InvalidArgumentException | \Psl\File\Exception\RuntimeException $ex) {
+                    return Result::err(
+                        new MediaWikiManagementCommandFailure(
+                            1,
+                            'Read configuration file ' . $farm_instance_configuration_path,
+                            $ex->getMessage(),
+                        )
+                    );
+                }
+                $updated_configuration_content = \Psl\Regex\replace($configuration_content, "/^wfLoadSkin\( '(?!Vector).+' \);$/m", '//\0');
+                try {
+                    \Psl\File\write($farm_instance_configuration_path, $updated_configuration_content);
+                } catch (\Psl\File\Exception\InvalidArgumentException | \Psl\File\Exception\RuntimeException $ex) {
+                    return Result::err(
+                        new MediaWikiManagementCommandFailure(
+                            1,
+                            'Update configuration file ' . $farm_instance_configuration_path,
+                            $ex->getMessage(),
+                        )
+                    );
+                }
+
+                return Result::ok(null);
+            }
         );
     }
 

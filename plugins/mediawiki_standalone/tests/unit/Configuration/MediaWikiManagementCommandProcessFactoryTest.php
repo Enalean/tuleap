@@ -40,4 +40,39 @@ final class MediaWikiManagementCommandProcessFactoryTest extends TestCase
 
         self::assertTrue(Result::isOk($install_command->wait()));
     }
+
+    public function testAdjustFarmInstanceConfigurationFile(): void
+    {
+        $settings_directory = vfsStream::setup()->url();
+        \Psl\File\write(
+            $settings_directory . '/LocalSettings.php',
+            <<<EOS
+            # Enabled skins.
+            # The following skins were automatically enabled:
+            wfLoadSkin( 'MinervaNeue' );
+            wfLoadSkin( 'MonoBook' );
+            wfLoadSkin( 'Timeless' );
+            wfLoadSkin( 'TuleapSkin' );
+            wfLoadSkin( 'Vector' );
+            EOS
+        );
+
+        $factory = new MediaWikiManagementCommandProcessFactory(new NullLogger(), $settings_directory);
+
+        $update_config_command = $factory->buildFarmInstanceConfigurationUpdate();
+
+        self::assertTrue(Result::isOk($update_config_command->wait()));
+        self::assertSame(
+            <<<EOS
+            # Enabled skins.
+            # The following skins were automatically enabled:
+            //wfLoadSkin( 'MinervaNeue' );
+            //wfLoadSkin( 'MonoBook' );
+            //wfLoadSkin( 'Timeless' );
+            //wfLoadSkin( 'TuleapSkin' );
+            wfLoadSkin( 'Vector' );
+            EOS,
+            \Psl\File\read($settings_directory . '/LocalSettings.php')
+        );
+    }
 }
