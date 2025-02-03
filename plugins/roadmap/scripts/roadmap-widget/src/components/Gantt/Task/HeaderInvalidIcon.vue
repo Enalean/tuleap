@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="roadmap-gantt-task-header-invalid-icon">
         <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
     </div>

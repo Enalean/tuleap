@@ -40,21 +40,16 @@
     </a>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Task } from "../../../type";
 
-@Component
-export default class HeaderLink extends Vue {
-    @Prop({ required: true })
-    readonly task!: Task;
+const props = defineProps<{
+    task: Task;
+    should_display_project: boolean;
+}>();
 
-    @Prop({ required: true })
-    readonly should_display_project!: boolean;
-
-    get link_class(): string {
-        return "roadmap-gantt-task-header-link-" + this.task.color_name;
-    }
-}
+const link_class = computed((): string => {
+    return "roadmap-gantt-task-header-link-" + props.task.color_name;
+});
 </script>
