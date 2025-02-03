@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { CurrentTrackerIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { PossibleParentsCache } from "./PossibleParentsCache";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
-import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
-import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 
 describe(`PossibleParentsCache`, () => {
     let first_parent: LinkableArtifact,
@@ -33,7 +32,7 @@ describe(`PossibleParentsCache`, () => {
     beforeEach(() => {
         first_parent = LinkableArtifactStub.withDefaults({ id: 867 });
         second_parent = LinkableArtifactStub.withDefaults({ id: 628 });
-        tracker_identifier = CurrentTrackerIdentifierStub.withId(125);
+        tracker_identifier = CurrentTrackerIdentifier.fromId(125);
     });
 
     const getCache = (): RetrievePossibleParents => {

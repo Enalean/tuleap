@@ -21,7 +21,10 @@ import { selectOrThrow } from "@tuleap/dom";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import { en_US_LOCALE } from "@tuleap/core-constants";
-import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import {
+    CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import type { ArtifactCreatedEvent, HostElement } from "./ArtifactCreatorElement";
 import {
     getTrackerSelectClasses,
@@ -46,7 +49,6 @@ import { TrackerStub } from "../../../../../../tests/stubs/TrackerStub";
 import { ProjectStub } from "../../../../../../tests/stubs/ProjectStub";
 import { TrackerIdentifierStub } from "../../../../../../tests/stubs/TrackerIdentifierStub";
 import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
-import { CurrentTrackerIdentifierStub } from "../../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { CreateLinkableArtifactStub } from "../../../../../../tests/stubs/CreateLinkableArtifactStub";
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { CreateLinkableArtifact } from "../../../../../domain/fields/link-field/creation/CreateLinkableArtifact";
@@ -77,7 +79,7 @@ describe(`ArtifactCreatorElement`, () => {
                 ),
                 artifact_creator,
                 CurrentProjectIdentifier.fromId(144),
-                CurrentTrackerIdentifierStub.withId(209),
+                CurrentTrackerIdentifier.fromId(209),
                 en_US_LOCALE,
             );
 

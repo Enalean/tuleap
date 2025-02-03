@@ -19,8 +19,8 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import type { CurrentTrackerIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { LinkableArtifact } from "./LinkableArtifact";
-import type { CurrentTrackerIdentifier } from "../../CurrentTrackerIdentifier";
 
 export interface RetrievePossibleParents {
     getPossibleParents(
