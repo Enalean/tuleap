@@ -31,24 +31,21 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { SkeletonRow } from "../../../type";
 
-@Component
-export default class SubtaskSkeletonHeader extends Vue {
-    @Prop({ required: true })
-    readonly skeleton!: SkeletonRow;
+const props = defineProps<{
+    skeleton: SkeletonRow;
+}>();
 
-    get classes(): string[] {
-        const classes = ["roadmap-gantt-task-header-" + this.skeleton.for_task.color_name];
+const classes = computed((): string[] => {
+    const classes = ["roadmap-gantt-task-header-" + props.skeleton.for_task.color_name];
 
-        if (this.skeleton.is_last_one) {
-            classes.push("roadmap-gantt-subtask-header-last-one");
-        }
-
-        return classes;
+    if (props.skeleton.is_last_one) {
+        classes.push("roadmap-gantt-subtask-header-last-one");
     }
-}
+
+    return classes;
+});
 </script>
