@@ -22,21 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MethodNotConfiguredTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsNullProgressWhenTheSemanticIsNotDefined(): void
     {
         $method = new MethodNotConfigured();
         self::assertEquals('', $method->getErrorMessage());
 
-        $result = $method->computeProgression(Mockery::spy(Artifact::class), Mockery::spy(PFUser::class));
+        $result = $method->computeProgression(ArtifactTestBuilder::anArtifact(101)->build(), UserTestBuilder::buildWithDefaults());
         self::assertEquals('', $result->getErrorMessage());
         self::assertEquals(null, $result->getValue());
     }
@@ -44,7 +41,7 @@ final class MethodNotConfiguredTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsNothingToREST(): void
     {
         $method = new MethodNotConfigured();
-        self::assertNull($method->exportToREST(Mockery::spy(PFUser::class)));
+        self::assertNull($method->exportToREST(UserTestBuilder::buildWithDefaults()));
     }
 
     public function testItExportsNothingToXML(): void
@@ -63,7 +60,7 @@ final class MethodNotConfiguredTest extends \Tuleap\Test\PHPUnit\TestCase
         $method = new MethodNotConfigured();
 
         $this->assertFalse(
-            $method->saveSemanticForTracker(\Mockery::mock(\Tracker::class))
+            $method->saveSemanticForTracker(TrackerTestBuilder::aTracker()->build())
         );
     }
 
@@ -71,7 +68,7 @@ final class MethodNotConfiguredTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $method = new MethodNotConfigured();
         $this->assertFalse(
-            $method->deleteSemanticForTracker(\Mockery::mock(\Tracker::class))
+            $method->deleteSemanticForTracker(TrackerTestBuilder::aTracker()->build())
         );
     }
 }
