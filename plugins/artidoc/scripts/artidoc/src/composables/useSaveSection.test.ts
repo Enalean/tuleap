@@ -17,12 +17,9 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import useSaveSection from "@/composables/useSaveSection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { flushPromises } from "@vue/test-utils";
 import * as rest_querier from "@/helpers/rest-querier";
 import { okAsync } from "neverthrow";
@@ -34,23 +31,13 @@ import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
 import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/SectionsPositionsForSaveRetrieverStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
+import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
+const document_id = 105;
 
 describe("useSaveSection", () => {
-    let callbacks: Parameters<typeof useSaveSection>[5];
-
-    beforeEach(() => {
-        callbacks = {
-            closeEditor: noop,
-            mergeArtifactAttachments: vi.fn(),
-        };
-        mockStrictInject([
-            [CAN_USER_EDIT_DOCUMENT, true],
-            [DOCUMENT_ID, 1],
-        ]);
-    });
     describe("forceSave", () => {
         it("should save artifact section", async () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
@@ -60,12 +47,14 @@ describe("useSaveSection", () => {
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = useSaveSection(
+                document_id,
                 SectionStateStub.inEditMode(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                callbacks,
+                SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                noop,
             );
 
             forceSave(artifact_section, { description: "new description", title: "new title" });
@@ -81,12 +70,14 @@ describe("useSaveSection", () => {
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = useSaveSection(
+                document_id,
                 SectionStateStub.inEditMode(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                callbacks,
+                SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                noop,
             );
 
             forceSave(freetext_section, { description: "new description", title: "new title" });
@@ -102,12 +93,14 @@ describe("useSaveSection", () => {
 
                 const section_state = SectionStateStub.inEditMode();
                 const { save } = useSaveSection(
+                    document_id,
                     section_state,
                     SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    callbacks,
+                    SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                    noop,
                 );
 
                 save(artifact_section, {
@@ -122,12 +115,14 @@ describe("useSaveSection", () => {
 
                 const section_state = SectionStateStub.inEditMode();
                 const { save } = useSaveSection(
+                    document_id,
                     section_state,
                     SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    callbacks,
+                    SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                    noop,
                 );
 
                 save(freetext_section, {
@@ -142,12 +137,14 @@ describe("useSaveSection", () => {
 
                 const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
                 const { save } = useSaveSection(
+                    document_id,
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    callbacks,
+                    SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                    noop,
                 );
 
                 save(artifact_section, {
@@ -165,12 +162,14 @@ describe("useSaveSection", () => {
 
                 const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
                 const { save } = useSaveSection(
+                    document_id,
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    callbacks,
+                    SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                    noop,
                 );
 
                 save(freetext_section, {
@@ -192,12 +191,14 @@ describe("useSaveSection", () => {
                 .mockReturnValue(okAsync({} as Response));
 
             const { save } = useSaveSection(
+                document_id,
                 SectionStateStub.inEditMode(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                callbacks,
+                SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                noop,
             );
 
             save(artifact_section, { description: "new description", title: "new title" });
@@ -214,12 +215,14 @@ describe("useSaveSection", () => {
                 .mockReturnValue(okAsync({} as Response));
 
             const { save } = useSaveSection(
+                document_id,
                 SectionStateStub.inEditMode(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                callbacks,
+                SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                noop,
             );
 
             save(freetext_section, { description: "new description", title: "new title" });
@@ -233,12 +236,14 @@ describe("useSaveSection", () => {
 
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
+                document_id,
                 SectionStateStub.inEditMode(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 replacer,
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                callbacks,
+                SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                noop,
             );
 
             const pending_section = PendingArtifactSectionFactory.create();
@@ -262,12 +267,14 @@ describe("useSaveSection", () => {
 
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
+                document_id,
                 SectionStateStub.inEditMode(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 replacer,
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                callbacks,
+                SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                noop,
             );
 
             const pending_section = FreetextSectionFactory.pending();

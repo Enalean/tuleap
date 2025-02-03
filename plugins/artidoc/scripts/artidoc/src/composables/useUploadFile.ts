@@ -20,7 +20,7 @@
 import type { FileUploadOptions, UploadError, OnGoingUploadFile } from "@tuleap/file-upload";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
-import type { AttachmentFile } from "@/composables/useAttachmentFile";
+import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { OnGoingUploadFileWithId } from "@/stores/useUploadFileStore";
 import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
@@ -32,8 +32,7 @@ export type UseUploadFileType = {
 
 export function useUploadFile(
     section_id: string,
-    post_information: FileUploadOptions["post_information"],
-    add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"],
+    manage_section_attachments: ManageSectionAttachmentFiles,
 ): UseUploadFileType {
     const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
     const { addPendingUpload, pending_uploads, deleteUpload, cancelSectionUploads } =
@@ -71,7 +70,7 @@ export function useUploadFile(
     };
     const onSuccessCallback = (id: number, download_href: string, file_name: string): void => {
         updateProgress(file_name, 100);
-        add_attachment_to_waiting_list({ id, upload_url: download_href });
+        manage_section_attachments.addAttachmentToWaitingList({ id, upload_url: download_href });
     };
     const onProgressCallback = (file_name: string, global_progress: number): void => {
         updateProgress(file_name, global_progress);
@@ -81,7 +80,7 @@ export function useUploadFile(
     };
 
     const file_upload_options: FileUploadOptions = {
-        post_information,
+        post_information: manage_section_attachments.getPostInformation(),
         max_size_upload: upload_max_size,
         onStartUploadCallback,
         onErrorCallback,

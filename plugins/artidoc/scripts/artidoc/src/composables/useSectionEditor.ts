@@ -24,8 +24,8 @@ import type { EditorSectionContent } from "@/composables/useEditorSectionContent
 import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { RefreshSection } from "@/composables/useRefreshSection";
 import { useRefreshSection } from "@/composables/useRefreshSection";
-import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
+import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import type { Fault } from "@tuleap/fault";
 import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
 import type { UpdateSections } from "@/sections/SectionsUpdater";
@@ -49,11 +49,11 @@ export type SectionEditor = {
 };
 
 export function useSectionEditor(
+    document_id: number,
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
     manage_error_state: ManageErrorState,
-    mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
-    setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
+    manage_section_attachments: ManageSectionAttachmentFiles,
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
     remove_sections: RemoveSections,
@@ -82,21 +82,20 @@ export function useSectionEditor(
     });
 
     const { save, forceSave } = useSaveSection(
+        document_id,
         section_state,
         manage_error_state,
         replace_pending_sections,
         update_sections,
         retrieve_positions,
-        {
-            closeEditor,
-            mergeArtifactAttachments,
-        },
+        manage_section_attachments,
+        closeEditor,
     );
 
     function closeEditor(): void {
         editor_section_content.resetContent();
         setEditMode(false);
-        setWaitingListAttachments([]);
+        manage_section_attachments.setWaitingListAttachments([]);
 
         manage_error_state.resetErrorStates();
     }

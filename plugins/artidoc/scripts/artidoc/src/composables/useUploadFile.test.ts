@@ -20,17 +20,19 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useUploadFile } from "@/composables/useUploadFile";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
-import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
-import { type FileUploadOptions, UploadError } from "@tuleap/file-upload";
-import type { GetText } from "@tuleap/gettext";
-import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
-import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
-import type { OnGoingUploadFileWithId, UploadFileStoreType } from "@/stores/useUploadFileStore";
-import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
-import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
-import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
 import { mockFileList } from "@/helpers/mock-file-list";
-import { noop } from "@/helpers/noop";
+import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
+import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
+import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
+import { UploadError } from "@tuleap/file-upload";
+import type { GetText } from "@tuleap/gettext";
+import type { OnGoingUploadFileWithId, UploadFileStoreType } from "@/stores/useUploadFileStore";
+import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
+import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
+import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
+import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
+import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 const gettext_provider = {
     gettext: (msgid: string) => msgid,
@@ -43,37 +45,24 @@ function getCurrentSectionUploads(
     return store_data.filter((upload) => upload.section_id === section_id);
 }
 describe("useUploadFile", () => {
-    let mocked_upload_data: UploadFileStoreType;
-    let mocked_notifications_data: UseNotificationsStoreType;
+    let mocked_upload_data: UploadFileStoreType,
+        mocked_notifications_data: UseNotificationsStoreType,
+        manage_section_attachments: ManageSectionAttachmentFiles;
+
     const section_id: string =
         UploadFileStoreStub.uploadInProgress().pending_uploads.value[0].section_id;
 
     beforeEach(() => {
         mocked_upload_data = UploadFileStoreStub.uploadInProgress();
         mocked_notifications_data = NotificationsSub.withMessages();
+        manage_section_attachments = SectionAttachmentFilesManagerStub.forSection(
+            FreetextSectionFactory.create(),
+        );
         mockStrictInject([
             [UPLOAD_MAX_SIZE, 222],
             [UPLOAD_FILE_STORE, mocked_upload_data],
             [NOTIFICATION_STORE, mocked_notifications_data],
         ]);
-    });
-
-    describe("file_upload_options", () => {
-        it("should be initialized properly", () => {
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
-
-            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
-
-            expect(file_upload_options.post_information).toStrictEqual(post_information);
-            expect(file_upload_options.max_size_upload).toBe(222);
-            expect(file_upload_options.onErrorCallback).toBeDefined();
-            expect(file_upload_options.onStartUploadCallback).toBeDefined();
-            expect(file_upload_options.onSuccessCallback).toBeDefined();
-            expect(file_upload_options.onProgressCallback).toBeDefined();
-        });
     });
 
     describe("error_message", () => {
@@ -87,12 +76,8 @@ describe("useUploadFile", () => {
                     { ...mocked_notifications_data, addNotification: mocked_add_notification },
                 ],
             ]);
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
 
-            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
+            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
             file_upload_options.onErrorCallback(new UploadError(gettext_provider), "file_name");
 
@@ -108,12 +93,8 @@ describe("useUploadFile", () => {
                 [UPLOAD_FILE_STORE, { ...mocked_upload_data, deleteUpload: mocked_delete_upload }],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
 
-            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
+            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
             const current_file = mocked_upload_data.pending_uploads.value[0];
             file_upload_options.onErrorCallback(
@@ -136,12 +117,8 @@ describe("useUploadFile", () => {
                 ],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
 
-            const { resetProgressCallback } = useUploadFile(section_id, post_information, vi.fn());
+            const { resetProgressCallback } = useUploadFile(section_id, manage_section_attachments);
 
             resetProgressCallback();
 
@@ -160,12 +137,8 @@ describe("useUploadFile", () => {
                 ],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
 
-            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
+            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
             const list: FileList = mockFileList([new File(["123"], "file_1")]);
             file_upload_options.onStartUploadCallback(list);
@@ -176,16 +149,11 @@ describe("useUploadFile", () => {
 
     describe("onSuccessCallback", () => {
         it("should add the current upload to the store pending uploads", () => {
-            const add_attachment_to_waiting_list_mock = vi.fn();
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
-            const { file_upload_options } = useUploadFile(
-                section_id,
-                post_information,
-                add_attachment_to_waiting_list_mock,
+            const add_attachment_to_waiting_list_mock = vi.spyOn(
+                manage_section_attachments,
+                "addAttachmentToWaitingList",
             );
+            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
             file_upload_options.onSuccessCallback(123, "download_href", "file_name");
             expect(add_attachment_to_waiting_list_mock).toHaveBeenCalledWith({
@@ -194,12 +162,7 @@ describe("useUploadFile", () => {
             });
         });
         it("should actualize progress of upload to 100%", () => {
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
-
-            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
+            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
@@ -224,12 +187,7 @@ describe("useUploadFile", () => {
 
     describe("onProgressCallback", () => {
         it("should actualize progress of upload", () => {
-            const post_information: FileUploadOptions["post_information"] = {
-                upload_url: "upload_url",
-                getUploadJsonPayload: noop,
-            };
-
-            const { file_upload_options } = useUploadFile(section_id, post_information, vi.fn());
+            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
@@ -251,14 +209,9 @@ describe("useUploadFile", () => {
         });
         describe("if the file is not found in upload list", () => {
             it("should not actualize upload list state", () => {
-                const post_information: FileUploadOptions["post_information"] = {
-                    upload_url: "upload_url",
-                    getUploadJsonPayload: noop,
-                };
                 const { file_upload_options } = useUploadFile(
                     section_id,
-                    post_information,
-                    vi.fn(),
+                    manage_section_attachments,
                 );
 
                 const save_upload_files = [...mocked_upload_data.pending_uploads.value];
