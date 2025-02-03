@@ -35,7 +35,6 @@
         />
 
         <feature-card
-            v-else
             v-for="feature in features"
             v-bind:key="feature.id"
             v-bind:feature="feature"
@@ -51,67 +50,57 @@
         />
     </div>
 </template>
-
-<script lang="ts">
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useGetters, useActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
 import FeatureCard from "./FeatureCard.vue";
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
-import { Getter } from "vuex-class";
 import type { Feature } from "../../../type";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 
-@Component({
-    components: {
-        ErrorDisplayer,
-        ProgramIncrementNotPlannable,
-        BacklogElementSkeleton,
-        FeatureCard,
-        ProgramIncrementNoContent,
-    },
-})
-export default class ProgramIncrementFeatureList extends Vue {
-    @Prop({ required: true })
-    readonly increment!: ProgramIncrement;
+const { $gettext } = useGettext();
 
-    features: Array<Feature> = [];
-    error_message = "";
-    has_error = false;
-    is_loading = false;
+const props = defineProps<{ increment: ProgramIncrement }>();
 
-    @Getter
-    readonly getFeaturesInProgramIncrement!: (increment_id: number) => Feature[];
-    @Getter
-    readonly isProgramIncrementAlreadyAdded!: (increment_id: number) => boolean;
+const features = ref<Feature[]>([]);
+const error_message = ref("");
+const has_error = ref(false);
+const is_loading = ref(false);
 
-    async mounted(): Promise<void> {
-        if (this.isProgramIncrementAlreadyAdded(this.increment.id)) {
-            this.features = this.getFeaturesInProgramIncrement(this.increment.id);
-            return;
-        }
+const { getFeaturesInProgramIncrement, isProgramIncrementAlreadyAdded } = useGetters<{
+    getFeaturesInProgramIncrement: () => (program_increment_id: number) => Feature[];
+    isProgramIncrementAlreadyAdded: () => (program_increment_id: number) => boolean;
+}>(["getFeaturesInProgramIncrement", "isProgramIncrementAlreadyAdded"]);
 
-        try {
-            this.is_loading = true;
-            this.features = await this.$store.dispatch(
-                "getFeatureAndStoreInProgramIncrement",
-                this.increment,
-            );
-        } catch (e) {
-            this.has_error = true;
-            this.error_message = this.$gettext(
-                "The retrieval of the elements to be planned in program has failed",
-            );
-            throw e;
-        } finally {
-            this.is_loading = false;
-        }
+const { getFeatureAndStoreInProgramIncrement } = useActions([
+    "getFeatureAndStoreInProgramIncrement",
+]);
+
+onMounted(async () => {
+    if (isProgramIncrementAlreadyAdded.value(props.increment.id)) {
+        features.value = getFeaturesInProgramIncrement.value(props.increment.id);
+        return;
     }
 
-    public doesIncrementAcceptPlannableItems(): boolean {
-        return this.increment.user_can_plan;
+    try {
+        is_loading.value = true;
+        features.value = await getFeatureAndStoreInProgramIncrement(props.increment);
+    } catch (e) {
+        has_error.value = true;
+        error_message.value = $gettext(
+            "The retrieval of the elements to be planned in program has failed",
+        );
+        throw e;
+    } finally {
+        is_loading.value = false;
     }
+});
+
+function doesIncrementAcceptPlannableItems(): boolean {
+    return props.increment.user_can_plan;
 }
 </script>
