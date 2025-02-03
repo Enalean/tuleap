@@ -17,19 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
-import type { Wrapper } from "@vue/test-utils";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
 describe("ProgramIncrementCard", () => {
     async function getWrapper(
         user_can_update = true,
         is_iteration_tracker_defined = true,
-    ): Promise<Wrapper<ProgramIncrementCard>> {
+    ): Promise<Wrapper<Vue>> {
         const increment = {
             id: 1,
             title: "PI 1",
@@ -41,13 +40,12 @@ describe("ProgramIncrementCard", () => {
 
         return shallowMount(ProgramIncrementCard, {
             localVue: await createProgramManagementLocalVue(),
-            propsData: {
-                increment,
-            },
+            propsData: { increment },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         configuration: {
+                            user_locale: "en_US",
                             short_name: "guinea-pig",
                             is_iteration_tracker_defined,
                             tracker_iteration_label: "stuff",
