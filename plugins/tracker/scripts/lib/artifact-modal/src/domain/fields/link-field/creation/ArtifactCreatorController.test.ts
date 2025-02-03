@@ -19,7 +19,10 @@
 
 import { Fault } from "@tuleap/fault";
 import { en_US_LOCALE } from "@tuleap/core-constants";
-import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import {
+    CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import { ArtifactCreatorController } from "./ArtifactCreatorController";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import type { RetrieveProjects } from "./RetrieveProjects";
@@ -30,7 +33,6 @@ import { ProjectIdentifierStub } from "../../../../../tests/stubs/ProjectIdentif
 import type { ProjectIdentifier } from "../../../ProjectIdentifier";
 import { TrackerStub } from "../../../../../tests/stubs/TrackerStub";
 import { ProjectStub } from "../../../../../tests/stubs/ProjectStub";
-import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { TrackerIdentifierStub } from "../../../../../tests/stubs/TrackerIdentifierStub";
 import { CreateLinkableArtifactStub } from "../../../../../tests/stubs/CreateLinkableArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
@@ -75,7 +77,7 @@ describe(`ArtifactCreatorController`, () => {
             tracker_retriever,
             artifact_creator,
             CurrentProjectIdentifier.fromId(CURRENT_PROJECT_ID),
-            CurrentTrackerIdentifierStub.withId(CURRENT_TRACKER_ID),
+            CurrentTrackerIdentifier.fromId(CURRENT_TRACKER_ID),
             en_US_LOCALE,
         );
 

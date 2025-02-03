@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
+import type { Identifier } from "./Identifier";
 
 // I identify the tracker of the artifact currently under creation or edition
 export type CurrentTrackerIdentifier = Identifier<"CurrentTrackerIdentifier">;
+
+export const CurrentTrackerIdentifier = {
+    fromId: (id: number): CurrentTrackerIdentifier => ({ id, _type: "CurrentTrackerIdentifier" }),
+};

@@ -19,7 +19,10 @@
 
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
-import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import {
+    CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { HostElement } from "./LinkField";
 import { getLinkedArtifactPresenters } from "./LinkField";
@@ -48,7 +51,6 @@ import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
-import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -193,7 +195,7 @@ describe(`LinkedArtifactTemplate`, () => {
         });
 
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
-            const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
+            const current_tracker_identifier = CurrentTrackerIdentifier.fromId(75);
             const current_artifact_reference = Option.fromValue(
                 ArtifactCrossReferenceStub.withRef("story #72"),
             );

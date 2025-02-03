@@ -19,7 +19,10 @@
 
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
-import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import {
+    CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement } from "./LinkField";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
@@ -37,7 +40,6 @@ import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
-import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -156,7 +158,7 @@ describe(`NewLinkTemplate`, () => {
 
     describe(`action button`, () => {
         const getHost = (new_link: NewLink): HostElement => {
-            const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
+            const current_tracker_identifier = CurrentTrackerIdentifier.fromId(28);
             const current_artifact_reference = Option.fromValue(
                 ArtifactCrossReferenceStub.withRef("bug #22"),
             );

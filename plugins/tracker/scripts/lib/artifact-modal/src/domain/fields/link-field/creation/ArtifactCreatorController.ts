@@ -19,7 +19,10 @@
 
 import type { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
-import type { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import type {
+    CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import type { DispatchEvents, WillDisableSubmit } from "../../../AllEvents";
 import { WillEnableSubmit } from "../../../AllEvents";
 import type { RetrieveProjects } from "./RetrieveProjects";
@@ -31,7 +34,6 @@ import { ProjectTrackersRetrievalFault } from "./ProjectTrackersRetrievalFault";
 import { ProjectIdentifier } from "../../../ProjectIdentifier";
 import { TrackerIdentifier } from "../../../TrackerIdentifier";
 import type { LinkableArtifact } from "../LinkableArtifact";
-import type { CurrentTrackerIdentifier } from "../../../CurrentTrackerIdentifier";
 import type { CreateLinkableArtifact } from "./CreateLinkableArtifact";
 import { ArtifactCreationFault } from "../../../ArtifactCreationFault";
 

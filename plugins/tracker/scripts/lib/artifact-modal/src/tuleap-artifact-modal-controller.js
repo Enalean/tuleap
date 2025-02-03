@@ -21,7 +21,10 @@ import { loadTooltips } from "@tuleap/tooltip";
 import { Option } from "@tuleap/option";
 import { en_US_LOCALE } from "@tuleap/core-constants";
 import { EVENT_TLP_MODAL_WILL_HIDE } from "@tuleap/tlp-modal";
-import { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import {
+    CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
@@ -47,7 +50,6 @@ import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-fie
 import { NewLinksStore } from "./adapters/Memory/fields/link-field/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
-import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/fields/link-field/PossibleParentsCache";
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
@@ -121,9 +123,7 @@ function ArtifactModalController(
     const parent_artifact_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
         modal_model.parent_artifact_id,
     );
-    const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
-        modal_model.tracker_id,
-    );
+    const current_tracker_identifier = CurrentTrackerIdentifier.fromId(modal_model.tracker_id);
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(link_field_api_client);
 

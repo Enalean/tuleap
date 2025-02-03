@@ -19,7 +19,10 @@
 
 import type { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
-import type { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import type {
+    CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
 import type { LinkedArtifact, LinkedArtifactIdentifier } from "./LinkedArtifact";
 import type { AddLinkMarkedForRemoval } from "./AddLinkMarkedForRemoval";
@@ -36,7 +39,6 @@ import { NewLink } from "./NewLink";
 import { LinkType } from "./LinkType";
 import type { DeleteNewLink } from "./DeleteNewLink";
 import type { RetrievePossibleParents } from "./RetrievePossibleParents";
-import type { CurrentTrackerIdentifier } from "../../CurrentTrackerIdentifier";
 import type { LinkTypesCollection } from "./LinkTypesCollection";
 import type { DispatchEvents } from "../../AllEvents";
 import {

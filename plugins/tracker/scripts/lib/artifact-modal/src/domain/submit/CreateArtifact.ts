@@ -19,9 +19,9 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import type { CurrentTrackerIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { ArtifactCreated } from "../ArtifactCreated";
 import type { ChangesetValues } from "./ChangesetValues";
-import type { CurrentTrackerIdentifier } from "../CurrentTrackerIdentifier";
 import type { TrackerIdentifier } from "../TrackerIdentifier";
 
 export type CreateArtifact = {

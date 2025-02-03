@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
-import type { CurrentTrackerIdentifier } from "./CurrentTrackerIdentifier";
+import type { CurrentTrackerIdentifier, Identifier } from "@tuleap/plugin-tracker-artifact-common";
 
 export type TrackerIdentifier = Identifier<"TrackerIdentifier">;
 
