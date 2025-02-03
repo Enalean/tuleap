@@ -174,17 +174,13 @@ describe("StepDefinitionEditableStep", () => {
             it("retrieves the content of the both editors if they are set and if the current step is in HTML format", async () => {
                 const wrapper = await getComponentInstance({}, TEXT_FORMAT_HTML);
 
-                expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
-                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "raw expected results",
-                );
+                expect(wrapper.vm.$data.raw_description).toContain("raw description");
+                expect(wrapper.vm.$data.raw_expected_results).toContain("raw expected results");
 
                 wrapper.vm.getEditorsContent();
 
-                expect(wrapper.vm.$props.step.raw_description).toContain("some fabulous content");
-                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "some fabulous content",
-                );
+                expect(wrapper.vm.$data.raw_description).toContain("some fabulous content");
+                expect(wrapper.vm.$data.raw_expected_results).toContain("some fabulous content");
             });
 
             it("does not retrieve the RTE content if the format is not HTML", async () => {
