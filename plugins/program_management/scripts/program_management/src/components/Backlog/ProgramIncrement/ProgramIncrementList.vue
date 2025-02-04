@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <form v-bind:action="create_new_program_increment" method="post">
+        <form v-bind:action="create_new_program_increment_uri" method="post">
             <div class="program-increment-title-with-button">
                 <h2 data-test="program-increment-title" class="program-increment-title">
                     {{ tracker_program_increment_label }}
@@ -59,71 +59,66 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useNamespacedState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import EmptyState from "./EmptyState.vue";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { getProgramIncrements } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
-import { namespace } from "vuex-class";
 
-const configuration = namespace("configuration");
+const { $gettext, interpolate } = useGettext();
 
-@Component({
-    components: { BacklogElementSkeleton, ProgramIncrementCard, EmptyState },
-})
-export default class ProgramIncrementList extends Vue {
-    error_message = "";
-    has_error = false;
-    program_increments: Array<ProgramIncrement> = [];
-    is_loading = false;
+const error_message = ref("");
+const has_error = ref(false);
+const program_increments = ref<ProgramIncrement[]>([]);
+const is_loading = ref(false);
 
-    @configuration.State
-    readonly can_create_program_increment!: boolean;
+const {
+    can_create_program_increment,
+    tracker_program_increment_label,
+    tracker_program_increment_sub_label,
+    tracker_program_increment_id,
+    program_id,
+} = useNamespacedState<{
+    can_create_program_increment: boolean;
+    tracker_program_increment_label: string;
+    tracker_program_increment_sub_label: string;
+    tracker_program_increment_id: number;
+    program_id: number;
+}>("configuration", [
+    "can_create_program_increment",
+    "tracker_program_increment_label",
+    "tracker_program_increment_sub_label",
+    "tracker_program_increment_id",
+    "program_id",
+]);
 
-    @configuration.State
-    readonly tracker_program_increment_label!: string;
-
-    @configuration.State
-    readonly tracker_program_increment_sub_label!: string;
-
-    @configuration.State
-    readonly tracker_program_increment_id!: number;
-
-    @configuration.State
-    readonly program_id!: number;
-
-    async mounted(): Promise<void> {
-        try {
-            this.is_loading = true;
-            this.program_increments = await getProgramIncrements(this.program_id);
-        } catch (e) {
-            this.has_error = true;
-            this.error_message = this.$gettext(
-                "The retrieval of the program increments has failed",
-            );
-            throw e;
-        } finally {
-            this.is_loading = false;
-        }
+onMounted(async () => {
+    try {
+        is_loading.value = true;
+        program_increments.value = await getProgramIncrements(program_id.value);
+    } catch (e) {
+        has_error.value = true;
+        error_message.value = $gettext("The retrieval of the program increments has failed");
+        throw e;
+    } finally {
+        is_loading.value = false;
     }
+});
 
-    get user_can_create_program_increment(): boolean {
-        return this.can_create_program_increment && this.program_increments.length > 0;
-    }
+const user_can_create_program_increment = computed(
+    (): boolean => can_create_program_increment.value && program_increments.value.length > 0,
+);
 
-    get create_new_program_increment(): string {
-        return buildCreateNewProgramIncrement(this.tracker_program_increment_id);
-    }
+const create_new_program_increment_uri = buildCreateNewProgramIncrement(
+    tracker_program_increment_id.value,
+);
 
-    get add_button_label(): string {
-        return this.$gettextInterpolate(this.$gettext("New %{ program_increment_sub_label }"), {
-            program_increment_sub_label: this.tracker_program_increment_sub_label,
-        });
-    }
-}
+const add_button_label = interpolate($gettext("New %{ program_increment_sub_label }"), {
+    program_increment_sub_label: tracker_program_increment_sub_label.value,
+});
 </script>
