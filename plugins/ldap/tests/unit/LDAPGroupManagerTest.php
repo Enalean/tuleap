@@ -89,6 +89,7 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $ldap_user_manager,
                 $prjm,
                 $notm,
+                new NullLogger(),
             ])->getMockForAbstractClass();
 
         $grpManager->setGroupDn('cn=whatever,ou=groups,dc=example,dc=com');
@@ -162,6 +163,7 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $ldap_user_manager,
                 $prjm,
                 $this->createMock(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class),
+                new NullLogger(),
             ])->getMockForAbstractClass();
 
         $members = $grpManager->getLdapGroupMembers('cn=ABCDEF,ou=groups,dc=example,dc=com');

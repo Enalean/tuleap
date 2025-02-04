@@ -39,17 +39,12 @@ use Tuleap\LDAP\GroupSyncNotificationsManager;
  * group name set respectively with setId() and setGroupName().
  *
  */
-abstract class LDAP_GroupManager
+abstract class LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const NO_SYNCHRONIZATION      = 'never';
     public const AUTO_SYNCHRONIZATION    = 'auto';
     public const BIND_OPTION             = 'bind';
     public const PRESERVE_MEMBERS_OPTION = 'preserve_members';
-
-    /**
-     * @var LDAP
-     */
-    private $ldap;
 
     protected $groupName;
     protected $groupDn;
@@ -59,20 +54,6 @@ abstract class LDAP_GroupManager
     protected $usersNotImpacted;
     protected array $cached_users = [];
 
-    /**
-     * @var GroupSyncNotificationsManager
-     * */
-    protected $notifications_manager;
-
-    /**
-     * @var LDAP_UserManager
-     */
-    protected $ldap_user_manager;
-
-    /**
-     * @var ProjectManager
-     * */
-    private $project_manager;
 
     /**
      * Constructor
@@ -80,16 +61,12 @@ abstract class LDAP_GroupManager
      * @param LDAP $ldap Ldap access object
      */
     public function __construct(
-        LDAP $ldap,
-        LDAP_UserManager $ldap_user_manager,
-        ProjectManager $project_manager,
-        GroupSyncNotificationsManager $notifications_manager,
+        private readonly LDAP $ldap,
+        private readonly LDAP_UserManager $ldap_user_manager,
+        private readonly ProjectManager $project_manager,
+        private readonly GroupSyncNotificationsManager $notifications_manager,
+        private readonly \Psr\Log\LoggerInterface $logger,
     ) {
-        $this->ldap                  = $ldap;
-        $this->ldap_user_manager     = $ldap_user_manager;
-        $this->project_manager       = $project_manager;
-        $this->notifications_manager = $notifications_manager;
-
         // Current group to treat: the ldap group name the Codendi group id
         // and the list of user to add/remove. If you want to manipulate several
         // groups in the same time, instanciate several objects.
@@ -223,25 +200,30 @@ abstract class LDAP_GroupManager
      */
     protected function diffDbAndDirectory($option)
     {
-        if ($this->getGroupDn()) {
-            $ldapGroupMembers = $this->getLdapGroupMembersIds($this->groupDn);
-            $ugroup_members   = $this->getDbGroupMembersIds($this->id);
+        if ($this->getGroupDn() === false || $this->getGroupDn() === null) {
+            return;
+        }
+        $ldapGroupMembers = $this->getLdapGroupMembersIds($this->groupDn);
+        $ugroup_members   = $this->getDbGroupMembersIds($this->id);
 
-            $this->usersToAdd       = [];
-            $this->usersToRemove    = [];
-            $this->usersNotImpacted = [];
+        $this->logger->debug('Number of users bound to ldap group: ' . count($ldapGroupMembers));
+        $this->logger->debug('Number of users bound to Tuleap group: ' . count($ugroup_members));
 
-            foreach ($ugroup_members as $userId) {
-                if (! isset($ldapGroupMembers[$userId]) && $option != self::PRESERVE_MEMBERS_OPTION) {
-                    $this->usersToRemove[$userId] = $userId;
-                } else {
-                    $this->usersNotImpacted[$userId] = $userId;
-                }
+
+        $this->usersToAdd       = [];
+        $this->usersToRemove    = [];
+        $this->usersNotImpacted = [];
+
+        foreach ($ugroup_members as $userId) {
+            if (! isset($ldapGroupMembers[$userId]) && $option != self::PRESERVE_MEMBERS_OPTION) {
+                $this->usersToRemove[$userId] = $userId;
+            } else {
+                $this->usersNotImpacted[$userId] = $userId;
             }
-            foreach ($ldapGroupMembers as $userId) {
-                if (! isset($this->usersNotImpacted[$userId])) {
-                    $this->usersToAdd[$userId] = $userId;
-                }
+        }
+        foreach ($ldapGroupMembers as $userId) {
+            if (! isset($this->usersNotImpacted[$userId])) {
+                $this->usersToAdd[$userId] = $userId;
             }
         }
     }
