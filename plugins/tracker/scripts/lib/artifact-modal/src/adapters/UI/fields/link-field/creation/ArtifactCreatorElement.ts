@@ -45,7 +45,7 @@ import type { Tracker } from "../../../../../domain/Tracker";
 import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
 import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
-import { TrackerIdentifierProxy } from "./TrackerIdentifierProxy";
+import { TrackerIdentifierBuilder } from "./TrackerIdentifierBuilder";
 import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
 import { WillDisableSubmit } from "../../../../../domain/AllEvents";
 
@@ -184,14 +184,16 @@ export const onProjectChange = (host: InternalArtifactCreator, event: Event): vo
 
 export const onTrackerChange = (host: InternalArtifactCreator, event: Event): void => {
     host.has_tracker_selection_error = !host.tracker_selectbox.checkValidity();
-    TrackerIdentifierProxy.fromChangeEvent(event).match(
-        (tracker_id) => {
-            host.selected_tracker = host.controller.selectTracker(tracker_id);
-        },
-        () => {
-            host.selected_tracker = host.controller.clearTracker();
-        },
-    );
+    TrackerIdentifierBuilder()
+        .buildFromChangeEvent(event)
+        .match(
+            (tracker_id) => {
+                host.selected_tracker = host.controller.selectTracker(tracker_id);
+            },
+            () => {
+                host.selected_tracker = host.controller.clearTracker();
+            },
+        );
 };
 
 type DisconnectFunction = () => void;

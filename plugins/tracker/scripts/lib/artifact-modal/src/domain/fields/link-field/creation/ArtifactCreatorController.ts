@@ -35,7 +35,7 @@ import { ProjectIdentifier } from "../../../ProjectIdentifier";
 import { TrackerIdentifier } from "../../../TrackerIdentifier";
 import type { LinkableArtifact } from "../LinkableArtifact";
 import type { CreateLinkableArtifact } from "./CreateLinkableArtifact";
-import { ArtifactCreationFault } from "../../../ArtifactCreationFault";
+import { LinkArtifactCreationFault } from "./LinkArtifactCreationFault";
 
 type OnFaultHandler = (fault: Fault) => void;
 
@@ -140,7 +140,9 @@ export const ArtifactCreatorController = (
                         artifact_creator.createLinkableArtifact(tracker_identifier, title).match(
                             (artifact): Option<LinkableArtifact> => Option.fromValue(artifact),
                             (fault) => {
-                                _handler.apply((handler) => handler(ArtifactCreationFault(fault)));
+                                _handler.apply((handler) =>
+                                    handler(LinkArtifactCreationFault(fault)),
+                                );
                                 return Option.nothing();
                             },
                         ),

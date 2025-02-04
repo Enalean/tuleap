@@ -79,9 +79,12 @@ export const TuleapAPIClient = (
         });
     },
 
-    createArtifact(tracker_identifier, changeset_values): ResultAsync<ArtifactCreated, Fault> {
+    createArtifact(
+        current_tracker_identifier,
+        changeset_values,
+    ): ResultAsync<ArtifactCreated, Fault> {
         const payload: ArtifactCreationPayload = {
-            tracker: { id: tracker_identifier.id },
+            tracker: { id: current_tracker_identifier.id },
             values: changeset_values,
         };
         return postJSON<JustCreatedArtifactResponse>(uri`/api/v1/artifacts`, payload).mapErr(

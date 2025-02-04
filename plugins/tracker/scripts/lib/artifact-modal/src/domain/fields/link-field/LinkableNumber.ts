@@ -18,13 +18,13 @@
  */
 
 import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
-import type { ArtifactCreated } from "../../ArtifactCreated";
+import type { ArtifactCreatedIdentifier } from "./creation/ArtifactCreatedIdentifier";
 
 // I hold a number that is maybe an artifact id that can be linked to the current artifact
 export type LinkableNumber = Identifier<"LinkableNumber">;
 
 export const LinkableNumber = {
-    fromArtifactCreated: (artifact: ArtifactCreated): LinkableNumber => ({
+    fromArtifactCreated: (artifact: ArtifactCreatedIdentifier): LinkableNumber => ({
         id: artifact.id,
         _type: "LinkableNumber",
     }),

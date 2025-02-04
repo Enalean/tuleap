@@ -19,9 +19,9 @@
 
 import type { Option } from "@tuleap/option";
 import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
-import { TrackerIdentifierProxy } from "./TrackerIdentifierProxy";
+import { TrackerIdentifierBuilder } from "./TrackerIdentifierBuilder";
 
-describe(`TrackerIdentifierProxy`, () => {
+describe(`TrackerIdentifierBuilder`, () => {
     let doc: Document, tracker_identifier: Option<TrackerIdentifier>, option: string;
     const TRACKER_ID = 97;
     beforeEach(() => {
@@ -33,7 +33,7 @@ describe(`TrackerIdentifierProxy`, () => {
         const select = doc.createElement("select");
         select.insertAdjacentHTML("afterbegin", option);
         select.addEventListener("change", (event) => {
-            tracker_identifier = TrackerIdentifierProxy.fromChangeEvent(event);
+            tracker_identifier = TrackerIdentifierBuilder().buildFromChangeEvent(event);
         });
         select.dispatchEvent(new Event("change"));
     };
@@ -46,7 +46,7 @@ describe(`TrackerIdentifierProxy`, () => {
     it(`builds nothing if the target element is not a select`, () => {
         const input = doc.createElement("input");
         input.addEventListener("change", (event) => {
-            tracker_identifier = TrackerIdentifierProxy.fromChangeEvent(event);
+            tracker_identifier = TrackerIdentifierBuilder().buildFromChangeEvent(event);
         });
         input.dispatchEvent(new Event("change"));
         expect(tracker_identifier.isNothing()).toBe(true);

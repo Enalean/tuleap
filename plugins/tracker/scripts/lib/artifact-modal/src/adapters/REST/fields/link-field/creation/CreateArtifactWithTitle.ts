@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Option } from "@tuleap/option";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import type { TitleFieldIdentifier } from "../../../../../domain/fields/link-field/creation/TitleFieldIdentifier";
+import type { ArtifactCreatedIdentifier } from "../../../../../domain/fields/link-field/creation/ArtifactCreatedIdentifier";
 
-export const TrackerIdentifierProxy = {
-    fromChangeEvent: (event: Event): Option<TrackerIdentifier> => {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            return Option.nothing();
-        }
-        const tracker_id = Number.parseInt(event.target.value, 10);
-        if (Number.isNaN(tracker_id)) {
-            return Option.nothing();
-        }
-        const identifier: TrackerIdentifier = { id: tracker_id, _type: "TrackerIdentifier" };
-        return Option.fromValue(identifier);
-    },
+export type CreateArtifactWithTitle = {
+    createArtifactWithTitle(
+        tracker_identifier: TrackerIdentifier,
+        title_field_identifier: TitleFieldIdentifier,
+        title: string,
+    ): ResultAsync<ArtifactCreatedIdentifier, Fault>;
 };

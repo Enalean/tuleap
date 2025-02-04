@@ -207,9 +207,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`when an artifact is returned by the artifact api,
             it will be added to the matching artifact section,
             and clear the fault notification`, async () => {
-            artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(
-                okAsync(first_artifact),
-            );
+            artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(first_artifact);
 
             autocomplete(String(FIRST_ARTIFACT_ID));
 
