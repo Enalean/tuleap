@@ -22,36 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertSame;
 
-class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var StatusValueRetriever
-     */
-    private $retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Semantic_StatusFactory
-     */
-    private $semantic_status_factory;
-    private Mockery\LegacyMockInterface|Mockery\MockInterface|FirstPossibleValueInListRetriever $first_possible_value_retriever;
+    private StatusValueRetriever $retriever;
+    private Tracker_Semantic_StatusFactory&MockObject $semantic_status_factory;
+    private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
     private Artifact $artifact;
     private Tracker_Semantic_Status $semantic_status;
     private PFUser $user;
@@ -65,8 +57,8 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
         $this->artifact = ArtifactTestBuilder::anArtifact(112)->inTracker($this->tracker)->build();
 
-        $this->semantic_status_factory        = Mockery::mock(Tracker_Semantic_StatusFactory::class);
-        $this->first_possible_value_retriever = Mockery::mock(FirstPossibleValueInListRetriever::class);
+        $this->semantic_status_factory        = $this->createMock(Tracker_Semantic_StatusFactory::class);
+        $this->first_possible_value_retriever = $this->createMock(FirstPossibleValueInListRetriever::class);
 
         $this->retriever = new StatusValueRetriever(
             $this->semantic_status_factory,
@@ -140,9 +132,9 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithClosedValue();
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
-            ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
-            ->andReturn(45);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')
+            ->with($this->artifact, $this->semantic_status->getField(), self::anything(), $this->user)
+            ->willReturn(45);
 
         $field_value = $this->retriever->getFirstClosedValueUserCanRead(
             $this->user,
@@ -157,9 +149,9 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithClosedValue();
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
-            ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
-            ->andThrow(NoPossibleValueException::class);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')
+            ->with($this->artifact, $this->semantic_status->getField(), self::anything(), $this->user)
+            ->willThrowException(new NoPossibleValueException());
 
         $this->expectException(NoPossibleValueException::class);
 
@@ -173,9 +165,9 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithOpenValue();
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
-            ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
-            ->andThrow(NoPossibleValueException::class);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')
+            ->with($this->artifact, $this->semantic_status->getField(), self::anything(), $this->user)
+            ->willThrowException(new NoPossibleValueException());
 
         $this->expectException(NoPossibleValueException::class);
 
@@ -213,9 +205,9 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockSemanticStatusDefinedWithOpenValue();
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')
-            ->withArgs([$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user])
-            ->andReturn(44);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')
+            ->with($this->artifact, $this->semantic_status->getField(), self::anything(), $this->user)
+            ->willReturn(44);
 
         $field_value = $this->retriever->getFirstOpenValueUserCanRead(
             $this->user,
@@ -228,10 +220,11 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticStatusNotDefined(): void
     {
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new Tracker_Semantic_Status(
                     $this->tracker,
                     null,
@@ -242,16 +235,13 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticStatusNotDefinedWithFieldNonReadable(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
-            ->with($this->user)
-            ->andReturnFalse();
+        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
 
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new Tracker_Semantic_Status(
                     $this->tracker,
                     $field,
@@ -262,28 +252,20 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticStatusDefinedWithAllValuesAsOpen(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
-            ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-            ]);
+        $field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(1001)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+        )->withStaticValues([
+            44 => 'a',
+            45 => 'b',
+        ])->build()->getField();
 
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 new Tracker_Semantic_Status(
                     $this->tracker,
                     $field,
@@ -294,159 +276,139 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticStatusDefinedWithAllValuesClosed(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')->once()->with($this->user)->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-            ]);
+        $field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(1001)
+                ->withReadPermission($this->user, true)
+                ->build()
+        )->withStaticValues([
+            44 => 'a',
+            45 => 'b',
+        ])->build()->getField();
+
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
             []
         );
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 $this->semantic_status
             );
     }
 
     private function mockSemanticStatusDefinedWithClosedValueHidden(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
-            ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnTrue()
-                    ->getMock(),
-            ]);
+        $field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(1001)
+                ->withReadPermission($this->user, true)
+                ->build()
+        )->withStaticValues(
+            [
+                44 => 'a',
+                45 => 'b',
+            ],
+            [
+                45 => true,
+            ]
+        )->build()->getField();
+
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
             [44]
         );
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 $this->semantic_status
             );
     }
 
     private function mockSemanticStatusDefinedWithOpenValueHidden(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
-            ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnTrue()
-                    ->getMock(),
-            ]);
+        $field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(1001)
+                ->withReadPermission($this->user, true)
+                ->build()
+        )->withStaticValues(
+            [
+                44 => 'a',
+                45 => 'b',
+            ],
+            [
+                45 => true,
+            ]
+        )->build()->getField();
+
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
             [45]
         );
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 $this->semantic_status
             );
     }
 
     private function mockSemanticStatusDefinedWithClosedValue(): void
     {
-        $not_open_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $not_open_value->shouldReceive('isHidden')->andReturnFalse();
-        $not_open_value->shouldReceive('getId')->andReturn(45);
+        $field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(1001)
+                ->withReadPermission($this->user, true)
+                ->build()
+        )->withStaticValues(
+            [
+                44 => 'a',
+                45 => 'b',
+            ]
+        )->build()->getField();
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
-            ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-                45 => $not_open_value,
-            ]);
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
             [44]
         );
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 $this->semantic_status
             );
     }
 
     private function mockSemanticStatusDefinedWithOpenValue(): void
     {
-        $open_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $open_value->shouldReceive('isHidden')->andReturnFalse();
-        $open_value->shouldReceive('getId')->andReturn(44);
+        $field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(1001)
+                ->withReadPermission($this->user, true)
+                ->build()
+        )->withStaticValues(
+            [
+                44 => 'a',
+                45 => 'b',
+            ]
+        )->build()->getField();
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('userCanRead')
-            ->once()
-            ->with($this->user)
-            ->andReturnTrue();
-        $field->shouldReceive('getAllValues')
-            ->once()
-            ->andReturn([
-                44 => $open_value,
-                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
-                    ->shouldReceive('isHidden')
-                    ->andReturnFalse()
-                    ->getMock(),
-            ]);
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
             [44]
         );
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn(
+            ->willReturn(
                 $this->semantic_status
             );
     }

@@ -22,111 +22,81 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var StatusValueForChangesetProvider
-     */
-    private $provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Semantic_Status
-     */
-    private $semantic;
+    private StatusValueForChangesetProvider&MockObject $provider;
+    private Tracker_Artifact_Changeset $changeset;
+    private PFUser $user;
+    private \Tracker_Semantic_Status&MockObject $semantic;
 
     protected function setUp(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $this->changeset = ChangesetTestBuilder::aChangeset(101)->build();
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset->shouldReceive('getArtifact')->andReturn($artifact);
+        $this->semantic = $this->createMock(\Tracker_Semantic_Status::class);
 
-        $this->user = Mockery::mock(PFUser::class);
-
-        $this->semantic = Mockery::mock(\Tracker_Semantic_Status::class);
-
-        $this->provider = Mockery::mock(StatusValueForChangesetProvider::class . '[loadSemantic]');
-        $this->provider->shouldAllowMockingProtectedMethods();
-        $this->provider->shouldReceive('loadSemantic')->andReturn($this->semantic);
+        $this->provider = $this->createPartialMock(StatusValueForChangesetProvider::class, ['loadSemantic']);
+        $this->provider->method('loadSemantic')->willReturn($this->semantic);
     }
 
     public function testReturnsNullIfNoFieldForStatus()
     {
-        $this->semantic->shouldReceive('getField')->once()->andReturnNull();
+        $this->semantic->expects(self::once())->method('getField')->willReturn(null);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
 
     public function testReturnsNullIfUserCannotReadStatus()
     {
-        $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->semantic->shouldReceive('getField')->once()->andReturn($field);
-
-        $field->shouldReceive('userCanRead')->with($this->user)->once()->andReturnFalse();
+        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
+        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
 
     public function testReturnsNullIfNoChangesetValue()
     {
-        $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->semantic->shouldReceive('getField')->once()->andReturn($field);
+        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
+        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->with($this->user)->once()->andReturnTrue();
-
-        $this->changeset->shouldReceive('getValue')->with($field)->andReturnNull();
+        $this->changeset->setFieldValue($field, null);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
 
     public function testReturnsNullIfNoValueForField()
     {
-        $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->semantic->shouldReceive('getField')->once()->andReturn($field);
+        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
+        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->with($this->user)->once()->andReturnTrue();
+        $value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
+        $this->changeset->setFieldValue($field, $value);
 
-        $value = Mockery::mock(\Tracker_Artifact_ChangesetValue_List::class);
-        $this->changeset->shouldReceive('getValue')->with($field)->andReturn($value);
-
-        $value->shouldReceive('getListValues')->once()->andReturn([]);
+        $value->expects(self::once())->method('getListValues')->willReturn([]);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
 
     public function testReturnsTheFirstValue()
     {
-        $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->semantic->shouldReceive('getField')->once()->andReturn($field);
+        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
+        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
 
-        $field->shouldReceive('userCanRead')->with($this->user)->once()->andReturnTrue();
+        $value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
+        $this->changeset->setFieldValue($field, $value);
 
-        $value = Mockery::mock(\Tracker_Artifact_ChangesetValue_List::class);
-        $this->changeset->shouldReceive('getValue')->with($field)->andReturn($value);
-
-        $todo = Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $done = Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value->shouldReceive('getListValues')->once()->andReturn([$todo, $done]);
+        $todo = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $done = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $value->expects(self::once())->method('getListValues')->willReturn([$todo, $done]);
 
         $this->assertSame($todo, $this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }

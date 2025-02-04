@@ -22,66 +22,55 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Tracker_Artifact_Changeset;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
-class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var StatusValueForChangesetProvider
-     */
-    private $provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusValueProvider
-     */
-    private $for_changeset_provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
+    private StatusValueProvider $provider;
+    private StatusValueForChangesetProvider&MockObject $for_changeset_provider;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(Artifact::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->user = Mockery::mock(PFUser::class);
-
-        $this->for_changeset_provider = Mockery::mock(StatusValueForChangesetProvider::class);
+        $this->for_changeset_provider = $this->createMock(StatusValueForChangesetProvider::class);
         $this->provider               = new StatusValueProvider($this->for_changeset_provider);
     }
 
     public function testItReturnsNullIfNoLastChangeset(): void
     {
-        $this->artifact->shouldReceive('getLastChangeset')->andReturnNull();
+        $artifact = ArtifactTestBuilder::anArtifact(101)->build();
+        $artifact->setChangesets([]);
 
-        $this->assertNull($this->provider->getStatusValue($this->artifact, $this->user));
+        $this->assertNull($this->provider->getStatusValue($artifact, $this->user));
     }
 
     public function testItReturnsTheStatusValueForTheLastChangeset(): void
     {
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $changeset = ChangesetTestBuilder::aChangeset(1002)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)
+            ->withChangesets($changeset)
+            ->build();
 
-        $value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $value = $this->createMock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $this->for_changeset_provider
-            ->shouldReceive('getStatusValueForChangeset')
+            ->expects(self::once())
+            ->method('getStatusValueForChangeset')
             ->with($changeset, $this->user)
-            ->once()
-            ->andReturn($value);
+            ->willReturn($value);
 
         $this->assertSame(
             $value,
-            $this->provider->getStatusValue($this->artifact, $this->user)
+            $this->provider->getStatusValue($artifact, $this->user)
         );
     }
 }
