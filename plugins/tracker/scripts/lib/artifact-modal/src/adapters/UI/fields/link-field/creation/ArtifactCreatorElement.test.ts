@@ -29,11 +29,11 @@ import type { ArtifactCreatedEvent, HostElement } from "./ArtifactCreatorElement
 import {
     getTrackerSelectClasses,
     onClickCancel,
+    onErrorMessageChange,
     onProjectChange,
     onSubmit,
     onTrackerChange,
     renderArtifactCreatorElement,
-    setErrorMessage,
 } from "./ArtifactCreatorElement";
 import { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
@@ -359,39 +359,29 @@ describe(`ArtifactCreatorElement`, () => {
         );
     });
 
-    describe(`setters`, () => {
-        let form: HTMLElement, tracker_selectbox: HTMLSelectElement;
+    describe(`observe`, () => {
+        let form: HTMLElement;
 
         beforeEach(() => {
             form = doc.createElement("div");
             form.setAttribute("data-form", "");
-            tracker_selectbox = doc.createElement("select");
         });
         const getHost = (): HostElement => {
             const target = doc.createElement("div");
             target.append(form);
             return Object.assign(target, {
-                tracker_selectbox,
-                has_tracker_selection_error: false,
                 render: (): HTMLElement => target,
             } as HostElement);
         };
-
-        it(`defaults error message to Nothing`, () => {
-            const result = setErrorMessage(getHost(), undefined);
-            expect(result.isNothing()).toBe(true);
-        });
 
         it(`scrolls the form into view when given an actual error message`, () => {
             const host = getHost();
             const scrollIntoView = jest.fn();
             Object.assign(form, { scrollIntoView });
-            const option = Option.fromValue("Error message");
 
-            const result = setErrorMessage(host, option);
+            onErrorMessageChange(host);
 
             expect(scrollIntoView).toHaveBeenCalled();
-            expect(result).toBe(option);
         });
     });
 });
