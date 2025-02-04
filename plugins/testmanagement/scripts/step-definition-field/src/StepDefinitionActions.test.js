@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,19 +27,21 @@ import {
 } from "@tuleap/plugin-tracker-constants";
 import CommonmarkPreviewButton from "./CommonMark/CommonmarkPreviewButton.vue";
 import CommonmarkSyntaxHelper from "./CommonMark/CommonmarkSyntaxHelper.vue";
-import { createLocalVueForTests } from "./helpers/local-vue.js";
+import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
 
-const getWrapper = async (props = {}) => {
+const getWrapper = (props = {}) => {
     return shallowMount(StepDefinitionActions, {
-        localVue: await createLocalVueForTests(),
+        global: {
+            ...getGlobalTestOptions(),
+        },
         propsData: { ...props },
     });
 };
 
 describe(`StepDefinitionActions`, () => {
     describe("Display of the CommonMark buttons", () => {
-        it(`displays the 'Preview' and the syntax helper buttons when the CommonMark/Markdown value is selected or not disabled`, async () => {
-            const wrapper = await getWrapper({
+        it(`displays the 'Preview' and the syntax helper buttons when the CommonMark/Markdown value is selected or not disabled`, () => {
+            const wrapper = getWrapper({
                 value: TEXT_FORMAT_COMMONMARK,
                 disabled: false,
             });
@@ -48,8 +50,8 @@ describe(`StepDefinitionActions`, () => {
             expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBe(true);
         });
 
-        it(`does not display the 'Preview' and the syntax helper buttons when the step is deleted even if the format is CommonMark/Markdown`, async () => {
-            const wrapper = await getWrapper({
+        it(`does not display the 'Preview' and the syntax helper buttons when the step is deleted even if the format is CommonMark/Markdown`, () => {
+            const wrapper = getWrapper({
                 value: TEXT_FORMAT_COMMONMARK,
                 disabled: true,
             });
@@ -60,8 +62,8 @@ describe(`StepDefinitionActions`, () => {
 
         it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT]])(
             `does not display the buttons when the selected format is %s`,
-            async (selected_format) => {
-                const wrapper = await getWrapper({
+            (selected_format) => {
+                const wrapper = getWrapper({
                     value: selected_format,
                     disabled: false,
                 });
@@ -74,8 +76,8 @@ describe(`StepDefinitionActions`, () => {
     describe(`Selection of the right format`, () => {
         it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT], [TEXT_FORMAT_COMMONMARK]])(
             `selects the '%s' format according the prop 'value' value`,
-            async (value) => {
-                const wrapper = await getWrapper({
+            (value) => {
+                const wrapper = getWrapper({
                     value,
                 });
                 expect(
@@ -86,8 +88,8 @@ describe(`StepDefinitionActions`, () => {
         );
     });
     describe("Enabling of the selectbox", () => {
-        it(`Enable the selectbox when we are in edit mode AND if the step is not disabled`, async () => {
-            const wrapper = await getWrapper({ disabled: false, is_in_preview_mode: false });
+        it(`Enable the selectbox when we are in edit mode AND if the step is not disabled`, () => {
+            const wrapper = getWrapper({ disabled: false, is_in_preview_mode: false });
 
             expect(
                 wrapper.find("[data-test=ttm-definition-step-description-format]").element.disabled,
@@ -100,8 +102,8 @@ describe(`StepDefinitionActions`, () => {
             [false, true],
         ])(
             `Disable the select box when the user is in preview mode OR if the step is disabled`,
-            async (disabled, is_in_preview_mode) => {
-                const wrapper = await getWrapper({ disabled, is_in_preview_mode });
+            (disabled, is_in_preview_mode) => {
+                const wrapper = getWrapper({ disabled, is_in_preview_mode });
 
                 expect(
                     wrapper.find("[data-test=ttm-definition-step-description-format]").element

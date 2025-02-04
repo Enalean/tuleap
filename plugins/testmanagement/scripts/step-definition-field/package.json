@@ -11,17 +11,18 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/tlp": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/vue2-dompurify-html": "workspace:^",
-    "@tuleap/vue2-gettext-init": "workspace:^",
+    "@tuleap/vue3-gettext-init": "workspace:^",
+    "@vue/compat": "^3.5.13",
     "uuid": "^8.3.2",
-    "vue": "^2.7.8",
-    "vuex": "^3.6.2"
+    "vue": "^3.3.4",
+    "vue-dompurify-html": "^5.2.0",
+    "vue3-gettext": "2.4.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
-    "@tuleap/vuex-store-wrapper-jest": "workspace:*",
-    "@vue/test-utils": "^1.3",
+    "@vue/test-utils": "^2.4.1",
     "jquery": "^3.6.0"
   },
   "scripts": {

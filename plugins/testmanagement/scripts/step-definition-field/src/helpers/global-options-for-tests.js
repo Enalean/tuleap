@@ -17,19 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import Vuex from "vuex";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import { createGettext } from "vue3-gettext";
+import { createStore } from "vuex";
 
-export const createLocalVueForTests = async () => {
-    const local_vue = createLocalVue();
-    local_vue.use(Vuex);
-
-    local_vue.use(VueDOMPurifyHTML);
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    return local_vue;
-};
+export function getGlobalTestOptions(store_options = {}) {
+    return {
+        plugins: [createGettext({ silent: true }), createStore(store_options)],
+    };
+}

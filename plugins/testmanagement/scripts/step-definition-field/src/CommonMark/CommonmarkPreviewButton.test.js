@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
-import { createLocalVueForTests } from "../helpers/local-vue.js";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 describe("CommonmarkPreviewButton", () => {
     it.each([
@@ -28,9 +28,11 @@ describe("CommonmarkPreviewButton", () => {
         ["Preview", false, "fa-eye"],
     ])(
         `displays the '%s' button if the preview mode is %s`,
-        async (expected_button_label, is_in_preview_mode, expected_class) => {
+        (expected_button_label, is_in_preview_mode, expected_class) => {
             const wrapper = shallowMount(CommonmarkPreviewButton, {
-                localVue: await createLocalVueForTests(),
+                global: {
+                    ...getGlobalTestOptions(),
+                },
                 propsData: {
                     is_in_preview_mode,
                     is_preview_loading: false,
@@ -47,9 +49,11 @@ describe("CommonmarkPreviewButton", () => {
         },
     );
 
-    it("disables the button and display the spinner when the preview is loading", async () => {
+    it("disables the button and display the spinner when the preview is loading", () => {
         const wrapper = shallowMount(CommonmarkPreviewButton, {
-            localVue: await createLocalVueForTests(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
             propsData: {
                 is_in_preview_mode: false,
                 is_preview_loading: true,

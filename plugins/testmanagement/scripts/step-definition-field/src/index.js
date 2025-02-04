@@ -17,34 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./store/index.js";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import StepDefinitionField from "./StepDefinitionField.vue";
 import { setProjectId } from "./helpers/shared-properties.js";
-
-const StepDefinitionFieldComponent = Vue.extend(StepDefinitionField);
+import { createApp } from "vue";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    Vue.use(VueDOMPurifyHTML);
-    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
-
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
         const store = createStore();
         const initial_steps = JSON.parse(mount_point.dataset.steps);
 
-        new StepDefinitionFieldComponent({
-            store,
-            propsData: {
-                initial_steps,
-                artifact_field_id: JSON.parse(mount_point.dataset.fieldId),
-                empty_step: JSON.parse(mount_point.dataset.emptyStep),
-                upload_url: mount_point.dataset.uploadUrl,
-                upload_field_name: mount_point.dataset.uploadFieldName,
-                upload_max_size: mount_point.dataset.uploadMaxSize,
-            },
-        }).$mount(mount_point);
+        createApp(StepDefinitionField, {
+            initial_steps,
+            artifact_field_id: JSON.parse(mount_point.dataset.fieldId),
+            empty_step: JSON.parse(mount_point.dataset.emptyStep),
+            upload_url: mount_point.dataset.uploadUrl,
+            upload_field_name: mount_point.dataset.uploadFieldName,
+            upload_max_size: mount_point.dataset.uploadMaxSize,
+        })
+            .use(VueDOMPurifyHTML)
+            .use(
+                await initVueGettext(
+                    createGettext,
+                    (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+                ),
+            )
+            .use(store)
+            .mount(mount_point);
         setProjectId(mount_point.dataset.projectId);
     }
 });
