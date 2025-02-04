@@ -8,6 +8,7 @@
     <span
         ng-if="! wip_header.isColumnLoaded()"
         class="kanban-column-header-wip-count"
+        data-test="column-loading-count"
     >{{ wip_header.column.nb_items_at_kanban_init }}</span>
     <div class="tlp-dropdown" ng-if="wip_header.isWipBadgeShown()">
         <span class="kanban-column-header-wip-limit tlp-badge-rounded"
