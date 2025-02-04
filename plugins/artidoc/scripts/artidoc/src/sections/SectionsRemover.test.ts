@@ -29,6 +29,7 @@ import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { getSectionsRemover } from "@/sections/SectionsRemover";
 import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 const section1 = ArtifactSectionFactory.create();
 const section2 = PendingArtifactSectionFactory.create();
@@ -42,7 +43,7 @@ describe("SectionsRemover", () => {
         states_collection = SectionsStatesCollectionStub.build();
         sections_collection = buildSectionsCollection(states_collection);
         sections_collection.replaceAll(
-            CreateStoredSections.fromArtidocSectionsCollection([
+            ReactiveStoredArtidocSectionStub.fromCollection([
                 section1,
                 section2,
                 section3,

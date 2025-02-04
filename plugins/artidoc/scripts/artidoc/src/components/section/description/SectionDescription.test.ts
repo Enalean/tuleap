@@ -30,6 +30,10 @@ import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { noop } from "@/helpers/noop";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
+import { getSectionEditorStateManager } from "@/sections/SectionEditorStateManager";
 
 describe("SectionDescription", () => {
     let are_sections_loading: boolean, can_user_edit_document: boolean;
@@ -39,6 +43,8 @@ describe("SectionDescription", () => {
         can_user_edit_document = true;
     });
 
+    const section_state = SectionStateStub.withDefaults();
+    const section = ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.create());
     const getWrapper = (): VueWrapper =>
         shallowMount(SectionDescription, {
             global: {
@@ -54,18 +60,15 @@ describe("SectionDescription", () => {
                 },
             },
             props: {
-                title: "Title",
-                editable_description: "Lorem ipsum",
-                readonly_description: "Lorem ipsum",
-                is_edit_mode: false,
                 post_information: {
                     upload_url: "/file/upload",
                     getUploadJsonPayload: noop,
                 },
-                input_section_content: noop,
                 upload_file: UploadFileStub.uploadNotInProgress(),
-                is_there_any_change: false,
                 project_id: 101,
+                section,
+                section_state,
+                manage_section_editor_state: getSectionEditorStateManager(section, section_state),
             },
         });
 

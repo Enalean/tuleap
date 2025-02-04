@@ -28,9 +28,9 @@ import type { Tracker } from "@/stores/configuration-store";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("PendingSectionInserter", () => {
     let sections_collection: SectionsCollection,
@@ -42,7 +42,7 @@ describe("PendingSectionInserter", () => {
         sections_states = SectionsStatesCollectionStub.build();
         sections_collection = buildSectionsCollection(sections_states);
         sections_collection.replaceAll(
-            CreateStoredSections.fromArtidocSectionsCollection([ArtifactSectionFactory.create()]),
+            ReactiveStoredArtidocSectionStub.fromCollection([ArtifactSectionFactory.create()]),
         );
 
         selected_tracker = ref(null);
@@ -148,7 +148,7 @@ describe("PendingSectionInserter", () => {
         watchAndInsertPendingSectionIfNeeded();
 
         sections_collection.replaceAll(
-            CreateStoredSections.fromArtidocSectionsCollection([
+            ReactiveStoredArtidocSectionStub.fromCollection([
                 ...sections_collection.sections.value.map(unref),
                 ArtifactSectionFactory.create(),
             ]),

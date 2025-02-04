@@ -23,9 +23,9 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositionsForSaveRetriever";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("SectionsPositionsForSaveRetriever", () => {
     const getEmptySectionsCollection = (): SectionsCollection =>
@@ -33,7 +33,7 @@ describe("SectionsPositionsForSaveRetriever", () => {
 
     const getCollectionWithSections = (sections: ArtidocSection[]): SectionsCollection => {
         const collection = getEmptySectionsCollection();
-        collection.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
+        collection.replaceAll(ReactiveStoredArtidocSectionStub.fromCollection(sections));
         return collection;
     };
 

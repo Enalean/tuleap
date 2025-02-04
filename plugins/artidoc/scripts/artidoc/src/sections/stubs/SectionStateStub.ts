@@ -32,6 +32,9 @@ const initial_state = {
     is_outdated: ref(false),
     is_not_found: ref(false),
     error_message: ref(""),
+    edited_title: ref(""),
+    edited_description: ref(""),
+    is_editor_reset_needed: ref(false),
 };
 
 export const SectionStateStub = {
@@ -48,5 +51,15 @@ export const SectionStateStub = {
         ...initial_state,
         is_section_in_edit_mode: ref(true),
         is_save_allowed: computed(() => false),
+    }),
+    withEditedContent: (
+        new_title = "new title",
+        new_description = "new description",
+    ): SectionState => ({
+        ...initial_state,
+        edited_title: ref(new_title),
+        edited_description: ref(new_description),
+        is_section_in_edit_mode: ref(true),
+        is_editor_reset_needed: ref(true),
     }),
 };

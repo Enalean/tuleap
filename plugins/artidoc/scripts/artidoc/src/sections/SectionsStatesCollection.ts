@@ -19,12 +19,15 @@
 
 import { computed, shallowRef, triggerRef } from "vue";
 import type { ComputedRef } from "vue";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type {
+    ReactiveStoredArtidocSection,
+    StoredArtidocSection,
+} from "@/sections/SectionsCollection";
 import type { BuildSectionState, SectionState } from "@/sections/SectionStateBuilder";
 
 export type SectionsStatesCollection = {
-    createStateForSection(section: StoredArtidocSection): void;
-    createAllSectionsStates(sections: StoredArtidocSection[]): void;
+    createStateForSection(section: ReactiveStoredArtidocSection): void;
+    createAllSectionsStates(sections: ReactiveStoredArtidocSection[]): void;
     getSectionState(section: StoredArtidocSection): SectionState;
     destroyAll(): void;
     destroySectionState(section: StoredArtidocSection): void;
@@ -36,16 +39,16 @@ export const getSectionsStatesCollection = (
 ): SectionsStatesCollection => {
     const states = shallowRef(new Map<string, SectionState>());
 
-    const createNewState = (section: StoredArtidocSection): void => {
-        states.value.set(section.internal_id, build_section_state.forSection(section));
+    const createNewState = (section: ReactiveStoredArtidocSection): void => {
+        states.value.set(section.value.internal_id, build_section_state.forSection(section));
     };
 
     return {
-        createStateForSection(section: StoredArtidocSection): void {
+        createStateForSection(section: ReactiveStoredArtidocSection): void {
             createNewState(section);
             triggerRef(states);
         },
-        createAllSectionsStates(sections: StoredArtidocSection[]): void {
+        createAllSectionsStates(sections: ReactiveStoredArtidocSection[]): void {
             sections.forEach(createNewState);
         },
         getSectionState({ internal_id }): SectionState {

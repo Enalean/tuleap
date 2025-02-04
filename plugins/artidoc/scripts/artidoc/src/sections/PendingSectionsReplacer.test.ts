@@ -26,13 +26,13 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("PendingSectionsReplacer", () => {
     const getSectionsCollection = (sections: ArtidocSection[]): SectionsCollection => {
         const collection = buildSectionsCollection(SectionsStatesCollectionStub.build());
-        collection.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
+        collection.replaceAll(ReactiveStoredArtidocSectionStub.fromCollection(sections));
 
         return collection;
     };
@@ -40,7 +40,7 @@ describe("PendingSectionsReplacer", () => {
     it("should do nothing if the pending sections cannot be found", () => {
         const section = PendingArtifactSectionFactory.create();
         const sections = getSectionsCollection([section]);
-        const replacer = getPendingSectionsReplacer(sections);
+        const replacer = getPendingSectionsReplacer(sections, SectionsStatesCollectionStub.build());
 
         replacer.replacePendingSection(
             PendingArtifactSectionFactory.create(),
@@ -61,7 +61,7 @@ describe("PendingSectionsReplacer", () => {
         const newone = ArtifactSectionFactory.create();
 
         const sections = getSectionsCollection([section0, section1, section2, section3]);
-        const replacer = getPendingSectionsReplacer(sections);
+        const replacer = getPendingSectionsReplacer(sections, SectionsStatesCollectionStub.build());
 
         replacer.replacePendingSection(section2, newone);
 
@@ -80,7 +80,7 @@ describe("PendingSectionsReplacer", () => {
         const newone = FreetextSectionFactory.create();
 
         const sections = getSectionsCollection([section0, section1, section2, section3]);
-        const replacer = getPendingSectionsReplacer(sections);
+        const replacer = getPendingSectionsReplacer(sections, SectionsStatesCollectionStub.build());
 
         if (!isPendingFreetextSection(section1)) {
             throw new Error("Expected a pending freetext section");

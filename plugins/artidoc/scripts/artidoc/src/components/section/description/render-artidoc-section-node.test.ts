@@ -19,12 +19,20 @@
 
 import { describe, it, expect } from "vitest";
 import { renderArtidocSectionNode } from "./render-artidoc-section-node";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("render-artidoc-section-node", () => {
     it("Given a title and a description, Then it should render an artidoc-section node", () => {
-        const title = "The title";
+        const display_title = "The title";
         const description = "<p>The description</p>";
-        const section_node = renderArtidocSectionNode(title, description);
+        const section = ReactiveStoredArtidocSectionStub.fromSection(
+            FreetextSectionFactory.override({
+                display_title,
+                description,
+            }),
+        );
+        const section_node = renderArtidocSectionNode(section);
 
         const title_element = section_node.querySelector<HTMLElement>("artidoc-section-title");
         const description_element = section_node.querySelector<HTMLElement>(
@@ -37,7 +45,7 @@ describe("render-artidoc-section-node", () => {
             throw new Error("Unable to find the section title or the section description.");
         }
 
-        expect(title_element.textContent).toBe(title);
+        expect(title_element.textContent).toBe(display_title);
         expect(
             description_element.innerHTML.trim().replace(/<!--\?lit\$[0-9]+\$-->|<!--\??-->/g, ""),
         ).toBe(description);

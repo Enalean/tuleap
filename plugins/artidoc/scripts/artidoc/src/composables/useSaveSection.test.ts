@@ -32,15 +32,20 @@ import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/Sections
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
 import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
-const artifact_section = ArtifactSectionFactory.create();
-const freetext_section = FreetextSectionFactory.create();
+const artifact_section = ReactiveStoredArtidocSectionStub.fromSection(
+    ArtifactSectionFactory.create(),
+);
+const freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
+    FreetextSectionFactory.create(),
+);
 const document_id = 105;
 
 describe("useSaveSection", () => {
     describe("forceSave", () => {
         it("should save artifact section", async () => {
-            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section.value));
 
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putArtifact")
@@ -48,22 +53,23 @@ describe("useSaveSection", () => {
 
             const { forceSave } = useSaveSection(
                 document_id,
-                SectionStateStub.inEditMode(),
+                artifact_section,
+                SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
                 noop,
             );
 
-            forceSave(artifact_section, { description: "new description", title: "new title" });
+            forceSave();
             await flushPromises();
 
             expect(mock_put_artifact_description).toHaveBeenCalledOnce();
         });
         it("should save freetext section", async () => {
-            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section.value));
 
             const mock_put_freetext_description = vi
                 .spyOn(rest_querier, "putSection")
@@ -71,120 +77,25 @@ describe("useSaveSection", () => {
 
             const { forceSave } = useSaveSection(
                 document_id,
-                SectionStateStub.inEditMode(),
+                freetext_section,
+                SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
                 noop,
             );
 
-            forceSave(freetext_section, { description: "new description", title: "new title" });
+            forceSave();
             await flushPromises();
 
             expect(mock_put_freetext_description).toHaveBeenCalledOnce();
         });
     });
     describe("save", () => {
-        describe("when the new description and title are the same as the original one", () => {
-            it("should disable edit mode with artifact section", () => {
-                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
-
-                const section_state = SectionStateStub.inEditMode();
-                const { save } = useSaveSection(
-                    document_id,
-                    section_state,
-                    SectionErrorManagerStub.withNoExpectedFault(),
-                    PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withExpectedCall(),
-                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    SectionAttachmentFilesManagerStub.forSection(artifact_section),
-                    noop,
-                );
-
-                save(artifact_section, {
-                    description: artifact_section.description.value,
-                    title: artifact_section.display_title,
-                });
-
-                expect(section_state.is_section_in_edit_mode.value).toBe(false);
-            });
-            it("should disable edit mode with freetext section", () => {
-                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
-
-                const section_state = SectionStateStub.inEditMode();
-                const { save } = useSaveSection(
-                    document_id,
-                    section_state,
-                    SectionErrorManagerStub.withNoExpectedFault(),
-                    PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withExpectedCall(),
-                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    SectionAttachmentFilesManagerStub.forSection(freetext_section),
-                    noop,
-                );
-
-                save(freetext_section, {
-                    description: freetext_section.description,
-                    title: freetext_section.display_title,
-                });
-
-                expect(section_state.is_section_in_edit_mode.value).toBe(false);
-            });
-            it("should not save artifact section", async () => {
-                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
-
-                const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
-                const { save } = useSaveSection(
-                    document_id,
-                    SectionStateStub.inEditMode(),
-                    SectionErrorManagerStub.withNoExpectedFault(),
-                    PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withExpectedCall(),
-                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    SectionAttachmentFilesManagerStub.forSection(artifact_section),
-                    noop,
-                );
-
-                save(artifact_section, {
-                    description: artifact_section.description.value,
-                    title: artifact_section.display_title,
-                });
-
-                await flushPromises();
-
-                expect(mock_put_artifact_description).not.toHaveBeenCalledOnce();
-            });
-
-            it("should not save freetext section", async () => {
-                vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
-
-                const mock_put_freetext_description = vi.spyOn(rest_querier, "putSection");
-                const { save } = useSaveSection(
-                    document_id,
-                    SectionStateStub.inEditMode(),
-                    SectionErrorManagerStub.withNoExpectedFault(),
-                    PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withExpectedCall(),
-                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    SectionAttachmentFilesManagerStub.forSection(freetext_section),
-                    noop,
-                );
-
-                save(freetext_section, {
-                    description: freetext_section.description,
-                    title: freetext_section.display_title,
-                });
-
-                await flushPromises();
-
-                expect(mock_put_freetext_description).not.toHaveBeenCalledOnce();
-            });
-        });
-
-        it("should save artifact section", async () => {
-            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+        it("should save artifact sections", async () => {
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section.value));
 
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putArtifact")
@@ -192,23 +103,24 @@ describe("useSaveSection", () => {
 
             const { save } = useSaveSection(
                 document_id,
-                SectionStateStub.inEditMode(),
+                artifact_section,
+                SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
                 noop,
             );
 
-            save(artifact_section, { description: "new description", title: "new title" });
+            save();
             await flushPromises();
 
             expect(mock_put_artifact_description).toHaveBeenCalledOnce();
         });
 
-        it("should save freetext section", async () => {
-            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+        it("should save freetext sections", async () => {
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section.value));
 
             const mock_put_freetext_description = vi
                 .spyOn(rest_querier, "putSection")
@@ -216,33 +128,37 @@ describe("useSaveSection", () => {
 
             const { save } = useSaveSection(
                 document_id,
-                SectionStateStub.inEditMode(),
+                freetext_section,
+                SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
                 noop,
             );
 
-            save(freetext_section, { description: "new description", title: "new title" });
+            save();
             await flushPromises();
 
             expect(mock_put_freetext_description).toHaveBeenCalledOnce();
         });
 
         it("When the saved section is a pending artifact section, Then it should create it and replace it by the saved one.", async () => {
-            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section));
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section.value));
 
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
                 document_id,
-                SectionStateStub.inEditMode(),
+                ReactiveStoredArtidocSectionStub.fromSection(
+                    PendingArtifactSectionFactory.create(),
+                ),
+                SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 replacer,
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(artifact_section),
+                SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
                 noop,
             );
 
@@ -254,7 +170,7 @@ describe("useSaveSection", () => {
                 .spyOn(rest_querier, "createArtifactSection")
                 .mockReturnValue(okAsync(ArtifactSectionFactory.override(pending_section)));
 
-            save(pending_section, { title: "Pending section", description: "Save me" });
+            save();
             await flushPromises();
 
             expect(createArtifact).toHaveBeenCalledOnce();
@@ -263,17 +179,18 @@ describe("useSaveSection", () => {
         });
 
         it("When the saved section is a pending freetext section, Then it should create it and replace it by the saved one.", async () => {
-            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section));
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section.value));
 
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
             const { save } = useSaveSection(
                 document_id,
-                SectionStateStub.inEditMode(),
+                ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.pending()),
+                SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 replacer,
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(freetext_section),
+                SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
                 noop,
             );
 
@@ -282,7 +199,7 @@ describe("useSaveSection", () => {
                 .spyOn(rest_querier, "createFreetextSection")
                 .mockReturnValue(okAsync(FreetextSectionFactory.override(pending_section)));
 
-            save(pending_section, { title: "Pending section", description: "Save me" });
+            save();
             await flushPromises();
 
             expect(createFreetextSection).toHaveBeenCalledOnce();

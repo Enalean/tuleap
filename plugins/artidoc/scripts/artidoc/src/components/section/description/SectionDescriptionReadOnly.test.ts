@@ -22,19 +22,26 @@ import * as tooltip from "@tuleap/tooltip";
 import { shallowMount } from "@vue/test-utils";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("SectionDescriptionReadOnly", () => {
     it("should display text with tooltips", () => {
         const loadTooltips = vi.spyOn(tooltip, "loadTooltips");
+        const description = "Lorem ipsum";
         const wrapper = shallowMount(SectionDescriptionReadOnly, {
             props: {
-                readonly_value: "Lorem ipsum",
+                section: ReactiveStoredArtidocSectionStub.fromSection(
+                    FreetextSectionFactory.override({
+                        description,
+                    }),
+                ),
             },
             global: {
                 plugins: [VueDOMPurifyHTML],
             },
         });
-        expect(wrapper.text()).toContain("Lorem ipsum");
+        expect(wrapper.text()).toContain(description);
         expect(loadTooltips).toHaveBeenCalled();
     });
 });
