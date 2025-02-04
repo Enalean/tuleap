@@ -24,7 +24,6 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import * as saveSection from "@/composables/useSaveSection";
 import * as refreshSection from "@/composables/useRefreshSection";
@@ -42,11 +41,12 @@ import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/Sections
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
+import { noop } from "@/helpers/noop";
+import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = FreetextSectionFactory.create();
-const merge_artifacts = vi.fn();
-const set_waiting_list = vi.fn();
+const document_id = 105;
 
 describe("useSectionEditor", () => {
     let store_stub: SectionsCollection;
@@ -60,7 +60,6 @@ describe("useSectionEditor", () => {
         };
         mockStrictInject([
             [CAN_USER_EDIT_DOCUMENT, true],
-            [DOCUMENT_ID, 1],
             [SECTIONS_COLLECTION, store_stub],
             [UPLOAD_FILE_STORE, upload_file_store_stub],
         ]);
@@ -90,16 +89,16 @@ describe("useSectionEditor", () => {
                 ["freetext_section", freetext_section],
             ])("should save the editor content with %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
+                    document_id,
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
-                    merge_artifacts,
-                    set_waiting_list,
+                    SectionAttachmentFilesManagerStub.forSection(section),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    () => {},
+                    noop,
                 );
                 editor_actions.saveEditor();
 
@@ -112,16 +111,16 @@ describe("useSectionEditor", () => {
                 ["freetext_section", freetext_section],
             ])("should force save the editor content %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
+                    document_id,
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
-                    merge_artifacts,
-                    set_waiting_list,
+                    SectionAttachmentFilesManagerStub.forSection(section),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    () => {},
+                    noop,
                 );
                 editor_actions.forceSaveEditor();
 
@@ -134,16 +133,16 @@ describe("useSectionEditor", () => {
                 ["freetext_section", freetext_section],
             ])("should refresh the editor content with %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
+                    document_id,
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
-                    merge_artifacts,
-                    set_waiting_list,
+                    SectionAttachmentFilesManagerStub.forSection(section),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    () => {},
+                    noop,
                 );
                 editor_actions.refreshSection();
 
@@ -157,16 +156,16 @@ describe("useSectionEditor", () => {
             ])("should cancel edit mode with %s", (name, section) => {
                 const section_state = SectionStateStub.inEditMode();
                 const { editor_actions, editor_section_content } = useSectionEditor(
+                    document_id,
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     section_state,
                     SectionErrorManagerStub.withNoExpectedFault(),
-                    merge_artifacts,
-                    set_waiting_list,
+                    SectionAttachmentFilesManagerStub.forSection(section),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    () => {},
+                    noop,
                 );
                 expect(section_state.is_section_in_edit_mode.value).toBe(true);
                 editor_section_content.inputSectionContent(
@@ -194,16 +193,16 @@ describe("useSectionEditor", () => {
                 ["freetext_section", freetext_section],
             ])("should cancel file uploads with %s", (name, section) => {
                 const { editor_actions } = useSectionEditor(
+                    document_id,
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
-                    merge_artifacts,
-                    set_waiting_list,
+                    SectionAttachmentFilesManagerStub.forSection(section),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     SectionsRemoverStub.withNoExpectedCall(),
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    vi.fn(),
+                    noop,
                 );
                 editor_actions.cancelEditor();
 
@@ -217,16 +216,16 @@ describe("useSectionEditor", () => {
                 );
 
                 const { editor_actions } = useSectionEditor(
+                    document_id,
                     section,
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
-                    merge_artifacts,
-                    set_waiting_list,
+                    SectionAttachmentFilesManagerStub.forSection(section.value),
                     PendingSectionsReplacerStub.withNoExpectedCall(),
                     SectionsUpdaterStub.withNoExpectedCall(),
                     sections_remover,
                     SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    () => {},
+                    noop,
                 );
                 editor_actions.cancelEditor();
                 expect(sections_remover.getLastRemovedSection()).toStrictEqual(section.value);
@@ -242,16 +241,16 @@ describe("useSectionEditor", () => {
             const editor_content = vi.spyOn(editorContent, "useEditorSectionContent");
 
             const { editor_section_content } = useSectionEditor(
+                document_id,
                 ReactiveStoredArtidocSectionStub.fromSection(section),
                 SectionStateStub.inEditMode(),
                 SectionErrorManagerStub.withNoExpectedFault(),
-                merge_artifacts,
-                set_waiting_list,
+                SectionAttachmentFilesManagerStub.forSection(section),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
                 SectionsUpdaterStub.withNoExpectedCall(),
                 SectionsRemoverStub.withNoExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                () => {},
+                noop,
             );
             expect(editor_content).toHaveBeenCalledOnce();
             expect(editor_section_content).toBeDefined();

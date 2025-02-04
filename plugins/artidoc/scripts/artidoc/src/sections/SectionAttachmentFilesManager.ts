@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,33 +19,32 @@
 
 import type { Ref } from "vue";
 import { ref } from "vue";
+import type { FileUploadOptions } from "@tuleap/file-upload";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import { noop } from "@/helpers/noop";
-import type { FileUploadOptions } from "@tuleap/file-upload";
-import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 type PendingAttachment = { id: number; upload_url: string };
-export interface AttachmentFile {
-    addAttachmentToWaitingList: (new_pending_attachment: PendingAttachment) => void;
-    mergeArtifactAttachments: (
-        section: ArtidocSection,
-        description: string,
-    ) => { field_id: number; value: number[] };
-    post_information: FileUploadOptions["post_information"];
-    getWaitingListAttachments: () => Ref<PendingAttachment[]>;
-    setWaitingListAttachments: (new_value: PendingAttachment[]) => void;
-}
+export type MergedAttachmentFiles = { field_id: number; value: number[] };
 
-export function useAttachmentFile(
+export type ManageSectionAttachmentFiles = {
+    addAttachmentToWaitingList(new_pending_attachment: PendingAttachment): void;
+    mergeArtifactAttachments(section: ArtidocSection, description: string): MergedAttachmentFiles;
+    getPostInformation(): FileUploadOptions["post_information"];
+    getWaitingListAttachments(): Ref<PendingAttachment[]>;
+    setWaitingListAttachments(new_value: PendingAttachment[]): void;
+};
+
+export const getSectionAttachmentFilesManager = (
     section: ReactiveStoredArtidocSection,
     artidoc_id: number,
-): AttachmentFile {
+): ManageSectionAttachmentFiles => {
     const not_saved_yet_description_attachments: Ref<PendingAttachment[]> = ref([]);
 
     if (isFreetextSection(section.value)) {
         return {
-            post_information: {
+            getPostInformation: () => ({
                 upload_url: "/api/v1/artidoc_files",
                 getUploadJsonPayload(file: File): unknown {
                     return {
@@ -55,7 +54,7 @@ export function useAttachmentFile(
                         file_type: file.type,
                     };
                 },
-            },
+            }),
             getWaitingListAttachments: () => ref(not_saved_yet_description_attachments),
             setWaitingListAttachments: noop,
             addAttachmentToWaitingList: noop,
@@ -66,10 +65,10 @@ export function useAttachmentFile(
     const field_id = section.value.attachments ? section.value.attachments.field_id : 0;
     if (field_id === 0) {
         return {
-            post_information: {
+            getPostInformation: () => ({
                 upload_url: "",
                 getUploadJsonPayload: noop,
-            },
+            }),
             getWaitingListAttachments: () => ref(not_saved_yet_description_attachments),
             setWaitingListAttachments: noop,
             addAttachmentToWaitingList: noop,
@@ -127,7 +126,7 @@ export function useAttachmentFile(
     }
 
     return {
-        post_information: {
+        getPostInformation: () => ({
             upload_url,
             getUploadJsonPayload(file: File): unknown {
                 return {
@@ -136,10 +135,10 @@ export function useAttachmentFile(
                     file_type: file.type,
                 };
             },
-        },
+        }),
         addAttachmentToWaitingList,
         mergeArtifactAttachments,
         getWaitingListAttachments,
         setWaitingListAttachments,
     };
-}
+};

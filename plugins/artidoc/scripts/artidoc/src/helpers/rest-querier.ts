@@ -33,7 +33,7 @@ import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.
 import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
 import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
-import type { AttachmentFile } from "@/composables/useAttachmentFile";
+import type { MergedAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 export function putConfiguration(
@@ -55,7 +55,7 @@ export function putArtifact(
     title: ArtifactSection["title"],
     new_description: string,
     description_field_id: number,
-    file_field: ReturnType<AttachmentFile["mergeArtifactAttachments"]>,
+    merged_attachments: MergedAttachmentFiles,
 ): ResultAsync<Response, Fault> {
     const values: { field_id: number; value: unknown }[] = [
         {
@@ -72,10 +72,10 @@ export function putArtifact(
                 : { value: { content: new_title, format: "text" } }),
         },
     ];
-    if (file_field && file_field.field_id > 0) {
+    if (merged_attachments && merged_attachments.field_id > 0) {
         values.push({
-            field_id: file_field.field_id,
-            value: file_field.value,
+            field_id: merged_attachments.field_id,
+            value: merged_attachments.value,
         });
     }
     return putResponse(
@@ -93,7 +93,7 @@ export function postArtifact(
     title: ArtifactSection["title"],
     new_description: string,
     description_field_id: number,
-    file_field: ReturnType<AttachmentFile["mergeArtifactAttachments"]>,
+    merged_attachments: MergedAttachmentFiles,
 ): ResultAsync<{ id: number }, Fault> {
     const values: { field_id: number; value: unknown }[] = [
         {
@@ -111,10 +111,10 @@ export function postArtifact(
         },
     ];
 
-    if (file_field && file_field.field_id > 0) {
+    if (merged_attachments && merged_attachments.field_id > 0) {
         values.push({
-            field_id: file_field.field_id,
-            value: file_field.value,
+            field_id: merged_attachments.field_id,
+            value: merged_attachments.value,
         });
     }
 

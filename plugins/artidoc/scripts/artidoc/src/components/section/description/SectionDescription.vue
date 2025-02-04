@@ -24,11 +24,8 @@
         <component
             v-bind:is="async_editor"
             v-bind:post_information="post_information"
-            v-bind:add_attachment_to_waiting_list="add_attachment_to_waiting_list"
             v-bind:editable_description="editable_description"
             v-bind:is_edit_mode="is_edit_mode"
-            v-bind:readonly_value="readonly_description"
-            v-bind:is_image_upload_allowed="is_image_upload_allowed"
             v-bind:upload_file="upload_file"
             v-bind:project_id="project_id"
             v-bind:title="title"
@@ -48,27 +45,22 @@ import { loadTooltips } from "@tuleap/tooltip";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
-import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import type { FileUploadOptions } from "@tuleap/file-upload";
 
 defineProps<{
     title: string;
-    add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
     post_information: FileUploadOptions["post_information"];
     editable_description: string;
     readonly_description: string;
     is_edit_mode: boolean;
-    is_image_upload_allowed: boolean;
     upload_file: UseUploadFileType;
     project_id: number;
     input_section_content: EditorSectionContent["inputSectionContent"];
     is_there_any_change: boolean;
-    section: ArtidocSection;
 }>();
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);

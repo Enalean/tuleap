@@ -18,6 +18,9 @@
  */
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ResultAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import {
     isPendingSection,
     isArtifactSection,
@@ -34,13 +37,8 @@ import {
     putArtifact,
     putSection,
 } from "@/helpers/rest-querier";
-import { Fault } from "@tuleap/fault";
-import type { ResultAsync } from "neverthrow";
-import { errAsync, okAsync } from "neverthrow";
 import { getSectionInItsLatestVersion } from "@/helpers/get-section-in-its-latest-version";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { AttachmentFile } from "@/composables/useAttachmentFile";
+import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
 import type { UpdateSections } from "@/sections/SectionsUpdater";
 import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
@@ -65,18 +63,15 @@ export type SaveEditor = {
 };
 
 export default function useSaveSection(
+    document_id: number,
     section_state: SectionState,
     manage_error_state: ManageErrorState,
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
     retrieve_positions: RetrieveSectionsPositionForSave,
-    callbacks: {
-        closeEditor: () => void;
-        mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"];
-    },
+    manage_section_attachments: ManageSectionAttachmentFiles,
+    closeEditor: () => void,
 ): SaveEditor {
-    const document_id = strictInject(DOCUMENT_ID);
-
     function getLatestVersionOfCurrentSection(
         section: ArtidocSection,
     ): ResultAsync<ArtidocSection, Fault> {
@@ -109,14 +104,17 @@ export default function useSaveSection(
                   section.title,
                   new_value.description,
                   section.description.field_id,
-                  callbacks.mergeArtifactAttachments(section, new_value.description),
+                  manage_section_attachments.mergeArtifactAttachments(
+                      section,
+                      new_value.description,
+                  ),
               );
         put.andThen(() => getLatestVersionOfCurrentSection(section)).match(
             (artidoc_section: ArtidocSection) => {
                 if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
                     update_sections.updateSection(artidoc_section);
                 }
-                callbacks.closeEditor();
+                closeEditor();
                 section_state.is_being_saved.value = false;
                 section_state.is_just_saved.value = true;
             },
@@ -173,7 +171,7 @@ export default function useSaveSection(
                     update_sections.updateSection(artidoc_section);
                 }
 
-                callbacks.closeEditor();
+                closeEditor();
                 section_state.is_being_saved.value = false;
                 section_state.is_just_saved.value = true;
             },
@@ -192,7 +190,7 @@ export default function useSaveSection(
         },
     ): ResultAsync<ArtidocSection, Fault> {
         if (isPendingArtifactSection(section)) {
-            const merged_attachments = callbacks.mergeArtifactAttachments(
+            const merged_attachments = manage_section_attachments.mergeArtifactAttachments(
                 section,
                 new_value.description,
             );
@@ -237,7 +235,10 @@ export default function useSaveSection(
                           section.title,
                           new_value.description,
                           section.description.field_id,
-                          callbacks.mergeArtifactAttachments(section, new_value.description),
+                          manage_section_attachments.mergeArtifactAttachments(
+                              section,
+                              new_value.description,
+                          ),
                       );
             })
             .andThen(() => getLatestVersionOfCurrentSection(section));

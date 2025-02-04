@@ -53,15 +53,12 @@
                 v-bind:editable_description="editable_description"
                 v-bind:readonly_description="getReadonlyDescription()"
                 v-bind:is_edit_mode="section_state.is_section_in_edit_mode.value"
-                v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
-                v-bind:post_information="post_information"
-                v-bind:is_image_upload_allowed="section_state.is_image_upload_allowed.value"
+                v-bind:post_information="section_attachments_manager.getPostInformation()"
                 v-bind:upload_file="upload_file"
                 v-bind:project_id="getProjectId()"
                 v-bind:title="section.value.display_title"
                 v-bind:input_section_content="inputSectionContent"
                 v-bind:is_there_any_change="is_there_any_change"
-                v-bind:section="section.value"
             />
             <section-footer
                 v-bind:editor="editor"
@@ -75,29 +72,33 @@
 <script setup lang="ts">
 import { watch } from "vue";
 import type { Ref } from "vue";
+import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+
 import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import SectionHeader from "./header/SectionHeader.vue";
 import SectionDescription from "./description/SectionDescription.vue";
-import { useSectionEditor } from "@/composables/useSectionEditor";
 import SectionDropdown from "./header/SectionDropdown.vue";
 import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
 import SectionFooter from "./footer/SectionFooter.vue";
-import { useAttachmentFile } from "@/composables/useAttachmentFile";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { useUploadFile } from "@/composables/useUploadFile";
+
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
-import { useGettext } from "vue3-gettext";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
-import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+
+import { useSectionEditor } from "@/composables/useSectionEditor";
+import { useUploadFile } from "@/composables/useUploadFile";
+
+import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
 import { getSectionsUpdater } from "@/sections/SectionsUpdater";
 import { getSectionsRemover } from "@/sections/SectionsRemover";
 import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositionsForSaveRetriever";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
-import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { getSectionErrorManager } from "@/sections/SectionErrorManager";
+import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -143,27 +144,18 @@ watch(
     },
 );
 
-const {
-    post_information,
-    addAttachmentToWaitingList,
-    mergeArtifactAttachments,
-    setWaitingListAttachments,
-} = useAttachmentFile(props.section, document_id);
+const section_attachments_manager = getSectionAttachmentFilesManager(props.section, document_id);
 
-const upload_file = useUploadFile(
-    props.section.value.id,
-    post_information,
-    addAttachmentToWaitingList,
-);
+const upload_file = useUploadFile(props.section.value.id, section_attachments_manager);
 
 const { $gettext } = useGettext();
 
 const editor = useSectionEditor(
+    document_id,
     props.section,
     section_state,
     getSectionErrorManager(section_state),
-    mergeArtifactAttachments,
-    setWaitingListAttachments,
+    section_attachments_manager,
     getPendingSectionsReplacer(sections_collection),
     getSectionsUpdater(sections_collection),
     getSectionsRemover(sections_collection, states_collection),

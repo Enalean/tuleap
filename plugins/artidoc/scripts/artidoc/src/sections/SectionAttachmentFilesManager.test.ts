@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,35 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { useAttachmentFile } from "@/composables/useAttachmentFile";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
 
 const section = ArtifactSectionFactory.create();
 const artidoc_id = 123;
 
-describe("useAttachmentFile", () => {
+describe("SectionAttachmentFilesManager", () => {
     it("should return formatted upload_url", () => {
-        const { post_information } = useAttachmentFile(
+        const { upload_url } = getSectionAttachmentFilesManager(
             ReactiveStoredArtidocSectionStub.fromSection(section),
             artidoc_id,
-        );
-        expect(post_information.upload_url).toBe("/api/v1/tracker_fields/171/files");
+        ).getPostInformation();
+        expect(upload_url).toBe("/api/v1/tracker_fields/171/files");
     });
 
     it("should return a specific upload url for freetext sections", () => {
-        const { post_information } = useAttachmentFile(
+        const { upload_url } = getSectionAttachmentFilesManager(
             ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.create()),
             artidoc_id,
-        );
-        expect(post_information.upload_url).toBe("/api/v1/artidoc_files");
+        ).getPostInformation();
+        expect(upload_url).toBe("/api/v1/artidoc_files");
     });
 
     describe("getWaitingListAttachments", () => {
         it("should return the waiting list", () => {
-            const { getWaitingListAttachments } = useAttachmentFile(
+            const { getWaitingListAttachments } = getSectionAttachmentFilesManager(
                 ReactiveStoredArtidocSectionStub.fromSection(section),
                 artidoc_id,
             );
@@ -56,10 +56,11 @@ describe("useAttachmentFile", () => {
 
     describe("addAttachmentToWaitingList", () => {
         it("should add a new attachment to the waiting list", () => {
-            const { addAttachmentToWaitingList, getWaitingListAttachments } = useAttachmentFile(
-                ReactiveStoredArtidocSectionStub.fromSection(section),
-                artidoc_id,
-            );
+            const { addAttachmentToWaitingList, getWaitingListAttachments } =
+                getSectionAttachmentFilesManager(
+                    ReactiveStoredArtidocSectionStub.fromSection(section),
+                    artidoc_id,
+                );
             expect(getWaitingListAttachments().value).toEqual([]);
 
             const attachment_id_to_add = 123;
@@ -76,10 +77,11 @@ describe("useAttachmentFile", () => {
     describe("mergeArtifactAttachments", () => {
         describe("when all pending images are present in the current description", () => {
             it("should get all files to upload", () => {
-                const { mergeArtifactAttachments, setWaitingListAttachments } = useAttachmentFile(
-                    ReactiveStoredArtidocSectionStub.fromSection(section),
-                    artidoc_id,
-                );
+                const { mergeArtifactAttachments, setWaitingListAttachments } =
+                    getSectionAttachmentFilesManager(
+                        ReactiveStoredArtidocSectionStub.fromSection(section),
+                        artidoc_id,
+                    );
 
                 setWaitingListAttachments([
                     { id: 123, upload_url: "/path/to/foo.png" },
@@ -97,10 +99,11 @@ describe("useAttachmentFile", () => {
         });
         describe("when some pending images has been removed in the current description", () => {
             it("should get only files present in the description", () => {
-                const { mergeArtifactAttachments, setWaitingListAttachments } = useAttachmentFile(
-                    ReactiveStoredArtidocSectionStub.fromSection(section),
-                    artidoc_id,
-                );
+                const { mergeArtifactAttachments, setWaitingListAttachments } =
+                    getSectionAttachmentFilesManager(
+                        ReactiveStoredArtidocSectionStub.fromSection(section),
+                        artidoc_id,
+                    );
 
                 setWaitingListAttachments([
                     { id: 123, upload_url: "/path/to/foo.png" },
@@ -119,10 +122,11 @@ describe("useAttachmentFile", () => {
 
     describe("setWaitingListAttachments", () => {
         it("should set new waiting file list", () => {
-            const { getWaitingListAttachments, setWaitingListAttachments } = useAttachmentFile(
-                ReactiveStoredArtidocSectionStub.fromSection(section),
-                artidoc_id,
-            );
+            const { getWaitingListAttachments, setWaitingListAttachments } =
+                getSectionAttachmentFilesManager(
+                    ReactiveStoredArtidocSectionStub.fromSection(section),
+                    artidoc_id,
+                );
 
             expect(getWaitingListAttachments().value).toEqual([]);
 
