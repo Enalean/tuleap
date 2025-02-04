@@ -222,7 +222,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         $this->checkAccess();
         try {
             $report         = $this->getReport($id);
-            $representation = $this->getReportRepresentation($report, $this->user_manager->getCurrentUser());
+            $representation = $this->getReportRepresentation($report);
         } catch (CrossTrackerReportNotFoundException) {
             throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $id));
         }
@@ -324,7 +324,6 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @url PUT {id}
      *
      * @param int $id Id of the report
-     * @param array $trackers_id Tracker id to link to report {@max 25}
      * @param string $expert_query The TQL query saved with the report
      *
      * @status 201
@@ -334,7 +333,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put(int $id, array $trackers_id, string $expert_query = ''): CrossTrackerExpertReportRepresentation
+    protected function put(int $id, string $expert_query = ''): CrossTrackerExpertReportRepresentation
     {
         $this->sendAllowHeaders();
 
@@ -354,7 +353,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         }
 
-        return $this->getReportRepresentation($expected_report, $current_user);
+        return $this->getReportRepresentation($expected_report);
     }
 
     /**
@@ -400,7 +399,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         Header::allowOptionsGetPut();
     }
 
-    private function getReportRepresentation(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerExpertReportRepresentation
+    private function getReportRepresentation(CrossTrackerExpertReport $report): CrossTrackerExpertReportRepresentation
     {
         return CrossTrackerExpertReportRepresentation::fromReport($report);
     }

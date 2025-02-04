@@ -15,9 +15,6 @@ msgstr ""
 msgid "%{from} – %{to} of %{total}"
 msgstr ""
 
-msgid "Add"
-msgstr "Adicionar"
-
 msgid "An error occurred: %{error}"
 msgstr ""
 
@@ -33,9 +30,6 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgid "Click to see the documentation for advanced mode"
-msgstr ""
-
 msgid "Description"
 msgstr "Descrição"
 
@@ -45,16 +39,7 @@ msgstr ""
 msgid "Error while exporting the report as .xlsx: %{error}"
 msgstr ""
 
-msgid "Error while exporting the report to CSV: %{error}"
-msgstr ""
-
 msgid "Error while fetching the artifacts matching the query: %{error}"
-msgstr ""
-
-msgid "Error while fetching the list of projects you are member of: %{error}"
-msgstr ""
-
-msgid "Error while fetching the list of trackers of this project: %{error}"
 msgstr ""
 
 msgid "Error while fetching the report: %{error}"
@@ -63,18 +48,9 @@ msgstr ""
 msgid "Error while saving the report: %{error}"
 msgstr ""
 
-msgid "Example: @title = 'value'"
-msgstr ""
-
 msgid ""
 "Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title "
 "= 'value'"
-msgstr ""
-
-msgid "Expert mode"
-msgstr ""
-
-msgid "Export CSV"
 msgstr ""
 
 msgid "Export XSLX"
@@ -86,9 +62,6 @@ msgstr ""
 msgid "Id"
 msgstr ""
 
-msgid "If you update the query, these trackers will be removed from it."
-msgstr ""
-
 msgid "Last"
 msgstr ""
 
@@ -98,25 +71,10 @@ msgstr ""
 msgid "Last update date"
 msgstr ""
 
-msgid "Load more"
-msgstr ""
-
 msgid "Next"
 msgstr ""
 
 msgid "No artifact found"
-msgstr ""
-
-msgid "No trackers selected"
-msgstr ""
-
-msgid "Please add trackers by clicking on \"No tracker selected\" above."
-msgstr ""
-
-msgid "Please choose…"
-msgstr ""
-
-msgid "Please create a new query by clicking on \"No tracker selected\" above."
 msgstr ""
 
 msgid "Please create a new query."
@@ -155,9 +113,6 @@ msgstr "Enviado por"
 msgid "Submitted on"
 msgstr ""
 
-msgid "The initial query contains trackers from inactive projects:"
-msgstr ""
-
 msgid "There is no artifact matching the query."
 msgstr ""
 
@@ -165,9 +120,6 @@ msgid "Title"
 msgstr "Título"
 
 msgid "Tracker"
-msgstr ""
-
-msgid "Tracker selection is limited to 25 trackers"
 msgstr ""
 
 msgid "User avatar"

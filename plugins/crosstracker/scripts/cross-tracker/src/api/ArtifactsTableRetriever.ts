@@ -34,7 +34,6 @@ export const ArtifactsTableRetriever = (
 ): RetrieveArtifactsTable => {
     return {
         getSelectableQueryResult(
-            tracker_ids,
             expert_query,
             limit,
             offset,
@@ -44,7 +43,6 @@ export const ArtifactsTableRetriever = (
                     limit,
                     offset,
                     query: JSON.stringify({
-                        trackers_id: tracker_ids,
                         expert_query,
                     }),
                 },

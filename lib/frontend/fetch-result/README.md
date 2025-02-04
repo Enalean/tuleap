@@ -258,41 +258,6 @@ function getTrackersOfProject(project_id: number): ResultAsync<ReadonlyArray<Pro
 }
 ```
 
-### `getTextResponse()`
-
-```typescript
-import type { ResultAsync } from "@neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { decodeAsText, getTextResponse, uri } from "@tuleap/fetch-result";
-
-type CSVReport = {
-    readonly csv: string;
-    readonly total: number;
-};
-
-// getCSVReport(28) will query /plugins/crosstracker/csv_export/28?limit=50&offset=0
-function getCSVReport(report_id: number): ResultAsync<CSVReport, Fault> {
-    return getTextResponse(uri`/plugins/crosstracker/csv_export/${report_id}`, {
-        // These parameters are URI-encoded and appended to the base URI
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-    }).andThen((response) => {
-        const size = response.headers.get("X-PAGINATION-SIZE");
-        if (!size) {
-            // This is likely an unexpected dev problem, we should not handle this case with Fault
-            throw Error("No X-PAGINATION-SIZE field in the header.");
-        }
-        const total = Number.parseInt(size, 10);
-
-        return decodeAsText(response).map((csv) => ({ csv, total }));
-    });
-    // Errors are typically also plain text (and not JSON) on Text APIs.
-    // They will be automatically decoded as Faults.
-}
-```
-
 <span id="faults"></span>
 ## Faults
 

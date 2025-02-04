@@ -20,13 +20,11 @@
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { IntlFormatter } from "@tuleap/date-helper";
 import type { Ref } from "vue";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
 import type { ReportState } from "./domain/ReportState";
 import type { NotifyFaultCallback, ClearFeedbacksCallback } from "./composables/useFeedbacks";
 import type { GetColumnName } from "./domain/ColumnNameGetter";
 
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol();
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> = Symbol();

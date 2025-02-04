@@ -26,9 +26,6 @@ import { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
 import { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
 import { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
-import { getSortedProjectsIAmMemberOf } from "./api/rest-querier";
-import { ProjectsCache } from "./api/ProjectsCache";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
@@ -37,7 +34,6 @@ import {
     IS_USER_ADMIN,
     REPORT_ID,
     RETRIEVE_ARTIFACTS_TABLE,
-    RETRIEVE_PROJECTS,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -59,8 +55,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         "dashboard-widget-content-cross-tracker",
     );
 
-    const projects_retriever: RetrieveProjects = { getSortedProjectsIAmMemberOf };
-    const projects_cache = ProjectsCache(projects_retriever);
     const column_name_getter = ColumnNameGetter({ $gettext: gettext_plugin.$gettext });
 
     for (const widget_element of widget_cross_tracker_elements) {
@@ -94,7 +88,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
             .use(gettext_plugin)
             .use(VueDOMPurifyHTML)
-            .provide(RETRIEVE_PROJECTS, projects_cache)
             .provide(DATE_FORMATTER, date_formatter)
             .provide(DATE_TIME_FORMATTER, date_time_formatter)
             .provide(

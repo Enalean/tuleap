@@ -33,7 +33,7 @@ import {
 } from "./restler-methods";
 import { RestlerErrorHandler } from "./faults/RestlerErrorHandler";
 import { PATCH_METHOD, POST_METHOD, PUT_METHOD } from "./constants";
-import { buildGetTextResponse, buildSendFormAndReceiveText } from "./text-methods";
+import { buildSendFormAndReceiveText } from "./text-methods";
 
 export type { GetAllOptions, GetAllCollectionCallback } from "./AllGetter";
 export type { OptionsWithAutoEncodedParameters } from "./options";
@@ -71,7 +71,6 @@ export { uri, rawUri } from "./uri-string-template";
  *
  * @see `getResponse` when you need access to the Response, for example for a "Load more" button where you need the total number of items.
  * @see `getAllJSON` when you want to fetch a complete paginated collection.
- * @see `getTextResponse` when the server responds with text that is not JSON (for example text/csv).
  *
  * @template TypeOfJSONPayload
  * @param {EncodedURI} uri The URI destination of the request.
@@ -145,12 +144,10 @@ export const head = buildHead(response_retriever);
  * which is only available on the Response headers.
  *
  * ⚠️ In case of error, the response body is expected to be in JSON, in Restler-like format.
- * If it is plain text instead, consider using `getTextResponse`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
  * @see `getJSON` when you don't care about the Response and you want the decoded JSON returned by the server.
- * @see `getTextResponse` when the server responds with text (including for errors).
  *
  * @param {EncodedURI} uri The URI destination of the request.
  * @param {OptionsWithAutoEncodedParameters=} options (optional) An object with a `params` key containing a list of URI
@@ -291,24 +288,6 @@ export const patchResponse = buildSendJSON(response_retriever, PATCH_METHOD);
  * @returns {ResultAsync<Response, Fault>}
  */
 export const del = buildDelete(response_retriever);
-
-/**
- * `getTextResponse` returns an `Ok` variant containing a Response.
- * If there was a problem (network error, remote API error), it returns an `Err` variant containing a `Fault`.
- *
- * In case of error, the response body will be decoded as plain text.
- *
- * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
- *
- * @see `getResponse` when the server sends Restler-like JSON error payloads.
- * @see `getJSON` when the server responds with JSON and sends Restler-like JSON error payloads.
- *
- * @param {EncodedURI} uri The URI destination of the request.
- * @param {OptionsWithAutoEncodedParameters=} options (optional) An object with a `params` key containing a list of URI
- * search parameters. Each key-value pair will be URI-encoded and appended to `uri`.
- * @returns {ResultAsync<Response, Fault>}
- */
-export const getTextResponse = buildGetTextResponse(response_retriever);
 
 /**
  * `postFormWithTextResponse` sends a `FormData` body with POST method and returns an `Ok` variant containing the

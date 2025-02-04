@@ -62,8 +62,6 @@ final class CrossTrackerTest extends RestBase
             'id'               => 1,
             'uri'              => 'cross_tracker_reports/1',
             'expert_query'     => '',
-            'trackers'         => [],
-            'report_mode'      => 'expert',
             'title'            => '',
             'description'      => '',
         ];
@@ -85,8 +83,6 @@ final class CrossTrackerTest extends RestBase
             'id'           => 3,
             'uri'          => 'cross_tracker_reports/3',
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
-            'trackers'     => [],
-            'report_mode'  => 'expert',
             'title'        => '',
             'description'  => '',
         ];
@@ -97,7 +93,6 @@ final class CrossTrackerTest extends RestBase
     public function testPutForReadOnlyUser(): void
     {
         $params   = [
-            'trackers_id'  => [],
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
         ];
         $response = $this->getResponse(

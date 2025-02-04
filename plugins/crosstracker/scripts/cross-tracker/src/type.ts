@@ -17,44 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    TrackerProjectRepresentation,
-    TrackerResponseWithProject,
-} from "@tuleap/plugin-tracker-rest-api-types";
-
-export type InvalidTracker = {
-    readonly id: number;
-    readonly label: string;
-    readonly project: { readonly label: string };
-};
-export type TrackerInfo = Pick<TrackerResponseWithProject, "id" | "label">;
-export type ProjectInfo = Pick<TrackerProjectRepresentation, "id" | "uri" | "label">;
-
-export type SelectedTracker = {
-    readonly tracker_id: number;
-};
-
-export type TrackerAndProject = {
-    readonly project: Pick<ProjectInfo, "id" | "label">;
-    readonly tracker: TrackerInfo;
-};
-
-export type TrackerToUpdate = {
-    readonly tracker_id: number;
-    readonly tracker_label: string;
-    readonly project_label: string;
-};
+import type { TrackerProjectRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 
 export type Report = {
-    readonly trackers: ReadonlyArray<TrackerAndProject>;
     readonly expert_query: string;
-    readonly invalid_trackers: ReadonlyArray<InvalidTracker>;
-    readonly expert_mode: boolean;
-};
-
-export type ArtifactsCollection = {
-    readonly artifacts: ReadonlyArray<Artifact>;
-    readonly total: number;
 };
 
 export type Artifact = {

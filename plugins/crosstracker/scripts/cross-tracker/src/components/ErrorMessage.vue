@@ -41,20 +41,6 @@ const props = defineProps<{
 
 const error_message = computed<Option<string>>(() =>
     props.fault.map((fault) => {
-        if ("isProjectsRetrieval" in fault && fault.isProjectsRetrieval() === true) {
-            return $gettext(
-                "Error while fetching the list of projects you are member of: %{error}",
-                { error: String(fault) },
-                true,
-            );
-        }
-        if ("isTrackersRetrieval" in fault && fault.isTrackersRetrieval() === true) {
-            return $gettext(
-                "Error while fetching the list of trackers of this project: %{error}",
-                { error: String(fault) },
-                true,
-            );
-        }
         if ("isArtifactsRetrieval" in fault && fault.isArtifactsRetrieval() === true) {
             return $gettext(
                 "Error while fetching the artifacts matching the query: %{error}",
@@ -76,22 +62,12 @@ const error_message = computed<Option<string>>(() =>
                 true,
             );
         }
-        if ("isCSVExport" in fault && fault.isCSVExport() === true) {
-            return $gettext(
-                "Error while exporting the report to CSV: %{error}",
-                { error: String(fault) },
-                true,
-            );
-        }
         if ("isXLSXExport" in fault && fault.isXLSXExport() === true) {
             return $gettext(
                 "Error while exporting the report as .xlsx: %{error}",
                 { error: String(fault) },
                 true,
             );
-        }
-        if ("isMaxTrackersSelected" in fault && fault.isMaxTrackersSelected() === true) {
-            return $gettext("Tracker selection is limited to 25 trackers");
         }
         return $gettext("An error occurred: %{error}", { error: String(fault) }, true);
     }),

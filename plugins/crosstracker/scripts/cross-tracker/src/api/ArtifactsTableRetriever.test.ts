@@ -32,7 +32,6 @@ describe(`ArtifactsTableRetriever`, () => {
         const limit = 30;
         const offset = 30;
         const report_id = 583;
-        const tracker_ids = [78, 518, 937];
         const expert_query = `SELECT start_date WHERE @title = "forevouched"`;
 
         const getRetriever = (): RetrieveArtifactsTable => {
@@ -64,7 +63,6 @@ describe(`ArtifactsTableRetriever`, () => {
             );
 
             const result = await getRetriever().getSelectableQueryResult(
-                tracker_ids,
                 expert_query,
                 limit,
                 offset,
@@ -77,7 +75,6 @@ describe(`ArtifactsTableRetriever`, () => {
                         limit,
                         offset,
                         query: JSON.stringify({
-                            trackers_id: tracker_ids,
                             expert_query,
                         }),
                     },

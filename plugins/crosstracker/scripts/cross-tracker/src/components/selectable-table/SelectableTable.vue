@@ -118,10 +118,6 @@ function handleNewPage(new_offset: number): void {
 }
 
 function refreshArtifactList(): void {
-    if (!props.writing_cross_tracker_report.expert_mode) {
-        return;
-    }
-
     rows.value = [];
     columns.value = new Set<string>();
     is_loading.value = true;
@@ -155,7 +151,6 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithT
     }
 
     return artifacts_retriever.getSelectableQueryResult(
-        props.writing_cross_tracker_report.getTrackerIds(),
         props.writing_cross_tracker_report.expert_query,
         limit,
         offset,
