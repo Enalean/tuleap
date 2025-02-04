@@ -13,6 +13,7 @@ CREATE TABLE plugin_artidoc_section_version
     artifact_id INT(11)          NULL,
     freetext_id BINARY(16)       NULL,
     `rank`      INT(11) unsigned NOT NULL,
+    level       TINYINT unsigned NOT NULL,
     INDEX idx (section_id),
     INDEX idx_artifact (artifact_id)
 ) ENGINE = InnoDB;

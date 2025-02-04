@@ -37,6 +37,7 @@ final readonly class ArtifactSectionRepresentation implements SectionRepresentat
      */
     public function __construct(
         public string $id,
+        public int $level,
         public ArtifactReference $artifact,
         public mixed $title,
         public ArtifactTextFieldValueRepresentation $description,

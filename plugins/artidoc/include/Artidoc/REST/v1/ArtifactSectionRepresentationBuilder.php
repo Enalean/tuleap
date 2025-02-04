@@ -33,7 +33,7 @@ final class ArtifactSectionRepresentationBuilder implements BuildArtifactSection
     {
     }
 
-    public function build(RequiredArtifactInformation $artifact_information, SectionIdentifier $section_identifier, \PFUser $user): ArtifactSectionRepresentation
+    public function build(RequiredArtifactInformation $artifact_information, SectionIdentifier $section_identifier, int $level, \PFUser $user): ArtifactSectionRepresentation
     {
         $can_user_edit_section = $artifact_information->title_field->userCanUpdate($user)
             && $artifact_information->description_field->userCanUpdate($user);
@@ -50,6 +50,7 @@ final class ArtifactSectionRepresentationBuilder implements BuildArtifactSection
 
         return new ArtifactSectionRepresentation(
             $section_identifier->toString(),
+            $level,
             ArtifactReference::build($artifact),
             $artifact_information->title,
             $artifact_information->description,

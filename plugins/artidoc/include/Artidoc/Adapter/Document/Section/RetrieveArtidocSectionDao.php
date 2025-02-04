@@ -56,7 +56,8 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
                    freetext.id AS freetext_id,
                    freetext.title AS freetext_title,
                    freetext.description AS freetext_description,
-                   section_version.`rank`
+                   section_version.`rank`,
+                   section_version.level
             FROM plugin_artidoc_section AS section
                 INNER JOIN plugin_artidoc_section_version AS section_version
                     ON (section.id = section_version.section_id)
@@ -77,7 +78,7 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
     }
 
     /**
-     * @param array{ id: SectionIdentifier, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int } $row
+     * @param array{ id: SectionIdentifier, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int, level: int } $row
      */
     private function instantiateRetrievedSection(array $row): RetrievedSection
     {
@@ -110,7 +111,8 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
                    freetext.id AS freetext_id,
                    freetext.title AS freetext_title,
                    freetext.description AS freetext_description,
-                   section_version.`rank`
+                   section_version.`rank`,
+                   section_version.level
                 FROM plugin_artidoc_section AS section
                     INNER JOIN plugin_artidoc_section_version AS section_version
                         ON (section.id = section_version.section_id)
@@ -141,7 +143,7 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
                 array_values(
                     array_map(
                         /**
-                         * @param array{ id: string, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int } $row
+                         * @param array{ id: string, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int, level: int } $row
                          */
                         function (array $row): RetrievedSection {
                             $row['id'] = $this->section_identifier_factory->buildFromBytesData($row['id']);

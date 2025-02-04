@@ -56,21 +56,24 @@ final readonly class SectionRepresentationBuilder
                     fn (SectionWrapper $wrapper) => $this->artifact_section_representation_builder->build(
                         $wrapper->required_info,
                         $wrapper->section_identifier,
+                        $section->level,
                         $user,
                     )
                 ),
             fn (RetrievedSectionContentFreetext $freetext) => Result::ok(
-                $this->getSectionRepresentationForFreetext($section->id, $freetext),
+                $this->getSectionRepresentationForFreetext($section->id, $section->level, $freetext),
             )
         );
     }
 
     private function getSectionRepresentationForFreetext(
         SectionIdentifier $section_identifier,
+        int $level,
         RetrievedSectionContentFreetext $freetext,
     ): SectionRepresentation {
         return FreetextSectionRepresentation::fromRetrievedSectionContentFreetext(
             $section_identifier,
+            $level,
             $freetext,
         );
     }

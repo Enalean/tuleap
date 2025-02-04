@@ -155,6 +155,7 @@ final class SectionUpdaterTest extends TestCase
             'item_id'     => self::ITEM_ID,
             'artifact_id' => self::ARTIFACT_ID,
             'rank'        => 0,
+            'level'       => 1,
         ]);
     }
 
@@ -167,6 +168,7 @@ final class SectionUpdaterTest extends TestCase
             'freetext_title'       => 'Intro',
             'freetext_description' => '',
             'rank'                 => 0,
+            'level'                => 1,
         ]);
     }
 }

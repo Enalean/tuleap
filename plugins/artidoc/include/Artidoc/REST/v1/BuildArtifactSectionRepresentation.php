@@ -27,6 +27,7 @@ interface BuildArtifactSectionRepresentation
     public function build(
         RequiredArtifactInformation $artifact_information,
         SectionIdentifier $section_identifier,
+        int $level,
         \PFUser $user,
     ): ArtifactSectionRepresentation;
 }
