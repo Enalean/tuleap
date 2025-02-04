@@ -17,35 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ProgramIncrementList from "./ProgramIncrementList.vue";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import * as retriever from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import type { DefaultData } from "vue/types/options";
-import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+
+jest.useFakeTimers();
 
 describe("ProgramIncrementList", () => {
-    it("Displays the empty state when no artifact are found", async () => {
-        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
-
-        const wrapper = shallowMount(ProgramIncrementList, {
+    async function getWrapper(can_create_program_increment: boolean): Promise<Wrapper<Vue>> {
+        return shallowMount(ProgramIncrementList, {
             localVue: await createProgramManagementLocalVue(),
-            data(): DefaultData<ProgramIncrementList> {
-                return {
-                    program_increments: [],
-                    is_loading: false,
-                    has_error: false,
-                };
-            },
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        configuration: { program_id: 202 },
+                        configuration: {
+                            can_create_program_increment,
+                            tracker_program_increment_label: "Program Increments",
+                            tracker_program_increment_sub_label: "program increment",
+                            tracker_program_increment_id: 532,
+                            program_id: 202,
+                        },
                     },
                 }),
             },
         });
+    }
+
+    it("Displays the empty state when no artifact are found", async () => {
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
+
+        const wrapper = await getWrapper(true);
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
         expect(wrapper.find("[data-test=program-increment-skeleton]").exists()).toBe(false);
@@ -55,24 +61,9 @@ describe("ProgramIncrementList", () => {
 
     it("Displays an error when rest route fail", async () => {
         jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
-        const wrapper = shallowMount(ProgramIncrementList, {
-            localVue: await createProgramManagementLocalVue(),
-            data(): DefaultData<ProgramIncrementList> {
-                return {
-                    program_increments: [],
-                    is_loading: false,
-                    has_error: true,
-                    error_message: "Oups, something happened",
-                };
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { program_id: 202 },
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper(true);
+        wrapper.setData({ has_error: true, error_message: "Oups, something happened" });
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.find("[data-test=program-increment-skeleton]").exists()).toBe(false);
@@ -80,42 +71,29 @@ describe("ProgramIncrementList", () => {
         expect(wrapper.find("[data-test=program-increment-error]").exists()).toBe(true);
     });
 
-    it("Displays the elements to be planned", async () => {
-        const element_one = {
+    it("Displays the program increments", async () => {
+        const increment_one = {
             id: 1,
             title: "PI 1",
-            status: '"To be Planned',
+            status: "Planned",
             start_date: null,
             end_date: null,
         } as ProgramIncrement;
-        const element_two = {
+        const increment_two = {
             title: "PI 2",
-            status: "Planned",
+            status: "Ongoing",
             start_date: "2021-01-20T00:00:00+01:00",
             end_date: "2021-01-20T00:00:00+01:00",
             id: 2,
         } as ProgramIncrement;
 
-        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([element_one, element_two]);
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([
+            increment_one,
+            increment_two,
+        ]);
 
-        const wrapper = shallowMount(ProgramIncrementList, {
-            localVue: await createProgramManagementLocalVue(),
-            data(): DefaultData<ProgramIncrementList> {
-                return {
-                    program_increments: [element_one, element_two],
-                    is_loading: false,
-                    has_error: false,
-                    error_message: "",
-                };
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { program_id: 202 },
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper(true);
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.find("[data-test=program-increment-skeleton]").exists()).toBe(false);
@@ -124,38 +102,18 @@ describe("ProgramIncrementList", () => {
     });
 
     it("User can see the button when he can create program increment", async () => {
-        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([
+            {
+                id: 1,
+                title: "PI 1",
+                status: "Planned",
+                start_date: "2021-01-20T00:00:00+01:00",
+                end_date: "2021-01-20T00:00:00+01:00",
+            } as ProgramIncrement,
+        ]);
 
-        const wrapper = shallowMount(ProgramIncrementList, {
-            localVue: await createProgramManagementLocalVue(),
-            data(): DefaultData<ProgramIncrementList> {
-                return {
-                    program_increments: [
-                        {
-                            id: 1,
-                            title: "PI 1",
-                            status: '"To be Planned',
-                            start_date: null,
-                            end_date: null,
-                        } as ProgramIncrement,
-                    ],
-                    is_loading: false,
-                    has_error: false,
-                };
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            program_id: 202,
-                            can_create_program_increment: true,
-                            tracker_program_increment_label: "Program Increments",
-                            tracker_program_increment_sub_label: "program increment",
-                        },
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper(true);
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(true);
         expect(wrapper.find("[data-test=program-increment-title]").text()).toBe(
@@ -167,36 +125,17 @@ describe("ProgramIncrementList", () => {
     });
 
     it("No button is displayed when user can not add program increments", async () => {
-        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([
+            {
+                id: 1,
+                title: "PI 1",
+                status: "Planned",
+                start_date: "2021-01-20T00:00:00+01:00",
+                end_date: "2021-01-20T00:00:00+01:00",
+            } as ProgramIncrement,
+        ]);
 
-        const wrapper = shallowMount(ProgramIncrementList, {
-            localVue: await createProgramManagementLocalVue(),
-            data(): DefaultData<ProgramIncrementList> {
-                return {
-                    program_increments: [
-                        {
-                            id: 1,
-                            title: "PI 1",
-                            status: '"To be Planned',
-                            start_date: null,
-                            end_date: null,
-                        } as ProgramIncrement,
-                    ],
-                    is_loading: false,
-                    has_error: false,
-                };
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            program_id: 202,
-                            can_create_program_increment: false,
-                        },
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper(false);
 
         expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(false);
     });
