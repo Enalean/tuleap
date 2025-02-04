@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Transition;
 use TransitionFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
@@ -31,26 +30,21 @@ use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Workflow;
 
-class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private TransitionFactory&MockObject $transition_factory;
+    private TransitionReplicator&MockObject $transition_replicator;
+    private TransitionExtractor&MockObject $transition_extractor;
 
-    private $transition_factory;
-    private $transition_replicator;
-    private $transition_extractor;
-
-    /**
-     * @var TransitionCreator
-     */
-    private $creator;
+    private TransitionCreator $creator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->transition_factory    = Mockery::mock(TransitionFactory::class);
-        $this->transition_replicator = Mockery::mock(TransitionReplicator::class);
-        $this->transition_extractor  = Mockery::mock(TransitionExtractor::class);
+        $this->transition_factory    = $this->createMock(TransitionFactory::class);
+        $this->transition_replicator = $this->createMock(TransitionReplicator::class);
+        $this->transition_extractor  = $this->createMock(TransitionExtractor::class);
 
         $this->creator = new TransitionCreator(
             $this->transition_factory,
@@ -61,26 +55,29 @@ class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreatesTransitionInWorkfowState()
     {
-        $state    = Mockery::mock(State::class);
-        $workflow = Mockery::mock(Workflow::class);
+        $state    = $this->createMock(State::class);
+        $workflow = $this->createMock(Workflow::class);
         $params   = new TransitionCreationParameters(100, 101);
 
-        $transition           = Mockery::mock(Transition::class);
-        $reference_transition = Mockery::mock(Transition::class);
+        $transition           = $this->createMock(Transition::class);
+        $reference_transition = $this->createMock(Transition::class);
 
-        $this->transition_factory->shouldReceive('createAndSaveTransition')
+        $this->transition_factory
+            ->expects(self::once())
+            ->method('createAndSaveTransition')
             ->with($workflow, $params)
-            ->once()
-            ->andReturn($transition);
+            ->willReturn($transition);
 
-        $this->transition_extractor->shouldReceive('extractReferenceTransitionFromState')
+        $this->transition_extractor
+            ->expects(self::once())
+            ->method('extractReferenceTransitionFromState')
             ->with($state)
-            ->once()
-            ->andReturn($reference_transition);
+            ->willReturn($reference_transition);
 
-        $this->transition_replicator->shouldReceive('replicate')
-            ->with($reference_transition, $transition)
-            ->once();
+        $this->transition_replicator
+            ->expects(self::once())
+            ->method('replicate')
+            ->with($reference_transition, $transition);
 
         $this->creator->createTransitionInState(
             $state,
@@ -91,23 +88,25 @@ class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreatesFirstTransitionInState()
     {
-        $state    = Mockery::mock(State::class);
-        $workflow = Mockery::mock(Workflow::class);
+        $state    = $this->createMock(State::class);
+        $workflow = $this->createMock(Workflow::class);
         $params   = new TransitionCreationParameters(100, 101);
 
-        $transition = Mockery::mock(Transition::class);
+        $transition = $this->createMock(Transition::class);
 
-        $this->transition_factory->shouldReceive('createAndSaveTransition')
+        $this->transition_factory
+            ->expects(self::once())
+            ->method('createAndSaveTransition')
             ->with($workflow, $params)
-            ->once()
-            ->andReturn($transition);
+            ->willReturn($transition);
 
-        $this->transition_extractor->shouldReceive('extractReferenceTransitionFromState')
+        $this->transition_extractor
+            ->expects(self::once())
+            ->method('extractReferenceTransitionFromState')
             ->with($state)
-            ->once()
-            ->andThrow(NoTransitionForStateException::class);
+            ->willThrowException(new NoTransitionForStateException());
 
-        $this->transition_replicator->shouldReceive('replicate')->never();
+        $this->transition_replicator->expects(self::never())->method('replicate');
 
         $this->creator->createTransitionInState(
             $state,

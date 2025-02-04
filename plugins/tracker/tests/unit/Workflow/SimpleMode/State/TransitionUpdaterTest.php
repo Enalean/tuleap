@@ -22,31 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Transition;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 
-class TransitionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TransitionUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ConditionsUpdater&MockObject $condition_updater;
+    private PostActionCollectionUpdater&MockObject $collection_updater;
 
-    private $condition_updater;
-    private $collection_updater;
-
-    /**
-     * @var TransitionUpdater
-     */
-    private $transition_updater;
+    private TransitionUpdater $transition_updater;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->condition_updater  = Mockery::mock(ConditionsUpdater::class);
-        $this->collection_updater = Mockery::mock(PostActionCollectionUpdater::class);
+        $this->condition_updater  = $this->createMock(ConditionsUpdater::class);
+        $this->collection_updater = $this->createMock(PostActionCollectionUpdater::class);
 
         $this->transition_updater = new TransitionUpdater(
             $this->condition_updater,
@@ -56,46 +51,32 @@ class TransitionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatesConditionsForAllTransitionsInState()
     {
-        $transition    = Mockery::mock(Transition::class);
-        $transition_02 = Mockery::mock(Transition::class);
-        $transition_03 = Mockery::mock(Transition::class);
+        $transition    = $this->createMock(Transition::class);
+        $transition_02 = $this->createMock(Transition::class);
+        $transition_03 = $this->createMock(Transition::class);
 
-        $transition->shouldReceive('getIdFrom')->andReturn('');
-        $transition_02->shouldReceive('getIdFrom')->andReturn('101');
-        $transition_03->shouldReceive('getIdFrom')->andReturn('101');
+        $transition->method('getIdFrom')->willReturn('');
+        $transition_02->method('getIdFrom')->willReturn('101');
+        $transition_03->method('getIdFrom')->willReturn('101');
 
-        $transition->shouldReceive('getIdTo')->andReturn('101');
-        $transition_02->shouldReceive('getIdTo')->andReturn('102');
-        $transition_03->shouldReceive('getIdTo')->andReturn('103');
+        $transition->method('getIdTo')->willReturn('101');
+        $transition_02->method('getIdTo')->willReturn('102');
+        $transition_03->method('getIdTo')->willReturn('103');
 
         $state = new State(1, [$transition, $transition_02, $transition_03]);
 
-        $this->condition_updater->shouldReceive('update')
-            ->with(
-                $transition,
-                ['101_4'],
-                [],
-                false
-            )
-            ->once();
-
-        $this->condition_updater->shouldReceive('update')
-            ->with(
-                $transition_02,
-                ['101_4'],
-                [],
-                false
-            )
-            ->once();
-
-        $this->condition_updater->shouldReceive('update')
-            ->with(
-                $transition_03,
-                ['101_4'],
-                [],
-                false
-            )
-            ->once();
+        $this->condition_updater
+            ->expects(self::exactly(3))
+            ->method('update')
+            ->willReturnCallback(
+                static fn (
+                    Transition $arg_transition,
+                ) => match ($arg_transition) {
+                    $transition,
+                    $transition_02,
+                    $transition_03 => true
+                }
+            );
 
         $this->transition_updater->updateStatePreConditions(
             $state,
@@ -107,20 +88,21 @@ class TransitionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatesTheUniqueTranstionFromState()
     {
-        $transition = Mockery::mock(Transition::class);
-        $transition->shouldReceive('getIdFrom')->andReturn('');
-        $transition->shouldReceive('getIdTo')->andReturn('101');
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getIdFrom')->willReturn('');
+        $transition->method('getIdTo')->willReturn('101');
 
         $state = new State(1, [$transition]);
 
-        $this->condition_updater->shouldReceive('update')
+        $this->condition_updater
+            ->expects(self::once())
+            ->method('update')
             ->with(
                 $transition,
                 ['101_4'],
                 [],
                 false
-            )
-            ->once();
+            );
 
         $this->transition_updater->updateStatePreConditions(
             $state,
@@ -132,34 +114,26 @@ class TransitionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatesThePostActionsForState()
     {
-        $transition    = Mockery::mock(Transition::class);
-        $transition_02 = Mockery::mock(Transition::class);
-        $transition_03 = Mockery::mock(Transition::class);
+        $transition    = $this->createMock(Transition::class);
+        $transition_02 = $this->createMock(Transition::class);
+        $transition_03 = $this->createMock(Transition::class);
 
         $state = new State(1, [$transition, $transition_02, $transition_03]);
 
         $post_actions = new PostActionCollection();
 
-        $this->collection_updater->shouldReceive('updateByTransition')
-            ->with(
-                $transition,
-                $post_actions
-            )
-            ->once();
-
-        $this->collection_updater->shouldReceive('updateByTransition')
-            ->with(
-                $transition_02,
-                $post_actions
-            )
-            ->once();
-
-        $this->collection_updater->shouldReceive('updateByTransition')
-            ->with(
-                $transition_03,
-                $post_actions
-            )
-            ->once();
+        $this->collection_updater
+            ->expects(self::exactly(3))
+            ->method('updateByTransition')
+            ->willReturnCallback(
+                static fn (
+                    Transition $arg_transition,
+                ) => match ($arg_transition) {
+                    $transition,
+                    $transition_02,
+                    $transition_03 => true
+                }
+            );
 
         $this->transition_updater->updateStateActions(
             $state,
