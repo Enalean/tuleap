@@ -32,3 +32,11 @@
     justify-content: center;
     height: 300px;
 }
+
+.dropdown-menu-example-filter {
+    min-width: 360px;
+
+    > .tlp-dropdown-menu-actions > input {
+        width: 50%;
+    }
+}

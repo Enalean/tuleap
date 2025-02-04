@@ -123,6 +123,13 @@ $tlp-dropdown-transition: 75ms ease-out;
     }
 }
 
+.tlp-dropdown-menu-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    gap: var(--tlp-medium-spacing);
+}
+
 .tlp-dropdown-menu-title {
     margin: var(--tlp-small-spacing) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
