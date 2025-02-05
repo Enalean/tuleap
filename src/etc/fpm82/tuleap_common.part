@@ -7,7 +7,7 @@ group = %application_user%
 
 ; Errors handling
 catch_workers_output = yes
-php_admin_value[error_log] = /var/opt/remi/php82/log/php-fpm/www-error.log
+php_admin_value[error_log] = syslog
 php_admin_flag[log_errors] = on
 
 ; Security
