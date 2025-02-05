@@ -217,6 +217,41 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
+    public function testItDoesNotStopWhenWeSynchronizeGitLabRepositoriesAndWhenSomeRepositoriesAreNotInitialized(): void
+    {
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson([
+            [
+                'id' => 1,
+                'description' => 'My GitLab project',
+                'web_url' => 'https://example.com/root/project01',
+                'name' => 'Project 01',
+                'path_with_namespace' => 'root/project01',
+                'last_activity_at' => '2020-11-12',
+            ],
+            [
+                'id' => 2,
+                'description' => 'My GitLab project number 2',
+                'web_url' => 'https://example.com/root/project02',
+                'name' => 'Project 02',
+                'path_with_namespace' => 'root/project02',
+                'last_activity_at' => '2020-11-12',
+                'default_branch' => 'main',
+            ],
+        ]);
+
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
+
+        $gitlab_project = $project_builder->getGroupProjectsFromGitlabAPI($this->credentials, 1);
+
+        self::assertCount(1, $gitlab_project);
+        self::assertSame(2, $gitlab_project[0]->getId());
+        self::assertSame('My GitLab project number 2', $gitlab_project[0]->getDescription());
+        self::assertSame('root/project02', $gitlab_project[0]->getPathWithNamespace());
+        self::assertSame('https://example.com/root/project02', $gitlab_project[0]->getWebUrl());
+        self::assertSame(1605135600, $gitlab_project[0]->getLastActivityAt()->getTimestamp());
+        self::assertSame('main', $gitlab_project[0]->getDefaultBranch());
+    }
+
     public function testItBuildsSeveralGitlabProjectObject(): void
     {
         $gitlab_client = GitlabClientWrapperStub::buildWithJson([
