@@ -38,6 +38,10 @@ import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStore
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import TableOfContents from "./TableOfContents.vue";
 
+const display_level_section1 = "1.";
+const display_level_section2 = "2.";
+const display_level_section3 = "2.1.";
+
 describe("TableOfContents", () => {
     let can_user_edit_document: boolean,
         is_loading_sections: boolean,
@@ -97,16 +101,19 @@ describe("TableOfContents", () => {
             artifact_section_1 = ReactiveStoredArtidocSectionStub.fromSection(
                 ArtifactSectionFactory.override({
                     artifact: { ...ArtifactSectionFactory.create().artifact, id: 1 },
+                    display_level: display_level_section1,
                 }),
             );
             artifact_section_2 = ReactiveStoredArtidocSectionStub.fromSection(
                 ArtifactSectionFactory.override({
                     artifact: { ...ArtifactSectionFactory.create().artifact, id: 2 },
+                    display_level: display_level_section2,
                 }),
             );
             freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
                 FreetextSectionFactory.override({
                     display_title: "Freetext section",
+                    display_level: display_level_section3,
                 }),
             );
 
@@ -150,7 +157,7 @@ describe("TableOfContents", () => {
         });
 
         it("should have an url to redirect to the section", () => {
-            const list = getWrapper().find("ol");
+            const list = getWrapper().find("ul");
             const links = list.findAll("li a");
 
             expect(links.length).toBe(3);
@@ -162,6 +169,13 @@ describe("TableOfContents", () => {
 
         it("should display the table of content title", () => {
             expect(getWrapper().find("h1").text()).toBe("Table of contents");
+        });
+
+        it("should display the number according to display_level", () => {
+            const display_levels = getWrapper().findAll("#display-level");
+            expect(display_levels[0].text()).toBe(display_level_section1);
+            expect(display_levels[1].text()).toBe(display_level_section2);
+            expect(display_levels[2].text()).toBe(display_level_section3);
         });
     });
 });

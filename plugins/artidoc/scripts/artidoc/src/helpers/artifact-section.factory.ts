@@ -61,6 +61,8 @@ const ArtifactSectionFactory = {
             type: "file",
             file_descriptions: [],
         },
+        level: 1,
+        display_level: "",
     }),
 
     skeleton: (): ArtifactSection => {

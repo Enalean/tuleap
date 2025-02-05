@@ -22,7 +22,6 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import SectionContainer from "@/components/section/SectionContainer.vue";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -58,13 +57,16 @@ describe("DocumentContent", () => {
         section_1 = ArtifactSectionFactory.override({
             title: { ...default_artifact_section.title, value: "Title 1" },
             artifact: { ...default_artifact_section.artifact, id: 1 },
+            level: 1,
         });
         section_2 = ArtifactSectionFactory.override({
             title: { ...default_artifact_section.title, value: "Title 2" },
             artifact: { ...default_artifact_section.artifact, id: 2 },
+            level: 2,
         });
         section_3 = PendingArtifactSectionFactory.override({
             title: { ...default_pending_artifact_section.title, value: "Title 3" },
+            level: 3,
         });
 
         sections_collection = SectionsCollectionStub.withSections([
@@ -76,14 +78,13 @@ describe("DocumentContent", () => {
         can_user_edit_document = true;
     });
 
-    it("should display the two sections", () => {
-        const list = getWrapper().find("ol");
-        expect(list.findAllComponents(SectionContainer)).toHaveLength(3);
+    it("should display the three sections", () => {
+        const sections = getWrapper().findAll("[data-test=artidoc-section]");
+        expect(sections).toHaveLength(3);
     });
 
     it("sections should have an id for anchor feature except pending artifact section", () => {
-        const list = getWrapper().find("ol");
-        const sections = list.findAll("li");
+        const sections = getWrapper().findAll("[data-test=artidoc-section]");
         expect(sections[0].attributes().id).toBe(`section-${section_1.id}`);
         expect(sections[1].attributes().id).toBe(`section-${section_2.id}`);
         expect(sections[2].attributes().id).toBe(`section-${section_3.id}`);

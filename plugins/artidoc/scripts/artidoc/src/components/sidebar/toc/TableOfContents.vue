@@ -22,7 +22,7 @@
     <h1 class="tlp-pane-title">
         {{ $gettext("Table of contents") }}
     </h1>
-    <ol ref="list" data-is-container="true">
+    <ul ref="list" data-is-container="true">
         <li
             data-test="section-in-toc"
             v-for="(section, index) in sections_collection.sections.value"
@@ -43,6 +43,17 @@
                 v-bind:class="{ 'dragndrop-grip-when-sections-loading': is_loading_sections }"
             >
                 <dragndrop-grip-illustration />
+            </span>
+
+            <span
+                class="artidoc-display-level"
+                id="display-level"
+                v-bind:class="{
+                    'artidoc-level2': section.value.level === 2,
+                    'artidoc-level3': section.value.level === 3,
+                }"
+            >
+                {{ section.value.display_level }}
             </span>
 
             <span v-if="is_loading_sections" class="tlp-skeleton-text"></span>
@@ -77,7 +88,7 @@
                 />
             </span>
         </li>
-    </ol>
+    </ul>
 </template>
 
 <script setup lang="ts">
@@ -232,7 +243,7 @@ h1 {
     margin: var(--artidoc-sidebar-title-vertical-margin) var(--tlp-medium-spacing);
 }
 
-ol {
+ul {
     height: var(--artidoc-sidebar-content-height);
     padding: 0 0 var(--tlp-medium-spacing);
     overflow: hidden auto;
@@ -241,6 +252,10 @@ ol {
 }
 
 li {
+    &::marker {
+        color: transparent; // hack to hide the li point to be displayed before the title
+    }
+
     position: relative;
     padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-medium-spacing);
 
@@ -249,7 +264,7 @@ li {
     }
 
     &:has(> .dragndrop-grip) {
-        padding-left: var(--tlp-large-spacing);
+        padding-left: var(--tlp-small-spacing);
     }
 
     &:has(> .reorder-arrows) {
@@ -261,6 +276,14 @@ li {
     &:has(> .dragndrop-grip:hover) {
         transition: background ease-in-out 250ms;
         background: var(--tlp-main-color-lighter-90);
+    }
+
+    &:has(> .artidoc-level2) {
+        padding-left: var(--tlp-large-spacing);
+    }
+
+    &:has(> .artidoc-level3) {
+        padding-left: calc(var(--tlp-large-spacing) * 2);
     }
 
     &:not(:hover) > .dragndrop-grip {

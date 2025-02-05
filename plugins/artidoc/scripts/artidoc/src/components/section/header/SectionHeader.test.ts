@@ -25,12 +25,8 @@ import { createGettext } from "vue3-gettext";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const current_title = "Current section title";
-
-const expectAReadonlyTitle = (wrapper: VueWrapper): void => {
-    const readonly_title = wrapper.find("h1");
-    expect(readonly_title.exists()).toBe(true);
-    expect(readonly_title.text()).toBe(current_title);
-};
+const current_display_level = "1. ";
+const number_and_title = current_display_level + current_title;
 
 describe("SectionHeader", () => {
     let can_user_edit_document: boolean, is_print_mode: boolean;
@@ -47,6 +43,7 @@ describe("SectionHeader", () => {
                 title: current_title,
                 is_print_mode,
                 is_freetext: false,
+                display_level: current_display_level,
             },
         });
 
@@ -54,16 +51,16 @@ describe("SectionHeader", () => {
         can_user_edit_document = false;
         is_print_mode = false;
 
-        const wrapper = getWrapper();
-        expectAReadonlyTitle(wrapper);
+        const readonly_title = getWrapper().find("h1");
+        expect(readonly_title.text()).toBe(current_title);
     });
 
     it("When the user can edit the document, but it is in print mode, then it should display a readonly title", () => {
         can_user_edit_document = true;
         is_print_mode = true;
 
-        const wrapper = getWrapper();
-        expectAReadonlyTitle(wrapper);
+        const readonly_title = getWrapper().find("h1");
+        expect(readonly_title.text()).toBe(number_and_title);
     });
 
     it("When the user can edit the document, and it is NOT in print mode, then it should display nothing", () => {

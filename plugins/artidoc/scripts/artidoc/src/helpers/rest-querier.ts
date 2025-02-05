@@ -34,6 +34,7 @@ import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artid
 import type { Tracker } from "@/stores/configuration-store";
 import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
 import type { MergedAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
+import { injectDisplayLevel } from "@/sections/SectionsNumberer";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 export function putConfiguration(
@@ -180,7 +181,9 @@ export function getAllSections(document_id: number): ResultAsync<readonly Artido
         params: {
             limit: 50,
         },
-    }).map((sections: readonly ArtidocSection[]) => sections.map(injectDisplayTitle));
+    })
+        .map((sections: readonly ArtidocSection[]) => sections.map(injectDisplayTitle))
+        .map((sections: ArtidocSection[]) => injectDisplayLevel(sections));
 }
 
 export function getSection(section_id: string): ResultAsync<ArtidocSection, Fault> {
