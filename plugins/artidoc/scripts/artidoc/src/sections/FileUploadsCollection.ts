@@ -21,7 +21,7 @@ import { ref, type Ref } from "vue";
 import type { OnGoingUploadFile } from "@tuleap/file-upload";
 import { v4 as uuidv4 } from "uuid";
 
-export type UploadFileStoreType = {
+export type FileUploadsCollection = {
     pending_uploads: Ref<OnGoingUploadFileWithId[]>;
     deleteUpload: (file_id: string) => void;
     cancelSectionUploads: (section_id: string) => void;
@@ -34,24 +34,22 @@ export type OnGoingUploadFileWithId = OnGoingUploadFile & {
     error_message?: string | null | undefined;
 };
 
-export function useUploadFileStore(): UploadFileStoreType {
+export function getFileUploadsCollection(): FileUploadsCollection {
     const pending_uploads: Ref<OnGoingUploadFileWithId[]> = ref([]);
 
     const deleteUpload = (file_id: string): void => {
         const index = pending_uploads.value.findIndex(
             (upload: OnGoingUploadFileWithId) => upload.file_id === file_id,
         );
-        if (index >= 0) {
+        if (index !== -1) {
             pending_uploads.value.splice(index, 1);
         }
     };
 
     const cancelSectionUploads = (section_id: string): void => {
-        pending_uploads.value.forEach((upload) => {
-            if (upload.section_id === section_id) {
-                deleteUpload(upload.file_id);
-            }
-        });
+        pending_uploads.value = pending_uploads.value.filter(
+            (upload) => upload.section_id !== section_id,
+        );
     };
 
     const addPendingUpload = (file_name: string, section_id: string): void => {

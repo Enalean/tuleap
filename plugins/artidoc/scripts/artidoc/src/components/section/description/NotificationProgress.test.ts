@@ -20,63 +20,63 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
+import { v4 as uuidv4 } from "uuid";
+import { noop } from "@/helpers/noop";
+import type { FileUploadsCollection } from "@/sections/FileUploadsCollection";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
+import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
-import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
-import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
-import type { NotificationProgressProps } from "@/components/section/description/NotificationProgress.vue";
 
-const default_props = {
-    file_id: "123",
-    file_name: "file_name",
-    upload_progress: 0,
-    is_in_progress: false,
-    reset_progress: vi.fn(),
-};
-
-function getWrapper(props: NotificationProgressProps): VueWrapper {
-    return shallowMount(NotificationProgress, {
-        props,
-    });
-}
+const file_id = uuidv4();
+const file_name = "bug.png";
 
 describe("NotificationProgress", () => {
-    const mocked_upload_data = UploadFileStoreStub.uploadInProgress();
+    let file_uploads_collection: FileUploadsCollection, upload_progress_in_percents: number;
 
     beforeEach(() => {
-        mockStrictInject([[UPLOAD_FILE_STORE, mocked_upload_data]]);
+        file_uploads_collection = FileUploadsCollectionStub.withUploadsInProgress();
+        upload_progress_in_percents = 0;
     });
+
+    function getWrapper(): VueWrapper {
+        return shallowMount(NotificationProgress, {
+            global: {
+                provide: {
+                    [FILE_UPLOADS_COLLECTION.valueOf()]: file_uploads_collection,
+                },
+            },
+            props: {
+                file_id,
+                file_name,
+                is_in_progress: upload_progress_in_percents > 0,
+                reset_progress: noop,
+                upload_progress: upload_progress_in_percents,
+            },
+        });
+    }
 
     describe("when an upload is in progress", () => {
         it("should display the progress bar", () => {
-            const wrapper = getWrapper({
-                ...default_props,
-                upload_progress: 20,
-            });
+            upload_progress_in_percents = 20;
 
-            const progressElement = wrapper.find('div[class="notification-message"]');
+            const progress_element = getWrapper().find('div[class="notification-message"]');
 
-            expect(progressElement.exists()).toBe(true);
-            expect(progressElement.text()).toBe("file_name 20%");
+            expect(progress_element.exists()).toBe(true);
+            expect(progress_element.text()).toBe(`${file_name} ${upload_progress_in_percents}%`);
         });
     });
     describe("when the upload is finished", () => {
-        it("should delete the progress bar after 3 seconds", () => {
+        it("Given an upload, When it is done (100%), Then it should delete the progress bar after 3 seconds", () => {
             vi.useFakeTimers();
+            vi.spyOn(file_uploads_collection, "deleteUpload");
 
-            const mocked_delete_upload = vi.fn();
-            mockStrictInject([
-                [UPLOAD_FILE_STORE, { ...mocked_upload_data, deleteUpload: mocked_delete_upload }],
-            ]);
+            upload_progress_in_percents = 100;
 
-            getWrapper({
-                ...default_props,
-                upload_progress: 100,
-            });
-
+            getWrapper();
             vi.advanceTimersByTime(3_000);
 
-            expect(mocked_delete_upload).toHaveBeenCalledOnce();
+            expect(file_uploads_collection.deleteUpload).toHaveBeenCalledOnce();
+            expect(file_uploads_collection.deleteUpload).toHaveBeenCalledWith(file_id);
 
             vi.useRealTimers();
         });

@@ -24,10 +24,9 @@ import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import SectionEditorSaveCancelButtons from "./SectionEditorSaveCancelButtons.vue";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
+import { SectionEditorCloserStub } from "@/sections/stubs/SectionEditorCloserStub";
 
 describe("SectionEditorSaveCancelButtons", () => {
     function getWrapper(section_state: SectionState): VueWrapper<ComponentPublicInstance> {
@@ -35,13 +34,10 @@ describe("SectionEditorSaveCancelButtons", () => {
             propsData: {
                 editor: SectionEditorStub.build(),
                 section_state,
+                close_section_editor: SectionEditorCloserStub.withExpectedCall(),
             },
             global: {
                 plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIGURATION_STORE.valueOf()]:
-                        ConfigurationStoreStub.withoutAllowedTrackers(),
-                },
             },
         });
     }

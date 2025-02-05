@@ -25,7 +25,7 @@ import {
     isPendingArtifactSection,
     isPendingSection,
 } from "@/helpers/artidoc-section.type";
-import type { OnGoingUploadFileWithId } from "@/stores/useUploadFileStore";
+import type { OnGoingUploadFileWithId } from "@/sections/FileUploadsCollection";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { getSectionHtmlDescription } from "@/helpers/get-section-html-description";
 

@@ -22,13 +22,15 @@ import { useUploadFile } from "@/composables/useUploadFile";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { mockFileList } from "@/helpers/mock-file-list";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
-import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
 import type { UploadError } from "@tuleap/file-upload";
-import type { OnGoingUploadFileWithId, UploadFileStoreType } from "@/stores/useUploadFileStore";
+import type {
+    FileUploadsCollection,
+    OnGoingUploadFileWithId,
+} from "@/sections/FileUploadsCollection";
 import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
-import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
+import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
 import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
@@ -49,22 +51,21 @@ class DummyUploadError extends Error implements UploadError {
 }
 
 describe("useUploadFile", () => {
-    let mocked_upload_data: UploadFileStoreType,
+    let file_uploads_collection: FileUploadsCollection,
         mocked_notifications_data: UseNotificationsStoreType,
         manage_section_attachments: ManageSectionAttachmentFiles;
 
     const section_id: string =
-        UploadFileStoreStub.uploadInProgress().pending_uploads.value[0].section_id;
+        FileUploadsCollectionStub.withUploadsInProgress().pending_uploads.value[0].section_id;
 
     beforeEach(() => {
-        mocked_upload_data = UploadFileStoreStub.uploadInProgress();
+        file_uploads_collection = FileUploadsCollectionStub.withUploadsInProgress();
         mocked_notifications_data = NotificationsSub.withMessages();
         manage_section_attachments = SectionAttachmentFilesManagerStub.forSection(
             FreetextSectionFactory.create(),
         );
         mockStrictInject([
             [UPLOAD_MAX_SIZE, 222],
-            [UPLOAD_FILE_STORE, mocked_upload_data],
             [NOTIFICATION_STORE, mocked_notifications_data],
         ]);
     });
@@ -74,14 +75,17 @@ describe("useUploadFile", () => {
             const mocked_add_notification = vi.fn();
             mockStrictInject([
                 [UPLOAD_MAX_SIZE, 222],
-                [UPLOAD_FILE_STORE, mocked_upload_data],
                 [
                     NOTIFICATION_STORE,
                     { ...mocked_notifications_data, addNotification: mocked_add_notification },
                 ],
             ]);
 
-            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
+            const { file_upload_options } = useUploadFile(
+                section_id,
+                manage_section_attachments,
+                file_uploads_collection,
+            );
 
             file_upload_options.onErrorCallback(new DummyUploadError(), "file_name");
 
@@ -91,60 +95,63 @@ describe("useUploadFile", () => {
             });
         });
         it("should delete the current file pending upload", () => {
-            const mocked_delete_upload = vi.fn();
+            const deleteUpload = vi.spyOn(file_uploads_collection, "deleteUpload");
             mockStrictInject([
                 [UPLOAD_MAX_SIZE, 222],
-                [UPLOAD_FILE_STORE, { ...mocked_upload_data, deleteUpload: mocked_delete_upload }],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
 
-            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
+            const { file_upload_options } = useUploadFile(
+                section_id,
+                manage_section_attachments,
+                file_uploads_collection,
+            );
 
-            const current_file = mocked_upload_data.pending_uploads.value[0];
+            const current_file = file_uploads_collection.pending_uploads.value[0];
             file_upload_options.onErrorCallback(new DummyUploadError(), current_file.file_name);
 
-            expect(mocked_delete_upload).toHaveBeenCalledWith(current_file.file_id);
+            expect(deleteUpload).toHaveBeenCalledWith(current_file.file_id);
         });
     });
 
     describe("resetProgressCallback", () => {
         it("should reset progress", () => {
-            const cancelSectionUploadsMock = vi.fn();
+            const cancelUploads = vi.spyOn(file_uploads_collection, "cancelSectionUploads");
             mockStrictInject([
                 [UPLOAD_MAX_SIZE, 222],
-                [
-                    UPLOAD_FILE_STORE,
-                    { ...mocked_upload_data, cancelSectionUploads: cancelSectionUploadsMock },
-                ],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
 
-            const { resetProgressCallback } = useUploadFile(section_id, manage_section_attachments);
+            const { resetProgressCallback } = useUploadFile(
+                section_id,
+                manage_section_attachments,
+                file_uploads_collection,
+            );
 
             resetProgressCallback();
 
-            expect(cancelSectionUploadsMock).toHaveBeenCalledOnce();
+            expect(cancelUploads).toHaveBeenCalledOnce();
         });
     });
 
     describe("onStartUploadCallback", () => {
         it("should add the current upload to the store pending uploads", () => {
-            const addPendingUploadMock = vi.fn();
+            const addPendingUpload = vi.spyOn(file_uploads_collection, "addPendingUpload");
             mockStrictInject([
                 [UPLOAD_MAX_SIZE, 222],
-                [
-                    UPLOAD_FILE_STORE,
-                    { ...mocked_upload_data, addPendingUpload: addPendingUploadMock },
-                ],
                 [NOTIFICATION_STORE, mocked_notifications_data],
             ]);
 
-            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
+            const { file_upload_options } = useUploadFile(
+                section_id,
+                manage_section_attachments,
+                file_uploads_collection,
+            );
 
             const list: FileList = mockFileList([new File(["123"], "file_1")]);
             file_upload_options.onStartUploadCallback(list);
 
-            expect(addPendingUploadMock).toHaveBeenNthCalledWith(1, "file_1", section_id);
+            expect(addPendingUpload).toHaveBeenNthCalledWith(1, "file_1", section_id);
         });
     });
 
@@ -154,7 +161,11 @@ describe("useUploadFile", () => {
                 manage_section_attachments,
                 "addAttachmentToWaitingList",
             );
-            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
+            const { file_upload_options } = useUploadFile(
+                section_id,
+                manage_section_attachments,
+                file_uploads_collection,
+            );
 
             file_upload_options.onSuccessCallback(123, "download_href", "file_name");
             expect(add_attachment_to_waiting_list_mock).toHaveBeenCalledWith({
@@ -163,23 +174,27 @@ describe("useUploadFile", () => {
             });
         });
         it("should actualize progress of upload to 100%", () => {
-            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
+            const { file_upload_options } = useUploadFile(
+                section_id,
+                manage_section_attachments,
+                file_uploads_collection,
+            );
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
-                mocked_upload_data.pending_uploads.value,
+                file_uploads_collection.pending_uploads.value,
             );
             expect(current_uploads_section[0].progress).toBe(45);
 
             file_upload_options.onSuccessCallback(
                 123,
                 "download_href",
-                mocked_upload_data.pending_uploads.value[0].file_name,
+                file_uploads_collection.pending_uploads.value[0].file_name,
             );
 
             const new_current_uploads_section = getCurrentSectionUploads(
                 section_id,
-                mocked_upload_data.pending_uploads.value,
+                file_uploads_collection.pending_uploads.value,
             );
 
             expect(new_current_uploads_section[0].progress).toBe(100);
@@ -188,11 +203,15 @@ describe("useUploadFile", () => {
 
     describe("onProgressCallback", () => {
         it("should actualize progress of upload", () => {
-            const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
+            const { file_upload_options } = useUploadFile(
+                section_id,
+                manage_section_attachments,
+                file_uploads_collection,
+            );
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
-                mocked_upload_data.pending_uploads.value,
+                file_uploads_collection.pending_uploads.value,
             );
 
             const new_progress = current_uploads_section[0].progress + 12;
@@ -203,7 +222,7 @@ describe("useUploadFile", () => {
 
             const new_current_uploads_section = getCurrentSectionUploads(
                 section_id,
-                mocked_upload_data.pending_uploads.value,
+                file_uploads_collection.pending_uploads.value,
             );
 
             expect(new_current_uploads_section[0].progress).toBe(new_progress);
@@ -213,13 +232,14 @@ describe("useUploadFile", () => {
                 const { file_upload_options } = useUploadFile(
                     section_id,
                     manage_section_attachments,
+                    file_uploads_collection,
                 );
 
-                const save_upload_files = [...mocked_upload_data.pending_uploads.value];
+                const save_upload_files = [...file_uploads_collection.pending_uploads.value];
 
                 file_upload_options.onProgressCallback("unknown file name", 12);
 
-                expect(mocked_upload_data.pending_uploads.value).toEqual(save_upload_files);
+                expect(file_uploads_collection.pending_uploads.value).toEqual(save_upload_files);
             });
         });
     });

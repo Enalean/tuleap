@@ -18,7 +18,6 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { MockedFunction } from "vitest";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { errAsync, okAsync } from "neverthrow";
@@ -30,17 +29,12 @@ import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
+import { SectionEditorCloserStub } from "@/sections/stubs/SectionEditorCloserStub";
 
 const artifact_section = ArtifactSectionFactory.create();
 const freetext_section = ArtifactSectionFactory.create();
 
 describe("useRefreshSection", () => {
-    let closeEditor: MockedFunction<() => void>;
-
-    beforeEach(() => {
-        closeEditor = vi.fn();
-    });
-
     describe("refresh_section", () => {
         describe.each([
             ["artifact", artifact_section, ArtifactSectionFactory.create()],
@@ -57,7 +51,7 @@ describe("useRefreshSection", () => {
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withNoExpectedFault(),
                     updater,
-                    closeEditor,
+                    SectionEditorCloserStub.withExpectedCall(),
                 );
                 refreshSection();
 
@@ -67,19 +61,20 @@ describe("useRefreshSection", () => {
             });
             it(`should close editor with ${name}`, async () => {
                 const updater = SectionsUpdaterStub.withExpectedCall();
+                const editor_closer = SectionEditorCloserStub.withExpectedCall();
                 const { refreshSection } = useRefreshSection(
                     ReactiveStoredArtidocSectionStub.fromSection(section),
                     SectionStateStub.inEditMode(),
                     SectionErrorManagerStub.withExpectedFault(),
                     updater,
-                    closeEditor,
+                    editor_closer,
                 );
 
                 refreshSection();
                 await flushPromises();
 
                 expect(updater.getLastUpdatedSection()).toStrictEqual(new_section);
-                expect(closeEditor).toHaveBeenCalledOnce();
+                expect(editor_closer.hasEditorBeenClosed()).toBe(true);
             });
             describe("when the api call returns an artifact section", () => {
                 it("should call update section from store", async () => {
@@ -91,7 +86,7 @@ describe("useRefreshSection", () => {
                         SectionStateStub.inEditMode(),
                         SectionErrorManagerStub.withExpectedFault(),
                         updater,
-                        closeEditor,
+                        SectionEditorCloserStub.withExpectedCall(),
                     );
 
                     refreshSection();
@@ -119,7 +114,7 @@ describe("useRefreshSection", () => {
                     SectionStateStub.inEditMode(),
                     error_manager,
                     SectionsUpdaterStub.withNoExpectedCall(),
-                    closeEditor,
+                    SectionEditorCloserStub.withExpectedCall(),
                 );
                 refreshSection();
                 await flushPromises();
@@ -133,7 +128,7 @@ describe("useRefreshSection", () => {
                     section_state,
                     SectionErrorManagerStub.withExpectedFault(),
                     SectionsUpdaterStub.withNoExpectedCall(),
-                    closeEditor,
+                    SectionEditorCloserStub.withExpectedCall(),
                 );
                 section_state.is_outdated.value = true;
                 expect(section_state.is_outdated.value).toBe(true);

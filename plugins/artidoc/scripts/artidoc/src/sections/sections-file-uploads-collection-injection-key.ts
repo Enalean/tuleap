@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
+import type { FileUploadsCollection } from "@/sections/FileUploadsCollection";
 
-export const UPLOAD_FILE_STORE: StrictInjectionKey<UploadFileStoreType> = Symbol("upload-file");
+export const FILE_UPLOADS_COLLECTION: StrictInjectionKey<FileUploadsCollection> =
+    Symbol("file-uploads-collection");

@@ -25,6 +25,7 @@ import type { UpdateSections } from "@/sections/SectionsUpdater";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { ManageErrorState } from "@/sections/SectionErrorManager";
+import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 
 export type RefreshSection = {
     refreshSection: () => void;
@@ -35,7 +36,7 @@ export function useRefreshSection(
     section_state: SectionState,
     manage_error_state: ManageErrorState,
     update_sections: UpdateSections,
-    close_editor_callback: () => void,
+    close_section_editor: CloseSectionEditor,
 ): RefreshSection {
     function refreshSection(): void {
         if (!isArtifactSection(section.value) && !isFreetextSection(section.value)) {
@@ -47,7 +48,7 @@ export function useRefreshSection(
                 if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
                     update_sections.updateSection(artidoc_section);
                 }
-                close_editor_callback();
+                close_section_editor.closeEditor();
                 section_state.is_just_refreshed.value = true;
             },
             (fault: Fault) => {

@@ -18,47 +18,49 @@
  */
 
 import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
-import { createGettext } from "vue3-gettext";
-import App from "./App.vue";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { createGettext } from "vue3-gettext";
+import { getDatasetItemOrThrow } from "@tuleap/dom";
+import App from "./App.vue";
+
 import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
-import { userLocale } from "@/helpers/user-locale";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { TITLE } from "@/title-injection-key";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
+import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
+import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
+import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
+import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
 import { CONFIGURATION_STORE, initConfigurationStore } from "@/stores/configuration-store";
+import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBusStore,
 } from "@/stores/useOpenConfigurationModalBusStore";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
-import { preventPageLeave } from "@/helpers/on-before-unload";
-import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
-import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
-import { useUploadFileStore } from "@/stores/useUploadFileStore";
-import { UPLOAD_FILE_STORE } from "./stores/upload-file-store-injection-key";
-import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
-import { useNotificationsStore } from "@/stores/useNotificationsStore";
 import {
     OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
     useOpenAddExistingSectionModalBus,
 } from "@/composables/useOpenAddExistingSectionModalBus";
-import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
-import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import {
     REMOVE_FREETEXT_SECTION_MODAL,
     useRemoveFreetextSectionModal,
 } from "@/composables/useRemoveFreetextSectionModal";
+
+import { buildSectionsCollection } from "@/sections/SectionsCollection";
+import { userLocale } from "@/helpers/user-locale";
+import { preventPageLeave } from "@/helpers/on-before-unload";
+import { getFileUploadsCollection } from "@/sections/FileUploadsCollection";
+import { useNotificationsStore } from "@/stores/useNotificationsStore";
+import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
-import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
-import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
 import { getSectionsStatesCollection } from "@/sections/SectionsStatesCollection";
-import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 import { getSectionStateBuilder } from "@/sections/SectionStateBuilder";
+import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -87,9 +89,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selected_tracker = JSON.parse(
         getDatasetItemOrThrow(vue_mount_point, "data-selected-tracker"),
     );
-    const upload_file_store = useUploadFileStore();
+    const file_uploads_colletion = getFileUploadsCollection();
     const states_collection = getSectionsStatesCollection(
-        getSectionStateBuilder(can_user_edit_document, upload_file_store.pending_uploads),
+        getSectionStateBuilder(can_user_edit_document, file_uploads_colletion.pending_uploads),
     );
     const sections_collection = buildSectionsCollection(states_collection);
     const notifications_store = useNotificationsStore();
@@ -111,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     app.provide(SECTIONS_COLLECTION, sections_collection);
     app.provide(SECTIONS_STATES_COLLECTION, states_collection);
-    app.provide(UPLOAD_FILE_STORE, upload_file_store);
+    app.provide(FILE_UPLOADS_COLLECTION, file_uploads_colletion);
     app.provide(NOTIFICATION_STORE, notifications_store);
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document);

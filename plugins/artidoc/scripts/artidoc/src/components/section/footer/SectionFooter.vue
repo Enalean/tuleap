@@ -34,6 +34,7 @@
         <section-editor-save-cancel-buttons
             v-bind:editor="editor"
             v-bind:section_state="section_state"
+            v-bind:close_section_editor="close_section_editor"
         />
     </div>
 </template>
@@ -46,11 +47,13 @@ import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import GenericError from "./GenericError.vue";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 
 const props = defineProps<{
     section: StoredArtidocSection;
     editor: SectionEditor;
     section_state: SectionState;
+    close_section_editor: CloseSectionEditor;
 }>();
 
 const { error_message, is_outdated, is_in_error, is_not_found } = props.section_state;
