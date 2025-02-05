@@ -50,15 +50,12 @@
             />
             <section-header-skeleton v-if="is_loading_sections" class="section-header" />
             <section-description
-                v-bind:editable_description="editable_description"
-                v-bind:readonly_description="getReadonlyDescription()"
-                v-bind:is_edit_mode="section_state.is_section_in_edit_mode.value"
                 v-bind:post_information="section_attachments_manager.getPostInformation()"
                 v-bind:upload_file="upload_file"
                 v-bind:project_id="getProjectId()"
-                v-bind:title="section.value.display_title"
-                v-bind:input_section_content="inputSectionContent"
-                v-bind:is_there_any_change="is_there_any_change"
+                v-bind:section="section"
+                v-bind:section_state="section_state"
+                v-bind:manage_section_editor_state="section_editor_state_manager"
             />
             <section-footer
                 v-bind:editor="editor"
@@ -99,6 +96,7 @@ import { getSectionsRemover } from "@/sections/SectionsRemover";
 import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositionsForSaveRetriever";
 import { getSectionErrorManager } from "@/sections/SectionErrorManager";
 import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
+import { getSectionEditorStateManager } from "@/sections/SectionEditorStateManager";
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -145,6 +143,7 @@ watch(
 );
 
 const section_attachments_manager = getSectionAttachmentFilesManager(props.section, document_id);
+const section_editor_state_manager = getSectionEditorStateManager(props.section, section_state);
 
 const upload_file = useUploadFile(props.section.value.id, section_attachments_manager);
 
@@ -155,8 +154,9 @@ const editor = useSectionEditor(
     props.section,
     section_state,
     getSectionErrorManager(section_state),
+    section_editor_state_manager,
     section_attachments_manager,
-    getPendingSectionsReplacer(sections_collection),
+    getPendingSectionsReplacer(sections_collection, states_collection),
     getSectionsUpdater(sections_collection),
     getSectionsRemover(sections_collection, states_collection),
     getSectionsPositionsForSaveRetriever(sections_collection),
@@ -169,9 +169,6 @@ const editor = useSectionEditor(
 );
 
 const { is_in_error, is_outdated } = section_state;
-
-const { inputSectionContent, is_there_any_change, editable_description, getReadonlyDescription } =
-    editor.editor_section_content;
 
 function getProjectId(): number {
     if (isArtifactSection(props.section.value)) {

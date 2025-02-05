@@ -26,9 +26,10 @@ import { getSectionStateBuilder } from "@/sections/SectionStateBuilder";
 import type { OnGoingUploadFileWithId } from "@/stores/useUploadFileStore";
 import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
 
 describe("SectionStateBuilder", () => {
     let can_user_edit_document: boolean, pending_uploads: Ref<OnGoingUploadFileWithId[]>;
@@ -40,7 +41,7 @@ describe("SectionStateBuilder", () => {
 
     const createState = (section: ArtidocSection): SectionState =>
         getSectionStateBuilder(can_user_edit_document, pending_uploads).forSection(
-            CreateStoredSections.fromArtidocSection(section),
+            ReactiveStoredArtidocSectionStub.fromSection(section),
         );
 
     describe("is_image_upload_allowed", () => {
@@ -76,6 +77,7 @@ describe("SectionStateBuilder", () => {
 
     describe("is_section_editable", () => {
         it.each([
+            ["artifact section", ArtifactSectionFactory.create()],
             ["pending artifact section", PendingArtifactSectionFactory.create()],
             ["freetext section", FreetextSectionFactory.create()],
             ["pending freetext section", FreetextSectionFactory.pending()],
@@ -185,6 +187,52 @@ describe("SectionStateBuilder", () => {
     describe("error_message", () => {
         it("should be an empty string by default", () => {
             expect(createState(FreetextSectionFactory.create()).error_message.value).toBe("");
+        });
+    });
+
+    describe("edited_title", () => {
+        it.each([
+            ["an artifact section", ArtifactSectionFactory.create()],
+            ["a pending artifact section", PendingArtifactSectionFactory.create()],
+            ["a freetext section", FreetextSectionFactory.create()],
+            ["a pending freetext section", FreetextSectionFactory.pending()],
+        ])(
+            "When the section is %s, then it should have the section's display title as default value",
+            (section_type, section) => {
+                expect(createState(section).edited_title.value).toBe(section.display_title);
+            },
+        );
+    });
+
+    describe("edited_description", () => {
+        it.each([
+            ["an artifact section", ArtifactSectionFactory.create()],
+            ["a pending artifact section", PendingArtifactSectionFactory.create()],
+        ])(
+            "When the section is %s, then it should have the section's HTML description as default value",
+            (section_type, section) => {
+                expect(createState(section).edited_description.value).toBe(
+                    convertDescriptionToHtml(section.description),
+                );
+            },
+        );
+
+        it.each([
+            ["a freetext section", FreetextSectionFactory.create()],
+            ["a pending freetext section", FreetextSectionFactory.pending()],
+        ])(
+            "When the section is %s, then it should have the section's HTML description as default value",
+            (section_type, section) => {
+                expect(createState(section).edited_description.value).toBe(section.description);
+            },
+        );
+    });
+
+    describe("is_editor_reset_needed", () => {
+        it("should be false by default", () => {
+            expect(createState(FreetextSectionFactory.create()).is_editor_reset_needed.value).toBe(
+                false,
+            );
         });
     });
 });

@@ -56,15 +56,15 @@ export const getSectionsInserter = (
                 sections_collection.sections.value,
                 position,
             );
-            const new_section = CreateStoredSections.fromArtidocSection(section);
+            const new_section = ref(CreateStoredSections.fromArtidocSection(section));
             states_collection.createStateForSection(new_section);
 
             if (index === NOT_FOUND) {
-                sections_collection.sections.value.push(ref(new_section));
+                sections_collection.sections.value.push(new_section);
                 return;
             }
 
-            sections_collection.sections.value.splice(index, 0, ref(new_section));
+            sections_collection.sections.value.splice(index, 0, new_section);
         },
     };
 };

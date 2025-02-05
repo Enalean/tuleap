@@ -18,9 +18,9 @@
  */
 
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
-export const skeleton_sections_collection = CreateStoredSections.fromArtidocSectionsCollection([
+export const skeleton_sections_collection = ReactiveStoredArtidocSectionStub.fromCollection([
     ArtifactSectionFactory.skeleton(),
     ArtifactSectionFactory.skeleton(),
     ArtifactSectionFactory.skeleton(),

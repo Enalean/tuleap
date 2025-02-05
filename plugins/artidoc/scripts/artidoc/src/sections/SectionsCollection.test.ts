@@ -21,8 +21,8 @@ import { describe, it, expect } from "vitest";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("SectionsCollection", () => {
     it("should have no sections by default", () => {
@@ -35,25 +35,25 @@ describe("SectionsCollection", () => {
         it("should store loaded sections and create their states", () => {
             const states_collection = SectionsStatesCollectionStub.build();
             const collection = buildSectionsCollection(states_collection);
-            const artifact_section = CreateStoredSections.fromArtidocSection(
+            const artifact_section = ReactiveStoredArtidocSectionStub.fromSection(
                 ArtifactSectionFactory.create(),
             );
-            const freetext_section = CreateStoredSections.fromArtidocSection(
+            const freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
                 FreetextSectionFactory.create(),
             );
 
             collection.replaceAll([artifact_section, freetext_section]);
 
             expect(collection.sections.value).toHaveLength(2);
-            expect(states_collection.getSectionState(freetext_section)).toBeDefined();
-            expect(states_collection.getSectionState(artifact_section)).toBeDefined();
+            expect(states_collection.getSectionState(freetext_section.value)).toBeDefined();
+            expect(states_collection.getSectionState(artifact_section.value)).toBeDefined();
         });
 
         it("should create an internal id because when section are replaced (pending section -> artifact section) the fake id is replaced by the real one and it could mess up the v-for.key", () => {
             const collection = buildSectionsCollection(SectionsStatesCollectionStub.build());
             const section = ArtifactSectionFactory.create();
 
-            collection.replaceAll([CreateStoredSections.fromArtidocSection(section)]);
+            collection.replaceAll([ReactiveStoredArtidocSectionStub.fromSection(section)]);
 
             expect(collection.sections.value[0].value.internal_id).toBeDefined();
             expect(collection.sections.value[0].value.id).toBe(section.id);

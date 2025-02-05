@@ -57,7 +57,7 @@ describe("SectionContent", () => {
             const states_collection = SectionsStatesCollectionStub.build();
             const section = ReactiveStoredArtidocSectionStub.fromSection(factory.create());
 
-            states_collection.createStateForSection(section.value);
+            states_collection.createStateForSection(section);
 
             wrapper = shallowMount(SectionContent, {
                 global: {
@@ -102,7 +102,7 @@ describe("SectionContent", () => {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections(
-                            skeleton_sections_collection,
+                            skeleton_sections_collection.map((section) => section.value),
                         ),
                         [SECTIONS_STATES_COLLECTION.valueOf()]: states_collection,
                         [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,

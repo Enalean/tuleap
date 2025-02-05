@@ -27,7 +27,6 @@ import {
     isFreetextSection,
     isPendingArtifactSection,
     isPendingFreetextSection,
-    isSectionBasedOnArtifact,
 } from "@/helpers/artidoc-section.type";
 import {
     createArtifactSection,
@@ -44,26 +43,16 @@ import type { UpdateSections } from "@/sections/SectionsUpdater";
 import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositionsForSaveRetriever";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ManageErrorState } from "@/sections/SectionErrorManager";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 export type SaveEditor = {
-    forceSave: (
-        section: ArtidocSection,
-        new_value: {
-            description: string;
-            title: string;
-        },
-    ) => void;
-    save: (
-        section: ArtidocSection,
-        new_value: {
-            description: string;
-            title: string;
-        },
-    ) => void;
+    forceSave: () => void;
+    save: () => void;
 };
 
 export default function useSaveSection(
     document_id: number,
+    section: ReactiveStoredArtidocSection,
     section_state: SectionState,
     manage_error_state: ManageErrorState,
     replace_pending_sections: ReplacePendingSections,
@@ -72,44 +61,38 @@ export default function useSaveSection(
     manage_section_attachments: ManageSectionAttachmentFiles,
     closeEditor: () => void,
 ): SaveEditor {
-    function getLatestVersionOfCurrentSection(
-        section: ArtidocSection,
-    ): ResultAsync<ArtidocSection, Fault> {
-        if (isArtifactSection(section) || isFreetextSection(section)) {
-            return getSection(section.id);
+    function getLatestVersionOfCurrentSection(): ResultAsync<ArtidocSection, Fault> {
+        if (isArtifactSection(section.value) || isFreetextSection(section.value)) {
+            return getSection(section.value.id);
         }
 
-        return okAsync(section);
+        return okAsync(section.value);
     }
 
-    function forceSave(
-        section: ArtidocSection,
-        new_value: {
-            description: string;
-            title: string;
-        },
-    ): void {
-        if (!isArtifactSection(section) && !isFreetextSection(section)) {
+    function forceSave(): void {
+        if (!isArtifactSection(section.value) && !isFreetextSection(section.value)) {
             return;
         }
 
         section_state.is_outdated.value = false;
         section_state.is_being_saved.value = true;
 
-        const put = isFreetextSection(section)
-            ? putSection(section.id, new_value.title, new_value.description)
+        const { edited_title, edited_description } = section_state;
+
+        const put = isFreetextSection(section.value)
+            ? putSection(section.value.id, edited_title.value, edited_description.value)
             : putArtifact(
-                  section.artifact.id,
-                  new_value.title,
-                  section.title,
-                  new_value.description,
-                  section.description.field_id,
+                  section.value.artifact.id,
+                  edited_title.value,
+                  section.value.title,
+                  edited_description.value,
+                  section.value.description.field_id,
                   manage_section_attachments.mergeArtifactAttachments(
-                      section,
-                      new_value.description,
+                      section.value,
+                      edited_description.value,
                   ),
               );
-        put.andThen(() => getLatestVersionOfCurrentSection(section)).match(
+        put.andThen(() => getLatestVersionOfCurrentSection()).match(
             (artidoc_section: ArtidocSection) => {
                 if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
                     update_sections.updateSection(artidoc_section);
@@ -125,45 +108,14 @@ export default function useSaveSection(
         );
     }
 
-    const save = (
-        section: ArtidocSection,
-        new_value: {
-            description: string;
-            title: string;
-        },
-    ): void => {
+    const save = (): void => {
         manage_error_state.resetErrorStates();
-
-        if (
-            isSectionBasedOnArtifact(section) &&
-            new_value.description === section.description.value &&
-            new_value.title === section.title.value
-        ) {
-            if (isPendingArtifactSection(section)) {
-                return;
-            }
-
-            section_state.is_section_in_edit_mode.value = false;
-            section_state.is_just_saved.value = true;
-            return;
-        }
-
-        if (
-            isFreetextSection(section) &&
-            new_value.description === section.description &&
-            new_value.title === section.title
-        ) {
-            section_state.is_section_in_edit_mode.value = false;
-            section_state.is_just_saved.value = true;
-            return;
-        }
-
         section_state.is_being_saved.value = true;
 
-        saveSection(section, { description: new_value.description, title: new_value.title }).match(
+        saveSection().match(
             (artidoc_section: ArtidocSection) => {
-                if (isPendingSection(section)) {
-                    replace_pending_sections.replacePendingSection(section, artidoc_section);
+                if (isPendingSection(section.value)) {
+                    replace_pending_sections.replacePendingSection(section.value, artidoc_section);
                 } else if (
                     isArtifactSection(artidoc_section) ||
                     isFreetextSection(artidoc_section)
@@ -182,66 +134,62 @@ export default function useSaveSection(
         );
     };
 
-    function saveSection(
-        section: ArtidocSection,
-        new_value: {
-            description: string;
-            title: string;
-        },
-    ): ResultAsync<ArtidocSection, Fault> {
-        if (isPendingArtifactSection(section)) {
+    function saveSection(): ResultAsync<ArtidocSection, Fault> {
+        const { edited_title, edited_description } = section_state;
+
+        if (isPendingArtifactSection(section.value)) {
             const merged_attachments = manage_section_attachments.mergeArtifactAttachments(
-                section,
-                new_value.description,
+                section.value,
+                edited_description.value,
             );
             return postArtifact(
-                section.tracker,
-                new_value.title,
-                section.title,
-                new_value.description,
-                section.description.field_id,
+                section.value.tracker,
+                edited_title.value,
+                section.value.title,
+                edited_description.value,
+                section.value.description.field_id,
                 merged_attachments,
             ).andThen(({ id }) =>
                 createArtifactSection(
                     document_id,
                     id,
-                    retrieve_positions.getSectionPositionForSave(section),
+                    retrieve_positions.getSectionPositionForSave(section.value),
                 ),
             );
         }
 
-        if (isPendingFreetextSection(section)) {
+        if (isPendingFreetextSection(section.value)) {
             return createFreetextSection(
                 document_id,
-                new_value.title,
-                new_value.description,
-                retrieve_positions.getSectionPositionForSave(section),
+                edited_title.value,
+                edited_description.value,
+                retrieve_positions.getSectionPositionForSave(section.value),
             );
         }
 
-        return getSectionInItsLatestVersion(section)
+        return getSectionInItsLatestVersion(section.value)
             .andThen(() => {
-                if (!isArtifactSection(section) && !isFreetextSection(section)) {
+                if (!isArtifactSection(section.value) && !isFreetextSection(section.value)) {
                     return errAsync(
                         Fault.fromMessage("Save of new section is not implemented yet"),
                     );
                 }
 
-                return isFreetextSection(section)
-                    ? putSection(section.id, new_value.title, new_value.description)
+                return isFreetextSection(section.value)
+                    ? putSection(section.value.id, edited_title.value, edited_description.value)
                     : putArtifact(
-                          section.artifact.id,
-                          new_value.title,
-                          section.title,
-                          new_value.description,
-                          section.description.field_id,
+                          section.value.artifact.id,
+                          edited_title.value,
+                          section.value.title,
+                          edited_description.value,
+                          section.value.description.field_id,
                           manage_section_attachments.mergeArtifactAttachments(
-                              section,
-                              new_value.description,
+                              section.value,
+                              edited_description.value,
                           ),
                       );
             })
-            .andThen(() => getLatestVersionOfCurrentSection(section));
+            .andThen(() => getLatestVersionOfCurrentSection());
     }
 
     return {

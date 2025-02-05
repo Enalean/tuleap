@@ -20,13 +20,13 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import { AT_THE_END, getSectionsInserter } from "@/sections/SectionsInserter";
 import type { InsertSections } from "@/sections/SectionsInserter";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 const section1 = ArtifactSectionFactory.create();
 const section2 = PendingArtifactSectionFactory.create();
@@ -41,7 +41,7 @@ describe("SectionsInserter", () => {
         states_collection = SectionsStatesCollectionStub.build();
         sections_collection = buildSectionsCollection(states_collection);
         sections_collection.replaceAll(
-            CreateStoredSections.fromArtidocSectionsCollection([section1, section2]),
+            ReactiveStoredArtidocSectionStub.fromCollection([section1, section2]),
         );
 
         inserter = getSectionsInserter(sections_collection, states_collection);

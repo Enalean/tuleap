@@ -30,9 +30,9 @@ import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 import { TITLE } from "@/title-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("PdfExportMenuItem", () => {
     it("should display disabled menuitem if user is anonymous", () => {
@@ -94,10 +94,11 @@ describe("PdfExportMenuItem", () => {
         "should display disabled menuitem when at least one section is in edition mode",
         (section) => {
             const sections_states = SectionsStatesCollectionStub.build();
-            const stored_section = CreateStoredSections.fromArtidocSection(section);
+            const stored_section = ReactiveStoredArtidocSectionStub.fromSection(section);
 
             sections_states.createStateForSection(stored_section);
-            sections_states.getSectionState(stored_section).is_section_in_edit_mode.value = true;
+            sections_states.getSectionState(stored_section.value).is_section_in_edit_mode.value =
+                true;
 
             const wrapper = shallowMount(PdfExportMenuItem, {
                 global: {

@@ -23,6 +23,7 @@ import type {
     PendingFreetextSection,
 } from "@/helpers/artidoc-section.type";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
+import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 
 export type ReplacePendingSections = {
     replacePendingSection(
@@ -33,6 +34,7 @@ export type ReplacePendingSections = {
 
 export const getPendingSectionsReplacer = (
     sections_collection: SectionsCollection,
+    states_collection: SectionsStatesCollection,
 ): ReplacePendingSections => ({
     replacePendingSection(pending, section): void {
         const index = sections_collection.sections.value.findIndex(
@@ -46,5 +48,6 @@ export const getPendingSectionsReplacer = (
             ...section,
             internal_id: sections_collection.sections.value[index].value.internal_id,
         };
+        states_collection.createStateForSection(sections_collection.sections.value[index]);
     },
 });

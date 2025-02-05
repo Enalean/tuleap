@@ -44,9 +44,13 @@ export const watchForNeededPendingSectionInsertion = (
 
         const selected_tracker = tracker.value;
         const is_configured_tracker_valid = isTrackerWithSubmittableSection(selected_tracker);
-        const section = is_configured_tracker_valid
-            ? injectInternalId(PendingArtifactSectionFactory.overrideFromTracker(selected_tracker))
-            : injectInternalId(FreetextSectionFactory.pending());
+        const section = ref(
+            is_configured_tracker_valid
+                ? injectInternalId(
+                      PendingArtifactSectionFactory.overrideFromTracker(selected_tracker),
+                  )
+                : injectInternalId(FreetextSectionFactory.pending()),
+        );
 
         states_collection.createStateForSection(section);
         sections_collection.sections.value.push(ref(section));

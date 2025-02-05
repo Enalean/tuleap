@@ -17,14 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ref } from "vue";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { injectInternalId } from "@/helpers/inject-internal-id";
+import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
 
-export const ReactiveStoredArtidocSectionStub = {
-    fromSection: (artidoc_section: ArtidocSection): ReactiveStoredArtidocSection =>
-        ref(injectInternalId(artidoc_section)),
-    fromCollection: (collection: ArtidocSection[]): ReactiveStoredArtidocSection[] =>
-        collection.map((artidoc_section) => ref(injectInternalId(artidoc_section))),
-};
+export const getSectionHtmlDescription = (section: ReactiveStoredArtidocSection): string =>
+    isSectionBasedOnArtifact(section.value)
+        ? convertDescriptionToHtml(section.value.description)
+        : section.value.description;

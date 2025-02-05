@@ -28,13 +28,13 @@ import type {
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { getSectionsUpdater } from "@/sections/SectionsUpdater";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("SectionsUpdater", () => {
     const getCollectionWithSections = (sections: ArtidocSection[]): SectionsCollection => {
         const collections = buildSectionsCollection(SectionsStatesCollectionStub.build());
-        collections.replaceAll(CreateStoredSections.fromArtidocSectionsCollection(sections));
+        collections.replaceAll(ReactiveStoredArtidocSectionStub.fromCollection(sections));
         return collections;
     };
 

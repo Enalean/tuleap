@@ -65,7 +65,7 @@ getSectionsLoader(strictInject(DOCUMENT_ID))
     .loadSections()
     .match(
         (collection) => {
-            sections_collection.replaceAll(collection);
+            sections_collection.replaceAll(collection.map((section) => ref(section)));
             is_loading_sections.value = false;
 
             const hash = window.location.hash.slice(1);

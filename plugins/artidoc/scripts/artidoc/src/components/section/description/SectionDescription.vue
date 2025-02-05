@@ -24,43 +24,40 @@
         <component
             v-bind:is="async_editor"
             v-bind:post_information="post_information"
-            v-bind:editable_description="editable_description"
-            v-bind:is_edit_mode="is_edit_mode"
             v-bind:upload_file="upload_file"
             v-bind:project_id="project_id"
-            v-bind:title="title"
-            v-bind:input_section_content="input_section_content"
-            v-bind:is_there_any_change="is_there_any_change"
+            v-bind:section="section"
+            v-bind:section_state="section_state"
+            v-bind:manage_section_editor_state="manage_section_editor_state"
             data-test="editor"
         />
     </template>
     <section-description-read-only
         v-if="!is_loading_sections && !can_section_be_edited"
-        v-bind:readonly_value="readonly_description"
+        v-bind:section="section"
     />
 </template>
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, computed } from "vue";
-import { loadTooltips } from "@tuleap/tooltip";
-import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
-import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
-import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { UseUploadFileType } from "@/composables/useUploadFile";
+import { loadTooltips } from "@tuleap/tooltip";
+import type { FileUploadOptions } from "@tuleap/file-upload";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
-import type { FileUploadOptions } from "@tuleap/file-upload";
+import type { UseUploadFileType } from "@/composables/useUploadFile";
+import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
+import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
+import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
 
 defineProps<{
-    title: string;
     post_information: FileUploadOptions["post_information"];
-    editable_description: string;
-    readonly_description: string;
-    is_edit_mode: boolean;
     upload_file: UseUploadFileType;
     project_id: number;
-    input_section_content: EditorSectionContent["inputSectionContent"];
-    is_there_any_change: boolean;
+    section: ReactiveStoredArtidocSection;
+    section_state: SectionState;
+    manage_section_editor_state: ManageSectionEditorState;
 }>();
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);

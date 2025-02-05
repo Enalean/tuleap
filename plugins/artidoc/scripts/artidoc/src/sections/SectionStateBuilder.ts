@@ -26,7 +26,8 @@ import {
     isPendingSection,
 } from "@/helpers/artidoc-section.type";
 import type { OnGoingUploadFileWithId } from "@/stores/useUploadFileStore";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import { getSectionHtmlDescription } from "@/helpers/get-section-html-description";
 
 export type SectionState = {
     is_image_upload_allowed: ComputedRef<boolean>;
@@ -40,52 +41,60 @@ export type SectionState = {
     is_outdated: Ref<boolean>;
     is_not_found: Ref<boolean>;
     error_message: Ref<string>;
+    edited_title: Ref<string>;
+    edited_description: Ref<string>;
+    is_editor_reset_needed: Ref<boolean>;
 };
 
 export type BuildSectionState = {
-    forSection(section: StoredArtidocSection): SectionState;
+    forSection(section: ReactiveStoredArtidocSection): SectionState;
 };
 
 export const getSectionStateBuilder = (
     can_user_edit_document: boolean,
     pending_uploads: Ref<OnGoingUploadFileWithId[]>,
-): BuildSectionState => ({
-    forSection: (section: StoredArtidocSection): SectionState => ({
-        is_image_upload_allowed: computed(() => {
-            if (isFreetextSection(section)) {
+): BuildSectionState => {
+    return {
+        forSection: (section: ReactiveStoredArtidocSection): SectionState => ({
+            is_image_upload_allowed: computed(() => {
+                if (isFreetextSection(section.value)) {
+                    return false;
+                }
+                return (
+                    section.value.attachments !== null &&
+                    undefined !== section.value.attachments.field_id &&
+                    0 !== section.value.attachments?.field_id
+                );
+            }),
+            is_section_editable: computed(() => {
+                if (isPendingArtifactSection(section.value) || isFreetextSection(section.value)) {
+                    return can_user_edit_document;
+                }
+
+                if (isArtifactSection(section.value) && section.value.can_user_edit_section) {
+                    return can_user_edit_document;
+                }
+
                 return false;
-            }
-            return (
-                section.attachments !== null &&
-                undefined !== section.attachments.field_id &&
-                0 !== section.attachments?.field_id
-            );
+            }),
+            is_save_allowed: computed(() => {
+                return (
+                    pending_uploads.value.filter(
+                        (upload: OnGoingUploadFileWithId) => upload.section_id === section.value.id,
+                    ).length === 0
+                );
+            }),
+            is_section_in_edit_mode: ref(isPendingSection(section.value)),
+            is_just_refreshed: ref(false),
+            is_being_saved: ref(false),
+            is_just_saved: ref(false),
+            is_in_error: ref(false),
+            is_outdated: ref(false),
+            is_not_found: ref(false),
+            error_message: ref(""),
+            edited_title: ref(section.value.display_title),
+            edited_description: ref(getSectionHtmlDescription(section)),
+            is_editor_reset_needed: ref(false),
         }),
-        is_section_editable: computed(() => {
-            if (isPendingArtifactSection(section) || isFreetextSection(section)) {
-                return can_user_edit_document;
-            }
-
-            if (isArtifactSection(section) && section.can_user_edit_section) {
-                return can_user_edit_document;
-            }
-
-            return false;
-        }),
-        is_save_allowed: computed(() => {
-            return (
-                pending_uploads.value.filter(
-                    (upload: OnGoingUploadFileWithId) => upload.section_id === section.id,
-                ).length === 0
-            );
-        }),
-        is_section_in_edit_mode: ref(isPendingSection(section)),
-        is_just_refreshed: ref(false),
-        is_being_saved: ref(false),
-        is_just_saved: ref(false),
-        is_in_error: ref(false),
-        is_outdated: ref(false),
-        is_not_found: ref(false),
-        error_message: ref(""),
-    }),
-});
+    };
+};
