@@ -85,6 +85,14 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=crosstrackersearch]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
+        updateSearchQuery(
+            `SELECT @pretty_title FROM @project.name = "${project_name}" WHERE @id >= 1`,
+        );
+        cy.log("Save results");
+        cy.get("[data-test=cross-tracker-save-report]").click();
+        cy.get("[data-test=cross-tracker-report-success]");
+        cy.reload();
+
         cy.intercept("/api/v1/cross_tracker_reports/*/content*").as("getReportContent");
 
         cy.log("Regular user should be able to run queries");

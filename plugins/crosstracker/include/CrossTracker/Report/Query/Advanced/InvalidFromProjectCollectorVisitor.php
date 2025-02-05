@@ -150,7 +150,7 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
 
     private function checkProjectAggregated(InvalidFromProjectCollectorParameters $parameters): void
     {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($parameters->report_id);
         if ($row === null || $row['dashboard_type'] !== 'project') {
             $parameters->collection->addInvalidFrom(dgettext(
                 'tuleap-crosstracker',

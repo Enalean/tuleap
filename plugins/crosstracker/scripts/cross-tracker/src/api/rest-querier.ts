@@ -23,14 +23,16 @@ import type { Fault } from "@tuleap/fault";
 import type { Report } from "../type";
 import type { ReportRepresentation } from "./cross-tracker-rest-api-types";
 
-export function getReport(report_id: number): ResultAsync<Report, Fault> {
-    return getJSON<ReportRepresentation>(uri`/api/v1/cross_tracker_reports/${report_id}`).map(
-        (report): Report => {
+export function getReports(report_id: number): ResultAsync<ReadonlyArray<Report>, Fault> {
+    return getJSON<ReadonlyArray<ReportRepresentation>>(
+        uri`/api/v1/cross_tracker_reports/${report_id}`,
+    ).map((reports): ReadonlyArray<Report> => {
+        return reports.map((report) => {
             return {
                 expert_query: report.expert_query,
             };
-        },
-    );
+        });
+    });
 }
 
 export function updateReport(report_id: number, expert_query: string): ResultAsync<Report, Fault> {

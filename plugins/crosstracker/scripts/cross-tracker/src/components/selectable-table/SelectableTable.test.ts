@@ -102,6 +102,7 @@ describe(`SelectableTable`, () => {
             },
             props: {
                 writing_cross_tracker_report,
+                there_is_no_query: false,
             },
         });
     };

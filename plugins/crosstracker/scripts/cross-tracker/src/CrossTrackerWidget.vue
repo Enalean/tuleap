@@ -51,7 +51,10 @@
         />
     </section>
     <section class="tlp-pane-section" v-if="!is_loading">
-        <selectable-table v-bind:writing_cross_tracker_report="writing_cross_tracker_report" />
+        <selectable-table
+            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+            v-bind:there_is_no_query="there_is_no_query"
+        />
     </section>
 </template>
 <script setup lang="ts">
@@ -61,7 +64,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import ReadingMode from "./components/reading-mode/ReadingMode.vue";
 import WritingMode from "./components/writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
-import { getReport } from "./api/rest-querier";
+import { getReports } from "./api/rest-querier";
 import type { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
 import type { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
 import type { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
@@ -93,6 +96,7 @@ const props = defineProps<{
 const report_state = ref<ReportState>("report-saved");
 provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
+const there_is_no_query = ref(true);
 
 const is_reading_mode_shown = computed(
     () =>
@@ -125,10 +129,21 @@ function initReports(): void {
 
 function loadBackendReport(): void {
     is_loading.value = true;
-    getReport(report_id)
+    getReports(report_id)
         .match(
-            (report: Report) => {
-                props.backend_cross_tracker_report.init(report.expert_query);
+            (reports: ReadonlyArray<Report>) => {
+                if (reports.length === 0) {
+                    there_is_no_query.value = true;
+                    props.backend_cross_tracker_report.init("");
+                    initReports();
+                    if (is_user_admin) {
+                        report_state.value = "edit-query";
+                    }
+
+                    return;
+                }
+                there_is_no_query.value = false;
+                props.backend_cross_tracker_report.init(reports[0].expert_query);
                 initReports();
             },
             (fault) => {

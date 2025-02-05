@@ -25,5 +25,8 @@ namespace Tuleap\CrossTracker\Report;
 interface RetrieveReport
 {
     /** @return array{id: int, query: string, title: string, description: string}|null */
-    public function searchReportById(int $report_id): ?array;
+    public function searchWidgetById(int $widget_id): ?array;
+
+    /** @return list<array{id: int, query: string, title: string, description: string}> */
+    public function searchQueriesByWidgetId(int $widget_id): array;
 }

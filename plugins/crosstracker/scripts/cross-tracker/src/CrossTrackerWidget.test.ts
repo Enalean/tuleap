@@ -48,13 +48,15 @@ describe("CrossTrackerWidget", () => {
         writing_cross_tracker_report = new WritingCrossTrackerReport();
         is_user_admin = true;
 
-        vi.spyOn(rest_querier, "getReport").mockReturnValue(
-            okAsync({
-                trackers: [],
-                expert_query: "",
-                invalid_trackers: [],
-                expert_mode: false,
-            }),
+        vi.spyOn(rest_querier, "getReports").mockReturnValue(
+            okAsync([
+                {
+                    trackers: [],
+                    expert_query: "",
+                    invalid_trackers: [],
+                    expert_mode: false,
+                },
+            ]),
         );
     });
 
@@ -199,7 +201,7 @@ describe("CrossTrackerWidget", () => {
     describe("loadBackendReport()", () => {
         it("When I load the report, then the reports will be initialized", async () => {
             const expert_query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
-            vi.spyOn(rest_querier, "getReport").mockReturnValue(okAsync({ expert_query }));
+            vi.spyOn(rest_querier, "getReports").mockReturnValue(okAsync([{ expert_query }]));
             const init = vi.spyOn(backend_cross_tracker_report, "init");
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
@@ -212,13 +214,27 @@ describe("CrossTrackerWidget", () => {
         });
 
         it("When there is a REST error, it will be shown", async () => {
-            vi.spyOn(rest_querier, "getReport").mockReturnValue(
+            vi.spyOn(rest_querier, "getReports").mockReturnValue(
                 errAsync(Fault.fromMessage("Report 41 not found")),
             );
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.current_fault.unwrapOr(null)?.isReportRetrieval()).toBe(true);
+        });
+
+        it("Force edit mode when widget has no query", async () => {
+            vi.spyOn(rest_querier, "getReports").mockReturnValue(okAsync([]));
+            const init = vi.spyOn(backend_cross_tracker_report, "init");
+            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
+            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
+            const wrapper = getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(init).toHaveBeenCalledWith("");
+            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
+            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
+            expect(wrapper.vm.report_state).toBe("edit-query");
         });
     });
 
@@ -250,7 +266,7 @@ describe("CrossTrackerWidget", () => {
 
         it(`when user is admin and there is an error selected in the report,
             it does not allow XLSX export`, async () => {
-            vi.spyOn(rest_querier, "getReport").mockReturnValue(okAsync({ expert_query: "" }));
+            vi.spyOn(rest_querier, "getReports").mockReturnValue(okAsync([{ expert_query: "" }]));
 
             const wrapper = getWrapper();
             wrapper.vm.current_fault = Option.fromValue(Fault.fromMessage("Ooops"));

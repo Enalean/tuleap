@@ -58,13 +58,13 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
 
     private function checkUserIsAllowedToSeeReport(): void
     {
-        $user_is_allowed_to_see_report_checker = new UserIsAllowedToSeeReportChecker(
+        $user_is_allowed_to_see_report_checker = new UserIsAllowedToSeeWidgetChecker(
             $this->cross_tracker_dao,
             $this->project_manager,
             $this->url_verification
         );
 
-        $user_is_allowed_to_see_report_checker->checkUserIsAllowedToSeeReport(
+        $user_is_allowed_to_see_report_checker->checkUserIsAllowedToSeeWidget(
             $this->user,
             new CrossTrackerExpertReport(
                 1,

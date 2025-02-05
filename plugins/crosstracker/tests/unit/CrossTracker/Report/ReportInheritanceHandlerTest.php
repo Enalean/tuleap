@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Report;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
-use Tuleap\CrossTracker\Tests\Stub\Report\CloneReportStub;
+use Tuleap\CrossTracker\Tests\Stub\Report\CloneWidgetStub;
 use Tuleap\CrossTracker\Tests\Stub\Report\RetrieveReportStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -32,13 +32,13 @@ final class ReportInheritanceHandlerTest extends TestCase
 {
     private const TEMPLATE_REPORT_ID = 90;
     private const CLONED_REPORT_ID   = 95;
-    private CloneReportStub $report_cloner;
+    private CloneWidgetStub $report_cloner;
     private TestLogger $logger;
     private array $template_report;
 
     protected function setUp(): void
     {
-        $this->report_cloner   = CloneReportStub::withClonedReportMap(
+        $this->report_cloner   = CloneWidgetStub::withClonedReportMap(
             [self::TEMPLATE_REPORT_ID => self::CLONED_REPORT_ID]
         );
         $this->logger          = new TestLogger();

@@ -19,8 +19,7 @@
  */
 
 use Tuleap\Config\GetConfigKeys;
-use Tuleap\CrossTracker\CrossTrackerReportCreator;
-use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
@@ -77,10 +76,10 @@ class crosstrackerPlugin extends Plugin
     public function widgetInstance(GetWidget $get_widget_event): void
     {
         if ($get_widget_event->getName() === ProjectCrossTrackerSearch::NAME) {
-            $report_dao = new CrossTrackerReportDao();
+            $report_dao = new CrossTrackerWidgetDao();
             $get_widget_event->setWidget(
                 new ProjectCrossTrackerSearch(
-                    new CrossTrackerReportCreator($report_dao),
+                    $report_dao,
                     new ReportInheritanceHandler(
                         new CrossTrackerReportFactory($report_dao),
                         $report_dao,

@@ -202,6 +202,9 @@ msgstr ""
 "Dans le contexte d'un tableau de bord personnel, vous devez fournir une "
 "condition sur @project dans la partie FROM de votre requête"
 
+msgid "My query"
+msgstr "Ma requête"
+
 msgid "No tracker found"
 msgstr "Aucun outils de suivi trouvé"
 
