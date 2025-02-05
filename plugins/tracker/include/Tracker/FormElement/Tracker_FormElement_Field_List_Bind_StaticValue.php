@@ -22,11 +22,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElement_Field_List_BindValue
 {
-    /**
-     *
-     * @var string
-     */
-    protected $label;
+    protected string $label;
 
     /**
      *
@@ -43,14 +39,14 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
     public function __construct($id, $label, $description, $rank, $is_hidden)
     {
         parent::__construct($id, $is_hidden);
-        $this->label       = $label;
+        $this->setLabel($label);
         $this->description = $description;
         $this->rank        = $rank;
     }
 
     public function __toString(): string
     {
-        return $this->label ? $this->label : '';
+        return $this->label;
     }
 
     /**
