@@ -24,6 +24,7 @@ import { EVENT_TLP_MODAL_WILL_HIDE } from "@tuleap/tlp-modal";
 import {
     CurrentProjectIdentifier,
     CurrentTrackerIdentifier,
+    ParentArtifactIdentifier,
 } from "@tuleap/plugin-tracker-artifact-common";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
@@ -36,7 +37,6 @@ import { ParentFeedbackController } from "./domain/parent/ParentFeedbackControll
 import { LinkFieldController } from "./domain/fields/link-field/LinkFieldController";
 import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
 import { LinksRetriever } from "./domain/fields/link-field/LinksRetriever";
-import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
 import { LinksMarkedForRemovalStore } from "./adapters/Memory/fields/link-field/LinksMarkedForRemovalStore";
 import { LinksStore } from "./adapters/Memory/fields/link-field/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
@@ -120,8 +120,8 @@ function ArtifactModalController(
     const new_links_store = NewLinksStore();
     const possible_parents_cache = PossibleParentsCache(link_field_api_client);
     const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
-    const parent_artifact_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
-        modal_model.parent_artifact_id,
+    const parent_artifact_identifier = Option.fromNullable(modal_model.parent_artifact_id).map(
+        ParentArtifactIdentifier.fromId,
     );
     const current_tracker_identifier = CurrentTrackerIdentifier.fromId(modal_model.tracker_id);
     const file_uploader = FileFieldsUploader(api_client, FileUploader());

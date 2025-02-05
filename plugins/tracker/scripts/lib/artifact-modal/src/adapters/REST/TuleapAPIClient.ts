@@ -26,10 +26,12 @@ import type {
     JustCreatedArtifactResponse,
     PostFileResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
-import type { CurrentProjectIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import type {
+    CurrentProjectIdentifier,
+    ParentArtifactIdentifier,
+} from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
-import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
 import type { CreateFileUpload } from "../../domain/fields/file-field/CreateFileUpload";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";

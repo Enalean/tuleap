@@ -24,6 +24,7 @@ import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constan
 import {
     CurrentProjectIdentifier,
     CurrentTrackerIdentifier,
+    ParentArtifactIdentifier,
 } from "@tuleap/plugin-tracker-artifact-common";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
@@ -50,8 +51,6 @@ import type { LinkType } from "./LinkType";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "./LinkType";
 import { RetrievePossibleParentsStub } from "../../../../tests/stubs/RetrievePossibleParentsStub";
 import type { RetrievePossibleParents } from "./RetrievePossibleParents";
-import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdentifier";
-import { ParentArtifactIdentifierStub } from "../../../../tests/stubs/ParentArtifactIdentifierStub";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -139,7 +138,7 @@ describe(`LinkFieldController`, () => {
 
     describe(`hasParentLink()`, () => {
         it(`returns true when the artifact under creation was given a parent by the caller of the modal`, () => {
-            parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifierStub.withId(318));
+            parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifier.fromId(318));
             expect(getController().hasParentLink([], [])).toBe(true);
         });
 
@@ -216,7 +215,7 @@ describe(`LinkFieldController`, () => {
 
         it(`When the artifact under creation was given a parent by the caller of the modal,
             then it will return the untyped link type`, () => {
-            parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifierStub.withId(123));
+            parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifier.fromId(123));
             parent_tracker_identifier = Option.fromValue(ParentTrackerIdentifierStub.withId(88));
 
             const selected_link_type = getController().getCurrentLinkType(true, [], []);
