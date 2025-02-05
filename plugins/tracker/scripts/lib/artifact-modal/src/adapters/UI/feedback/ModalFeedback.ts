@@ -72,18 +72,22 @@ export const renderModalFeedback = (host: ModalFeedback): UpdateFunction<ModalFe
 
 export const ModalFeedback = define<ModalFeedback>({
     tag: "modal-feedback",
-    parentController: (host, controller: ParentFeedbackControllerType) => {
-        controller
-            .getParentArtifact()
-            .then((parent_option) => (host.parent_option = parent_option));
-        return controller;
+    parentController: {
+        value: (host, controller) => controller,
+        observe(host, controller) {
+            controller
+                .getParentArtifact()
+                .then((parent_option) => (host.parent_option = parent_option));
+        },
     },
-    faultController: (host, controller: FaultFeedbackControllerType) => {
-        const formatter = ErrorMessageFormatter();
-        controller.registerFaultListener((fault_option) => {
-            host.error_message_option = fault_option.map(formatter.format);
-        });
-        return controller;
+    faultController: {
+        value: (host, controller) => controller,
+        observe(host, controller) {
+            const formatter = ErrorMessageFormatter();
+            controller.registerFaultListener((fault_option) => {
+                host.error_message_option = fault_option.map(formatter.format);
+            });
+        },
     },
     parent_option: (host, new_value) => new_value ?? Option.nothing(),
     error_message_option: (host, new_value) => new_value ?? Option.nothing(),
