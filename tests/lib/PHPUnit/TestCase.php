@@ -22,13 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\PHPUnit;
 
-use PHPUnit\Framework\MockObject\MockBuilder;
-
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    final public function getMockBuilder(string $class_name): MockBuilder
-    {
-        return parent::getMockBuilder($class_name)
-            ->disableAutoReturnValueGeneration();
-    }
 }

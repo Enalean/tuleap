@@ -211,20 +211,22 @@ final class FrontRouterTest extends TestCase
         $this->router->route($this->request);
     }
 
-    public function testItRaisesAnErrorWhenHandlerIsUnknown(): void
+    public function testItRaisesAnErrorWhenHandlerThrows(): void
     {
-        $handler = $this->createMock(DispatchableWithRequest::class);
-
         $url_verification = $this->createMock(URLVerification::class);
         $url_verification->expects(self::once())->method('assertValidUrl')->with(self::anything(), $this->request, null);
         $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
         $this->request_instrumentation->expects(self::once())->method('increment');
 
-        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
-            $r->get('/stuff', function () use ($handler) {
-                return $handler;
+        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r): true {
+            $r->get('/stuff', function (): DispatchableWithRequest {
+                return new class implements DispatchableWithRequest {
+                    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+                    {
+                        throw new Exception('Failure');
+                    }
+                };
             });
-
             return true;
         }));
 
@@ -241,7 +243,29 @@ final class FrontRouterTest extends TestCase
         );
 
         $this->router->route($this->request);
-        $this->logger->hasErrorRecords();
+        self::assertTrue($this->logger->hasErrorRecords());
+    }
+
+    public function testRaisesAnErrorWhenNoHandlerFound(): void
+    {
+        $this->request->method('isAjax')->willReturn(false);
+
+        $this->request_instrumentation->expects(self::once())->method('increment');
+
+        $this->route_collector->method('collect');
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/does_not_exist';
+
+        $this->error_rendering->expects(self::once())->method('rendersError')->with(
+            self::anything(),
+            self::anything(),
+            404,
+            self::anything(),
+            self::anything(),
+        );
+
+        $this->router->route($this->request);
     }
 
     public function testItDispatchWithProject(): void
@@ -499,7 +523,7 @@ final class FrontRouterTest extends TestCase
             );
 
         $this->router->route($this->request);
-        $this->logger->hasErrorThatContains('Caught exception');
+        self::assertTrue($this->logger->hasErrorThatContains('Caught exception'));
     }
 
     public function testHttpStatusCodeIs500IfTheExceptionDoesNotImplementCodeIsAValidHTTPStatus(): void
@@ -544,6 +568,6 @@ final class FrontRouterTest extends TestCase
             );
 
         $this->router->route($this->request);
-        $this->logger->hasErrorThatContains('Caught exception');
+        self::assertTrue($this->logger->hasErrorThatContains('Caught exception'));
     }
 }
