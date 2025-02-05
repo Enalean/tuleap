@@ -235,16 +235,9 @@ const initListPickers = (host: InternalArtifactCreator): DisconnectFunction => {
     };
 };
 
-export const setErrorMessage = (
-    host: InternalArtifactCreator,
-    new_value: Option<string> | undefined,
-): Option<string> => {
-    if (new_value) {
-        host.render().querySelector("[data-form]")?.scrollIntoView({ block: "center" });
-        return new_value;
-    }
-    return Option.nothing();
-};
+export function onErrorMessageChange(host: InternalArtifactCreator): void {
+    host.render().querySelector("[data-form]")?.scrollIntoView({ block: "center" });
+}
 
 export const renderArtifactCreatorElement = (
     host: InternalArtifactCreator,
@@ -359,7 +352,10 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     available_types: (host, available_types) => available_types,
     current_link_type: (host, current_link_type) => current_link_type,
     is_loading: false,
-    error_message: setErrorMessage,
+    error_message: {
+        value: (host, error_message) => error_message ?? Option.nothing(),
+        observe: onErrorMessageChange,
+    },
     show_error_details: false,
     projects: (host, new_value) => new_value ?? [],
     trackers: (host, new_value) => new_value ?? [],
