@@ -43,6 +43,7 @@ use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\Domain\Document\Section\EmptyTitleFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Domain\Document\Section\SectionCreator;
 use Tuleap\Artidoc\Domain\Document\Section\SectionRetriever;
@@ -284,8 +285,13 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(400, 'Sibling section id is invalid');
         }
 
+        $level = Level::tryFrom($section->level);
+        if ($level === null) {
+            throw new RestException(400, 'Unknown level. Allowed values: ' . implode(', ', Level::allowed()));
+        }
+
         return $this->getSectionCreator($user, $collector)
-            ->create($artidoc_id, $before_section_id, ContentToBeCreatedBuilder::buildFromRepresentation($section))
+            ->create($artidoc_id, $before_section_id, $level, ContentToBeCreatedBuilder::buildFromRepresentation($section))
             ->andThen(
                 fn (SectionIdentifier $section_identifier) =>
                 $this->getSectionRetriever($user, $collector)

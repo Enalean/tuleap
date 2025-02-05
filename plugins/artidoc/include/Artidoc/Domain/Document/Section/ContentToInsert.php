@@ -37,22 +37,25 @@ final readonly class ContentToInsert
     private function __construct(
         public Option $artifact_id,
         public Option $freetext,
+        public Level $level,
     ) {
     }
 
-    public static function fromArtifactId(int $artifact_id): self
+    public static function fromArtifactId(int $artifact_id, Level $level): self
     {
         return new self(
             Option::fromValue($artifact_id),
             Option::nothing(FreetextContent::class),
+            $level,
         );
     }
 
-    public static function fromFreetext(FreetextContent $freetext): self
+    public static function fromFreetext(FreetextContent $freetext, Level $level): self
     {
         return new self(
             Option::nothing(\Psl\Type\int()),
             Option::fromValue($freetext),
+            $level,
         );
     }
 }

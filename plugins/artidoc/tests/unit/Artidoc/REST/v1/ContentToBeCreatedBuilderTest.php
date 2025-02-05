@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use function PHPUnit\Framework\assertSame;
@@ -36,7 +37,8 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         $section = new ArtidocSectionPOSTRepresentation(
             new ArtidocPOSTSectionArtifactRepresentation(101),
             null,
-            new POSTContentSectionRepresentation('title', 'description', 'freetext')
+            new POSTContentSectionRepresentation('title', 'description', 'freetext'),
+            Level::One->value,
         );
         $this->expectException(RestException::class);
         $this->expectExceptionMessage("The properties 'artifact' and 'content' can not be used at the same time");
@@ -46,7 +48,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
     public function testItThrowsWhenArtifactAndContentAreBothAbsent(): void
     {
-        $section = new ArtidocSectionPOSTRepresentation(null, null, null);
+        $section = new ArtidocSectionPOSTRepresentation(null, null, null, Level::One->value);
         $this->expectException(RestException::class);
         $this->expectExceptionMessage('No artifact id or section content provided');
 
@@ -59,7 +61,8 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         $section = new ArtidocSectionPOSTRepresentation(
             new ArtidocPOSTSectionArtifactRepresentation($id),
             null,
-            null
+            null,
+            Level::One->value,
         );
 
         $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
@@ -80,7 +83,8 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         $section = new ArtidocSectionPOSTRepresentation(
             null,
             null,
-            new POSTContentSectionRepresentation('title', 'description', 'freetext')
+            new POSTContentSectionRepresentation('title', 'description', 'freetext'),
+            Level::One->value,
         );
 
         $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);

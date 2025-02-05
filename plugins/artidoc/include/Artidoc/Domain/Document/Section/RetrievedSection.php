@@ -29,7 +29,7 @@ final readonly class RetrievedSection
 {
     private function __construct(
         public SectionIdentifier $id,
-        public int $level,
+        public Level $level,
         public int $item_id,
         public RetrievedSectionContent $content,
         public int $rank,
@@ -43,7 +43,7 @@ final readonly class RetrievedSection
     {
         return new self(
             $row['id'],
-            $row['level'],
+            Level::from($row['level']),
             $row['item_id'],
             RetrievedSectionContent::fromArtifact($row['artifact_id']),
             $row['rank'],
@@ -57,7 +57,7 @@ final readonly class RetrievedSection
     {
         return new self(
             $row['id'],
-            $row['level'],
+            Level::from($row['level']),
             $row['item_id'],
             RetrievedSectionContent::fromFreetext($row['freetext_id'], $row['freetext_title'], $row['freetext_description']),
             $row['rank'],

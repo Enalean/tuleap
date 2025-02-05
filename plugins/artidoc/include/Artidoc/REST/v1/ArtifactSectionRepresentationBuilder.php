@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -33,8 +34,12 @@ final class ArtifactSectionRepresentationBuilder implements BuildArtifactSection
     {
     }
 
-    public function build(RequiredArtifactInformation $artifact_information, SectionIdentifier $section_identifier, int $level, \PFUser $user): ArtifactSectionRepresentation
-    {
+    public function build(
+        RequiredArtifactInformation $artifact_information,
+        SectionIdentifier $section_identifier,
+        Level $level,
+        \PFUser $user,
+    ): ArtifactSectionRepresentation {
         $can_user_edit_section = $artifact_information->title_field->userCanUpdate($user)
             && $artifact_information->description_field->userCanUpdate($user);
 
@@ -50,7 +55,7 @@ final class ArtifactSectionRepresentationBuilder implements BuildArtifactSection
 
         return new ArtifactSectionRepresentation(
             $section_identifier->toString(),
-            $level,
+            $level->value,
             ArtifactReference::build($artifact),
             $artifact_information->title,
             $artifact_information->description,

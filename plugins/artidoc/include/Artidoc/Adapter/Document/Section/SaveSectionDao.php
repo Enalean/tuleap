@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\SaveOneSection;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\NeverThrow\Err;
@@ -61,9 +62,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
                 $item_id,
             ) ?: 0;
 
-            $level = 1;
-
-            return $this->insertSection($db, $item_id, $content, $rank, $level);
+            return $this->insertSection($db, $item_id, $content, $rank, $content->level);
         });
     }
 
@@ -100,16 +99,14 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
                 $rank,
             );
 
-            $level = 1;
-
-            return $this->insertSection($db, $item_id, $content, $rank, $level);
+            return $this->insertSection($db, $item_id, $content, $rank, $content->level);
         });
     }
 
     /**
      * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    private function insertSection(EasyDB $db, int $item_id, ContentToInsert $content, int $rank, int $level): Ok|Err
+    private function insertSection(EasyDB $db, int $item_id, ContentToInsert $content, int $rank, Level $level): Ok|Err
     {
         return $content->artifact_id
             ->match(
@@ -124,7 +121,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
     /**
      * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    private function insertArtifactSection(EasyDB $db, int $item_id, int $artifact_id, int $rank, int $level): Ok|Err
+    private function insertArtifactSection(EasyDB $db, int $item_id, int $artifact_id, int $rank, Level $level): Ok|Err
     {
         if (
             $db->cell(
@@ -159,7 +156,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
                 'artifact_id' => $artifact_id,
                 'freetext_id' => null,
                 'rank'        => $rank,
-                'level'       => $level,
+                'level'       => $level->value,
             ]
         );
 
@@ -169,7 +166,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
     /**
      * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    private function insertFreetextSection(EasyDB $db, int $item_id, FreetextContent $content, int $rank, int $level): Ok|Err
+    private function insertFreetextSection(EasyDB $db, int $item_id, FreetextContent $content, int $rank, Level $level): Ok|Err
     {
         $freetext_id = $this->freetext_identifier_factory->buildIdentifier()->getBytes();
         $db->insert(
@@ -198,7 +195,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
                 'artifact_id' => null,
                 'freetext_id' => $freetext_id,
                 'rank'        => $rank,
-                'level'       => $level,
+                'level'       => $level->value,
             ]
         );
 

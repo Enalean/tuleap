@@ -281,6 +281,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                                 'artifact' => ['id' => $section_id],
                                 'position' => null,
                                 'content' => null,
+                                'level' => 1,
                             ],
                         ],
                         JSON_THROW_ON_ERROR
@@ -314,6 +315,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                         'artifact' => ['id' => $section_3_art_id],
                         'position' => null,
                         'content' => null,
+                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
@@ -343,6 +345,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             'before' => $new_section_id,
                         ],
                         'content' => null,
+                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
@@ -374,6 +377,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             'description' => 'My freetext description',
                             'type' => 'freetext',
                         ],
+                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
@@ -765,6 +769,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             'description' => 'My freetext description',
                             'type' => 'freetext',
                         ],
+                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),

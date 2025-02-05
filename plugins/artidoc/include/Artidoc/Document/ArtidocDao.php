@@ -40,7 +40,7 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
     {
         $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($source_id, $target_id) {
             $rows = $db->run(
-                'SELECT artifact_id, freetext_id, `rank`
+                'SELECT artifact_id, freetext_id, `rank`, level
                 FROM plugin_artidoc_section AS section
                     INNER JOIN plugin_artidoc_section_version AS section_version
                         ON (section.id = section_version.section_id)
@@ -65,6 +65,7 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
                             'artifact_id' => $row['artifact_id'],
                             'freetext_id' => null,
                             'rank'        => $row['rank'],
+                            'level'       =>  $row['level'],
                         ]
                     );
                 } elseif ($row['freetext_id'] !== null) {
@@ -96,6 +97,7 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
                             'artifact_id' => null,
                             'freetext_id' => $freetext_id,
                             'rank'        => $row['rank'],
+                            'level'       =>  $row['level'],
                         ]
                     );
                 }

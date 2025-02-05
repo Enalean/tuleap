@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -68,7 +69,7 @@ final readonly class SectionRepresentationBuilder
 
     private function getSectionRepresentationForFreetext(
         SectionIdentifier $section_identifier,
-        int $level,
+        Level $level,
         RetrievedSectionContentFreetext $freetext,
     ): SectionRepresentation {
         return FreetextSectionRepresentation::fromRetrievedSectionContentFreetext(
