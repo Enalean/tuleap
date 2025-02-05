@@ -47,8 +47,7 @@ import type { Tracker } from "../../../../../domain/Tracker";
 import { ProjectIdentifierStub } from "../../../../../../tests/stubs/ProjectIdentifierStub";
 import { TrackerStub } from "../../../../../../tests/stubs/TrackerStub";
 import { ProjectStub } from "../../../../../../tests/stubs/ProjectStub";
-import { TrackerIdentifierStub } from "../../../../../../tests/stubs/TrackerIdentifierStub";
-import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
 import { CreateLinkableArtifactStub } from "../../../../../../tests/stubs/CreateLinkableArtifactStub";
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { CreateLinkableArtifact } from "../../../../../domain/fields/link-field/creation/CreateLinkableArtifact";
@@ -240,7 +239,7 @@ describe(`ArtifactCreatorElement`, () => {
             show_error_details = false;
             projects = [];
             trackers = [];
-            selected_tracker = Option.fromValue(TrackerIdentifierStub.withId(selected_tracker_id));
+            selected_tracker = Option.fromValue(TrackerIdentifier.fromId(selected_tracker_id));
         });
 
         const render = (): HTMLElement => {

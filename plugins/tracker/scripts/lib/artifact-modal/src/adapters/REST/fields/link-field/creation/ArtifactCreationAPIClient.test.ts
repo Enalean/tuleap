@@ -30,7 +30,9 @@ import { ArtifactCreationAPIClient } from "./ArtifactCreationAPIClient";
 import type { Tracker } from "../../../../../domain/Tracker";
 import { ProjectIdentifierStub } from "../../../../../../tests/stubs/ProjectIdentifierStub";
 import type { TrackerWithTitleSemantic } from "./TrackerWithTitleSemantic";
-import { TrackerIdentifierStub } from "../../../../../../tests/stubs/TrackerIdentifierStub";
+import type { ArtifactCreatedIdentifier } from "../../../../../domain/fields/link-field/creation/ArtifactCreatedIdentifier";
+import { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import { TitleFieldIdentifier } from "../../../../../domain/fields/link-field/creation/TitleFieldIdentifier";
 
 describe(`ArtifactCreationAPIClient`, () => {
     const getClient = (): ArtifactCreationAPIClient => {
@@ -129,9 +131,7 @@ describe(`ArtifactCreationAPIClient`, () => {
     describe(`getTrackerWithTitle()`, () => {
         const TRACKER_ID = 32;
         const getTracker = (): ResultAsync<TrackerWithTitleSemantic, Fault> => {
-            return getClient().getTrackerWithTitleSemantic(
-                TrackerIdentifierStub.withId(TRACKER_ID),
-            );
+            return getClient().getTrackerWithTitleSemantic(TrackerIdentifier.fromId(TRACKER_ID));
         };
 
         it(`will return a Tracker with data about its Title field id`, async () => {
@@ -145,6 +145,37 @@ describe(`ArtifactCreationAPIClient`, () => {
 
             expect(result.unwrapOr(null)).toBe(tracker);
             expect(getJSON.mock.calls[0][0]).toStrictEqual(uri`/api/trackers/${TRACKER_ID}`);
+        });
+    });
+
+    describe(`createArtifactWithTitle()`, () => {
+        const ARTIFACT_ID = 184,
+            TRACKER_ID = 334,
+            TITLE_FIELD_ID = 770,
+            TITLE = "Encumberingly ochletic";
+        const createArtifact = (): ResultAsync<ArtifactCreatedIdentifier, Fault> => {
+            return getClient().createArtifactWithTitle(
+                TrackerIdentifier.fromId(TRACKER_ID),
+                TitleFieldIdentifier.fromId(TITLE_FIELD_ID),
+                TITLE,
+            );
+        };
+
+        it(`will create the artifact with given title, and will return the created artifact's identifier`, async () => {
+            const postJSON = jest
+                .spyOn(fetch_result, "postJSON")
+                .mockReturnValue(okAsync({ id: ARTIFACT_ID }));
+
+            const result = await createArtifact();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value.id).toBe(ARTIFACT_ID);
+            expect(postJSON).toHaveBeenCalledWith(uri`/api/v1/artifacts`, {
+                tracker: { id: TRACKER_ID },
+                values: [{ field_id: TITLE_FIELD_ID, value: TITLE }],
+            });
         });
     });
 });

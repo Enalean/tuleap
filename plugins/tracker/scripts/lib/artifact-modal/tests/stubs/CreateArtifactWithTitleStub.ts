@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ResultAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { CurrentTrackerIdentifier } from "@tuleap/plugin-tracker-artifact-common";
-import type { ArtifactCreated } from "../ArtifactCreated";
-import type { ChangesetValues } from "./ChangesetValues";
+import type { CreateArtifactWithTitle } from "../../src/adapters/REST/fields/link-field/creation/CreateArtifactWithTitle";
+import type { ArtifactCreatedIdentifier } from "../../src/domain/fields/link-field/creation/ArtifactCreatedIdentifier";
 
-export type CreateArtifact = {
-    createArtifact(
-        current_tracker_identifier: CurrentTrackerIdentifier,
-        changeset_values: ChangesetValues,
-    ): ResultAsync<ArtifactCreated, Fault>;
+export const CreateArtifactWithTitleStub = {
+    withArtifactCreated: (new_identifier: ArtifactCreatedIdentifier): CreateArtifactWithTitle => ({
+        createArtifactWithTitle: () => okAsync(new_identifier),
+    }),
+
+    withFault: (fault: Fault): CreateArtifactWithTitle => ({
+        createArtifactWithTitle: () => errAsync(fault),
+    }),
 };

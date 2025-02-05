@@ -225,7 +225,7 @@ function ArtifactModalController(
                 artifact_creation_api_client,
                 LinkableArtifactCreator(
                     artifact_creation_api_client,
-                    api_client,
+                    artifact_creation_api_client,
                     link_field_api_client,
                 ),
                 current_project_identifier,

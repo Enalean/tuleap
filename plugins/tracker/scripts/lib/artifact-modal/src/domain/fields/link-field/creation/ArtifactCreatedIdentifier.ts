@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import type { CurrentTrackerIdentifier } from "@tuleap/plugin-tracker-artifact-common";
-import type { ArtifactCreated } from "../ArtifactCreated";
-import type { ChangesetValues } from "./ChangesetValues";
+import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
 
-export type CreateArtifact = {
-    createArtifact(
-        current_tracker_identifier: CurrentTrackerIdentifier,
-        changeset_values: ChangesetValues,
-    ): ResultAsync<ArtifactCreated, Fault>;
+export type ArtifactCreatedIdentifier = Identifier<"ArtifactCreatedIdentifier">;
+
+export const ArtifactCreatedIdentifier = {
+    fromId: (id: number): ArtifactCreatedIdentifier => ({ id, _type: "ArtifactCreatedIdentifier" }),
 };

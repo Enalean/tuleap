@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerIdentifier } from "../../src/domain/TrackerIdentifier";
+import type { Fault } from "@tuleap/fault";
 
-export const TrackerIdentifierStub = {
-    withId: (id: number): TrackerIdentifier => ({ _type: "TrackerIdentifier", id }),
-};
+export const LinkArtifactCreationFault = (previous: Fault): Fault => ({
+    isArtifactCreation: () => true,
+    ...previous,
+});

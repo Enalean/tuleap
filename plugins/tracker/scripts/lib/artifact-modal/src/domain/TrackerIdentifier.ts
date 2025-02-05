@@ -22,6 +22,8 @@ import type { CurrentTrackerIdentifier, Identifier } from "@tuleap/plugin-tracke
 export type TrackerIdentifier = Identifier<"TrackerIdentifier">;
 
 export const TrackerIdentifier = {
+    fromId: (id: number): TrackerIdentifier => ({ id, _type: "TrackerIdentifier" }),
+
     fromCurrentTracker: (
         current_tracker_identifier: CurrentTrackerIdentifier,
     ): TrackerIdentifier => ({

@@ -33,7 +33,7 @@ import { ProjectIdentifierStub } from "../../../../../tests/stubs/ProjectIdentif
 import type { ProjectIdentifier } from "../../../ProjectIdentifier";
 import { TrackerStub } from "../../../../../tests/stubs/TrackerStub";
 import { ProjectStub } from "../../../../../tests/stubs/ProjectStub";
-import { TrackerIdentifierStub } from "../../../../../tests/stubs/TrackerIdentifierStub";
+import { TrackerIdentifier } from "../../../TrackerIdentifier";
 import { CreateLinkableArtifactStub } from "../../../../../tests/stubs/CreateLinkableArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { CreateLinkableArtifact } from "./CreateLinkableArtifact";
@@ -114,7 +114,7 @@ describe(`ArtifactCreatorController`, () => {
 
         it(`after calling selectTracker(),
             it will memorize it and return it`, () => {
-            const tracker_id = TrackerIdentifierStub.withId(670);
+            const tracker_id = TrackerIdentifier.fromId(670);
             const controller = getController();
 
             const selected_tracker = controller.selectTracker(tracker_id);

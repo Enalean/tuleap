@@ -17,26 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { LinkableArtifactCreator } from "./LinkableArtifactCreator";
 import type { RetrieveTrackerWithTitleSemantic } from "./RetrieveTrackerWithTitleSemantic";
 import { RetrieveTrackerWithTitleSemanticStub } from "../../../../../../tests/stubs/RetrieveTrackerWithTitleSemanticStub";
-import { TrackerIdentifierStub } from "../../../../../../tests/stubs/TrackerIdentifierStub";
-import type { CreateArtifact } from "../../../../../domain/submit/CreateArtifact";
-import { CreateArtifactStub } from "../../../../../../tests/stubs/CreateArtifactStub";
+import { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import type { CreateArtifactWithTitle } from "./CreateArtifactWithTitle";
+import { CreateArtifactWithTitleStub } from "../../../../../../tests/stubs/CreateArtifactWithTitleStub";
 import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import { RetrieveMatchingArtifactStub } from "../../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
+import { ArtifactCreatedIdentifier } from "../../../../../domain/fields/link-field/creation/ArtifactCreatedIdentifier";
 
 describe(`LinkableArtifactCreator`, () => {
     const TRACKER_ID = 201,
         TITLE = "pseudohallucinatory antheridiophore",
         ARTIFACT_ID = 710;
     let tracker_retriever: RetrieveTrackerWithTitleSemantic,
-        artifact_creator: CreateArtifact,
+        artifact_creator: CreateArtifactWithTitle,
         artifact_retriever: RetrieveMatchingArtifact;
 
     beforeEach(() => {
@@ -44,9 +44,11 @@ describe(`LinkableArtifactCreator`, () => {
             id: TRACKER_ID,
             semantics: { title: { field_id: 968 } },
         });
-        artifact_creator = CreateArtifactStub.withArtifactCreated({ id: ARTIFACT_ID });
+        artifact_creator = CreateArtifactWithTitleStub.withArtifactCreated(
+            ArtifactCreatedIdentifier.fromId(ARTIFACT_ID),
+        );
         artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(
-            okAsync(LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID, title: TITLE })),
+            LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID, title: TITLE }),
         );
     });
 
@@ -56,7 +58,7 @@ describe(`LinkableArtifactCreator`, () => {
             artifact_creator,
             artifact_retriever,
         );
-        return creator.createLinkableArtifact(TrackerIdentifierStub.withId(TRACKER_ID), TITLE);
+        return creator.createLinkableArtifact(TrackerIdentifier.fromId(TRACKER_ID), TITLE);
     };
 
     it(`creates a LinkableArtifact from a Tracker id and a title`, async () => {
@@ -79,7 +81,9 @@ describe(`LinkableArtifactCreator`, () => {
     });
 
     it(`when there is an error during the creation of the artifact, it will return a Fault`, async () => {
-        artifact_creator = CreateArtifactStub.withFault(Fault.fromMessage("Permission denied"));
+        artifact_creator = CreateArtifactWithTitleStub.withFault(
+            Fault.fromMessage("Permission denied"),
+        );
         const result = await create();
         expect(result.isErr()).toBe(true);
     });

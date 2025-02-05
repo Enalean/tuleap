@@ -29,6 +29,7 @@ import type {
 import {
     CurrentArtifactIdentifier,
     CurrentProjectIdentifier,
+    CurrentTrackerIdentifier,
 } from "@tuleap/plugin-tracker-artifact-common";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
@@ -39,7 +40,6 @@ import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
-import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
 
 const PROJECT_ID = 179;
 
@@ -196,7 +196,7 @@ describe(`TuleapAPIClient`, () => {
             ];
 
             return getClient().createArtifact(
-                TrackerIdentifierStub.withId(TRACKER_ID),
+                CurrentTrackerIdentifier.fromId(TRACKER_ID),
                 changeset_values,
             );
         };

@@ -19,9 +19,13 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getAllJSON, getJSON, uri } from "@tuleap/fetch-result";
+import { getAllJSON, getJSON, uri, postJSON } from "@tuleap/fetch-result";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
-import type { TrackerResponseWithCannotCreateReason } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    ArtifactCreationPayload,
+    JustCreatedArtifactResponse,
+    TrackerResponseWithCannotCreateReason,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import type { RetrieveProjects } from "../../../../../domain/fields/link-field/creation/RetrieveProjects";
 import type { Project } from "../../../../../domain/Project";
 import { ProjectProxy } from "../../../ProjectProxy";
@@ -30,10 +34,13 @@ import type { Tracker } from "../../../../../domain/Tracker";
 import { MINIMAL_REPRESENTATION, SEMANTIC_TO_CHECK, TrackerProxy } from "../../../TrackerProxy";
 import type { RetrieveTrackerWithTitleSemantic } from "./RetrieveTrackerWithTitleSemantic";
 import type { TrackerWithTitleSemantic } from "./TrackerWithTitleSemantic";
+import type { CreateArtifactWithTitle } from "./CreateArtifactWithTitle";
+import { ArtifactCreatedIdentifier } from "../../../../../domain/fields/link-field/creation/ArtifactCreatedIdentifier";
 
 export type ArtifactCreationAPIClient = RetrieveProjects &
     RetrieveProjectTrackers &
-    RetrieveTrackerWithTitleSemantic;
+    RetrieveTrackerWithTitleSemantic &
+    CreateArtifactWithTitle;
 
 export const ArtifactCreationAPIClient = (): ArtifactCreationAPIClient => ({
     getProjects(): ResultAsync<readonly Project[], Fault> {
@@ -57,5 +64,19 @@ export const ArtifactCreationAPIClient = (): ArtifactCreationAPIClient => ({
 
     getTrackerWithTitleSemantic(tracker_id): ResultAsync<TrackerWithTitleSemantic, Fault> {
         return getJSON<TrackerWithTitleSemantic>(uri`/api/trackers/${tracker_id.id}`);
+    },
+
+    createArtifactWithTitle(
+        tracker_identifier,
+        title_field_identifier,
+        title,
+    ): ResultAsync<ArtifactCreatedIdentifier, Fault> {
+        const payload: ArtifactCreationPayload = {
+            tracker: { id: tracker_identifier.id },
+            values: [{ field_id: title_field_identifier.id, value: title }],
+        };
+        return postJSON<JustCreatedArtifactResponse>(uri`/api/v1/artifacts`, payload).map(
+            (response) => ArtifactCreatedIdentifier.fromId(response.id),
+        );
     },
 });
