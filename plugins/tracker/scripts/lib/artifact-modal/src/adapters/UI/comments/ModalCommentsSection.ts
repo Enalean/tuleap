@@ -117,16 +117,18 @@ export const ModalCommentsSection = define<InternalModalCommentsSection>({
     tag: "tuleap-artifact-modal-comments-section",
     presenter: (host, presenter) =>
         presenter ?? CommentsPresenter.buildLoading(host.controller.getPreferences()),
-    controller: (host, controller: CommentsControllerType) => {
-        controller.getComments().then((comments) => {
-            host.presenter = CommentsPresenter.fromCommentsAndPreferences(
-                comments,
-                controller.getPreferences(),
-            );
-            host.render();
-            loadTooltips(host);
-        });
-        return controller;
+    controller: {
+        value: (host, controller) => controller,
+        observe(host, controller) {
+            controller.getComments().then((comments) => {
+                host.presenter = CommentsPresenter.fromCommentsAndPreferences(
+                    comments,
+                    controller.getPreferences(),
+                );
+                host.render();
+                loadTooltips(host);
+            });
+        },
     },
     formattedTextController: (host, controller) => controller,
     render: (host) =>

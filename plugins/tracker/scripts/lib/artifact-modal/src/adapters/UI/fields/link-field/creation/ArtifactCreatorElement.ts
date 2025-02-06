@@ -324,15 +324,13 @@ export const renderArtifactCreatorElement = (
 export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     tag: "tuleap-artifact-modal-link-artifact-creator",
     controller: {
-        value: (host, controller: ArtifactCreatorController) => {
+        value: (host, controller) => controller,
+        observe: (host, controller) => {
             const displayer = FaultDisplayer();
             controller.registerFaultListener((fault) => {
                 host.error_message = Option.fromValue(displayer.formatForDisplay(fault));
             });
 
-            return controller;
-        },
-        observe: (host, controller) => {
             host.selected_project = controller.getSelectedProject();
             host.is_loading = true;
 

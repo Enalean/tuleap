@@ -74,7 +74,8 @@ export const SelectBoxField = define<InternalSelectboxField>({
         return input;
     },
     controller: {
-        value: (host, controller: ControlSelectBoxField) => {
+        value: (host, controller) => controller,
+        observe(host, controller) {
             controller.onDependencyChange((bind_value_ids, presenter) => {
                 host.bind_value_ids = bind_value_ids;
                 host.field_presenter = presenter;
@@ -83,8 +84,6 @@ export const SelectBoxField = define<InternalSelectboxField>({
             });
 
             setTimeout(() => controller.setSelectedValue(host.bind_value_ids));
-
-            return controller;
         },
         connect: (host) => {
             host.controller.initListPicker(host.select_element);

@@ -272,7 +272,8 @@ export const LinkField = define<InternalLinkField>({
     tag: "tuleap-artifact-modal-link-field",
     link_selector: (host: HostElement) => createLazyBox(host),
     controller: {
-        value: (host, controller: LinkFieldController) => {
+        value: (host, controller) => controller,
+        observe(host, controller) {
             Promise.all([
                 controller.getLinkedArtifacts(getSubmitDisabledForLinksReason()),
                 controller.getPossibleParents(),
@@ -294,7 +295,6 @@ export const LinkField = define<InternalLinkField>({
                         host.controller.getAllowedLinkTypes(),
                     );
             });
-            return controller;
         },
     },
     autocompleter: (host, autocompleter) => autocompleter,

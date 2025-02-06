@@ -45,8 +45,8 @@ export const FileUploadQuota = define<FileUploadQuota>({
     tag: "tuleap-artifact-modal-file-upload-quota",
     controller: {
         value: (host, controller) => controller,
-        connect: (host) => {
-            host.controller.getMaxAllowedUploadSizeInBytes().then((max_size) => {
+        observe(host, controller) {
+            controller.getMaxAllowedUploadSizeInBytes().then((max_size) => {
                 host.max_upload_size_in_bytes = max_size;
             });
         },
