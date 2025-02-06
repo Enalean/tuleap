@@ -24,6 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\API;
 
 use DateTimeImmutable;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 class GitlabProjectBuilder implements BuildGitlabProjects
 {
@@ -45,7 +49,13 @@ class GitlabProjectBuilder implements BuildGitlabProjects
             );
         }
 
-        return $this->buildGitlabProject($gitlab_project_data);
+        return $this->buildGitlabProject($gitlab_project_data)
+            ->match(
+                fn(GitlabProject $project) => $project,
+                function (Fault $fault) {
+                    throw new GitlabResponseAPIException((string) $fault);
+                }
+            );
     }
 
     /**
@@ -65,25 +75,36 @@ class GitlabProjectBuilder implements BuildGitlabProjects
 
         $gitlab_projects = [];
         foreach ($group_projects_data as $gitlab_project) {
-            $gitlab_projects[] = $this->buildGitlabProject($gitlab_project);
+            $this->buildGitlabProject($gitlab_project)
+                ->match(
+                    function (GitlabProject $project) use (&$gitlab_projects) {
+                        $gitlab_projects[] = $project;
+                    },
+                    function (Fault $fault) {
+                        // This GitLab project may have Repository feature disabled, skip it from group
+                        if (! $fault instanceof DefaultBranchMissingFromJSONFault) {
+                            throw new GitlabResponseAPIException((string) $fault);
+                        }
+                    }
+                );
         }
         return $gitlab_projects;
     }
 
-    /**
-     * @throws GitlabResponseAPIException
-     */
-    private function buildGitlabProject(array $gitlab_project_data): GitlabProject
+    private function buildGitlabProject(array $gitlab_project_data): OK|Err
     {
+        if (! array_key_exists('default_branch', $gitlab_project_data)) {
+            return Result::err(DefaultBranchMissingFromJSONFault::build());
+        }
+
         if (
             ! array_key_exists('id', $gitlab_project_data) ||
             ! array_key_exists('description', $gitlab_project_data) ||
             ! array_key_exists('web_url', $gitlab_project_data) ||
             ! array_key_exists('path_with_namespace', $gitlab_project_data) ||
-            ! array_key_exists('last_activity_at', $gitlab_project_data) ||
-            ! array_key_exists('default_branch', $gitlab_project_data)
+            ! array_key_exists('last_activity_at', $gitlab_project_data)
         ) {
-            throw new GitlabResponseAPIException('Some keys are missing in the project Json. This is not expected. Aborting.');
+            return Result::err(GitLabProjectJSONFault::buildForMissingKey());
         }
 
         if (
@@ -94,16 +115,16 @@ class GitlabProjectBuilder implements BuildGitlabProjects
             ! is_string($gitlab_project_data['last_activity_at']) ||
             ! is_string($gitlab_project_data['default_branch'])
         ) {
-            throw new GitlabResponseAPIException("Some keys haven't the expected types. This is not expected. Aborting.");
+            return Result::err(GitLabProjectJSONFault::buildForIncorrectType());
         }
 
-        return new GitlabProject(
+        return Result::ok(new GitlabProject(
             $gitlab_project_data['id'],
             (string) $gitlab_project_data['description'],
             $gitlab_project_data['web_url'],
             $gitlab_project_data['path_with_namespace'],
             new DateTimeImmutable($gitlab_project_data['last_activity_at']),
             $gitlab_project_data['default_branch']
-        );
+        ));
     }
 }
