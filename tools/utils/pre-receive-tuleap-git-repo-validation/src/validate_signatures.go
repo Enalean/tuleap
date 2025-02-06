@@ -16,6 +16,7 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
 var sshCommitSignature = regexp.MustCompile(`(?Us)gpgsig (-----BEGIN SSH SIGNATURE-----.*-----END SSH SIGNATURE-----)\n`)
@@ -30,50 +31,74 @@ func ValidateSignatures(hookData HookData, repo *git.Repository) (*string, error
 	allowedSigningKeys := GetIntegratorsSigningKeys()
 
 	var notSignedItems []string
-	for referenceName := range hookData.UpdatedReferences {
-		var objectType plumbing.ObjectType
-		itemName := ""
-		var signatureExtractRegexp *regexp.Regexp
-
+	for referenceName, referenceValues := range hookData.UpdatedReferences {
 		if strings.HasPrefix(referenceName, "refs/tags/") {
-			objectType = plumbing.TagObject
-			itemName = "annotated tag " + referenceName
-			signatureExtractRegexp = sshTagSignature
+			reference, err := repo.Reference(plumbing.ReferenceName(referenceName), false)
+			if err != nil {
+				return nil, err
+			}
+
+			notSignedMessage, err := checkGitObjectSignature(
+				repo,
+				"annotated tag "+referenceName,
+				plumbing.TagObject,
+				reference.Hash(),
+				allowedSigningKeys,
+			)
+
+			if err != nil {
+				return nil, err
+			}
+
+			if notSignedMessage != "" {
+				notSignedItems = append(notSignedItems, notSignedMessage)
+			}
 		} else if strings.HasPrefix(referenceName, "refs/heads/") {
-			objectType = plumbing.CommitObject
-			itemName = "head commit of " + referenceName
-			signatureExtractRegexp = sshCommitSignature
-		} else {
-			continue
-		}
+			if referenceValues.NewValue == "0000000000000000000000000000000000000000" {
+				continue
+			}
 
-		reference, err := repo.Reference(plumbing.ReferenceName(referenceName), false)
-		if err != nil {
-			return nil, err
-		}
+			currentCommit, err := repo.CommitObject(plumbing.NewHash(referenceValues.NewValue))
+			if err != nil {
+				return nil, fmt.Errorf("could not get new rev: %w", err)
+			}
+			oldCommit, err := repo.CommitObject(plumbing.NewHash(referenceValues.OldValue))
+			if err != nil {
+				return nil, fmt.Errorf("could not get old rev: %w", err)
+			}
 
-		encodedObjectContent, err := getEncodedObjectContent(repo, objectType, reference.Hash())
-		if err == plumbing.ErrObjectNotFound && objectType == plumbing.TagObject {
-			notSignedItems = append(notSignedItems, referenceName+" (not annotated tag?)")
-			continue
-		} else if err != nil {
-			return nil, err
-		}
+			commitsToVerify, err := findNewCommits(currentCommit, oldCommit)
+			if err != nil {
+				return nil, fmt.Errorf("could not identify commits to verify: %w", err)
+			}
 
-		matches := signatureExtractRegexp.FindSubmatch(encodedObjectContent)
-		if len(matches) != 2 {
-			notSignedItems = append(notSignedItems, itemName)
-			continue
-		}
+			commitsHashSignatureVerified := make(map[plumbing.Hash]bool)
+			for _, commitToVerify := range commitsToVerify {
+				notSignedMessage, err := checkGitObjectSignature(
+					repo,
+					"commit "+commitToVerify.Hash.String(),
+					plumbing.CommitObject,
+					commitToVerify.Hash,
+					allowedSigningKeys,
+				)
+				if err != nil {
+					return nil, err
+				}
 
-		err = verifySignature(
-			allowedSigningKeys,
-			matches[1],
-			bytes.ReplaceAll(encodedObjectContent, matches[0], []byte("")),
-		)
-		if err != nil {
-			notSignedItems = append(notSignedItems, fmt.Sprintf("%s (%s)", itemName, err))
-			continue
+				if notSignedMessage == "" {
+					commitsHashSignatureVerified[commitToVerify.Hash] = true
+					commitToVerify.Parents().ForEach(func(commit *object.Commit) error {
+						commitsHashSignatureVerified[commit.Hash] = true
+						return nil
+					})
+				}
+			}
+
+			for _, commitToVerify := range commitsToVerify {
+				if !commitsHashSignatureVerified[commitToVerify.Hash] {
+					notSignedItems = append(notSignedItems, "commit "+commitToVerify.Hash.String())
+				}
+			}
 		}
 	}
 
@@ -83,6 +108,66 @@ func ValidateSignatures(hookData HookData, repo *git.Repository) (*string, error
 	}
 
 	return nil, nil
+}
+
+func findNewCommits(fromCommit *object.Commit, tailCommit *object.Commit) ([]*object.Commit, error) {
+	newCommits := []*object.Commit{}
+	if fromCommit.Hash == tailCommit.Hash {
+		return newCommits, nil
+	}
+
+	isAncestor, err := fromCommit.IsAncestor(tailCommit)
+	if err != nil || isAncestor {
+		return newCommits, err
+	}
+
+	newCommits = append(newCommits, fromCommit)
+	err = fromCommit.Parents().ForEach(func(commit *object.Commit) error {
+		additionalCommits, err := findNewCommits(commit, tailCommit)
+		if err != nil {
+			return err
+		}
+
+		newCommits = append(
+			newCommits,
+			additionalCommits...,
+		)
+		return nil
+	})
+
+	return newCommits, err
+
+}
+
+func checkGitObjectSignature(repo *git.Repository, itemName string, objectType plumbing.ObjectType, hash plumbing.Hash, allowedSigningKeys []IntegratorSigningKey) (string, error) {
+	encodedObjectContent, err := getEncodedObjectContent(repo, objectType, hash)
+	if err == plumbing.ErrObjectNotFound && objectType == plumbing.TagObject {
+		return fmt.Sprintf("%s (not annotated tag?)", itemName), nil
+	} else if err != nil {
+		return "", err
+	}
+
+	var signatureExtractRegexp *regexp.Regexp
+	if objectType == plumbing.TagObject {
+		signatureExtractRegexp = sshTagSignature
+	} else if objectType == plumbing.CommitObject {
+		signatureExtractRegexp = sshCommitSignature
+	}
+
+	matches := signatureExtractRegexp.FindSubmatch(encodedObjectContent)
+	if len(matches) != 2 {
+		return itemName, nil
+	}
+
+	err = verifySignature(
+		allowedSigningKeys,
+		matches[1],
+		bytes.ReplaceAll(encodedObjectContent, matches[0], []byte("")),
+	)
+	if err != nil {
+		return fmt.Sprintf("%s (%s)", itemName, err), nil
+	}
+	return "", nil
 }
 
 func getEncodedObjectContent(repo *git.Repository, objectType plumbing.ObjectType, hash plumbing.Hash) ([]byte, error) {
