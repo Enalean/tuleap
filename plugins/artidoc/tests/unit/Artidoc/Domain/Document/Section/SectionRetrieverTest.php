@@ -169,6 +169,7 @@ final class SectionRetrieverTest extends TestCase
             'item_id' => self::ITEM_ID,
             'artifact_id' => self::ARTIFACT_ID,
             'rank' => 0,
+            'level' => 1,
         ]);
     }
 }

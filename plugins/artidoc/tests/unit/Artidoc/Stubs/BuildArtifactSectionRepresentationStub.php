@@ -42,6 +42,7 @@ final class BuildArtifactSectionRepresentationStub implements BuildArtifactSecti
     public function build(
         RequiredArtifactInformation $artifact_information,
         SectionIdentifier $section_identifier,
+        int $level,
         \PFUser $user,
     ): ArtifactSectionRepresentation {
         $can_user_edit_section = true;
@@ -49,6 +50,7 @@ final class BuildArtifactSectionRepresentationStub implements BuildArtifactSecti
 
         return new ArtifactSectionRepresentation(
             $section_identifier->toString(),
+            $level,
             ArtifactReference::build($artifact_information->last_changeset->getArtifact()),
             $artifact_information->title,
             $artifact_information->description,

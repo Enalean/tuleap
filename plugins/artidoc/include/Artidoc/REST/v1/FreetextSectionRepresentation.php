@@ -32,6 +32,7 @@ final readonly class FreetextSectionRepresentation implements SectionRepresentat
 {
     private function __construct(
         public string $id,
+        public int $level,
         public string $title,
         public string $description,
     ) {
@@ -39,10 +40,12 @@ final readonly class FreetextSectionRepresentation implements SectionRepresentat
 
     public static function fromRetrievedSectionContentFreetext(
         SectionIdentifier $section_identifier,
+        int $level,
         RetrievedSectionContentFreetext $freetext,
     ): self {
         return new self(
             $section_identifier->toString(),
+            $level,
             $freetext->content->title,
             $freetext->content->description,
         );
