@@ -34,7 +34,6 @@ use Tuleap\Widget\Event\GetWidget;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/constants.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class crosstrackerPlugin extends Plugin

@@ -56,7 +56,7 @@ class ProjectCrossTrackerSearch extends Widget
     public function getContent()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            CROSSTRACKER_BASE_DIR . '/templates/widgets'
+            __DIR__ . '/../../../templates/widgets'
         );
 
         $request = HTTPRequest::instance();
