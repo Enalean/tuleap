@@ -31,7 +31,7 @@
                 type="button"
                 class="tlp-button-warning"
                 data-test="force-save"
-                v-on:click="editor_actions.forceSaveEditor"
+                v-on:click="save_section.forceSave"
             >
                 {{ $gettext("Force save") }}
             </button>
@@ -49,11 +49,11 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { SectionEditorActions } from "@/composables/useSectionEditor";
 import type { RefreshSection } from "@/sections/SectionRefresher";
+import type { SaveSection } from "@/sections/SectionSaver";
 
 defineProps<{
-    editor_actions: Pick<SectionEditorActions, "forceSaveEditor">;
+    save_section: SaveSection;
     refresh_section: RefreshSection;
 }>();
 

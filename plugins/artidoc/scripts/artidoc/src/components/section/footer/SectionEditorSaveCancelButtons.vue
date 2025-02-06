@@ -23,15 +23,17 @@
             v-on:click="close_section_editor.closeAndCancelEditor"
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-large"
+            data-test="cancel-button"
         >
             <i class="fa-solid fa-xmark tlp-button-icon" aria-hidden="true"></i>
             <span>{{ $gettext("Cancel") }}</span>
         </button>
         <button
-            v-on:click="saveEditor"
+            v-on:click="save_section.save"
             v-bind:disabled="!is_save_allowed"
             type="button"
             class="tlp-button-primary tlp-button-large"
+            data-test="save-button"
         >
             <i class="fa-solid fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
             <span>{{ $gettext("Save") }}</span>
@@ -41,18 +43,17 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
+import type { SaveSection } from "@/sections/SectionSaver";
 
 const props = defineProps<{
-    editor: SectionEditor;
     section_state: SectionState;
     close_section_editor: CloseSectionEditor;
+    save_section: SaveSection;
 }>();
 
 const { $gettext } = useGettext();
-const { saveEditor } = props.editor.editor_actions;
 const { is_section_in_edit_mode, is_save_allowed } = props.section_state;
 </script>
 

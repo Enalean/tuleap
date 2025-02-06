@@ -17,49 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import { createGettext } from "vue3-gettext";
-import type { SectionEditorActions } from "@/composables/useSectionEditor";
 import { SectionRefresherStub } from "@/sections/stubs/SectionRefresherStub";
+import { SaveSectionStub } from "@/sections/stubs/SaveSectionStub";
 
 describe("OutdatedSectionWarning", () => {
     it("should force save", async () => {
-        const forceSaveEditor: SectionEditorActions["forceSaveEditor"] = vi.fn();
-
+        const save_section = SaveSectionStub.withExpectForceSave();
         const wrapper = shallowMount(OutdatedSectionWarning, {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
-                editor_actions: {
-                    forceSaveEditor,
-                },
                 refresh_section: SectionRefresherStub.withNoExpectedCall(),
+                save_section,
             },
         });
 
         await wrapper.find("[data-test=force-save]").trigger("click");
 
-        expect(forceSaveEditor).toHaveBeenCalled();
+        expect(save_section.hasBeenForceSaved()).toBe(true);
     });
 
     it("should refresh section", async () => {
-        const forceSaveEditor: SectionEditorActions["forceSaveEditor"] = vi.fn();
-
         const refresh_section = SectionRefresherStub.withExpectedCall();
         const wrapper = shallowMount(OutdatedSectionWarning, {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
-                editor_actions: {
-                    forceSaveEditor,
-                },
                 refresh_section,
+                save_section: SaveSectionStub.withNoExpectedCall(),
             },
         });
 
         await wrapper.find("[data-test=refresh]").trigger("click");
 
-        expect(forceSaveEditor).not.toHaveBeenCalled();
         expect(refresh_section.hasSectionBeenRefreshed()).toBe(true);
     });
 });

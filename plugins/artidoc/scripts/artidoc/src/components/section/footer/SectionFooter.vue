@@ -28,20 +28,19 @@
         />
         <outdated-section-warning
             v-else-if="is_outdated"
-            v-bind:editor_actions="editor.editor_actions"
+            v-bind:save_section="save_section"
             v-bind:refresh_section="refresh_section"
         />
 
         <section-editor-save-cancel-buttons
-            v-bind:editor="editor"
             v-bind:section_state="section_state"
+            v-bind:save_section="save_section"
             v-bind:close_section_editor="close_section_editor"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionEditorSaveCancelButtons from "./SectionEditorSaveCancelButtons.vue";
 import NotFoundError from "./NotFoundError.vue";
 import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
@@ -50,13 +49,14 @@ import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 import type { RefreshSection } from "@/sections/SectionRefresher";
+import type { SaveSection } from "@/sections/SectionSaver";
 
 const props = defineProps<{
     section: StoredArtidocSection;
-    editor: SectionEditor;
     section_state: SectionState;
     close_section_editor: CloseSectionEditor;
     refresh_section: RefreshSection;
+    save_section: SaveSection;
 }>();
 
 const { error_message, is_outdated, is_in_error, is_not_found } = props.section_state;

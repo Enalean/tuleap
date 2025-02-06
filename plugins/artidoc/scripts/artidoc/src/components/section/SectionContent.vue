@@ -25,7 +25,7 @@
     >
         <div class="artidoc-dropdown-container">
             <section-dropdown
-                v-bind:editor="editor"
+                v-bind:delete_section="delete_section"
                 v-bind:section="section.value"
                 v-bind:section_state="section_state"
                 v-if="!is_loading_sections"
@@ -57,11 +57,11 @@
                 v-bind:manage_section_editor_state="section_editor_state_manager"
             />
             <section-footer
-                v-bind:editor="editor"
                 v-bind:section="section.value"
                 v-bind:section_state="section_state"
                 v-bind:close_section_editor="section_editor_closer"
                 v-bind:refresh_section="section_refresher"
+                v-bind:save_section="save_section"
             />
         </article>
     </section>
@@ -89,8 +89,6 @@ import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-dura
 import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
 
-import { useSectionEditor } from "@/composables/useSectionEditor";
-
 import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
 import { getSectionsUpdater } from "@/sections/SectionsUpdater";
 import { getSectionsRemover } from "@/sections/SectionsRemover";
@@ -100,6 +98,8 @@ import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFi
 import { getSectionEditorStateManager } from "@/sections/SectionEditorStateManager";
 import { getSectionEditorCloser } from "@/sections/SectionEditorCloser";
 import { getSectionRefresher } from "@/sections/SectionRefresher";
+import { getSectionDeletor } from "@/sections/SectionDeletor";
+import { getSectionSaver } from "@/sections/SectionSaver";
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -169,17 +169,23 @@ const section_refresher = getSectionRefresher(
 
 const { $gettext } = useGettext();
 
-const editor = useSectionEditor(
+const save_section = getSectionSaver(
     document_id,
     props.section,
     section_state,
     error_state_manager,
-    section_attachments_manager,
     getPendingSectionsReplacer(sections_collection, states_collection),
     sections_updater,
-    sections_remover,
     getSectionsPositionsForSaveRetriever(sections_collection),
+    section_attachments_manager,
     section_editor_closer,
+);
+
+const delete_section = getSectionDeletor(
+    props.section.value,
+    section_state,
+    error_state_manager,
+    sections_remover,
     (error: string) => {
         setGlobalErrorMessage({
             message: $gettext("An error occurred while removing the section."),
