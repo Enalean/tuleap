@@ -14,7 +14,11 @@
     }
   },
   "dependencies": {
-    "@tuleap/gettext": "workspace:^"
+    "@tuleap/fetch-result": "workspace:^",
+    "@tuleap/gettext": "workspace:^",
+    "@tuleap/option": "workspace:^",
+    "neverthrow": "6.0.0",
+    "tus-js-client": "^4.3.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

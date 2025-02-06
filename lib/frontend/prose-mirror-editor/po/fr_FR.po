@@ -13,6 +13,9 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "An error occurred during upload"
+msgstr "Une erreur est survenue durant le téléversement"
+
 msgid "Cancel"
 msgstr "Annuler"
 

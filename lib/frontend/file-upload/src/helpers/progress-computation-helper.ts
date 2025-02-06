@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { OnGoingUploadFile } from "@tuleap/file-upload";
+import type { OnGoingUploadFile } from "../file-upload-options";
 
 export function computedProgress(
     files: OnGoingUploadFile[],

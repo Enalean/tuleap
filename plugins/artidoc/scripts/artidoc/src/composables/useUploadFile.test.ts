@@ -24,8 +24,7 @@ import { mockFileList } from "@/helpers/mock-file-list";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
-import { UploadError } from "@tuleap/file-upload";
-import type { GetText } from "@tuleap/gettext";
+import type { UploadError } from "@tuleap/file-upload";
 import type { OnGoingUploadFileWithId, UploadFileStoreType } from "@/stores/useUploadFileStore";
 import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
@@ -34,16 +33,21 @@ import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
 import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
-const gettext_provider = {
-    gettext: (msgid: string) => msgid,
-} as unknown as GetText;
-
 function getCurrentSectionUploads(
     section_id: string,
     store_data: OnGoingUploadFileWithId[],
 ): OnGoingUploadFileWithId[] {
     return store_data.filter((upload) => upload.section_id === section_id);
 }
+
+class DummyUploadError extends Error implements UploadError {
+    constructor() {
+        super();
+        this.name = "DummyUploadError";
+        this.message = "An error occurred during upload";
+    }
+}
+
 describe("useUploadFile", () => {
     let mocked_upload_data: UploadFileStoreType,
         mocked_notifications_data: UseNotificationsStoreType,
@@ -79,7 +83,7 @@ describe("useUploadFile", () => {
 
             const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
-            file_upload_options.onErrorCallback(new UploadError(gettext_provider), "file_name");
+            file_upload_options.onErrorCallback(new DummyUploadError(), "file_name");
 
             expect(mocked_add_notification).toHaveBeenCalledWith({
                 message: "An error occurred during upload",
@@ -97,10 +101,7 @@ describe("useUploadFile", () => {
             const { file_upload_options } = useUploadFile(section_id, manage_section_attachments);
 
             const current_file = mocked_upload_data.pending_uploads.value[0];
-            file_upload_options.onErrorCallback(
-                new UploadError(gettext_provider),
-                current_file.file_name,
-            );
+            file_upload_options.onErrorCallback(new DummyUploadError(), current_file.file_name);
 
             expect(mocked_delete_upload).toHaveBeenCalledWith(current_file.file_id);
         });

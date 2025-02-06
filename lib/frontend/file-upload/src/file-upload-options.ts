@@ -19,6 +19,10 @@
 
 import type { UploadError } from "./upload-file.error";
 
+export interface OngoingUpload {
+    readonly cancel: () => void;
+}
+
 export type OnGoingUploadFile = {
     file_name: string;
     progress: number;

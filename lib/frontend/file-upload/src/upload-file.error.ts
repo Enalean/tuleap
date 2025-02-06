@@ -19,7 +19,12 @@
 
 import type { GetText } from "@tuleap/gettext";
 
-export class UploadError extends Error {
+export interface UploadError {
+    readonly name: string;
+    readonly message: string;
+}
+
+export class GenericUploadError extends Error implements UploadError {
     constructor(gettext_provider: GetText) {
         super();
         this.name = "UploadError";
