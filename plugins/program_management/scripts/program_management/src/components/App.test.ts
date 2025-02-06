@@ -19,13 +19,13 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import App from "./App.vue";
-import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
 import * as drekkenov from "@tuleap/drag-and-drop";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import App from "./App.vue";
+import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
 
 describe("App", () => {
-    async function createWrapper(is_configured: boolean, is_admin: boolean): Promise<Wrapper<App>> {
+    async function createWrapper(is_configured: boolean, is_admin: boolean): Promise<Wrapper<Vue>> {
         return shallowMount(App, {
             mocks: {
                 $store: createStoreMock({
@@ -33,20 +33,19 @@ describe("App", () => {
                         has_modal_error: false,
                         configuration: {
                             has_plan_permissions: true,
-                            is_configured: is_configured,
+                            is_configured,
                             is_program_admin: is_admin,
                             public_name: "Fibrovasal phrenesis",
                             short_name: "fibrovasal-phrenesis",
                             project_icon: "",
                             privacy: {},
                             flags: [],
+                            program_id: 775,
                         },
                     },
                 }),
             },
-            directives: {
-                "dompurify-html": jest.fn(),
-            },
+            directives: { "dompurify-html": jest.fn() },
             localVue: await createProgramManagementLocalVue(),
         });
     }
@@ -84,9 +83,7 @@ describe("App", () => {
 
     describe(`destroy()`, () => {
         it(`will destroy the "drek"`, async () => {
-            const mock_drek = {
-                destroy: jest.fn(),
-            };
+            const mock_drek = { destroy: jest.fn() };
             jest.spyOn(drekkenov, "init").mockImplementation(() => mock_drek);
             const wrapper = await createWrapper(true, false);
             wrapper.destroy();
