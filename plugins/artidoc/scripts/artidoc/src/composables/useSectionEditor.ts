@@ -18,8 +18,6 @@
  */
 
 import useSaveSection from "@/composables/useSaveSection";
-import { useRefreshSection } from "@/composables/useRefreshSection";
-import type { RefreshSection } from "@/composables/useRefreshSection";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import type { Fault } from "@tuleap/fault";
 import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
@@ -34,7 +32,6 @@ import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 export type SectionEditorActions = {
     saveEditor: () => void;
     forceSaveEditor: () => void;
-    refreshSection: RefreshSection["refreshSection"];
     deleteSection: () => void;
 };
 
@@ -55,14 +52,6 @@ export function useSectionEditor(
     close_section_editor: CloseSectionEditor,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
-    const { refreshSection } = useRefreshSection(
-        section,
-        section_state,
-        manage_error_state,
-        update_sections,
-        close_section_editor,
-    );
-
     const { save, forceSave } = useSaveSection(
         document_id,
         section,
@@ -110,7 +99,6 @@ export function useSectionEditor(
     const editor_actions: SectionEditorActions = {
         saveEditor,
         forceSaveEditor,
-        refreshSection,
         deleteSection,
     };
 

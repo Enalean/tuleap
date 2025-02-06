@@ -31,14 +31,14 @@ export type RefreshSection = {
     refreshSection: () => void;
 };
 
-export function useRefreshSection(
+export const getSectionRefresher = (
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
     manage_error_state: ManageErrorState,
     update_sections: UpdateSections,
     close_section_editor: CloseSectionEditor,
-): RefreshSection {
-    function refreshSection(): void {
+): RefreshSection => ({
+    refreshSection(): void {
         if (!isArtifactSection(section.value) && !isFreetextSection(section.value)) {
             return;
         }
@@ -56,9 +56,5 @@ export function useRefreshSection(
                 section_state.is_outdated.value = false;
             },
         );
-    }
-
-    return {
-        refreshSection,
-    };
-}
+    },
+});

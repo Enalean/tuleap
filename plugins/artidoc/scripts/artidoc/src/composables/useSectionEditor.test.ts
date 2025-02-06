@@ -22,7 +22,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useSectionEditor } from "@/composables/useSectionEditor";
 import { noop } from "@/helpers/noop";
 import * as saveSection from "@/composables/useSaveSection";
-import * as refreshSection from "@/composables/useRefreshSection";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { PendingSectionsReplacerStub } from "@/sections/stubs/PendingSectionsReplacerStub";
@@ -43,19 +42,14 @@ describe("useSectionEditor", () => {
     describe("editor_actions", () => {
         let save: Mock;
         let force_save: Mock;
-        let refresh_section: Mock;
 
         beforeEach(() => {
             save = vi.fn();
             force_save = vi.fn();
-            refresh_section = vi.fn();
 
             vi.spyOn(saveSection, "default").mockReturnValue({
                 save,
                 forceSave: force_save,
-            });
-            vi.spyOn(refreshSection, "useRefreshSection").mockReturnValue({
-                refreshSection: refresh_section,
             });
         });
 
@@ -107,32 +101,6 @@ describe("useSectionEditor", () => {
                 editor_actions.forceSaveEditor();
 
                 expect(force_save).toHaveBeenCalledOnce();
-            });
-        });
-        describe("refresh_section", () => {
-            it.each([
-                ["artifact_section", artifact_section],
-                ["freetext_section", freetext_section],
-            ])("should refresh the editor content with %s", (name, section) => {
-                const reactive_section = ReactiveStoredArtidocSectionStub.fromSection(section);
-                const section_state = SectionStateStub.withEditedContent();
-
-                const { editor_actions } = useSectionEditor(
-                    document_id,
-                    reactive_section,
-                    section_state,
-                    SectionErrorManagerStub.withNoExpectedFault(),
-                    SectionAttachmentFilesManagerStub.forSection(section),
-                    PendingSectionsReplacerStub.withNoExpectedCall(),
-                    SectionsUpdaterStub.withNoExpectedCall(),
-                    SectionsRemoverStub.withNoExpectedCall(),
-                    SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                    SectionEditorCloserStub.withExpectedCall(),
-                    noop,
-                );
-                editor_actions.refreshSection();
-
-                expect(refresh_section).toHaveBeenCalledOnce();
             });
         });
     });
