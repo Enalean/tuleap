@@ -19,7 +19,7 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { ParentArtifactIdentifier } from "./ParentArtifactIdentifier";
+import type { ParentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import type { ParentArtifact } from "./ParentArtifact";
 
 export interface RetrieveParent {

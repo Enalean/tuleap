@@ -20,6 +20,7 @@
 export { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
 export { CurrentProjectIdentifier } from "./CurrentProjectIdentifier";
 export { CurrentTrackerIdentifier } from "./CurrentTrackerIdentifier";
+export { ParentArtifactIdentifier } from "./ParentArtifactIdentifier";
 export type { Identifier } from "./Identifier";
 export type { CommonEvents } from "./events/CommonEvents";
 export type {

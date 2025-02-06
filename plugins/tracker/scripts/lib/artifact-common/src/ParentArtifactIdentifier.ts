@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "@tuleap/plugin-tracker-artifact-common";
+import type { Identifier } from "./Identifier";
 
 // I identify the Artifact that will be linked as a parent of the artifact under creation
 export type ParentArtifactIdentifier = Identifier<"ParentArtifactIdentifier">;
+
+export const ParentArtifactIdentifier = {
+    fromId: (id: number): ParentArtifactIdentifier => ({ id, _type: "ParentArtifactIdentifier" }),
+};

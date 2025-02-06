@@ -30,10 +30,10 @@ import {
     CurrentArtifactIdentifier,
     CurrentProjectIdentifier,
     CurrentTrackerIdentifier,
+    ParentArtifactIdentifier,
 } from "@tuleap/plugin-tracker-artifact-common";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
-import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
@@ -52,7 +52,7 @@ describe(`TuleapAPIClient`, () => {
             ARTIFACT_TITLE = "thio";
 
         const getParent = (): ResultAsync<ParentArtifact, Fault> => {
-            return getClient().getParent(ParentArtifactIdentifierStub.withId(ARTIFACT_ID));
+            return getClient().getParent(ParentArtifactIdentifier.fromId(ARTIFACT_ID));
         };
 
         it(`will return the parent artifact matching the given id`, async () => {

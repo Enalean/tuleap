@@ -19,6 +19,7 @@
 
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
+import type { ParentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import {
     CurrentProjectIdentifier,
     CurrentTrackerIdentifier,
@@ -58,7 +59,6 @@ import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStu
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import type { ParentArtifactIdentifier } from "src/domain/parent/ParentArtifactIdentifier";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;

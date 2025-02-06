@@ -22,6 +22,7 @@ import type { Fault } from "@tuleap/fault";
 import type {
     CurrentProjectIdentifier,
     CurrentTrackerIdentifier,
+    ParentArtifactIdentifier,
 } from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
 import type { LinkedArtifact, LinkedArtifactIdentifier } from "./LinkedArtifact";
@@ -50,7 +51,6 @@ import {
 import type { ChangeNewLinkType } from "./ChangeNewLinkType";
 import type { ChangeLinkType } from "./ChangeLinkType";
 import type { ParentTrackerIdentifier } from "./ParentTrackerIdentifier";
-import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdentifier";
 
 export type LinkFieldController = {
     getCurrentArtifactReference(): Option<ArtifactCrossReference>;

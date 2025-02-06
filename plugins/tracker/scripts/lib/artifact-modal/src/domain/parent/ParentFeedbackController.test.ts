@@ -19,9 +19,8 @@
 
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
+import { ParentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { ParentFeedbackController } from "./ParentFeedbackController";
-import type { ParentArtifactIdentifier } from "./ParentArtifactIdentifier";
-import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
 import { RetrieveParentStub } from "../../../tests/stubs/RetrieveParentStub";
 import type { ParentArtifact } from "./ParentArtifact";
 import type { RetrieveParent } from "./RetrieveParent";
@@ -40,7 +39,7 @@ describe(`ParentFeedbackController`, () => {
         const parent_artifact: ParentArtifact = { title: PARENT_TITLE };
         artifact_retriever = RetrieveParentStub.withParent(parent_artifact);
         parent_artifact_identifier = Option.fromValue(
-            ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID),
+            ParentArtifactIdentifier.fromId(PARENT_ARTIFACT_ID),
         );
     });
 
