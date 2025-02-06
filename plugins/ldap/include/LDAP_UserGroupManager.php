@@ -25,38 +25,19 @@ use Tuleap\User\UserNameNormalizer;
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
-class LDAP_UserGroupManager extends LDAP_GroupManager
+class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private $project_id;
 
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var LDAP_UserGroupDao
-     */
-    private $dao;
-
     public function __construct(
-        LDAP $ldap,
-        LDAP_UserManager $ldap_user_manager,
-        LDAP_UserGroupDao $dao,
-        ProjectManager $project_manager,
-        \Psr\Log\LoggerInterface $logger,
-        \Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager,
+        readonly LDAP $ldap,
+        readonly LDAP_UserManager $ldap_user_manager,
+        private readonly LDAP_UserGroupDao $dao,
+        private readonly ProjectManager $project_manager,
+        private readonly \Psr\Log\LoggerInterface $logger,
+        readonly \Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager,
     ) {
-        parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager);
-
-        $this->project_manager = $project_manager;
-        $this->logger          = $logger;
-        $this->dao             = $dao;
+        parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager, $logger);
     }
 
     public function setProjectId($project_id)

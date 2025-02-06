@@ -27,41 +27,20 @@ use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
 /**
  * Manage interaction between an LDAP group and Project members
  */
-class LDAP_ProjectGroupManager extends LDAP_GroupManager
+class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var LDAP_ProjectGroupDao
-     */
-    private $dao;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var ProjectGroupManagerRestrictedUserFilter
-     */
-    private $project_restricted_user_filter;
-
     public function __construct(
-        LDAP $ldap,
-        LDAP_UserManager $ldap_user_manager,
-        LDAP_ProjectGroupDao $dao,
-        ProjectManager $project_manager,
-        UserManager $user_manager,
-        GroupSyncNotificationsManager $notifications_manager,
-        ProjectGroupManagerRestrictedUserFilter $project_restricted_user_filter,
+        readonly LDAP $ldap,
+        readonly LDAP_UserManager $ldap_user_manager,
+        private readonly LDAP_ProjectGroupDao $dao,
+        private readonly ProjectManager $project_manager,
+        private readonly UserManager $user_manager,
+        readonly GroupSyncNotificationsManager $notifications_manager,
+        private readonly ProjectGroupManagerRestrictedUserFilter $project_restricted_user_filter,
         private readonly AddProjectMembers $add_project_members,
+        readonly \Psr\Log\LoggerInterface $logger,
     ) {
-        parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager);
-
-        $this->dao                            = $dao;
-        $this->project_manager                = $project_manager;
-        $this->user_manager                   = $user_manager;
-        $this->project_restricted_user_filter = $project_restricted_user_filter;
+        parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager, $this->logger);
     }
 
     /**
