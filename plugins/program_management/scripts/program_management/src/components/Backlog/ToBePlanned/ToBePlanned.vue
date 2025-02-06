@@ -19,7 +19,9 @@
 
 <template>
     <div>
-        <h2 class="program-to-be-planned-title">{{ $gettext("To Be Planned") }}</h2>
+        <h2 class="program-to-be-planned-title">
+            {{ $gettext("To Be Planned") }}
+        </h2>
         <div data-is-container="true" v-bind:data-can-plan="has_plan_permissions">
             <program-increment-not-plannable />
             <feature-not-plannable v-if="!has_plan_permissions" />
@@ -46,57 +48,46 @@
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, ref, onMounted } from "vue";
+import { useNamespacedState, useStore, useActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import EmptyState from "./EmptyState.vue";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
-import { State, namespace } from "vuex-class";
 import type { Feature } from "../../../type";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import ProgramIncrementNotPlannable from "../ProgramIncrement/ProgramIncrementNotPlannable.vue";
 import FeatureNotPlannable from "./FeatureNotPlannable.vue";
 
-const configuration = namespace("configuration");
+const gettext_provider = useGettext();
 
-@Component({
-    components: {
-        FeatureNotPlannable,
-        ProgramIncrementNotPlannable,
-        ErrorDisplayer,
-        BacklogElementSkeleton,
-        ToBePlannedCard,
-        EmptyState,
-    },
-})
-export default class ToBePlanned extends Vue {
-    error_message = "";
-    has_error = false;
-    is_loading = false;
+const error_message = ref("");
+const has_error = ref(false);
+const is_loading = ref(false);
 
-    @State
-    readonly to_be_planned_elements!: Array<Feature>;
-    @configuration.State
-    readonly program_id!: number;
+const store = useStore();
+const to_be_planned_elements = computed((): Feature[] => store.state.to_be_planned_elements);
 
-    @configuration.State
-    readonly has_plan_permissions!: boolean;
+const { program_id, has_plan_permissions } = useNamespacedState<{
+    program_id: number;
+    has_plan_permissions: boolean;
+}>("configuration", ["program_id", "has_plan_permissions"]);
 
-    async mounted(): Promise<void> {
-        try {
-            this.is_loading = true;
-            await this.$store.dispatch("retrieveToBePlannedElement", this.program_id);
-        } catch (e) {
-            this.has_error = true;
-            this.error_message = this.$gettext(
-                "The retrieval of the elements to be planned in program has failed",
-            );
-            throw e;
-        } finally {
-            this.is_loading = false;
-        }
+const { retrieveToBePlannedElement } = useActions(["retrieveToBePlannedElement"]);
+
+onMounted(async () => {
+    try {
+        is_loading.value = true;
+        await retrieveToBePlannedElement(program_id.value);
+    } catch (e) {
+        has_error.value = true;
+        error_message.value = gettext_provider.$gettext(
+            "The retrieval of the elements to be planned in program has failed",
+        );
+        throw e;
+    } finally {
+        is_loading.value = false;
     }
-}
+});
 </script>
