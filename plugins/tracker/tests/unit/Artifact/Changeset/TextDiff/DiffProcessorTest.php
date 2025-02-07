@@ -22,35 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Codendi_UnifiedDiffFormatter;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
+use Tracker_FormElement_Field;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
-final class DiffProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DiffProcessorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var DiffProcessor
-     */
-    private $diff_processor;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $field;
+    private DiffProcessor $diff_processor;
+    private Tracker_Artifact_Changeset $changeset;
+    private Tracker_FormElement_Field $field;
 
     protected function setUp(): void
     {
-        $this->field     = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $this->changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $this->field     = TextFieldBuilder::aTextField(145)->build();
+        $this->changeset = ChangesetTestBuilder::aChangeset(15)->build();
 
-        $this->diff_processor = new DiffProcessor(new \Codendi_UnifiedDiffFormatter());
+        $this->diff_processor = new DiffProcessor(new Codendi_UnifiedDiffFormatter());
     }
 
     public function testTextDiff(): void
@@ -73,20 +64,20 @@ final class DiffProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             'text'
         );
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '- FullTextSearch does not work on Wiki pages',
             $this->diff_processor->processDiff($next, $previous, 'text')
         );
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '+ Problems during <ins> installation',
             $this->diff_processor->processDiff($next, $previous, 'text')
         );
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '+ FullTextSearch does not work on Wiki pages',
             $this->diff_processor->processDiff($previous, $next, 'text')
         );
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '- Problems during <ins> installation',
             $this->diff_processor->processDiff($previous, $next, 'text')
         );
@@ -112,20 +103,20 @@ final class DiffProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             'html'
         );
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '<tt class="prefix">-</tt><del>FullTextSearch does not work on Wiki pages</del>',
             $this->diff_processor->processDiff($next, $previous, 'html')
         );
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '<tt class="prefix">+</tt><ins>Problems during &lt;ins&gt; installation',
             $this->diff_processor->processDiff($next, $previous, 'html')
         );
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '<tt class="prefix">+</tt><ins>FullTextSearch does not work on Wiki pages',
             $this->diff_processor->processDiff($previous, $next, 'html')
         );
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '<tt class="prefix">-</tt><del>Problems during &lt;ins&gt; installation',
             $this->diff_processor->processDiff($previous, $next, 'html')
         );

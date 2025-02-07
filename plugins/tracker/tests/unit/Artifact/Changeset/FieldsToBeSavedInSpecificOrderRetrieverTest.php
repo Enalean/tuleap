@@ -22,37 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
-use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_Integer;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class FieldsToBeSavedInSpecificOrderRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldsToBeSavedInSpecificOrderRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetFiles(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
+        $tracker  = TrackerTestBuilder::aTracker()->build();
+        $artifact = ArtifactTestBuilder::anArtifact(135)->inTracker($tracker)->build();
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $text_field = TextFieldBuilder::aTextField(125)->build();
+        $file_field = FileFieldBuilder::aFileField(126)->build();
+        $int_field  = IntFieldBuilder::anIntField(127)->build();
 
-        $text_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $file_field = Mockery::mock(Tracker_FormElement_Field_File::class);
-        $int_field  = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-
-        $factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $factory->shouldReceive('getUsedFields')->andReturn([$text_field, $file_field, $int_field]);
-        $factory->shouldReceive('isFieldAFileField')->with($text_field)->andReturn(false);
-        $factory->shouldReceive('isFieldAFileField')->with($file_field)->andReturn(true);
-        $factory->shouldReceive('isFieldAFileField')->with($int_field)->andReturn(false);
+        $factory = $this->createPartialMock(Tracker_FormElementFactory::class, ['getUsedFields']);
+        $factory->method('getUsedFields')->willReturn([$text_field, $file_field, $int_field]);
 
         $retriever = new FieldsToBeSavedInSpecificOrderRetriever($factory);
-        $this->assertEquals([$file_field, $text_field, $int_field], $retriever->getFields($artifact));
+        self::assertEquals([$file_field, $text_field, $int_field], $retriever->getFields($artifact));
     }
 }
