@@ -23,49 +23,43 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Artifact_ChangesetValue_ArtifactLinkDiff;
 use Tracker_ArtifactLinkInfo;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactLinkDiffTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var M\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var M\MockInterface|TypePresenterFactory
-     */
-    private $factory;
-    /**
-     * @var M\MockInterface|PFUser
-     */
-    private $user;
+    private Tracker&MockObject $tracker;
+    private TypePresenterFactory&MockObject $factory;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->tracker = M::mock(Tracker::class, ['isProjectAllowedToUseType' => true]);
-        $this->factory = M::mock(TypePresenterFactory::class);
-        $this->user    = M::mock(PFUser::class);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->factory = $this->createMock(TypePresenterFactory::class);
+        $this->user    = UserTestBuilder::buildWithDefaults();
     }
 
-    public function testHasNoChangesWithEmptyArrays()
+    public function testHasNoChangesWithEmptyArrays(): void
     {
         $previous           = [];
         $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertFalse($artifact_link_diff->hasChanges());
+        self::assertFalse($artifact_link_diff->hasChanges());
     }
 
-    public function testHasNoChangesWhenTheTwoArtifactsAreEquals()
+    public function testHasNoChangesWhenTheTwoArtifactsAreEquals(): void
     {
         $previous           = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
@@ -74,147 +68,149 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertFalse($artifact_link_diff->hasChanges());
+        self::assertFalse($artifact_link_diff->hasChanges());
     }
 
-    public function testHasChangesWithANewArtifact()
+    public function testHasChangesWithANewArtifact(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->andReturn(new TypePresenter('', '', '', true));
+        $this->factory->method('getFromShortname')->willReturn(new TypePresenter('', '', '', true));
         $previous           = [];
         $next               = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertTrue($artifact_link_diff->hasChanges());
+        self::assertTrue($artifact_link_diff->hasChanges());
     }
 
-    public function testHasChangesWhenAnArtifactIsRemoved()
+    public function testHasChangesWhenAnArtifactIsRemoved(): void
     {
         $previous           = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
         ];
         $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertTrue($artifact_link_diff->hasChanges());
+        self::assertTrue($artifact_link_diff->hasChanges());
     }
 
-    public function testGetFormattedWithoutChanges()
+    public function testGetFormattedWithoutChanges(): void
     {
         $previous           = [];
         $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals('', $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals('', $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    public function testGetFormattedWithAnAddedArtifactWithoutType()
+    public function testGetFormattedWithAnAddedArtifactWithoutType(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
+        $this->factory->method('getFromShortname')->with('')->willReturn(new TypePresenter('', '', '', true));
         $previous           = [];
         $next               = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals("\n    * Added: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals("\n    * Added: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    public function testGetFormattedWithRemovedAllArtifactsWithoutType()
+    public function testGetFormattedWithRemovedAllArtifactsWithoutType(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
+        $this->factory->method('getFromShortname')->with('')->willReturn(new TypePresenter('', '', '', true));
         $previous           = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
         ];
         $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals(' cleared', $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals(' cleared', $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    public function testGetFormattedWithRemovedOneArtifactWithoutType()
+    public function testGetFormattedWithRemovedOneArtifactWithoutType(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
+        $this->factory->method('getFromShortname')->with('')->willReturn(new TypePresenter('', '', '', true));
         $previous           = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
-            123 => $this->getTrackerArtifactLinkInfo(123, 'bug', ''),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
+            123 => $this->getTrackerArtifactLinkInfo(123, ''),
         ];
         $next               = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals("\n    * Removed: bug #123\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals("\n    * Removed: bug #123\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    public function testGetFormattedWithAnAddedArtifactWithRandomType()
+    public function testGetFormattedWithAnAddedArtifactWithRandomType(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
+        $this->factory->method('getFromShortname')->with('fixed_in')->willReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
         $previous           = [];
         $next               = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'fixed_in'),
+            122 => $this->getTrackerArtifactLinkInfo(122, 'fixed_in'),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals("\n    * Added Fixed in: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals("\n    * Added Fixed in: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    public function testGetFormattedWithRemovedOneArtifactWithRandomType()
+    public function testGetFormattedWithRemovedOneArtifactWithRandomType(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
+        $this->factory->method('getFromShortname')->willReturnCallback(static fn(string $shortname) => match ($shortname) {
+            ''         => new TypePresenter('', '', '', true),
+            'fixed_in' => new TypePresenter('fixed_in', 'Fixed in', '', true),
+        });
         $previous           = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
-            123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
+            123 => $this->getTrackerArtifactLinkInfo(123, 'fixed_in'),
         ];
         $next               = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals("\n    * Removed: bug #123\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals("\n    * Removed: bug #123\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    public function testChangedArtifactLinkSetType()
+    public function testChangedArtifactLinkSetType(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new TypePresenter('reported_in', 'Reported in', '', true));
+        $this->factory->method('getFromShortname')->willReturnCallback(static fn(string $shortname) => match ($shortname) {
+            ''            => new TypePresenter('', '', '', true),
+            'fixed_in'    => new TypePresenter('fixed_in', 'Fixed in', '', true),
+            'reported_in' => new TypePresenter('reported_in', 'Reported in', '', true),
+        });
         $previous           = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
-            123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
+            123 => $this->getTrackerArtifactLinkInfo(123, 'fixed_in'),
         ];
         $next               = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'reported_in'),
-            123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
+            122 => $this->getTrackerArtifactLinkInfo(122, 'reported_in'),
+            123 => $this->getTrackerArtifactLinkInfo(123, 'fixed_in'),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals("\n    * Changed type from no type to Reported in: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals("\n    * Changed type from no type to Reported in: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    public function testChangedArtifactLinkRemoveType()
+    public function testChangedArtifactLinkRemoveType(): void
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new TypePresenter('reported_in', 'Reported in', '', true));
+        $this->factory->method('getFromShortname')->willReturnCallback(static fn(string $shortname) => match ($shortname) {
+            ''            => new TypePresenter('', '', '', true),
+            'fixed_in'    => new TypePresenter('fixed_in', 'Fixed in', '', true),
+            'reported_in' => new TypePresenter('reported_in', 'Reported in', '', true),
+        });
         $previous           = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'reported_in'),
-            123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
+            122 => $this->getTrackerArtifactLinkInfo(122, 'reported_in'),
+            123 => $this->getTrackerArtifactLinkInfo(123, 'fixed_in'),
         ];
         $next               = [
-            122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
-            123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
+            122 => $this->getTrackerArtifactLinkInfo(122, ''),
+            123 => $this->getTrackerArtifactLinkInfo(123, 'fixed_in'),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
-        $this->assertEquals("\n    * Changed type from Reported in to no type: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
+        self::assertEquals("\n    * Changed type from Reported in to no type: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-    private function getTrackerArtifactLinkInfo(int $artifact_id, string $keyword, string $type): Tracker_ArtifactLinkInfo
+    private function getTrackerArtifactLinkInfo(int $artifact_id, string $type): Tracker_ArtifactLinkInfo
     {
-        $tracker   = M::mock(Tracker::class, ['getItemName' => $keyword, 'getGroupId' => '*', 'getId' => 888]);
-        $changeset = M::mock(\Tracker_Artifact_Changeset::class, ['getId' => '*']);
-        $artifact  = M::mock(
-            \Tuleap\Tracker\Artifact\Artifact::class,
-            [
-                'getId' => $artifact_id,
-                'userCanView' => true,
-                'getTracker' => $tracker,
-                'getLastChangeset' => $changeset,
-            ]
-        );
+        $tracker   = TrackerTestBuilder::aTracker()->withId(888)->withName('bug')->withProject(ProjectTestBuilder::aProject()->build())->build();
+        $changeset = ChangesetTestBuilder::aChangeset(15)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact($artifact_id)
+            ->inTracker($tracker)
+            ->withChangesets($changeset)
+            ->userCanView($this->user)
+            ->build();
         return Tracker_ArtifactLinkInfo::buildFromArtifact($artifact, $type);
     }
 }

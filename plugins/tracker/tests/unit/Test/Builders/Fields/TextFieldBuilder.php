@@ -27,7 +27,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TextFieldBuilder
 {
-    private string $name = 'text';
+    private string $name  = 'text';
+    private string $label = 'Text';
     private \Tracker $tracker;
     /** @var list<\PFUser> $user_with_read_permissions */
     private array $user_with_read_permissions = [];
@@ -50,6 +51,12 @@ final class TextFieldBuilder
     public function withName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function withLabel(string $label): self
+    {
+        $this->label = $label;
         return $this;
     }
 
@@ -106,7 +113,7 @@ final class TextFieldBuilder
             10,
             15,
             $this->name,
-            '',
+            $this->label,
             '',
             true,
             'P',

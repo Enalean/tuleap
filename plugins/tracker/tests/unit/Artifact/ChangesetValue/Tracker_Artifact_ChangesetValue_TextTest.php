@@ -19,29 +19,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Artifact\ChangesetValue;
+
+use Codendi_HTMLPurifier;
+use Tracker_Artifact_ChangesetValue_Text;
+use Tracker_FormElement_Field_Text;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Tracker_Artifact_ChangesetValue_TextTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private const PROJECT_ID = 101;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
-
-    protected function setUp(): void
-    {
-        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-    }
 
     public function testTexts(): void
     {
         $field = $this->getTextFieldWithProject();
 
-        $text = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $field, false, 'Problems during installation', 'text');
-        $this->assertEquals('Problems during installation', $text->getText());
-        $this->assertEquals('Problems during installation', $text->getValue());
+        $text = new Tracker_Artifact_ChangesetValue_Text(111, ChangesetTestBuilder::aChangeset(15)->build(), $field, false, 'Problems during installation', 'text');
+        self::assertEquals('Problems during installation', $text->getText());
+        self::assertEquals('Problems during installation', $text->getValue());
     }
 
     public function testItReturnsTheValueWhenFormatIsText(): void
@@ -49,13 +52,13 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             'Problems with my code: <b>example</b>',
             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
         );
-        $this->assertEquals('Problems with my code: <b>example</b>', $text->getContentAsText());
+        self::assertEquals('Problems with my code: <b>example</b>', $text->getContentAsText());
     }
 
     public function testItStripHTMLWhenFormatIsHTML(): void
@@ -63,13 +66,13 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             'Problems with my code: <b>example</b>',
             Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
         );
-        $this->assertEquals('Problems with my code: example', $text->getContentAsText());
+        self::assertEquals('Problems with my code: example', $text->getContentAsText());
     }
 
     public function testItStripsCommonMarkMarkupWhenFormatIsCommonMark(): void
@@ -77,7 +80,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            $this->createMock(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             'Problems with my code: **example**',
@@ -91,13 +94,13 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             'Problems with my code: <b>example</b>',
             Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
         );
-        $this->assertEquals('Problems with my code: <b>example</b>', $text->getTextWithReferences(self::PROJECT_ID));
+        self::assertEquals('Problems with my code: <b>example</b>', $text->getTextWithReferences(self::PROJECT_ID));
     }
 
     public function testReturnsUnconvertedTextWhenFormatIsText(): void
@@ -105,31 +108,20 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             'Problems with my code: <b>example</b>',
             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
         );
-        $this->assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(self::PROJECT_ID));
+        self::assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(self::PROJECT_ID));
     }
 
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Text
-     */
-    private function getTextFieldWithProject()
+    private function getTextFieldWithProject(): Tracker_FormElement_Field_Text
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $field   = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
-        $field->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getLabel')->andReturn('my field');
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturn(self::PROJECT_ID);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-
-        return $field;
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        return TextFieldBuilder::aTextField(1)->inTracker($tracker)->withLabel('my field')->build();
     }
 
     public function testItReturnsTheTextValue(): void
@@ -137,7 +129,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             'Problems with my code: <b>example</b>',
@@ -152,7 +144,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             'Problems with my code: <b>example</b>',
@@ -164,10 +156,12 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
 
     public function testItReturnsTheMarkdownValue(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(self::PROJECT_ID);
-        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker   = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build())
+            ->build();
+        $changeset = ChangesetTestBuilder::aChangeset(15)
+            ->ofArtifact(ArtifactTestBuilder::anArtifact(785)->inTracker($tracker)->build())
+            ->build();
 
         $field = $this->getTextFieldWithProject();
         $text  = new Tracker_Artifact_ChangesetValue_Text(
@@ -184,12 +178,13 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
 
     public function testItBuildTheMarkdownTextValueRepresentation(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(self::PROJECT_ID);
-        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker   = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build())
+            ->build();
+        $changeset = ChangesetTestBuilder::aChangeset(15)
+            ->ofArtifact(ArtifactTestBuilder::anArtifact(785)->inTracker($tracker)->build())
+            ->build();
 
-        $user                 = Mockery::mock(PFUser::class);
         $text                 = 'Problems with my code: **example**';
         $field                = $this->getTextFieldWithProject();
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
@@ -201,22 +196,21 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
             Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
         );
 
-        $representation = $changeset_value_text->getRESTValue($user);
-        $this->assertEquals(
+        $representation = $changeset_value_text->getRESTValue(UserTestBuilder::buildWithDefaults());
+        self::assertEquals(
             "<p>Problems with my code: <strong>example</strong></p>\n",
             $representation->value,
         );
-        $this->assertEquals(
+        self::assertEquals(
             "<p>Problems with my code: <strong>example</strong></p>\n",
             $representation->post_processed_value,
         );
-        $this->assertEquals('html', $representation->format);
-        $this->assertEquals($text, $representation->commonmark);
+        self::assertEquals('html', $representation->format);
+        self::assertEquals($text, $representation->commonmark);
     }
 
     public function testItBuildTheHtmlTextValueRepresentation(): void
     {
-        $user  = Mockery::mock(PFUser::class);
         $text  = '<p>Problems with my code: <strong>example</strong> art #1</p>';
         $field = $this->getTextFieldWithProject();
 
@@ -227,7 +221,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
 
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             $text,
@@ -235,17 +229,16 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         );
         $changeset_value_text->setPurifier($purifier);
 
-        $representation = $changeset_value_text->getRESTValue($user);
-        $this->assertEquals(
+        $representation = $changeset_value_text->getRESTValue(UserTestBuilder::buildWithDefaults());
+        self::assertEquals(
             '<p>Problems with my code: <strong>example</strong> art #1</p>',
             $representation->value,
         );
-        $this->assertEquals('html', $representation->format);
+        self::assertEquals('html', $representation->format);
     }
 
     public function testItBuildTheTextTextValueRepresentation(): void
     {
-        $user  = Mockery::mock(PFUser::class);
         $text  = 'Ca débite, Ca débite art #1';
         $field = $this->getTextFieldWithProject();
 
@@ -256,7 +249,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
 
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(15)->build(),
             $field,
             false,
             $text,
@@ -264,15 +257,15 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         );
         $changeset_value_text->setPurifier($purifier);
 
-        $representation = $changeset_value_text->getRESTValue($user);
-        $this->assertEquals(
+        $representation = $changeset_value_text->getRESTValue(UserTestBuilder::buildWithDefaults());
+        self::assertEquals(
             'Ca débite, Ca débite art #1',
             $representation->value,
         );
-        $this->assertEquals(
+        self::assertEquals(
             'Ca débite, Ca débite <a href>art #1</a>',
             $representation->post_processed_value,
         );
-        $this->assertEquals('text', $representation->format);
+        self::assertEquals('text', $representation->format);
     }
 }
