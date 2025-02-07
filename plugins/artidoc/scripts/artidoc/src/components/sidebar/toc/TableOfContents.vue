@@ -54,10 +54,10 @@
                 class="table-of-content-section-title"
                 data-not-drag-handle="true"
             >
-                {{ section.value.display_title }}
+                {{ getReactiveEditedTitle(section) }}
             </a>
             <span v-else class="table-of-content-section-title" data-not-drag-handle="true">
-                {{ section.value.display_title }}
+                {{ getReactiveEditedTitle(section) }}
             </span>
             <span
                 class="reorder-arrows"
@@ -94,18 +94,23 @@ import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import { init } from "@tuleap/drag-and-drop";
 import type { Drekkenov, SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
 import { noop } from "@/helpers/noop";
+import type {
+    InternalArtidocSectionId,
+    ReactiveStoredArtidocSection,
+} from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { InternalArtidocSectionId } from "@/sections/SectionsCollection";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
+import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
 import { isCannotReorderSectionsFault } from "@/sections/CannotReorderSectionsFault";
 import { buildSectionsReorderer } from "@/sections/SectionsReorderer";
-import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 
 const { $gettext } = useGettext();
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
+const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const document_id = strictInject(DOCUMENT_ID);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -146,6 +151,9 @@ const handleReorderingFault = (fault: Fault): void => {
         details,
     });
 };
+
+const getReactiveEditedTitle = (section: ReactiveStoredArtidocSection): string =>
+    states_collection.getSectionState(section.value).edited_title.value;
 
 onMounted(() => {
     if (!list.value || !is_reorder_allowed) {
