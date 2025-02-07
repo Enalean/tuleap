@@ -85,7 +85,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $document_to_upload = $this->create();
 
-        $this->assertSame('/uploads/tracker/file/12', $document_to_upload->getUploadHref());
+        self::assertSame('/uploads/tracker/file/12', $document_to_upload->getUploadHref());
     }
 
     public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile(): void
@@ -96,7 +96,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $document_to_upload = $this->create();
 
-        $this->assertSame('/uploads/tracker/file/12', $document_to_upload->getUploadHref());
+        self::assertSame('/uploads/tracker/file/12', $document_to_upload->getUploadHref());
     }
 
     public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit(): void

@@ -59,7 +59,7 @@ final class PostArtifactDeletionCleanerTest extends TestCase
         $artifact->method('getTracker')->willReturn($tracker);
 
         $file_changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_File::class);
-        $file                 = $this->createStub(Tracker_FileInfo::class);
+        $file                 = $this->createMock(Tracker_FileInfo::class);
         $file_changeset_value->method('getFiles')->willReturn([$file]);
         $file->expects(self::once())->method('deleteFiles');
 

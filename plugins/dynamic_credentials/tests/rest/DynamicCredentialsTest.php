@@ -34,7 +34,7 @@ class DynamicCredentialsTest extends \RestBase
 
         $this->createAccount(self::USERNAME, self::PASSWORD, $expiration_date);
         $response = $this->login(self::USERNAME, self::PASSWORD);
-        $this->assertSame(201, $response->getStatusCode());
+        self::assertSame(201, $response->getStatusCode());
     }
 
     public function testPOSTNewAccountAndLoginFailureWithExpiredAccount()
@@ -70,7 +70,7 @@ class DynamicCredentialsTest extends \RestBase
             'signature'  => $this->getSignatureForDeleteAction(self::USERNAME),
         ]);
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('DELETE', $uri));
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
     }
 
     public function testDELETEInvalidSignatureRejected()

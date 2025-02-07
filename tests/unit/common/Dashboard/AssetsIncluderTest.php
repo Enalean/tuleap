@@ -113,16 +113,25 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItIncludesDependenciesWidgetsWithoutDuplicationWhenRequested(): void
     {
         $dashboard = $this->getDashboardWithWidgets(['first_widget', 'second_widget']);
+        $matcher   = $this->exactly(5);
 
-        $this->layout->method('includeFooterJavascriptFile')->withConsecutive(
-        // first widget
-            ['dashboards/dashboard.js'],
-            ['dependency_one'],
-            ['dependency_three'],
-            // second widget
-            ['dependency_one'],
-            ['dependency_four'],
-        );
+        $this->layout->expects($matcher)->method('includeFooterJavascriptFile')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('dashboards/dashboard.js', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('dependency_one', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('dependency_three', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame('dependency_one', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 5) {
+                self::assertSame('dependency_four', $parameters[0]);
+            }
+        });
         $this->layout->expects(self::once())->method('includeFooterJavascriptSnippet')->with('dependency_two');
 
         $this->layout->expects(self::once())->method('addCssAssetCollection');

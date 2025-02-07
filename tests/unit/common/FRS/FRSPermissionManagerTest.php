@@ -86,10 +86,10 @@ class FRSPermissionManagerTest extends TestCase
         $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
         $this->user->method('isSuperUser')->willReturn(false);
         $this->user->method('isAdmin')->willReturn(false);
-        $this->user->method('isMemberOfUGroup')->withConsecutive(
-            [5, 101],
-            [4, 101]
-        )->willReturnOnConsecutiveCalls(false, true);
+        $this->user->method('isMemberOfUGroup')->willReturnMap([
+            ['5', 101, 0, false],
+            ['4', 101, 0, true],
+        ]);
 
         self::assertTrue($this->permission_manager->isAdmin($this->project, $this->user));
     }
@@ -160,6 +160,7 @@ class FRSPermissionManagerTest extends TestCase
             ]
         );
         $this->user->method('isMemberOfUGroup')->with(3, 101)->willReturn(true);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->willReturn([]);
 
         self::assertTrue($this->permission_manager->userCanRead($this->project, $this->user));
     }
@@ -172,6 +173,7 @@ class FRSPermissionManagerTest extends TestCase
             ]
         );
         $this->user->method('isMemberOfUGroup')->willReturn(false);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->willReturn([]);
 
         self::assertFalse($this->permission_manager->userCanRead($this->project, $this->user));
     }

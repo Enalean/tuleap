@@ -408,9 +408,17 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $artifact_9  = ArtifactTestBuilder::anArtifact(9)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
         $artifact_10 = ArtifactTestBuilder::anArtifact(10)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
-        $this->artifact_factory->method('getArtifactById')
-            ->withConsecutive([9], [10])
-            ->willReturnOnConsecutiveCalls($artifact_9, $artifact_10);
+        $matcher     = $this->exactly(2);
+        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $artifact_9, $artifact_10) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(9, $parameters[0]);
+                return $artifact_9;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(10, $parameters[0]);
+                return $artifact_10;
+            }
+        });
 
         $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
         $this->artifact_factory->expects(self::once())->method('getChildrenCount')->willReturn([]);

@@ -79,9 +79,17 @@ final class CardwallConfigXmlExportTest extends TestCase
 
     public function testItReturnsTheGoodRootXmlWithTrackers(): void
     {
-        $this->config_factory->expects(self::exactly(2))->method('getOnTopConfig')
-            ->withConsecutive([$this->tracker1], [$this->tracker2])
-            ->willReturnOnConsecutiveCalls($this->cardwall_config, $this->cardwall_config2);
+        $matcher = self::exactly(2);
+        $this->config_factory->expects($matcher)->method('getOnTopConfig')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->tracker1, $parameters[0]);
+                return $this->cardwall_config;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->tracker2, $parameters[0]);
+                return $this->cardwall_config2;
+            }
+        });
 
         $this->cardwall_config2->method('getDashboardColumns')->willReturn([]);
 
@@ -98,10 +106,18 @@ final class CardwallConfigXmlExportTest extends TestCase
         $cardwall_config2 = $this->createMock(Cardwall_OnTop_Config::class);
         $cardwall_config2->method('isEnabled')->willReturn(false);
         $config_factory2 = $this->createMock(Cardwall_OnTop_ConfigFactory::class);
+        $matcher         = $this->exactly(2);
 
-        $config_factory2->method('getOnTopConfig')
-            ->withConsecutive([$this->tracker1], [$this->tracker2])
-            ->willReturnOnConsecutiveCalls($cardwall_config, $cardwall_config2);
+        $config_factory2->expects($matcher)->method('getOnTopConfig')->willReturnCallback(function (...$parameters) use ($matcher, $cardwall_config, $cardwall_config2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->tracker1, $parameters[0]);
+                return $cardwall_config;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->tracker2, $parameters[0]);
+                return $cardwall_config2;
+            }
+        });
 
         $xml_exporter2 = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $config_factory2, $this->xml_validator);
 
@@ -111,9 +127,17 @@ final class CardwallConfigXmlExportTest extends TestCase
 
     public function testItThrowsAnExceptionIfXmlGeneratedIsNotValid(): void
     {
-        $this->config_factory->method('getOnTopConfig')
-            ->withConsecutive([$this->tracker1], [$this->tracker2])
-            ->willReturnOnConsecutiveCalls($this->cardwall_config, $this->cardwall_config2);
+        $matcher = $this->exactly(2);
+        $this->config_factory->expects($matcher)->method('getOnTopConfig')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->tracker1, $parameters[0]);
+                return $this->cardwall_config;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->tracker2, $parameters[0]);
+                return $this->cardwall_config2;
+            }
+        });
 
         $this->cardwall_config2->method('getDashboardColumns')->willReturn([]);
 

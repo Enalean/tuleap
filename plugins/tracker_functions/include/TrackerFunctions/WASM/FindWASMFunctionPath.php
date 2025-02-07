@@ -26,13 +26,19 @@ use Tracker;
 
 final class FindWASMFunctionPath implements WASMFunctionPathHelper
 {
+    /**
+     * @psalm-var non-empty-string
+     */
     private readonly string $base_path;
 
     public function __construct()
     {
-        $this->base_path = \ForgeConfig::get('sys_data_dir') . '/tracker_functions/';
+        $this->base_path = ((string) \ForgeConfig::get('sys_data_dir')) . '/tracker_functions/';
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getPathForTracker(Tracker $tracker): string
     {
         return $this->base_path . $tracker->getId() . '/post-action.wasm';

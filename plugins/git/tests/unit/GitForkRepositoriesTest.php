@@ -98,11 +98,17 @@ final class GitForkRepositoriesTest extends TestCase
         $git = $this->createPartialMock(Git::class, ['addAction']);
         $git->setProject($project);
         $git->setProjectManager($projectManager);
-        $git->expects(self::atLeast(2))->method('addAction')
-            ->withConsecutive(
-                ['getProjectRepositoryList', [$groupId]],
-                ['fork', [$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions]],
-            );
+        $matcher = self::atLeast(2);
+        $git->expects($matcher)->method('addAction')->willReturnCallback(function (...$parameters) use ($matcher, $groupId, $repos, $project, $path, $user, $forkPermissions) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('getProjectRepositoryList', $parameters[0]);
+                self::assertSame($groupId, (int) $parameters[1][0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('fork', $parameters[0]);
+                self::assertSame([$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions], $parameters[1]);
+            }
+        });
         $request = new Codendi_Request([
             'repos'       => '1001',
             'path'        => 'toto',

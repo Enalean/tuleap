@@ -106,6 +106,6 @@ final class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->expectOutputString(json_encode(['message' => $error_message]));
-        $this->assertSame($error_code, http_response_code());
+        self::assertSame($error_code, http_response_code());
     }
 }

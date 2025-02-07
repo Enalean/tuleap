@@ -71,7 +71,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertTrue(Result::isOk($result));
-        $this->assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
+        self::assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
         self::assertTrue($save->isCalled());
         self::assertSame(
             $current_time->add(new \DateInterval('PT4H'))->getTimestamp(),
@@ -104,7 +104,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertTrue(Result::isOk($result));
-        $this->assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
+        self::assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
         self::assertTrue($save->isCalled());
         self::assertNull($save->getSaved()->expiration_date);
     }
@@ -134,7 +134,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertFalse($save->isCalled());
         self::assertTrue(Result::isOk($result));
-        $this->assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
+        self::assertSame('/uploads/artidoc/sections/file/' . $identifier->toString(), $result->value->getUploadHref());
     }
 
     public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit(): void

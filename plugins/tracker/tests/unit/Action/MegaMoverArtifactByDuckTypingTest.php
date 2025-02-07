@@ -108,7 +108,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $this->expectException(MoveArtifactNotDoneException::class);
 
         $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping, new NullLogger());
-        $this->assertSame(1, $this->xml_updater->getCallCount());
+        self::assertSame(1, $this->xml_updater->getCallCount());
     }
 
     public function testItRunTheMoveAndUpdateRankAndReturnTotalArtifactsDeleted(): void
@@ -128,6 +128,6 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation');
 
         $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping, new NullLogger());
-        $this->assertSame(1, $this->xml_updater->getCallCount());
+        self::assertSame(1, $this->xml_updater->getCallCount());
     }
 }

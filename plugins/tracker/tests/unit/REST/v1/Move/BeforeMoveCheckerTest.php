@@ -76,6 +76,8 @@ final class BeforeMoveCheckerTest extends TestCase
         $this->event_manager->method('processEvent');
         $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
 
+        $this->expectNotToPerformAssertions();
+
         $this->before_move_checker->check($source_tracker, $target_tracker, $this->user, $artifact, $event);
     }
 

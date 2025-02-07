@@ -427,19 +427,19 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertCount(4, $post_actions);
 
         $first_post_action = $post_actions[0];
-        $this->assertSame('set_field_value', $first_post_action['type']);
-        $this->assertSame('date', $first_post_action['field_type']);
+        self::assertSame('set_field_value', $first_post_action['type']);
+        self::assertSame('date', $first_post_action['field_type']);
 
         $second_post_action = $post_actions[1];
-        $this->assertSame('set_field_value', $second_post_action['type']);
-        $this->assertSame('int', $second_post_action['field_type']);
+        self::assertSame('set_field_value', $second_post_action['type']);
+        self::assertSame('int', $second_post_action['field_type']);
 
         $third_post_action = $post_actions[2];
-        $this->assertSame('set_field_value', $third_post_action['type']);
-        $this->assertSame('float', $third_post_action['field_type']);
+        self::assertSame('set_field_value', $third_post_action['type']);
+        self::assertSame('float', $third_post_action['field_type']);
 
         $forth_post_action = $post_actions[3];
-        $this->assertSame('run_job', $forth_post_action['type']);
+        self::assertSame('run_job', $forth_post_action['type']);
     }
 
     public function testPUTTrackerWorkflowTransitionActionsDeniedForReadOnlyUser(): void
@@ -583,9 +583,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $response_get_content = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $response_get_content);
 
-        $this->assertSame('set_field_value', $response_get_content[0]['type']);
-        $this->assertSame('float', $response_get_content[0]['field_type']);
-        $this->assertSame(1.2, $response_get_content[0]['value']);
-        $this->assertSame($used_field_id, $response_get_content[0]['field_id']);
+        self::assertSame('set_field_value', $response_get_content[0]['type']);
+        self::assertSame('float', $response_get_content[0]['field_type']);
+        self::assertSame(1.2, $response_get_content[0]['value']);
+        self::assertSame($used_field_id, $response_get_content[0]['field_id']);
     }
 }

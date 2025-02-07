@@ -76,8 +76,8 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
 
         $artifact->shouldReceive('getChangesetFactory')->once()->andReturns($changeset_factory);
 
-        $this->assertSame($changeset, $artifact->getLastChangeset());
-        $this->assertSame($changeset, $artifact->getLastChangeset());
+        self::assertSame($changeset, $artifact->getLastChangeset());
+        self::assertSame($changeset, $artifact->getLastChangeset());
     }
 
     public function testLastChangesetIsRetrievedWhenAllChangesetsHaveAlreadyBeenLoaded(): void
@@ -95,8 +95,8 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->setChangesets($changesets);
         $artifact->shouldReceive('getChangesets')->once()->andReturns($changesets);
 
-        $this->assertSame($last_changeset, $artifact->getLastChangeset());
-        $this->assertSame($last_changeset, $artifact->getLastChangeset());
+        self::assertSame($last_changeset, $artifact->getLastChangeset());
+        self::assertSame($last_changeset, $artifact->getLastChangeset());
     }
 
     public function testGetValue(): void
@@ -923,6 +923,6 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $children = $artifact->getChildrenForUserInSameProject($user);
 
         $this->assertCount(1, $children);
-        $this->assertSame($children[0], $visible_artifact_children);
+        self::assertSame($children[0], $visible_artifact_children);
     }
 }

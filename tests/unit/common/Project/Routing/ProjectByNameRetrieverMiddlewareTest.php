@@ -49,11 +49,11 @@ final class ProjectByNameRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
 
         $request = (new NullServerRequest())->withAttribute('project_name', 'acme');
 
-        $this->assertSame(
+        self::assertSame(
             $response,
             $middleware->process($request, $handler)
         );
-        $this->assertSame(
+        self::assertSame(
             $project,
             $handler->getCapturedRequest()->getAttribute(\Project::class)
         );

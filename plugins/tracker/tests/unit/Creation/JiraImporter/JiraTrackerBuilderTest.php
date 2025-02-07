@@ -48,13 +48,13 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertCount(2, $result);
 
-        $this->assertSame('epic', $result[0]->getId());
-        $this->assertSame('Epics', $result[0]->getName());
-        $this->assertSame(['id' => 'epic', 'name' => 'Epics'], $result[0]->toArray());
+        self::assertSame('epic', $result[0]->getId());
+        self::assertSame('Epics', $result[0]->getName());
+        self::assertSame(['id' => 'epic', 'name' => 'Epics'], $result[0]->toArray());
 
-        $this->assertSame('issue', $result[1]->getId());
-        $this->assertSame('Issues', $result[1]->getName());
-        $this->assertSame(['id' => 'issue', 'name' => 'Issues'], $result[1]->toArray());
+        self::assertSame('issue', $result[1]->getId());
+        self::assertSame('Issues', $result[1]->getName());
+        self::assertSame(['id' => 'issue', 'name' => 'Issues'], $result[1]->toArray());
     }
 
     public function testItThrowsAnExceptionIfJiraRepresentationHasChanged(): void

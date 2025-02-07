@@ -62,7 +62,7 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $identified_users = $this->mapping->getIdentifiedUsers();
         $this->assertEquals(1, count($identified_users));
-        $this->assertSame(
+        self::assertSame(
             [
                 'jira_display_name'       => 'Jeannot',
                 'tuleap_user_real_name'   => 'John Doe',
@@ -86,7 +86,7 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $not_matching_email_address_users = $this->mapping->getUserEmailsNotMatching();
         $this->assertEquals(1, count($not_matching_email_address_users));
-        $this->assertSame(
+        self::assertSame(
             ['jira_display_name' => 'Jeannot'],
             $not_matching_email_address_users[0]
         );
@@ -104,7 +104,7 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $unknown_users = $this->mapping->getUnknownUsers();
         $this->assertEquals(1, count($unknown_users));
-        $this->assertSame(
+        self::assertSame(
             ['jira_display_name' => 'Jeannot'],
             $unknown_users[0]
         );

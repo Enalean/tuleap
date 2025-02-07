@@ -222,7 +222,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
                 )
             );
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     private function buildOAuth2App(int $id): OAuth2App

@@ -48,10 +48,10 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $response            = $this->lock_response_builder->buildSuccessfulLockCreation($lock);
         $serialized_response = json_decode(json_encode($response));
 
-        $this->assertSame('Mick Jagger', $serialized_response->lock->owner->name);
-        $this->assertSame('test/FileTest.png', $serialized_response->lock->path);
-        $this->assertSame('1', $serialized_response->lock->id);
-        $this->assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
+        self::assertSame('Mick Jagger', $serialized_response->lock->owner->name);
+        self::assertSame('test/FileTest.png', $serialized_response->lock->path);
+        self::assertSame('1', $serialized_response->lock->id);
+        self::assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
     }
 
     public function testListLocksResponseIsCorrect(): void
@@ -82,16 +82,16 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(2, $serialized_response->locks);
 
         $serialized_lock_1 = $serialized_response->locks[0];
-        $this->assertSame('Mick Jagger', $serialized_lock_1->owner->name);
-        $this->assertSame('test/FileTest1.png', $serialized_lock_1->path);
-        $this->assertSame('1', $serialized_lock_1->id);
-        $this->assertSame('2019-01-14T18:29:07+01:00', $serialized_lock_1->locked_at);
+        self::assertSame('Mick Jagger', $serialized_lock_1->owner->name);
+        self::assertSame('test/FileTest1.png', $serialized_lock_1->path);
+        self::assertSame('1', $serialized_lock_1->id);
+        self::assertSame('2019-01-14T18:29:07+01:00', $serialized_lock_1->locked_at);
 
         $serialized_lock_2 = $serialized_response->locks[1];
-        $this->assertSame('Jean Bono', $serialized_lock_2->owner->name);
-        $this->assertSame('test/FileTest2.png', $serialized_lock_2->path);
-        $this->assertSame('2', $serialized_lock_2->id);
-        $this->assertSame('2019-01-16T19:18:15+01:00', $serialized_lock_2->locked_at);
+        self::assertSame('Jean Bono', $serialized_lock_2->owner->name);
+        self::assertSame('test/FileTest2.png', $serialized_lock_2->path);
+        self::assertSame('2', $serialized_lock_2->id);
+        self::assertSame('2019-01-16T19:18:15+01:00', $serialized_lock_2->locked_at);
     }
 
     public function testVerifyLocksResponseIsCorrect(): void
@@ -124,16 +124,16 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(1, $serialized_response->theirs);
 
         $our_serialized_lock = $serialized_response->ours[0];
-        $this->assertSame('Mick Jagger', $our_serialized_lock->owner->name);
-        $this->assertSame('test/FileTest1.png', $our_serialized_lock->path);
-        $this->assertSame('1', $our_serialized_lock->id);
-        $this->assertSame('2019-01-14T18:29:07+01:00', $our_serialized_lock->locked_at);
+        self::assertSame('Mick Jagger', $our_serialized_lock->owner->name);
+        self::assertSame('test/FileTest1.png', $our_serialized_lock->path);
+        self::assertSame('1', $our_serialized_lock->id);
+        self::assertSame('2019-01-14T18:29:07+01:00', $our_serialized_lock->locked_at);
 
         $their_serialized_lock = $serialized_response->theirs[0];
-        $this->assertSame('Jean Bono', $their_serialized_lock->owner->name);
-        $this->assertSame('test/FileTest2.png', $their_serialized_lock->path);
-        $this->assertSame('2', $their_serialized_lock->id);
-        $this->assertSame('2019-01-16T19:18:15+01:00', $their_serialized_lock->locked_at);
+        self::assertSame('Jean Bono', $their_serialized_lock->owner->name);
+        self::assertSame('test/FileTest2.png', $their_serialized_lock->path);
+        self::assertSame('2', $their_serialized_lock->id);
+        self::assertSame('2019-01-16T19:18:15+01:00', $their_serialized_lock->locked_at);
     }
 
     public function testErrorResponseIsCorrect(): void
@@ -142,7 +142,7 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $response            = $this->lock_response_builder->buildErrorResponse($message);
         $serialized_response = json_decode(json_encode($response));
 
-        $this->assertSame($message, $serialized_response->message);
+        self::assertSame($message, $serialized_response->message);
     }
 
     public function testDeleteLockResponseIsCorrect(): void
@@ -159,10 +159,10 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $response            = $this->lock_response_builder->buildSuccessfulLockDestruction($lock);
         $serialized_response = json_decode(json_encode($response));
 
-        $this->assertSame('Mick Jagger', $serialized_response->lock->owner->name);
-        $this->assertSame('test/FileTest.png', $serialized_response->lock->path);
-        $this->assertSame('1', $serialized_response->lock->id);
-        $this->assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
+        self::assertSame('Mick Jagger', $serialized_response->lock->owner->name);
+        self::assertSame('test/FileTest.png', $serialized_response->lock->path);
+        self::assertSame('1', $serialized_response->lock->id);
+        self::assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
     }
 
     public function testLockConflictResponseIsCorrect(): void
@@ -179,10 +179,10 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $response            = $this->lock_response_builder->buildLockConflictErrorResponse($lock);
         $serialized_response = json_decode(json_encode($response));
 
-        $this->assertSame('Mick Jagger', $serialized_response->lock->owner->name);
-        $this->assertSame('test/FileTest.png', $serialized_response->lock->path);
-        $this->assertSame('1', $serialized_response->lock->id);
-        $this->assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
-        $this->assertSame('already created lock', $serialized_response->message);
+        self::assertSame('Mick Jagger', $serialized_response->lock->owner->name);
+        self::assertSame('test/FileTest.png', $serialized_response->lock->path);
+        self::assertSame('1', $serialized_response->lock->id);
+        self::assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
+        self::assertSame('already created lock', $serialized_response->message);
     }
 }

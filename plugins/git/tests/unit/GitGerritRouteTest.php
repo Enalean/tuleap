@@ -250,12 +250,18 @@ final class GitGerritRouteTest extends TestCase
         $repo            = GitRepositoryTestBuilder::aProjectRepository()->build();
         $factory         = $this->createMock(GitRepositoryFactory::class);
         $factory->expects(self::once())->method('getRepositoryById')->willReturn($repo);
-        $git = $this->getGitDisconnect($request, $factory);
+        $git     = $this->getGitDisconnect($request, $factory);
+        $matcher = $this->exactly(2);
 
-        $git->method('addAction')->withConsecutive(
-            ['disconnectFromGerrit', [$repo]],
-            ['redirectToRepoManagement', self::anything()],
-        );
+        $git->expects($matcher)->method('addAction')->willReturnCallback(function (...$parameters) use ($matcher, $repo) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('disconnectFromGerrit', $parameters[0]);
+                self::assertSame([$repo], $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('redirectToRepoManagement', $parameters[0]);
+            }
+        });
         $git->request();
     }
 
@@ -297,12 +303,18 @@ final class GitGerritRouteTest extends TestCase
         $request->set('remote_server_id', $server_id);
         $request->set('gerrit_template_id', $gerrit_template_id);
 
-        $git = $this->getGitMigrate($request, $factory);
+        $git     = $this->getGitMigrate($request, $factory);
+        $matcher = $this->exactly(2);
 
-        $git->method('addAction')->withConsecutive(
-            ['migrateToGerrit', [$this->repository, $server_id, $gerrit_template_id, $this->admin]],
-            ['redirectToRepoManagementWithMigrationAccessRightInformation', self::anything()],
-        );
+        $git->expects($matcher)->method('addAction')->willReturnCallback(function (...$parameters) use ($matcher, $server_id, $gerrit_template_id) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('migrateToGerrit', $parameters[0]);
+                self::assertSame([$this->repository, $server_id, $gerrit_template_id, $this->admin], $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('redirectToRepoManagementWithMigrationAccessRightInformation', $parameters[0]);
+            }
+        });
 
         $git->request();
     }

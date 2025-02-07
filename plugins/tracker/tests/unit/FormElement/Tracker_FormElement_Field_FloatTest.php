@@ -143,10 +143,10 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
     public function testFetchChangesetValue(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $this->assertSame('3.1416', $float_field->fetchChangesetValue(123, 456, 3.14159));
-        $this->assertSame('0', $float_field->fetchChangesetValue(123, 456, 0));
-        $this->assertSame('2', $float_field->fetchChangesetValue(123, 456, 2));
-        $this->assertSame('', $float_field->fetchChangesetValue(123, 456, null));
+        self::assertSame('3.1416', $float_field->fetchChangesetValue(123, 456, 3.14159));
+        self::assertSame('0', $float_field->fetchChangesetValue(123, 456, 0));
+        self::assertSame('2', $float_field->fetchChangesetValue(123, 456, 2));
+        self::assertSame('', $float_field->fetchChangesetValue(123, 456, null));
     }
 
     public function testItSearchOnZeroValue(): void
@@ -254,7 +254,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
 
-        $this->assertSame('5.1', $html_value_read_only);
+        self::assertSame('5.1', $html_value_read_only);
     }
 
     public function testItDisplaysTheFloatValue0InReadOnly(): void
@@ -279,7 +279,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
 
-        $this->assertSame('0', $html_value_read_only);
+        self::assertSame('0', $html_value_read_only);
     }
 
     public function testItDisplaysEmptyMessageIfNoChangesetValue(): void
@@ -294,7 +294,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, null);
 
-        $this->assertSame('Empty', $html_value_read_only);
+        self::assertSame('Empty', $html_value_read_only);
     }
 
     public function testItDisplaysEmptyMessageIfNoChangesetFloatValue(): void
@@ -311,6 +311,6 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
 
-        $this->assertSame('Empty', $html_value_read_only);
+        self::assertSame('Empty', $html_value_read_only);
     }
 }

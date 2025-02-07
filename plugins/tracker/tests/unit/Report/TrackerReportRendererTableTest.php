@@ -122,7 +122,7 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn([]);
 
-        $this->assertSame(
+        self::assertSame(
             [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,99,100) '],
             $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns)
         );

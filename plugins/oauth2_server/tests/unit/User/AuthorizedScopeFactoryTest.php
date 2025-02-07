@@ -96,9 +96,9 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(['foo:bar', 'type:value']);
 
         $saved_scopes = $this->factory->getAuthorizedScopes($user, $app);
-        $this->assertSame(2, count($saved_scopes));
-        $this->assertSame('foo:bar', $saved_scopes[0]->getIdentifier()->toString());
-        $this->assertSame('type:value', $saved_scopes[1]->getIdentifier()->toString());
+        self::assertSame(2, count($saved_scopes));
+        self::assertSame('foo:bar', $saved_scopes[0]->getIdentifier()->toString());
+        self::assertSame('type:value', $saved_scopes[1]->getIdentifier()->toString());
     }
 
     public function testGetAuthorizedScopesSkipsInvalidSavedScopes(): void
@@ -112,7 +112,7 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(['flob:wobble', 'type:value']);
 
         $saved_scopes = $this->factory->getAuthorizedScopes($user, $app);
-        $this->assertSame(1, count($saved_scopes));
-        $this->assertSame('type:value', $saved_scopes[0]->getIdentifier()->toString());
+        self::assertSame(1, count($saved_scopes));
+        self::assertSame('type:value', $saved_scopes[0]->getIdentifier()->toString());
     }
 }

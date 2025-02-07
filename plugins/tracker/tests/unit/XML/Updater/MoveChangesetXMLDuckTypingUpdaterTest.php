@@ -370,24 +370,24 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         );
 
         $this->assertCount(16, $artifact_xml->changeset->field_change);
-        $this->assertSame($destination_title_field->getName(), (string) $artifact_xml->changeset->field_change[0]->attributes()->field_name);
-        $this->assertSame($destination_details_field->getName(), (string) $artifact_xml->changeset->field_change[1]->attributes()->field_name);
-        $this->assertSame($destination_status_field->getName(), (string) $artifact_xml->changeset->field_change[2]->attributes()->field_name);
-        $this->assertSame($destination_severity_field->getName(), (string) $artifact_xml->changeset->field_change[3]->attributes()->field_name);
-        $this->assertSame($destination_close_date_field->getName(), (string) $artifact_xml->changeset->field_change[4]->attributes()->field_name);
-        $this->assertSame($destination_initial_effort_field->getName(), (string) $artifact_xml->changeset->field_change[5]->attributes()->field_name);
-        $this->assertSame($destination_remaining_effort_field->getName(), (string) $artifact_xml->changeset->field_change[6]->attributes()->field_name);
-        $this->assertSame($destination_static_multiple_list_field->getName(), (string) $artifact_xml->changeset->field_change[7]->attributes()->field_name);
-        $this->assertSame($destination_assigned_to_field->getName(), (string) $artifact_xml->changeset->field_change[8]->attributes()->field_name);
-        $this->assertSame($destination_cc_field->getName(), (string) $artifact_xml->changeset->field_change[9]->attributes()->field_name);
-        $this->assertSame($destination_permissions_field->getName(), (string) $artifact_xml->changeset->field_change[10]->attributes()->field_name);
-        $this->assertSame($destination_open_list_user_group_field->getName(), (string) $artifact_xml->changeset->field_change[11]->attributes()->field_name);
-        $this->assertSame($destination_open_list_static_field->getName(), (string) $artifact_xml->changeset->field_change[12]->attributes()->field_name);
-        $this->assertSame($destination_open_list_user_field->getName(), (string) $artifact_xml->changeset->field_change[13]->attributes()->field_name);
-        $this->assertSame($destination_computed_field->getName(), (string) $artifact_xml->changeset->field_change[14]->attributes()->field_name);
+        self::assertSame($destination_title_field->getName(), (string) $artifact_xml->changeset->field_change[0]->attributes()->field_name);
+        self::assertSame($destination_details_field->getName(), (string) $artifact_xml->changeset->field_change[1]->attributes()->field_name);
+        self::assertSame($destination_status_field->getName(), (string) $artifact_xml->changeset->field_change[2]->attributes()->field_name);
+        self::assertSame($destination_severity_field->getName(), (string) $artifact_xml->changeset->field_change[3]->attributes()->field_name);
+        self::assertSame($destination_close_date_field->getName(), (string) $artifact_xml->changeset->field_change[4]->attributes()->field_name);
+        self::assertSame($destination_initial_effort_field->getName(), (string) $artifact_xml->changeset->field_change[5]->attributes()->field_name);
+        self::assertSame($destination_remaining_effort_field->getName(), (string) $artifact_xml->changeset->field_change[6]->attributes()->field_name);
+        self::assertSame($destination_static_multiple_list_field->getName(), (string) $artifact_xml->changeset->field_change[7]->attributes()->field_name);
+        self::assertSame($destination_assigned_to_field->getName(), (string) $artifact_xml->changeset->field_change[8]->attributes()->field_name);
+        self::assertSame($destination_cc_field->getName(), (string) $artifact_xml->changeset->field_change[9]->attributes()->field_name);
+        self::assertSame($destination_permissions_field->getName(), (string) $artifact_xml->changeset->field_change[10]->attributes()->field_name);
+        self::assertSame($destination_open_list_user_group_field->getName(), (string) $artifact_xml->changeset->field_change[11]->attributes()->field_name);
+        self::assertSame($destination_open_list_static_field->getName(), (string) $artifact_xml->changeset->field_change[12]->attributes()->field_name);
+        self::assertSame($destination_open_list_user_field->getName(), (string) $artifact_xml->changeset->field_change[13]->attributes()->field_name);
+        self::assertSame($destination_computed_field->getName(), (string) $artifact_xml->changeset->field_change[14]->attributes()->field_name);
 
         $this->assertCount(1, $artifact_xml->changeset->external_field_change);
-        $this->assertSame($destination_external_field->getName(), (string) $artifact_xml->changeset->external_field_change[0]->attributes()->field_name);
+        self::assertSame($destination_external_field->getName(), (string) $artifact_xml->changeset->external_field_change[0]->attributes()->field_name);
     }
 
     private function getXMLArtifact(): \SimpleXMLElement

@@ -118,7 +118,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
     }
 
     /**
-     * @return Ok<string>|Err<Fault>
+     * @return Ok<non-empty-string>|Err<Fault>
      */
     private function getWASMFunctionPath(Tracker $tracker): Ok|Err
     {

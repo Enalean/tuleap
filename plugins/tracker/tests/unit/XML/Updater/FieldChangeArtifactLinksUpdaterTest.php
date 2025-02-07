@@ -84,9 +84,9 @@ final class FieldChangeArtifactLinksUpdaterTest extends TestCase
             0
         );
 
-        $this->assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
-        $this->assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
-        $this->assertSame('The type "system_1" of the link to artifact #101 has been set to "no type"', (string) $changeset_xml->comments->comment->body);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
+        self::assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('The type "system_1" of the link to artifact #101 has been set to "no type"', (string) $changeset_xml->comments->comment->body);
     }
 
     public function testItResetsTheTypeNatureWhenItIsNotUsedInTheDestinationProject(): void
@@ -101,9 +101,9 @@ final class FieldChangeArtifactLinksUpdaterTest extends TestCase
             0
         );
 
-        $this->assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
-        $this->assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
-        $this->assertSame('The type "my_custom_type" of the link to artifact #101 has been set to "no type"', (string) $changeset_xml->comments->comment->body);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
+        self::assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('The type "my_custom_type" of the link to artifact #101 has been set to "no type"', (string) $changeset_xml->comments->comment->body);
     }
 
     public function testItLeavesTheLinkAsItIsWhenItIsACustomNatureAndItIsUsedInTheDestinationProject(): void
@@ -116,9 +116,9 @@ final class FieldChangeArtifactLinksUpdaterTest extends TestCase
             0
         );
 
-        $this->assertSame($this->custom_type_1->shortname, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
-        $this->assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
-        $this->assertSame('', (string) $changeset_xml->comments->comment->body);
+        self::assertSame($this->custom_type_1->shortname, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
+        self::assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('', (string) $changeset_xml->comments->comment->body);
     }
 
     private function getChangesetXMLWithLinkType(TypePresenter $type): SimpleXMLElement

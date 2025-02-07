@@ -85,6 +85,6 @@ final class PrivateCommentReportQueryTest extends TrackerBase
     {
         $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $artifacts);
-        $this->assertSame($this->private_comment_artifact_id, $artifacts[0]['id']);
+        self::assertSame($this->private_comment_artifact_id, $artifacts[0]['id']);
     }
 }

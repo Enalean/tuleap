@@ -228,9 +228,9 @@ final class ItemFactoryTest extends TestCase
         $fld113 = new Docman_Folder(['parent_id' => 112]);
 
         $itemFactory->method('getItemFromDb')->willReturnMap([
-            110 => $fld110,
-            111 => $fld111,
-            112 => $fld112,
+            110 => [$fld110],
+            111 => [$fld111],
+            112 => [$fld112],
         ]);
         $itemFactory->method('isRoot')->willReturnCallback(static fn(Docman_Item $item) => match ($item) {
             $fld110                   => true,
@@ -505,7 +505,16 @@ final class ItemFactoryTest extends TestCase
 
         $versionFactory = $this->createMock(Docman_VersionFactory::class);
         $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn([$v1, $v2]);
-        $versionFactory->method('restore')->withConsecutive([$v1], [$v2])->willReturn(true);
+        $matcher = $this->exactly(2);
+        $versionFactory->expects($matcher)->method('restore')->willReturnCallback(function (...$parameters) use ($matcher, $v1, $v2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($v1, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($v2, $parameters[0]);
+            }
+            return true;
+        });
         $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
@@ -569,7 +578,17 @@ final class ItemFactoryTest extends TestCase
 
         $versionFactory = $this->createMock(Docman_VersionFactory::class);
         $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn([$v1, $v2]);
-        $versionFactory->method('restore')->withConsecutive([$v1], [$v2])->willReturnOnConsecutiveCalls(true, false);
+        $matcher = $this->exactly(2);
+        $versionFactory->expects($matcher)->method('restore')->willReturnCallback(function (...$parameters) use ($matcher, $v1, $v2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($v1, $parameters[0]);
+                return true;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($v2, $parameters[0]);
+                return false;
+            }
+        });
         $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
@@ -605,7 +624,16 @@ final class ItemFactoryTest extends TestCase
 
         $versionFactory = $this->createMock(Docman_VersionFactory::class);
         $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn([$v1, $v2]);
-        $versionFactory->method('restore')->withConsecutive([$v1], [$v2])->willReturn(false);
+        $matcher = $this->exactly(2);
+        $versionFactory->expects($matcher)->method('restore')->willReturnCallback(function (...$parameters) use ($matcher, $v1, $v2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($v1, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($v2, $parameters[0]);
+            }
+            return false;
+        });
         $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event

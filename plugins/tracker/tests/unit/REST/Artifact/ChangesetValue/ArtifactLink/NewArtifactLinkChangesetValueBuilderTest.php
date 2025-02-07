@@ -138,6 +138,6 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $reverse_links = $update_value->getSubmittedReverseLinks()->unwrapOr(new CollectionOfReverseLinks([]))->links;
         self::assertCount(1, $reverse_links);
-        $this->assertSame(48, $reverse_links[0]->getSourceArtifactId());
+        self::assertSame(48, $reverse_links[0]->getSourceArtifactId());
     }
 }

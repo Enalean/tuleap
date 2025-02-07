@@ -45,7 +45,7 @@ final class CheckTrackerCSRFMiddlewareTest extends TestCase
         $request = (new NullServerRequest())
             ->withAttribute(\Tracker::class, TrackerTestBuilder::aTracker()->build());
 
-        $this->assertSame(
+        self::assertSame(
             $response,
             $middleware->process($request, $handler)
         );

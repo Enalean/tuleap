@@ -84,12 +84,30 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
             ]
         );
         $this->field_dao->expects(self::never())->method('deleteCardwall');
-        $this->value_dao->expects(self::exactly(2))
-            ->method('deleteForColumn')
-            ->withConsecutive([$this->tracker_id, 13], [$this->tracker_id, 14]);
-        $this->dao->expects(self::exactly(2))
-            ->method('delete')
-            ->withConsecutive([$this->tracker_id, 13], [$this->tracker_id, 14]);
+        $matcher = self::exactly(2);
+        $this->value_dao->expects($matcher)
+            ->method('deleteForColumn')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(13, $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(14, $parameters[1]);
+                }
+            });
+        $matcher = self::exactly(2);
+        $this->dao->expects($matcher)
+            ->method('delete')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(13, $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(14, $parameters[1]);
+                }
+            });
         $this->command->execute($request);
     }
 
@@ -114,12 +132,30 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
             ]
         );
         $this->field_dao->expects(self::once())->method('deleteCardwall')->with($this->tracker_id);
-        $this->value_dao->expects(self::exactly(2))
-            ->method('deleteForColumn')
-            ->withConsecutive([$this->tracker_id, 12], [$this->tracker_id, 13]);
-        $this->dao->expects(self::exactly(2))
-            ->method('delete')
-            ->withConsecutive([$this->tracker_id, 12], [$this->tracker_id, 13]);
+        $matcher = self::exactly(2);
+        $this->value_dao->expects($matcher)
+            ->method('deleteForColumn')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(12, $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(13, $parameters[1]);
+                }
+            });
+        $matcher = self::exactly(2);
+        $this->dao->expects($matcher)
+            ->method('delete')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(12, $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(13, $parameters[1]);
+                }
+            });
         $this->command->execute($request);
     }
 }

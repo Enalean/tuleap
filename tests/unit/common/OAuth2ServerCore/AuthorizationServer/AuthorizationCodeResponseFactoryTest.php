@@ -72,7 +72,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
             null,
             null
         );
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');
         $this->assertStringContainsString('https://example.com', $location);
         $this->assertStringContainsString('code=' . $auth_code, $location);
@@ -94,7 +94,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
             'pkce_code_challenge',
             'oidc_nonce'
         );
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');
         $this->assertStringContainsString('https://example.com', $location);
         $this->assertStringContainsString('state=6k9Sfw', $location);
@@ -108,7 +108,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
             'https://example.com',
             null
         );
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');
         $this->assertStringContainsString('https://example.com', $location);
         $this->assertStringContainsString('error=invalid_request', $location);
@@ -121,7 +121,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
             'https://example.com',
             '9EEbiaQfNRQXusHSe'
         );
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');
         $this->assertStringContainsString('https://example.com', $location);
         $this->assertStringContainsString('state=9EEbiaQfNRQXusHSe', $location);
@@ -135,7 +135,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
         $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request, ['client_id' => '1']);
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
         $this->assertEquals('/login?&prompt=login', $response->getHeaderLine('Location'));
     }
 
@@ -146,7 +146,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
         $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request, ['client_id' => '1', 'prompt' => 'login consent']);
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
         $this->assertEquals('/login?&prompt=login', $response->getHeaderLine('Location'));
     }
 

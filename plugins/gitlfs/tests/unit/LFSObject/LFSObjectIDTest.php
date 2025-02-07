@@ -29,7 +29,7 @@ final class LFSObjectIDTest extends \Tuleap\Test\PHPUnit\TestCase
         $oid_value = 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb';
         $oid       = new LFSObjectID($oid_value);
 
-        $this->assertSame($oid_value, $oid->getValue());
+        self::assertSame($oid_value, $oid->getValue());
     }
 
     public function testInvalidOIDValueIsRejected(): void

@@ -47,7 +47,7 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
             '<p>Comment 01</p>'
         );
 
-        $this->assertSame(
+        self::assertSame(
             'userO1 said: <br/><br/><p>Comment 01</p>',
             $enhancer->getEnhancedValueWithCommentWriterInformation($comment, $commenter)
         );
@@ -73,7 +73,7 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
             '<p>Comment 01</p>'
         );
 
-        $this->assertSame(
+        self::assertSame(
             '<p>Comment 01</p>',
             $enhancer->getEnhancedValueWithCommentWriterInformation($comment, $commenter)
         );

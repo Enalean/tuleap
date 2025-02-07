@@ -49,11 +49,11 @@ class ProjectOwnershipTest extends \RestBase
                 'template_id' => $this->project_private_id,
             ])))
         );
-        $this->assertSame(201, $creation_response->getStatusCode());
+        self::assertSame(201, $creation_response->getStatusCode());
         $new_project_id = json_decode($creation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $project_ownership_representation = $this->getProjectOwnershipRepresentation($new_project_id);
-        $this->assertSame(
+        self::assertSame(
             $this->user_ids[\REST_TestDataBuilder::ADMIN_USER_NAME],
             $project_ownership_representation['project_owner']['id']
         );
@@ -67,7 +67,7 @@ class ProjectOwnershipTest extends \RestBase
                 ],
             ])))
         );
-        $this->assertSame(200, $response_update_admins->getStatusCode());
+        self::assertSame(200, $response_update_admins->getStatusCode());
 
         $response_update_project_ownership = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -75,10 +75,10 @@ class ProjectOwnershipTest extends \RestBase
                 'project_owner' => ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
             ])))
         );
-        $this->assertSame(200, $response_update_project_ownership->getStatusCode());
+        self::assertSame(200, $response_update_project_ownership->getStatusCode());
 
         $updated_project_ownership_representation = $this->getProjectOwnershipRepresentation($new_project_id);
-        $this->assertSame(
+        self::assertSame(
             $this->user_ids[\REST_TestDataBuilder::TEST_USER_1_NAME],
             $updated_project_ownership_representation['project_owner']['id']
         );
@@ -91,7 +91,7 @@ class ProjectOwnershipTest extends \RestBase
             \REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 }

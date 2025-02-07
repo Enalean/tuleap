@@ -71,10 +71,10 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             new SplitTokenVerificationStringHasher(),
             'plugin_oauth2'
         );
-        $this->assertSame($app_name, $new_app->getName());
-        $this->assertSame($redirect_uri, $new_app->getRedirectEndpoint());
-        $this->assertSame($use_pkce, $new_app->isUsingPKCE());
-        $this->assertSame($project, $new_app->getProject());
+        self::assertSame($app_name, $new_app->getName());
+        self::assertSame($redirect_uri, $new_app->getRedirectEndpoint());
+        self::assertSame($use_pkce, $new_app->isUsingPKCE());
+        self::assertSame($project, $new_app->getProject());
     }
 
     /**
@@ -92,9 +92,9 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             new SplitTokenVerificationStringHasher(),
             'plugin_oauth2'
         );
-        $this->assertSame($app_name, $new_app->getName());
-        $this->assertSame($redirect_uri, $new_app->getRedirectEndpoint());
-        $this->assertSame($use_pkce, $new_app->isUsingPKCE());
+        self::assertSame($app_name, $new_app->getName());
+        self::assertSame($redirect_uri, $new_app->getRedirectEndpoint());
+        self::assertSame($use_pkce, $new_app->isUsingPKCE());
         $this->assertNull($new_app->getProject());
     }
 

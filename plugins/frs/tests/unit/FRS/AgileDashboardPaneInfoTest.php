@@ -37,12 +37,12 @@ final class AgileDashboardPaneInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetUri(): void
     {
-        $this->assertSame('/frs/release/78/release-notes', $this->agile_dashboard_pane_info->getUri());
+        self::assertSame('/frs/release/78/release-notes', $this->agile_dashboard_pane_info->getUri());
     }
 
     public function testGetIconName(): void
     {
-        $this->assertSame('fa-regular fa-copy', $this->agile_dashboard_pane_info->getIconName());
+        self::assertSame('fa-regular fa-copy', $this->agile_dashboard_pane_info->getIconName());
     }
 
     public function testIsExternalLink(): void

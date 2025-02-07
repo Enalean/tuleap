@@ -117,7 +117,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testForbiddenSource($field_id, $source_id, $expected, $message)
     {
-        $this->assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenSource(1, $field_id, $source_id), $message);
+        self::assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenSource(1, $field_id, $source_id), $message);
     }
 
     public static function forbiddenSourceProvider()
@@ -147,7 +147,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testForbiddenTarget($field_id, $source_id, $expected, $message)
     {
-        $this->assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenTarget(1, $field_id, $source_id), $message);
+        self::assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenTarget(1, $field_id, $source_id), $message);
     }
 
     public static function forbiddenTargetProvider()
@@ -177,7 +177,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testFieldHasSource($field_id, $expected)
     {
-        $this->assertSame($expected, $this->tracker_rules_manager->fieldHasSource(1, $field_id));
+        self::assertSame($expected, $this->tracker_rules_manager->fieldHasSource(1, $field_id));
     }
 
     public static function fieldHasSourceProvider(): array
@@ -197,7 +197,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function test6ieldHasTarget($field_id, $expected)
     {
-        $this->assertSame($expected, $this->tracker_rules_manager->fieldHasTarget(1, $field_id));
+        self::assertSame($expected, $this->tracker_rules_manager->fieldHasTarget(1, $field_id));
     }
 
     public static function fieldHasTargetProvider(): array

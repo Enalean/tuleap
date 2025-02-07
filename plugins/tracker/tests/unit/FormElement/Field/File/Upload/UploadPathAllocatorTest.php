@@ -50,7 +50,7 @@ class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $allocator = new UploadPathAllocator($dao, $factory);
 
-        $this->assertSame(
+        self::assertSame(
             $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0)),
             $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0))
         );

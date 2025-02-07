@@ -114,29 +114,30 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $template_service,
             $other_template_service,
         ]);
+        $matcher = self::exactly(2);
 
-        $this->service_creator->expects(self::exactly(2))->method('createService')->withConsecutive(
-            [
-                $template_service,
-                101,
-                [
+        $this->service_creator->expects($matcher)->method('createService')->willReturnCallback(function (...$parameters) use ($matcher, $template_service, $other_template_service) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($template_service, $parameters[0]);
+                self::assertSame(101, $parameters[1]);
+                self::assertSame([
                     'system'  => false,
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => 1,
-                ],
-            ],
-            [
-                $other_template_service,
-                101,
-                [
+                ], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($other_template_service, $parameters[0]);
+                self::assertSame(101, $parameters[1]);
+                self::assertSame([
                     'system'  => false,
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => 1,
-                ],
-            ]
-        );
+                ], $parameters[2]);
+            }
+        });
 
         $this->event_manager->expects(self::once())->method('processEvent');
 

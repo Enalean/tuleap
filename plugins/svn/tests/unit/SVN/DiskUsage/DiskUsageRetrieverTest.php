@@ -79,10 +79,15 @@ final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetDiskUsageForProject(): void
     {
-        $this->logger->method('info')->withConsecutive(
-            ['Collecting statistics for project projet'],
-            ['Project has new commit, collecting disk size data.'],
-        );
+        $matcher = $this->exactly(2);
+        $this->logger->expects($matcher)->method('info')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('Collecting statistics for project projet', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('Project has new commit, collecting disk size data.', $parameters[0]);
+            }
+        });
 
         $this->disk_usage_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(true);
 
@@ -102,10 +107,15 @@ final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetDiskUsageForProjectWhenNoNewCommit(): void
     {
-        $this->logger->method('info')->withConsecutive(
-            ['Collecting statistics for project projet'],
-            ['No new commit made on this project since yesterday, duplicate value from DB.'],
-        );
+        $matcher = $this->exactly(2);
+        $this->logger->expects($matcher)->method('info')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('Collecting statistics for project projet', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('No new commit made on this project since yesterday, duplicate value from DB.', $parameters[0]);
+            }
+        });
 
         $this->disk_usage_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(false);
         $this->disk_usage_dao->method('hasRepositories')->willReturn(true);
@@ -117,10 +127,15 @@ final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetDiskUsageForProjectWhenNoRepositories(): void
     {
-        $this->logger->method('info')->withConsecutive(
-            ['Collecting statistics for project projet'],
-            ['Project has new commit, collecting disk size data.'],
-        );
+        $matcher = $this->exactly(2);
+        $this->logger->expects($matcher)->method('info')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('Collecting statistics for project projet', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('Project has new commit, collecting disk size data.', $parameters[0]);
+            }
+        });
 
         $this->disk_usage_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(true);
 

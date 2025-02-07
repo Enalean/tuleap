@@ -340,14 +340,26 @@ final class Docman_PermissionsManagerTest extends TestCase
         $itemId = 1515;
 
         // Start Test
-        $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::exactly(3))->method('userHasPermission')
-            ->withConsecutive(
-                [$itemId, 'PLUGIN_DOCMAN_READ', ['test']],
-                [$itemId, 'PLUGIN_DOCMAN_WRITE', ['test']],
-                [$itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']],
-            )
-            ->willReturn(false);
+        $pm      = $this->createMock(PermissionsManager::class);
+        $matcher = self::exactly(3);
+        $pm->expects($matcher)->method('userHasPermission')->willReturnCallback(function (...$parameters) use ($matcher, $itemId) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($itemId, $parameters[0]);
+                self::assertSame('PLUGIN_DOCMAN_READ', $parameters[1]);
+                self::assertSame(['test'], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($itemId, $parameters[0]);
+                self::assertSame('PLUGIN_DOCMAN_WRITE', $parameters[1]);
+                self::assertSame(['test'], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($itemId, $parameters[0]);
+                self::assertSame('PLUGIN_DOCMAN_MANAGE', $parameters[1]);
+                self::assertSame(['test'], $parameters[2]);
+            }
+            return false;
+        });
 
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
@@ -370,13 +382,21 @@ final class Docman_PermissionsManagerTest extends TestCase
         $itemId = 1515;
 
         // Start Test
-        $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::exactly(2))->method('userHasPermission')
-            ->withConsecutive(
-                [$itemId, 'PLUGIN_DOCMAN_WRITE', ['test']],
-                [$itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']],
-            )
-            ->willReturn(false);
+        $pm      = $this->createMock(PermissionsManager::class);
+        $matcher = self::exactly(2);
+        $pm->expects($matcher)->method('userHasPermission')->willReturnCallback(function (...$parameters) use ($matcher, $itemId) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($itemId, $parameters[0]);
+                self::assertSame('PLUGIN_DOCMAN_WRITE', $parameters[1]);
+                self::assertSame(['test'], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($itemId, $parameters[0]);
+                self::assertSame('PLUGIN_DOCMAN_MANAGE', $parameters[1]);
+                self::assertSame(['test'], $parameters[2]);
+            }
+            return false;
+        });
 
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 

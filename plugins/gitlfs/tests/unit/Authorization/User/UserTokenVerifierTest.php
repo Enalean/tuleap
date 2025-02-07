@@ -69,7 +69,7 @@ final class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
-        $this->assertSame(
+        self::assertSame(
             $user,
             $verifier->getUser($this->current_time, $user_token, $repository, $operation)
         );

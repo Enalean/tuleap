@@ -141,6 +141,6 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_json = '["read","submit"]';
-        $this->assertSame($expected_json, json_encode($computed_permissions));
+        self::assertSame($expected_json, json_encode($computed_permissions));
     }
 }

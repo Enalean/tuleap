@@ -33,7 +33,7 @@ class VersionNumberExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $extractor = new VersionNumberExtractor();
 
-        $this->assertSame(
+        self::assertSame(
             $expected_tuleap_release_note_version,
             $extractor->extractReleaseNoteTuleapVersion($tuleap_version)
         );

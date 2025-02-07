@@ -55,7 +55,7 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->expects(self::once())->method('getAuthorizedScopes')
             ->with($user, $app)
             ->willReturn($saved_scopes);
-        $this->assertSame(
+        self::assertSame(
             $expected_result,
             $this->comparator->areRequestedScopesAlreadyGranted($user, $app, $requested_scopes)
         );

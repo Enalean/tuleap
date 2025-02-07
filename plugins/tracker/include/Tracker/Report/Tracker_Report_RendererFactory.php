@@ -25,6 +25,7 @@ use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 class Tracker_Report_RendererFactory
 {
     public const MAPPING_KEY = 'plugin_tracker_renderer';
+    private Tracker_Report_Session $report_session;
 
     /**
      * A protected constructor; prevents direct creation of object

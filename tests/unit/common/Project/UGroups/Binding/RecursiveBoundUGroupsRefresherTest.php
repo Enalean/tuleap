@@ -62,28 +62,54 @@ final class RecursiveBoundUGroupsRefresherTest extends \Tuleap\Test\PHPUnit\Test
 
         $first_bound_ugroup  = ProjectUGroupTestBuilder::aCustomUserGroup(473)->build();
         $second_bound_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(623)->build();
+        $matcher             = self::exactly(2);
         $this->ugroup_manager
-            ->expects(self::exactly(2))
-            ->method('getById')
-            ->withConsecutive([473], [623])
-            ->willReturnOnConsecutiveCalls(
-                $first_bound_ugroup,
-                $second_bound_ugroup
-            );
+            ->expects($matcher)
+            ->method('getById')->willReturnCallback(function (...$parameters) use ($matcher, $first_bound_ugroup, $second_bound_ugroup) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame(473, $parameters[0]);
+                    return $first_bound_ugroup;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame(623, $parameters[0]);
+                    return $second_bound_ugroup;
+                }
+            });
+        $matcher = self::exactly(3);
 
         $this->refresher
-            ->expects(self::exactly(3))
-            ->method('refresh')
-            ->withConsecutive(
-                [$source, $destination],
-                [$destination, $first_bound_ugroup],
-                [$destination, $second_bound_ugroup]
-            );
+            ->expects($matcher)
+            ->method('refresh')->willReturnCallback(function (...$parameters) use ($matcher, $source, $destination, $first_bound_ugroup, $second_bound_ugroup) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($source, $parameters[0]);
+                    self::assertSame($destination, $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($destination, $parameters[0]);
+                    self::assertSame($first_bound_ugroup, $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame($destination, $parameters[0]);
+                    self::assertSame($second_bound_ugroup, $parameters[1]);
+                }
+            });
+        $matcher = self::exactly(3);
         $this->ugroup_manager
-            ->expects(self::exactly(3))
-            ->method('searchUGroupByBindingSource')
-            ->withConsecutive([371], [473], [623])
-            ->willReturnOnConsecutiveCalls([['ugroup_id' => 473], ['ugroup_id' => 623]], [], []);
+            ->expects($matcher)
+            ->method('searchUGroupByBindingSource')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame(371, $parameters[0]);
+                    return [['ugroup_id' => 473], ['ugroup_id' => 623]];
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame(473, $parameters[0]);
+                    return [];
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame(623, $parameters[0]);
+                    return [];
+                }
+            });
 
         $this->recursive_refresher->refreshUGroupAndBoundUGroups($source, $destination);
     }

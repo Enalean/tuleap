@@ -206,16 +206,16 @@ final class NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.
 
         $item_factory = $this->createMock(Docman_ItemFactory::class);
         $item_factory->method('getItemFromDb')->willReturnMap([
-            $a->getId() => $a,
-            $b->getId() => $b,
-            $c->getId() => $c,
-            $d->getId() => $d,
+            $a->getId() => [$a],
+            $b->getId() => [$b],
+            $c->getId() => [$c],
+            $d->getId() => [$d],
         ]);
 
         $user_manager = $this->createMock(UserManager::class);
         $user_manager->method('getUserById')->willReturnMap([
-            $user->getId()     => $user,
-            $listener->getId() => $listener,
+            $user->getId()     => [$user],
+            $listener->getId() => [$listener],
         ]);
 
         $permissions_manager = $this->createMock(Docman_PermissionsManager::class);

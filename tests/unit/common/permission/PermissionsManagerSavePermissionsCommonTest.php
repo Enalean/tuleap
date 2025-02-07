@@ -92,14 +92,22 @@ class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\T
             ->method('clearPermission')
             ->with($this->permission_type, $this->object_id)
             ->willReturn(true);
+        $matcher = self::exactly(2);
         $this->permissions_dao
-            ->expects(self::exactly(2))
-            ->method('addPermission')
-            ->withConsecutive(
-                [$this->permission_type, $this->object_id, 104],
-                [$this->permission_type, $this->object_id, 201]
-            )
-            ->willReturn(true);
+            ->expects($matcher)
+            ->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->permission_type, $parameters[0]);
+                    self::assertSame($this->object_id, $parameters[1]);
+                    self::assertSame(104, $parameters[2]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->permission_type, $parameters[0]);
+                    self::assertSame($this->object_id, $parameters[1]);
+                    self::assertSame(201, $parameters[2]);
+                }
+                return true;
+            });
         $this->permissions_dao
             ->expects(self::once())
             ->method('addHistory')
@@ -114,14 +122,22 @@ class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\T
         $this->permissions_dao->method('clearPermission')->willReturn(true);
 
         $this->permissions_dao->method('addHistory');
+        $matcher = self::atLeast(2);
         $this->permissions_dao
-            ->expects(self::atLeast(2))
-            ->method('addPermission')
-            ->withConsecutive(
-                [$this->permission_type, $this->object_id, 104],
-                [$this->permission_type, $this->object_id, 201]
-            )
-            ->willReturn(true);
+            ->expects($matcher)
+            ->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->permission_type, $parameters[0]);
+                    self::assertSame($this->object_id, $parameters[1]);
+                    self::assertSame(104, $parameters[2]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->permission_type, $parameters[0]);
+                    self::assertSame($this->object_id, $parameters[1]);
+                    self::assertSame(201, $parameters[2]);
+                }
+                return true;
+            });
 
         $this->savePermissions([104, 201, 104]);
     }

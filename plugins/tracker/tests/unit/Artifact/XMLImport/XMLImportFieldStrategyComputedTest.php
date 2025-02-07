@@ -43,7 +43,7 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0'];
 
-        $this->assertSame($expected_result, $change_computed);
+        self::assertSame($expected_result, $change_computed);
     }
 
     public function testItShouldWorkWhenIsAutocomputed(): void
@@ -59,7 +59,7 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'];
 
-        $this->assertSame($expected_result, $change_computed);
+        self::assertSame($expected_result, $change_computed);
     }
 
     public function testItShouldWorkWithAManualValueAndIsAutocomputed(): void
@@ -79,6 +79,6 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
         ];
 
-        $this->assertSame($expected_result, $change_computed);
+        self::assertSame($expected_result, $change_computed);
     }
 }

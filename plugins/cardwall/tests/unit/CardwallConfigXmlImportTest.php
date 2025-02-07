@@ -231,14 +231,38 @@ final class CardwallConfigXmlImportTest extends TestCase
 
         $this->cardwall_ontop_dao->method('enable')->willReturn(true);
         $this->cardwall_ontop_dao->method('enableFreestyleColumns');
+        $matcher = self::exactly(4);
 
-        $this->column_dao->expects(self::exactly(4))->method('createWithcolor')
-            ->withConsecutive(
-                [555, 'Todo', '', '', ''],
-                [555, 'On going', '', '', ''],
-                [555, 'Review', '', '', ''],
-                [555, 'Done', '', '', ''],
-            );
+        $this->column_dao->expects($matcher)->method('createWithcolor')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame('Todo', $parameters[1]);
+                self::assertSame('', $parameters[2]);
+                self::assertSame('', $parameters[3]);
+                self::assertSame('', $parameters[4]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame('On going', $parameters[1]);
+                self::assertSame('', $parameters[2]);
+                self::assertSame('', $parameters[3]);
+                self::assertSame('', $parameters[4]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame('Review', $parameters[1]);
+                self::assertSame('', $parameters[2]);
+                self::assertSame('', $parameters[3]);
+                self::assertSame('', $parameters[4]);
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame('Done', $parameters[1]);
+                self::assertSame('', $parameters[2]);
+                self::assertSame('', $parameters[3]);
+                self::assertSame('', $parameters[4]);
+            }
+        });
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
@@ -251,14 +275,34 @@ final class CardwallConfigXmlImportTest extends TestCase
         $this->cardwall_ontop_dao->method('enableFreestyleColumns');
         $this->mapping_field_dao->method('create');
         $this->mapping_field_value_dao->method('save');
+        $matcher = $this->exactly(3);
 
-        $this->column_dao->method('createWithcolor')
-            ->withConsecutive(
-                [555, 'Todo', '', '', ''],
-                [555, 'On going', 255, 255, 240],
-                [555, 'Review', '', '', ''],
-            )
-            ->willReturnOnConsecutiveCalls(20, 21, 22);
+        $this->column_dao->expects($matcher)->method('createWithcolor')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame('Todo', $parameters[1]);
+                self::assertSame('', $parameters[2]);
+                self::assertSame('', $parameters[3]);
+                self::assertSame('', $parameters[4]);
+                return 20;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame('On going', $parameters[1]);
+                self::assertSame(255, $parameters[2]);
+                self::assertSame(255, $parameters[3]);
+                self::assertSame(240, $parameters[4]);
+                return 21;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame('Review', $parameters[1]);
+                self::assertSame('', $parameters[2]);
+                self::assertSame('', $parameters[3]);
+                self::assertSame('', $parameters[4]);
+                return 22;
+            }
+        });
         $this->column_dao->expects(self::once())->method('createWithTLPColor')->with(555, 'Done', 'fiesta-red');
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
@@ -290,13 +334,28 @@ final class CardwallConfigXmlImportTest extends TestCase
         $this->column_dao->method('createWithTLPColor')->willReturn(23);
 
         $this->mapping_field_dao->expects(self::once())->method('create')->with(555, 666, 1);
+        $matcher = self::exactly(3);
 
-        $this->mapping_field_value_dao->expects(self::exactly(3))->method('save')
-            ->withConsecutive(
-                [555, 666, 1, 401, self::anything()],
-                [555, 666, 1, 404, self::anything()],
-                [555, 666, 1, 100, self::anything()],
-            );
+        $this->mapping_field_value_dao->expects($matcher)->method('save')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame(666, $parameters[1]);
+                self::assertSame(1, $parameters[2]);
+                self::assertSame(401, $parameters[3]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame(666, $parameters[1]);
+                self::assertSame(1, $parameters[2]);
+                self::assertSame(404, $parameters[3]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(555, $parameters[0]);
+                self::assertSame(666, $parameters[1]);
+                self::assertSame(1, $parameters[2]);
+                self::assertSame(100, $parameters[3]);
+            }
+        });
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }

@@ -269,9 +269,9 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
-        $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
+        self::assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
 
     public function testItSkipsTheValueWhenTheMappingNoLongerContainsTheIDFoundInTheChangeLog(): void
@@ -360,9 +360,9 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
-        $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
+        self::assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
 
     public function testItExportsTheSelectedValuesInAMultiSelectboxField(): void
@@ -423,10 +423,10 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(2, $field_change_node->value);
-        $this->assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
-        $this->assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
+        self::assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
+        self::assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
     }
 
     public function testItExportsTheSelectedValuesInACheckboxField(): void
@@ -487,10 +487,10 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(2, $field_change_node->value);
-        $this->assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
-        $this->assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
+        self::assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
+        self::assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
     }
 
     public function testItExportsTheStatusValuesInASelectboxFieldWithTransformedIDs(): void
@@ -547,9 +547,9 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
-        $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value);
+        self::assertSame((string) $generated_tuleap_id, (string) $field_change_node->value);
     }
 
     public function testItExportsTheUsersInASelectboxField(): void
@@ -591,9 +591,9 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
-        $this->assertSame('105', (string) $field_change_node->value);
+        self::assertSame('105', (string) $field_change_node->value);
     }
 
     public function testItExportsTheUsersInAMultiSelectboxField(): void
@@ -643,10 +643,10 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        $this->assertSame('list', (string) $field_change_node['type']);
+        self::assertSame('list', (string) $field_change_node['type']);
         $this->assertCount(2, $field_change_node->value);
-        $this->assertSame('105', (string) $field_change_node->value[0]);
-        $this->assertSame('106', (string) $field_change_node->value[1]);
+        self::assertSame('105', (string) $field_change_node->value[0]);
+        self::assertSame('106', (string) $field_change_node->value[1]);
     }
 
     public function testItExportsTheLinkedIssues(): void

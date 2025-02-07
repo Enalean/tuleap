@@ -47,11 +47,17 @@ final class PostFileImporterTest extends TestCase
         $item          = new Docman_Item();
 
         $version_importer = $this->createMock(VersionImporter::class);
-        $version_importer->expects(self::exactly(2))->method('import')
-            ->withConsecutive(
-                [self::callback(static fn(SimpleXMLElement $node) => (string) $node->filename === 'image.png'), $item, 1],
-                [self::callback(static fn(SimpleXMLElement $node) => (string) $node->filename === 'file.txt'), $item, 2],
-            );
+        $matcher          = self::exactly(2);
+        $version_importer->expects($matcher)->method('import')->willReturnCallback(function (...$parameters) use ($matcher, $item) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('image.png', (string) $parameters[0]->filename);
+                self::assertSame(1, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('file.txt', (string) $parameters[0]->filename);
+                self::assertSame(2, $parameters[2]);
+            }
+        });
 
         $importer = new PostFileImporter($version_importer, new NullLogger());
         $importer->postImport($node_importer, $node, $item);

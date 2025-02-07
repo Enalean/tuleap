@@ -70,7 +70,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
         $this->v2->shouldReceive('fetchFormattedForJson')->andReturn('whatever 2');
         $this->bind->shouldReceive('getAllValues')->andReturn([$this->v1, $this->v2]);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'whatever 1',
                 'whatever 2',
@@ -82,7 +82,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
     public function testItSendsAnEmptyArrayInJSONFormatWhenNoValues(): void
     {
         $this->bind->shouldReceive('getAllValues')->andReturn([]);
-        $this->assertSame(
+        self::assertSame(
             [],
             $this->bind->fetchFormattedForJson()
         );
@@ -176,6 +176,6 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
 
         $bind->shouldReceive('getAllValues')->andReturn($user_list);
 
-        $this->assertSame([111 => true], $bind->getDefaultValues());
+        self::assertSame([111 => true], $bind->getDefaultValues());
     }
 }

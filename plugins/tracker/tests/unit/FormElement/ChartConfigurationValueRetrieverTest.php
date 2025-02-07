@@ -112,7 +112,7 @@ class ChartConfigurationValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->capacity_field->shouldReceive('getComputedValue')->andReturn($this->capacity);
 
-        $this->assertSame(
+        self::assertSame(
             $this->configuration_value_retriever->getCapacity($this->artifact_sprint, $this->user),
             $this->capacity
         );

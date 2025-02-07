@@ -69,20 +69,19 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotAllowUpdatingUGroupsAccordingToEvent(): void
     {
-        $ugroup = $this->getEmptyStaticUGroup();
+        $ugroup  = $this->getEmptyStaticUGroup();
+        $matcher = self::exactly(2);
         $this->event_manager
-            ->expects(self::exactly(2))
-            ->method('processEvent')
-            ->withConsecutive(
-                [Event::UGROUP_UPDATE_USERS_ALLOWED, self::anything()],
-                [self::isInstanceOf(ProjectUGroupMemberUpdatable::class)]
-            )
-            ->willReturnOnConsecutiveCalls(
-                self::returnCallback(function (string $event_name, array $params): void {
-                    $params['allowed'] = false;
-                }),
-                self::anything()
-            );
+            ->expects($matcher)
+            ->method('processEvent')->willReturnCallback(function (string|ProjectUGroupMemberUpdatable $event, array $params) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame(Event::UGROUP_UPDATE_USERS_ALLOWED, $event);
+                    $params['allowed'] &= false;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    $this->assertInstanceOf(ProjectUGroupMemberUpdatable::class, $event);
+                }
+            });
         $this->detector
             ->method('isSynchronizedWithProjectMembers')
             ->willReturn(false);
@@ -221,20 +220,19 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMemberOf($project)
             ->build();
         $ugroup->method('getMembersIncludingSuspendedAndDeleted')->willReturn([$first_member]);
+        $matcher = self::exactly(2);
 
         $this->event_manager
-            ->expects(self::exactly(2))
-            ->method('processEvent')
-            ->withConsecutive(
-                [Event::UGROUP_UPDATE_USERS_ALLOWED, self::anything()],
-                [self::isInstanceOf(ProjectUGroupMemberUpdatable::class)]
-            )
-            ->willReturn(
-                self::anything(),
-                self::returnCallback(function (ProjectUGroupMemberUpdatable $event) use ($first_member): void {
+            ->expects($matcher)
+            ->method('processEvent')->willReturnCallback(function (string|ProjectUGroupMemberUpdatable $event) use ($matcher, $first_member) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame(Event::UGROUP_UPDATE_USERS_ALLOWED, $event);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    $this->assertInstanceOf(ProjectUGroupMemberUpdatable::class, $event);
                     $event->markUserHasNotUpdatable($first_member, 'User cannot be updated');
-                })
-            );
+                }
+            });
         $this->user_helper->method('getDisplayName');
         $this->detector
             ->method('isSynchronizedWithProjectMembers')

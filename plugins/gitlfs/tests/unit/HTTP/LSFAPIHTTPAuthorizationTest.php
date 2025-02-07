@@ -57,7 +57,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_user = UserTestBuilder::aUser()->build();
         $this->token_verifier->method('getUser')->willReturn($expected_user);
 
-        $this->assertSame(
+        self::assertSame(
             $expected_user,
             $lfs_http_api_authorization->getUserFromAuthorizationToken(
                 $request,
@@ -80,7 +80,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_user = UserTestBuilder::aUser()->build();
         $this->token_verifier->method('getUser')->willReturn($expected_user);
 
-        $this->assertSame(
+        self::assertSame(
             $expected_user,
             $lfs_http_api_authorization->getUserFromAuthorizationToken(
                 $request,
@@ -108,7 +108,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $this->assertSame(
+        self::assertSame(
             $expected_user,
             $lfs_http_api_authorization->getUserFromAuthorizationToken(
                 $request,

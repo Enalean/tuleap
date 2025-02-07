@@ -78,13 +78,7 @@ final class PluginDependencySolverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsEmptyArrayWhenDependenciesAreMet(): void
     {
         $installed_plugin = [$this->tracker_plugin, $this->fusionforge_compat_plugin];
-        $this->plugin_manager->method('getPluginByName')->withConsecutive(
-            ['fusionforge_compat'],
-            ['tracker']
-        )->willReturnOnConsecutiveCalls(
-            $this->fusionforge_compat_plugin,
-            $this->tracker_plugin
-        );
+        $this->plugin_manager->method('getPluginByName')->with('fusionforge_compat')->willReturn($this->fusionforge_compat_plugin);
         $this->plugin_manager->method('getAllPlugins')->willReturn($installed_plugin);
         $this->plugin_manager->method('getPluginDuringInstall')->with('mediawiki')->willReturn($this->mediawiki_plugin);
         $solver = new PluginDependencySolver($this->plugin_manager);

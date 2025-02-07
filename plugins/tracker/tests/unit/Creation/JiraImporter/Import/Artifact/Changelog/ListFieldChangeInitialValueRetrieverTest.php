@@ -74,7 +74,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             )
         );
 
-        $this->assertSame(['id' => '10005'], $list_value);
+        self::assertSame(['id' => '10005'], $list_value);
     }
 
     public function testItReturnsTheUserIdFormatted(): void
@@ -99,7 +99,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             )
         );
 
-        $this->assertSame(['id' => '105'], $list_value);
+        self::assertSame(['id' => '105'], $list_value);
     }
 
     public function testItReturnsTheUsersIdsFormattedWithoutTrackerImporterId(): void
@@ -129,7 +129,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             )
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 ['id' => '105'],
             ],
@@ -167,7 +167,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             )
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 ['id' => '105'],
                 ['id' => '106'],

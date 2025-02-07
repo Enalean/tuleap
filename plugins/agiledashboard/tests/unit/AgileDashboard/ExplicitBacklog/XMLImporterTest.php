@@ -268,12 +268,18 @@ final class XMLImporterTest extends TestCase
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
+        $matcher = self::exactly(2);
 
-        $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds')
-            ->withConsecutive(
-                [225, 101],
-                [226, 101],
-            );
+        $this->unplanned_artifacts_adder->expects($matcher)->method('addArtifactToTopBacklogFromIds')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(225, $parameters[0]);
+                self::assertSame(101, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(226, $parameters[0]);
+                self::assertSame(101, $parameters[1]);
+            }
+        });
 
         $this->top_backlog_elements_to_add_checker->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 

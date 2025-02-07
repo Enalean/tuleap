@@ -27,16 +27,25 @@ use Tuleap\TrackerFunctions\WASM\WASMFunctionPathHelper;
 
 final class WASMFunctionPathHelperStub implements WASMFunctionPathHelper
 {
+    /**
+     * @psalm-param non-empty-string $path
+     */
     private function __construct(
         private readonly string $path,
     ) {
     }
 
+    /**
+     * @psalm-param non-empty-string $path
+     */
     public static function withPath(string $path): self
     {
         return new self($path);
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getPathForTracker(Tracker $tracker): string
     {
         return $this->path;

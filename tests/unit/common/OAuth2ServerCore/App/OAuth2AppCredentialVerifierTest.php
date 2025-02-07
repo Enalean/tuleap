@@ -70,7 +70,7 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
             new SplitToken($expected_app->getId(), SplitTokenVerificationString::generateNewSplitTokenVerificationString())
         );
 
-        $this->assertSame($expected_app, $app);
+        self::assertSame($expected_app, $app);
     }
 
     public function testAppIsNotVerifiedWhenTheClientSecretIsNotCoherentWithTheClientIdentifier(): void

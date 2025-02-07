@@ -53,7 +53,7 @@ final class Tracker_Report_SessionTest extends \Tuleap\Test\PHPUnit\TestCase
         $session                  = &$this->tracker_report_session->getSessionNamespace();
         $session['criteria']['1'] = 'tintinlachipo';
         $this->tracker_report_session->removeCriterion('0');
-        $this->assertSame('tintinlachipo', $session['criteria']['1']);
+        self::assertSame('tintinlachipo', $session['criteria']['1']);
     }
 
     public function testStoreCriterionNoOpts(): void

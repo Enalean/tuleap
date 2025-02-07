@@ -145,10 +145,10 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->user_registered->getEmail())
             ->willReturn([$this->user_registered, $this->user_registered_bis]);
         $this->project_access_checker->method('checkUserCanAccessProject')
-            ->withConsecutive(
+            ->willReturnMap([
                 [$this->user_registered, $this->project],
-                [$this->user_registered_bis, $this->project]
-            );
+                [$this->user_registered_bis, $this->project],
+            ]);
 
         $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_registered->getEmail()]);
         $expected_mails = [$this->user_registered->getEmail()];
@@ -161,11 +161,7 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->method('getAllUsersByEmail')
             ->with($this->user_registered->getEmail())
             ->willReturn([$this->user_registered, $this->user_registered_bis]);
-        $this->project_access_checker->method('checkUserCanAccessProject')
-            ->withConsecutive(
-                [$this->user_registered, $this->project],
-                [$this->user_registered_bis, $this->project]
-            );
+        $this->project_access_checker->method('checkUserCanAccessProject')->with($this->user_registered, $this->project);
 
         $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_registered->getEmail()]);
         $expected_mails = [$this->user_registered->getEmail()];
@@ -188,20 +184,22 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItKeepsAllMailIfUserCanReadProject(): void
     {
         $this->project_access_checker->method('checkUserCanAccessProject')
-            ->withConsecutive(
+            ->willReturnMap([
                 [$this->user_registered, $this->project],
-                [$this->user_active, $this->project]
-            );
+                [$this->user_active, $this->project],
+            ]);
+        $matcher = $this->exactly(2);
 
-        $this->user_manager->method('getAllUsersByEmail')
-            ->withConsecutive(
-                [$this->user_registered->getEmail()],
-                [$this->user_active->getEmail()]
-            )
-            ->willReturnOnConsecutiveCalls(
-                [$this->user_registered],
-                [$this->user_active]
-            );
+        $this->user_manager->expects($matcher)->method('getAllUsersByEmail')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->user_registered->getEmail(), $parameters[0]);
+                return [$this->user_registered];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->user_active->getEmail(), $parameters[0]);
+                return [$this->user_active];
+            }
+        });
 
         $filtered_mails = $this->mail_filter->filter(
             $this->project,
@@ -218,16 +216,6 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotFilterMailsWhenConfigurationAllowsIt(): void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
-
-        $this->user_manager->method('getAllUsersByEmail')
-            ->withConsecutive(
-                [$this->user_registered->getEmail()],
-                [$this->user_active->getEmail()]
-            )
-            ->willReturnOnConsecutiveCalls(
-                [$this->user_registered],
-                [$this->user_active]
-            );
 
         $filtered_mails = $this->mail_filter->filter(
             $this->project,

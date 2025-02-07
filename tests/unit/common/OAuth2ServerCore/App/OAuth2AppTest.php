@@ -57,11 +57,11 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         $app_name    = 'Jenkins';
         $project     = ProjectTestBuilder::aProject()->build();
         $updated_app = OAuth2App::fromProjectAdministrationData($app_id, $app_name, $redirect_uri, $use_pkce, $project);
-        $this->assertSame(75, $updated_app->getId());
-        $this->assertSame($app_name, $updated_app->getName());
-        $this->assertSame($redirect_uri, $updated_app->getRedirectEndpoint());
-        $this->assertSame($use_pkce, $updated_app->isUsingPKCE());
-        $this->assertSame($project, $updated_app->getProject());
+        self::assertSame(75, $updated_app->getId());
+        self::assertSame($app_name, $updated_app->getName());
+        self::assertSame($redirect_uri, $updated_app->getRedirectEndpoint());
+        self::assertSame($use_pkce, $updated_app->isUsingPKCE());
+        self::assertSame($project, $updated_app->getProject());
     }
 
     /**
@@ -74,10 +74,10 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         $app_id      = '75';
         $app_name    = 'Jenkins';
         $updated_app = OAuth2App::fromSiteAdministrationData($app_id, $app_name, $redirect_uri, $use_pkce);
-        $this->assertSame(75, $updated_app->getId());
-        $this->assertSame($app_name, $updated_app->getName());
-        $this->assertSame($redirect_uri, $updated_app->getRedirectEndpoint());
-        $this->assertSame($use_pkce, $updated_app->isUsingPKCE());
+        self::assertSame(75, $updated_app->getId());
+        self::assertSame($app_name, $updated_app->getName());
+        self::assertSame($redirect_uri, $updated_app->getRedirectEndpoint());
+        self::assertSame($use_pkce, $updated_app->isUsingPKCE());
         $this->assertNull($updated_app->getProject());
     }
 

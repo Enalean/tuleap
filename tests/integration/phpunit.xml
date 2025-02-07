@@ -19,12 +19,16 @@
   ~
   -->
 
-<phpunit bootstrap="bootstrap.php" verbose="true" colors="true"
+<phpunit bootstrap="bootstrap.php" colors="true"
          failOnRisky="true"
          beStrictAboutChangesToGlobalState="true" backupGlobals="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
-         convertDeprecationsToExceptions="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
          executionOrder="random">
     <php>
         <ini name="assert.exception" value="1"/>

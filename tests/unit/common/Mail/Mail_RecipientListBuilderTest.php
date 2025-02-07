@@ -86,14 +86,26 @@ final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAListOfExternalAddresses(): void
     {
-        $this->user_manager->method('getAllUsersByEmail')->withConsecutive(
-            [$this->external_address],
-            [$this->external_address2]
-        )->willReturn([]);
-        $this->user_manager->method('findUser')->withConsecutive(
-            [$this->external_address],
-            [$this->external_address2]
-        )->willReturn(null);
+        $matcher = $this->exactly(2);
+        $this->user_manager->expects($matcher)->method('getAllUsersByEmail')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->external_address, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->external_address2, $parameters[0]);
+            }
+            return [];
+        });
+        $matcher = $this->exactly(2);
+        $this->user_manager->expects($matcher)->method('findUser')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->external_address, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->external_address2, $parameters[0]);
+            }
+            return null;
+        });
 
         $list = $this->builder->getValidRecipientsFromAddresses(
             [$this->external_address, $this->external_address2]
@@ -124,10 +136,17 @@ final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotOutputSuspendedNorDeletedUsers(): void
     {
-        $this->user_manager->method('getAllUsersByEmail')->withConsecutive(
-            [$this->suspended_user_address],
-            [$this->deleted_user_address]
-        )->willReturnOnConsecutiveCalls([$this->suspended_user], [$this->deleted_user]);
+        $matcher = $this->exactly(2);
+        $this->user_manager->expects($matcher)->method('getAllUsersByEmail')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->suspended_user_address, $parameters[0]);
+                return [$this->suspended_user];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->deleted_user_address, $parameters[0]);
+                return [$this->deleted_user];
+            }
+        });
 
         $list = $this->builder->getValidRecipientsFromAddresses(
             [$this->suspended_user_address, $this->deleted_user_address]

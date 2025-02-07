@@ -60,6 +60,6 @@ final class ReferenceIsReadOnlyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             return true;
         }));
 
-        $this->assertSame($expected_result, $this->checker->isReferenceReadOnly($reference));
+        self::assertSame($expected_result, $this->checker->isReferenceReadOnly($reference));
     }
 }

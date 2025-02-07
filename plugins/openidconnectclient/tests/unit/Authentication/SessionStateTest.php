@@ -34,9 +34,9 @@ final class SessionStateTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation        = $session_state->convertToMinimalRepresentation();
         $rebuilt_session_state = SessionState::buildFromMinimalRepresentation($representation);
 
-        $this->assertSame($session_state->getSecretKey(), $rebuilt_session_state->getSecretKey());
-        $this->assertSame($session_state->getNonce(), $rebuilt_session_state->getNonce());
-        $this->assertSame($session_state->getReturnTo(), $rebuilt_session_state->getReturnTo());
+        self::assertSame($session_state->getSecretKey(), $rebuilt_session_state->getSecretKey());
+        self::assertSame($session_state->getNonce(), $rebuilt_session_state->getNonce());
+        self::assertSame($session_state->getReturnTo(), $rebuilt_session_state->getReturnTo());
         $this->assertTrue($session_state->getPKCECodeVerifier()->isIdenticalTo($rebuilt_session_state->getPKCECodeVerifier()));
     }
 

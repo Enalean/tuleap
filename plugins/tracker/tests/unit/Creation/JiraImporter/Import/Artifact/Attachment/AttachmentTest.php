@@ -39,10 +39,10 @@ class AttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $attachment = Attachment::buildFromIssueAPIResponse($response);
 
-        $this->assertSame(10001, $attachment->getId());
-        $this->assertSame('file01.png', $attachment->getFilename());
-        $this->assertSame('image/png', $attachment->getMimeType());
-        $this->assertSame('URL/file01.png', $attachment->getContentUrl());
-        $this->assertSame(30, $attachment->getSize());
+        self::assertSame(10001, $attachment->getId());
+        self::assertSame('file01.png', $attachment->getFilename());
+        self::assertSame('image/png', $attachment->getMimeType());
+        self::assertSame('URL/file01.png', $attachment->getContentUrl());
+        self::assertSame(30, $attachment->getSize());
     }
 }

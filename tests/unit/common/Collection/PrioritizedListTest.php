@@ -39,13 +39,13 @@ class PrioritizedListTest extends \Tuleap\Test\PHPUnit\TestCase
         $l->add($a);
         $it      = $l->iterator();
         $element = $it->current();
-        $this->assertSame($element, $c);
+        self::assertSame($element, $c);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $b);
+        self::assertSame($element, $b);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $a);
+        self::assertSame($element, $a);
     }
 
     public function testEqualsDifferentOrder(): void
@@ -74,16 +74,16 @@ class PrioritizedListTest extends \Tuleap\Test\PHPUnit\TestCase
         $l->add($b, 20);
         $it      = $l->iterator();
         $element = $it->current();
-        $this->assertSame($element, $c);
+        self::assertSame($element, $c);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $b);
+        self::assertSame($element, $b);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $a2);
+        self::assertSame($element, $a2);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $a1);
+        self::assertSame($element, $a1);
     }
 
     public function testComplexePriority(): void
@@ -109,31 +109,31 @@ class PrioritizedListTest extends \Tuleap\Test\PHPUnit\TestCase
         $l->add($b1, 20);
         $it      = $l->iterator();
         $element = $it->current();
-        $this->assertSame($element, $c2);
+        self::assertSame($element, $c2);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $c3);
+        self::assertSame($element, $c3);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $c1);
+        self::assertSame($element, $c1);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $b3);
+        self::assertSame($element, $b3);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $b2);
+        self::assertSame($element, $b2);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $b1);
+        self::assertSame($element, $b1);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $a1);
+        self::assertSame($element, $a1);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $a2);
+        self::assertSame($element, $a2);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $a3);
+        self::assertSame($element, $a3);
     }
 
     public function testNegativeAndDefaultPriority(): void
@@ -149,16 +149,16 @@ class PrioritizedListTest extends \Tuleap\Test\PHPUnit\TestCase
         $l->add($c);
         $it      = $l->iterator();
         $element = $it->current();
-        $this->assertSame($element, $a);
+        self::assertSame($element, $a);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $d);
+        self::assertSame($element, $d);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $c);
+        self::assertSame($element, $c);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $b);
+        self::assertSame($element, $b);
     }
 
     public function testNegativeAndDefaultPriority2(): void
@@ -178,21 +178,21 @@ class PrioritizedListTest extends \Tuleap\Test\PHPUnit\TestCase
         $l->add($c, -5);
         $it      = $l->iterator();
         $element = $it->current();
-        $this->assertSame($element, $a);
+        self::assertSame($element, $a);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $b);
+        self::assertSame($element, $b);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $c);
+        self::assertSame($element, $c);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $d);
+        self::assertSame($element, $d);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $e);
+        self::assertSame($element, $e);
         $it->next();
         $element = $it->current();
-        $this->assertSame($element, $f);
+        self::assertSame($element, $f);
     }
 }

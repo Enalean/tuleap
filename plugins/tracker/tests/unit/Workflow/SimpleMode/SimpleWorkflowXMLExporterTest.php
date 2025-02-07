@@ -105,8 +105,8 @@ final class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_state_01 = $xml->states->state[0];
         $xml_state_02 = $xml->states->state[1];
 
-        $this->assertSame((string) $xml_state_01->to_id['REF'], 'V114-0');
-        $this->assertSame((string) $xml_state_02->to_id['REF'], 'V114-1');
+        self::assertSame((string) $xml_state_01->to_id['REF'], 'V114-0');
+        self::assertSame((string) $xml_state_02->to_id['REF'], 'V114-1');
 
         $xml_state_01_transitions = $xml_state_01->transitions;
         $xml_state_02_transitions = $xml_state_02->transitions;
@@ -114,8 +114,8 @@ final class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(1, $xml_state_01_transitions->transition);
         $this->assertCount(2, $xml_state_02_transitions->transition);
 
-        $this->assertSame((string) $xml_state_01_transitions->transition->from_id['REF'], 'null');
-        $this->assertSame((string) $xml_state_02_transitions->transition[0]->from_id['REF'], 'null');
-        $this->assertSame((string) $xml_state_02_transitions->transition[1]->from_id['REF'], 'V114-2');
+        self::assertSame((string) $xml_state_01_transitions->transition->from_id['REF'], 'null');
+        self::assertSame((string) $xml_state_02_transitions->transition[0]->from_id['REF'], 'null');
+        self::assertSame((string) $xml_state_02_transitions->transition[1]->from_id['REF'], 'V114-2');
     }
 }

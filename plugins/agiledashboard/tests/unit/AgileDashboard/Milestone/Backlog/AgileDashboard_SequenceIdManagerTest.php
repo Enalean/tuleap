@@ -194,9 +194,19 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
 
     public function testItCanDealWithMultipleCallWithDifferentMilestones(): void
     {
-        $this->backlog_factory->expects(self::exactly(2))->method('getBacklog')
-            ->withConsecutive([$this->user, $this->milestone_1], [$this->user, $this->milestone_2])
-            ->willReturnOnConsecutiveCalls($this->backlog_1, $this->backlog_2);
+        $matcher = self::exactly(2);
+        $this->backlog_factory->expects($matcher)->method('getBacklog')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame($this->milestone_1, $parameters[1]);
+                return $this->backlog_1;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame($this->milestone_2, $parameters[1]);
+                return $this->backlog_2;
+            }
+        });
 
         $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $backlog_items->push($this->artifact_2);

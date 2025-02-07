@@ -48,8 +48,10 @@ final class UGroupManagerUpdateUgroupBindingEventTest extends \Tuleap\Test\PHPUn
 
         $this->ugroup_12 = new ProjectUGroup(['ugroup_id' => 12]);
         $this->ugroup_24 = new ProjectUGroup(['ugroup_id' => 24]);
-        $this->ugroup_manager->method('getById')->withConsecutive([12], [24])
-            ->willReturnOnConsecutiveCalls($this->ugroup_12, $this->ugroup_24);
+        $this->ugroup_manager->method('getById')->willReturnMap([
+            [12, $this->ugroup_12],
+            [24, $this->ugroup_24],
+        ]);
     }
 
     public function testItRaiseAnEventWithGroupsWhenOneIsAdded(): void

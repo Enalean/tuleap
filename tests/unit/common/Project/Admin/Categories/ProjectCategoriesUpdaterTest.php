@@ -95,22 +95,40 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesCategoriesValues(): void
     {
         $this->history_dao->method('groupAddHistory');
+        $matcher = self::exactly(2);
 
         $this->factory
-            ->expects(self::exactly(2))
-            ->method('removeProjectTopCategoryValue')
-            ->withConsecutive(
-                [$this->project, 1],
-                [$this->project, 2]
-            );
+            ->expects($matcher)
+            ->method('removeProjectTopCategoryValue')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->project, $parameters[0]);
+                    self::assertSame(1, $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->project, $parameters[0]);
+                    self::assertSame(2, $parameters[1]);
+                }
+            });
+        $matcher = self::exactly(3);
         $this->set_node_facade
-            ->expects(self::exactly(3))
-            ->method('setNode')
-            ->withConsecutive(
-                [$this->project, 11, 1],
-                [$this->project, 12, 1],
-                [$this->project, 21, 2]
-            );
+            ->expects($matcher)
+            ->method('setNode')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->project, $parameters[0]);
+                    self::assertSame(11, $parameters[1]);
+                    self::assertSame(1, $parameters[2]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->project, $parameters[0]);
+                    self::assertSame(12, $parameters[1]);
+                    self::assertSame(1, $parameters[2]);
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame($this->project, $parameters[0]);
+                    self::assertSame(21, $parameters[1]);
+                    self::assertSame(2, $parameters[2]);
+                }
+            });
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12'], 2 => ['', '21']]));
     }

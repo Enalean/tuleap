@@ -150,7 +150,6 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
         $artifact->method('getId')->willReturn(1);
         $artifact->method('getStatusForChangeset')->willReturn('');
         $artifact->method('getTracker')->willReturn($tracker);
-        $artifact->method('getStatusForChangeset')->willReturnOnConsecutiveCalls('', '');
         return $artifact;
     }
 

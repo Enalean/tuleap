@@ -58,9 +58,9 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $representation = $builder->build();
 
-        $this->assertSame(1, $representation[0]->id);
-        $this->assertSame('run_job', $representation[0]->type);
-        $this->assertSame('http://job.example.com', $representation[0]->job_url);
+        self::assertSame(1, $representation[0]->id);
+        self::assertSame('run_job', $representation[0]->type);
+        self::assertSame('http://job.example.com', $representation[0]->job_url);
     }
 
     private function buildAPostActionCIBuild($id, $job_url): Transition_PostAction_CIBuild
@@ -79,11 +79,11 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $representation = $builder->build();
 
-        $this->assertSame(1, $representation[0]->id);
-        $this->assertSame('set_field_value', $representation[0]->type);
-        $this->assertSame(8, $representation[0]->field_id);
-        $this->assertSame('date', $representation[0]->field_type);
-        $this->assertSame('', $representation[0]->value);
+        self::assertSame(1, $representation[0]->id);
+        self::assertSame('set_field_value', $representation[0]->type);
+        self::assertSame(8, $representation[0]->field_id);
+        self::assertSame('date', $representation[0]->field_type);
+        self::assertSame('', $representation[0]->value);
     }
 
     public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldIntAction()
@@ -95,11 +95,11 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $representation = $builder->build();
 
-        $this->assertSame(1, $representation[0]->id);
-        $this->assertSame('set_field_value', $representation[0]->type);
-        $this->assertSame(8, $representation[0]->field_id);
-        $this->assertSame('int', $representation[0]->field_type);
-        $this->assertSame(23, $representation[0]->value);
+        self::assertSame(1, $representation[0]->id);
+        self::assertSame('set_field_value', $representation[0]->type);
+        self::assertSame(8, $representation[0]->field_id);
+        self::assertSame('int', $representation[0]->field_type);
+        self::assertSame(23, $representation[0]->value);
     }
 
     public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldFloatAction()
@@ -111,11 +111,11 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $representation = $builder->build();
 
-        $this->assertSame(1, $representation[0]->id);
-        $this->assertSame('set_field_value', $representation[0]->type);
-        $this->assertSame(8, $representation[0]->field_id);
-        $this->assertSame('float', $representation[0]->field_type);
-        $this->assertSame(3.4, $representation[0]->value);
+        self::assertSame(1, $representation[0]->id);
+        self::assertSame('set_field_value', $representation[0]->type);
+        self::assertSame(8, $representation[0]->field_id);
+        self::assertSame('float', $representation[0]->field_type);
+        self::assertSame(3.4, $representation[0]->value);
     }
 
     public function testBuildReturnsAsManyRepresentationsAsGivenActions()

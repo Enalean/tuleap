@@ -44,17 +44,17 @@ final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
         ))
             ->export($plannings_xml);
 
-        $this->assertSame('planning', $xml_planning->getName());
-        $this->assertSame('Sprint plan', (string) $xml_planning['name']);
-        $this->assertSame('Sprint plan', (string) $xml_planning['plan_title']);
-        $this->assertSame('Backlog', (string) $xml_planning['backlog_title']);
-        $this->assertSame('T411', (string) $xml_planning['planning_tracker_id']);
+        self::assertSame('planning', $xml_planning->getName());
+        self::assertSame('Sprint plan', (string) $xml_planning['name']);
+        self::assertSame('Sprint plan', (string) $xml_planning['plan_title']);
+        self::assertSame('Backlog', (string) $xml_planning['backlog_title']);
+        self::assertSame('T411', (string) $xml_planning['planning_tracker_id']);
 
         $this->assertTrue(isset($xml_planning->backlogs));
         $this->assertCount(3, $xml_planning->backlogs->children());
-        $this->assertSame('10000', (string) $xml_planning->backlogs->backlog[0]);
-        $this->assertSame('T412', (string) $xml_planning->backlogs->backlog[1]);
-        $this->assertSame('10506', (string) $xml_planning->backlogs->backlog[2]);
+        self::assertSame('10000', (string) $xml_planning->backlogs->backlog[0]);
+        self::assertSame('T412', (string) $xml_planning->backlogs->backlog[1]);
+        self::assertSame('10506', (string) $xml_planning->backlogs->backlog[2]);
     }
 
     public function testItExportsPlanningWithPermissionsInXML(): void
@@ -75,27 +75,27 @@ final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withPriorityChangePermission('ugroup1', 'ugroup2')
             ->export($plannings_xml);
 
-        $this->assertSame('planning', $xml_planning->getName());
-        $this->assertSame('Sprint plan', (string) $xml_planning['name']);
-        $this->assertSame('Sprint plan', (string) $xml_planning['plan_title']);
-        $this->assertSame('Backlog', (string) $xml_planning['backlog_title']);
-        $this->assertSame('T411', (string) $xml_planning['planning_tracker_id']);
+        self::assertSame('planning', $xml_planning->getName());
+        self::assertSame('Sprint plan', (string) $xml_planning['name']);
+        self::assertSame('Sprint plan', (string) $xml_planning['plan_title']);
+        self::assertSame('Backlog', (string) $xml_planning['backlog_title']);
+        self::assertSame('T411', (string) $xml_planning['planning_tracker_id']);
 
         $this->assertTrue(isset($xml_planning->backlogs));
         $this->assertCount(3, $xml_planning->backlogs->children());
-        $this->assertSame('10000', (string) $xml_planning->backlogs->backlog[0]);
-        $this->assertSame('T412', (string) $xml_planning->backlogs->backlog[1]);
-        $this->assertSame('10506', (string) $xml_planning->backlogs->backlog[2]);
+        self::assertSame('10000', (string) $xml_planning->backlogs->backlog[0]);
+        self::assertSame('T412', (string) $xml_planning->backlogs->backlog[1]);
+        self::assertSame('10506', (string) $xml_planning->backlogs->backlog[2]);
 
         $this->assertTrue(isset($xml_planning->permissions));
         $this->assertCount(2, $xml_planning->permissions->children());
-        $this->assertSame('ugroup1', (string) $xml_planning->permissions->permission[0]['ugroup']);
-        $this->assertSame('ugroup2', (string) $xml_planning->permissions->permission[1]['ugroup']);
-        $this->assertSame(
+        self::assertSame('ugroup1', (string) $xml_planning->permissions->permission[0]['ugroup']);
+        self::assertSame('ugroup2', (string) $xml_planning->permissions->permission[1]['ugroup']);
+        self::assertSame(
             'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE',
             (string) $xml_planning->permissions->permission[0]['type']
         );
-        $this->assertSame(
+        self::assertSame(
             'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE',
             (string) $xml_planning->permissions->permission[1]['type']
         );

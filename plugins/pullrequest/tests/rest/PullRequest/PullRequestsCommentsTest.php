@@ -84,7 +84,7 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponseForNonMember($this->request_factory->createRequest('GET', 'pull_requests/1/comments'));
 
-        $this->assertSame(403, $response->getStatusCode());
+        self::assertSame(403, $response->getStatusCode());
     }
 
     public function testCreatesAndEditAPullRequestComment(): void
@@ -129,7 +129,7 @@ final class PullRequestsCommentsTest extends RestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertSame(403, $response->getStatusCode());
+        self::assertSame(403, $response->getStatusCode());
     }
 
     public function testOptionsComment(): void

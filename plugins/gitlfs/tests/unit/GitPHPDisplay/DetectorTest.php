@@ -31,7 +31,7 @@ final class DetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $detector = new Detector();
 
-        $this->assertSame($expected, $detector->isFileALFSFile($file));
+        self::assertSame($expected, $detector->isFileALFSFile($file));
     }
 
     public static function fileProvider(): array

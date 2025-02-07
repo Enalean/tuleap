@@ -140,12 +140,18 @@ final class MembershipManagerCreateGroupTest extends TestCase
         $mary = UserTestBuilder::buildWithId(112);
         $bob  = UserTestBuilder::buildWithId(125);
         $this->ugroup->method('getMembers')->willReturn([$mary, $bob]);
+        $matcher = self::exactly(2);
 
-        $this->membership_manager->expects(self::exactly(2))->method('addUserToGroupWithoutFlush')
-            ->withConsecutive(
-                [$mary, $this->ugroup],
-                [$bob, $this->ugroup],
-            );
+        $this->membership_manager->expects($matcher)->method('addUserToGroupWithoutFlush')->willReturnCallback(function (...$parameters) use ($matcher, $mary, $bob) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($mary, $parameters[0]);
+                self::assertSame($this->ugroup, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($bob, $parameters[0]);
+                self::assertSame($this->ugroup, $parameters[1]);
+            }
+        });
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }
@@ -182,12 +188,18 @@ final class MembershipManagerCreateGroupTest extends TestCase
 
         $this->driver->method('doesTheGroupExist')->willReturn(true);
         $this->ugroup->method('getSourceGroup')->willReturn(false);
+        $matcher = self::exactly(2);
 
-        $this->membership_manager->expects(self::exactly(2))->method('addUserToGroupWithoutFlush')
-            ->withConsecutive(
-                [$this->user1, $this->ugroup],
-                [$this->user2, $this->ugroup],
-            );
+        $this->membership_manager->expects($matcher)->method('addUserToGroupWithoutFlush')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->user1, $parameters[0]);
+                self::assertSame($this->ugroup, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->user2, $parameters[0]);
+                self::assertSame($this->ugroup, $parameters[1]);
+            }
+        });
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }
@@ -200,11 +212,19 @@ final class MembershipManagerCreateGroupTest extends TestCase
         $this->remote_server_factory->method('getServersForProject')->willReturn([$remote_server1, $remote_server2]);
 
         $this->driver->method('doesTheGroupExist')->willReturn(false);
-        $this->driver->expects(self::exactly(2))->method('createGroup')
-            ->withConsecutive(
-                [$remote_server1, 'w3c/coders', 'w3c/project_admins'],
-                [$remote_server2, 'w3c/coders', 'w3c/project_admins'],
-            );
+        $matcher = self::exactly(2);
+        $this->driver->expects($matcher)->method('createGroup')->willReturnCallback(function (...$parameters) use ($matcher, $remote_server1, $remote_server2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($remote_server1, $parameters[0]);
+                self::assertSame('w3c/coders', $parameters[1]);
+                self::assertSame('w3c/project_admins', $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($remote_server2, $parameters[0]);
+                self::assertSame('w3c/coders', $parameters[1]);
+                self::assertSame('w3c/project_admins', $parameters[2]);
+            }
+        });
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }

@@ -85,7 +85,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([$transition]);
 
-        $this->assertSame(
+        self::assertSame(
             $transition,
             $this->retriever->retrieveTransition(
                 $workflow,
@@ -135,7 +135,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $workflow_field->shouldReceive('getDefaultValue')->once()->andReturn('59');
 
-        $this->assertSame(
+        self::assertSame(
             $transition,
             $this->retriever->retrieveTransition(
                 $workflow,
@@ -196,7 +196,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($previous_changeset_value_list);
 
-        $this->assertSame(
+        self::assertSame(
             $transition,
             $this->retriever->retrieveTransition(
                 $workflow,

@@ -41,7 +41,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             \DateTime::createFromFormat('d-m-Y H:i:s', '20-12-2017 23:59:00')->getTimestamp(),
         ];
 
-        $this->assertSame($days_to_cache, $expected_days);
+        self::assertSame($days_to_cache, $expected_days);
     }
 
     public function testItGetsDaysToCacheWhenPeriodHasEnded()
@@ -59,7 +59,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             \DateTime::createFromFormat('d-m-Y H:i:s', '20-12-2017 23:59:00')->getTimestamp(),
         ];
 
-        $this->assertSame($days_to_cache, $expected_days);
+        self::assertSame($days_to_cache, $expected_days);
     }
 
     public function testItGetsDayToCacheWhenPeriodHasNotYetStarted()
@@ -73,7 +73,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_days = [];
 
-        $this->assertSame($days_to_cache, $expected_days);
+        self::assertSame($days_to_cache, $expected_days);
     }
 
     public function testItGetsDayToCacheWhenPeriodHasAWeekEnd()
@@ -93,6 +93,6 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             \DateTime::createFromFormat('d-m-Y H:i:s', '27-12-2017 23:59:00')->getTimestamp(),
         ];
 
-        $this->assertSame($days_to_cache, $expected_days);
+        self::assertSame($days_to_cache, $expected_days);
     }
 }

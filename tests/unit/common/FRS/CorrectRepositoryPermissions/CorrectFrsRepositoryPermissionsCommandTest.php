@@ -94,18 +94,26 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $this->project_1->method('getUnixGID')->willReturn(1);
         $this->project_2->method('getUnixGID')->willReturn(2);
+        $matcher = $this->exactly(4);
 
-        $this->project_manager->method('getProjectByUnixName')->withConsecutive(
-            ['leprojet'],
-            ['leprojet2'],
-            ['leprojet3'],
-            ['DELETED']
-        )->willReturnOnConsecutiveCalls(
-            $this->project_1,
-            $this->project_2,
-            $this->project_3,
-            null
-        );
+        $this->project_manager->expects($matcher)->method('getProjectByUnixName')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('leprojet', $parameters[0]);
+                return $this->project_1;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('leprojet2', $parameters[0]);
+                return $this->project_2;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('leprojet3', $parameters[0]);
+                return $this->project_3;
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame('DELETED', $parameters[0]);
+                return null;
+            }
+        });
     }
 
     public function testChangeGroupSuccess()
@@ -182,12 +190,22 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
     public function testChangeGroupWithDeleted()
     {
-        $this->project_manager->method('getProjectByUnixName')->withConsecutive(
-            ['leprojet'],
-            ['leprojet2'],
-            ['leprojet3'],
-            ['DELETED']
-        )->willReturn(null);
+        $matcher = $this->exactly(4);
+        $this->project_manager->expects($matcher)->method('getProjectByUnixName')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('leprojet', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('leprojet2', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('leprojet3', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame('DELETED', $parameters[0]);
+            }
+            return null;
+        });
 
         chgrp($this->base . '/tuleap/ftp/tuleap/DELETED', 0);
 

@@ -193,8 +193,8 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(strtotime($end_date), $date_period->getEndDate());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($end_date), $date_period->getEndDate());
         $this->assertEquals(2, $date_period->getDuration());
     }
 
@@ -213,7 +213,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
         $this->assertNull($date_period->getEndDate());
         $this->assertNull($date_period->getDuration());
     }
@@ -233,7 +233,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
         $this->assertNull($date_period->getEndDate());
         $this->assertNull($date_period->getDuration());
     }
@@ -276,11 +276,11 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(0, $date_period->getEndDate());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(0, $date_period->getEndDate());
         // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
         // Weird but consistent with date field/duration behavior.
-        $this->assertSame(-11347, $date_period->getDuration());
+        self::assertSame(-11347, $date_period->getDuration());
     }
 
     public function testItBuildsADatePeriodWithEndDateForArtifactWithZeroForEndDateIfNoLastChangesetValue(): void
@@ -300,11 +300,11 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(0, $date_period->getEndDate());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(0, $date_period->getEndDate());
         // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
         // Weird but consistent with date field/duration behavior.
-        $this->assertSame(-11347, $date_period->getDuration());
+        self::assertSame(-11347, $date_period->getDuration());
     }
 
     public function testItThrowsAnExceptionWhenEndDateHasNoLastChangesetValueInChartContext(): void
@@ -374,9 +374,9 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(strtotime($end_date), $date_period->getEndDate());
-        $this->assertSame(10, $date_period->getDuration());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($end_date), $date_period->getEndDate());
+        self::assertSame(10, $date_period->getDuration());
     }
 
     public function testItReturnsTrueWhenUserCanReadFields(): void

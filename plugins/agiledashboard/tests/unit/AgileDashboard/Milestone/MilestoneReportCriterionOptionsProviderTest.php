@@ -91,9 +91,13 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
         $sprint_artifact_1241 = ArtifactTestBuilder::anArtifact(1241)
             ->userCanView($this->user)
             ->build();
+        $matcher              = $this->exactly(3);
         $artifact_factory->method('getArtifactById')
-            ->withConsecutive([1231], [1232], [1241])
-            ->willReturnOnConsecutiveCalls($sprint_artifact_1231, $sprint_artifact_1232, $sprint_artifact_1241);
+            ->willReturnMap([
+                [1231, $sprint_artifact_1231],
+                [1232, $sprint_artifact_1232],
+                [1241, $sprint_artifact_1241],
+            ]);
 
         $this->dao                               = $this->createMock(MilestoneDao::class);
         $this->nearest_planning_tracker_provider = $this->createMock(AgileDashboard_Planning_NearestPlanningTrackerProvider::class);

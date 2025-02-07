@@ -169,12 +169,20 @@ final class MetadataTest extends TestCase
         $srcMd2->setId(302);
         $srcMd2->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
         $srcMdF->expects(self::once())->method('getRealMetadataList')->with(false)->willReturn([$srcMd1, $srcMd2]);
+        $matcher = self::exactly(2);
 
-        $srcMdF->expects(self::exactly(2))->method('_cloneOneMetadata')
-            ->withConsecutive(
-                [$dstGroupId, $srcMd1, $metadataMapping],
-                [$dstGroupId, $srcMd2, $metadataMapping],
-            );
+        $srcMdF->expects($matcher)->method('_cloneOneMetadata')->willReturnCallback(function (...$parameters) use ($matcher, $dstGroupId, $srcMd1, $metadataMapping, $srcMd2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($dstGroupId, $parameters[0]);
+                self::assertSame($srcMd1, $parameters[1]);
+                self::assertSame($metadataMapping, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($dstGroupId, $parameters[0]);
+                self::assertSame($srcMd2, $parameters[1]);
+                self::assertSame($metadataMapping, $parameters[2]);
+            }
+        });
 
         // Run the test
         $srcMdF->_cloneRealMetadata($dstGroupId, $metadataMapping);

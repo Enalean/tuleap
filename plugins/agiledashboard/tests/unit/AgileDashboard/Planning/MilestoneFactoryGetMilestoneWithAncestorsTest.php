@@ -92,9 +92,19 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
         $product_milestone->method('getArtifact')->willReturn($product_artifact);
         $release_milestone = $this->createMock(Planning_ArtifactMilestone::class);
         $release_milestone->method('getArtifact')->willReturn($release_artifact);
-        $this->milestone_factory->method('getMilestoneFromArtifact')
-            ->withConsecutive([$this->current_user, $release_artifact], [$this->current_user, $product_artifact])
-            ->willReturnOnConsecutiveCalls($release_milestone, $product_milestone);
+        $matcher = $this->exactly(2);
+        $this->milestone_factory->expects($matcher)->method('getMilestoneFromArtifact')->willReturnCallback(function (...$parameters) use ($matcher, $release_artifact, $product_artifact, $release_milestone, $product_milestone) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->current_user, $parameters[0]);
+                self::assertSame($release_artifact, $parameters[1]);
+                return $release_milestone;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->current_user, $parameters[0]);
+                self::assertSame($product_artifact, $parameters[1]);
+                return $product_milestone;
+            }
+        });
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
         self::assertEquals([$release_milestone, $product_milestone], $milestones);

@@ -94,11 +94,18 @@ final class GitForkCrossProjectTest extends TestCase
         $git->setProjectManager($projectManager);
         $git->setFactory($repositoryFactory);
         $git->setPermissionsManager($permissions_manager);
+        $matcher = self::exactly(2);
 
-        $git->expects(self::exactly(2))->method('addAction')->withConsecutive(
-            ['fork', [$repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['Response'], '/plugins/git/toproject/', $forkPermissions]],
-            ['getProjectRepositoryList', [$groupId]],
-        );
+        $git->expects($matcher)->method('addAction')->willReturnCallback(function (...$parameters) use ($matcher, $repos, $toProject, $user, $forkPermissions, $groupId) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('fork', $parameters[0]);
+                self::assertSame([$repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['Response'], '/plugins/git/toproject/', $forkPermissions], $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('getProjectRepositoryList', $parameters[0]);
+                self::assertSame($groupId, (int) $parameters[1][0]);
+            }
+        });
         $git->expects(self::once())->method('addView')->with('forkRepositories');
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);

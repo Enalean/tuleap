@@ -56,12 +56,26 @@ final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TestCase // 
                 14 => ['label' => 'Done', 'bgcolor' => '#16ed9d'],
             ]
         );
-        $this->dao->expects(self::exactly(2))
-            ->method('save')
-            ->withConsecutive(
-                [$this->tracker_id, 12, 'Todo', 0, 0, 0],
-                [$this->tracker_id, 14, 'Done', 22, 237, 157],
-            );
+        $matcher = self::exactly(2);
+        $this->dao->expects($matcher)
+            ->method('save')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(12, $parameters[1]);
+                    self::assertSame('Todo', $parameters[2]);
+                    self::assertSame(0, $parameters[3]);
+                    self::assertSame(0, $parameters[4]);
+                    self::assertSame(0, $parameters[5]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->tracker_id, $parameters[0]);
+                    self::assertSame(14, $parameters[1]);
+                    self::assertSame('Done', $parameters[2]);
+                    self::assertSame(22, $parameters[3]);
+                    self::assertSame(237, $parameters[4]);
+                    self::assertSame(157, $parameters[5]);
+                }
+            });
         $this->command->execute($request);
     }
 }

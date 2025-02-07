@@ -59,7 +59,7 @@ final class Tracker_XML_Updater_TemporaryFileCreatorTest extends \Tuleap\Test\PH
     public function testItCreatesFileInPlateformDefinedTmpDir(): void
     {
         $copy = $this->creator->createTemporaryFile($this->initial);
-        $this->assertSame(0, strpos($copy, ForgeConfig::get('tmp_dir')));
+        self::assertSame(0, strpos($copy, ForgeConfig::get('tmp_dir')));
     }
 
     public function testItCreatesFileInATemporaryDirectoryThatIsDifferentFromOtherCreators(): void

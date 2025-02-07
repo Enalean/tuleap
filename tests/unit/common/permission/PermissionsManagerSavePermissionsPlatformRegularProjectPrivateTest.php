@@ -98,14 +98,22 @@ class PermissionsManagerSavePermissionsPlatformRegularProjectPrivateTest extends
 
     public function testItSavesProjectMembersProjectAdminsAndStaticGroup(): void
     {
+        $matcher = self::exactly(2);
         $this->permissions_dao
-            ->expects(self::exactly(2))
-            ->method('addPermission')
-            ->withConsecutive(
-                [$this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS],
-                [$this->permission_type, $this->object_id, 104]
-            )
-            ->willReturn(true);
+            ->expects($matcher)
+            ->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->permission_type, $parameters[0]);
+                    self::assertSame($this->object_id, $parameters[1]);
+                    self::assertSame(ProjectUGroup::PROJECT_MEMBERS, $parameters[2]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($this->permission_type, $parameters[0]);
+                    self::assertSame($this->object_id, $parameters[1]);
+                    self::assertSame(104, $parameters[2]);
+                }
+                return true;
+            });
 
         $this->savePermissions([ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }

@@ -138,7 +138,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
     public function testItReturnFirstValueWhenNoWorkflow(): void
     {
         $this->artifact->method('getWorkflow')->willReturn(null);
-        $this->assertSame(
+        self::assertSame(
             self::FIRST_VALUE_ID,
             $this->first_possible_value_retriever->getFirstPossibleValue(
                 $this->artifact,
@@ -172,7 +172,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->workflow->method('getGlobalRulesManager')->willReturn($this->tracker_rules_manager);
         $this->tracker_rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn([]);
 
-        $this->assertSame(
+        self::assertSame(
             self::SECOND_VALUE_ID,
             $this->first_possible_value_retriever->getFirstPossibleValue(
                 $this->artifact,
@@ -258,7 +258,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->artifact->method('getValue')->with($this->field_changed)->willReturn($changeset_value);
         $changeset_value->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
 
-        $this->assertSame(
+        self::assertSame(
             self::THIRD_VALUE_ID,
             $this->first_possible_value_retriever->getFirstPossibleValue(
                 $this->artifact,

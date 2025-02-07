@@ -40,7 +40,7 @@ final class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         fclose($source_resource);
         rewind($destination_resource);
 
-        $this->assertSame($expected_data, stream_get_contents($destination_resource));
+        self::assertSame($expected_data, stream_get_contents($destination_resource));
 
         fclose($destination_resource);
     }
@@ -58,10 +58,10 @@ final class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ReplaceDataFilter($expected_filtered_data)
         );
 
-        $this->assertSame($expected_filtered_data, stream_get_contents($resource));
+        self::assertSame($expected_filtered_data, stream_get_contents($resource));
         StreamFilter::removeFilter($filter_handle);
         rewind($resource);
-        $this->assertSame($expected_data, stream_get_contents($resource));
+        self::assertSame($expected_data, stream_get_contents($resource));
 
         fclose($resource);
     }

@@ -122,6 +122,6 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->value_for_changeset_provider->method('getStatusValueForChangeset')->willReturn($bind_value);
         $this->field->method('getBind')->willReturn($bind);
 
-        $this->assertSame('flamingo-pink', $this->color_provider->provideColor($this->changeset, $this->tracker, $this->user));
+        self::assertSame('flamingo-pink', $this->color_provider->provideColor($this->changeset, $this->tracker, $this->user));
     }
 }

@@ -121,7 +121,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
-        $this->assertSame([], $fields_data[66]);
+        self::assertSame([], $fields_data[66]);
     }
 
     public function testAugmentDataFromRequestEmptyarray()
@@ -134,7 +134,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
-        $this->assertSame([], $fields_data[66]);
+        self::assertSame([], $fields_data[66]);
     }
 
     public function testAugmentDataFromRequestOneFileBelongingToField()
@@ -170,7 +170,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
-        $this->assertSame(
+        self::assertSame(
             [
                 0 => [
                     'name'     => 'toto.gif',
@@ -220,7 +220,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
-        $this->assertSame(
+        self::assertSame(
             [
                 0 => [
                     'name'     => 'toto.gif',
@@ -288,7 +288,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
-        $this->assertSame(
+        self::assertSame(
             [
                 0 => [
                     'name'     => 'toto.gif',
@@ -341,7 +341,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
-        $this->assertSame([], $fields_data[66]);
+        self::assertSame([], $fields_data[66]);
     }
 
     public function testAugmentDataFromRequestDontOverrideDescription()

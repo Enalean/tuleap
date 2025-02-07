@@ -164,11 +164,16 @@ final class GitActionsTest extends TestCase
         $git = $this->createMock(Git::class);
         $this->gitAction->setController($git);
         $this->gitAction->method('getGitRepository')->willReturn(null);
+        $matcher = self::exactly(2);
 
-        $git->expects(self::exactly(2))->method('addError')->withConsecutive(
-            ['The repository does not exist'],
-            ['Empty required parameter(s)'],
-        );
+        $git->expects($matcher)->method('addError')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('The repository does not exist', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('Empty required parameter(s)', $parameters[0]);
+            }
+        });
         $git->expects(self::never())->method('addInfo');
         $git->method('redirect');
         $this->gitAction->method('addData');
@@ -204,11 +209,18 @@ final class GitActionsTest extends TestCase
         $this->gitAction->method('addData');
 
         $git->expects(self::never())->method('addError');
-        $git->expects(self::exactly(3))->method('addInfo')->withConsecutive(
-            ['The notification is already enabled for this email john.doe@acme.com'],
-            ['The notification is already enabled for this email jane.doe@acme.com'],
-            ['The notification is already enabled for this email john.smith@acme.com'],
-        );
+        $matcher = self::exactly(3);
+        $git->expects($matcher)->method('addInfo')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('The notification is already enabled for this email john.doe@acme.com', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('The notification is already enabled for this email jane.doe@acme.com', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('The notification is already enabled for this email john.smith@acme.com', $parameters[0]);
+            }
+        });
 
         $mails = ['john.doe@acme.com',
             'jane.doe@acme.com',
@@ -228,12 +240,16 @@ final class GitActionsTest extends TestCase
         $gitRepository->method('getProjectId');
         $this->gitAction->method('getGitRepository')->willReturn($gitRepository);
         $this->gitAction->method('addData');
+        $matcher = self::exactly(2);
 
-        $git->expects(self::exactly(2))->method('addError')
-            ->withConsecutive(
-                ['Could not add mail john.doe@acme.com'],
-                ['Could not add mail john.smith@acme.com'],
-            );
+        $git->expects($matcher)->method('addError')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('Could not add mail john.doe@acme.com', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('Could not add mail john.smith@acme.com', $parameters[0]);
+            }
+        });
         $git->expects(self::never())->method('addInfo');
 
         $mails = ['john.doe@acme.com',
@@ -270,11 +286,16 @@ final class GitActionsTest extends TestCase
         $git = $this->createMock(Git::class);
         $this->gitAction->setController($git);
         $this->gitAction->method('getGitRepository')->willReturn(null);
+        $matcher = self::exactly(2);
 
-        $git->expects(self::exactly(2))->method('addError')->withConsecutive(
-            ['The repository does not exist'],
-            ['Empty required parameter(s)'],
-        );
+        $git->expects($matcher)->method('addError')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('The repository does not exist', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('Empty required parameter(s)', $parameters[0]);
+            }
+        });
         $git->expects(self::never())->method('addInfo');
         $git->method('redirect');
 
@@ -502,10 +523,15 @@ final class GitActionsTest extends TestCase
         $dao->method('getProjectRepositoriesOwners')->with($projectId)->willReturn($repo_owners);
 
         $controller = $this->createMock(Git::class);
-        $controller->expects(self::atLeast(2))->method('addData')->withConsecutive(
-            [['repository_list' => $project_repos, 'repositories_owners' => $repo_owners]],
-            [['repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners]],
-        );
+        $matcher    = self::atLeast(2);
+        $controller->expects($matcher)->method('addData')->willReturnCallback(function (...$parameters) use ($matcher, $project_repos, $repo_owners, $sandra_repos) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(['repository_list' => $project_repos, 'repositories_owners' => $repo_owners], $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(['repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners], $parameters[0]);
+            }
+        });
 
         $action = $this->createPartialMock(GitActions::class, ['getDao']);
         $action->setController($controller);

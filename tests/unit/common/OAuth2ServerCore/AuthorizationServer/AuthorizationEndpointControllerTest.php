@@ -118,7 +118,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->expects(self::once())->method('createRedirectToLoginResponse')->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public function testRejectsAnonymousUserWithAnErrorWhenNoInteractionAreAllowed(): void
@@ -142,7 +142,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->with('login_required', 'https://example.com/redirect', null)
             ->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public function testHandleRedirectsToLoginWhenPromptParameterRequiresIt(): void
@@ -164,7 +164,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->expects(self::once())->method('createRedirectToLoginResponse')->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public function testHandleRedirectsToLoginWhenMaxAgeParameterRequiresIt(): void
@@ -187,7 +187,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->expects(self::once())->method('createRedirectToLoginResponse')->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     /**
@@ -259,7 +259,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->method('createErrorResponse')->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public static function dataProviderInvalidQueryParameters(): array
@@ -332,7 +332,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->method('createErrorResponse')->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     /**
@@ -371,7 +371,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->method('createSuccessfulResponse')->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public function testRendersAuthorizationFormWhenConstentIsRequired(): void
@@ -441,7 +441,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->with('interaction_required', 'https://example.com/redirect', 'xyz')
             ->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public static function dataProviderSupportedRequestHTTPMethod(): array

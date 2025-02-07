@@ -89,7 +89,7 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
 
     public function testItReturnFirstValueWithValidTransitionIfTheirIsNoDependencyRuleForTracker(): void
     {
-        $this->assertSame(
+        self::assertSame(
             self::FIRST_VALUE_ID,
             $this->first_valid_value_according_to_dependencies_retriever->getFirstValidValuesAccordingToDependencies(
                 $this->value_collection,
@@ -102,7 +102,7 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
 
     public function testItReturnFirstValueWithValidTransitionAndDependencyRuleForTracker(): void
     {
-        $this->assertSame(
+        self::assertSame(
             self::THIRD_VALUE_ID,
             $this->first_valid_value_according_to_dependencies_retriever->getFirstValidValuesAccordingToDependencies(
                 $this->value_collection,

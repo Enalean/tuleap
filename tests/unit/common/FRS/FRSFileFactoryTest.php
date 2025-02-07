@@ -269,10 +269,15 @@ class FRSFileFactoryTest extends TestCase
         $dao->expects(self::once())->method('setPurgeDate')->with(12, $_SERVER['REQUEST_TIME'])->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
-        $backend->method('log')->withConsecutive(
-            [self::anything(), self::stringContains('warn')],
-            [self::anything(), self::stringContains('error')],
-        );
+        $matcher = $this->exactly(2);
+        $backend->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                $this->assertStringContainsString('warn', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                $this->assertStringContainsString('error', $parameters[1]);
+            }
+        });
 
         self::assertFalse($ff->moveDeletedFileToStagingArea($file, $backend));
 

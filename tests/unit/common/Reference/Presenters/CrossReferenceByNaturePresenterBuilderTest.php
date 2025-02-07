@@ -160,18 +160,28 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 
     public function testItCallsSourceAndBothAndTargetCrossReferenceLinkListWithLinkArray(): void
     {
-        $this->cross_ref_link_collection_presenter_builder
-            ->method('build')
-            ->withConsecutive(
-                [[$this->cross_ref_target_3], 'both', true],
-                [[$this->cross_ref_target_2], 'target', true],
-                [[$this->cross_ref_target_1], 'source', true],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [$this->cross_ref_link_3],
-                [$this->cross_ref_link_2],
-                [$this->cross_ref_link_1],
-            );
+        $matcher = $this->exactly(3);
+        $this->cross_ref_link_collection_presenter_builder->expects($matcher)
+            ->method('build')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame([$this->cross_ref_target_3], $parameters[0]);
+                    self::assertSame('both', $parameters[1]);
+                    self::assertSame(true, $parameters[2]);
+                    return [$this->cross_ref_link_3];
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame([$this->cross_ref_target_2], $parameters[0]);
+                    self::assertSame('target', $parameters[1]);
+                    self::assertSame(true, $parameters[2]);
+                    return [$this->cross_ref_link_2];
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame([$this->cross_ref_target_1], $parameters[0]);
+                    self::assertSame('source', $parameters[1]);
+                    self::assertSame(true, $parameters[2]);
+                    return [$this->cross_ref_link_1];
+                }
+            });
 
         $this->cross_ref_link_list_presenter_builder
             ->method('buildForSource')

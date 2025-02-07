@@ -144,7 +144,7 @@ class FileTest extends RestBase
 
         $response2 = $this->getResponse($this->request_factory->createRequest('POST', 'frs_files')->withBody($this->stream_factory->createStream(json_encode($query))));
         $this->assertEquals(201, $response1->getStatusCode());
-        $this->assertSame($response1_json['upload_href'], json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['upload_href']);
+        self::assertSame($response1_json['upload_href'], json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['upload_href']);
 
         $query['file_size'] = 456;
         $response3          = $this->getResponse($this->request_factory->createRequest('POST', 'frs_files')->withBody($this->stream_factory->createStream(json_encode($query))));

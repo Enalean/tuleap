@@ -114,9 +114,9 @@ class SimpleModeTest extends TrackerBase
         $pre_conditions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected_ugroup = $this->tracker_workflows_project_id . '_3';
-        $this->assertSame([$expected_ugroup], $pre_conditions['authorized_user_group_ids']);
+        self::assertSame([$expected_ugroup], $pre_conditions['authorized_user_group_ids']);
         $this->assertTrue($pre_conditions['is_comment_required']);
-        $this->assertSame([$date_field_id], $pre_conditions['not_empty_field_ids']);
+        self::assertSame([$date_field_id], $pre_conditions['not_empty_field_ids']);
     }
 
     /**
@@ -132,7 +132,7 @@ class SimpleModeTest extends TrackerBase
         $post_actions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $post_actions);
-        $this->assertSame('https://example.com/2', $post_actions[0]['job_url']);
+        self::assertSame('https://example.com/2', $post_actions[0]['job_url']);
     }
 
     public function testPATCHTrackerWorkflowTransitionsDuplicatesPreConditionsOnAllSiblingTransitions(): void
@@ -176,9 +176,9 @@ class SimpleModeTest extends TrackerBase
         $this->assertEquals(200, $response->getStatusCode());
         $sibling_pre_conditions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertSame([$project_admins_ugroup], $sibling_pre_conditions['authorized_user_group_ids']);
+        self::assertSame([$project_admins_ugroup], $sibling_pre_conditions['authorized_user_group_ids']);
         $this->assertTrue($sibling_pre_conditions['is_comment_required']);
-        $this->assertSame([$date_field_id], $sibling_pre_conditions['not_empty_field_ids']);
+        self::assertSame([$date_field_id], $sibling_pre_conditions['not_empty_field_ids']);
     }
 
     public function testPUTTrackerWorkflowTransitionsActions(): int
@@ -239,10 +239,10 @@ class SimpleModeTest extends TrackerBase
         $date_post_action = $sibling_post_actions[0];
         $int_post_action  = $sibling_post_actions[1];
 
-        $this->assertSame('', $date_post_action['value']);
-        $this->assertSame($date_field_id, $date_post_action['field_id']);
-        $this->assertSame(9001, $int_post_action['value']);
-        $this->assertSame($int_field_id, $int_post_action['field_id']);
+        self::assertSame('', $date_post_action['value']);
+        self::assertSame($date_field_id, $date_post_action['field_id']);
+        self::assertSame(9001, $int_post_action['value']);
+        self::assertSame($int_field_id, $int_post_action['field_id']);
 
         return $transition_id;
     }

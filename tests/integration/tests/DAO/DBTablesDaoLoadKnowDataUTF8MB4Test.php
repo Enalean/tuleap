@@ -24,7 +24,7 @@ namespace Tuleap\DAO;
 
 use Tuleap\DB\DBFactory;
 
-final class DBTablesDaoLoadKnowDataUTF8MB4Test extends DBTablesDaoLoadKnowDataTest
+final class DBTablesDaoLoadKnowDataUTF8MB4Test extends DBTablesDaoLoadKnowDataTestCase
 {
     protected function createDatabase(string $db_name): void
     {

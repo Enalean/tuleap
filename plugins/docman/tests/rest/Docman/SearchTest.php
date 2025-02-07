@@ -53,7 +53,7 @@ final class SearchTest extends DocmanTestExecutionHelper
                 ->withBody($this->stream_factory->createStream(json_encode($query)))
         );
 
-        $this->assertSame(200, $search_response->getStatusCode());
+        self::assertSame(200, $search_response->getStatusCode());
         $found_items = json_decode($search_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $item_titles = [];
@@ -77,7 +77,7 @@ final class SearchTest extends DocmanTestExecutionHelper
         );
 
 
-        $this->assertSame(200, $foo_search_response->getStatusCode());
+        self::assertSame(200, $foo_search_response->getStatusCode());
         $found_items = json_decode($foo_search_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $found_items);
@@ -115,7 +115,7 @@ final class SearchTest extends DocmanTestExecutionHelper
                 ->withBody($this->stream_factory->createStream(json_encode($query)))
         );
 
-        $this->assertSame(200, $search_response->getStatusCode());
+        self::assertSame(200, $search_response->getStatusCode());
         $found_items = json_decode($search_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $item_titles = [];

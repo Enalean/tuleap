@@ -152,23 +152,42 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
             ->isOpen(true)
             ->withAncestors([])
             ->build();
+        $matcher       = $this->exactly(3);
 
-        $this->artifact_factory->method('getInstanceFromRow')
-            ->withConsecutive(
-                [$row_sprint_1],
-                [$row_sprint_2],
-                [$row_hackfest_2012],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $sprint_1,
-                $sprint_2,
-                $hackfest_2012,
-            );
+        $this->artifact_factory->expects($matcher)->method('getInstanceFromRow')->willReturnCallback(function (...$parameters) use ($matcher, $row_sprint_1, $row_sprint_2, $row_hackfest_2012, $sprint_1, $sprint_2, $hackfest_2012) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($row_sprint_1, $parameters[0]);
+                return $sprint_1;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($row_sprint_2, $parameters[0]);
+                return $sprint_2;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($row_hackfest_2012, $parameters[0]);
+                return $hackfest_2012;
+            }
+        });
+        $matcher = $this->exactly(3);
 
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')
-            ->withConsecutive([$this->user, $sprints_tracker], [$this->user, $sprints_tracker], [$this->user, $hackfests_tracker])
-            ->willReturnOnConsecutiveCalls($sprint_planning, $sprint_planning, $hackfest_planning);
+        $this->planning_factory->expects($matcher)->method('getPlanningByPlanningTracker')->willReturnCallback(function (...$parameters) use ($matcher, $sprints_tracker, $hackfests_tracker, $sprint_planning, $hackfest_planning) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame($sprints_tracker, $parameters[1]);
+                return $sprint_planning;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame($sprints_tracker, $parameters[1]);
+                return $sprint_planning;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame($hackfests_tracker, $parameters[1]);
+                return $hackfest_planning;
+            }
+        });
 
         $milestone = new Planning_ArtifactMilestone(
             ProjectTestBuilder::aProject()->build(),

@@ -77,10 +77,18 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
 
     public function testItReturnsOneTargetCrossRefAndDontDisplayCommaAndDisplayParams(): void
     {
-        $GLOBALS['Language']->method('getText')->withConsecutive(
-            ['cross_ref_fact_include', 'confirm_delete'],
-            ['cross_ref_fact_include', 'delete'],
-        )->willReturn('Delete the item?');
+        $matcher = $this->atLeast(2);
+        $GLOBALS['Language']->expects($matcher)->method('getText')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('cross_ref_fact_include', $parameters[0]);
+                self::assertSame('confirm_delete', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('cross_ref_fact_include', $parameters[0]);
+                self::assertSame('delete', $parameters[1]);
+            }
+            return 'Delete the item?';
+        });
         $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
@@ -98,10 +106,18 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
 
     public function testItReturnsTwoTargetsCrossRefsAndDisplayCommaAndDisplayParams(): void
     {
-        $GLOBALS['Language']->method('getText')->withConsecutive(
-            ['cross_ref_fact_include', 'confirm_delete'],
-            ['cross_ref_fact_include', 'delete'],
-        )->willReturn('Delete the item?');
+        $matcher = $this->atLeast(2);
+        $GLOBALS['Language']->expects($matcher)->method('getText')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('cross_ref_fact_include', $parameters[0]);
+                self::assertSame('confirm_delete', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('cross_ref_fact_include', $parameters[0]);
+                self::assertSame('delete', $parameters[1]);
+            }
+            return 'Delete the item?';
+        });
         $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
@@ -127,10 +143,18 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
 
     public function testItReturnsOneSourceCrossRefAndDontDisplayCommaAndDontDisplayParams(): void
     {
-        $GLOBALS['Language']->method('getText')->withConsecutive(
-            ['cross_ref_fact_include', 'confirm_delete'],
-            ['cross_ref_fact_include', 'delete'],
-        )->willReturn('Delete the item?');
+        $matcher = $this->atLeast(2);
+        $GLOBALS['Language']->expects($matcher)->method('getText')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('cross_ref_fact_include', $parameters[0]);
+                self::assertSame('confirm_delete', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('cross_ref_fact_include', $parameters[0]);
+                self::assertSame('delete', $parameters[1]);
+            }
+            return 'Delete the item?';
+        });
         $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(

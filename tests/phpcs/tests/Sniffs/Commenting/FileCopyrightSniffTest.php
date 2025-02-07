@@ -51,7 +51,7 @@ final class FileCopyrightSniffTest extends TestCase
     {
         $report = self::checkFile(__DIR__ . '/_fixtures/FileCopyright/Invalid/CodeBeforeCopyright.php');
 
-        $this->assertSame(1, $report->getErrorCount());
+        self::assertSame(1, $report->getErrorCount());
         self::assertSniffError($report, 3, 'MissingCopyright');
     }
 
@@ -59,7 +59,7 @@ final class FileCopyrightSniffTest extends TestCase
     {
         $report = self::checkFile(__DIR__ . '/_fixtures/FileCopyright/Invalid/OnlyPHPOpenTag.php');
 
-        $this->assertSame(1, $report->getErrorCount());
+        self::assertSame(1, $report->getErrorCount());
         self::assertSniffError($report, 1, 'MissingCopyright');
     }
 
@@ -67,7 +67,7 @@ final class FileCopyrightSniffTest extends TestCase
     {
         $report = self::checkFile(__DIR__ . '/_fixtures/FileCopyright/Invalid/EmptyLinesBeforeCopyRight.php');
 
-        $this->assertSame(1, $report->getErrorCount());
+        self::assertSame(1, $report->getErrorCount());
         self::assertSniffError($report, 5, 'EmptyLinesBeforeCopyright');
         self::assertAllFixedInFile($report);
     }
@@ -76,7 +76,7 @@ final class FileCopyrightSniffTest extends TestCase
     {
         $report = self::checkFile(__DIR__ . '/_fixtures/FileCopyright/Invalid/EmptyLinesBeforeCopyRightAndMultipleOpenTags.php');
 
-        $this->assertSame(1, $report->getErrorCount());
+        self::assertSame(1, $report->getErrorCount());
         self::assertSniffError($report, 5, 'EmptyLinesBeforeCopyright');
         self::assertAllFixedInFile($report);
     }
@@ -85,7 +85,7 @@ final class FileCopyrightSniffTest extends TestCase
     {
         $report = self::checkFile(__DIR__ . '/_fixtures/FileCopyright/Invalid/SpacesAfterOpenTag.php');
 
-        $this->assertSame(1, $report->getErrorCount());
+        self::assertSame(1, $report->getErrorCount());
         self::assertSniffError($report, 3, 'EmptyLinesBeforeCopyright');
         self::assertAllFixedInFile($report);
     }
@@ -94,7 +94,7 @@ final class FileCopyrightSniffTest extends TestCase
     {
         $report = self::checkFile(__DIR__ . '/_fixtures/FileCopyright/Invalid/CopyrightOnTheSameLineThanOpenTag.php');
 
-        $this->assertSame(1, $report->getErrorCount());
+        self::assertSame(1, $report->getErrorCount());
         self::assertSniffError($report, 1, 'NoNewLineBetweenOpenTagAndCopyright');
         self::assertAllFixedInFile($report);
     }

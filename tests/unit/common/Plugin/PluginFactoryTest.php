@@ -68,15 +68,17 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetPluginByName(): void
     {
-        $this->dao->method('searchByName')
-            ->withConsecutive(
-                ['plugin 123'],
-                ['plugin 124']
-            )
-            ->willReturnOnConsecutiveCalls(
-                \TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => 1]),
-                \TestHelper::emptyDar()
-            );
+        $matcher = $this->exactly(2);
+        $this->dao->expects($matcher)->method('searchByName')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('plugin 123', $parameters[0]);
+                return \TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => 1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('plugin 124', $parameters[0]);
+                return \TestHelper::emptyDar();
+            }
+        });
 
         $factory = $this->getMockBuilder(\PluginFactory::class)
             ->setConstructorArgs([$this->dao, $this->restrictor])
@@ -95,28 +97,34 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreatePlugin(): void
     {
-        $this->dao->method('searchByName')
-            ->withConsecutive(
-                ['existing plugin'],
-                ['new plugin'],
-                ['error plugin creation']
-            )
-            ->willReturnOnConsecutiveCalls(
-                \TestHelper::arrayToDar(['id' => 123, 'name' => 'plugin 123', 'available' => '1']),
-                \TestHelper::emptyDar(),
-                \TestHelper::emptyDar()
-            );
+        $matcher = $this->exactly(3);
+        $this->dao->expects($matcher)->method('searchByName')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('existing plugin', $parameters[0]);
+                return \TestHelper::arrayToDar(['id' => 123, 'name' => 'plugin 123', 'available' => '1']);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('new plugin', $parameters[0]);
+                return \TestHelper::emptyDar();
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('error plugin creation', $parameters[0]);
+                return \TestHelper::emptyDar();
+            }
+        });
+        $matcher = self::exactly(2);
         $this->dao
-            ->expects(self::exactly(2))
-            ->method('create')
-            ->withConsecutive(
-                ['new plugin'],
-                ['error plugin creation']
-            )
-            ->willReturnOnConsecutiveCalls(
-                125, //its id
-                false //error
-            );
+            ->expects($matcher)
+            ->method('create')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('new plugin', $parameters[0]);
+                    return 125;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('error plugin creation', $parameters[0]);
+                    return false;
+                }
+            });
 
         $factory = $this->getMockBuilder(\PluginFactory::class)
             ->setConstructorArgs([$this->dao, $this->restrictor])
@@ -170,15 +178,17 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsPluginAvailable(): void
     {
-        $this->dao->method('searchById')
-            ->withConsecutive(
-                [123],
-                [124]
-            )
-            ->willReturnOnConsecutiveCalls(
-                \TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '1']),
-                \TestHelper::arrayToDar(['id' => '124', 'name' => 'plugin 124', 'available' => '0'])
-            );
+        $matcher = $this->exactly(2);
+        $this->dao->expects($matcher)->method('searchById')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(123, $parameters[0]);
+                return \TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '1']);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(124, $parameters[0]);
+                return \TestHelper::arrayToDar(['id' => '124', 'name' => 'plugin 124', 'available' => '0']);
+            }
+        });
 
         $factory = $this->getMockBuilder(\PluginFactory::class)
             ->setConstructorArgs([$this->dao, $this->restrictor])
@@ -262,15 +272,17 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPluginIsCustom(): void
     {
-        $this->dao->method('searchByName')
-            ->withConsecutive(
-                ['custom'],
-                ['official']
-            )
-            ->willReturnOnConsecutiveCalls(
-                \TestHelper::arrayToDar(['id' => '123', 'name' => 'custom', 'available' => 1]),
-                \TestHelper::arrayToDar(['id' => '124', 'name' => 'official', 'available' => 1])
-            );
+        $matcher = $this->exactly(2);
+        $this->dao->expects($matcher)->method('searchByName')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('custom', $parameters[0]);
+                return \TestHelper::arrayToDar(['id' => '123', 'name' => 'custom', 'available' => 1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('official', $parameters[0]);
+                return \TestHelper::arrayToDar(['id' => '124', 'name' => 'official', 'available' => 1]);
+            }
+        });
 
         $factory                   = $this->getMockBuilder(\PluginFactory::class)
             ->setConstructorArgs([$this->dao, $this->restrictor])
@@ -282,14 +294,17 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $official_plugin           = new class extends Plugin {
         };
         $official_plugin_classname = $official_plugin::class;
-        $factory->method('getClassNameForPluginName')
-            ->withConsecutive(
-                ['custom'],
-                ['official']
-            )->willReturnOnConsecutiveCalls(
-                ['class' => $custom_plugin_classname, 'custom' => true],
-                ['class' => $official_plugin_classname, 'custom' => false]
-            );
+        $matcher                   = $this->exactly(2);
+        $factory->expects($matcher)->method('getClassNameForPluginName')->willReturnCallback(function (...$parameters) use ($matcher, $custom_plugin_classname, $official_plugin_classname) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('custom', $parameters[0]);
+                return ['class' => $custom_plugin_classname, 'custom' => true];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('official', $parameters[0]);
+                return ['class' => $official_plugin_classname, 'custom' => false];
+            }
+        });
 
         $plugin_custom = $factory->getPluginByName('custom');
         self::assertInstanceOf($custom_plugin_classname, $plugin_custom);

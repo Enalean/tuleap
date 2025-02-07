@@ -93,7 +93,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $verified_refresh_token = $this->verifier->getRefreshToken($app, $refresh_token);
 
-        $this->assertSame(12, $verified_refresh_token->getAssociatedAuthorizationCodeID());
+        self::assertSame(12, $verified_refresh_token->getAssociatedAuthorizationCodeID());
         $this->assertEquals([OAuth2TestScope::fromItself()], $verified_refresh_token->getScopes());
     }
 

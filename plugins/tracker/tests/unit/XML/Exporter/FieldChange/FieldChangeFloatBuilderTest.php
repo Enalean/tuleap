@@ -56,9 +56,9 @@ class FieldChangeFloatBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        $this->assertSame('float', (string) $field_change_node['type']);
-        $this->assertSame('field_float_01', (string) $field_change_node['field_name']);
-        $this->assertSame('2.1456', (string) $field_change_node->value);
+        self::assertSame('float', (string) $field_change_node['type']);
+        self::assertSame('field_float_01', (string) $field_change_node['field_name']);
+        self::assertSame('2.1456', (string) $field_change_node->value);
     }
 
     public function testItBuildsTheFieldChangeNodeWithValueAsNull(): void
@@ -74,8 +74,8 @@ class FieldChangeFloatBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        $this->assertSame('float', (string) $field_change_node['type']);
-        $this->assertSame('field_float_01', (string) $field_change_node['field_name']);
-        $this->assertSame('', (string) $field_change_node->value);
+        self::assertSame('float', (string) $field_change_node['type']);
+        self::assertSame('field_float_01', (string) $field_change_node['field_name']);
+        self::assertSame('', (string) $field_change_node->value);
     }
 }

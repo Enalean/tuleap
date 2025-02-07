@@ -41,8 +41,8 @@ final class CanSubmitNewArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAllowArtifactSubmissionByDefault(): void
     {
-        $this->assertSame($this->user, $this->can_submit_artifact->getUser());
-        $this->assertSame($this->tracker, $this->can_submit_artifact->getTracker());
+        self::assertSame($this->user, $this->can_submit_artifact->getUser());
+        self::assertSame($this->tracker, $this->can_submit_artifact->getTracker());
         $this->assertTrue($this->can_submit_artifact->canSubmitNewArtifact());
         $this->can_submit_artifact->disableArtifactSubmission();
         $this->assertFalse($this->can_submit_artifact->canSubmitNewArtifact());

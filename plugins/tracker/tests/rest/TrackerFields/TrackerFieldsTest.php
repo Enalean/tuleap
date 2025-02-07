@@ -137,8 +137,8 @@ class TrackerFieldsTest extends TrackerBase
         $response2 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
         $this->assertEquals(200, $response2->getStatusCode());
         $response2_json = json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertSame($response1_json['upload_href'], $response2_json['upload_href']);
-        $this->assertSame($response1_json['download_href'], $response2_json['download_href']);
+        self::assertSame($response1_json['upload_href'], $response2_json['upload_href']);
+        self::assertSame($response1_json['download_href'], $response2_json['download_href']);
 
         $query['file_size'] = 456;
         $response3          = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));

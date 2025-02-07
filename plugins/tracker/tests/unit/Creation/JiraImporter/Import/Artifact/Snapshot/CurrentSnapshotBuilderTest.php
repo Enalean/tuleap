@@ -72,23 +72,23 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new LinkedIssuesCollection(),
         );
 
-        $this->assertSame(1587820210, $snapshot->getDate()->getTimestamp());
-        $this->assertSame($user, $snapshot->getUser());
+        self::assertSame(1587820210, $snapshot->getDate()->getTimestamp());
+        self::assertSame($user, $snapshot->getUser());
         $this->assertCount(4, $snapshot->getAllFieldsSnapshot());
 
         foreach ($snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             $field_id = $field_snapshot->getFieldMapping()->getJiraFieldId();
             if ($field_id === 'summary') {
-                $this->assertSame('summary01', $field_snapshot->getValue());
+                self::assertSame('summary01', $field_snapshot->getValue());
                 $this->assertNull($field_snapshot->getRenderedValue());
             } elseif ($field_id === 'issuetype') {
-                $this->assertSame(['id' => '10004'], $field_snapshot->getValue());
+                self::assertSame(['id' => '10004'], $field_snapshot->getValue());
                 $this->assertNull($field_snapshot->getRenderedValue());
             } elseif ($field_id === 'assignee') {
-                $this->assertSame(['id' => '105'], $field_snapshot->getValue());
+                self::assertSame(['id' => '105'], $field_snapshot->getValue());
                 $this->assertNull($field_snapshot->getRenderedValue());
             } elseif ($field_id === 'homies') {
-                $this->assertSame(
+                self::assertSame(
                     [
                         ['id' => '105'],
                         ['id' => '106'],

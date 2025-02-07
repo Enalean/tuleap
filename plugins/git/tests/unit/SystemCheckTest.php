@@ -54,7 +54,7 @@ final class SystemCheckTest extends TestCase
     {
         $this->driver->expects(self::once())->method('checkAuthorizedKeys');
         $this->gitgc->expects(self::once())->method('cleanUpGitoliteAdminWorkingCopy');
-        $this->plugin->method('getPluginEtcRoot');
+        $this->plugin->method('getPluginEtcRoot')->willReturn('/do/not/exist');
 
         $this->system_check->process();
     }
