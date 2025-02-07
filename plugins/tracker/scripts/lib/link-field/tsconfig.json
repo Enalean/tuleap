@@ -1,0 +1,9 @@
+{
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "lib": ["ES2019", "DOM"],
+        "types": ["jest"],
+        "resolveJsonModule": true
+    },
+    "include": ["src/**/*", "tests/**/*"]
+}

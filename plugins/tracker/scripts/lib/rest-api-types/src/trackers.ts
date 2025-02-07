@@ -22,15 +22,17 @@ import type {
     CheckBoxFieldIdentifier,
     ColorName,
     ColumnIdentifier,
+    CreatePermission,
     DateFieldIdentifier,
     FieldSetIdentifier,
     LastUpdateDateFieldIdentifier,
     MultiSelectBoxFieldIdentifier,
-    Permission,
     PermissionFieldIdentifier,
     RadioButtonFieldIdentifier,
+    ReadPermission,
     StringFieldIdentifier,
     SubmissionDateFieldIdentifier,
+    UpdatePermission,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -41,6 +43,8 @@ import type { ListFieldStructure } from "./list-field";
 export * from "./open-list-field";
 export * from "./list-field";
 export * from "./file-field";
+
+export type PermissionsArray = readonly [ReadPermission, CreatePermission?, UpdatePermission?];
 
 export interface BaseFieldStructure {
     readonly field_id: number;
@@ -67,7 +71,7 @@ export interface ReadonlyDateFieldStructure extends CommonDateFieldStructure {
 
 export interface EditableDateFieldStructure extends CommonDateFieldStructure {
     readonly type: DateFieldIdentifier;
-    readonly permissions: ReadonlyArray<Permission>;
+    readonly permissions: PermissionsArray;
 }
 
 export type DateFieldStructure = ReadonlyDateFieldStructure | EditableDateFieldStructure;
@@ -102,6 +106,7 @@ export interface ArtifactLinkFieldStructure extends BaseFieldStructure {
     readonly type: ArtifactLinkFieldIdentifier;
     readonly label: string;
     readonly allowed_types: ReadonlyArray<AllowedLinkTypeRepresentation>;
+    readonly permissions: PermissionsArray;
 }
 
 export type StructureFields =
