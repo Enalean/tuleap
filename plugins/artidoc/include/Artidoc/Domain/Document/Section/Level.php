@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Level;
-
-interface BuildArtifactSectionRepresentation
+enum Level: int
 {
-    public function build(
-        RequiredArtifactInformation $artifact_information,
-        SectionIdentifier $section_identifier,
-        Level $level,
-        \PFUser $user,
-    ): ArtifactSectionRepresentation;
+    case One   = 1;
+    case Two   = 2;
+    case Three = 3;
+
+    /**
+     * @return list<int>
+     */
+    public static function allowed(): array
+    {
+        $values = [];
+        foreach (self::cases() as $case) {
+            $values[] = $case->value;
+        }
+
+        return $values;
+    }
 }

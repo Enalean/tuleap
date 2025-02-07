@@ -70,6 +70,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::nothing(SectionIdentifier::class),
+            Level::One,
             SectionContentToBeCreated::fromArtifact(101)
         );
 
@@ -98,6 +99,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
             SectionContentToBeCreated::fromArtifact(101)
         );
 
@@ -126,6 +128,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
             SectionContentToBeCreated::fromFreetext('my title', 'my description'),
         );
 
@@ -153,6 +156,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
             SectionContentToBeCreated::fromArtifact(101)
         );
 
@@ -194,6 +198,7 @@ final class SectionCreatorTest extends TestCase
             $before_section_id === null
                 ? Option::nothing(SectionIdentifier::class)
             : Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
             SectionContentToBeCreated::fromArtifact($artifact_id)
         );
 
@@ -220,6 +225,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
             SectionContentToBeCreated::fromArtifact(101)
         );
 
@@ -241,6 +247,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
             SectionContentToBeCreated::fromArtifact(101)
         );
 
@@ -266,6 +273,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
             SectionContentToBeCreated::fromArtifact(101)
         );
 

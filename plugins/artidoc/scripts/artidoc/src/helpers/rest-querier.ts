@@ -153,6 +153,7 @@ export function createArtifactSection(
         section: {
             artifact: { id: artifact_id },
             position,
+            level: 1,
             content: null,
         },
     }).map(injectDisplayTitle);
@@ -168,6 +169,7 @@ export function createFreetextSection(
         artidoc_id,
         section: {
             content: { title, description, type: "freetext" },
+            level: 1,
             position,
         },
     }).map(injectDisplayTitle);

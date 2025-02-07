@@ -34,6 +34,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
@@ -45,10 +46,10 @@ final class UpdateFreetextContentDaoTest extends TestIntegrationTestCase
     {
         $artidoc = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));
         $this->createArtidocSections($artidoc, [
-            ContentToInsert::fromFreetext(new FreetextContent('Intro', '')),
-            ContentToInsert::fromFreetext(new FreetextContent('Requirements', '')),
-            ContentToInsert::fromArtifactId(1001),
-            ContentToInsert::fromArtifactId(1002),
+            ContentToInsert::fromFreetext(new FreetextContent('Intro', ''), Level::One),
+            ContentToInsert::fromFreetext(new FreetextContent('Requirements', ''), Level::One),
+            ContentToInsert::fromArtifactId(1001, Level::One),
+            ContentToInsert::fromArtifactId(1002, Level::One),
         ]);
         SectionsAsserter::assertSectionsForDocument($artidoc, ['Intro', 'Requirements', 1001, 1002]);
 

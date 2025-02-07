@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Result;
@@ -122,48 +123,56 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
                 'artifact_id' => 1001,
                 'freetext_id' => null,
                 'rank'        => 1,
+                'level'       => 1,
             ],
             [
                 'section_id'  => $section_2_id,
                 'artifact_id' => null,
                 'freetext_id' => $introduction_id,
                 'rank'        => 1,
+                'level'       => 1,
             ],
             [
                 'section_id'  => $section_3_id,
                 'artifact_id' => null,
                 'freetext_id' => $requirements_id,
                 'rank'        => 2,
+                'level'       => 1,
             ],
             [
                 'section_id'  => $section_4_id,
                 'artifact_id' => 1001,
                 'freetext_id' => null,
                 'rank'        => 4,
+                'level'       => 1,
             ],
             [
                 'section_id'  => $section_5_id,
                 'artifact_id' => 2001,
                 'freetext_id' => null,
                 'rank'        => 3,
+                'level'       => 1,
             ],
             [
                 'section_id'  => $section_6_id,
                 'artifact_id' => 1003,
                 'freetext_id' => null,
                 'rank'        => 3,
+                'level'       => 1,
             ],
             [
                 'section_id'  => $section_7_id,
                 'artifact_id' => 1002,
                 'freetext_id' => null,
                 'rank'        => 2,
+                'level'       => 1,
             ],
             [
                 'section_id'  => $section_8_id,
                 'artifact_id' => 1004,
                 'freetext_id' => null,
                 'rank'        => 4,
+                'level'       => 1,
             ],
         ]);
 
@@ -229,7 +238,7 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
     private function getArtifactIdsToInsert(int ...$artifact_ids): array
     {
         return array_map(
-            static fn ($id) => ContentToInsert::fromArtifactId($id),
+            static fn ($id) => ContentToInsert::fromArtifactId($id, Level::One),
             $artifact_ids,
         );
     }

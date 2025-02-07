@@ -32,6 +32,7 @@ use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -71,7 +72,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     private function getArtifactIdsToInsert(int ...$artifact_ids): array
     {
         return array_map(
-            static fn ($id) => ContentToInsert::fromArtifactId($id),
+            static fn ($id) => ContentToInsert::fromArtifactId($id, Level::One),
             $artifact_ids,
         );
     }
@@ -82,10 +83,10 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao = $this->getDao();
         $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert(1001));
         $this->createArtidocSections($this->artidoc_102, [
-            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum')),
-            ContentToInsert::fromFreetext(new FreetextContent('Requirements', '')),
-            ContentToInsert::fromArtifactId(2001),
-            ContentToInsert::fromArtifactId(1001),
+            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum'), Level::One),
+            ContentToInsert::fromFreetext(new FreetextContent('Requirements', ''), Level::One),
+            ContentToInsert::fromArtifactId(2001, Level::Two),
+            ContentToInsert::fromArtifactId(1001, Level::Two),
         ]);
         $dao->saveTracker($this->artidoc_102->document->getId(), 10001);
 

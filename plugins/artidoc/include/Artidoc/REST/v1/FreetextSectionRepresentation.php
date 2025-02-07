@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 
 /**
  * @psalm-immutable
@@ -40,12 +41,12 @@ final readonly class FreetextSectionRepresentation implements SectionRepresentat
 
     public static function fromRetrievedSectionContentFreetext(
         SectionIdentifier $section_identifier,
-        int $level,
+        Level $level,
         RetrievedSectionContentFreetext $freetext,
     ): self {
         return new self(
             $section_identifier->toString(),
-            $level,
+            $level->value,
             $freetext->content->title,
             $freetext->content->description,
         );

@@ -41,13 +41,20 @@ final class ArtidocSectionPOSTRepresentation
      */
     public mixed $position;
 
+    /**
+     * @var int The level of the section {@required false}
+     */
+    public int $level;
+
     public function __construct(
         ?ArtidocPOSTSectionArtifactRepresentation $artifact,
         ?ArtidocPOSTSectionPositionBeforeRepresentation $position,
         ?POSTContentSectionRepresentation $content,
+        int $level,
     ) {
         $this->artifact = $artifact;
         $this->position = $position;
         $this->content  = $content;
+        $this->level    = $level;
     }
 }

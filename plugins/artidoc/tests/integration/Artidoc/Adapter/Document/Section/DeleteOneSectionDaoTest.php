@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -50,7 +51,7 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
 
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
-            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum')),
+            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum'), Level::One),
         )->match(
             function (SectionIdentifier $identifier) {
                 $this->uuid_intro = $identifier;
@@ -59,11 +60,11 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
         );
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
-            ContentToInsert::fromArtifactId(1001),
+            ContentToInsert::fromArtifactId(1001, Level::One),
         );
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
-            ContentToInsert::fromArtifactId(1002),
+            ContentToInsert::fromArtifactId(1002, Level::One),
         )->match(
             function (SectionIdentifier $identifier) {
                 $this->uuid_2 = $identifier;
@@ -72,11 +73,11 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
         );
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
-            ContentToInsert::fromArtifactId(1003),
+            ContentToInsert::fromArtifactId(1003, Level::One),
         );
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
-            ContentToInsert::fromFreetext(new FreetextContent('Legal', 'doloret')),
+            ContentToInsert::fromFreetext(new FreetextContent('Legal', 'doloret'), Level::One),
         );
     }
 
