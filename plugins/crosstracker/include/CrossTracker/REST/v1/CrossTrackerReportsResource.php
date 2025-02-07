@@ -123,8 +123,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\Pro
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRepresentation;
 use Tuleap\DB\DatabaseUUIDFactory;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
@@ -264,7 +264,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws RestException 404
      */
-    public function getIdContent(string $uuid, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0): LegacyCrossTrackerReportContentRepresentation|CrossTrackerReportContentRepresentation
+    public function getIdContent(string $uuid, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0): CrossTrackerReportContentRepresentation
     {
         $this->checkAccess();
         Header::allowOptionsGet();
