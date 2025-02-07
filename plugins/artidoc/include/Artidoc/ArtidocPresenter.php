@@ -38,6 +38,7 @@ final readonly class ArtidocPresenter
      */
     public function __construct(
         public int $item_id,
+        public int $project_id,
         public bool $can_user_edit_document,
         public string $title,
         ?DocumentTrackerRepresentation $selected_tracker,

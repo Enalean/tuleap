@@ -51,7 +51,6 @@
             <section-header-skeleton v-if="is_loading_sections" class="section-header" />
             <section-description
                 v-bind:post_information="section_attachments_manager.getPostInformation()"
-                v-bind:project_id="getProjectId()"
                 v-bind:section="section"
                 v-bind:section_state="section_state"
                 v-bind:manage_section_editor_state="section_editor_state_manager"
@@ -73,7 +72,6 @@ import type { Ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 
-import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import SectionHeader from "./header/SectionHeader.vue";
 import SectionDescription from "./description/SectionDescription.vue";
@@ -195,16 +193,6 @@ const delete_section = getSectionDeletor(
 );
 
 const { is_in_error, is_outdated } = section_state;
-
-function getProjectId(): number {
-    if (isArtifactSection(props.section.value)) {
-        return props.section.value.artifact.tracker.project.id;
-    }
-
-    return isPendingArtifactSection(props.section.value)
-        ? props.section.value.tracker.project.id
-        : 0;
-}
 </script>
 
 <style lang="scss" scoped>

@@ -63,7 +63,6 @@ describe("SectionDescription", () => {
                     upload_url: "/file/upload",
                     getUploadJsonPayload: noop,
                 },
-                project_id: 101,
                 section,
                 section_state,
                 manage_section_editor_state: getSectionEditorStateManager(section, section_state),
