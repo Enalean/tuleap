@@ -49,7 +49,7 @@
                 <h1 class="empty-state-title">
                     {{ $gettext("Program configuration is incomplete") }}
                 </h1>
-                <p class="empty-state-text" v-dompurify-html="getAdminEmptyState()"></p>
+                <p class="empty-state-text" v-dompurify-html="admin_empty_state"></p>
             </div>
             <div v-else>
                 <h1 class="empty-state-title" data-test="regular-user-empty-state">
@@ -63,137 +63,125 @@
         <error-modal v-if="has_modal_error" />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import AppBreadcrumb from "./AppBreadcrumb.vue";
-import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
-import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted } from "vue";
+import {
+    useGetters,
+    useActions,
+    useNamespacedState,
+    useState,
+    useStore,
+} from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
-import { init } from "@tuleap/drag-and-drop";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import type {
     Drekkenov,
     PossibleDropCallbackParameter,
     SuccessfulDropCallbackParameter,
 } from "@tuleap/drag-and-drop";
-import type { HandleDropContextWithProgramId } from "../helpers/drag-drop";
+import { init } from "@tuleap/drag-and-drop";
+import AppBreadcrumb from "./AppBreadcrumb.vue";
+import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
+import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
 import {
     canMove,
+    checkAcceptsDrop,
+    checkAfterDrag,
     invalid,
     isConsideredInDropzone,
     isContainer,
-    checkAcceptsDrop,
-    checkAfterDrag,
 } from "../helpers/drag-drop";
-import { Action, State, namespace, Getter } from "vuex-class";
 import ErrorModal from "./Backlog/ErrorModal.vue";
 import ConfigurationEmptyState from "./ConfigurationEmptyState.vue";
-import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
-const configuration = namespace("configuration");
+const gettext_provider = useGettext();
+const store = useStore();
 
-@Component({
-    components: {
-        ConfigurationEmptyState,
-        ToBePlanned,
-        ProgramIncrementList,
-        AppBreadcrumb,
-        ErrorModal,
-    },
-})
-export default class App extends Vue {
-    private drek!: Drekkenov | undefined;
+let drek: Drekkenov | undefined = undefined;
 
-    @Action
-    private readonly handleDrop!: (handle_drop: HandleDropContextWithProgramId) => Promise<void>;
+const { handleDrop } = useActions(["handleDrop"]);
 
-    @State
-    readonly has_modal_error!: boolean;
+const { has_modal_error } = useState<{
+    has_modal_error: boolean;
+}>(["has_modal_error"]);
 
-    @configuration.State
-    readonly public_name!: string;
+const {
+    public_name,
+    short_name,
+    project_icon,
+    privacy,
+    has_plan_permissions,
+    program_id,
+    is_program_admin,
+    is_configured,
+} = useNamespacedState<{
+    public_name: string;
+    short_name: string;
+    project_icon: string;
+    privacy: ProjectPrivacy;
+    has_plan_permissions: boolean;
+    program_id: number;
+    is_program_admin: boolean;
+    is_configured: boolean;
+}>("configuration", [
+    "public_name",
+    "short_name",
+    "project_icon",
+    "privacy",
+    "has_plan_permissions",
+    "program_id",
+    "is_program_admin",
+    "is_configured",
+]);
+const flags: ProjectFlag[] = store.state.configuration.flags;
 
-    @configuration.State
-    readonly short_name!: string;
+const { hasAnElementMovedInsideIncrement } = useGetters(["hasAnElementMovedInsideIncrement"]);
 
-    @configuration.State
-    readonly project_icon!: string;
+onBeforeUnmount(() => {
+    window.removeEventListener("beforeunload", beforeUnload);
+    drek?.destroy();
+});
 
-    @configuration.State
-    readonly privacy!: ProjectPrivacy;
+onMounted(() => {
+    window.addEventListener("beforeunload", beforeUnload);
 
-    @configuration.State
-    readonly flags!: Array<ProjectFlag>;
-
-    @configuration.State
-    readonly can_create_program_increment!: boolean;
-
-    @configuration.State
-    readonly has_plan_permissions!: boolean;
-
-    @configuration.State
-    readonly program_id!: number;
-
-    @configuration.State
-    readonly is_program_admin!: boolean;
-
-    @configuration.State
-    readonly is_configured!: boolean;
-
-    @Getter
-    readonly hasAnElementMovedInsideIncrement!: boolean;
-
-    beforeDestroy(): void {
-        window.removeEventListener("beforeunload", this.beforeUnload);
-        if (this.drek) {
-            this.drek.destroy();
-        }
+    if (!has_plan_permissions.value) {
+        return;
     }
 
-    mounted(): void {
-        window.addEventListener("beforeunload", this.beforeUnload);
+    drek = init({
+        mirror_container: document.body,
+        isDropZone: isContainer,
+        isDraggable: canMove,
+        isInvalidDragHandle: invalid,
+        isConsideredInDropzone,
+        doesDropzoneAcceptDraggable(context: PossibleDropCallbackParameter): boolean {
+            return checkAcceptsDrop(store, gettext_provider, {
+                dropped_card: context.dragged_element,
+                source_cell: context.source_dropzone,
+                target_cell: context.target_dropzone,
+            });
+        },
+        async onDrop(context: SuccessfulDropCallbackParameter): Promise<void> {
+            await handleDrop({ program_id: program_id.value, ...context });
+        },
+        cleanupAfterDragCallback(): void {
+            return checkAfterDrag();
+        },
+    });
+});
 
-        if (!this.has_plan_permissions) {
-            return;
-        }
-
-        this.drek = init({
-            mirror_container: this.$el,
-            isDropZone: isContainer,
-            isDraggable: canMove,
-            isInvalidDragHandle: invalid,
-            isConsideredInDropzone,
-            doesDropzoneAcceptDraggable: (context: PossibleDropCallbackParameter): boolean => {
-                return checkAcceptsDrop(this.$store, this, {
-                    dropped_card: context.dragged_element,
-                    source_cell: context.source_dropzone,
-                    target_cell: context.target_dropzone,
-                });
-            },
-            onDrop: async (context: SuccessfulDropCallbackParameter): Promise<void> => {
-                await this.handleDrop({ program_id: this.program_id, ...context });
-            },
-            cleanupAfterDragCallback: (): void => {
-                return checkAfterDrag();
-            },
-        });
-    }
-
-    beforeUnload(event: Event): void {
-        if (this.hasAnElementMovedInsideIncrement) {
-            event.preventDefault();
-            event.returnValue = false;
-        }
-    }
-
-    getAdminEmptyState(): string {
-        return this.$gettextInterpolate(
-            this.$gettext(
-                `Configuration can be done in <a href="%{ url }" data-test="program-go-to-administration">administration</a> of service.`,
-            ),
-            { url: `/program_management/admin/${this.short_name}` },
-        );
+function beforeUnload(event: Event): void {
+    if (hasAnElementMovedInsideIncrement.value) {
+        event.preventDefault();
     }
 }
+
+const admin_empty_state = gettext_provider.interpolate(
+    gettext_provider.$gettext(
+        `Configuration can be done in <a href="%{ url }" data-test="program-go-to-administration">administration</a> of service.`,
+    ),
+    { url: `/program_management/admin/${short_name.value}` },
+);
 </script>
