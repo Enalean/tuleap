@@ -27,17 +27,12 @@ use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\CrossReferenceSectionPresenter;
 use Tuleap\Reference\TitleBadgePresenter;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 
-class CrossReferenceArtifactOrganizer
+final readonly class CrossReferenceArtifactOrganizer
 {
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    public function __construct(\Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(private RetrieveViewableArtifact $artifact_factory)
     {
-        $this->artifact_factory = $artifact_factory;
     }
 
     public function organizeArtifactReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void

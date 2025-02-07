@@ -22,60 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\CrossReference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker_ArtifactFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
-class CrossReferenceArtifactOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceArtifactOrganizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CrossReferenceArtifactOrganizer
-     */
-    private $organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private CrossReferenceArtifactOrganizer $organizer;
+    private RetrieveViewableArtifact&MockObject $artifact_factory;
 
     protected function setUp(): void
     {
-        $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->artifact_factory = $this->createMock(RetrieveViewableArtifact::class);
 
-        $this->organizer = new CrossReferenceArtifactOrganizer(
-            $this->artifact_factory,
-        );
+        $this->organizer = new CrossReferenceArtifactOrganizer($this->artifact_factory);
     }
 
     public function testItDoesNotOrganizeCrossReferencesItDoesNotKnow(): void
     {
-        $user = Mockery::mock(PFUser::class);
-
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                    ],
-                ]
-            )->getMock();
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([CrossReferencePresenterBuilder::get(1)->withType('git')->build()]);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }
 
     public function testItDoesNotOrganizeArtifactCrossReferencesIfArtifactCannotBeFound(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_tracker_artifact')
@@ -83,137 +65,87 @@ class CrossReferenceArtifactOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
+            ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }
 
     public function testItMovesArtifactCrossReferenceToAnUnlabelledSectionWithATitleBadge(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_tracker_artifact')
             ->withValue('123')
             ->build();
 
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getXRef')->willReturn('bug #123');
+        $artifact->method('getTitle')->willReturn('Issue on submit button. Please fix ASAP!');
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(TrackerColor::fromName('fiesta-red'))->build());
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
+            ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
-            ->andReturn(
-                Mockery::mock(Artifact::class)
-                    ->shouldReceive(
-                        [
-                            'getXRef'    => 'bug #123',
-                            'getTitle'   => 'Issue on submit button. Please fix ASAP!',
-                            'getTracker' => Mockery::mock(\Tracker::class)
-                                ->shouldReceive(
-                                    [
-                                        'getColor' => TrackerColor::fromName('fiesta-red'),
-                                    ]
-                                )->getMock(),
-                        ]
-                    )->getMock(),
-            );
+            ->willReturn($artifact);
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
-
-        $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
+        $by_nature_organizer->expects(self::once())->method('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(
-                    function (CrossReferencePresenter $presenter) {
-                        return $presenter->id === 1
-                            && $presenter->title === 'Issue on submit button. Please fix ASAP!'
-                            && $presenter->title_badge->label === 'bug #123'
-                            && $presenter->title_badge->color === 'fiesta-red';
-                    }
-                ),
+                self::callback(static fn(CrossReferencePresenter $presenter) => (
+                    $presenter->id === 1
+                    && $presenter->title === 'Issue on submit button. Please fix ASAP!'
+                    && $presenter->title_badge->label === 'bug #123'
+                    && $presenter->title_badge->color === 'fiesta-red'
+                )),
                 ''
-            )
-            ->once();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->never();
+            );
+        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }
 
     public function testItMovesArtifactCrossReferenceWithEmptyStringInsteadOfNullTitle(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_tracker_artifact')
             ->withValue('123')
             ->build();
 
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getXRef')->willReturn('bug #123');
+        $artifact->method('getTitle')->willReturn(null);
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(TrackerColor::fromName('fiesta-red'))->build());
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
+            ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
-            ->andReturn(
-                Mockery::mock(Artifact::class)
-                    ->shouldReceive(
-                        [
-                            'getXRef'    => 'bug #123',
-                            'getTitle'   => null,
-                            'getTracker' => Mockery::mock(\Tracker::class)
-                                ->shouldReceive(
-                                    [
-                                        'getColor' => TrackerColor::fromName('fiesta-red'),
-                                    ]
-                                )->getMock(),
-                        ]
-                    )->getMock(),
-            );
+            ->willReturn($artifact);
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
-
-        $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
+        $by_nature_organizer->expects(self::once())->method('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(
-                    function (CrossReferencePresenter $presenter) {
-                        return $presenter->id === 1
-                            && $presenter->title === ''
-                            && $presenter->title_badge->label === 'bug #123'
-                            && $presenter->title_badge->color === 'fiesta-red';
-                    }
-                ),
+                self::callback(static fn(CrossReferencePresenter $presenter) => (
+                    $presenter->id === 1
+                    && $presenter->title === ''
+                    && $presenter->title_badge->label === 'bug #123'
+                    && $presenter->title_badge->color === 'fiesta-red'
+                )),
                 ''
-            )
-            ->once();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->never();
+            );
+        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }
