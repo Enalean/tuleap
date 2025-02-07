@@ -24,50 +24,41 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Attachment;
 
 use ForgeConfig;
-use Mockery;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
-use Tuleap\DB\DBTransactionExecutor;
+use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
-class TemporaryFileManagerAppendChunkTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TemporaryFileManagerAppendChunkTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    private $empty_file;
-    private $wrong_path_file;
-    protected $file_manager;
-    protected $cache_dir;
-
-    /** @var \Tracker_Artifact_Attachment_TemporaryFileManagerDao */
-    protected $dao;
-
-    /** @var \PFUser */
-    protected $user;
+    private Tracker_Artifact_Attachment_TemporaryFile $empty_file;
+    private Tracker_Artifact_Attachment_TemporaryFile $wrong_path_file;
+    private Tracker_Artifact_Attachment_TemporaryFileManager $file_manager;
+    private string $cache_dir;
+    private Tracker_Artifact_Attachment_TemporaryFileManagerDao&MockObject $dao;
 
     public function setUp(): void
     {
-        ForgeConfig::store();
-
         $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
 
-        $this->user   = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
-        $user_manager = Mockery::mock(\UserManager::class);
-        $user_manager->shouldReceive('getUserById')->with(101)->andReturn($this->user);
-
-        $this->dao = Mockery::mock(\Tracker_Artifact_Attachment_TemporaryFileManagerDao::class, ['create' =>  1]);
-
-        $system = new System_Command();
-
-        $retention_delay = 3;
+        $this->dao = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManagerDao::class);
+        $this->dao->method('create')->willReturn(1);
 
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
-            $user_manager,
+            RetrieveUserByIdStub::withUser(new PFUser(['user_id' => 101, 'language_id' => 'en_US'])),
             $this->dao,
-            $system,
-            $retention_delay,
-            Mockery::mock(DBTransactionExecutor::class),
+            new System_Command(),
+            3,
+            new DBTransactionExecutorPassthrough(),
         );
 
         ForgeConfig::set('sys_max_size_upload', 10);
@@ -98,41 +89,40 @@ class TemporaryFileManagerAppendChunkTest extends \Tuleap\Test\PHPUnit\TestCase
     public function tearDown(): void
     {
         exec('rm -rf ' . escapeshellarg($this->cache_dir));
-        ForgeConfig::restore();
     }
 
-    public function testItThrowsExceptionIfOffsetIsNotValid()
+    public function testItThrowsExceptionIfOffsetIsNotValid(): void
     {
         $this->expectException('Tracker_Artifact_Attachment_InvalidOffsetException');
 
         $this->file_manager->appendChunk(base64_encode('le content'), $this->empty_file, 2);
     }
 
-    public function testItThrowsExceptionIfFileDoesNotExist()
+    public function testItThrowsExceptionIfFileDoesNotExist(): void
     {
         $this->expectException('Tracker_Artifact_Attachment_InvalidPathException');
 
         $this->file_manager->appendChunk(base64_encode('le content'), $this->wrong_path_file, 1);
     }
 
-    public function testItWritesChunkOnTheDisk()
+    public function testItWritesChunkOnTheDisk(): void
     {
         $filepath = $this->cache_dir . '/rest_attachement_temp_101_' . $this->empty_file->getTemporaryName();
 
-        $this->dao->shouldReceive('updateFileInfo');
+        $this->dao->method('updateFileInfo');
 
         $this->file_manager->appendChunk(base64_encode('le content'), $this->empty_file, 1);
 
-        $this->assertEquals('le content', file_get_contents($filepath));
+        self::assertEquals('le content', file_get_contents($filepath));
     }
 
-    public function testItThrowsExceptionIfChunkIsTooBig()
+    public function testItThrowsExceptionIfChunkIsTooBig(): void
     {
         $filepath = $this->cache_dir . '/rest_attachement_temp_101_' . $this->empty_file->getTemporaryName();
         $this->expectException('Tuleap\Tracker\Artifact\Attachment\QuotaExceededException');
 
         $this->file_manager->appendChunk(base64_encode('le too big content'), $this->empty_file, 1);
 
-        $this->assertEquals('', file_get_contents($filepath));
+        self::assertEquals('', file_get_contents($filepath));
     }
 }
