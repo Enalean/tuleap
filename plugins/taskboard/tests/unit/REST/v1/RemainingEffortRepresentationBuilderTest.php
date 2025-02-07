@@ -120,7 +120,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
             ->expects(self::once())
             ->method('getRemainingEffortValue')
             ->with($this->user, $this->artifact)
-            ->willReturn('3.14');
+            ->willReturn(3.14);
 
         $representation = $this->builder->getRemainingEffort($this->user, $this->artifact);
         self::assertNotNull($representation);
@@ -145,7 +145,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
             ->expects(self::once())
             ->method('getRemainingEffortValue')
             ->with($this->user, $this->artifact)
-            ->willReturn('whatedver');
+            ->willReturn(null);
 
         $representation = $this->builder->getRemainingEffort($this->user, $this->artifact);
         self::assertNotNull($representation);
