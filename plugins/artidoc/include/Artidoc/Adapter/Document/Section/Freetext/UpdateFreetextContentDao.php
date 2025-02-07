@@ -25,21 +25,39 @@ namespace Tuleap\Artidoc\Adapter\Document\Section\Freetext;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\UpdateFreetextContent;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DataAccessObject;
 
 final class UpdateFreetextContentDao extends DataAccessObject implements UpdateFreetextContent
 {
-    public function updateFreetextContent(FreetextIdentifier $id, FreetextContent $content): void
-    {
-        $this->getDB()->update(
-            'plugin_artidoc_section_freetext',
-            [
-                'title'       => $content->title,
-                'description' => $content->description,
-            ],
-            [
-                'id' => $id->getBytes(),
-            ],
-        );
+    public function updateFreetextContent(
+        SectionIdentifier $section_identifier,
+        FreetextIdentifier $id,
+        FreetextContent $content,
+        Level $level,
+    ): void {
+        $this->getDB()->tryFlatTransaction(function () use ($section_identifier, $id, $content, $level) {
+            $this->getDB()->update(
+                'plugin_artidoc_section_version',
+                [
+                    'level' => $level->value,
+                ],
+                [
+                    'section_id' => $section_identifier->getBytes(),
+                ]
+            );
+
+            $this->getDB()->update(
+                'plugin_artidoc_section_freetext',
+                [
+                    'title'       => $content->title,
+                    'description' => $content->description,
+                ],
+                [
+                    'id' => $id->getBytes(),
+                ],
+            );
+        });
     }
 }

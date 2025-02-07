@@ -60,6 +60,7 @@ final class SectionUpdaterTest extends TestCase
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             'Introduction',
             '',
+            Level::One,
         );
         self::assertTrue(Result::isOk($result));
         self::assertTrue($update->isCalled());
@@ -84,6 +85,7 @@ final class SectionUpdaterTest extends TestCase
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             $empty,
             '',
+            Level::One,
         );
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(EmptyTitleFault::class, $result->error);
@@ -105,6 +107,7 @@ final class SectionUpdaterTest extends TestCase
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             'Introduction',
             '',
+            Level::One,
         );
         self::assertFalse(Result::isOk($result));
         self::assertFalse($update->isCalled());
@@ -125,6 +128,7 @@ final class SectionUpdaterTest extends TestCase
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             'Introduction',
             '',
+            Level::One,
         );
         self::assertFalse(Result::isOk($result));
         self::assertFalse($update->isCalled());
@@ -143,6 +147,7 @@ final class SectionUpdaterTest extends TestCase
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             'Introduction',
             '',
+            Level::One,
         );
         self::assertFalse(Result::isOk($result));
         self::assertFalse($update->isCalled());

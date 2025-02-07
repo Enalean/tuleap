@@ -40,7 +40,7 @@ final readonly class SectionUpdater
     /**
      * @return Ok<null>|Err<Fault>
      */
-    public function update(SectionIdentifier $section_identifier, string $title, string $description): Ok|Err
+    public function update(SectionIdentifier $section_identifier, string $title, string $description, Level $level): Ok|Err
     {
         $title = trim($title);
         if ($title === '') {
@@ -51,7 +51,7 @@ final readonly class SectionUpdater
             ->retrieveSectionUserCanWrite($section_identifier)
             ->andThen(fn (RetrievedSection $section) => $section->content->apply(
                 $this->updateArtifactSection(...),
-                fn (RetrievedSectionContentFreetext $freetext) => $this->updateFreetextSection($freetext, $title, $description),
+                fn (RetrievedSectionContentFreetext $freetext) => $this->updateFreetextSection($section_identifier, $freetext, $title, $description, $level),
             ));
     }
 
@@ -66,9 +66,14 @@ final readonly class SectionUpdater
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function updateFreetextSection(RetrievedSectionContentFreetext $freetext, string $title, string $description): Ok|Err
-    {
-        $this->update_freetext->updateFreetextContent($freetext->id, new FreetextContent($title, $description));
+    private function updateFreetextSection(
+        SectionIdentifier $section_identifier,
+        RetrievedSectionContentFreetext $freetext,
+        string $title,
+        string $description,
+        Level $level,
+    ): Ok|Err {
+        $this->update_freetext->updateFreetextContent($section_identifier, $freetext->id, new FreetextContent($title, $description), $level);
 
         return Result::ok(null);
     }

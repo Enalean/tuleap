@@ -722,6 +722,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                         [
                             'title' => 'My updated title',
                             'description' => 'My updated description',
+                            'level' => 1,
                         ],
                     ),
                 )
