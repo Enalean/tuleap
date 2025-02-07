@@ -21,7 +21,7 @@
 /**
  * User-editable parameters of the planning.
  */
-class PlanningParameters
+class PlanningParameters // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const NAME                = 'name';
     public const BACKLOG_TITLE       = 'backlog_title';
@@ -56,13 +56,13 @@ class PlanningParameters
 
     public static function fromArray(array $array)
     {
-        $parameters  = new PlanningParameters();
-        $backlog_ids = self::get($array, self::BACKLOG_TRACKER_IDS);
+        $parameters = new PlanningParameters();
+
 
         $parameters->name                       = self::get($array, self::NAME);
         $parameters->backlog_title              = self::get($array, self::BACKLOG_TITLE);
         $parameters->plan_title                 = self::get($array, self::PLANNING_TITLE);
-        $parameters->backlog_tracker_ids        = ($backlog_ids) ? $backlog_ids : [];
+        $parameters->backlog_tracker_ids        = self::getBacklogIds($array);
         $parameters->planning_tracker_id        = self::get($array, self::PLANNING_TRACKER_ID);
         $parameters->priority_change_permission = self::get($array, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
 
@@ -72,5 +72,41 @@ class PlanningParameters
     private static function get($array, $key)
     {
         return array_key_exists($key, $array) ? $array[$key] : '';
+    }
+
+    /**
+     * @return list<int>
+     */
+    private static function getBacklogIds(array $array): array
+    {
+        $backlog_ids = self::get($array, self::BACKLOG_TRACKER_IDS);
+        if ($backlog_ids === '') {
+            return [];
+        }
+
+        $backlog_ids = self::getBacklogIdsWithNullValue($backlog_ids);
+        return self::getIds($backlog_ids);
+    }
+
+    /**
+     * @param list<int | string | null> $backlog_ids
+     * @return list<int|null>
+     */
+    private static function getBacklogIdsWithNullValue(mixed $backlog_ids): array
+    {
+        return array_map(function (string|int|null $value) {
+            return $value === null ? null : (int) $value;
+        }, $backlog_ids);
+    }
+
+    /**
+     * @param list<int | null> $backlog_ids
+     * @return list<int>
+     */
+    private static function getIds(array $backlog_ids): array
+    {
+        return array_values(array_filter($backlog_ids, function (?int $value) {
+            return $value !== null;
+        }));
     }
 }
