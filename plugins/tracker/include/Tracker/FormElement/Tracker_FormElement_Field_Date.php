@@ -510,7 +510,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html = '';
-        if ($criteria->is_advanced === true) {
+        if ((bool) $criteria->is_advanced === true) {
             $html = $this->fetchAdvancedCriteriaValue($criteria);
         } else {
             $criteria_value = $this->getCriteriaValue($criteria);
