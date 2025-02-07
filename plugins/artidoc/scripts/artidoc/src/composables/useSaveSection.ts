@@ -44,6 +44,7 @@ import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositio
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ManageErrorState } from "@/sections/SectionErrorManager";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 
 export type SaveEditor = {
     forceSave: () => void;
@@ -59,7 +60,7 @@ export default function useSaveSection(
     update_sections: UpdateSections,
     retrieve_positions: RetrieveSectionsPositionForSave,
     manage_section_attachments: ManageSectionAttachmentFiles,
-    closeEditor: () => void,
+    close_section_editor: CloseSectionEditor,
 ): SaveEditor {
     function getLatestVersionOfCurrentSection(): ResultAsync<ArtidocSection, Fault> {
         if (isArtifactSection(section.value) || isFreetextSection(section.value)) {
@@ -97,7 +98,7 @@ export default function useSaveSection(
                 if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
                     update_sections.updateSection(artidoc_section);
                 }
-                closeEditor();
+                close_section_editor.closeEditor();
                 section_state.is_being_saved.value = false;
                 section_state.is_just_saved.value = true;
             },
@@ -123,7 +124,7 @@ export default function useSaveSection(
                     update_sections.updateSection(artidoc_section);
                 }
 
-                closeEditor();
+                close_section_editor.closeEditor();
                 section_state.is_being_saved.value = false;
                 section_state.is_just_saved.value = true;
             },

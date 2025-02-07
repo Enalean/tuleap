@@ -20,7 +20,7 @@
 <template>
     <div v-if="is_section_in_edit_mode" class="document-section-cancel-save-buttons">
         <button
-            v-on:click="onCancel"
+            v-on:click="close_section_editor.closeAndCancelEditor"
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-large"
         >
@@ -40,22 +40,20 @@
 </template>
 
 <script setup lang="ts">
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 
 const props = defineProps<{
     editor: SectionEditor;
     section_state: SectionState;
+    close_section_editor: CloseSectionEditor;
 }>();
 
 const { $gettext } = useGettext();
-const { cancelEditor, saveEditor } = props.editor.editor_actions;
+const { saveEditor } = props.editor.editor_actions;
 const { is_section_in_edit_mode, is_save_allowed } = props.section_state;
-
-function onCancel(): void {
-    cancelEditor();
-}
 </script>
 
 <style lang="scss" scoped>

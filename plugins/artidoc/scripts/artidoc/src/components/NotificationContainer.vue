@@ -47,14 +47,14 @@
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
 import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
 import NotificationMessage from "@/components/section/description/NotificationMessage.vue";
 import { computed } from "vue";
 import NotificationRemainingPendingUploads from "@/components/NotificationRemainingPendingUploads.vue";
 
-const { pending_uploads } = strictInject(UPLOAD_FILE_STORE);
+const { pending_uploads } = strictInject(FILE_UPLOADS_COLLECTION);
 const { messages, deleteNotification } = strictInject(NOTIFICATION_STORE);
 
 const NB_PENDING_UPLOAD_TO_DISPLAY = 3;

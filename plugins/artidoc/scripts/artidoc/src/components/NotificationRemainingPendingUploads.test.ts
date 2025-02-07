@@ -20,7 +20,7 @@
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
+import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import NotificationRemainingPendingUploads, {
     type NotificationRemainingProps,
 } from "@/components/NotificationRemainingPendingUploads.vue";
@@ -47,7 +47,8 @@ describe("NotificationRemainingPendingUploads", () => {
     });
     describe("When the number of downloads is not greater than the number to display", () => {
         it("should not display the message", () => {
-            const pending_uploads = UploadFileStoreStub.uploadInProgress().pending_uploads.value;
+            const pending_uploads =
+                FileUploadsCollectionStub.withUploadsInProgress().pending_uploads.value;
             const wrapper = getWrapper({
                 pending_uploads: pending_uploads,
                 nb_pending_upload_to_display: pending_uploads.length,
@@ -60,7 +61,7 @@ describe("NotificationRemainingPendingUploads", () => {
         describe("When it's only one remaining upload", () => {
             it("should display the message in singular form", () => {
                 const pending_uploads =
-                    UploadFileStoreStub.uploadInProgress().pending_uploads.value;
+                    FileUploadsCollectionStub.withUploadsInProgress().pending_uploads.value;
                 const wrapper = getWrapper({
                     pending_uploads: pending_uploads,
                     nb_pending_upload_to_display: pending_uploads.length - 1,
@@ -75,7 +76,7 @@ describe("NotificationRemainingPendingUploads", () => {
         describe("When there is a bunch of remaining uploads", () => {
             it("should display the message in plural form", () => {
                 const pending_uploads =
-                    UploadFileStoreStub.uploadInProgress().pending_uploads.value;
+                    FileUploadsCollectionStub.withUploadsInProgress().pending_uploads.value;
                 const wrapper = getWrapper({
                     pending_uploads: pending_uploads,
                     nb_pending_upload_to_display: pending_uploads.length - 2,

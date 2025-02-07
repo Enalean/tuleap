@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isPendingSection } from "@/helpers/artidoc-section.type";
-import { strictInject } from "@tuleap/vue-strict-inject";
 import useSaveSection from "@/composables/useSaveSection";
 import { useRefreshSection } from "@/composables/useRefreshSection";
-import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { RefreshSection } from "@/composables/useRefreshSection";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import type { Fault } from "@tuleap/fault";
@@ -32,12 +29,11 @@ import type { RetrieveSectionsPositionForSave } from "@/sections/SectionsPositio
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { ManageErrorState } from "@/sections/SectionErrorManager";
-import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
+import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 
 export type SectionEditorActions = {
     saveEditor: () => void;
     forceSaveEditor: () => void;
-    cancelEditor: () => void;
     refreshSection: RefreshSection["refreshSection"];
     deleteSection: () => void;
 };
@@ -51,12 +47,12 @@ export function useSectionEditor(
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
     manage_error_state: ManageErrorState,
-    manage_section_editor_state: ManageSectionEditorState,
     manage_section_attachments: ManageSectionAttachmentFiles,
     replace_pending_sections: ReplacePendingSections,
     update_sections: UpdateSections,
     remove_sections: RemoveSections,
     retrieve_positions: RetrieveSectionsPositionForSave,
+    close_section_editor: CloseSectionEditor,
     raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
     const { refreshSection } = useRefreshSection(
@@ -64,7 +60,7 @@ export function useSectionEditor(
         section_state,
         manage_error_state,
         update_sections,
-        closeEditor,
+        close_section_editor,
     );
 
     const { save, forceSave } = useSaveSection(
@@ -76,30 +72,14 @@ export function useSectionEditor(
         update_sections,
         retrieve_positions,
         manage_section_attachments,
-        closeEditor,
+        close_section_editor,
     );
-
-    function closeEditor(): void {
-        manage_section_editor_state.resetContent();
-        manage_error_state.resetErrorStates();
-        manage_section_attachments.setWaitingListAttachments([]);
-    }
-
-    const { cancelSectionUploads } = strictInject(UPLOAD_FILE_STORE);
-    function cancelEditor(): void {
-        closeEditor();
-        cancelSectionUploads(section.value.id);
-
-        if (isPendingSection(section.value)) {
-            remove_sections.removeSection(section.value);
-        }
-    }
 
     function deleteSection(): void {
         remove_sections.removeSection(section.value).match(
             () => {
                 if (section_state.is_section_in_edit_mode.value) {
-                    closeEditor();
+                    close_section_editor.closeEditor();
                 }
             },
             (fault: Fault) => {
@@ -130,7 +110,6 @@ export function useSectionEditor(
     const editor_actions: SectionEditorActions = {
         saveEditor,
         forceSaveEditor,
-        cancelEditor,
         refreshSection,
         deleteSection,
     };

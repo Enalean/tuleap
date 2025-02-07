@@ -28,6 +28,7 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { CreateStoredSections } from "@/sections/CreateStoredSections";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
+import { SectionEditorCloserStub } from "@/sections/stubs/SectionEditorCloserStub";
 
 describe("SectionFooter", () => {
     function getWrapper(section_state: SectionState): VueWrapper<ComponentPublicInstance> {
@@ -36,6 +37,7 @@ describe("SectionFooter", () => {
                 editor: SectionEditorStub.build(),
                 section: CreateStoredSections.fromArtidocSection(ArtifactSectionFactory.create()),
                 section_state,
+                close_section_editor: SectionEditorCloserStub.withExpectedCall(),
             },
             global: {
                 plugins: [createGettext({ silent: true })],

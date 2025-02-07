@@ -25,7 +25,6 @@ export const SectionEditorStub = {
         editor_actions: {
             saveEditor: noop,
             forceSaveEditor: noop,
-            cancelEditor: noop,
             refreshSection: noop,
             deleteSection: noop,
         },

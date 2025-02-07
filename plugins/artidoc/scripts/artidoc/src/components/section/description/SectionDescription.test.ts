@@ -28,7 +28,6 @@ import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-ke
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
-import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { noop } from "@/helpers/noop";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
@@ -64,7 +63,6 @@ describe("SectionDescription", () => {
                     upload_url: "/file/upload",
                     getUploadJsonPayload: noop,
                 },
-                upload_file: UploadFileStub.uploadNotInProgress(),
                 project_id: 101,
                 section,
                 section_state,

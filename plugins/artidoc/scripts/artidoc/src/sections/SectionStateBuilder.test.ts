@@ -23,7 +23,7 @@ import type { Ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import { getSectionStateBuilder } from "@/sections/SectionStateBuilder";
-import type { OnGoingUploadFileWithId } from "@/stores/useUploadFileStore";
+import type { OnGoingUploadFileWithId } from "@/sections/FileUploadsCollection";
 import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";

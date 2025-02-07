@@ -21,8 +21,10 @@ import type { FileUploadOptions, UploadError, OnGoingUploadFile } from "@tuleap/
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
-import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
-import type { OnGoingUploadFileWithId } from "@/stores/useUploadFileStore";
+import type {
+    FileUploadsCollection,
+    OnGoingUploadFileWithId,
+} from "@/sections/FileUploadsCollection";
 import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
 
 export type UseUploadFileType = {
@@ -33,34 +35,33 @@ export type UseUploadFileType = {
 export function useUploadFile(
     section_id: string,
     manage_section_attachments: ManageSectionAttachmentFiles,
+    file_uploads_collection: FileUploadsCollection,
 ): UseUploadFileType {
     const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
-    const { addPendingUpload, pending_uploads, deleteUpload, cancelSectionUploads } =
-        strictInject(UPLOAD_FILE_STORE);
 
     const onStartUploadCallback = (files: FileList): OnGoingUploadFile[] => {
         for (const file of files) {
-            addPendingUpload(file.name, section_id);
+            file_uploads_collection.addPendingUpload(file.name, section_id);
         }
-        return pending_uploads.value;
+        return file_uploads_collection.pending_uploads.value;
     };
     const { addNotification } = strictInject(NOTIFICATION_STORE);
     const onErrorCallback = (error: UploadError, file_name: string): void => {
         addNotification({ message: error.message, type: "danger" });
-        const file_to_delete = pending_uploads.value.find(
+        const file_to_delete = file_uploads_collection.pending_uploads.value.find(
             (upload) => upload.file_name === file_name && upload.section_id === section_id,
         );
         if (file_to_delete) {
-            deleteUpload(file_to_delete.file_id);
+            file_uploads_collection.deleteUpload(file_to_delete.file_id);
         }
     };
     const updateProgress = (file_name: string, new_progress: number): boolean => {
-        const file_index = pending_uploads.value.findIndex(
+        const file_index = file_uploads_collection.pending_uploads.value.findIndex(
             (upload: OnGoingUploadFileWithId) => upload.file_name === file_name,
         );
         if (file_index >= 0) {
-            pending_uploads.value[file_index] = {
-                ...pending_uploads.value[file_index],
+            file_uploads_collection.pending_uploads.value[file_index] = {
+                ...file_uploads_collection.pending_uploads.value[file_index],
                 file_name,
                 progress: new_progress,
             };
@@ -76,7 +77,7 @@ export function useUploadFile(
         updateProgress(file_name, global_progress);
     };
     const resetProgressCallback = (): void => {
-        cancelSectionUploads(section_id);
+        file_uploads_collection.cancelSectionUploads(section_id);
     };
 
     const file_upload_options: FileUploadOptions = {

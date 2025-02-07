@@ -24,7 +24,6 @@
         <component
             v-bind:is="async_editor"
             v-bind:post_information="post_information"
-            v-bind:upload_file="upload_file"
             v-bind:project_id="project_id"
             v-bind:section="section"
             v-bind:section_state="section_state"
@@ -44,7 +43,6 @@ import { loadTooltips } from "@tuleap/tooltip";
 import type { FileUploadOptions } from "@tuleap/file-upload";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
-import type { UseUploadFileType } from "@/composables/useUploadFile";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
@@ -53,7 +51,6 @@ import type { ManageSectionEditorState } from "@/sections/SectionEditorStateMana
 
 defineProps<{
     post_information: FileUploadOptions["post_information"];
-    upload_file: UseUploadFileType;
     project_id: number;
     section: ReactiveStoredArtidocSection;
     section_state: SectionState;

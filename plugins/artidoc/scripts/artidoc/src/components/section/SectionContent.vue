@@ -51,7 +51,6 @@
             <section-header-skeleton v-if="is_loading_sections" class="section-header" />
             <section-description
                 v-bind:post_information="section_attachments_manager.getPostInformation()"
-                v-bind:upload_file="upload_file"
                 v-bind:project_id="getProjectId()"
                 v-bind:section="section"
                 v-bind:section_state="section_state"
@@ -61,6 +60,7 @@
                 v-bind:editor="editor"
                 v-bind:section="section.value"
                 v-bind:section_state="section_state"
+                v-bind:close_section_editor="section_editor_closer"
             />
         </article>
     </section>
@@ -86,9 +86,9 @@ import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
 import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
 
 import { useSectionEditor } from "@/composables/useSectionEditor";
-import { useUploadFile } from "@/composables/useUploadFile";
 
 import { getPendingSectionsReplacer } from "@/sections/PendingSectionsReplacer";
 import { getSectionsUpdater } from "@/sections/SectionsUpdater";
@@ -97,6 +97,7 @@ import { getSectionsPositionsForSaveRetriever } from "@/sections/SectionsPositio
 import { getSectionErrorManager } from "@/sections/SectionErrorManager";
 import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
 import { getSectionEditorStateManager } from "@/sections/SectionEditorStateManager";
+import { getSectionEditorCloser } from "@/sections/SectionEditorCloser";
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -104,6 +105,7 @@ const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const document_id = strictInject(DOCUMENT_ID);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
+const file_uploads_collection = strictInject(FILE_UPLOADS_COLLECTION);
 const section_state = states_collection.getSectionState(props.section.value);
 
 function addTemporaryFlag(flag: Ref<boolean>): void {
@@ -145,21 +147,29 @@ watch(
 const section_attachments_manager = getSectionAttachmentFilesManager(props.section, document_id);
 const section_editor_state_manager = getSectionEditorStateManager(props.section, section_state);
 
-const upload_file = useUploadFile(props.section.value.id, section_attachments_manager);
-
 const { $gettext } = useGettext();
 
+const error_state_manager = getSectionErrorManager(section_state);
+const sections_remover = getSectionsRemover(sections_collection, states_collection);
+const section_editor_closer = getSectionEditorCloser(
+    props.section,
+    error_state_manager,
+    section_editor_state_manager,
+    section_attachments_manager,
+    sections_remover,
+    file_uploads_collection,
+);
 const editor = useSectionEditor(
     document_id,
     props.section,
     section_state,
-    getSectionErrorManager(section_state),
-    section_editor_state_manager,
+    error_state_manager,
     section_attachments_manager,
     getPendingSectionsReplacer(sections_collection, states_collection),
     getSectionsUpdater(sections_collection),
-    getSectionsRemover(sections_collection, states_collection),
+    sections_remover,
     getSectionsPositionsForSaveRetriever(sections_collection),
+    section_editor_closer,
     (error: string) => {
         setGlobalErrorMessage({
             message: $gettext("An error occurred while removing the section."),

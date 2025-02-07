@@ -26,13 +26,13 @@ import { okAsync } from "neverthrow";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { PendingSectionsReplacerStub } from "@/sections/stubs/PendingSectionsReplacerStub";
-import { noop } from "@/helpers/noop";
 import { SectionsUpdaterStub } from "@/sections/stubs/SectionsUpdaterStub";
 import { SectionsPositionsForSaveRetrieverStub } from "@/sections/stubs/SectionsPositionsForSaveRetrieverStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
 import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { SectionEditorCloserStub } from "@/sections/stubs/SectionEditorCloserStub";
 
 const artifact_section = ReactiveStoredArtidocSectionStub.fromSection(
     ArtifactSectionFactory.create(),
@@ -60,7 +60,7 @@ describe("useSaveSection", () => {
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
-                noop,
+                SectionEditorCloserStub.withExpectedCall(),
             );
 
             forceSave();
@@ -84,7 +84,7 @@ describe("useSaveSection", () => {
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
-                noop,
+                SectionEditorCloserStub.withExpectedCall(),
             );
 
             forceSave();
@@ -110,7 +110,7 @@ describe("useSaveSection", () => {
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
-                noop,
+                SectionEditorCloserStub.withExpectedCall(),
             );
 
             save();
@@ -135,7 +135,7 @@ describe("useSaveSection", () => {
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
-                noop,
+                SectionEditorCloserStub.withExpectedCall(),
             );
 
             save();
@@ -159,7 +159,7 @@ describe("useSaveSection", () => {
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
-                noop,
+                SectionEditorCloserStub.withExpectedCall(),
             );
 
             const pending_section = PendingArtifactSectionFactory.create();
@@ -191,7 +191,7 @@ describe("useSaveSection", () => {
                 SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
                 SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
-                noop,
+                SectionEditorCloserStub.withExpectedCall(),
             );
 
             const pending_section = FreetextSectionFactory.pending();

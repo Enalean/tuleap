@@ -18,18 +18,18 @@
  */
 
 import { ref } from "vue";
-import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
+import type { FileUploadsCollection } from "@/sections/FileUploadsCollection";
 import { noop } from "@/helpers/noop";
 
-export const UploadFileStoreStub = {
-    uploadNotInProgress: (): UploadFileStoreType => ({
+export const FileUploadsCollectionStub = {
+    withoutUploadsInProgress: (): FileUploadsCollection => ({
         pending_uploads: ref([]),
         deleteUpload: noop,
         cancelSectionUploads: noop,
         addPendingUpload: noop,
     }),
 
-    uploadInProgress: (): UploadFileStoreType => ({
+    withUploadsInProgress: (): FileUploadsCollection => ({
         pending_uploads: ref([
             {
                 file_id: "id1",

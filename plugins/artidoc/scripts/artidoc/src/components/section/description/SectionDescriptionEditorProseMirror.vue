@@ -32,21 +32,23 @@ import type {
 import { initPluginDropFile, initPluginInput, useEditor } from "@tuleap/prose-mirror-editor";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { GetText } from "@tuleap/gettext";
-import type { UseUploadFileType } from "@/composables/useUploadFile";
+import { useUploadFile } from "@/composables/useUploadFile";
 import type { FileUploadOptions } from "@tuleap/file-upload";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
 import { setupMonoEditorPlugins } from "../mono-editor/setupMonoEditorPlugins";
-import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
+import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 
 const props = defineProps<{
     post_information: FileUploadOptions["post_information"];
-    upload_file: UseUploadFileType;
     project_id: number;
     section: ReactiveStoredArtidocSection;
     section_state: SectionState;
@@ -58,7 +60,14 @@ let useEditorInstance: UseEditorType | undefined;
 const area_editor = ref<HTMLElement | null>(null);
 const editorView = ref<EditorView | null>(null);
 
-const { file_upload_options, resetProgressCallback } = props.upload_file;
+const file_uploads_collection = strictInject(FILE_UPLOADS_COLLECTION);
+const document_id = strictInject(DOCUMENT_ID);
+
+const { file_upload_options, resetProgressCallback } = useUploadFile(
+    props.section.value.id,
+    getSectionAttachmentFilesManager(props.section, document_id),
+    file_uploads_collection,
+);
 
 function setupUploadPlugin(gettext_provider: GetText): PluginDropFile {
     return initPluginDropFile(file_upload_options, gettext_provider);
