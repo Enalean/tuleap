@@ -30,6 +30,7 @@ final class PUTSectionRepresentation
     private function __construct(
         public string $title,
         public string $description,
+        public int $level,
     ) {
     }
 }

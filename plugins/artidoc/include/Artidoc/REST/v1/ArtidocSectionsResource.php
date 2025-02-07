@@ -150,6 +150,11 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
+        $level = Level::tryFrom($content->level);
+        if ($level === null) {
+            throw new RestException(400, 'Unknown level. Allowed values: ' . implode(', ', Level::allowed()));
+        }
+
         $user      = UserManager::instance()->getCurrentUser();
         $collector = new RequiredSectionInformationCollector(
             $user,
@@ -158,7 +163,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         $updater = new SectionUpdater($this->getSectionRetriever($user, $collector), new UpdateFreetextContentDao());
 
-        $updater->update($section_id, $content->title, $content->description)
+        $updater->update($section_id, $content->title, $content->description, $level)
             ->mapErr(
                 function (Fault $fault) {
                     Fault::writeToLogger($fault, RESTLogger::getLogger());
