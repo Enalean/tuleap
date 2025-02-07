@@ -26,7 +26,7 @@ order to parse logs for example:
 
 ``` bash
 $> docker exec -ti <name-of-the-container> bash
-$root@d4601e92ca3f> tail -f /var/opt/remi/php82/log/php-fpm/error.log
+$root@d4601e92ca3f> tail -f /var/log/nginx/error.log
 ```
 
 And if you need to run queries on the database, look at the password

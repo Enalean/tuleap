@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\SiteDeploy\FPM;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\File\FileWriter;
 use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\TemplateHelper;
 
@@ -161,6 +162,7 @@ final class SiteDeployFPM
         $this->logger->info("Start configuration in $this->php_configuration_folder/php-fpm.d/");
         $this->maskDefaultUnits();
         $this->moveDefaultWww();
+        $this->overrideDefaultGlobalSettings();
 
         foreach ($this->getConfigurationFilesToDeploy() as $reference_file => $fpm_configuration_to_deploy) {
             if (! file_exists("$this->php_configuration_folder/php-fpm.d/$fpm_configuration_to_deploy")) {
@@ -253,6 +255,18 @@ final class SiteDeployFPM
                 "$this->php_configuration_folder/php-fpm.d/www.conf.orig"
             );
             touch("$this->php_configuration_folder/php-fpm.d/www.conf");
+        }
+    }
+
+    private function overrideDefaultGlobalSettings(): void
+    {
+        $php_fpm_global_settings_path  = "$this->php_configuration_folder/php-fpm.conf";
+        $configuration_content         = \Psl\File\read($php_fpm_global_settings_path);
+        $updated_configuration_content = \Psl\Regex\replace($configuration_content, '/^error_log\s*=.+/m', 'error_log = syslog');
+
+        if ($configuration_content !== $updated_configuration_content) {
+            $this->logger->info("Updating default PHP FPM configuration file $php_fpm_global_settings_path");
+            FileWriter::writeFile($php_fpm_global_settings_path, $updated_configuration_content);
         }
     }
 

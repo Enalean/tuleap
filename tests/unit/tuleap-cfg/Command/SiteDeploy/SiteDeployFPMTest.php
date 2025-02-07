@@ -64,6 +64,13 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeployphp82Prod(): void
     {
+        file_put_contents(
+            $this->php_configuration_folder . '/php-fpm.conf',
+            <<<EOF
+            ; Some comment
+            error_log = /some/path
+            EOF
+        );
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
@@ -78,6 +85,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $deploy->configure();
 
+        $this->assertFileExists($this->php_configuration_folder . '/php-fpm.conf');
         $this->assertFileExists($this->php_configuration_folder . '/php-fpm.d/tuleap.conf');
         $this->assertFileExists($this->php_configuration_folder . '/php-fpm.d/tuleap-long-running-request.conf');
         $this->assertFileExists($this->php_configuration_folder . '/php-fpm.d/tuleap_common.part');
@@ -91,10 +99,13 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertStringContainsString('group = ' . $this->current_user, $tuleap_conf);
 
         $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm82/tuleap_errors_prod.part', $this->php_configuration_folder . '/php-fpm.d/tuleap_errors.part');
+
+        $this->assertStringContainsString('error_log = syslog', file_get_contents($this->php_configuration_folder . '/php-fpm.conf'));
     }
 
     public function testDeployDoesntTouchExistingFilesByDefault(): void
     {
+        touch($this->php_configuration_folder . '/php-fpm.conf');
         $all_files = [
             'tuleap.conf',
             'tuleap-long-running-request.conf',
@@ -184,6 +195,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeployCreateMissingFiles(): void
     {
+        touch($this->php_configuration_folder . '/php-fpm.conf');
         $all_files = [
             'tuleap.conf',
             'tuleap-long-running-request.conf',
@@ -216,6 +228,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeployphp82WithSimpleRedisSession(): void
     {
+        touch($this->php_configuration_folder . '/php-fpm.conf');
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
@@ -242,6 +255,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeployphp82WithAuthenticatedRedisSession(): void
     {
+        touch($this->php_configuration_folder . '/php-fpm.conf');
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
@@ -268,6 +282,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeployphp82WithAuthenticatedRedisSessionWithTLS(): void
     {
+        touch($this->php_configuration_folder . '/php-fpm.conf');
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
