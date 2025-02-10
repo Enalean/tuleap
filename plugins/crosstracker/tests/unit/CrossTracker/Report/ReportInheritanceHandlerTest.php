@@ -23,50 +23,43 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use Tuleap\CrossTracker\CrossTrackerReportFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Tests\Stub\Report\CloneWidgetStub;
-use Tuleap\CrossTracker\Tests\Stub\Report\RetrieveReportStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ReportInheritanceHandlerTest extends TestCase
 {
     private const TEMPLATE_REPORT_ID = 90;
     private const CLONED_REPORT_ID   = 95;
+    private CrossTrackerWidgetDao&MockObject $widget_dao;
     private CloneWidgetStub $report_cloner;
     private TestLogger $logger;
-    private array $template_report;
 
     protected function setUp(): void
     {
-        $this->report_cloner   = CloneWidgetStub::withClonedReportMap(
+        $this->widget_dao    = $this->createMock(CrossTrackerWidgetDao::class);
+        $this->report_cloner = CloneWidgetStub::withClonedReportMap(
             [self::TEMPLATE_REPORT_ID => self::CLONED_REPORT_ID]
         );
-        $this->logger          = new TestLogger();
-        $this->template_report = [];
+        $this->logger        = new TestLogger();
     }
 
-    private function handle(): int
+    private function handle(int $id): int
     {
         $handler = new ReportInheritanceHandler(
-            new CrossTrackerReportFactory(
-                RetrieveReportStub::withReports($this->template_report)
-            ),
+            $this->widget_dao,
             $this->report_cloner,
             $this->logger
         );
-        return $handler->handle(self::TEMPLATE_REPORT_ID);
+        return $handler->handle($id);
     }
 
     public function testItClonesExpertReport(): void
     {
-        $this->template_report = [
-            'id'          => self::TEMPLATE_REPORT_ID,
-            'query'       => "SELECT @title FROM @tracker.name IN('stories', 'bugs') WHERE @assigned_to = MYSELF()",
-            'title'       => '',
-            'description' => '',
-        ];
+        $this->widget_dao->expects(self::once())->method('searchWidgetExistence')->with(self::TEMPLATE_REPORT_ID)->willReturn(true);
 
-        $result = $this->handle();
+        $result = $this->handle(self::TEMPLATE_REPORT_ID);
 
         self::assertSame(self::CLONED_REPORT_ID, $result);
         self::assertSame(1, $this->report_cloner->getCallCount());
@@ -74,14 +67,12 @@ final class ReportInheritanceHandlerTest extends TestCase
 
     public function testItWritesLogsAndReturnsZeroToAvoidCrashingTheProjectCreationWhenTemplateReportIsNotFound(): void
     {
-        $this->template_report = ['id' => 404, 'query' => '', 'title' => '', 'description' => ''];
+        $this->widget_dao->expects(self::once())->method('searchWidgetExistence')->with(404)->willReturn(false);
 
-        $result = $this->handle();
+        $result = $this->handle(404);
 
         self::assertSame(0, $result);
         self::assertSame(0, $this->report_cloner->getCallCount());
-        self::assertTrue($this->logger->hasError(
-            sprintf('Could not find report #%d while duplicating Cross-Tracker Search widget', self::TEMPLATE_REPORT_ID)
-        ));
+        self::assertTrue($this->logger->hasError('Could not find report #404 while duplicating Cross-Tracker Search widget'));
     }
 }

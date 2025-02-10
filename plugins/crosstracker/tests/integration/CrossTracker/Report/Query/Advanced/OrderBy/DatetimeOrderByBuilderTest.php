@@ -25,15 +25,17 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderBy;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class DatetimeOrderByBuilderTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $user;
     /** @var list<int> */
     private array $result_descending;
@@ -50,7 +52,7 @@ final class DatetimeOrderByBuilderTest extends CrossTrackerFieldTestCase
         $project_id = (int) $project->getId();
         $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
@@ -76,7 +78,7 @@ final class DatetimeOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testLastUpdateDateDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY date_field DESC', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY date_field DESC', '', '', 1),
             $this->user,
         );
 
@@ -94,7 +96,7 @@ final class DatetimeOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testLastUpdateDateAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY date_field ASC', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY date_field ASC', '', '', 1),
             $this->user,
         );
 

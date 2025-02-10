@@ -30,15 +30,15 @@ import type { ArtifactsTable } from "../domain/ArtifactsTable";
 
 export const ArtifactsTableRetriever = (
     table_builder: ArtifactsTableBuilder,
-    report_id: number,
 ): RetrieveArtifactsTable => {
     return {
         getSelectableQueryResult(
+            query_id,
             expert_query,
             limit,
             offset,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/cross_tracker_reports/${report_id}/content`, {
+            return getResponse(uri`/api/v1/cross_tracker_reports/${query_id}/content`, {
                 params: {
                     limit,
                     offset,
@@ -54,8 +54,12 @@ export const ArtifactsTableRetriever = (
             });
         },
 
-        getSelectableReportContent(limit, offset): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/cross_tracker_reports/${report_id}/content`, {
+        getSelectableReportContent(
+            query_id,
+            limit,
+            offset,
+        ): ResultAsync<ArtifactsTableWithTotal, Fault> {
+            return getResponse(uri`/api/v1/cross_tracker_reports/${query_id}/content`, {
                 params: {
                     limit,
                     offset,
@@ -68,9 +72,9 @@ export const ArtifactsTableRetriever = (
             });
         },
 
-        getSelectableFullReport(): ResultAsync<readonly ArtifactsTable[], Fault> {
+        getSelectableFullReport(query_id): ResultAsync<readonly ArtifactsTable[], Fault> {
             return getAllJSON<SelectableReportContentRepresentation>(
-                uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                uri`/api/v1/cross_tracker_reports/${query_id}/content`,
                 {
                     params: {
                         limit: 50,

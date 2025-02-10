@@ -20,7 +20,6 @@
 
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\CrossTracker\CrossTrackerWidgetDao;
-use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
@@ -81,7 +80,7 @@ class crosstrackerPlugin extends Plugin
                 new ProjectCrossTrackerSearch(
                     $report_dao,
                     new ReportInheritanceHandler(
-                        new CrossTrackerReportFactory($report_dao),
+                        $report_dao,
                         $report_dao,
                         $this->getBackendLogger()
                     ),

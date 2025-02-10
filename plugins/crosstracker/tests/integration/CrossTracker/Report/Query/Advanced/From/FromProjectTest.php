@@ -25,17 +25,20 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\From;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use UserManager;
 
 final class FromProjectTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid_1;
+    private UUID $uuid_2;
     private PFUser $user_member;
     private PFUser $user_admin;
 
@@ -89,8 +92,8 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         $artifact_3 = $tracker_builder->buildArtifact($tracker_3->getId());
         $tracker_builder->buildLastChangeset($artifact_3);
 
-        $this->addReportToProject(1, $project_1_id);
-        $this->addReportToProject(2, $project_2_id);
+        $this->uuid_1 = $this->addReportToProject(1, $project_1_id);
+        $this->uuid_2 = $this->addReportToProject(2, $project_2_id);
         $this->addReportToProject(3, $project_3_id);
     }
 
@@ -114,13 +117,13 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     public function testItGetTrackerFromProjectSelf(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1', '', '', 1),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 1'], $result);
 
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(2, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_2, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1', '', '', 2),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 2'], $result);
@@ -133,7 +136,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         UserManager::setInstance($user_manager);
 
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = MY_PROJECTS() WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project = MY_PROJECTS() WHERE @id >= 1', '', '', 1),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
@@ -142,7 +145,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     public function testPermissionsProjectSelf(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1', '', '', 1),
             $this->user_admin,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 1.1'], $result);
@@ -151,7 +154,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     public function testProjectCategoryEqual(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.category = "Type::Foo" WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project.category = "Type::Foo" WHERE @id >= 1', '', '', 1),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 1'], $result);
@@ -160,7 +163,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     public function testProjectCategoryEqualLike(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.category = "Type" WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project.category = "Type" WHERE @id >= 1', '', '', 1),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
@@ -169,7 +172,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     public function testProjectCategoryIn(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.category IN("Type::Foo", "Type::Bar") WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project.category IN("Type::Foo", "Type::Bar") WHERE @id >= 1', '', '', 1),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
@@ -178,7 +181,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     public function testProjectNameEqual(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.name = "project_2" WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project.name = "project_2" WHERE @id >= 1', '', '', 1),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 2'], $result);
@@ -187,7 +190,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     public function testProjectNameIn(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.name IN("project_1", "project_2") WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid_1, 'SELECT @tracker.name FROM @project.name IN("project_1", "project_2") WHERE @id >= 1', '', '', 1),
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);

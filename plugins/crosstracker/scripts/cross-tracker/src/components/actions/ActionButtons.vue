@@ -22,6 +22,7 @@
         v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
         v-bind:queries="queries"
+        v-bind:selected_query="selected_query"
     />
 </template>
 
@@ -35,5 +36,6 @@ defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
     reading_cross_tracker_report: ReadingCrossTrackerReport;
     queries: ReadonlyArray<Report>;
+    selected_query: Report | null;
 }>();
 </script>

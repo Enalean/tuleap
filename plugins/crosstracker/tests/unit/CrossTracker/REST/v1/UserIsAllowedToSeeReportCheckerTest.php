@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\SearchCrossTrackerWidgetStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -64,15 +63,7 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
             $this->url_verification
         );
 
-        $user_is_allowed_to_see_report_checker->checkUserIsAllowedToSeeWidget(
-            $this->user,
-            new CrossTrackerExpertReport(
-                1,
-                '',
-                '',
-                '',
-            ),
-        );
+        $user_is_allowed_to_see_report_checker->checkUserIsAllowedToSeeWidget($this->user, 1);
     }
 
     public function testItThrowsExceptionWhenTheCurrentUserWantToSeeAnotherUserWidget(): void

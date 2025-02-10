@@ -25,15 +25,17 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ArtifactLinks;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class ArtifactLinksTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $user;
     /** @var list<int> */
     private array $epics_ids;
@@ -50,7 +52,7 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $project_id = (int) $project->getID();
         $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $epic_tracker  = $tracker_builder->buildTracker($project_id, 'Epic');
         $story_tracker = $tracker_builder->buildTracker($project_id, 'Story');
@@ -84,11 +86,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithParent(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH PARENT',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -99,11 +102,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithParentArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH PARENT ARTIFACT = 123',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -114,11 +118,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithParentTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH PARENT TRACKER = "epic"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -129,11 +134,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithoutParent(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT PARENT',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -145,11 +151,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithoutParentArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT PARENT ARTIFACT = 123',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -161,11 +168,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithoutParentTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT PARENT TRACKER = "epic"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -177,11 +185,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsLinkedFrom(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED FROM WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -192,11 +201,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsLinkedFromArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -207,11 +217,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsLinkedFromTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -222,11 +233,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsNotLinkedFrom(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED FROM WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -238,11 +250,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsNotLinkedFromArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -254,11 +267,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsNotLinkedFromTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -270,11 +284,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithChildren(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH CHILDREN',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -286,11 +301,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithChildrenArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH CHILDREN ARTIFACT = 123',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -301,11 +317,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithChildrenTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH CHILDREN TRACKER = "epic"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -316,11 +333,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithoutChildren(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT CHILDREN',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -332,11 +350,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithoutChildrenArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT CHILDREN ARTIFACT = 123',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -348,11 +367,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testWithoutChildrenTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT CHILDREN TRACKER = "epic"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -364,11 +384,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsLinkedToWithType(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED TO WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -380,11 +401,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsLinkedToArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -395,11 +417,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsLinkedToTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -410,11 +433,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testItLinkedToNotTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -426,11 +450,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsLinkedTo(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED TO',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -442,11 +467,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsNotLinkedToWithType(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED TO WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -458,11 +484,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsNotLinkedToArtifact(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -474,11 +501,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsNotLinkedToTracker(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -492,11 +520,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $this->expectException(SearchablesAreInvalidException::class);
         $this->expectExceptionMessage('Double negative like `IS NOT LINKED ... TRACKER != ...` or `WITHOUT ... TRACKER != ...` is not supported. Please use simpler form like `IS LINKED ... TRACKER = ...` or `WITH ... TRACKER = ...`');
         $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );
@@ -505,11 +534,12 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     public function testIsNotLinkedTo(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED TO',
                 '',
                 '',
+                1,
             ),
             $this->user,
         );

@@ -28,7 +28,7 @@ use PFUser;
 use Tracker;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyInt;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilder;
@@ -111,7 +111,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      */
     public function getArtifactsMatchingReport(
-        CrossTrackerExpertReport $report,
+        CrossTrackerQuery $report,
         PFUser $current_user,
         int $limit,
         int $offset,
@@ -142,7 +142,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      */
     private function getArtifactsMatchingExpertQuery(
-        CrossTrackerExpertReport $report,
+        CrossTrackerQuery $report,
         PFUser $current_user,
         int $limit,
         int $offset,
@@ -211,7 +211,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      */
     private function getQueryFromReport(
-        CrossTrackerExpertReport $report,
+        CrossTrackerQuery $report,
         PFUser $current_user,
         array $trackers,
     ): Query {

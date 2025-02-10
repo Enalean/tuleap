@@ -26,17 +26,24 @@ use Tuleap\CrossTracker\Report\CloneWidget;
 use Tuleap\CrossTracker\Report\CreateWidget;
 use Tuleap\CrossTracker\Report\RetrieveReport;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
 use function Psl\Str\replace;
 
 class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateWidget, RetrieveReport, CloneWidget
 {
-    public function searchWidgetById(int $widget_id): ?array
+    public function searchQueryByUuid(string $uuid_hex): ?array
     {
-        $sql = 'SELECT *
-                FROM plugin_crosstracker_query
-                WHERE widget_id = ?';
-
-        return $this->getDB()->row($sql, $widget_id);
+        return $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->mapOr(
+            function (UUID $uuid) {
+                $row = $this->getDB()->row('SELECT * FROM plugin_crosstracker_query WHERE id = ?', $uuid->getBytes());
+                if ($row === null) {
+                    return null;
+                }
+                $row['id'] = $uuid;
+                return $row;
+            },
+            null,
+        );
     }
 
     public function searchWidgetExistence(int $widget_id): bool
@@ -46,11 +53,20 @@ class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrack
 
     public function searchQueriesByWidgetId(int $widget_id): array
     {
-        $sql = 'SELECT query.*
-                FROM plugin_crosstracker_query AS query
-                WHERE query.widget_id = ?';
+        $sql = 'SELECT * FROM plugin_crosstracker_query WHERE widget_id = ?';
 
-        return $this->getDB()->run($sql, $widget_id);
+        $rows = $this->getDB()->run($sql, $widget_id);
+        return array_values(array_map($this->transformQueryRow(...), $rows));
+    }
+
+    /**
+     * @param array{id: string, query: string, title: string, description: string, widget_id: int} $row
+     * @return array{id: UUID, query: string, title: string, description: string, widget_id: int}
+     */
+    private function transformQueryRow(array $row): array
+    {
+        $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+        return $row;
     }
 
     public function createWidget(): int
@@ -58,14 +74,17 @@ class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrack
         return (int) $this->getDB()->insertReturnId('plugin_crosstracker_widget', []);
     }
 
-    public function insertQuery(int $widget_id, string $query): void
+    public function insertQuery(int $widget_id, string $query): UUID
     {
+        $uuid = $this->uuid_factory->buildUUIDBytes();
         $this->getDB()->insert('plugin_crosstracker_query', [
-            'id'        => $this->uuid_factory->buildUUIDBytes(),
+            'id'        => $uuid,
             'widget_id' => $widget_id,
             'query'     => $query,
             'title'     => $this->extractWhereFromQuery($query),
         ]);
+
+        return $this->uuid_factory->buildUUIDFromBytesData($uuid);
     }
 
     private function extractWhereFromQuery(string $query): string
@@ -81,8 +100,8 @@ class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrack
 
     public function updateQuery(int $report_id, string $expert_query): void
     {
-        $sql = 'REPLACE INTO plugin_crosstracker_query (widget_id, query) VALUES (?, ?)';
-        $this->getDB()->run($sql, $report_id, $expert_query);
+        $sql = 'UPDATE plugin_crosstracker_query SET query = ? WHERE widget_id = ?';
+        $this->getDB()->run($sql, $expert_query, $report_id);
     }
 
     public function deleteWidget(int $widget_id): void

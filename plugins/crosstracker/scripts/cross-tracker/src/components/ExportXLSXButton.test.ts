@@ -76,6 +76,9 @@ describe("ExportXLSXButton", () => {
                     ),
                 },
             },
+            props: {
+                query_id: "0194dfd6-a489-703b-aabd-9d473212d908",
+            },
         });
     }
 

@@ -26,6 +26,7 @@ import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerRepor
 import ChooseQueryButton from "./ChooseQueryButton.vue";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 import type { Report } from "../../type";
+import { REFRESH_ARTIFACTS_EVENT, SWITCH_QUERY_EVENT } from "../../helpers/emitter-provider";
 vi.mock("@tuleap/tlp-dropdown", () => ({
     createDropdown: (): void => {
         // do nothing
@@ -39,6 +40,7 @@ describe("ChooseQueryButton", () => {
 
     const queries: ReadonlyArray<Report> = [
         {
+            uuid: "0194dfd6-a489-703b-aabd-9d473212d908",
             expert_query: "SELECT @id FROM @project = 'self' WHERE @id>1",
             title: " TQL query title",
             description: "",
@@ -58,6 +60,7 @@ describe("ChooseQueryButton", () => {
                 reading_cross_tracker_report,
                 writing_cross_tracker_report,
                 queries,
+                selected_query: null,
             },
         });
     };
@@ -75,11 +78,7 @@ describe("ChooseQueryButton", () => {
         await wrapper.find("[data-test=query]").trigger("click");
 
         expect(emitter.emitted_event_name.length).toBe(2);
-        expect(emitter.emitted_event_name[0]).toBe("refresh-artifacts");
-        expect(emitter.emitted_event_message[0].unwrapOr("")).toStrictEqual({
-            query: queries[0],
-        });
-        expect(emitter.emitted_event_name[1]).toBe("update-chosen-query-display");
-        expect(emitter.emitted_event_message[1].isNothing()).toBe(true);
+        expect(emitter.emitted_event_name[0]).toBe(REFRESH_ARTIFACTS_EVENT);
+        expect(emitter.emitted_event_name[1]).toBe(SWITCH_QUERY_EVENT);
     });
 });

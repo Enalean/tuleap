@@ -30,6 +30,7 @@
                 v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
                 v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
                 v-bind:queries="queries"
+                v-bind:selected_query="selected_query"
             />
         </div>
         <error-message
@@ -63,7 +64,7 @@
     <section class="tlp-pane-section" v-if="!is_loading">
         <selectable-table
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-            v-bind:there_is_no_query="there_is_no_query"
+            v-bind:selected_query="selected_query"
         />
     </section>
 </template>
@@ -94,6 +95,7 @@ import {
 import { useFeedbacks } from "./composables/useFeedbacks";
 import { ReportRetrievalFault } from "./domain/ReportRetrievalFault";
 import ActionButtons from "./components/actions/ActionButtons.vue";
+import { SWITCH_QUERY_EVENT } from "./helpers/emitter-provider";
 
 const report_id = strictInject(REPORT_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
@@ -111,8 +113,8 @@ const props = defineProps<{
 const report_state = ref<ReportState>("report-saved");
 provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
-const there_is_no_query = ref(true);
 const queries = ref<ReadonlyArray<Report>>([]);
+const selected_query = ref<Report | null>(null);
 
 const is_reading_mode_shown = computed(
     () =>
@@ -150,7 +152,7 @@ function loadBackendReport(): void {
             (reports: ReadonlyArray<Report>) => {
                 queries.value = reports;
                 if (reports.length === 0) {
-                    there_is_no_query.value = true;
+                    selected_query.value = null;
                     props.backend_cross_tracker_report.init("");
                     initReports();
                     if (is_user_admin) {
@@ -159,7 +161,7 @@ function loadBackendReport(): void {
 
                     return;
                 }
-                there_is_no_query.value = false;
+                selected_query.value = reports[0];
                 props.backend_cross_tracker_report.init(reports[0].expert_query);
                 initReports();
             },
@@ -174,11 +176,11 @@ function loadBackendReport(): void {
 
 onMounted(() => {
     loadBackendReport();
-    emitter.on("update-chosen-query-display", handleChosenQuery);
+    emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
 });
 
 onBeforeUnmount(() => {
-    emitter.off("update-chosen-query-display");
+    emitter.off(SWITCH_QUERY_EVENT);
 });
 
 function handleSwitchWriting(): void {
@@ -191,7 +193,7 @@ function handleSwitchWriting(): void {
     clearFeedbacks();
 }
 
-function handleChosenQuery(): void {
+function handleSwitchQuery(): void {
     if (!is_user_admin) {
         return;
     }

@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\Project\ProjectByIDFactory;
@@ -42,9 +41,9 @@ final readonly class UserIsAllowedToSeeWidgetChecker
     /**
      * @throws RestException
      */
-    public function checkUserIsAllowedToSeeWidget(PFUser $user, CrossTrackerExpertReport $report): void
+    public function checkUserIsAllowedToSeeWidget(PFUser $user, int $widget_id): void
     {
-        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetDashboardById($report->getId());
+        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetDashboardById($widget_id);
         if ($widget !== null && $widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
             throw new RestException(403);
         }

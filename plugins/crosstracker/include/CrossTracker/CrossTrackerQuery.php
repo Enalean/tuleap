@@ -20,34 +20,43 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\CrossTracker;
 
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
-use Tuleap\REST\JsonCast;
+use Tuleap\DB\UUID;
 
-/**
- * @psalm-immutable
- */
-final readonly class CrossTrackerExpertReportRepresentation
+final readonly class CrossTrackerQuery
 {
-    private function __construct(
-        public int $id,
-        public string $uri,
-        public string $expert_query,
-        public string $title,
-        public string $description,
+    public function __construct(
+        private UUID $uuid,
+        private string $query,
+        private string $title,
+        private string $description,
+        private int $widget_id,
     ) {
     }
 
-    public static function fromReport(CrossTrackerExpertReport $report): self
+    public function getUUID(): UUID
     {
-        $report_id = JsonCast::toInt($report->getId());
-        return new self(
-            $report_id,
-            CrossTrackerReportsResource::ROUTE . '/' . $report_id,
-            $report->getQuery(),
-            $report->getTitle(),
-            $report->getDescription(),
-        );
+        return $this->uuid;
+    }
+
+    public function getQuery(): string
+    {
+        return $this->query;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getWidgetId(): int
+    {
+        return $this->widget_id;
     }
 }

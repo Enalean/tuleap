@@ -26,11 +26,12 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use UserHelper;
@@ -38,6 +39,7 @@ use UserManager;
 
 final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     /**
      * @var array<int, UserRepresentation[]>
      */
@@ -57,7 +59,7 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $project_admin->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $core_builder->addUserToProjectMembers((int) $alice->getId(), $project_id);
@@ -133,11 +135,12 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT user_list_field FROM @project = 'self' WHERE user_list_field = '' OR user_list_field != ''",
                 '',
                 '',
+                1,
             ),
             $this->user,
         );

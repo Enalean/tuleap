@@ -107,7 +107,12 @@ describe(`SelectableTable`, () => {
             },
             props: {
                 writing_cross_tracker_report,
-                there_is_no_query: false,
+                selected_query: {
+                    uuid: "0194dfd6-a489-703b-aabd-9d473212d908",
+                    expert_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id = 1",
+                    title: "My awesome query",
+                    description: "",
+                },
             },
         });
     };

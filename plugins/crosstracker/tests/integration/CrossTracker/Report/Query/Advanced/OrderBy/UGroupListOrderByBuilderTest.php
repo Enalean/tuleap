@@ -27,15 +27,17 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $user;
     /** @var list<int> */
     private array $result_descending;
@@ -54,7 +56,7 @@ final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
         $project_id = (int) $project->getID();
         $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -117,7 +119,7 @@ final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testLastUpdateDateDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field DESC', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field DESC', '', '', 1),
             $this->user,
         );
 
@@ -135,7 +137,7 @@ final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testLastUpdateDateAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field ASC', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field ASC', '', '', 1),
             $this->user,
         );
 
