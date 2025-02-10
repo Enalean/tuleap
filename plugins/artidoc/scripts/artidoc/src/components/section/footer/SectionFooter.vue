@@ -29,6 +29,7 @@
         <outdated-section-warning
             v-else-if="is_outdated"
             v-bind:editor_actions="editor.editor_actions"
+            v-bind:refresh_section="refresh_section"
         />
 
         <section-editor-save-cancel-buttons
@@ -48,12 +49,14 @@ import GenericError from "./GenericError.vue";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
+import type { RefreshSection } from "@/sections/SectionRefresher";
 
 const props = defineProps<{
     section: StoredArtidocSection;
     editor: SectionEditor;
     section_state: SectionState;
     close_section_editor: CloseSectionEditor;
+    refresh_section: RefreshSection;
 }>();
 
 const { error_message, is_outdated, is_in_error, is_not_found } = props.section_state;

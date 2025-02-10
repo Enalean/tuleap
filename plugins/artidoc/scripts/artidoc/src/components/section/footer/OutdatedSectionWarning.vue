@@ -39,7 +39,7 @@
                 type="button"
                 class="tlp-button-warning"
                 data-test="refresh"
-                v-on:click="editor_actions.refreshSection"
+                v-on:click="refresh_section.refreshSection"
             >
                 {{ $gettext("Load new section") }}
             </button>
@@ -50,9 +50,11 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import type { SectionEditorActions } from "@/composables/useSectionEditor";
+import type { RefreshSection } from "@/sections/SectionRefresher";
 
 defineProps<{
-    editor_actions: Pick<SectionEditorActions, "refreshSection" | "forceSaveEditor">;
+    editor_actions: Pick<SectionEditorActions, "forceSaveEditor">;
+    refresh_section: RefreshSection;
 }>();
 
 const { $gettext } = useGettext();

@@ -22,10 +22,10 @@ import { shallowMount } from "@vue/test-utils";
 import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import { createGettext } from "vue3-gettext";
 import type { SectionEditorActions } from "@/composables/useSectionEditor";
+import { SectionRefresherStub } from "@/sections/stubs/SectionRefresherStub";
 
 describe("OutdatedSectionWarning", () => {
     it("should force save", async () => {
-        const refreshSection: SectionEditorActions["refreshSection"] = vi.fn();
         const forceSaveEditor: SectionEditorActions["forceSaveEditor"] = vi.fn();
 
         const wrapper = shallowMount(OutdatedSectionWarning, {
@@ -33,34 +33,33 @@ describe("OutdatedSectionWarning", () => {
             props: {
                 editor_actions: {
                     forceSaveEditor,
-                    refreshSection,
                 },
+                refresh_section: SectionRefresherStub.withNoExpectedCall(),
             },
         });
 
         await wrapper.find("[data-test=force-save]").trigger("click");
 
         expect(forceSaveEditor).toHaveBeenCalled();
-        expect(refreshSection).not.toHaveBeenCalled();
     });
 
     it("should refresh section", async () => {
-        const refreshSection: SectionEditorActions["refreshSection"] = vi.fn();
         const forceSaveEditor: SectionEditorActions["forceSaveEditor"] = vi.fn();
 
+        const refresh_section = SectionRefresherStub.withExpectedCall();
         const wrapper = shallowMount(OutdatedSectionWarning, {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
                 editor_actions: {
                     forceSaveEditor,
-                    refreshSection,
                 },
+                refresh_section,
             },
         });
 
         await wrapper.find("[data-test=refresh]").trigger("click");
 
         expect(forceSaveEditor).not.toHaveBeenCalled();
-        expect(refreshSection).toHaveBeenCalled();
+        expect(refresh_section.hasSectionBeenRefreshed()).toBe(true);
     });
 });

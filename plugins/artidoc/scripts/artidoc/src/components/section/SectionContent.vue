@@ -61,6 +61,7 @@
                 v-bind:section="section.value"
                 v-bind:section_state="section_state"
                 v-bind:close_section_editor="section_editor_closer"
+                v-bind:refresh_section="section_refresher"
             />
         </article>
     </section>
@@ -98,6 +99,7 @@ import { getSectionErrorManager } from "@/sections/SectionErrorManager";
 import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
 import { getSectionEditorStateManager } from "@/sections/SectionEditorStateManager";
 import { getSectionEditorCloser } from "@/sections/SectionEditorCloser";
+import { getSectionRefresher } from "@/sections/SectionRefresher";
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -146,11 +148,9 @@ watch(
 
 const section_attachments_manager = getSectionAttachmentFilesManager(props.section, document_id);
 const section_editor_state_manager = getSectionEditorStateManager(props.section, section_state);
-
-const { $gettext } = useGettext();
-
 const error_state_manager = getSectionErrorManager(section_state);
 const sections_remover = getSectionsRemover(sections_collection, states_collection);
+const sections_updater = getSectionsUpdater(sections_collection);
 const section_editor_closer = getSectionEditorCloser(
     props.section,
     error_state_manager,
@@ -159,6 +159,16 @@ const section_editor_closer = getSectionEditorCloser(
     sections_remover,
     file_uploads_collection,
 );
+const section_refresher = getSectionRefresher(
+    props.section,
+    section_state,
+    error_state_manager,
+    sections_updater,
+    section_editor_closer,
+);
+
+const { $gettext } = useGettext();
+
 const editor = useSectionEditor(
     document_id,
     props.section,
@@ -166,7 +176,7 @@ const editor = useSectionEditor(
     error_state_manager,
     section_attachments_manager,
     getPendingSectionsReplacer(sections_collection, states_collection),
-    getSectionsUpdater(sections_collection),
+    sections_updater,
     sections_remover,
     getSectionsPositionsForSaveRetriever(sections_collection),
     section_editor_closer,
