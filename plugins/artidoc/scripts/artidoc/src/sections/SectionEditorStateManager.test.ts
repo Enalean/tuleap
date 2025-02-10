@@ -46,8 +46,8 @@ describe("SectionEditorStateManager", () => {
             (section_type, artidoc_section) => {
                 const section = ReactiveStoredArtidocSectionStub.fromSection(artidoc_section);
                 const section_state = state_builder.forSection(section);
-                const new_title = "new title";
-                const new_description = "new description";
+                const new_title = "New title";
+                const new_description = "New description";
 
                 getSectionEditorStateManager(section, section_state).setEditedContent(
                     new_title,
@@ -66,7 +66,7 @@ describe("SectionEditorStateManager", () => {
             const section_state = state_builder.forSection(section);
 
             getSectionEditorStateManager(section, section_state).setEditedContent(
-                "new title",
+                "New title",
                 getSectionHtmlDescription(section),
             );
 
@@ -82,7 +82,7 @@ describe("SectionEditorStateManager", () => {
 
             getSectionEditorStateManager(section, section_state).setEditedContent(
                 section.value.display_title,
-                "new description",
+                "New description",
             );
 
             expect(section_state.is_editor_reset_needed.value).toBe(true);
@@ -91,22 +91,46 @@ describe("SectionEditorStateManager", () => {
     });
 
     describe("resetContent", () => {
-        it("should reset the edited title/description and is_section_in_edit_mode to their former values", () => {
+        it("Given that the edition was canceled, then title/description and is_section_in_edit_mode should be reset to their former values", () => {
             const section = ReactiveStoredArtidocSectionStub.fromSection(
-                FreetextSectionFactory.create(),
+                FreetextSectionFactory.override({
+                    display_title: "Current title",
+                    description: "Current description",
+                }),
             );
             const section_state = state_builder.forSection(section);
             const manager = getSectionEditorStateManager(section, section_state);
 
-            manager.setEditedContent("new title", "new description");
+            manager.setEditedContent("New title", "New description");
 
             manager.resetContent();
 
-            expect(section_state.edited_title.value).toBe(section.value.display_title);
-            expect(section_state.edited_description.value).toBe(getSectionHtmlDescription(section));
+            expect(section_state.edited_title.value).toBe("Current title");
+            expect(section_state.edited_description.value).toBe("Current description");
             expect(section_state.is_section_in_edit_mode.value).toBe(false);
             // Should not be reset, otherwise the editor component won't reset its DOM
             expect(section_state.is_editor_reset_needed.value).toBe(true);
+        });
+
+        it("Given that the title/description were saved, Then edited title/description should match the new title/description", () => {
+            const section = ReactiveStoredArtidocSectionStub.fromSection(
+                FreetextSectionFactory.override({
+                    display_title: "Current title",
+                    description: "Current description",
+                }),
+            );
+            const section_state = state_builder.forSection(section);
+            const manager = getSectionEditorStateManager(section, section_state);
+            manager.resetContent();
+
+            manager.setEditedContent("New title", "New description");
+            section.value.display_title = "New title";
+            section.value.description = "New description";
+
+            manager.resetContent();
+
+            expect(section_state.edited_title.value).toBe("New title");
+            expect(section_state.edited_description.value).toBe("New description");
         });
     });
 

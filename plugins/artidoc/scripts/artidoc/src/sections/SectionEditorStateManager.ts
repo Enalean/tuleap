@@ -46,8 +46,8 @@ export const getSectionEditorStateManager = (
             section_state.edited_description.value = new_description;
         },
         resetContent(): void {
-            section_state.edited_title.value = original_title;
-            section_state.edited_description.value = original_description;
+            section_state.edited_title.value = section.value.display_title;
+            section_state.edited_description.value = getSectionHtmlDescription(section);
             section_state.is_section_in_edit_mode.value = false;
         },
         markEditorAsReset(): void {
