@@ -29,6 +29,10 @@ import type {
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
+import {
+    initLevelAccordingToPreviousSectionLevel,
+    updateDisplayLevelToSections,
+} from "@/sections/levels/SectionsNumberer";
 
 export type InsertSections = {
     insertSection(section: ArtidocSection, position: PositionForSection): void;
@@ -61,13 +65,22 @@ export const getSectionsInserter = (
             );
             const new_section = ref(CreateStoredSections.fromArtidocSection(section));
             states_collection.createStateForSection(new_section);
-
             if (index === NOT_FOUND) {
                 sections_collection.sections.value.push(new_section);
+                new_section.value.level = initLevelAccordingToPreviousSectionLevel(
+                    sections_collection.sections.value,
+                    sections_collection.sections.value.length - 1,
+                );
+                updateDisplayLevelToSections(sections_collection.sections.value);
                 return;
             }
-
             sections_collection.sections.value.splice(index, 0, new_section);
+
+            new_section.value.level = initLevelAccordingToPreviousSectionLevel(
+                sections_collection.sections.value,
+                index,
+            );
+            updateDisplayLevelToSections(sections_collection.sections.value);
         },
     };
 };

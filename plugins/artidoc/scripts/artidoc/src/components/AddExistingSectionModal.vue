@@ -95,6 +95,7 @@ import {
 } from "@/helpers/search-existing-artifacts-for-autocompleter";
 import { errAsync } from "neverthrow";
 import { getInsertionPositionExcludingPendingSections } from "@/helpers/get-insertion-position-excluding-pending-sections";
+import { initLevelAccordingToPreviousSectionLevelForImportExistingArtifactSection } from "@/sections/levels/SectionsNumberer";
 
 const gettext_provider = useGettext();
 const { $gettext, interpolate } = gettext_provider;
@@ -244,6 +245,10 @@ function onSubmit(event: Event): void {
         documentId,
         selected.value.id,
         getInsertionPositionExcludingPendingSections(add_position, sections_collection),
+        initLevelAccordingToPreviousSectionLevelForImportExistingArtifactSection(
+            sections_collection.sections.value,
+            add_position,
+        ),
     ).match(
         (section: ArtidocSection) => {
             on_successful_addition_callback(section);
