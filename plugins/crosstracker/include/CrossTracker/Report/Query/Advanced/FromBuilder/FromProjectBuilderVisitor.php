@@ -102,7 +102,7 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
 
     private function getCurrentProjectId(FromProjectBuilderVisitorParameters $parameters): int
     {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($parameters->report_id);
         if ($row === null || $row['dashboard_type'] !== 'project') {
             throw new LogicException('Project id not found');
         }
@@ -114,7 +114,7 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
      */
     private function getAggregatedProjectsIds(FromProjectBuilderVisitorParameters $parameters): array
     {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($parameters->report_id);
         if ($row === null || $row['dashboard_type'] !== 'project') {
             throw new LogicException('Project id not found');
         }

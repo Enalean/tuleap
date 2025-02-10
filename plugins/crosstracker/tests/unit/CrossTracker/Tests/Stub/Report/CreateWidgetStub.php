@@ -20,9 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report;
+namespace Tuleap\CrossTracker\Tests\Stub\Report;
 
-interface CreateReport
+use Tuleap\CrossTracker\Report\CreateWidget;
+
+final readonly class CreateWidgetStub implements CreateWidget
 {
-    public function createReportFromExpertQuery(string $query): int;
+    private function __construct(private int $report_id)
+    {
+    }
+
+    public function createWidget(): int
+    {
+        return $this->report_id;
+    }
+
+    public static function withReport(int $report_id): self
+    {
+        return new self($report_id);
+    }
 }

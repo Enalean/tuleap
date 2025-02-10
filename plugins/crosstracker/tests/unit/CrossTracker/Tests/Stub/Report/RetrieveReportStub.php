@@ -31,14 +31,25 @@ final readonly class RetrieveReportStub implements \Tuleap\CrossTracker\Report\R
     {
     }
 
-    public function searchReportById(int $report_id): ?array
+    public function searchWidgetById(int $widget_id): ?array
     {
         foreach ($this->reports as $row) {
-            if ($row['id'] === $report_id) {
+            if ($row['id'] === $widget_id) {
                 return $row;
             }
         }
         return null;
+    }
+
+    public function searchQueriesByWidgetId(int $widget_id): array
+    {
+        $result = [];
+        foreach ($this->reports as $row) {
+            if ($row['id'] === $widget_id) {
+                $result[] = $row;
+            }
+        }
+        return $result;
     }
 
     /**

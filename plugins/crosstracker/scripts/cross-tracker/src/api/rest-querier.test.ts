@@ -20,7 +20,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
-import { getReport, updateReport } from "./rest-querier";
+import { getReports, updateReport } from "./rest-querier";
 
 describe("rest-querier", () => {
     describe("getReport()", () => {
@@ -28,10 +28,10 @@ describe("rest-querier", () => {
             const report = {
                 expert_query: '@title = "bla"',
             };
-            const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(report));
+            const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync([report]));
             const report_id = 16;
 
-            const result = await getReport(report_id);
+            const result = await getReports(report_id);
 
             expect(getJSON).toHaveBeenCalledWith(
                 fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}`,
@@ -39,7 +39,7 @@ describe("rest-querier", () => {
             if (!result.isOk()) {
                 throw Error("Expected an ok");
             }
-            expect(result.value.expert_query).toBe(report.expert_query);
+            expect(result.value[0].expert_query).toBe(report.expert_query);
         });
     });
 

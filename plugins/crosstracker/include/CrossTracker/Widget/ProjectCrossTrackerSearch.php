@@ -24,8 +24,8 @@ use Codendi_Request;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
-use Tuleap\CrossTracker\CrossTrackerReportCreator;
-use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Report\CreateWidget;
 use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -33,7 +33,6 @@ use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\MappingRegistry;
 use Widget;
 
@@ -42,7 +41,7 @@ class ProjectCrossTrackerSearch extends Widget
     public const NAME = 'crosstrackersearch';
 
     public function __construct(
-        private readonly CrossTrackerReportCreator $report_creator,
+        private readonly CreateWidget $widget_creator,
         private readonly ReportInheritanceHandler $inheritance_handler,
     ) {
         parent::__construct(self::NAME);
@@ -62,7 +61,7 @@ class ProjectCrossTrackerSearch extends Widget
         $request = HTTPRequest::instance();
         $user    = $request->getCurrentUser();
 
-        $permission_checker = new WidgetPermissionChecker(new CrossTrackerReportDao(), \ProjectManager::instance());
+        $permission_checker = new WidgetPermissionChecker(new CrossTrackerWidgetDao(), \ProjectManager::instance());
         $is_admin           = $permission_checker->isUserWidgetAdmin($user, $this->content_id);
 
         return $renderer->renderToString(
@@ -102,17 +101,12 @@ class ProjectCrossTrackerSearch extends Widget
 
     public function create(Codendi_Request $request)
     {
-        $dashboard_type = $request->get('dashboard-type');
-
-        return $this->report_creator->createReportAndReturnLastId($dashboard_type)->match(
-            static fn(int $content_id) => $content_id,
-            static fn(Fault $fault) => throw new \RuntimeException((string) $fault),
-        );
+        return $this->widget_creator->createWidget();
     }
 
     public function destroy($id)
     {
-        $this->getDao()->delete($id);
+        $this->getDao()->deleteWidget($id);
     }
 
     public function cloneContent(
@@ -150,11 +144,11 @@ class ProjectCrossTrackerSearch extends Widget
     }
 
     /**
-     * @return CrossTrackerReportDao
+     * @return CrossTrackerWidgetDao
      */
     private function getDao()
     {
-        return new CrossTrackerReportDao();
+        return new CrossTrackerWidgetDao();
     }
 
     public function isManagingItsOwnSection(): bool

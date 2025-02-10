@@ -62,11 +62,14 @@ final class CrossTrackerTest extends RestBase
             'id'               => 1,
             'uri'              => 'cross_tracker_reports/1',
             'expert_query'     => '',
-            'title'            => '',
+            'title'            => 'My query',
             'description'      => '',
         ];
 
-        self::assertEquals($expected_cross_tracker, decode($response->getBody()->getContents()));
+        $json_response = decode($response->getBody()->getContents());
+        self::assertIsArray($json_response);
+        self::assertCount(1, $json_response);
+        self::assertEqualsCanonicalizing($expected_cross_tracker, $json_response[0]);
     }
 
     public function testPut(): void
@@ -83,7 +86,7 @@ final class CrossTrackerTest extends RestBase
             'id'           => 3,
             'uri'          => 'cross_tracker_reports/3',
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
-            'title'        => '',
+            'title'        => 'My query',
             'description'  => '',
         ];
 
@@ -155,16 +158,5 @@ final class CrossTrackerTest extends RestBase
         $cross_tracker_artifacts = decode($response->getBody()->getContents());
 
         self::assertEmpty($cross_tracker_artifacts['artifacts']);
-    }
-
-    private function assertGetReport(array $cross_tracker_artifacts): void
-    {
-        self::assertCount(5, $cross_tracker_artifacts['artifacts']);
-
-        self::assertEquals($this->epic_artifact_ids[7], $cross_tracker_artifacts['artifacts'][0]['id']);
-        self::assertEquals($this->epic_artifact_ids[6], $cross_tracker_artifacts['artifacts'][1]['id']);
-        self::assertEquals($this->epic_artifact_ids[5], $cross_tracker_artifacts['artifacts'][2]['id']);
-        self::assertEquals($this->epic_artifact_ids[4], $cross_tracker_artifacts['artifacts'][3]['id']);
-        self::assertEquals($this->epic_artifact_ids[1], $cross_tracker_artifacts['artifacts'][4]['id']);
     }
 }

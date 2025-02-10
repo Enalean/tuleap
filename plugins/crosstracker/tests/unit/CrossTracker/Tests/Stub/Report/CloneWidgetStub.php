@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub\Report;
 
-final class CloneReportStub implements \Tuleap\CrossTracker\Report\CloneReport
+final class CloneWidgetStub implements \Tuleap\CrossTracker\Report\CloneWidget
 {
     private int $call_count = 0;
 
@@ -33,13 +33,13 @@ final class CloneReportStub implements \Tuleap\CrossTracker\Report\CloneReport
     {
     }
 
-    public function cloneReport(int $template_report_id): int
+    public function cloneWidget(int $template_widget_id): int
     {
         $this->call_count++;
-        if (! isset($this->reports_map[$template_report_id])) {
+        if (! isset($this->reports_map[$template_widget_id])) {
             throw new \LogicException('Expected to find template report id, but the stub was not prepared with it');
         }
-        return $this->reports_map[$template_report_id];
+        return $this->reports_map[$template_widget_id];
     }
 
     /**

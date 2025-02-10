@@ -30,7 +30,7 @@ final readonly class ReportInheritanceHandler
 {
     public function __construct(
         private CrossTrackerReportFactory $report_factory,
-        private CloneReport $report_cloner,
+        private CloneWidget $report_cloner,
         private LoggerInterface $logger,
     ) {
     }
@@ -46,6 +46,6 @@ final readonly class ReportInheritanceHandler
             return 0;
         }
 
-        return $this->report_cloner->cloneReport($template_report_id);
+        return $this->report_cloner->cloneWidget($template_report_id);
     }
 }

@@ -38,7 +38,7 @@ use Tracker_Semantic_TitleDao;
 use Tracker_Semantic_TitleFactory;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
-use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
@@ -336,7 +336,7 @@ final class ArtifactReportFactoryInstantiator
         );
         $event_manager            = EventManager::instance();
         $project_manager          = ProjectManager::instance();
-        $report_dao               = new CrossTrackerReportDao();
+        $report_dao               = new CrossTrackerWidgetDao();
         $from_builder_visitor     = new FromBuilderVisitor(
             new FromTrackerBuilderVisitor($report_dao),
             new FromProjectBuilderVisitor(

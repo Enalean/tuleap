@@ -155,6 +155,9 @@ msgid ""
 "condition in the FROM part of your query"
 msgstr ""
 
+msgid "My query"
+msgstr ""
+
 msgid "No tracker found"
 msgstr ""
 

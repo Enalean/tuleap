@@ -27,7 +27,7 @@ final class SearchCrossTrackerWidgetStub implements SearchCrossTrackerWidget
     {
     }
 
-    public function searchCrossTrackerWidgetByCrossTrackerReportId(int $content_id): ?array
+    public function searchCrossTrackerWidgetDashboardById(int $content_id): ?array
     {
         return $this->row;
     }

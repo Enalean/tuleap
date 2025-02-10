@@ -91,6 +91,7 @@ const is_xslx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
+    there_is_no_query: boolean;
 }>();
 
 const is_loading = ref(false);
@@ -129,6 +130,10 @@ onMounted(() => {
 });
 
 function loadArtifacts(): void {
+    if (props.there_is_no_query) {
+        is_loading.value = false;
+        return;
+    }
     getArtifactsFromReportOrUnsavedQuery()
         .match(
             (report_with_total) => {

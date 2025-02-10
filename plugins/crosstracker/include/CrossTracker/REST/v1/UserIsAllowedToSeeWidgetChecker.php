@@ -30,7 +30,7 @@ use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\REST\ProjectAuthorization;
 
-final readonly class UserIsAllowedToSeeReportChecker
+final readonly class UserIsAllowedToSeeWidgetChecker
 {
     public function __construct(
         private SearchCrossTrackerWidget $cross_tracker_dao,
@@ -42,9 +42,9 @@ final readonly class UserIsAllowedToSeeReportChecker
     /**
      * @throws RestException
      */
-    public function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerExpertReport $report): void
+    public function checkUserIsAllowedToSeeWidget(PFUser $user, CrossTrackerExpertReport $report): void
     {
-        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
+        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetDashboardById($report->getId());
         if ($widget !== null && $widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
             throw new RestException(403);
         }

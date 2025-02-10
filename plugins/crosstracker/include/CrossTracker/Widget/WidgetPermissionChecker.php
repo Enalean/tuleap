@@ -20,14 +20,14 @@
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 
 class WidgetPermissionChecker
 {
     /**
-     * @var CrossTrackerReportDao
+     * @var CrossTrackerWidgetDao
      */
     private $cross_tracker_dao;
     /**
@@ -35,7 +35,7 @@ class WidgetPermissionChecker
      */
     private $project_manager;
 
-    public function __construct(CrossTrackerReportDao $cross_tracker_dao, \ProjectManager $project_manager)
+    public function __construct(CrossTrackerWidgetDao $cross_tracker_dao, \ProjectManager $project_manager)
     {
         $this->cross_tracker_dao = $cross_tracker_dao;
         $this->project_manager   = $project_manager;
@@ -48,7 +48,7 @@ class WidgetPermissionChecker
      */
     public function isUserWidgetAdmin(\PFUser $user, $report_id)
     {
-        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report_id);
+        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetDashboardById($report_id);
 
         if (isset($widget['dashboard_type']) && $widget['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE) {
             return $widget['user_id'] === (int) $user->getId();

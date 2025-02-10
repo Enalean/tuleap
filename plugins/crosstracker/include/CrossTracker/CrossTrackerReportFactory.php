@@ -36,11 +36,26 @@ final readonly class CrossTrackerReportFactory
      */
     public function getById($id): CrossTrackerExpertReport
     {
-        $report_row = $this->report_retriever->searchReportById($id);
+        $report_row = $this->report_retriever->searchWidgetById($id);
         if (! $report_row) {
             throw new CrossTrackerReportNotFoundException();
         }
 
         return new CrossTrackerExpertReport($id, $report_row['query'], $report_row['title'], $report_row['description']);
+    }
+
+    /**
+     * @return CrossTrackerExpertReport[]
+     */
+    public function getByWidgetId(int $id): array
+    {
+        $rows = $this->report_retriever->searchQueriesByWidgetId($id);
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[] = new CrossTrackerExpertReport($id, $row['query'], $row['title'], $row['description']);
+        }
+
+        return $result;
     }
 }

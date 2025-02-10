@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report;
 
-interface CloneReport
+interface CloneWidget
 {
-    public function cloneReport(int $template_report_id): int;
+    public function cloneWidget(int $template_widget_id): int;
 }

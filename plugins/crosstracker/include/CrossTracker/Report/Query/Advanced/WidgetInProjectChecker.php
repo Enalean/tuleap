@@ -32,7 +32,7 @@ final readonly class WidgetInProjectChecker
 
     public function isWidgetInProjectDashboard(int $report_id): bool
     {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($report_id);
+        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($report_id);
 
         return $row !== null && $row['dashboard_type'] === 'project';
     }

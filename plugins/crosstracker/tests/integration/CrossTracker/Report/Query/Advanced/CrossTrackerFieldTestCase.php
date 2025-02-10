@@ -27,13 +27,14 @@ use ForgeConfig;
 use LogicException;
 use PFUser;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
-use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -68,10 +69,16 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         unset($_SERVER['REQUEST_URI']);
     }
 
-    protected function addReportToProject(int $report_id, int $project_id): void
+    protected function addReportToProject(int $widget_id, int $project_id): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert('plugin_crosstracker_query', ['id' => $report_id, 'query' => '']);
+        $db   = DBFactory::getMainTuleapDBConnection()->getDB();
+        $uuid = new DatabaseUUIDV7Factory();
+        $db->insert('plugin_crosstracker_query', [
+            'id'        => $uuid->buildUUIDBytes(),
+            'query'     => '',
+            'title'     => '',
+            'widget_id' => $widget_id,
+        ]);
         $widget_dao   = new DashboardWidgetDao(
             new WidgetFactory(
                 UserManager::instance(),
@@ -83,8 +90,9 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         $dashboard_id = $dao->save($project_id, 'Main Dashboard');
         $line_id      = $widget_dao->createLine($dashboard_id, 'project', 0);
         $column_id    = $widget_dao->createColumn($line_id, 0);
-        self::assertTrue($widget_dao->insertWidgetInColumnWithRank(ProjectCrossTrackerSearch::NAME, $report_id, $column_id, 0));
-        self::assertNotNull((new CrossTrackerReportDao())->searchCrossTrackerWidgetByCrossTrackerReportId($report_id));
+        self::assertTrue($widget_dao->insertWidgetInColumnWithRank(ProjectCrossTrackerSearch::NAME, $widget_id, $column_id, 0));
+        $db->insert('plugin_crosstracker_widget', ['id' => $widget_id]);
+        self::assertNotNull((new CrossTrackerWidgetDao())->searchCrossTrackerWidgetDashboardById($widget_id));
     }
 
     /**
