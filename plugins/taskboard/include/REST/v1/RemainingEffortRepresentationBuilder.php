@@ -71,6 +71,6 @@ class RemainingEffortRepresentationBuilder
             return null;
         }
 
-        return (float) $value;
+        return $value;
     }
 }
