@@ -92,17 +92,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsTheRequestWhenBacklogTrackerIdsAreMissing(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturnCallback(
-            function (?int $tracker_id): ?Tracker {
-                if ($tracker_id === null) {
-                    return null;
-                }
-                $tracker = $this->createMock(Tracker::class);
-                $tracker->method('getGroupId')->willReturn('12');
-                $tracker->method('userCanView')->willReturn(true);
-                return $tracker;
-            }
-        );
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
         $request = $this->getPlanningRequest('test', 1, null, null);
         $this->assertFalse($this->validator->isValid($request, $this->tracker_access_during_import_strategy));
     }
