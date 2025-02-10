@@ -116,6 +116,11 @@ id = "GO-2025-3420"
 reason = "No impact in Tuleap situation"
 ignoreUntil = 2025-02-28
 
+[[IgnoredVulns]]
+id = "GO-2025-3447"
+reason = "No impact in Tuleap situation, not building for ppc64"
+ignoreUntil = 2025-02-28
+
 # vault-tuleap-plugin
 ## github.com/hashicorp/yamux
 [[IgnoredVulns]]
