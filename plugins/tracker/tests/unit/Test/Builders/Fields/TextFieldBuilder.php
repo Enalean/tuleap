@@ -33,9 +33,13 @@ final class TextFieldBuilder
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> $read_permissions */
     private array $read_permissions = [];
-    private bool $is_required       = false;
-    private int $number_of_rows     = 0;
-    private int $number_of_columns  = 0;
+    /** @var list<\PFUser> */
+    private array $user_with_update_permissions = [];
+    /** @var array<int, bool> */
+    private array $update_permissions = [];
+    private bool $is_required         = false;
+    private int $number_of_rows       = 0;
+    private int $number_of_columns    = 0;
 
     private function __construct(private readonly int $id)
     {
@@ -58,6 +62,13 @@ final class TextFieldBuilder
         $this->user_with_read_permissions[]           = $user;
         $this->read_permissions[(int) $user->getId()] = $user_can_read;
 
+        return $this;
+    }
+
+    public function withUpdatePermission(\PFUser $user, bool $user_can_update): self
+    {
+        $this->user_with_update_permissions[]           = $user;
+        $this->update_permissions[(int) $user->getId()] = $user_can_update;
         return $this;
     }
 
@@ -120,6 +131,10 @@ final class TextFieldBuilder
         foreach ($this->user_with_read_permissions as $user) {
             $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
         }
+        foreach ($this->user_with_update_permissions as $user) {
+            $field->setUserCanUpdate($user, $this->update_permissions[(int) $user->getId()]);
+        }
+
         return $field;
     }
 }

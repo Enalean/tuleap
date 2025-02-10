@@ -166,15 +166,6 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getFieldsDataOnUpdate([$representation]);
     }
 
-    public function testItThrowsWhenUpdateRepresentationFieldIDIsNotInt(): void
-    {
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = null;
-
-        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
-        $this->getFieldsDataOnUpdate([$representation]);
-    }
-
     public function testItThrowsAtUpdateWhenFieldIDCantBeFoundInTracker(): void
     {
         $representation = ArtifactValuesRepresentationBuilder::aRepresentation(404)->build();
@@ -277,15 +268,6 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenCreateRepresentationDoesNotHaveAFieldID(): void
     {
         $representation = new ArtifactValuesRepresentation();
-        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
-        $this->getFieldsDataOnCreate([$representation]);
-    }
-
-    public function testItThrowsWhenCreateRepresentationFieldIDIsNotInt(): void
-    {
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = null;
-
         $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
         $this->getFieldsDataOnCreate([$representation]);
     }

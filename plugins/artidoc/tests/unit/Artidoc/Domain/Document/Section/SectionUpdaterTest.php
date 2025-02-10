@@ -26,6 +26,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFact
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
+use Tuleap\Artidoc\Stubs\Domain\Document\Section\Artifact\UpdateArtifactContentStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Section\Freetext\UpdateFreetextContentStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Section\RetrieveSectionStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -45,25 +46,54 @@ final class SectionUpdaterTest extends TestCase
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
-    public function testHappyPath(): void
+    public function testHappyPathFreetext(): void
     {
-        $update = UpdateFreetextContentStub::build();
+        $update_freetext = UpdateFreetextContentStub::build();
+        $update_artifact = UpdateArtifactContentStub::build();
 
         $updater = new SectionUpdater(
             RetrieveSectionStub::witMatchingSectionUserCanWrite(
                 $this->getMatchingFreetextSection(),
             ),
-            $update,
+            $update_freetext,
+            $update_artifact,
         );
 
         $result = $updater->update(
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             'Introduction',
             '',
+            [],
             Level::One,
         );
         self::assertTrue(Result::isOk($result));
-        self::assertTrue($update->isCalled());
+        self::assertTrue($update_freetext->isCalled());
+        self::assertFalse($update_artifact->isCalled());
+    }
+
+    public function testHappyPathArtifact(): void
+    {
+        $update_freetext = UpdateFreetextContentStub::build();
+        $update_artifact = UpdateArtifactContentStub::build();
+
+        $updater = new SectionUpdater(
+            RetrieveSectionStub::witMatchingSectionUserCanWrite(
+                $this->getMatchingArtifactSection(),
+            ),
+            $update_freetext,
+            $update_artifact,
+        );
+
+        $result = $updater->update(
+            $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
+            'Introduction',
+            '',
+            [],
+            Level::One,
+        );
+        self::assertTrue(Result::isOk($result));
+        self::assertFalse($update_freetext->isCalled());
+        self::assertTrue($update_artifact->isCalled());
     }
 
     /**
@@ -72,85 +102,76 @@ final class SectionUpdaterTest extends TestCase
      */
     public function testFaultWhenTitleIsEmpty(string $empty): void
     {
-        $update = UpdateFreetextContentStub::build();
+        $update_freetext = UpdateFreetextContentStub::build();
+        $update_artifact = UpdateArtifactContentStub::build();
 
         $updater = new SectionUpdater(
             RetrieveSectionStub::witMatchingSectionUserCanWrite(
                 $this->getMatchingFreetextSection(),
             ),
-            $update,
+            $update_freetext,
+            $update_artifact,
         );
 
         $result = $updater->update(
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             $empty,
             '',
+            [],
             Level::One,
         );
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(EmptyTitleFault::class, $result->error);
-        self::assertFalse($update->isCalled());
-    }
-
-    public function testFaultWhenSectionIsAnArtifactSection(): void
-    {
-        $update = UpdateFreetextContentStub::build();
-
-        $updater = new SectionUpdater(
-            RetrieveSectionStub::witMatchingSectionUserCanWrite(
-                $this->getMatchingArtifactSection(),
-            ),
-            $update,
-        );
-
-        $result = $updater->update(
-            $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
-            'Introduction',
-            '',
-            Level::One,
-        );
-        self::assertFalse(Result::isOk($result));
-        self::assertFalse($update->isCalled());
+        self::assertFalse($update_freetext->isCalled());
+        self::assertFalse($update_artifact->isCalled());
     }
 
     public function testFaultWhenUserCannotWrite(): void
     {
-        $update = UpdateFreetextContentStub::build();
+        $update_freetext = UpdateFreetextContentStub::build();
+        $update_artifact = UpdateArtifactContentStub::build();
 
         $updater = new SectionUpdater(
             RetrieveSectionStub::witMatchingSectionUserCanRead(
                 $this->getMatchingFreetextSection(),
             ),
-            $update,
+            $update_freetext,
+            $update_artifact,
         );
 
         $result = $updater->update(
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             'Introduction',
             '',
+            [],
             Level::One,
         );
         self::assertFalse(Result::isOk($result));
-        self::assertFalse($update->isCalled());
+        self::assertFalse($update_freetext->isCalled());
+        self::assertFalse($update_artifact->isCalled());
     }
 
     public function testFaultWhenNoMatchingSection(): void
     {
-        $update = UpdateFreetextContentStub::build();
+        $update_freetext = UpdateFreetextContentStub::build();
+        $update_artifact = UpdateArtifactContentStub::build();
 
         $updater = new SectionUpdater(
             RetrieveSectionStub::withoutMatchingSection(),
-            $update,
+            $update_freetext,
+            $update_artifact,
         );
 
         $result = $updater->update(
             $this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID),
             'Introduction',
             '',
+            [],
             Level::One,
         );
         self::assertFalse(Result::isOk($result));
-        self::assertFalse($update->isCalled());
+        self::assertFalse($update_freetext->isCalled());
+        self::assertFalse($update_artifact->isCalled());
     }
 
     private function getMatchingArtifactSection(): RetrievedSection

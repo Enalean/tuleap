@@ -20,17 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section;
+namespace Tuleap\Artidoc\Adapter\Document\Section;
 
-use Tuleap\NeverThrow\Fault;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
+use Tuleap\DB\DataAccessObject;
 
-/**
- * @psalm-immutable
- */
-final readonly class UnableToUpdateArtifactSectionFault extends Fault
+final class UpdateLevelDao extends DataAccessObject implements UpdateLevel
 {
-    public static function build(): Fault
-    {
-        return new self('Update of artifact section is not allowed');
+    public function updateLevel(
+        SectionIdentifier $section_identifier,
+        Level $level,
+    ): void {
+        $this->getDB()->update(
+            'plugin_artidoc_section_version',
+            [
+                'level' => $level->value,
+            ],
+            [
+                'section_id' => $section_identifier->getBytes(),
+            ]
+        );
     }
 }

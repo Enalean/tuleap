@@ -35,6 +35,10 @@ final class StringFieldBuilder
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> */
     private array $read_permissions = [];
+    /** @var list<\PFUser> */
+    private array $user_with_update_permissions = [];
+    /** @var array<int, bool> */
+    private array $update_permissions = [];
 
     private function __construct(private readonly int $id)
     {
@@ -77,6 +81,13 @@ final class StringFieldBuilder
         return $this;
     }
 
+    public function withUpdatePermission(\PFUser $user, bool $user_can_update): self
+    {
+        $this->user_with_update_permissions[]           = $user;
+        $this->update_permissions[(int) $user->getId()] = $user_can_update;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_String
     {
         $field = new Tracker_FormElement_Field_String(
@@ -97,6 +108,10 @@ final class StringFieldBuilder
         foreach ($this->user_with_read_permissions as $user) {
             $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
         }
+        foreach ($this->user_with_update_permissions as $user) {
+            $field->setUserCanUpdate($user, $this->update_permissions[(int) $user->getId()]);
+        }
+
         return $field;
     }
 }

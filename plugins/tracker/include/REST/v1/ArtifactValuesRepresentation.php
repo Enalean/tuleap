@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\REST\v1;
 class ArtifactValuesRepresentation
 {
     /**
-     * @var int {@type int} {@required true}
+     * @var int Id of the field {@required true}
      */
     public $field_id;
 
     /**
-     * @var mixed {@required false}
+     * @var mixed Value for the field {@required false}
      */
     public $value;
 

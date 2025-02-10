@@ -38,9 +38,8 @@ use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\FaultMapper;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-final class PUTHandler
+final class PUTHandler implements HandlePUT
 {
     public function __construct(
         private readonly FieldsDataBuilder $fields_data_builder,
@@ -49,10 +48,6 @@ final class PUTHandler
     ) {
     }
 
-    /**
-     * @param ArtifactValuesRepresentation[] $values
-     * @throws RestException
-     */
     public function handle(
         array $values,
         Artifact $artifact,
