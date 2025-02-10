@@ -24,6 +24,8 @@ export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" |
 
 export type ReportRepresentation = {
     readonly expert_query: string;
+    readonly title: string;
+    readonly description: string;
 };
 
 export const DATE_SELECTABLE_TYPE = "date";

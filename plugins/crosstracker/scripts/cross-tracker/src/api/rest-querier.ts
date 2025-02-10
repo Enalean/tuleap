@@ -30,6 +30,8 @@ export function getReports(report_id: number): ResultAsync<ReadonlyArray<Report>
         return reports.map((report) => {
             return {
                 expert_query: report.expert_query,
+                title: report.title,
+                description: report.description,
             };
         });
     });
@@ -41,6 +43,8 @@ export function updateReport(report_id: number, expert_query: string): ResultAsy
     }).map((report): Report => {
         return {
             expert_query: report.expert_query,
+            title: report.title,
+            description: report.description,
         };
     });
 }

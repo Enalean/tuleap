@@ -30,6 +30,9 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgid "Choose another query"
+msgstr ""
+
 msgid "Description"
 msgstr "Descrição"
 

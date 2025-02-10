@@ -60,9 +60,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
+    EMITTER,
     GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
@@ -81,6 +82,7 @@ import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
 import EditCell from "./EditCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
+import type { RefreshArtifactEvent } from "../../helpers/emitter-provider";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
@@ -112,6 +114,7 @@ watch(report_state, () => {
         refreshArtifactList();
     }
 });
+const emitter = strictInject(EMITTER);
 
 function handleNewPage(new_offset: number): void {
     offset = new_offset;
@@ -119,14 +122,23 @@ function handleNewPage(new_offset: number): void {
 }
 
 function refreshArtifactList(): void {
+    resetArtifactList();
+    loadArtifacts();
+}
+
+function resetArtifactList(): void {
     rows.value = [];
     columns.value = new Set<string>();
     is_loading.value = true;
-    loadArtifacts();
 }
 
 onMounted(() => {
     refreshArtifactList();
+    emitter.on("refresh-artifacts", refreshChosenQuery);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("refresh-artifacts");
 });
 
 function loadArtifacts(): void {
@@ -135,6 +147,31 @@ function loadArtifacts(): void {
         return;
     }
     getArtifactsFromReportOrUnsavedQuery()
+        .match(
+            (report_with_total) => {
+                columns.value = report_with_total.table.columns;
+                rows.value = report_with_total.table.rows;
+                total.value = report_with_total.total;
+            },
+            (fault) => {
+                notifyFault(ArtifactsRetrievalFault(fault));
+            },
+        )
+        .then(() => {
+            is_loading.value = false;
+        });
+}
+
+function refreshChosenQuery(event: RefreshArtifactEvent): void {
+    resetArtifactList();
+
+    if (props.there_is_no_query) {
+        is_loading.value = false;
+        return;
+    }
+
+    artifacts_retriever
+        .getSelectableQueryResult(event.query.expert_query, limit, offset)
         .match(
             (report_with_total) => {
                 columns.value = report_with_total.table.columns;

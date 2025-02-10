@@ -21,9 +21,12 @@
 namespace Tuleap\CrossTracker\Widget;
 
 use Codendi_Request;
+use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Report\CreateWidget;
 use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
@@ -38,11 +41,16 @@ use Widget;
 
 class ProjectCrossTrackerSearch extends Widget
 {
+    #[FeatureFlagConfigKey('Support multiple query in Cross Tracker widget')]
+    #[ConfigKeyInt(0)]
+    public const FEATURE_FLAG = 'cross_tracker_widget_multiple_query';
+
     public const NAME = 'crosstrackersearch';
 
     public function __construct(
         private readonly CreateWidget $widget_creator,
         private readonly ReportInheritanceHandler $inheritance_handler,
+        private readonly WidgetPermissionChecker $permission_checker,
     ) {
         parent::__construct(self::NAME);
     }
@@ -61,15 +69,15 @@ class ProjectCrossTrackerSearch extends Widget
         $request = HTTPRequest::instance();
         $user    = $request->getCurrentUser();
 
-        $permission_checker = new WidgetPermissionChecker(new CrossTrackerWidgetDao(), \ProjectManager::instance());
-        $is_admin           = $permission_checker->isUserWidgetAdmin($user, $this->content_id);
+        $is_admin = $this->permission_checker->isUserWidgetAdmin($user, $this->content_id);
 
         return $renderer->renderToString(
             'project-cross-tracker-search',
             new ProjectCrossTrackerSearchPresenter(
                 $this->content_id,
                 $is_admin,
-                $user
+                $user,
+                ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
             )
         );
     }

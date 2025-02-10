@@ -26,15 +26,20 @@ use PFUser;
 
 final readonly class ProjectCrossTrackerSearchPresenter
 {
+    public int $report_id;
     public string $is_widget_admin;
     public string $documentation_base_url;
+    public bool $is_multiple_query_supported;
 
-    public function __construct(public int $report_id, bool $is_admin, PFUser $current_user)
+    public function __construct(int $report_id, bool $is_admin, PFUser $current_user, bool $is_multiple_query_supported)
     {
+        $this->report_id = $report_id;
+
         $this->is_widget_admin = $is_admin ? 'true' : 'false';
 
-        $this->documentation_base_url = '/doc/' . urlencode(
+        $this->documentation_base_url      = '/doc/' . urlencode(
             $current_user->getShortLocale()
         );
+        $this->is_multiple_query_supported = $is_multiple_query_supported;
     }
 }

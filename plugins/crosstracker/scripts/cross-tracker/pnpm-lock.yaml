@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../../lib/frontend/date-helper
+  '@tuleap/dom':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/dom
   '@tuleap/fault':
     specifier: workspace:^
     version: link:../../../../lib/frontend/fault
@@ -29,6 +32,9 @@ dependencies:
   '@tuleap/tlp-badge':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tlp-badge
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tooltip':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tooltip
@@ -38,6 +44,9 @@ dependencies:
   '@tuleap/vue3-gettext-init':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue3-gettext-init
+  mitt:
+    specifier: ^3.0.0
+    version: 3.0.1
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
@@ -545,6 +554,10 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
     dev: true
+
+  /mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+    dev: false
 
   /nanoid@3.3.8:
     resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}

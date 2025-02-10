@@ -31,9 +31,11 @@ import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerRepor
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    EMITTER,
     GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
+    REPORT_ID,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
@@ -53,6 +55,7 @@ import SelectableCell from "./SelectableCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
+import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 
 vi.useFakeTimers();
 
@@ -94,10 +97,12 @@ describe(`SelectableTable`, () => {
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
                     [REPORT_STATE.valueOf()]: ref(report_state),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
+                    [REPORT_ID.valueOf()]: 15,
                     [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xslx_export_allowed),
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
                         createVueGettextProviderPassThrough(),
                     ),
+                    [EMITTER.valueOf()]: EmitterStub(),
                 },
             },
             props: {
