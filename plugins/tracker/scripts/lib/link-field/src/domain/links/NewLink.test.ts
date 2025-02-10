@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { ArtifactCrossReferenceStub } from "../../../tests/stubs/ArtifactCrossReferenceStub";
 import { NewLink } from "./NewLink";
 import { LinkType } from "./LinkType";

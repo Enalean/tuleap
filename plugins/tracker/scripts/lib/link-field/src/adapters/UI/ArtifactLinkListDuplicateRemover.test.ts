@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import type { LinkableArtifact } from "../../domain/links/LinkableArtifact";
 import { ArtifactLinkListDuplicateRemover } from "./ArtifactLinkListDuplicateRemover";
 

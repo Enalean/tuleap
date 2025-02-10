@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { GroupCollection } from "@tuleap/lazybox";
 import { Option } from "@tuleap/option";
 import { setTranslator } from "../../gettext-catalog";
@@ -159,7 +160,7 @@ describe("LinkField", () => {
 
             it(`replaces the link selector dropdown with the sections in the expected order when a section changes`, () => {
                 const host = getHost();
-                const setDropdown = jest.spyOn(link_selector, "replaceDropdownContent");
+                const setDropdown = vi.spyOn(link_selector, "replaceDropdownContent");
                 host.matching_artifact_section = [MatchingArtifactsGroup.buildEmpty()];
                 host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildEmpty()];
                 host.search_results_section = [SearchResultsGroup.buildEmpty()];
@@ -227,7 +228,7 @@ describe("LinkField", () => {
             it(`when the current type is changed,
                 it will call the autocompleter with an empty string`, () => {
                 const host = getHost();
-                const autoComplete = jest.spyOn(host.autocompleter, "autoComplete");
+                const autoComplete = vi.spyOn(host.autocompleter, "autoComplete");
 
                 current_link_type_descriptor.observe(host);
 
@@ -311,7 +312,7 @@ describe("LinkField", () => {
             describe("observeNewLinks()", () => {
                 it(`dispatches a bubbling "change" event`, () => {
                     const host = getHost();
-                    const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+                    const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
                     observeNewLinks(host, [NewLinkStub.withDefaults()], []);
 
@@ -322,7 +323,7 @@ describe("LinkField", () => {
 
                 it(`does not trigger when the property is defined for the first time`, () => {
                     const host = getHost();
-                    const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+                    const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
                     observeNewLinks(host, [], undefined);
 
@@ -338,7 +339,7 @@ describe("LinkField", () => {
 
         it(`when is_artifact_creator_shown becomes false, it focuses the link selector`, () => {
             const lazybox = getLazybox();
-            const focus = jest.spyOn(lazybox, "focus");
+            const focus = vi.spyOn(lazybox, "focus");
             const host = {
                 is_artifact_creator_shown: true,
                 link_selector: lazybox,

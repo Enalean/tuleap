@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import type { Option } from "@tuleap/option";
 import type { TrackerIdentifier } from "../../../domain/TrackerIdentifier";
 import { TrackerIdentifierBuilder } from "./TrackerIdentifierBuilder";

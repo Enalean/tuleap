@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { getLinkableArtifact, getStatusClasses } from "./LinkableArtifactTemplate";
 import { LinkableArtifactStub } from "../../../../tests/stubs/links/LinkableArtifactStub";
 

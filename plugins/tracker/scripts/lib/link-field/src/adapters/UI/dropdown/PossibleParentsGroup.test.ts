@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import { setTranslator } from "../../../gettext-catalog";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import { LinkableArtifactStub } from "../../../../tests/stubs/links/LinkableArtifactStub";

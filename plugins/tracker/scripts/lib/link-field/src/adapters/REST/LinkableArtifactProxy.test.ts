@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactWithStatus } from "./ArtifactWithStatus";
+import { describe, expect, it } from "vitest";
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import { ARTIFACT_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
+import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
 
 const ARTIFACT_ID = 801;

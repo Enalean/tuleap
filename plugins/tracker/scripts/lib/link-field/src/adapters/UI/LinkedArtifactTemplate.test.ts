@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import type { ParentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
@@ -271,7 +272,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 const linked_artifact = LinkedArtifactStub.withDefaults();
                 const host = getHost(linked_artifact);
                 render(host, linked_artifact, false);
-                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+                const dispatchEvent = vi.spyOn(host, "dispatchEvent");
                 const button = selectOrThrow(
                     target,
                     "[data-test=action-button]",
@@ -295,7 +296,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 const linked_artifact = LinkedArtifactStub.withDefaults();
                 const host = getHost(linked_artifact);
                 render(host, linked_artifact, true);
-                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+                const dispatchEvent = vi.spyOn(host, "dispatchEvent");
                 const button = selectOrThrow(
                     target,
                     "[data-test=action-button]",

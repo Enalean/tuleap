@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { okAsync, type ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { GetAllOptions } from "@tuleap/fetch-result";
@@ -68,7 +70,7 @@ describe(`LinkFieldAPIClient`, () => {
                 label: "Child",
             };
 
-            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            const getSpy = vi.spyOn(fetch_result, "getJSON");
             getSpy.mockReturnValue(okAsync({ natures: [child_type, parent_type] }));
 
             const result = await getAllLinkTypes();
@@ -104,7 +106,7 @@ describe(`LinkFieldAPIClient`, () => {
         };
 
         function getMockLinkedArtifactsRetrieval(
-            recursiveGetSpy: jest.SpyInstance,
+            recursiveGetSpy: MockInstance,
             linked_artifacts: LinkedArtifactCollection,
         ): void {
             recursiveGetSpy.mockImplementation(
@@ -130,7 +132,7 @@ describe(`LinkFieldAPIClient`, () => {
                 tracker: { color_name: "chrome-silver", project: ProjectStub.withDefaults() },
             } as ArtifactWithStatus;
 
-            const getAllSpy = jest.spyOn(fetch_result, "getAllJSON");
+            const getAllSpy = vi.spyOn(fetch_result, "getAllJSON");
             getMockLinkedArtifactsRetrieval(getAllSpy, {
                 collection: [first_artifact, second_artifact],
             });
@@ -177,7 +179,7 @@ describe(`LinkFieldAPIClient`, () => {
                 xref: ARTIFACT_XREF,
                 tracker: { color_name: COLOR, project: PROJECT },
             } as ArtifactWithStatus;
-            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            const getSpy = vi.spyOn(fetch_result, "getJSON");
             getSpy.mockReturnValue(okAsync(artifact));
 
             const result = await getMatching();
@@ -212,7 +214,7 @@ describe(`LinkFieldAPIClient`, () => {
                 id: SECOND_LINKED_ARTIFACT_ID,
                 tracker: { color_name: "coral-pink", project: PROJECT },
             } as ArtifactWithStatus;
-            const getAllSpy = jest.spyOn(fetch_result, "getAllJSON");
+            const getAllSpy = vi.spyOn(fetch_result, "getAllJSON");
             getAllSpy.mockReturnValue(okAsync([first_artifact, second_artifact]));
 
             const result = await getPossibleParents();
@@ -245,7 +247,7 @@ describe(`LinkFieldAPIClient`, () => {
             const second_entry = { per_type_id: ARTIFACT_2_ID, type: ARTIFACT_TYPE, badges: [] };
             const third_entry = { per_type_id: 1158, type: "kanban", badges: [] };
 
-            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            const getSpy = vi.spyOn(fetch_result, "getJSON");
             getSpy.mockReturnValue(okAsync({ entries: [first_entry, second_entry, third_entry] }));
 
             const result = await getUserArtifactHistory();
@@ -275,7 +277,7 @@ describe(`LinkFieldAPIClient`, () => {
             const second_entry = { per_type_id: ARTIFACT_2_ID, type: ARTIFACT_TYPE, badges: [] };
             const third_entry = { per_type_id: 84, type: "kanban", badges: [] };
 
-            const postSpy = jest
+            const postSpy = vi
                 .spyOn(fetch_result, "postJSON")
                 .mockReturnValue(okAsync([first_entry, second_entry, third_entry]));
 

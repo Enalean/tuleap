@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, vi } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
 import type { ResultAsync } from "neverthrow";
@@ -58,7 +59,7 @@ describe(`ArtifactCreationAPIClient`, () => {
                 id: SECOND_PROJECT_ID,
                 label: SECOND_PROJECT_LABEL,
             } as ProjectResponse;
-            const getAllJSON = jest
+            const getAllJSON = vi
                 .spyOn(fetch_result, "getAllJSON")
                 .mockReturnValue(okAsync([first_project, second_project]));
 
@@ -103,7 +104,7 @@ describe(`ArtifactCreationAPIClient`, () => {
                 color_name: SECOND_TRACKER_COLOR,
                 cannot_create_reasons: [],
             } as TrackerResponseWithCannotCreateReason;
-            const getAllJSON = jest
+            const getAllJSON = vi
                 .spyOn(fetch_result, "getAllJSON")
                 .mockReturnValue(okAsync([first_tracker, second_tracker]));
 
@@ -139,7 +140,7 @@ describe(`ArtifactCreationAPIClient`, () => {
                 id: TRACKER_ID,
                 semantics: { title: { field_id: 631 } },
             };
-            const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(tracker));
+            const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(tracker));
 
             const result = await getTracker();
 
@@ -162,7 +163,7 @@ describe(`ArtifactCreationAPIClient`, () => {
         };
 
         it(`will create the artifact with given title, and will return the created artifact's identifier`, async () => {
-            const postJSON = jest
+            const postJSON = vi
                 .spyOn(fetch_result, "postJSON")
                 .mockReturnValue(okAsync({ id: ARTIFACT_ID }));
 

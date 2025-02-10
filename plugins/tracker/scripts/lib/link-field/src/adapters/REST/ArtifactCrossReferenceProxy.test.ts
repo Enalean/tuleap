@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
+import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
 import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
 
 const CROSS_REFERENCE = "bug #247";
 const COLOR = "coral-pink";

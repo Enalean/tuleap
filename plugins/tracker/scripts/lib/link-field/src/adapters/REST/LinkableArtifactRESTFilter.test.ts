@@ -17,11 +17,12 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LinkableArtifactRESTFilter } from "./LinkableArtifactRESTFilter";
+import { beforeEach, describe, expect, it } from "vitest";
 import { ARTIFACT_TYPE, KANBAN_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { SearchResultEntry } from "@tuleap/core-rest-api-types";
 import { Option } from "@tuleap/option";
 import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import { LinkableArtifactRESTFilter } from "./LinkableArtifactRESTFilter";
 
 describe("LinkableArtifactRESTFilter", () => {
     let current_artifact_option: Option<CurrentArtifactIdentifier>, entry: SearchResultEntry;

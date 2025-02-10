@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setTranslator } from "../../../gettext-catalog";
+import { beforeEach, describe, expect, it } from "vitest";
 import { Fault } from "@tuleap/fault";
+import { setTranslator } from "../../../gettext-catalog";
 import { FaultDisplayer } from "./FaultDisplayer";
 import { ProjectsRetrievalFault } from "../../../domain/creation/ProjectsRetrievalFault";
 import { ProjectTrackersRetrievalFault } from "../../../domain/creation/ProjectTrackersRetrievalFault";

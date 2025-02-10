@@ -17,9 +17,10 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
+import type { Option } from "@tuleap/option";
 import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
 import type { ProjectIdentifier } from "../../../domain/ProjectIdentifier";
-import type { Option } from "@tuleap/option";
 
 describe("ProjectIdentifierProxy", () => {
     let project_identifier: Option<ProjectIdentifier>, doc: Document, option: string;

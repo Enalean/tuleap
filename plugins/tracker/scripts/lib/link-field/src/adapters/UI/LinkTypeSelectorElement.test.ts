@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
@@ -114,7 +115,7 @@ describe("LinkTypeSelectorElement", () => {
 
     it(`will dispatch a bubbling type-changed event when there's a change in the select`, () => {
         const host = getHost();
-        const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+        const dispatchEvent = vi.spyOn(host, "dispatchEvent");
         const select = render(host);
         select.value = `${IS_CHILD_LINK_TYPE} ${FORWARD_DIRECTION}`;
         select.dispatchEvent(new Event("change"));
