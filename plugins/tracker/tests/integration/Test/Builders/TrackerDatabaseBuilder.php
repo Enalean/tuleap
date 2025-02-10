@@ -57,6 +57,17 @@ final class TrackerDatabaseBuilder
         return $tracker;
     }
 
+    public function buildHierarchy(int $parent_id, int $child_id): void
+    {
+        $this->db->insert(
+            'tracker_hierarchy',
+            [
+                'parent_id' => $parent_id,
+                'child_id'  => $child_id,
+            ],
+        );
+    }
+
     public function setViewPermissionOnTracker(int $tracker_id, string $permission, int $user_group_id): void
     {
         $this->db->insert(
