@@ -132,3 +132,9 @@ ignoreUntil = 2025-02-28
 id = "GHSA-29qp-crvh-w22m"
 reason = "vault-tuleap-plugin is not exposed to untrusted connections"
 ignoreUntil = 2025-02-28
+
+# ESBuild
+[[IgnoredVulns]]
+id = "GHSA-67mh-4wv8-2f99"
+reason = "No direct impact, the development server is not being used"
+ignoreUntil = 2025-03-11
