@@ -47,7 +47,7 @@
 import { ref } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { useActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
@@ -98,4 +98,6 @@ async function loadUserStories(): Promise<void> {
         is_loading_user_story.value = false;
     }
 }
+
+defineExpose({ message_error_rest });
 </script>

@@ -17,55 +17,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import * as drekkenov from "@tuleap/drag-and-drop";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import App from "./App.vue";
-import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import type { State } from "../type";
+import type { ConfigurationState } from "../store/configuration";
+import { createConfigurationModule } from "../store/configuration";
 
 describe("App", () => {
-    async function createWrapper(is_configured: boolean, is_admin: boolean): Promise<Wrapper<Vue>> {
+    function createWrapper(is_configured: boolean, is_admin: boolean): VueWrapper {
         return shallowMount(App, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        has_modal_error: false,
-                        configuration: {
+            global: {
+                ...getGlobalTestOptions({
+                    state: { has_modal_error: false } as State,
+                    modules: {
+                        configuration: createConfigurationModule({
                             has_plan_permissions: true,
                             is_configured,
                             is_program_admin: is_admin,
                             public_name: "Fibrovasal phrenesis",
                             short_name: "fibrovasal-phrenesis",
                             project_icon: "",
-                            privacy: {},
-                            flags: [],
+                            privacy: {} as ProjectPrivacy,
+                            flags: [] as ReadonlyArray<ProjectFlag>,
                             program_id: 775,
-                        },
+                        } as ConfigurationState),
                     },
                 }),
             },
             directives: { "dompurify-html": jest.fn() },
-            localVue: await createProgramManagementLocalVue(),
         });
     }
 
-    it("Displays the backlog section", async () => {
-        const wrapper = await createWrapper(true, false);
+    it("Displays the backlog section", () => {
+        const wrapper = createWrapper(true, false);
         expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(true);
         expect(wrapper.find("[data-test=configuration-empty-state]").exists()).toBe(false);
     });
 
-    it("Displays an empty state when project has no linked team yet", async () => {
-        const wrapper = await createWrapper(false, false);
+    it("Displays an empty state when project has no linked team yet", () => {
+        const wrapper = createWrapper(false, false);
         expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(false);
         expect(wrapper.find("[data-test=configuration-empty-state]").exists()).toBe(true);
         expect(wrapper.find("[data-test=administrator-empty-state]").exists()).toBe(false);
         expect(wrapper.find("[data-test=regular-user-empty-state]").exists()).toBe(true);
     });
 
-    it("Displays an empty state for administrator when project has no linked team yet", async () => {
-        const wrapper = await createWrapper(false, true);
+    it("Displays an empty state for administrator when project has no linked team yet", () => {
+        const wrapper = createWrapper(false, true);
         expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(false);
         expect(wrapper.find("[data-test=configuration-empty-state]").exists()).toBe(true);
         expect(wrapper.find("[data-test=administrator-empty-state]").exists()).toBe(true);
@@ -73,20 +76,20 @@ describe("App", () => {
     });
 
     describe(`mounted()`, () => {
-        it(`will create a "drek"`, async () => {
+        it(`will create a "drek"`, () => {
             const init = jest.spyOn(drekkenov, "init");
-            await createWrapper(true, false);
+            createWrapper(true, false);
 
             expect(init).toHaveBeenCalled();
         });
     });
 
     describe(`destroy()`, () => {
-        it(`will destroy the "drek"`, async () => {
+        it(`will destroy the "drek"`, () => {
             const mock_drek = { destroy: jest.fn() };
             jest.spyOn(drekkenov, "init").mockImplementation(() => mock_drek);
-            const wrapper = await createWrapper(true, false);
-            wrapper.destroy();
+            const wrapper = createWrapper(true, false);
+            wrapper.unmount();
 
             expect(mock_drek.destroy).toHaveBeenCalled();
         });

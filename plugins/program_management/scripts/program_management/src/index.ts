@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import App from "./components/App.vue";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./store";
-import type { ConfigurationState } from "./store/configuration";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
+import App from "./components/App.vue";
+import { createInitializedStore } from "./store";
+import type { ConfigurationState } from "./store/configuration";
 import "../themes/main.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -34,9 +35,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const locale = getDatasetItemOrThrow(document.body, "userLocale");
 
-    Vue.config.language = locale;
-    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
-    Vue.use(VueDOMPurifyHTML);
+    const gettext_plugin = await initVueGettext(
+        createGettext,
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+    );
 
     const project_name = getDatasetItemOrThrow(vue_mount_point, "projectName");
     const project_short_name = getDatasetItemOrThrow(vue_mount_point, "projectShortName");
@@ -82,14 +84,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_iteration_label: iteration_label,
     };
 
-    await initVueGettext(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
-
-    const AppComponent = Vue.extend(App);
-
-    new AppComponent({
-        store: createStore(configuration_state),
-    }).$mount(vue_mount_point);
+    createApp(App)
+        .use(VueDOMPurifyHTML)
+        .use(createInitializedStore(configuration_state))
+        .use(gettext_plugin)
+        .mount(vue_mount_point);
 });

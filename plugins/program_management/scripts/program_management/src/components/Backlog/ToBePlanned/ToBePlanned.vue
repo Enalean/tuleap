@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
 import { useNamespacedState, useStore, useActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import EmptyState from "./EmptyState.vue";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
@@ -59,8 +59,9 @@ import type { Feature } from "../../../type";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import ProgramIncrementNotPlannable from "../ProgramIncrement/ProgramIncrementNotPlannable.vue";
 import FeatureNotPlannable from "./FeatureNotPlannable.vue";
+import type { ConfigurationState } from "../../../store/configuration";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const error_message = ref("");
 const has_error = ref(false);
@@ -69,10 +70,10 @@ const is_loading = ref(false);
 const store = useStore();
 const to_be_planned_elements = computed((): Feature[] => store.state.to_be_planned_elements);
 
-const { program_id, has_plan_permissions } = useNamespacedState<{
-    program_id: number;
-    has_plan_permissions: boolean;
-}>("configuration", ["program_id", "has_plan_permissions"]);
+const { program_id, has_plan_permissions } = useNamespacedState<ConfigurationState>(
+    "configuration",
+    ["program_id", "has_plan_permissions"],
+);
 
 const { retrieveToBePlannedElement } = useActions(["retrieveToBePlannedElement"]);
 
@@ -82,7 +83,7 @@ onMounted(async () => {
         await retrieveToBePlannedElement(program_id.value);
     } catch (e) {
         has_error.value = true;
-        error_message.value = gettext_provider.$gettext(
+        error_message.value = $gettext(
             "The retrieval of the elements to be planned in program has failed",
         );
         throw e;
@@ -90,4 +91,6 @@ onMounted(async () => {
         is_loading.value = false;
     }
 });
+
+defineExpose({ has_error, error_message });
 </script>

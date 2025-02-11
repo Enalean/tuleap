@@ -62,15 +62,16 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import EmptyState from "./EmptyState.vue";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { getProgramIncrements } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
+import type { ConfigurationState } from "../../../store/configuration";
 
-const { $gettext, interpolate } = useGettext();
+const { $gettext } = useGettext();
 
 const error_message = ref("");
 const has_error = ref(false);
@@ -83,13 +84,7 @@ const {
     tracker_program_increment_sub_label,
     tracker_program_increment_id,
     program_id,
-} = useNamespacedState<{
-    can_create_program_increment: boolean;
-    tracker_program_increment_label: string;
-    tracker_program_increment_sub_label: string;
-    tracker_program_increment_id: number;
-    program_id: number;
-}>("configuration", [
+} = useNamespacedState<ConfigurationState>("configuration", [
     "can_create_program_increment",
     "tracker_program_increment_label",
     "tracker_program_increment_sub_label",
@@ -118,7 +113,9 @@ const create_new_program_increment_uri = buildCreateNewProgramIncrement(
     tracker_program_increment_id.value,
 );
 
-const add_button_label = interpolate($gettext("New %{ program_increment_sub_label }"), {
+const add_button_label = $gettext("New %{ program_increment_sub_label }", {
     program_increment_sub_label: tracker_program_increment_sub_label.value,
 });
+
+defineExpose({ has_error, error_message });
 </script>

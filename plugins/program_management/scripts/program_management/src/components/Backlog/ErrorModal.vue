@@ -74,10 +74,9 @@
 import { computed, onMounted, ref } from "vue";
 import { createModal } from "@tuleap/tlp-modal";
 import { useState } from "vuex-composition-helpers";
+import type { State } from "../../type";
 
-const { modal_error_message } = useState<{
-    modal_error_message: string;
-}>(["modal_error_message"]);
+const { modal_error_message } = useState<State>(["modal_error_message"]);
 
 const is_more_shown = ref(false);
 const root = ref<HTMLElement>();

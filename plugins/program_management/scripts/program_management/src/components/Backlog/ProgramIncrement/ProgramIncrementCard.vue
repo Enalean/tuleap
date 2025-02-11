@@ -90,20 +90,16 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
+import type { ConfigurationState } from "../../../store/configuration";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const { user_locale, short_name, tracker_iteration_label, is_iteration_tracker_defined } =
-    useNamespacedState<{
-        user_locale: string;
-        short_name: string;
-        tracker_iteration_label: string;
-        is_iteration_tracker_defined: boolean;
-    }>("configuration", [
+    useNamespacedState<ConfigurationState>("configuration", [
         "user_locale",
         "short_name",
         "tracker_iteration_label",
@@ -123,8 +119,6 @@ function toggleIsOpen(): void {
 }
 
 const planned_iteration_link = computed((): string =>
-    gettext_provider.interpolate(gettext_provider.$gettext("Plan %{ iteration_label }"), {
-        iteration_label: tracker_iteration_label.value,
-    }),
+    $gettext("Plan %{ iteration_label }", { iteration_label: tracker_iteration_label.value }),
 );
 </script>

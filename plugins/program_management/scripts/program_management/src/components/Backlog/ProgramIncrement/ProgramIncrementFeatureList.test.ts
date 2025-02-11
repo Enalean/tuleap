@@ -17,25 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
-import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { Feature } from "../../../type";
+import FeatureCard from "./FeatureCard.vue";
+
+jest.useFakeTimers();
+
+type CachedContentChecker = () => boolean;
+type CachedContentGetter = () => Feature[];
 
 describe("ProgramIncrementFeatureList", () => {
-    let store: Store, increment: ProgramIncrement;
+    let increment: ProgramIncrement;
     beforeEach(() => {
-        store = createStoreMock({
-            state: {},
-            getters: {
-                getFeaturesInProgramIncrement: () => [],
-                isProgramIncrementAlreadyAdded: () => true,
-            },
-        });
         increment = {
             id: 1,
             title: "PI 1",
@@ -46,18 +43,32 @@ describe("ProgramIncrementFeatureList", () => {
         } as ProgramIncrement;
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(
+        is_already_loaded: boolean,
+        loaded_features: Feature[],
+        remote_features: Feature[],
+    ): VueWrapper<InstanceType<typeof ProgramIncrementFeatureList>> {
         return shallowMount(ProgramIncrementFeatureList, {
-            localVue: await createProgramManagementLocalVue(),
-            propsData: { increment },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    getters: {
+                        isProgramIncrementAlreadyAdded: (): CachedContentChecker => () =>
+                            is_already_loaded,
+                        getFeaturesInProgramIncrement: (): CachedContentGetter => () =>
+                            loaded_features,
+                    },
+                    actions: {
+                        getFeatureAndStoreInProgramIncrement: () =>
+                            Promise.resolve(remote_features),
+                    },
+                }),
+            },
+            props: { increment },
         });
     }
 
-    it("Displays the empty state when no features are found", async () => {
-        jest.spyOn(store, "dispatch").mockResolvedValue([]);
-
-        const wrapper = await getWrapper();
+    it("Displays the empty state when no features are found", () => {
+        const wrapper = getWrapper(true, [], []);
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
         expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
@@ -69,10 +80,9 @@ describe("ProgramIncrementFeatureList", () => {
     });
 
     it("Displays an error when rest route fail", async () => {
-        jest.spyOn(store, "dispatch").mockResolvedValue([]);
-
-        const wrapper = await getWrapper();
-        wrapper.setData({ has_error: true, error_message: "Oups, something happened" });
+        const wrapper = getWrapper(true, [], []);
+        wrapper.vm.has_error = true;
+        wrapper.vm.error_message = "Oups, something happened";
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
@@ -96,15 +106,8 @@ describe("ProgramIncrementFeatureList", () => {
             tracker: { label: "user_stories" },
         } as Feature;
 
-        store = createStoreMock({
-            state: {},
-            getters: {
-                getFeaturesInProgramIncrement: () => [element_one, element_two],
-                isProgramIncrementAlreadyAdded: () => true,
-            },
-        });
-
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper(true, [element_one, element_two], []);
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
@@ -128,32 +131,19 @@ describe("ProgramIncrementFeatureList", () => {
             tracker: { label: "user_stories" },
         } as Feature;
 
-        store = createStoreMock({
-            state: {},
-            getters: {
-                getFeaturesInProgramIncrement: () => [element_one, element_two],
-                isProgramIncrementAlreadyAdded: () => false,
-            },
-        });
-        jest.spyOn(store, "dispatch").mockResolvedValue([element_one, element_two]);
-
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper(false, [], [element_one, element_two]);
         await jest.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "getFeatureAndStoreInProgramIncrement",
-            increment,
-        );
+        expect(wrapper.findAllComponents(FeatureCard)).toHaveLength(2);
     });
 
-    it("Does not have the can-plan attribute when user can not plan elements", async () => {
+    it("Does not have the can-plan attribute when user can not plan elements", () => {
         increment.user_can_plan = false;
-        jest.spyOn(store, "dispatch").mockResolvedValue([]);
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper(true, [], []);
 
         expect(
             wrapper.get("[data-test=program-increment-feature-list]").attributes("data-can-plan"),
-        ).toBeUndefined();
+        ).toBe("false");
     });
 });

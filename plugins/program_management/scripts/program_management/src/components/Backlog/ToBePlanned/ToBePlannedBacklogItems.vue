@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { Feature } from "../../../type";
@@ -90,4 +90,6 @@ async function loadUserStories(): Promise<void> {
         is_loading_user_story.value = false;
     }
 }
+
+defineExpose({ message_error_rest });
 </script>

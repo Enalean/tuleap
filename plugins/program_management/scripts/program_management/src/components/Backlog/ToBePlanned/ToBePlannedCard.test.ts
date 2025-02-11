@@ -17,23 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
-import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { Feature } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import type { ConfigurationState } from "../../../store/configuration";
+import { createConfigurationModule } from "../../../store/configuration";
 
 describe("ToBePlannedCard", () => {
-    async function getWrapper(
+    function getWrapper(
         feature?: Partial<Feature>,
         configuration?: Partial<ConfigurationState>,
-    ): Promise<Wrapper<Vue>> {
+    ): VueWrapper {
         return shallowMount(ToBePlannedCard, {
-            localVue: await createProgramManagementLocalVue(),
-            propsData: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: createConfigurationModule({
+                            accessibility: false,
+                            has_plan_permissions: true,
+                            ...configuration,
+                        } as ConfigurationState),
+                    },
+                }),
+            },
+            props: {
                 feature: {
                     id: 100,
                     title: "My artifact",
@@ -43,22 +53,11 @@ describe("ToBePlannedCard", () => {
                     ...feature,
                 } as Feature,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            accessibility: false,
-                            has_plan_permissions: true,
-                            ...configuration,
-                        },
-                    },
-                }),
-            },
         });
     }
 
-    it("Displays a draggable card with accessibility pattern", async () => {
-        const wrapper = await getWrapper(
+    it("Displays a draggable card with accessibility pattern", () => {
+        const wrapper = getWrapper(
             {
                 background_color: "peggy-pink",
                 tracker: {
@@ -77,23 +76,23 @@ describe("ToBePlannedCard", () => {
         expect(card.classes()).toContain("element-card-background-peggy-pink");
     });
 
-    it("Displays a not draggable card without accessibility pattern", async () => {
-        const wrapper = await getWrapper({}, { accessibility: false });
+    it("Displays a not draggable card without accessibility pattern", () => {
+        const wrapper = getWrapper({}, { accessibility: false });
         expect(wrapper.find("[data-test=to-be-planned-card]").classes()).not.toContain(
             "element-card-with-accessibility",
         );
     });
 
-    it(`Displays a not draggable card when user cannot plan/unplan features`, async () => {
-        const wrapper = await getWrapper({}, { has_plan_permissions: false });
+    it(`Displays a not draggable card when user cannot plan/unplan features`, () => {
+        const wrapper = getWrapper({}, { has_plan_permissions: false });
         const card = wrapper.find("[data-test=to-be-planned-card]");
         expect(card.classes()).toContain("element-not-draggable");
         expect(card.classes()).not.toContain("element-draggable-item");
         expect(card.attributes("title")).not.toBe("");
     });
 
-    it("Displays a draggable card with backlog items container", async () => {
-        const wrapper = await getWrapper({ has_user_story_linked: true });
+    it("Displays a draggable card with backlog items container", () => {
+        const wrapper = getWrapper({ has_user_story_linked: true });
         expect(wrapper.findComponent(ToBePlannedBacklogItems).exists()).toBe(true);
     });
 });

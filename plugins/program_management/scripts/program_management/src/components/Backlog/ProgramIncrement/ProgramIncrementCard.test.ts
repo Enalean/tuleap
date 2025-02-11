@@ -17,18 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
-import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import type { ConfigurationState } from "../../../store/configuration";
+import { createConfigurationModule } from "../../../store/configuration";
 
 describe("ProgramIncrementCard", () => {
-    async function getWrapper(
-        user_can_update = true,
-        is_iteration_tracker_defined = true,
-    ): Promise<Wrapper<Vue>> {
+    function getWrapper(user_can_update = true, is_iteration_tracker_defined = true): VueWrapper {
         const increment = {
             id: 1,
             title: "PI 1",
@@ -39,25 +37,24 @@ describe("ProgramIncrementCard", () => {
         } as ProgramIncrement;
 
         return shallowMount(ProgramIncrementCard, {
-            localVue: await createProgramManagementLocalVue(),
-            propsData: { increment },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: createConfigurationModule({
                             user_locale: "en_US",
                             short_name: "guinea-pig",
                             is_iteration_tracker_defined,
                             tracker_iteration_label: "stuff",
-                        },
+                        } as ConfigurationState),
                     },
                 }),
             },
+            props: { increment },
         });
     }
 
-    it("Display a card with closed state", async () => {
-        const wrapper = await getWrapper();
+    it("Display a card with closed state", () => {
+        const wrapper = getWrapper();
 
         expect(
             wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right"),
@@ -70,7 +67,7 @@ describe("ProgramIncrementCard", () => {
     });
 
     it("Don't display update button if user doesn't have the permission", async () => {
-        const wrapper = await getWrapper(false);
+        const wrapper = getWrapper(false);
 
         await wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 
@@ -78,8 +75,8 @@ describe("ProgramIncrementCard", () => {
         expect(wrapper.find("[data-test=program-increment-content]").exists()).toBe(true);
     });
 
-    it(`Does not show the link to iterations when there is no iteration tracker defined`, async () => {
-        const wrapper = await getWrapper(true, false);
+    it(`Does not show the link to iterations when there is no iteration tracker defined`, () => {
+        const wrapper = getWrapper(true, false);
 
         expect(wrapper.find("[data-test=program-increment-plan-iterations-link]").exists()).toBe(
             false,
@@ -87,7 +84,7 @@ describe("ProgramIncrementCard", () => {
     });
 
     it("Display a card and its content", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         await wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 
