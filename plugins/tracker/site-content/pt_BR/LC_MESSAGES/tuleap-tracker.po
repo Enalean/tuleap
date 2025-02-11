@@ -3341,9 +3341,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #, php-format
-msgid ""
-"The tracker '%1$s' cannot be created. Use '--update' to update an existing "
-"tracker."
+msgid "The tracker '%1$s' cannot be created."
 msgstr ""
 
 #, php-format

@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TrackerFromXmlImportCannotBeCreatedException extends TrackerFromXmlException
+class TrackerFromXmlImportCannotBeCreatedException extends TrackerFromXmlException // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function __construct($tracker_name)
     {
-        $message = sprintf(dgettext('tuleap-tracker', 'The tracker \'%1$s\' cannot be created. Use \'--update\' to update an existing tracker.'), $tracker_name);
+        $message = sprintf(dgettext('tuleap-tracker', 'The tracker \'%1$s\' cannot be created.'), $tracker_name);
         parent::__construct($message);
     }
 }
