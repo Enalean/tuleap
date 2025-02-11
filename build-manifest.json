@@ -74,13 +74,13 @@
         "project-registration": {
             "src": "src/scripts/project-registration/src",
             "po": "src/scripts/project-registration/po"
-        }
-    },
-    "gettext-vue": {
+        },
         "switch-to": {
             "src": "src/scripts/switch-to/src",
             "po": "src/scripts/switch-to/po"
-        },
+        }
+    },
+    "gettext-vue": {
         "project-admin-services": {
             "src": "src/scripts/project-services/src",
             "po": "src/scripts/project-services/po"

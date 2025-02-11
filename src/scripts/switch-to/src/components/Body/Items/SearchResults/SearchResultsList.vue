@@ -45,13 +45,15 @@
         ></i>
     </div>
 </template>
-
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { useFullTextStore } from "../../../../stores/fulltext";
 import ItemEntry from "../ItemEntry.vue";
 import type { FocusFromItemPayload } from "../../../../stores/type";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+
+const { $gettext } = useGettext();
 
 const fulltext_store = useFullTextStore();
 const { fulltext_search_results, fulltext_search_has_more_results, fulltext_search_is_loading } =

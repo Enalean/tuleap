@@ -1,23 +1,21 @@
 {
     "name": "git",
-    "gettext-vue": {
-        "git-repositories": {
-            "src": "scripts/repositories-list/src",
-            "po": "scripts/repositories-list/po"
-        }
-    },
     "gettext-vue3": {
         "artifact-create-branch-action": {
             "src": "scripts/artifact-create-branch-action/src",
             "po": "scripts/artifact-create-branch-action/po"
         },
-        "permissions-per-group": {
-            "src": "scripts/permissions-per-group/src",
-            "po": "scripts/permissions-per-group/po"
-        },
         "branch-tag-selector": {
             "src": "scripts/repository/src/branch-tag-selector/src",
             "po": "scripts/repository/src/branch-tag-selector/po"
+        },
+        "git-repositories": {
+            "src": "scripts/repositories-list/src",
+            "po": "scripts/repositories-list/po"
+        },
+        "permissions-per-group": {
+            "src": "scripts/permissions-per-group/src",
+            "po": "scripts/permissions-per-group/po"
         }
     },
     "gettext-smarty": {

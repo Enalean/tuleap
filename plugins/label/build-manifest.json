@@ -1,6 +1,6 @@
 {
     "name": "label",
-    "gettext-vue": {
+    "gettext-vue3": {
         "labeled-items": {
             "src": "scripts/project-labeled-items/src",
             "po": "scripts/project-labeled-items/po"

@@ -31,14 +31,16 @@
         <switch-to-body class="tlp-modal-body" />
     </div>
 </template>
-
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
 import { useRootStore } from "../stores/root";
+
+const { $gettext } = useGettext();
 
 let modal: Modal | null = null;
 let trigger: HTMLElement | null = null;
