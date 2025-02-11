@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { NewLinksStore } from "./NewLinksStore";
 import { LinkTypeStub } from "../../../tests/stubs/links/LinkTypeStub";
 import { NewLinkStub } from "../../../tests/stubs/links/NewLinkStub";

@@ -17,12 +17,13 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
+import { okAsync } from "neverthrow";
 import type { LinkableArtifact } from "../../domain/links/LinkableArtifact";
 import { LinkableArtifactStub } from "../../../tests/stubs/links/LinkableArtifactStub";
 import { UserIdentifier } from "../../domain/UserIdentifier";
 import type { RetrieveUserHistory } from "../../domain/RetrieveUserHistory";
 import { RetrieveUserHistoryStub } from "../../../tests/stubs/RetrieveUserHistoryStub";
-import { okAsync } from "neverthrow";
 import { UserHistoryCache } from "./UserHistoryCache";
 
 describe(`UserHistoryCache`, () => {

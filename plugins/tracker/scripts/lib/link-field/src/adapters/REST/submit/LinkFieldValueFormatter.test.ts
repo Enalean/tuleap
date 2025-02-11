@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import { LinkFieldValueFormatter } from "./LinkFieldValueFormatter";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../tests/stubs/links/RetrieveLinkedArtifactsSyncStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../tests/stubs/links/VerifyLinkIsMarkedForRemovalStub";

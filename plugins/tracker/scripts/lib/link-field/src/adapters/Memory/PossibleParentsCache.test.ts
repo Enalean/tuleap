@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import { CurrentTrackerIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { PossibleParentsCache } from "./PossibleParentsCache";
 import type { LinkableArtifact } from "../../domain/links/LinkableArtifact";

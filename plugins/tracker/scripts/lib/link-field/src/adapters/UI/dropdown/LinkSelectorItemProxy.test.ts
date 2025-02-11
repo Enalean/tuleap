@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
+import type { LazyboxItem } from "@tuleap/lazybox";
 import type { VerifyIsAlreadyLinked } from "../../../domain/links/VerifyIsAlreadyLinked";
 import { VerifyIsAlreadyLinkedStub } from "../../../../tests/stubs/links/VerifyIsAlreadyLinkedStub";
 import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 import { LinkableArtifactStub } from "../../../../tests/stubs/links/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../domain/links/LinkableArtifact";
-import type { LazyboxItem } from "@tuleap/lazybox";
 
 describe(`LinkSelectorItemProxy`, () => {
     let link_verifier: VerifyIsAlreadyLinked, linkable_artifact: LinkableArtifact;

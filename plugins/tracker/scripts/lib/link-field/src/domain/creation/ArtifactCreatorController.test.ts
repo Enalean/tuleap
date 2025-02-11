@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Fault } from "@tuleap/fault";
 import { en_US_LOCALE } from "@tuleap/core-constants";
 import {
@@ -191,7 +192,7 @@ describe(`ArtifactCreatorController`, () => {
             it will call the previously registered Fault listener
             and it will return an empty array`, async () => {
             projects_retriever = RetrieveProjectsStub.withFault(Fault.fromMessage("Not found"));
-            const handler = jest.fn();
+            const handler = vi.fn();
             const controller = getController();
             controller.registerFaultListener(handler);
 
@@ -226,7 +227,7 @@ describe(`ArtifactCreatorController`, () => {
             tracker_retriever = RetrieveProjectTrackersStub.withFault(
                 Fault.fromMessage("Not found"),
             );
-            const handler = jest.fn();
+            const handler = vi.fn();
             const controller = getController();
             controller.registerFaultListener(handler);
 
@@ -279,7 +280,7 @@ describe(`ArtifactCreatorController`, () => {
             artifact_creator = CreateLinkableArtifactStub.withFault(
                 Fault.fromMessage("Bad Request"),
             );
-            const handler = jest.fn();
+            const handler = vi.fn();
             const controller = getController();
             controller.registerFaultListener(handler);
 

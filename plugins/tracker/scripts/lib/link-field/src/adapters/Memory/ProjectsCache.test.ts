@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import type { RetrieveProjects } from "../../domain/creation/RetrieveProjects";
 import { ProjectsCache } from "./ProjectsCache";
 import { RetrieveProjectsStub } from "../../../tests/stubs/RetrieveProjectsStub";

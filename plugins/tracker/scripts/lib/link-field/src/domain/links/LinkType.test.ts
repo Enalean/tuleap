@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { FORWARD_DIRECTION, LinkType } from "./LinkType";
 import { LinkTypeStub } from "../../../tests/stubs/links/LinkTypeStub";

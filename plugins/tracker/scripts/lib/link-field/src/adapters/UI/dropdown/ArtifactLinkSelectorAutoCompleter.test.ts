@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import type { GroupCollection } from "@tuleap/lazybox";
@@ -39,7 +40,7 @@ import type { SearchArtifacts } from "../../../domain/SearchArtifacts";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 import type { LinkFieldController } from "../../../domain/LinkFieldController";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 const FIRST_ARTIFACT_ID = 1621;
 const SECOND_ARTIFACT_ID = 15;
@@ -147,7 +148,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(host.matching_artifact_section).toHaveLength(0);
             expect(host.search_results_section).toHaveLength(0);
@@ -167,7 +168,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
             autocomplete("abc");
 
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(host.search_results_section).toHaveLength(1);
             const group = host.search_results_section[0];
@@ -183,7 +184,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             artifacts_searcher = SearchArtifactsStub.withFault(NotFoundFault());
 
             autocomplete("abc");
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).not.toContain("WillNotifyFault");
             expect(host.search_results_section).toHaveLength(0);
@@ -195,7 +196,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             artifacts_searcher = SearchArtifactsStub.withFault(Fault.fromMessage("Ooops"));
 
             autocomplete("abc");
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             expect(host.search_results_section).toHaveLength(1);
@@ -215,7 +216,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             const groups = host.matching_artifact_section;
             expect(groups).toHaveLength(1);
@@ -233,7 +234,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
             autocomplete(String(FIRST_ARTIFACT_ID));
 
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             const groups = host.matching_artifact_section;
@@ -253,7 +254,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
             autocomplete("");
 
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             const groups = host.recently_viewed_section;
@@ -275,7 +276,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
                 autocomplete("404");
 
-                await jest.runOnlyPendingTimersAsync();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(event_dispatcher.getDispatchedEventTypes()).not.toContain("WillNotifyFault");
                 const groups = host.matching_artifact_section;
@@ -301,7 +302,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             const groups = host.possible_parents_section;
             expect(groups).toHaveLength(1);
@@ -325,7 +326,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 autocomplete(query);
 
-                await jest.runOnlyPendingTimersAsync();
+                await vi.runOnlyPendingTimersAsync();
 
                 const groups = host.possible_parents_section;
                 expect(groups).toHaveLength(1);
@@ -343,7 +344,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 autocomplete(query);
 
-                await jest.runOnlyPendingTimersAsync();
+                await vi.runOnlyPendingTimersAsync();
 
                 const parent_groups = host.possible_parents_section;
                 expect(parent_groups).toHaveLength(1);
@@ -359,7 +360,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 and it will set two groups holding each`, async () => {
             autocomplete(String(FIRST_ARTIFACT_ID));
 
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             const groups = host.possible_parents_section;
             expect(groups).toHaveLength(1);

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import type { ParentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";

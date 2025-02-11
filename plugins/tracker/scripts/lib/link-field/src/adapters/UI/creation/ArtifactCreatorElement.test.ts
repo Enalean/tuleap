@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
@@ -106,8 +107,8 @@ describe(`ArtifactCreatorElement`, () => {
         it(`when I click on the "Cancel" button, it will enable the modal submit
             and dispatch a "cancel" event`, () => {
             const host = getHost();
-            const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-            const enableSubmit = jest.spyOn(host.controller, "enableSubmit");
+            const dispatchEvent = vi.spyOn(host, "dispatchEvent");
+            const enableSubmit = vi.spyOn(host.controller, "enableSubmit");
 
             onClickCancel(host);
 
@@ -136,7 +137,7 @@ describe(`ArtifactCreatorElement`, () => {
                 const expected_artifact = LinkableArtifactStub.withDefaults({ title: TITLE });
                 artifact_creator = CreateLinkableArtifactStub.withArtifact(expected_artifact);
                 const host = getHost();
-                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+                const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
                 const inner_event = triggerSubmit();
                 const promise = onSubmit(host, inner_event);
@@ -156,7 +157,7 @@ describe(`ArtifactCreatorElement`, () => {
                     Fault.fromMessage("Something happened"),
                 );
                 const host = getHost();
-                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+                const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
                 const inner_event = triggerSubmit();
                 await onSubmit(host, inner_event);
@@ -375,7 +376,7 @@ describe(`ArtifactCreatorElement`, () => {
 
         it(`scrolls the form into view when given an actual error message`, () => {
             const host = getHost();
-            const scrollIntoView = jest.fn();
+            const scrollIntoView = vi.fn();
             Object.assign(form, { scrollIntoView });
 
             onErrorMessageChange(host);

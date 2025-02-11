@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { Option } from "@tuleap/option";
 import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { ArtifactCrossReference } from "./ArtifactCrossReference";

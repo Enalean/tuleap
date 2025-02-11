@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import { Option } from "@tuleap/option";
 import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
