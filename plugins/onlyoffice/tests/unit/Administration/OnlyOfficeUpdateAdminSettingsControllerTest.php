@@ -71,11 +71,11 @@ final class OnlyOfficeUpdateAdminSettingsControllerTest extends TestCase
     public static function dataProviderInvalidSettings(): array
     {
         return [
-            ['No parameters' => []],
-            ['No server URL' => ['server_url' => '', 'server_key' => 'something']],
-            ['No server key' => ['server_url' => 'https://example.com', 'server_key' => '']],
-            ['Server key not long enough' => ['server_url' => 'https://example.com', 'server_key' => 'small']],
-            ['Server URL without HTTPS' => ['server_url' => 'http://example.com', 'server_key' => 'something']],
+            'No parameters' => [[]],
+            'No server URL' => [['server_url' => '', 'server_key' => 'something']],
+            'No server key' => [['server_url' => 'https://example.com', 'server_key' => '']],
+            'Server key not long enough' => [['server_url' => 'https://example.com', 'server_key' => 'small']],
+            'Server URL without HTTPS' => [['server_url' => 'http://example.com', 'server_key' => 'something']],
         ];
     }
 

@@ -46,8 +46,8 @@ final class IsOpenRetrieverTest extends TestCase
     public static function dataProviderMethodUnderTest(): array
     {
         return [
-            ['User Story' => [self::class, 'isUserStoryOpen']],
-            ['Feature' => [self::class, 'isFeatureOpen']],
+            'User Story' => [[self::class, 'isUserStoryOpen']],
+            'Feature' => [[self::class, 'isFeatureOpen']],
         ];
     }
 

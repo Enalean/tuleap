@@ -305,7 +305,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
         $this->organizePullRequestReferences($by_nature_organizer);
     }
 
-    public function getPullRequest(): iterable
+    public static function getPullRequest(): iterable
     {
         yield 'With an abandoned pull request' => [PullRequestTestBuilder::anAbandonedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), 'Abandonned'];
         yield 'With a merged pull request' => [PullRequestTestBuilder::aMergedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), 'Merged'];

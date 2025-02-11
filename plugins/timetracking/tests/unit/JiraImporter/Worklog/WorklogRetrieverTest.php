@@ -108,7 +108,7 @@ final class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 },
             ],
             'it builds worklogs from Jira Server API Response' => [
-                'payload' => new class extends JiraServerClientStub {
+                'jira_client' => new class extends JiraServerClientStub {
                     public array $urls = [
                         '/rest/api/2/issue/ISSUE-1/worklog?startAt=0' => [
                             'startAt'    => 0,

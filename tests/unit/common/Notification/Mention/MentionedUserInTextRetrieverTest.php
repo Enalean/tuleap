@@ -65,7 +65,7 @@ final class MentionedUserInTextRetrieverTest extends TestCase
         ];
     }
 
-    public function providerForFoundUsername(): array
+    public static function providerForFoundUsername(): array
     {
         $peralta  = UserTestBuilder::anActiveUser()->withId(self::PERALTA_ID)->withUserName(self::PERALTA_NAME)->build();
         $holt     = UserTestBuilder::anActiveUser()->withId(self::HOLT_ID)->withUserName(self::HOLT_NAME)->build();

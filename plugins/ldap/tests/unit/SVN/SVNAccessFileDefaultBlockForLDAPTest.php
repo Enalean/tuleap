@@ -74,7 +74,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
         );
     }
 
-    public function membersDataProvider(): iterable
+    public static function membersDataProvider(): iterable
     {
         $jmalko    = UserTestBuilder::anActiveUser()->withId(120)->withUserName('jmalko')->build();
         $csteven   = UserTestBuilder::anActiveUser()->withId(121)->withUserName('csteven')->build();
@@ -176,7 +176,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
         self::assertSame($is_world_access_forbidden, $default_block->isWorldAccessForbidden());
     }
 
-    public function permissionsDataProvider(): iterable
+    public static function permissionsDataProvider(): iterable
     {
         $public_project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         return [

@@ -121,7 +121,7 @@ final class VariableMisusageCollectorTest extends TestCase
     /**
      * @return array<string, array{0: string}>
      */
-    private function getVariables(): array
+    public static function getVariables(): array
     {
         $variables = array_map(
             static fn(Variable $variable) => [$variable->value],

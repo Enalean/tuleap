@@ -211,22 +211,20 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
     public static function dataProviderInvalidSettings(): array
     {
         return [
-            [
-                'No parameters' => [],
-            ],
-            [
-                'is_restricted is not in the body' => [
+            'No parameters' => [[]],
+            'is_restricted is not in the body' => [
+                [
                     'project-to-add' => '1',
                 ],
             ],
-            [
-                'Project to add is not a numeric' => [
+            'Project to add is not a numeric' => [
+                [
                     'is_restricted'  => '1',
                     'project-to-add' => 'not a numeric',
                 ],
             ],
-            [
-                'Projects to remove is not an array' => [
+            'Projects to remove is not an array' => [
+                [
                     'is_restricted'      => '1',
                     'projects-to-remove' => 'not an array',
                 ],

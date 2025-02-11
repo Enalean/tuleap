@@ -45,7 +45,7 @@ final class NotificationOnAllUpdatesSaverTest extends TestCase
         return $saver->save($preference, UserTestBuilder::buildWithId(self::USER_ID));
     }
 
-    private function generateChanges(): iterable
+    public static function generateChanges(): iterable
     {
         yield 'Enabled → Disabled' => [true, false, true, NotificationOnAllUpdatesSaver::VALUE_NO_NOTIF];
         yield 'Disabled → Enabled' => [false, true, true, NotificationOnAllUpdatesSaver::VALUE_NOTIF];

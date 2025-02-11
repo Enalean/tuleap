@@ -57,7 +57,7 @@ final class FeatureFlagControllerTest extends TestCase
         return json_encode(['error' => ['message' => $reason]], JSON_THROW_ON_ERROR);
     }
 
-    public function provideInvalidNames(): iterable
+    public static function provideInvalidNames(): iterable
     {
         yield 'Name param is missing' => [['some_param' => 'feature_flag_not_feature_flag'], 'Bad request: the query parameter "name" is missing'];
         yield 'Name param is empty' => [['name' => ''], 'Bad request: the name given is not a feature flag'];

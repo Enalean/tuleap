@@ -214,7 +214,7 @@ final class ReverseLinksAdderTest extends TestCase
         self::assertSame(0, $changeset_creator->getCallsCount());
     }
 
-    public function provideFaults(): array
+    public static function provideFaults(): array
     {
         return [
             [

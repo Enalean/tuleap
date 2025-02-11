@@ -216,7 +216,7 @@ final class UserPermissionsBuilderTest extends TestCase
     public function testGetPermissionsForReaders(
         PFUser $user,
         Project $project,
-        CheckProjectAccess $check_project_access,
+        CheckProjectAccess $check_access,
         bool $is_reader,
         bool $is_writer,
         bool $is_admin,
@@ -236,7 +236,7 @@ final class UserPermissionsBuilderTest extends TestCase
 
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
-            $check_project_access,
+            $check_access,
             new ProjectPermissionsRetriever($dao),
         );
 

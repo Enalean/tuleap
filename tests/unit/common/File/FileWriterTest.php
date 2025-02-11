@@ -49,7 +49,7 @@ final class FileWriterTest extends TestCase
         self::assertSame($chmod, fileperms($file_path) & 0777);
     }
 
-    protected function dataProviderPermissions(): array
+    public static function dataProviderPermissions(): array
     {
         return [
             [0600],

@@ -7,13 +7,12 @@
          beStrictAboutChangesToGlobalState="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
-         displayDetailsOnPhpunitDeprecations="false"
+         displayDetailsOnPhpunitDeprecations="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
          displayDetailsOnTestsThatTriggerNotices="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
          displayDetailsOnTestsThatTriggerErrors="true"
 >
-  <!-- displayDetailsOnPhpunitDeprecations should be true but it needs some work... -->
     <php>
         <ini name="error_reporting" value="-1" />
         <ini name="assert.exception" value="1"/>

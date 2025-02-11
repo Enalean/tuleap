@@ -100,7 +100,7 @@ final class TrackerRepresentationBuilderTest extends TestCase
         self::assertSame($expected_tracker_id, $tracker_representations[0]->id);
     }
 
-    private function getPaginatedRepresentations(): array
+    public static function getPaginatedRepresentations(): array
     {
         return [
             [0, self::FIRST_TRACKER_ID],
