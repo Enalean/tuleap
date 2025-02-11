@@ -80,7 +80,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($response);
         $this->app_remover->expects(self::never())->method('deleteAppByID');
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public static function dataProviderInvalidBody(): array
@@ -102,7 +102,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public function testHandleDeletesSiteAppAndRedirects(): void
@@ -116,7 +116,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public function testRejectsDeletingAppOfAnotherProject(): void
@@ -132,7 +132,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetProjectAdminUrl(): void
     {
         $project = new \Project(['group_id' => 102]);
-        $this->assertSame('/plugins/oauth2_server/project/102/admin/delete-app', DeleteAppController::getProjectAdminURL($project));
+        self::assertSame('/plugins/oauth2_server/project/102/admin/delete-app', DeleteAppController::getProjectAdminURL($project));
     }
 
     private function buildProjectAdminRequest(): ServerRequestInterface

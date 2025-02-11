@@ -177,48 +177,41 @@ final class CountElementsCalculatorTest extends TestCase
         $changeset_task_02 = ChangesetTestBuilder::aChangeset(1)->build();
 
         $this->artifact_factory->expects(self::exactly(5))->method('getArtifactById')
-            ->withConsecutive([2], [3], [4], [5], [6])
-            ->willReturn($epic, $user_story_01, $user_story_02, $task_01, $task_02);
+            ->willReturnMap([
+                [2, $epic],
+                [3, $user_story_01],
+                [4, $user_story_02],
+                [5, $task_01],
+                [6, $task_02],
+            ]);
 
         $this->changeset_factory->expects(self::exactly(5))->method('getChangesetAtTimestamp')
-            ->withConsecutive(
-                [$epic, $timestamp],
-                [$user_story_01, $timestamp],
-                [$user_story_02, $timestamp],
-                [$task_01, $timestamp],
-                [$task_02, $timestamp],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $changeset_epic,
-                $changeset_user_story_01,
-                $changeset_user_story_02,
-                $changeset_task_01,
-                $changeset_task_02,
-            );
+            ->willReturnMap([
+                [$epic, $timestamp, $changeset_epic],
+                [$user_story_01, $timestamp, $changeset_user_story_01],
+                [$user_story_02, $timestamp, $changeset_user_story_02],
+                [$task_01, $timestamp, $changeset_task_01],
+                [$task_02, $timestamp, $changeset_task_02],
+            ]);
 
         $this->form_element_factory->expects(self::exactly(5))->method('getUsedArtifactLinkFields')
-            ->withConsecutive(
-                [$epic_tracker],
-                [$this->user_story_tracker],
-                [$this->user_story_tracker],
-                [$this->task_tracker],
-                [$this->task_tracker],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [$epic_artifact_link_field],
-                [$user_story_artifact_link_field],
-                [$user_story_artifact_link_field],
-                [],
-                [],
-            );
+            ->willReturnMap([
+                [$epic_tracker, [$epic_artifact_link_field]],
+                [$this->user_story_tracker, [$user_story_artifact_link_field]],
+                [$this->task_tracker, []],
+            ]);
 
         $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
-            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02])
-            ->willReturnOnConsecutiveCalls(true, false);
+            ->willReturnMap([
+                [$changeset_user_story_01, true],
+                [$changeset_user_story_02, false],
+            ]);
 
         $task_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
-            ->withConsecutive([$changeset_task_01], [$changeset_task_02])
-            ->willReturn(false);
+            ->willReturnMap([
+                [$changeset_task_01, false],
+                [$changeset_task_02, false],
+            ]);
     }
 
     private function mockEpicUserStoriesAndTasksWithMultipleLinksToTask(int $artifact_id, int $timestamp): void
@@ -288,52 +281,37 @@ final class CountElementsCalculatorTest extends TestCase
         $changeset_task_02 = ChangesetTestBuilder::aChangeset(1)->build();
 
         $this->artifact_factory->expects(self::exactly(6))->method('getArtifactById')
-            ->withConsecutive([2], [3], [4], [5], [6], [5])
-            ->willReturn($epic, $user_story_01, $user_story_02, $task_01, $task_02, $task_01);
-
+            ->willReturnMap([
+                [2, $epic],
+                [3, $user_story_01],
+                [4, $user_story_02],
+                [5, $task_01],
+                [6, $task_02],
+            ]);
         $this->changeset_factory->expects(self::exactly(5))->method('getChangesetAtTimestamp')
-            ->withConsecutive(
-                [$epic, $timestamp],
-                [$user_story_01, $timestamp],
-                [$user_story_02, $timestamp],
-                [$task_01, $timestamp],
-                [$task_02, $timestamp],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $changeset_epic,
-                $changeset_user_story_01,
-                $changeset_user_story_02,
-                $changeset_task_01,
-                $changeset_task_02,
-            );
-
+            ->willReturnMap([
+                [$epic, $timestamp, $changeset_epic],
+                [$user_story_01, $timestamp, $changeset_user_story_01],
+                [$user_story_02, $timestamp, $changeset_user_story_02],
+                [$task_01, $timestamp, $changeset_task_01],
+                [$task_02, $timestamp, $changeset_task_02],
+            ]);
         $this->form_element_factory->expects(self::exactly(5))->method('getUsedArtifactLinkFields')
-            ->withConsecutive(
-                [$epic_tracker],
-                [$this->user_story_tracker],
-                [$this->user_story_tracker],
-                [$this->task_tracker],
-                [$this->task_tracker],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [$epic_artifact_link_field],
-                [$user_story_artifact_link_field],
-                [$user_story_artifact_link_field],
-                [],
-                [],
-            );
+            ->willReturnMap([
+                [$epic_tracker, [$epic_artifact_link_field]],
+                [$this->user_story_tracker, [$user_story_artifact_link_field]],
+                [$this->task_tracker, []],
+            ]);
 
         $epic_status_semantic->expects(self::once())->method('isOpenAtGivenChangeset')
             ->with($changeset_epic)
             ->willReturn(true);
 
         $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
-            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02])
-            ->willReturnOnConsecutiveCalls(true, false);
+            ->willReturnMap([[$changeset_user_story_01, true], [$changeset_user_story_02, false]]);
 
         $task_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
-            ->withConsecutive([$changeset_task_01], [$changeset_task_02])
-            ->willReturn(false);
+            ->willReturnMap([[$changeset_task_01, false], [$changeset_task_02, false]]);
     }
 
     private function mockUserStoriesWithoutArtLinkField(int $artifact_id, int $timestamp): void
@@ -357,26 +335,57 @@ final class CountElementsCalculatorTest extends TestCase
 
         $user_story_03           = ArtifactTestBuilder::anArtifact(4)->inTracker($this->user_story_tracker)->build();
         $changeset_user_story_03 = ChangesetTestBuilder::aChangeset(1)->build();
+        $matcher                 = self::exactly(3);
 
-        $this->artifact_factory->expects(self::exactly(3))->method('getArtifactById')
-            ->withConsecutive([2], [3], [4])
-            ->willReturnOnConsecutiveCalls($user_story_01, $user_story_02, $user_story_03);
+        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $user_story_02, $user_story_03) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(2, $parameters[0]);
+                return $user_story_01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(3, $parameters[0]);
+                return $user_story_02;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(4, $parameters[0]);
+                return $user_story_03;
+            }
+        });
+        $matcher = self::exactly(3);
 
-        $this->changeset_factory->expects(self::exactly(3))->method('getChangesetAtTimestamp')
-            ->withConsecutive(
-                [$user_story_01, $timestamp],
-                [$user_story_02, $timestamp],
-                [$user_story_03, $timestamp],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $changeset_user_story_01,
-                $changeset_user_story_02,
-                $changeset_user_story_03,
-            );
+        $this->changeset_factory->expects($matcher)->method('getChangesetAtTimestamp')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $timestamp, $user_story_02, $user_story_03, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($user_story_01, $parameters[0]);
+                self::assertSame($timestamp, $parameters[1]);
+                return $changeset_user_story_01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($user_story_02, $parameters[0]);
+                self::assertSame($timestamp, $parameters[1]);
+                return $changeset_user_story_02;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($user_story_03, $parameters[0]);
+                self::assertSame($timestamp, $parameters[1]);
+                return $changeset_user_story_03;
+            }
+        });
+        $matcher = self::exactly(3);
 
-        $user_story_status_semantic->expects(self::exactly(3))->method('isOpenAtGivenChangeset')
-            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02], [$changeset_user_story_03])
-            ->willReturnOnConsecutiveCalls(true, false, true);
+        $user_story_status_semantic->expects($matcher)->method('isOpenAtGivenChangeset')->willReturnCallback(function (...$parameters) use ($matcher, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($changeset_user_story_01, $parameters[0]);
+                return true;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($changeset_user_story_02, $parameters[0]);
+                return false;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($changeset_user_story_03, $parameters[0]);
+                return true;
+            }
+        });
 
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([]);
     }
@@ -412,27 +421,58 @@ final class CountElementsCalculatorTest extends TestCase
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_03, $artifact_link_field)
             ->withLinks([])
             ->build();
+        $matcher = self::exactly(3);
 
-        $this->artifact_factory->expects(self::exactly(3))->method('getArtifactById')
-            ->withConsecutive([2], [3], [4])
-            ->willReturnOnConsecutiveCalls($user_story_01, $user_story_02, $user_story_03);
+        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $user_story_02, $user_story_03) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(2, $parameters[0]);
+                return $user_story_01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(3, $parameters[0]);
+                return $user_story_02;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(4, $parameters[0]);
+                return $user_story_03;
+            }
+        });
+        $matcher = self::exactly(3);
 
-        $this->changeset_factory->expects(self::exactly(3))->method('getChangesetAtTimestamp')
-            ->withConsecutive(
-                [$user_story_01, $timestamp],
-                [$user_story_02, $timestamp],
-                [$user_story_03, $timestamp],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $changeset_user_story_01,
-                $changeset_user_story_02,
-                $changeset_user_story_03,
-            );
+        $this->changeset_factory->expects($matcher)->method('getChangesetAtTimestamp')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $timestamp, $user_story_02, $user_story_03, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($user_story_01, $parameters[0]);
+                self::assertSame($timestamp, $parameters[1]);
+                return $changeset_user_story_01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($user_story_02, $parameters[0]);
+                self::assertSame($timestamp, $parameters[1]);
+                return $changeset_user_story_02;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($user_story_03, $parameters[0]);
+                self::assertSame($timestamp, $parameters[1]);
+                return $changeset_user_story_03;
+            }
+        });
 
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([$artifact_link_field]);
+        $matcher = self::exactly(3);
 
-        $user_story_status_semantic->expects(self::exactly(3))->method('isOpenAtGivenChangeset')
-            ->withConsecutive([$changeset_user_story_01], [$changeset_user_story_02], [$changeset_user_story_03])
-            ->willReturnOnConsecutiveCalls(true, false, true);
+        $user_story_status_semantic->expects($matcher)->method('isOpenAtGivenChangeset')->willReturnCallback(function (...$parameters) use ($matcher, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($changeset_user_story_01, $parameters[0]);
+                return true;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($changeset_user_story_02, $parameters[0]);
+                return false;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($changeset_user_story_03, $parameters[0]);
+                return true;
+            }
+        });
     }
 }

@@ -69,7 +69,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetProjectAdminUrl(): void
     {
         $project = new \Project(['group_id' => 102]);
-        $this->assertSame(
+        self::assertSame(
             '/plugins/oauth2_server/project/102/admin/new-client-secret',
             NewClientSecretController::getProjectAdminURL($project)
         );
@@ -88,7 +88,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($response);
         $this->client_secret_updater->expects(self::never())->method('updateClientSecret');
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public static function dataProviderInvalidBody(): array

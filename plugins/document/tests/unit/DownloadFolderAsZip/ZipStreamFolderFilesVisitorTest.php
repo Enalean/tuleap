@@ -55,11 +55,18 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $root_folder = $this->getRootFolderWithItems();
+        $matcher     = self::exactly(2);
 
-        $this->zip->expects(self::exactly(2))->method('addFileFromPath')->withConsecutive(
-            ['/my files/file.pdf', '/path/to/file'],
-            ['/my files/an embedded file.html', '/path/to/embedded'],
-        );
+        $this->zip->expects($matcher)->method('addFileFromPath')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('/my files/file.pdf', $parameters[0]);
+                self::assertSame('/path/to/file', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('/my files/an embedded file.html', $parameters[0]);
+                self::assertSame('/path/to/embedded', $parameters[1]);
+            }
+        });
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -107,11 +114,18 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $root_folder = $this->getRootFolderWithItems(true);
+        $matcher     = self::exactly(2);
 
-        $this->zip->expects(self::exactly(2))->method('addFileFromPath')->withConsecutive(
-            ['/my files/file.pdf', '/path/to/file'],
-            ['/my files/an embedded file.html', '/path/to/embedded'],
-        );
+        $this->zip->expects($matcher)->method('addFileFromPath')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('/my files/file.pdf', $parameters[0]);
+                self::assertSame('/path/to/file', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('/my files/an embedded file.html', $parameters[0]);
+                self::assertSame('/path/to/embedded', $parameters[1]);
+            }
+        });
 
         $this->error_logging_helper->expects(self::atLeast(1))->method('logCorruptedFile');
 

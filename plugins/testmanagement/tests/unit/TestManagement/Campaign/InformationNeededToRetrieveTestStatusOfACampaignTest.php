@@ -84,10 +84,10 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
             $this->tracker_factory,
             $this->form_element_factory
         );
-        $this->assertSame(self::CAMPAIGN_ID, $information->campaign_id);
-        $this->assertSame(self::USER_UGROUP_IDS, $information->current_user_ugroup_ids);
-        $this->assertSame($status_field_id, $information->test_exec_status_field_id);
-        $this->assertSame($campaign_art_link_field_id, $information->test_campaign_art_link_field_id);
+        self::assertSame(self::CAMPAIGN_ID, $information->campaign_id);
+        self::assertSame(self::USER_UGROUP_IDS, $information->current_user_ugroup_ids);
+        self::assertSame($status_field_id, $information->test_exec_status_field_id);
+        self::assertSame($campaign_art_link_field_id, $information->test_campaign_art_link_field_id);
     }
 
     public function testUsersCannotAccessTheInformationWhenTheyCannotViewTheCampaign(): void

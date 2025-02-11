@@ -43,7 +43,7 @@ final class CheckCSRFMiddlewareTest extends TestCase
 
         $request = new NullServerRequest();
 
-        $this->assertSame(
+        self::assertSame(
             $response,
             $middleware->process($request, $handler)
         );

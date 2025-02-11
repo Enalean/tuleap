@@ -89,9 +89,16 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
         $repository_2->method('getId')->willReturn($repository_2_id);
         $repository_2->method('getProjectId')->willReturn($this->project);
         $repository_2->method('getBackend')->willReturn($backend);
+        $matcher = self::exactly(2);
 
-        $this->git_system_event_manager->expects(self::exactly(2))->method('queueRepositoryDeletion')
-            ->withConsecutive([$repository_1], [$repository_2]);
+        $this->git_system_event_manager->expects($matcher)->method('queueRepositoryDeletion')->willReturnCallback(function (...$parameters) use ($matcher, $repository_1, $repository_2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($repository_1, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($repository_2, $parameters[0]);
+            }
+        });
 
         $this->repository_factory->method('getAllRepositories')->willReturn([$repository_1, $repository_2]);
 

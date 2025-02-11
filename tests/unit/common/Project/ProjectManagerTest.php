@@ -86,26 +86,18 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             TestHelper::argListToDar([['group_id' => 102], ['group_id' => 103]])
         );
         $this->project_dao->method('foundRows')->willReturn(2);
+        $matcher = $this->exactly(2);
 
-        $project_access_checker->method('checkUserCanAccessProject')
-            ->withConsecutive(
-                [
-                    self::anything(),
-                    self::callback(static function (Project $project): bool {
-                        return $project->getID() === 102;
-                    }),
-                ],
-                [
-                    self::anything(),
-                    self::callback(static function (Project $project): bool {
-                        return $project->getID() === 103;
-                    }),
-                ]
-            )
-            ->willReturnOnConsecutiveCalls(
-                self::anything(),
-                self::throwException($this->createMock(Project_AccessException::class))
-            );
+        $project_access_checker->expects($matcher)->method('checkUserCanAccessProject')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(102, $parameters[1]->getID());
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(103, $parameters[1]->getID());
+                throw new class extends Project_AccessException {
+                };
+            }
+        });
 
         $paginated_projects = $project_manager->getMyAndPublicProjectsForREST(UserTestBuilder::buildWithDefaults(), 0, 100);
 
@@ -150,14 +142,26 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('two')
             ->build();
 
-        $p = $this->createPartialMock(\ProjectManager::class, [
+        $p       = $this->createPartialMock(\ProjectManager::class, [
             'createProjectInstance',
         ]);
+        $matcher = self::exactly(3);
         $p
-            ->expects(self::exactly(3))
-            ->method('createProjectInstance')
-            ->withConsecutive([1], [2], [1])
-            ->willReturnOnConsecutiveCalls($p1, $p2, $p1);
+            ->expects($matcher)
+            ->method('createProjectInstance')->willReturnCallback(function (...$parameters) use ($matcher, $p1, $p2) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame(1, $parameters[0]);
+                    return $p1;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame(2, $parameters[0]);
+                    return $p2;
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame(1, $parameters[0]);
+                    return $p1;
+                }
+            });
 
         $p->getProject(1);
         $p->getProject(1);
@@ -198,13 +202,20 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project_dao->method('searchActiveProjectsForUser')->with(69)->willReturn(\TestHelper::arrayToDar(['group_id' => 101, 'access' => Project::ACCESS_PRIVATE_WO_RESTRICTED], ['group_id' => 102, 'access' => Project::ACCESS_PRIVATE], ['group_id' => 103, 'access' => Project::ACCESS_PUBLIC], ['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]));
         $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
+        $matcher = self::exactly(3);
 
-        $this->project_manager_test_version->expects(self::exactly(3))->method('createProjectInstance')
-            ->withConsecutive(
-                [['group_id' => 102, 'access' => Project::ACCESS_PRIVATE]],
-                [['group_id' => 103, 'access' => Project::ACCESS_PUBLIC]],
-                [['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]],
-            );
+        $this->project_manager_test_version->expects($matcher)->method('createProjectInstance')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(['group_id' => 102, 'access' => Project::ACCESS_PRIVATE], $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(['group_id' => 103, 'access' => Project::ACCESS_PUBLIC], $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED], $parameters[0]);
+            }
+            return ProjectTestBuilder::aProject()->build();
+        });
 
         $projects = $this->project_manager_test_version->getActiveProjectsForUser($user);
 

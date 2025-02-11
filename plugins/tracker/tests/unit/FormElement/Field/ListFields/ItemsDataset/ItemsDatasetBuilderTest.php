@@ -39,7 +39,7 @@ class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field, $field_list_value);
-        $this->assertSame(
+        self::assertSame(
             ' data-user-id="102" data-avatar-url="some_url" data-color-name="peggy-pink"',
             $data_attributes
         );
@@ -52,7 +52,7 @@ class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_list_value->shouldReceive('getDataset')->andReturn([]);
 
         $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field, $field_list_value);
-        $this->assertSame(
+        self::assertSame(
             '',
             $data_attributes
         );

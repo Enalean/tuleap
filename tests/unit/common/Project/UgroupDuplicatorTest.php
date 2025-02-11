@@ -125,12 +125,20 @@ final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects(self::once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
 
         $project_admin = UserTestBuilder::buildWithDefaults();
+        $matcher       = self::exactly(2);
 
-        $this->member_adder->expects(self::exactly(2))->method('addMember')
-            ->withConsecutive(
-                [$user1, $new_ugroup, $project_admin],
-                [$user2, $new_ugroup, $project_admin],
-            );
+        $this->member_adder->expects($matcher)->method('addMember')->willReturnCallback(function (...$parameters) use ($matcher, $user1, $new_ugroup, $project_admin, $user2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($user1, $parameters[0]);
+                self::assertSame($new_ugroup, $parameters[1]);
+                self::assertSame($project_admin, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($user2, $parameters[0]);
+                self::assertSame($new_ugroup, $parameters[1]);
+                self::assertSame($project_admin, $parameters[2]);
+            }
+        });
 
         $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, $project_admin);
     }

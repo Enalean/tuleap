@@ -68,7 +68,7 @@ final class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($changeset, $this->user)
             ->willReturn($value);
 
-        $this->assertSame(
+        self::assertSame(
             $value,
             $this->provider->getStatusValue($artifact, $this->user)
         );

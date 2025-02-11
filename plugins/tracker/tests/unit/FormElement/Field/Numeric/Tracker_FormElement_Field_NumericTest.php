@@ -64,7 +64,7 @@ final class Tracker_FormElement_Field_NumericTest extends \Tuleap\Test\PHPUnit\T
             ['value' => $value]
         );
 
-        $this->assertSame($value, $field->getComputedValue($user, $artifact, $timestamp));
+        self::assertSame($value, $field->getComputedValue($user, $artifact, $timestamp));
     }
 
     public function testItReturnsZeroWhenUserDoesntHavePermissions(): void

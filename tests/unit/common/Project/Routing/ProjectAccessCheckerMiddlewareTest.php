@@ -54,7 +54,7 @@ final class ProjectAccessCheckerMiddlewareTest extends TestCase
 
         $request = (new NullServerRequest())->withAttribute(\Project::class, $project);
 
-        $this->assertSame(
+        self::assertSame(
             $response,
             $middleware->process($request, $handler)
         );

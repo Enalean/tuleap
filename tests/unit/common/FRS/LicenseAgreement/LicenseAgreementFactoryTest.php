@@ -313,18 +313,25 @@ class LicenseAgreementFactoryTest extends TestCase
         foreach ($package_ids as $package_id) {
             $packages[$package_id] = new FRSPackage(['package_id' => (string) $package_id, 'approve_license' => '1']);
         }
-        $frs_package_factory->method('getFRSPackageFromDb')->withConsecutive(...array_map(
-            static fn(int $package_id) => [$package_id],
-            $package_ids
-        ))->willReturnOnConsecutiveCalls(...$packages);
+        $frs_package_factory->method('getFRSPackageFromDb')
+            ->willReturnMap([
+                [350, null, 0, $packages[350]],
+                [1001, null, 0, $packages[1001]],
+                [470, null, 0, $packages[470]],
+                [1002, null, 0, $packages[1002]],
+            ]);
 
-        $this->dao->method('getLicenseAgreementForPackage')->withConsecutive(
-            [$packages[350]],
-            [$packages[470]]
-        )->willReturnOnConsecutiveCalls(
-            ['id' => 5, 'title' => 'some title', 'content' => 'and content'],
-            null
-        );
+        $matcher = $this->exactly(2);
+        $this->dao->expects($matcher)->method('getLicenseAgreementForPackage')->willReturnCallback(function (...$parameters) use ($matcher, $packages) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($packages[350], $parameters[0]);
+                return ['id' => 5, 'title' => 'some title', 'content' => 'and content'];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($packages[470], $parameters[0]);
+                return null;
+            }
+        });
 
         $this->dao->method('isLicenseAgreementValidForProject')->with($this->project, 12)->willReturn(true);
         $this->dao->expects(self::once())->method('saveLicenseAgreementForPackage')->with($packages[1001], 12);

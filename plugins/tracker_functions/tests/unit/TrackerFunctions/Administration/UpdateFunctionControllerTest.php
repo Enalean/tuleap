@@ -141,7 +141,7 @@ final class UpdateFunctionControllerTest extends TestCase
         self::assertSame(302, $response->getStatusCode());
     }
 
-    private function getUploadErrors(): array
+    public static function getUploadErrors(): array
     {
         return [
             [UPLOAD_ERR_INI_SIZE],

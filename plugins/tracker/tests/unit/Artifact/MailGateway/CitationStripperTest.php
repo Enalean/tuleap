@@ -36,7 +36,7 @@ class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
         $parsed_text_content          = file_get_contents($this->fixtures_dir . '/expected_followup.text.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir . '/expected_followup_without_citation.text.txt');
 
-        $this->assertSame(
+        self::assertSame(
             $text_content_witout_citation,
             $this->citation_stripper->stripText($parsed_text_content),
         );
@@ -47,7 +47,7 @@ class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
         $parsed_text_content          = file_get_contents($this->fixtures_dir . '/expected_followup.html.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir . '/expected_followup_without_citation.html.txt');
 
-        $this->assertSame(
+        self::assertSame(
             $text_content_witout_citation,
             $this->citation_stripper->stripHTML($parsed_text_content),
         );
@@ -58,7 +58,7 @@ class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
         $parsed_text_content          = file_get_contents($this->fixtures_dir . '/outlook_quote_fr.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir . '/expected_followup_outlook_quote_fr.txt');
 
-        $this->assertSame(
+        self::assertSame(
             $text_content_witout_citation,
             $this->citation_stripper->stripText($parsed_text_content),
         );
@@ -69,7 +69,7 @@ class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
         $parsed_text_content          = file_get_contents($this->fixtures_dir . '/outlook_quote_en.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir . '/expected_followup_outlook_quote_en.txt');
 
-        $this->assertSame(
+        self::assertSame(
             $text_content_witout_citation,
             $this->citation_stripper->stripText($parsed_text_content),
         );
@@ -80,7 +80,7 @@ class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
         $parsed_text_content = file_get_contents($this->fixtures_dir . '/outlook_quote_no_crlf.txt');
         $expected_text       = file_get_contents($this->fixtures_dir . '/expected_outlook_quote_no_crlf.txt');
 
-        $this->assertSame(
+        self::assertSame(
             $expected_text,
             $this->citation_stripper->stripText($parsed_text_content),
         );

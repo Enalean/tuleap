@@ -209,21 +209,21 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testMultipleFiles(): void
     {
         // Unitialized
-        $this->assertSame(ForgeConfig::get('toto'), false);
-        $this->assertSame(ForgeConfig::get('tutu'), false);
-        $this->assertSame(ForgeConfig::get('tata'), false);
+        self::assertSame(ForgeConfig::get('toto'), false);
+        self::assertSame(ForgeConfig::get('tutu'), false);
+        self::assertSame(ForgeConfig::get('tata'), false);
 
         // Load the first file
         ForgeConfig::loadFromFile(__DIR__ . '/_fixtures/config/local.inc');
-        $this->assertSame(ForgeConfig::get('toto'), 66);
-        $this->assertSame(ForgeConfig::get('tutu'), 123);
-        $this->assertSame(ForgeConfig::get('tata'), false);
+        self::assertSame(ForgeConfig::get('toto'), 66);
+        self::assertSame(ForgeConfig::get('tutu'), 123);
+        self::assertSame(ForgeConfig::get('tata'), false);
 
         // Load the second one. Merge of the conf
         ForgeConfig::loadFromFile(__DIR__ . '/_fixtures/config/other_file.inc.dist');
-        $this->assertSame(ForgeConfig::get('toto'), 66);
-        $this->assertSame(ForgeConfig::get('tutu'), 421);
-        $this->assertSame(ForgeConfig::get('tata'), 456);
+        self::assertSame(ForgeConfig::get('toto'), 66);
+        self::assertSame(ForgeConfig::get('tutu'), 421);
+        self::assertSame(ForgeConfig::get('tata'), 456);
     }
 
     public function testDump(): void

@@ -38,11 +38,11 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
-        $this->assertSame('field01', $representation->getFieldId());
+        self::assertSame('field01', $representation->getFieldId());
         $this->assertNull($representation->getFrom());
-        $this->assertSame('string01', $representation->getFromString());
+        self::assertSame('string01', $representation->getFromString());
         $this->assertNull($representation->getTo());
-        $this->assertSame('string02', $representation->getToString());
+        self::assertSame('string02', $representation->getToString());
 
         $response = [
             'fieldId'    => 'field02',
@@ -54,11 +54,11 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
-        $this->assertSame('field02', $representation->getFieldId());
-        $this->assertSame('10001', $representation->getFrom());
-        $this->assertSame('string02', $representation->getFromString());
-        $this->assertSame('10002', $representation->getTo());
-        $this->assertSame('string03', $representation->getToString());
+        self::assertSame('field02', $representation->getFieldId());
+        self::assertSame('10001', $representation->getFrom());
+        self::assertSame('string02', $representation->getFromString());
+        self::assertSame('10002', $representation->getTo());
+        self::assertSame('string03', $representation->getToString());
     }
 
     public function testItReturnsNullIfFieldIdNotProvidedInAPIResponse(): void

@@ -98,7 +98,7 @@ final class SiteDeployGitolite3Hooks
     {
         $target_realpath = realpath($target_path);
         error_clear_last();
-        $symlink_result = symlink($target_realpath, $link_path);
+        $symlink_result = @symlink($target_realpath, $link_path);
         if ($symlink_result === false) {
             throw new \RuntimeException(sprintf('Cannot create link %s (%s)', $link_path, error_get_last()['message'] ?? 'Unknown error'));
         }

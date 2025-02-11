@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <phpunit bootstrap="bootstrap.php"
-         verbose="true"
          colors="true"
          failOnRisky="true"
          failOnWarning="true"
@@ -8,60 +7,20 @@
          beStrictAboutChangesToGlobalState="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
-         convertDeprecationsToExceptions="true"
+         displayDetailsOnPhpunitDeprecations="false"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
 >
+  <!-- displayDetailsOnPhpunitDeprecations should be true but it needs some work... -->
     <php>
         <ini name="error_reporting" value="-1" />
         <ini name="assert.exception" value="1"/>
         <ini name="date.timezone" value="Europe/Paris"/>
         <ini name="memory_limit" value="2048M" /> <!-- This needs to be quite permissive to be able to generate coverage report -->
     </php>
-    <listeners>
-        <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
-    </listeners>
-    <extensions>
-        <extension class="\Tuleap\Test\PHPUnit\NoMockeryMockInDataProviderExtension"/>
-    </extensions>
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">../../src/common/</directory>
-            <directory suffix=".php">../../src/core/</directory>
-            <directory suffix=".php">../../src/tuleap-cfg/</directory>
-            <directory suffix=".php">../../plugins/*/include/</directory>
-            <directory suffix=".php">../../tests/lib/</directory>
-            <directory suffix=".php">../../tests/phpcs/TuleapCodingStandard/</directory>
-        </include>
-        <exclude>
-            <directory suffix=".php">../../src/common/wiki/</directory>
-            <directory suffix=".php">../../src/common/chart/</directory>
-            <file>../../src/common/admin/Homepage/Controller.php</file>
-            <file>../../plugins/docman/include/Docman_Sample.php</file> <!-- To investigate -->
-            <file>../../plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.php</file> <!-- To investigate -->
-            <file>../../plugins/ldap/include/LDAP_SearchPeople.php</file>
-            <file>../../plugins/mediawiki/include/MediawikiInstantiater.php</file>
-            <file>../../plugins/mediawiki/include/mediawiki-init.php</file>
-            <file>../../plugins/git/include/Git/Statistics/FrequenciesSample.php</file> <!-- To investigate -->
-            <file>../../plugins/git/include/GitXmlImporter.php</file>
-            <file>../../plugins/statistics/include/DiskUsageProjectsSearchFieldsPresenter.php</file> <!-- To investigate -->
-            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/CartifactSample.php</file> <!-- To investigate -->
-            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FiledSample.php</file> <!-- To investigate -->
-            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FilerSample.php</file> <!-- To investigate -->
-            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ForumSample.php</file> <!-- To investigate -->
-            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/OartifactSample.php</file> <!-- To investigate -->
-            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ProjectSample.php</file> <!-- To investigate -->
-            <file>../../plugins/webdav/include/BrowserPlugin.php</file>
-            <directory suffix=".php">../../plugins/webdav/include/FS/</directory>
-            <file>../../plugins/webdav/include/WebDAVTree.php</file>
-            <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.php</file>
-            <file>../../tests/lib/TuleapDbTestCase.php</file>
-            <file>../../src/tuleap-cfg/tuleap-cfg.php</file>
-            <file>../../src/core/contact.php</file>
-            <file>../../src/core/goto.php</file>
-            <file>../../src/core/info.php</file>
-            <file>../../src/core/make_links.php</file>
-            <file>../../src/core/robots.php</file>
-            <file>../../src/core/toggler.php</file>
-        </exclude>
+    <coverage includeUncoveredFiles="false">
     </coverage>
     <testsuites>
         <testsuite name="Core Tests">

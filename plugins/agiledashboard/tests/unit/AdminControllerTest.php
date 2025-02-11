@@ -89,10 +89,10 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withoutSiteAdministrator()
             ->build();
 
-        $this->request->method('exist')->willReturnMap(['activate-ad-service' => true]);
+        $this->request->method('exist')->willReturnMap(['activate-ad-service' => [true]]);
         $this->request->method('get')->willReturnMap([
-            ['activate-ad-service', ''],
-            ['group_id', self::PROJECT_ID],
+            'activate-ad-service' => [''],
+            'group_id' => [self::PROJECT_ID],
         ]);
         $GLOBALS['Language']->method('getText')->willReturn('Permission denied');
 

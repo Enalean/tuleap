@@ -193,6 +193,6 @@ class LicenseAgreementDisplayTest extends TestCase
             $custom_agreement,
         ]);
         $this->factory->method('getDefaultLicenseAgreementForProject')->willReturn($custom_agreement);
-        $this->assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
+        self::assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
     }
 }

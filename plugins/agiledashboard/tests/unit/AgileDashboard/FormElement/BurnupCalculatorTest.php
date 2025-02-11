@@ -49,8 +49,8 @@ final class BurnupCalculatorTest extends TestCase
         $this->setUpForTimestamp(self::TIMESTAMP_1);
         $effort = $this->calculator->getValue(101, self::TIMESTAMP_1, $this->plannable_trackers);
 
-        self::assertSame($effort->getTeamEffort(), 0.0);
-        self::assertSame($effort->getTotalEffort(), 9.0);
+        self::assertSame(0.0, $effort->getTeamEffort());
+        self::assertSame(9.0, $effort->getTotalEffort());
     }
 
     public function testItCalculsBurnupWithLastChangeset(): void
@@ -58,8 +58,8 @@ final class BurnupCalculatorTest extends TestCase
         $this->setUpForTimestamp(self::TIMESTAMP_2);
         $effort = $this->calculator->getValue(101, self::TIMESTAMP_2, $this->plannable_trackers);
 
-        self::assertSame($effort->getTeamEffort(), 4.0);
-        self::assertSame($effort->getTotalEffort(), 9.0);
+        self::assertSame(4.0, $effort->getTeamEffort());
+        self::assertSame(9.0, $effort->getTotalEffort());
     }
 
     private function setUpForTimestamp(int $timestamp): void
@@ -100,8 +100,10 @@ final class BurnupCalculatorTest extends TestCase
         $changeset_04  = ChangesetTestBuilder::aChangeset(4)->ofArtifact($user_story_02)->build();
 
         $artifact_factory->method('getArtifactById')
-            ->withConsecutive([102], [103])
-            ->willReturnOnConsecutiveCalls($user_story_01, $user_story_02);
+            ->willReturnMap([
+                [102, $user_story_01],
+                [103, $user_story_02],
+            ]);
 
         $semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
         $initial_effort_field    = IntFieldBuilder::anIntField(324)->build();
@@ -114,36 +116,34 @@ final class BurnupCalculatorTest extends TestCase
 
         if ($timestamp === self::TIMESTAMP_1) {
             $changeset_factory->expects(self::exactly(2))->method('getChangesetAtTimestamp')
-                ->withConsecutive(
-                    [$user_story_01, $timestamp],
-                    [$user_story_02, $timestamp],
-                )
-                ->willReturnOnConsecutiveCalls($changeset_01, $changeset_03);
-            $semantic_done->expects(self::exactly(2))->method('isDone')
-                ->withConsecutive([$changeset_01], [$changeset_03])
-                ->willReturn(false, false);
-            $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
-                ->withConsecutive(
-                    [$changeset_01],
-                    [$changeset_03],
-                )
-                ->willReturnOnConsecutiveCalls(true, true);
+                ->willReturnMap([
+                    [$user_story_01, $timestamp, $changeset_01],
+                    [$user_story_02, $timestamp, $changeset_03],
+                ]);
+            $semantic_done->method('isDone')->willReturnMap([
+                [$changeset_01, false],
+                [$changeset_03, false],
+            ]);
+            $user_story_status_semantic->method('isOpenAtGivenChangeset')
+                ->willReturnMap([
+                    [$changeset_01, true],
+                    [$changeset_03, true],
+                ]);
         } elseif ($timestamp === self::TIMESTAMP_2) {
             $changeset_factory->expects(self::exactly(2))->method('getChangesetAtTimestamp')
-                ->withConsecutive(
-                    [$user_story_01, $timestamp],
-                    [$user_story_02, $timestamp],
-                )
-                ->willReturnOnConsecutiveCalls($changeset_02, $changeset_04);
-            $semantic_done->expects(self::exactly(3))->method('isDone')
-                ->withConsecutive([$changeset_02], [$changeset_02], [$changeset_04])
-                ->willReturn(true, true, false);
-            $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
-                ->withConsecutive(
-                    [$changeset_02],
-                    [$changeset_04],
-                )
-                ->willReturnOnConsecutiveCalls(false, true);
+                ->willReturnMap([
+                    [$user_story_01, $timestamp, $changeset_02],
+                    [$user_story_02, $timestamp, $changeset_04],
+                ]);
+            $semantic_done->method('isDone')->willReturnMap([
+                [$changeset_02, true],
+                [$changeset_04, false],
+            ]);
+            $user_story_status_semantic->method('isOpenAtGivenChangeset')
+                ->willReturnMap([
+                    [$changeset_02, false],
+                    [$changeset_04, true],
+                ]);
         }
 
         ChangesetValueIntegerTestBuilder::aValue(1, $changeset_01, $initial_effort_field)->withValue(4)->build();

@@ -74,13 +74,13 @@ class AttachmentXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertCount(2, $artifact_node->children());
         $exported_file_01 = $artifact_node->file[0];
-        $this->assertSame('fileinfo_10007', (string) $exported_file_01['id']);
-        $this->assertSame('file01.png', (string) $exported_file_01->filename);
-        $this->assertSame('file0123', (string) $exported_file_01->path);
+        self::assertSame('fileinfo_10007', (string) $exported_file_01['id']);
+        self::assertSame('file01.png', (string) $exported_file_01->filename);
+        self::assertSame('file0123', (string) $exported_file_01->path);
 
         $exported_file_02 = $artifact_node->file[1];
-        $this->assertSame('fileinfo_10008', (string) $exported_file_02['id']);
-        $this->assertSame('file02.gif', (string) $exported_file_02->filename);
-        $this->assertSame('file5678', (string) $exported_file_02->path);
+        self::assertSame('fileinfo_10008', (string) $exported_file_02['id']);
+        self::assertSame('file02.gif', (string) $exported_file_02->filename);
+        self::assertSame('file5678', (string) $exported_file_02->path);
     }
 }

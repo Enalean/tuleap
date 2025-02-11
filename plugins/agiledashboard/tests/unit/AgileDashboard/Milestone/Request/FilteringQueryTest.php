@@ -31,7 +31,7 @@ final class FilteringQueryTest extends \Tuleap\Test\PHPUnit\TestCase
         $status = new StatusAll();
         $query  = FilteringQuery::fromStatusQuery($status);
 
-        $this->assertSame($status, $query->getStatusFilter());
+        self::assertSame($status, $query->getStatusFilter());
         $this->assertFalse($query->isCurrentPeriod());
         $this->assertFalse($query->isFuturePeriod());
     }

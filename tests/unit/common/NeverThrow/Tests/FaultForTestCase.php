@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\PHPUnit;
+namespace Tuleap\NeverThrow\Tests;
 
-use PHPUnit\Runner\BeforeFirstTestHook;
-use PHPUnit\Runner\TestHook;
+use Tuleap\NeverThrow\Fault;
 
-final class NoMockeryMockInDataProviderExtension implements TestHook, BeforeFirstTestHook
+/**
+ * @psalm-immutable
+ */
+final readonly class FaultForTestCase extends Fault
 {
-    public function executeBeforeFirstTest(): void
+    public function __construct(string $error_message, private int $code)
     {
-        try {
-            \Mockery::self();
-        } catch (\LogicException $ex) {
-            return;
-        }
-        throw new \RuntimeException(
-            'Do not declare a Mockery\'s mock in a data provider, it can generates failures when running the test suite in a random order'
-        );
+        parent::__construct($error_message);
+    }
+
+    public function getCode(): int
+    {
+        return $this->code;
     }
 }

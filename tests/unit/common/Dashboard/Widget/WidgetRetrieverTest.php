@@ -43,19 +43,29 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ['id' => 2, 'line_id' => 1, 'rank' => 1],
             ['id' => 3, 'line_id' => 1, 'rank' => 2],
         ]));
-        $dao->method('searchAllWidgetByColumnId')->withConsecutive([1], [2], [3])->willReturnOnConsecutiveCalls(
-            \TestHelper::argListToDar([
-                ['id' => 1, 'column_id' => 1, 'rank' => 0, 'name' => 'image', 'content_id' => 10],
-                ['id' => 3, 'column_id' => 1, 'rank' => 1, 'name' => 'image', 'content_id' => 12],
-            ]),
-            \TestHelper::argListToDar([
-                ['id' => 2, 'column_id' => 2, 'rank' => 0, 'name' => 'image', 'content_id' => 11],
-                ['id' => 4, 'column_id' => 2, 'rank' => 1, 'name' => 'image', 'content_id' => 13],
-            ]),
-            \TestHelper::argListToDar([
-                ['id' => 5, 'column_id' => 3, 'rank' => 0, 'name' => 'image', 'content_id' => 14],
-            ])
-        );
+        $matcher = $this->exactly(3);
+        $dao->expects($matcher)->method('searchAllWidgetByColumnId')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(1, $parameters[0]);
+                return \TestHelper::argListToDar([
+                    ['id' => 1, 'column_id' => 1, 'rank' => 0, 'name' => 'image', 'content_id' => 10],
+                    ['id' => 3, 'column_id' => 1, 'rank' => 1, 'name' => 'image', 'content_id' => 12],
+                ]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(2, $parameters[0]);
+                return \TestHelper::argListToDar([
+                    ['id' => 2, 'column_id' => 2, 'rank' => 0, 'name' => 'image', 'content_id' => 11],
+                    ['id' => 4, 'column_id' => 2, 'rank' => 1, 'name' => 'image', 'content_id' => 13],
+                ]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(3, $parameters[0]);
+                return \TestHelper::argListToDar([
+                    ['id' => 5, 'column_id' => 3, 'rank' => 0, 'name' => 'image', 'content_id' => 14],
+                ]);
+            }
+        });
 
         $lines                = $retriever->getAllWidgets(1, 'user');
         $columns              = $lines[0]->getWidgetColumns();

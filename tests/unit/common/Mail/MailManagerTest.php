@@ -40,11 +40,18 @@ final class MailManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nicolas = UserTestBuilder::anActiveUser()->build();
         $nicolas->setPreference('user_tracker_mailformat', 'text');
 
-        $um = $this->createMock(\UserManager::class);
-        $um->method('getAllUsersByEmail')->withConsecutive(
-            ['manuel@enalean.com'],
-            ['nicolas@enalean.com']
-        )->willReturnOnConsecutiveCalls([$manuel], [$nicolas]);
+        $um      = $this->createMock(\UserManager::class);
+        $matcher = $this->exactly(2);
+        $um->expects($matcher)->method('getAllUsersByEmail')->willReturnCallback(function (...$parameters) use ($matcher, $manuel, $nicolas) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('manuel@enalean.com', $parameters[0]);
+                return [$manuel];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('nicolas@enalean.com', $parameters[0]);
+                return [$nicolas];
+            }
+        });
         $mm->method('getUserManager')->willReturn($um);
 
         $addresses = ['manuel@enalean.com', 'nicolas@enalean.com'];

@@ -217,16 +217,24 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     {
         $result = [];
 
-        $l = $this->createPartialMock(BaseLanguage::class, [
+        $l       = $this->createPartialMock(BaseLanguage::class, [
             'loadAllTabFiles',
         ]);
-        $l->expects(self::exactly(4))->method('loadAllTabFiles')
-            ->withConsecutive(
-                [ForgeConfig::get('sys_incdir') . '/en_US', self::anything()],
-                [ForgeConfig::get('sys_custom_incdir') . '/en_US', self::anything()],
-                [ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', self::anything()],
-                [ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US', self::anything()]
-            );
+        $matcher = self::exactly(4);
+        $l->expects($matcher)->method('loadAllTabFiles')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(ForgeConfig::get('sys_incdir') . '/en_US', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(ForgeConfig::get('sys_custom_incdir') . '/en_US', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame(ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US', $parameters[0]);
+            }
+        });
 
         $l->loadAllLanguageFiles('en_US', $result);
     }
@@ -283,12 +291,16 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $language = $this->createPartialMock(BaseLanguage::class, [
             'loadAllTabFiles',
         ]);
+        $matcher  = self::exactly(2);
 
-        $language->expects(self::exactly(2))->method('loadAllTabFiles')
-            ->withConsecutive(
-                [$extra_path . '/bla/site-content/en_US', self::anything()],
-                [ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', self::anything()]
-            );
+        $language->expects($matcher)->method('loadAllTabFiles')->willReturnCallback(function (...$parameters) use ($matcher, $extra_path) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($extra_path . '/bla/site-content/en_US', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', $parameters[0]);
+            }
+        });
         $array = [];
         $language->loadPluginsSiteContent('en_US', $array);
     }

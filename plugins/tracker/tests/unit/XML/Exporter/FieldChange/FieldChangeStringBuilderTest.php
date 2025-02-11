@@ -56,8 +56,8 @@ class FieldChangeStringBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        $this->assertSame('string', (string) $field_change_node['type']);
-        $this->assertSame('field_string_01', (string) $field_change_node['field_name']);
-        $this->assertSame('my string content', (string) $field_change_node->value);
+        self::assertSame('string', (string) $field_change_node['type']);
+        self::assertSame('field_string_01', (string) $field_change_node['field_name']);
+        self::assertSame('my string content', (string) $field_change_node->value);
     }
 }

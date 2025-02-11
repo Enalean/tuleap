@@ -60,7 +60,7 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactoryTest extends \PHPUnit\F
 
         $incoming_message = $incoming_message_factory->build($incoming_mail);
 
-        $this->assertSame($artifact, $incoming_message->getArtifact());
-        $this->assertSame($user, $incoming_message->getUser());
+        self::assertSame($artifact, $incoming_message->getArtifact());
+        self::assertSame($user, $incoming_message->getUser());
     }
 }

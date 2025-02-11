@@ -390,14 +390,23 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->with('project_reference', 't_r_deleted')
             ->willReturn('Corresponding Reference Pattern Deleted');
 
-        $layout = $this->createMock(BaseLayout::class);
-        $layout
-            ->method('addFeedback')
-            ->withConsecutive(
-                [Feedback::INFO, 'Tracker User story has been successfully deleted'],
-                [Feedback::INFO, self::anything(), \Codendi_HTMLPurifier::CONFIG_LIGHT],
-                [Feedback::INFO, 'Corresponding Reference Pattern Deleted'],
-            );
+        $layout  = $this->createMock(BaseLayout::class);
+        $matcher = $this->exactly(3);
+        $layout->expects($matcher)
+            ->method('addFeedback')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame(Feedback::INFO, $parameters[0]);
+                    self::assertSame('Tracker User story has been successfully deleted', $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame(Feedback::INFO, $parameters[0]);
+                    self::assertSame(\Codendi_HTMLPurifier::CONFIG_LIGHT, $parameters[2]);
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame(Feedback::INFO, $parameters[0]);
+                    self::assertSame('Corresponding Reference Pattern Deleted', $parameters[1]);
+                }
+            });
 
         $layout->expects(self::once())->method('redirect');
 

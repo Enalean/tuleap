@@ -72,7 +72,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetProjectAdminUrl(): void
     {
         $project = new \Project(['group_id' => 102]);
-        $this->assertSame('/plugins/oauth2_server/project/102/admin/edit-app', EditAppController::getProjectAdminURL($project));
+        self::assertSame('/plugins/oauth2_server/project/102/admin/edit-app', EditAppController::getProjectAdminURL($project));
     }
 
     /**
@@ -88,7 +88,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($response);
         $this->app_dao->expects(self::never())->method('updateApp');
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public static function dataProviderInvalidBody(): array

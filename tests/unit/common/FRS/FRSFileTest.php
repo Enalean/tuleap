@@ -27,7 +27,7 @@ class FRSFileTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Cl
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
         $file->file_size     = filesize(dirname(__FILE__) . '/_fixtures/file_sample');
 
-        $this->assertSame(file_get_contents(dirname(__FILE__) . '/_fixtures/file_sample'), $file->getContent());
+        self::assertSame(file_get_contents(dirname(__FILE__) . '/_fixtures/file_sample'), $file->getContent());
     }
 
     public function testGetContentWithStartOffset()
@@ -35,7 +35,7 @@ class FRSFileTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Cl
         $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
 
-        $this->assertSame('"The quick', $file->getContent(0, 10));
+        self::assertSame('"The quick', $file->getContent(0, 10));
     }
 
     public function testGetContentWithOffsetAndSize()
@@ -43,7 +43,7 @@ class FRSFileTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Cl
         $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
 
-        $this->assertSame(' brown fox', $file->getContent(10, 10));
+        self::assertSame(' brown fox', $file->getContent(10, 10));
     }
 
     public function testGetContentWithOffsetAndEof()
@@ -51,7 +51,7 @@ class FRSFileTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Cl
         $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
 
-        $this->assertSame("arts.\n", $file->getContent(380, 10));
+        self::assertSame("arts.\n", $file->getContent(380, 10));
     }
 
     public function testGetContentWholeByOffset()
@@ -63,7 +63,7 @@ class FRSFileTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Cl
         $content .= $file->getContent(100, 100);
         $content .= $file->getContent(200, 100);
         $content .= $file->getContent(300, 100);
-        $this->assertSame(file_get_contents(dirname(__FILE__) . '/_fixtures/file_sample'), $content);
+        self::assertSame(file_get_contents(dirname(__FILE__) . '/_fixtures/file_sample'), $content);
     }
 
     public function testGetfilePath()

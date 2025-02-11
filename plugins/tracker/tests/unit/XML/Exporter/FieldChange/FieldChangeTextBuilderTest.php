@@ -57,9 +57,9 @@ class FieldChangeTextBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        $this->assertSame('text', (string) $field_change_node['type']);
-        $this->assertSame('field_text_01', (string) $field_change_node['field_name']);
-        $this->assertSame('my text content', (string) $field_change_node->value);
-        $this->assertSame('html', (string) $field_change_node->value['format']);
+        self::assertSame('text', (string) $field_change_node['type']);
+        self::assertSame('field_text_01', (string) $field_change_node['field_name']);
+        self::assertSame('my text content', (string) $field_change_node->value);
+        self::assertSame('html', (string) $field_change_node->value['format']);
     }
 }

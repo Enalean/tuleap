@@ -91,7 +91,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
             142 => true,
         ];
 
-        $this->assertSame(
+        self::assertSame(
             $expected,
             $this->retriever->getMatchingIds($this->tracker, $this->user)
         );
@@ -118,14 +118,18 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 
     private function mockArtifactFactory(): void
     {
-        $this->artifact_factory->method('getArtifactByIdUserCanView')
-            ->withConsecutive(
-                [$this->user, 142],
-                [$this->user, 148],
-            )
-            ->willReturnOnConsecutiveCalls(
-                ArtifactTestBuilder::anArtifact(142)->build(),
-                null,
-            );
+        $matcher = $this->exactly(2);
+        $this->artifact_factory->expects($matcher)->method('getArtifactByIdUserCanView')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame(142, $parameters[1]);
+                return ArtifactTestBuilder::anArtifact(142)->build();
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame(148, $parameters[1]);
+                return null;
+            }
+        });
     }
 }

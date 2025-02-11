@@ -88,10 +88,17 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn($this->user);
 
         $this->project_manager->expects(self::exactly(2))->method('getProject')->willReturn($this->project);
+        $matcher = $this->exactly(2);
 
-        $this->organizer_by_nature
-            ->method('removeUnreadableCrossReference')
-            ->withConsecutive([$ref_build], [$ref_job]);
+        $this->organizer_by_nature->expects($matcher)
+            ->method('removeUnreadableCrossReference')->willReturnCallback(function (...$parameters) use ($matcher, $ref_build, $ref_job) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($ref_build, $parameters[0]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($ref_job, $parameters[0]);
+                }
+            });
 
         $this->organizer_by_nature
             ->expects(self::never())
@@ -120,13 +127,19 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->organizer_by_nature
             ->expects(self::never())
             ->method('removeUnreadableCrossReference');
+        $matcher = $this->exactly(2);
 
-        $this->organizer_by_nature
-            ->method('moveCrossReferenceToSection')
-            ->withConsecutive(
-                [$ref_build, ''],
-                [$ref_job, ''],
-            );
+        $this->organizer_by_nature->expects($matcher)
+            ->method('moveCrossReferenceToSection')->willReturnCallback(function (...$parameters) use ($matcher, $ref_build, $ref_job) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($ref_build, $parameters[0]);
+                    self::assertSame('', $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($ref_job, $parameters[0]);
+                    self::assertSame('', $parameters[1]);
+                }
+            });
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
     }

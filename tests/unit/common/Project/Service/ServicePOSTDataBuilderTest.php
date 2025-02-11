@@ -258,39 +258,60 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getMinimalRank')->willReturn(10);
         $response = $this->createMock(BaseLayout::class);
         $request  = $this->createMock(\HTTPRequest::class);
+        $matcher  = self::exactly(8);
         $request
-            ->expects(self::exactly(8))
-            ->method('getValidated')
-            ->withConsecutive(
-                ['service_id', self::anything(), self::anything()],
-                ['short_name', self::anything(), self::anything()],
-                ['label', self::anything(), self::anything()],
-                ['icon_name', self::anything(), self::anything()],
-                ['description', self::anything(), self::anything()],
-                ['rank', self::anything(), self::anything()],
-                ['is_active', self::anything(), self::anything()],
-                ['link', self::anything(), self::anything()],
-            )
-            ->willReturnOnConsecutiveCalls(
-                12,
-                'admin',
-                'My custom service',
-                'fa-invalid-icon-name',
-                '',
-                1230,
-                1,
-                'https://example.com/custom',
-            );
+            ->expects($matcher)
+            ->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('service_id', $parameters[0]);
+                    return 12;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('short_name', $parameters[0]);
+                    return 'admin';
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame('label', $parameters[0]);
+                    return 'My custom service';
+                }
+                if ($matcher->numberOfInvocations() === 4) {
+                    self::assertSame('icon_name', $parameters[0]);
+                    return 'fa-invalid-icon-name';
+                }
+                if ($matcher->numberOfInvocations() === 5) {
+                    self::assertSame('description', $parameters[0]);
+                    return '';
+                }
+                if ($matcher->numberOfInvocations() === 6) {
+                    self::assertSame('rank', $parameters[0]);
+                    return 1230;
+                }
+                if ($matcher->numberOfInvocations() === 7) {
+                    self::assertSame('is_active', $parameters[0]);
+                    return 1;
+                }
+                if ($matcher->numberOfInvocations() === 8) {
+                    self::assertSame('link', $parameters[0]);
+                    return 'https://example.com/custom';
+                }
+            });
         $request
             ->expects(self::once())
             ->method('exist')
             ->with('short_name')
             ->willReturn(true);
+        $matcher = self::exactly(2);
         $request
-            ->expects(self::exactly(2))
-            ->method('get')
-            ->withConsecutive(['is_in_iframe'], ['is_in_new_tab'])
-            ->willReturn(false);
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('is_in_iframe', $parameters[0]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('is_in_new_tab', $parameters[0]);
+                }
+                return false;
+            });
 
         $current_admin_service = new Service($project, ['label' => 'Admin', 'short_name' => Service::ADMIN, 'description' => 'admin']);
 
@@ -307,41 +328,64 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $service  = new Service($project, ['label' => 'foo', 'short_name' => 'bar', 'description' => 'baz']);
         $response = $this->createMock(BaseLayout::class);
         $request  = $this->createMock(\HTTPRequest::class);
+        $matcher  = self::exactly(9);
         $request
-            ->expects(self::exactly(9))
-            ->method('getValidated')
-            ->withConsecutive(
-                ['service_id', self::anything(), self::anything()],
-                ['short_name', self::anything(), self::anything()],
-                ['label', self::anything(), self::anything()],
-                ['icon_name', self::anything(), self::anything()],
-                ['description', self::anything(), self::anything()],
-                ['rank', self::anything(), self::anything()],
-                ['is_active', self::anything(), self::anything()],
-                ['is_used', self::anything(), self::anything()],
-                ['link', self::anything(), self::anything()],
-            )
-            ->willReturnOnConsecutiveCalls(
-                12,
-                '',
-                'My custom service',
-                'fa-invalid-icon-name',
-                '',
-                123,
-                1,
-                true,
-                'https://example.com/custom',
-            );
+            ->expects($matcher)
+            ->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('service_id', $parameters[0]);
+                    return 12;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('short_name', $parameters[0]);
+                    return '';
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame('label', $parameters[0]);
+                    return 'My custom service';
+                }
+                if ($matcher->numberOfInvocations() === 4) {
+                    self::assertSame('icon_name', $parameters[0]);
+                    return 'fa-invalid-icon-name';
+                }
+                if ($matcher->numberOfInvocations() === 5) {
+                    self::assertSame('description', $parameters[0]);
+                    return '';
+                }
+                if ($matcher->numberOfInvocations() === 6) {
+                    self::assertSame('rank', $parameters[0]);
+                    return 123;
+                }
+                if ($matcher->numberOfInvocations() === 7) {
+                    self::assertSame('is_active', $parameters[0]);
+                    return 1;
+                }
+                if ($matcher->numberOfInvocations() === 8) {
+                    self::assertSame('is_used', $parameters[0]);
+                    return true;
+                }
+                if ($matcher->numberOfInvocations() === 9) {
+                    self::assertSame('link', $parameters[0]);
+                    return 'https://example.com/custom';
+                }
+            });
         $request
             ->expects(self::once())
             ->method('exist')
             ->with('short_name')
             ->willReturn(false);
+        $matcher = self::exactly(2);
         $request
-            ->expects(self::exactly(2))
-            ->method('get')
-            ->withConsecutive(['is_in_iframe'], ['is_in_new_tab'])
-            ->willReturn(false);
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('is_in_iframe', $parameters[0]);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('is_in_new_tab', $parameters[0]);
+                }
+                return false;
+            });
 
         self::expectException(InvalidServicePOSTDataException::class);
 
@@ -369,35 +413,58 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $response = $this->createMock(BaseLayout::class);
         $request  = $this->createMock(\HTTPRequest::class);
-        $request->method('getValidated')
-            ->withConsecutive(
-                ['service_id', self::anything(), self::anything()],
-                ['short_name', self::anything(), self::anything()],
-                ['label', self::anything(), self::anything()],
-                ['icon_name', self::anything(), self::anything()],
-                ['description', self::anything(), self::anything()],
-                ['rank', self::anything(), self::anything()],
-                ['is_active', self::anything(), self::anything()],
-                ['is_used', self::anything(), self::anything()],
-                ['link', self::anything(), self::anything()],
-            )
-            ->willReturnOnConsecutiveCalls(
-                12,
-                '',
-                $submitted_label,
-                'fa-bolt',
-                $submitted_description,
-                123,
-                1,
-                true,
-                'https://example.com/custom',
-            );
+        $matcher  = $this->exactly(9);
+        $request->expects($matcher)->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher, $submitted_label, $submitted_description) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('service_id', $parameters[0]);
+                return 12;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('short_name', $parameters[0]);
+                return '';
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('label', $parameters[0]);
+                return $submitted_label;
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame('icon_name', $parameters[0]);
+                return 'fa-bolt';
+            }
+            if ($matcher->numberOfInvocations() === 5) {
+                self::assertSame('description', $parameters[0]);
+                return $submitted_description;
+            }
+            if ($matcher->numberOfInvocations() === 6) {
+                self::assertSame('rank', $parameters[0]);
+                return 123;
+            }
+            if ($matcher->numberOfInvocations() === 7) {
+                self::assertSame('is_active', $parameters[0]);
+                return 1;
+            }
+            if ($matcher->numberOfInvocations() === 8) {
+                self::assertSame('is_used', $parameters[0]);
+                return true;
+            }
+            if ($matcher->numberOfInvocations() === 9) {
+                self::assertSame('link', $parameters[0]);
+                return 'https://example.com/custom';
+            }
+        });
         $request->method('exist')
             ->with('short_name')
             ->willReturn(false);
-        $request->method('get')
-            ->withConsecutive(['is_in_iframe'], ['is_in_new_tab'])
-            ->willReturn(false);
+        $matcher = $this->exactly(2);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('is_in_iframe', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('is_in_new_tab', $parameters[0]);
+            }
+            return false;
+        });
 
         $service = $this->service_postdata_builder->buildFromRequest($request, $project, $service, $response);
 

@@ -36,8 +36,8 @@ pipeline {
             }
         }
 
-        stage('Unit tests PHP with coverage') {
-            steps { script { actions.runPHPUnitTests('82', true) } }
+        stage('Unit tests PHP') {
+            steps { script { actions.runPHPUnitTests('82', false) } }
             post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
         }
 

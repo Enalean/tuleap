@@ -30,7 +30,7 @@ class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
         $string               = "Content-type: sdfsdf\r\n\r\nThe body";
         list($headers, $body) = http_split_header_body($string);
 
-        $this->assertSame('The body', $body);
+        self::assertSame('The body', $body);
     }
 
     public function testItExtractBodyThatStartsWithNul()
@@ -38,21 +38,21 @@ class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
         $string               = "Content-type: sdfsdf\r\n\r\n" . (0x00) . 'The body';
         list($headers, $body) = http_split_header_body($string);
 
-        $this->assertSame((0x00) . 'The body', $body);
+        self::assertSame((0x00) . 'The body', $body);
     }
 
     public function testItExtractBodyThatStartsWithLN()
     {
         list($headers, $body) = http_split_header_body("Content-type: sdfsdf\r\n\r\n
 The body");
-        $this->assertSame("\nThe body", $body);
+        self::assertSame("\nThe body", $body);
     }
 
     public function testItExtractHeaders()
     {
         list($headers, $body) = http_split_header_body("Content-disposition: anefe
 Content-type: sdfsdf\r\n\r\nThe body");
-        $this->assertSame("Content-disposition: anefe\nContent-type: sdfsdf", $headers);
+        self::assertSame("Content-disposition: anefe\nContent-type: sdfsdf", $headers);
     }
 
     /**
@@ -61,6 +61,6 @@ Content-type: sdfsdf\r\n\r\nThe body");
     public function testItExtractsBodyWithBinaryData()
     {
         list($headers, $body) = http_split_header_body(file_get_contents(dirname(__FILE__) . '/_fixtures/svn_bin_data'));
-        $this->assertSame('Content-Type: text/plain', $headers);
+        self::assertSame('Content-Type: text/plain', $headers);
     }
 }

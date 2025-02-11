@@ -99,12 +99,20 @@ final class PermissionsImporterTest extends TestCase
                 'UGROUP_REGISTERED' => 2,
                 'Developers'        => 101,
             });
+        $matcher = self::exactly(2);
 
-        $this->permission_manager->expects(self::exactly(2))->method('addPermission')
-            ->withConsecutive(
-                ['PLUGIN_DOCMAN_READ', 14, 2],
-                ['PLUGIN_DOCMAN_WRITE', 14, 101],
-            );
+        $this->permission_manager->expects($matcher)->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('PLUGIN_DOCMAN_READ', $parameters[0]);
+                self::assertSame(14, $parameters[1]);
+                self::assertSame(2, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('PLUGIN_DOCMAN_WRITE', $parameters[0]);
+                self::assertSame(14, $parameters[1]);
+                self::assertSame(101, $parameters[2]);
+            }
+        });
 
         $this->importer->importPermissions($this->parent_item, $this->item, $xml);
     }

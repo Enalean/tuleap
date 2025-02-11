@@ -26,5 +26,8 @@ use Tracker;
 
 interface WASMFunctionPathHelper
 {
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getPathForTracker(Tracker $tracker): string;
 }

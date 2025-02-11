@@ -56,7 +56,7 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['getPackageList']);
         $webDAVFRS->method('getPackageList')->willReturn([]);
 
-        $this->assertSame([], $webDAVFRS->getChildren());
+        self::assertSame([], $webDAVFRS->getChildren());
     }
 
     /**
@@ -73,7 +73,7 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
         $FRSPackage = $this->createMock(FRSPackage::class);
         $webDAVFRS->method('getPackageList')->willReturn([$FRSPackage]);
 
-        $this->assertSame([], $webDAVFRS->getChildren());
+        self::assertSame([], $webDAVFRS->getChildren());
     }
 
     /**
@@ -91,7 +91,7 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
         $FRSPackage = $this->createMock(FRSPackage::class);
         $webDAVFRS->method('getPackageList')->willReturn([$FRSPackage]);
 
-        $this->assertSame([$package], $webDAVFRS->getChildren());
+        self::assertSame([$package], $webDAVFRS->getChildren());
     }
 
     /**

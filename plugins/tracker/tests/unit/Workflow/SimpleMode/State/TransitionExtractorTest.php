@@ -46,7 +46,7 @@ final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $state = new State(1, [$transition_from_new, $transition_from_value]);
 
-        $this->assertSame(
+        self::assertSame(
             $transition_from_value,
             $this->extractor->extractReferenceTransitionFromState($state)
         );
@@ -59,7 +59,7 @@ final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $state = new State(1, [1238 => $transition_from_new]);
 
-        $this->assertSame(
+        self::assertSame(
             $transition_from_new,
             $this->extractor->extractReferenceTransitionFromState($state)
         );
@@ -89,7 +89,7 @@ final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $state = new State(1, [$transition_01, $transition_02]);
 
-        $this->assertSame(
+        self::assertSame(
             [$transition_02],
             $this->extractor->extractSiblingTransitionsFromState($state, $transition_01)
         );
@@ -107,7 +107,7 @@ final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $state = new State(1, [$transition_01]);
 
-        $this->assertSame(
+        self::assertSame(
             [],
             $this->extractor->extractSiblingTransitionsFromState($state, $transition_01)
         );

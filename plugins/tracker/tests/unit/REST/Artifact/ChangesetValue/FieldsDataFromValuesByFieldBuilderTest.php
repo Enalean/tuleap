@@ -120,7 +120,7 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         $fields_data = $this->buildFromValuesByField($payload);
-        $this->assertSame([
+        self::assertSame([
             self::INT_FIELD_ID    => self::INT_VALUE,
             self::FLOAT_FIELD_ID  => self::FLOAT_VALUE,
             self::STRING_FIELD_ID => self::STRING_VALUE,

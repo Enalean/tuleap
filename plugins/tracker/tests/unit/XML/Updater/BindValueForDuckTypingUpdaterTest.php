@@ -51,7 +51,7 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
         $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame('0', (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('0', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItSetBindValueForSingleValueSelect(): void
@@ -65,7 +65,7 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
         $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame('309', (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('309', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItSetBindValueForMultipleValuesSelect(): void
@@ -83,7 +83,7 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
         $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame('190', (string) $changeset_xml->field_change[0]->value);
+        self::assertSame('190', (string) $changeset_xml->field_change[0]->value);
     }
 
     public function testItIgnoresDuplicates(): void

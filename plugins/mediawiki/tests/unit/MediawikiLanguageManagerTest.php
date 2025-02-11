@@ -56,7 +56,7 @@ final class MediawikiLanguageManagerTest extends TestCase
     {
         $this->dao->method('getUsedLanguageForProject')->willReturn(['language' => 'ja_JP']);
 
-        $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'ja_JP');
+        self::assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'ja_JP');
     }
 
     public function testItUsesTheSystemLangIfThereIsOnlyOneAndNoProjectLanguage(): void
@@ -66,7 +66,7 @@ final class MediawikiLanguageManagerTest extends TestCase
 
         $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
 
-        $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
+        self::assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
     }
 
     public function testItUsesTheSystemLangIfThereIsOnlyOneAndNullProjectLanguage(): void
@@ -76,7 +76,7 @@ final class MediawikiLanguageManagerTest extends TestCase
 
         $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
 
-        $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
+        self::assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
     }
 
     public function testItSavesTheSystemLangIfThereIsOnlyOneAndNoProjectLanguage(): void
@@ -94,7 +94,7 @@ final class MediawikiLanguageManagerTest extends TestCase
         ForgeConfig::set('sys_supported_languages', 'it_IT,ja_JP');
         $this->dao->method('getUsedLanguageForProject')->willReturn(false);
 
-        $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), null);
+        self::assertSame($this->language_manager->getUsedLanguageForProject($this->project), null);
     }
 
     public function testItSavesNothingIfThereAreNoProjectLanguageAndMoreThanOneSystemLanguage(): void

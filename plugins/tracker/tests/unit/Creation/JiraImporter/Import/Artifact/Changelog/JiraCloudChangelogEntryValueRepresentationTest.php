@@ -53,8 +53,8 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
 
         $representation = JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
 
-        $this->assertSame(10057, $representation->getId());
-        $this->assertSame(1585141810, $representation->getCreated()->getTimestamp());
+        self::assertSame(10057, $representation->getId());
+        self::assertSame(1585141810, $representation->getCreated()->getTimestamp());
         $this->assertCount(1, $representation->getItemRepresentations());
         $this->assertEquals($representation->getChangelogOwner()->getDisplayName(), 'John Doe');
     }

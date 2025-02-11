@@ -254,6 +254,6 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), $duration);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
-        $this->assertSame([0 => null], $user_burndown_data->getRemainingEffort());
+        self::assertSame([0 => null], $user_burndown_data->getRemainingEffort());
     }
 }

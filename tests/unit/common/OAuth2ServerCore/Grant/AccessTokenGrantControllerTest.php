@@ -81,7 +81,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $response = $this->controller->handle($request);
-        $this->assertSame($expected_response, $response);
+        self::assertSame($expected_response, $response);
     }
 
     public function testSuccessfullyGrantAccessTokenWithRefreshToken(): void
@@ -98,7 +98,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $response = $this->controller->handle($request);
-        $this->assertSame($expected_response, $response);
+        self::assertSame($expected_response, $response);
     }
 
     public function testRejectsRequestThatDoesNotHaveAnExplicitGrantType(): void

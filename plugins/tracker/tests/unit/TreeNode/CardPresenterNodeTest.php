@@ -35,7 +35,7 @@ final class Tracker_TreeNode_CardPresenterNodeTest extends \Tuleap\Test\PHPUnit\
 
         $presenter_node = $this->newNode($tree_node);
         $this->assertEquals($presenter_node->getId(), $tree_node->getId());
-        $this->assertSame($presenter_node->getData(), $tree_node->getData());
+        self::assertSame($presenter_node->getData(), $tree_node->getData());
         $this->assertEquals($presenter_node->getChildren(), $tree_node->getChildren());
         $this->assertEquals($presenter_node->getObject(), $tree_node->getObject());
     }

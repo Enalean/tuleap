@@ -310,7 +310,7 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function checkItHasAReportNamedBugs(): void
     {
-        $this->assertSame('Bugs', $this->bugs_report->name);
+        self::assertSame('Bugs', $this->bugs_report->name);
     }
 
     private function checkItHasFourCriteria(): void

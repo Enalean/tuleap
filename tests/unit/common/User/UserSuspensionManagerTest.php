@@ -150,8 +150,16 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('delayForBeingSubscribed')
             ->with($non_project_member_1, $last_remove)
             ->willReturn([[null]]);
+        $matcher = $this->exactly(2);
 
-        $this->dao->method('suspendAccount')->withConsecutive([$non_project_member_1], [$non_project_member_2]);
+        $this->dao->expects($matcher)->method('suspendAccount')->willReturnCallback(function (...$parameters) use ($matcher, $non_project_member_1, $non_project_member_2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($non_project_member_1, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($non_project_member_2, $parameters[0]);
+            }
+        });
 
         $this->dao->expects(self::once())->method('suspendInactiveAccounts')->with($last_valid_access);
         $this->dao->expects(self::once())->method('suspendExpiredAccounts')->with($test_date);

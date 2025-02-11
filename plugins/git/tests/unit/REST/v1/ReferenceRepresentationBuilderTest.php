@@ -69,20 +69,20 @@ final class ReferenceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->assertCount(4, $references);
 
-        $this->assertSame('in', $references[0]->direction);
-        $this->assertSame('story #1234', $references[0]->ref);
-        $this->assertSame('custom_url', $references[0]->url);
+        self::assertSame('in', $references[0]->direction);
+        self::assertSame('story #1234', $references[0]->ref);
+        self::assertSame('custom_url', $references[0]->url);
 
-        $this->assertSame('in', $references[1]->direction);
-        $this->assertSame('art #123', $references[1]->ref);
-        $this->assertSame('custom_url2', $references[1]->url);
+        self::assertSame('in', $references[1]->direction);
+        self::assertSame('art #123', $references[1]->ref);
+        self::assertSame('custom_url2', $references[1]->url);
 
-        $this->assertSame('out', $references[2]->direction);
-        $this->assertSame('custom_url3', $references[2]->url);
-        $this->assertSame('rel #1234', $references[2]->ref);
+        self::assertSame('out', $references[2]->direction);
+        self::assertSame('custom_url3', $references[2]->url);
+        self::assertSame('rel #1234', $references[2]->ref);
 
-        $this->assertSame('both', $references[3]->direction);
-        $this->assertSame('custom_url4', $references[3]->url);
-        $this->assertSame('epic #123', $references[3]->ref);
+        self::assertSame('both', $references[3]->direction);
+        self::assertSame('custom_url4', $references[3]->url);
+        self::assertSame('epic #123', $references[3]->ref);
     }
 }

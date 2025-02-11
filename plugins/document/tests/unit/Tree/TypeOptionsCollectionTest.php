@@ -35,7 +35,7 @@ final class TypeOptionsCollectionTest extends TestCase
 
         $collection->addOptionAfter('stuff', $option);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 $option,
             ],
@@ -54,7 +54,7 @@ final class TypeOptionsCollectionTest extends TestCase
 
         $collection->addOptionAfter('folder', $file);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 $folder,
                 $file,
@@ -76,7 +76,7 @@ final class TypeOptionsCollectionTest extends TestCase
 
         $collection->addOptionAfter('file', $wiki);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 $folder,
                 $file,
@@ -99,7 +99,7 @@ final class TypeOptionsCollectionTest extends TestCase
 
         $collection->addOptionAfter('folder', $wiki);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 $folder,
                 $wiki,

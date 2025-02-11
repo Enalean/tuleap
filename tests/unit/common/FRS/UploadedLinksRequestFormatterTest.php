@@ -29,15 +29,21 @@ final class UploadedLinksRequestFormatterTest extends TestCase
     public function testItExtractsOneArrayFromLinksProvidedInRequest(): void
     {
         $request = $this->createMock(HTTPRequest::class);
-        $request->method('get')->withConsecutive(
-            ['uploaded-link-name'],
-            ['uploaded-link'],
-            ['uploaded-link']
-        )->willReturnOnConsecutiveCalls(
-            ['test', ''],
-            ['http://example.com', 'ftp://example.com'],
-            ['http://example.com', 'ftp://example.com']
-        );
+        $matcher = $this->exactly(3);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('uploaded-link-name', $parameters[0]);
+                return ['test', ''];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return ['http://example.com', 'ftp://example.com'];
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return ['http://example.com', 'ftp://example.com'];
+            }
+        });
         $request->method('validArray')->willReturn(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
@@ -52,15 +58,21 @@ final class UploadedLinksRequestFormatterTest extends TestCase
     public function testItThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput(): void
     {
         $request = $this->createMock(HTTPRequest::class);
-        $request->method('get')->withConsecutive(
-            ['uploaded-link-name'],
-            ['uploaded-link'],
-            ['uploaded-link']
-        )->willReturnOnConsecutiveCalls(
-            ['test'],
-            ['http://example.com', 'https://example.com'],
-            ['http://example.com', 'https://example.com']
-        );
+        $matcher = $this->exactly(3);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('uploaded-link-name', $parameters[0]);
+                return ['test'];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return ['http://example.com', 'https://example.com'];
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return ['http://example.com', 'https://example.com'];
+            }
+        });
         $request->method('validArray')->willReturn(true);
 
         self::expectException(UploadedLinksInvalidFormException::class);
@@ -71,15 +83,21 @@ final class UploadedLinksRequestFormatterTest extends TestCase
     public function testItDoesNotAcceptInvalidLinks(): void
     {
         $request = $this->createMock(HTTPRequest::class);
-        $request->method('get')->withConsecutive(
-            ['uploaded-link-name'],
-            ['uploaded-link'],
-            ['uploaded-link']
-        )->willReturnOnConsecutiveCalls(
-            ['invalid'],
-            ['example.com'],
-            ['example.com']
-        );
+        $matcher = $this->exactly(3);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('uploaded-link-name', $parameters[0]);
+                return ['invalid'];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return ['example.com'];
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return ['example.com'];
+            }
+        });
         $request->method('validArray')->willReturn(true);
 
         $formatter = new UploadedLinksRequestFormatter();
@@ -91,15 +109,21 @@ final class UploadedLinksRequestFormatterTest extends TestCase
     public function testItDoesNotEmptyLinks(): void
     {
         $request = $this->createMock(HTTPRequest::class);
-        $request->method('get')->withConsecutive(
-            ['uploaded-link-name'],
-            ['uploaded-link'],
-            ['uploaded-link']
-        )->willReturnOnConsecutiveCalls(
-            [''],
-            [''],
-            ['']
-        );
+        $matcher = $this->exactly(3);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('uploaded-link-name', $parameters[0]);
+                return [''];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return [''];
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('uploaded-link', $parameters[0]);
+                return [''];
+            }
+        });
         $request->method('validArray')->willReturn(true);
 
         $formatter      = new UploadedLinksRequestFormatter();

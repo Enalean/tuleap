@@ -94,7 +94,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
 
         $verified_authorization = $this->verifier->getAuthorizationCode($auth_code);
 
-        $this->assertSame($expected_user, $verified_authorization->getUser());
+        self::assertSame($expected_user, $verified_authorization->getUser());
         $this->assertEquals([OAuth2TestScope::fromItself()], $verified_authorization->getScopes());
     }
 

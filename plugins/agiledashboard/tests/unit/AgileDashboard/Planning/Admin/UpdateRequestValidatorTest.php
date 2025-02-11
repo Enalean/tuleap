@@ -108,7 +108,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $validated_updated_planning = $this->validate($request);
         $this->assertNotNull($validated_updated_planning);
-        $this->assertSame((string) self::ORIGINAL_MILESTONE_TRACKER_ID, $validated_updated_planning->planning_tracker_id);
+        self::assertSame((string) self::ORIGINAL_MILESTONE_TRACKER_ID, $validated_updated_planning->planning_tracker_id);
     }
 
     public function testItRejectsTheRequestWhenPlanningTrackerIsUnavailable(): void
@@ -140,12 +140,12 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $validated_updated_planning = $this->validate($request);
         $this->assertNotNull($validated_updated_planning);
-        $this->assertSame('Release Planning', $validated_updated_planning->name);
+        self::assertSame('Release Planning', $validated_updated_planning->name);
         $this->assertContains(10, $validated_updated_planning->backlog_tracker_ids);
         $this->assertContains(26, $validated_updated_planning->backlog_tracker_ids);
-        $this->assertSame(self::NEW_MILESTONE_TRACKER_ID, $validated_updated_planning->planning_tracker_id);
-        $this->assertSame('Product Backlog', $validated_updated_planning->backlog_title);
-        $this->assertSame('Release Plan', $validated_updated_planning->plan_title);
+        self::assertSame(self::NEW_MILESTONE_TRACKER_ID, $validated_updated_planning->planning_tracker_id);
+        self::assertSame('Product Backlog', $validated_updated_planning->backlog_title);
+        self::assertSame('Release Plan', $validated_updated_planning->plan_title);
     }
 
     public function testItReturnsValidatedPlanningParametersWhenPlanningTrackerDidNotChange(): void

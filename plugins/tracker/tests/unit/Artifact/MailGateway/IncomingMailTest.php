@@ -29,8 +29,8 @@ class IncomingMailTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $incoming_mail = new IncomingMail(file_get_contents($mail_content_path));
 
-        $this->assertSame('Re: [tasks #1661] Do it', $incoming_mail->getSubject());
-        $this->assertSame(['nicolas.terray@example.com'], $incoming_mail->getFrom());
+        self::assertSame('Re: [tasks #1661] Do it', $incoming_mail->getSubject());
+        self::assertSame(['nicolas.terray@example.com'], $incoming_mail->getFrom());
         $this->assertStringEqualsFile(
             __DIR__ . '/_fixtures/expected_followup.text.txt',
             $incoming_mail->getBodyText()
@@ -50,12 +50,12 @@ class IncomingMailTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUTF8BodyIsReturnedFromISO8859Mail()
     {
         $incoming_mail = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/mail-iso-8859-1.txt'));
-        $this->assertSame('This should be correctly displayed: èàéô', $incoming_mail->getBodyText());
+        self::assertSame('This should be correctly displayed: èàéô', $incoming_mail->getBodyText());
     }
 
     public function testEmptyBodyIsReturnedWhenNoTextBody()
     {
         $incoming_mail = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/reply-comment.html.eml'));
-        $this->assertSame('', $incoming_mail->getBodyText());
+        self::assertSame('', $incoming_mail->getBodyText());
     }
 }

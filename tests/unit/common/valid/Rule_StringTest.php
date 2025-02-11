@@ -33,7 +33,7 @@ class Rule_StringTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($r->isValid('abcd'));
         $this->assertTrue($r->isValid('abcd efg'));
 
-        $this->assertSame("\n", chr(10));
+        self::assertSame("\n", chr(10));
 
         // Unix
         $this->assertFalse($r->isValid("abcd\nfg"));
@@ -55,7 +55,7 @@ class Rule_StringTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNull(): void
     {
         $r = new Rule_NoCr();
-        $this->assertSame("\0", chr(0));
+        self::assertSame("\0", chr(0));
         $this->assertFalse($r->isValid("abcd\0fg"));
         $this->assertFalse($r->isValid("\0abcdfg"));
         $this->assertFalse($r->isValid("abcdfg\0"));

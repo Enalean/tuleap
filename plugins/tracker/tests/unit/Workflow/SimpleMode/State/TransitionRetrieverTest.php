@@ -77,7 +77,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($state);
 
         $transition = $this->transition_retriever->getReferenceTransitionForCurrentState($artifact);
-        $this->assertSame($expected_transition, $transition);
+        self::assertSame($expected_transition, $transition);
     }
 
     public function testFirstTransitionForAnArtifactStateDoesNotExistWhenThereIsNoWorkflow(): void

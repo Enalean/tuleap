@@ -110,22 +110,25 @@ final class MilestoneStatusCounterTest extends TestCase
         $this->artifact_dao->method('getChildrenForArtifacts')->with([35, 36])->willReturn(
             [['id' => 38], ['id' => 39], ['id' => 40]]
         );
+        $matcher = $this->exactly(2);
 
-        $this->artifact_dao->method('getArtifactsStatusByIds')
-            ->withConsecutive(
-                [[35, 36]], // Level 0
-                [[38, 39, 40]] // Level -1
-            )->willReturnOnConsecutiveCalls(
-                [
+        $this->artifact_dao->expects($matcher)->method('getArtifactsStatusByIds')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame([35, 36], $parameters[0]);
+                return [
                     ['id' => 36, 'status' => Artifact::STATUS_OPEN],
                     ['id' => 35, 'status' => Artifact::STATUS_CLOSED],
-                ],
-                [
+                ];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame([38, 39, 40], $parameters[0]);
+                return [
                     ['id' => 38, 'status' => Artifact::STATUS_OPEN],
                     ['id' => 39, 'status' => Artifact::STATUS_CLOSED],
                     ['id' => 40, 'status' => Artifact::STATUS_CLOSED],
-                ],
-            );
+                ];
+            }
+        });
 
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals([
@@ -142,9 +145,17 @@ final class MilestoneStatusCounterTest extends TestCase
         $other_artifact = ArtifactTestBuilder::anArtifact(36)
             ->userCanView($this->user)
             ->build();
-        $this->artifact_factory->method('getArtifactById')
-            ->withConsecutive([35], [36])
-            ->willReturnOnConsecutiveCalls($artifact, $other_artifact);
+        $matcher        = $this->exactly(2);
+        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $artifact, $other_artifact) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(35, $parameters[0]);
+                return $artifact;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(36, $parameters[0]);
+                return $other_artifact;
+            }
+        });
 
         $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 35], ['id' => 36]]);
         $this->artifact_dao->method('getArtifactsStatusByIds')->willReturn([['id' => 36, 'status' => Artifact::STATUS_OPEN]]);
@@ -167,18 +178,35 @@ final class MilestoneStatusCounterTest extends TestCase
         $artifact_38 = ArtifactTestBuilder::anArtifact(38)
             ->userCanView($this->user)
             ->build();
+        $matcher     = $this->exactly(3);
 
-        $this->artifact_factory->method('getArtifactById')
-            ->withConsecutive([36], [37], [38])
-            ->willReturnOnConsecutiveCalls($artifact_36, $artifact_37, $artifact_38);
+        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $artifact_36, $artifact_37, $artifact_38) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(36, $parameters[0]);
+                return $artifact_36;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(37, $parameters[0]);
+                return $artifact_37;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(38, $parameters[0]);
+                return $artifact_38;
+            }
+        });
 
         $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 36]]);
-        $this->artifact_dao->method('getArtifactsStatusByIds')
-            ->withConsecutive([[36]], [[37, 38]])
-            ->willReturnOnConsecutiveCalls(
-                [['id' => 36, 'status' => Artifact::STATUS_OPEN]],
-                [['id' => 38, 'status' => Artifact::STATUS_OPEN]],
-            );
+        $matcher = $this->exactly(2);
+        $this->artifact_dao->expects($matcher)->method('getArtifactsStatusByIds')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame([36], $parameters[0]);
+                return [['id' => 36, 'status' => Artifact::STATUS_OPEN]];
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame([37, 38], $parameters[0]);
+                return [['id' => 38, 'status' => Artifact::STATUS_OPEN]];
+            }
+        });
         $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(
             [['id' => 37], ['id' => 38]]
         );

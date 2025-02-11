@@ -62,17 +62,17 @@ final class XmlReportTableExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $renderer = $renderers->renderer;
         $this->assertNotNull($renderer);
 
-        $this->assertSame('0', (string) $renderer['rank']);
-        $this->assertSame('table', (string) $renderer['type']);
-        $this->assertSame('15', (string) $renderer['chunksz']);
+        self::assertSame('0', (string) $renderer['rank']);
+        self::assertSame('table', (string) $renderer['type']);
+        self::assertSame('15', (string) $renderer['chunksz']);
 
 
-        $this->assertSame('Results', (string) $renderer->name);
+        self::assertSame('Results', (string) $renderer->name);
 
         $column_01 = $renderer->columns->field[0];
-        $this->assertSame('Fsummary', (string) $column_01['REF']);
+        self::assertSame('Fsummary', (string) $column_01['REF']);
 
         $column_02 = $renderer->columns->field[1];
-        $this->assertSame('Fdescription', (string) $column_02['REF']);
+        self::assertSame('Fdescription', (string) $column_02['REF']);
     }
 }

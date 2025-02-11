@@ -171,11 +171,18 @@ final class MasschangeUpdaterTest extends TestCase
                         ->build();
 
         $this->artifact_factory = RetrieveArtifactStub::withArtifacts($artifact_201, $artifact_202);
+        $matcher                = self::exactly(2);
 
-        $this->artifact_dao->expects(self::exactly(2))->method('createUnsubscribeNotification')->withConsecutive(
-            [201, self::USER_ID],
-            [202, self::USER_ID]
-        );
+        $this->artifact_dao->expects($matcher)->method('createUnsubscribeNotification')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(201, $parameters[0]);
+                self::assertSame(self::USER_ID, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(202, $parameters[0]);
+                self::assertSame(self::USER_ID, $parameters[1]);
+            }
+        });
 
         $expected_artifacts = [$artifact_201, $artifact_202];
 

@@ -98,7 +98,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
             ->once()
             ->andReturn(['431']);
 
-        $this->assertSame(
+        self::assertSame(
             ['10'],
             $this->bind->getNumericValues($changeset_value)
         );

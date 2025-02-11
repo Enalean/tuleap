@@ -31,7 +31,7 @@ class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $file_id = (new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
 
-        $this->assertSame(
+        self::assertSame(
             $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation($file_id, 'Filename', 123, 0)),
             $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation($file_id, 'Filename', 123, 0))
         );

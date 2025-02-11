@@ -84,15 +84,30 @@ final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.
         $cardincell_presenter1->method('getArtifact')->willReturn($artifact1);
         $cardincell_presenter2 = $this->createMock(Cardwall_CardInCellPresenter::class);
         $cardincell_presenter2->method('getArtifact')->willReturn($artifact2);
+        $matcher = $this->exactly(4);
 
-        $this->config->method('isInColumn')
-            ->withConsecutive(
-                [$artifact1, self::anything(), $column1],
-                [$artifact2, self::anything(), $column1],
-                [$artifact1, self::anything(), $column2],
-                [$artifact2, self::anything(), $column2],
-            )
-            ->willReturnOnConsecutiveCalls(true, false, false, true);
+        $this->config->expects($matcher)->method('isInColumn')->willReturnCallback(function (...$parameters) use ($matcher, $artifact1, $column1, $artifact2, $column2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($artifact1, $parameters[0]);
+                self::assertSame($column1, $parameters[2]);
+                return true;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($artifact2, $parameters[0]);
+                self::assertSame($column1, $parameters[2]);
+                return false;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($artifact1, $parameters[0]);
+                self::assertSame($column2, $parameters[2]);
+                return false;
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame($artifact2, $parameters[0]);
+                self::assertSame($column2, $parameters[2]);
+                return true;
+            }
+        });
 
         $swimlines = $this->factory->getCells($columns, [$cardincell_presenter1, $cardincell_presenter2]);
         $expected  = [

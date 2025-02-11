@@ -83,8 +83,8 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         )->withParsedBody(['app_id' => '53']);
 
         $response = $this->controller->handle($request);
-        $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame(AccountAppsController::URL, $response->getHeaderLine('Location'));
+        self::assertSame(302, $response->getStatusCode());
+        self::assertSame(AccountAppsController::URL, $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectsWithErrorWhenNoAppIdInBody(): void
@@ -97,7 +97,7 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
         $response = $this->controller->handle($request);
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
     }
 
     public function testHandleRedirectsWithErrorIfNoAuthorizationFoundForUserAndAppID(): void
@@ -117,7 +117,7 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
         $response = $this->controller->handle($request);
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
     }
 
     public function testHandleRevokesAuthorizationAndRedirects(): void
@@ -138,6 +138,6 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
         $response = $this->controller->handle($request);
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
     }
 }

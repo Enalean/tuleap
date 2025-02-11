@@ -139,10 +139,18 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
         $field_124 = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(124)->build()
         )->withStaticValues([])->build()->getField();
+        $matcher   = $this->exactly(2);
 
-        $element_factory->method('getFieldById')
-            ->withConsecutive([125], [124])
-            ->willReturnOnConsecutiveCalls(null, $field_124);
+        $element_factory->expects($matcher)->method('getFieldById')->willReturnCallback(function (...$parameters) use ($matcher, $field_124) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(125, $parameters[0]);
+                return null;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(124, $parameters[0]);
+                return $field_124;
+            }
+        });
 
         $group_id   = 234;
         $project    = ProjectTestBuilder::aProject()->withId($group_id)->build();

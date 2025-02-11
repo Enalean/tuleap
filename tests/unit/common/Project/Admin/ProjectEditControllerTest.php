@@ -82,17 +82,35 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateProjectStatus(): void
     {
         $request = $this->createMock(HTTPRequest::class);
-        $request->expects(self::exactly(2))->method('get')->withConsecutive(
-            ['new_name'],
-            ['group_id']
-        )->willReturnOnConsecutiveCalls(null, 111);
+        $matcher = self::exactly(2);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('new_name', $parameters[0]);
+                return null;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_id', $parameters[0]);
+                return 111;
+            }
+        });
 
         $this->project_manager->method('getProject')->willReturn($this->project);
+        $matcher = $this->exactly(2);
 
-        $request->method('getValidated')->withConsecutive(
-            ['form_status', 'string', 'H'],
-            ['group_type', 'string', TemplateSingleton::PROJECT]
-        )->willReturnOnConsecutiveCalls('A', TemplateSingleton::PROJECT);
+        $request->expects($matcher)->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('form_status', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame('H', $parameters[2]);
+                return 'A';
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_type', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame(TemplateSingleton::PROJECT, (int) $parameters[2]);
+                return TemplateSingleton::PROJECT;
+            }
+        });
 
         $this->dao->method('updateProjectStatusAndType');
 
@@ -111,24 +129,49 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateProjectUnixNameDoesntWorkIfUnixNameCantBeEdited(): void
     {
         $request = $this->createMock(HTTPRequest::class);
-        $request->expects(self::exactly(2))->method('get')->withConsecutive(
-            ['new_name'],
-            ['group_id']
-        )->willReturnOnConsecutiveCalls('new_name', 111);
+        $matcher = self::exactly(2);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('new_name', $parameters[0]);
+                return 'new_name';
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_id', $parameters[0]);
+                return 111;
+            }
+        });
 
         $this->project_manager->method('getProject')->willReturn($this->project);
+        $matcher = $this->exactly(2);
 
-        $request->method('getValidated')->withConsecutive(
-            ['form_status', 'string', 'H'],
-            ['group_type', 'string', TemplateSingleton::PROJECT]
-        )->willReturnOnConsecutiveCalls('A', TemplateSingleton::PROJECT);
+        $request->expects($matcher)->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('form_status', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame('H', $parameters[2]);
+                return 'A';
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_type', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame(TemplateSingleton::PROJECT, (int) $parameters[2]);
+                return TemplateSingleton::PROJECT;
+            }
+        });
 
         $this->dao->method('updateProjectStatusAndType');
+        $matcher = $this->exactly(2);
 
-        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
-            [Feedback::WARN, "This project doesn't allow short name edition."],
-            [Feedback::INFO, 'Updating Project Info']
-        );
+        $GLOBALS['Response']->expects($matcher)->method('addFeedback')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(Feedback::WARN, $parameters[0]);
+                self::assertSame("This project doesn't allow short name edition.", $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(Feedback::INFO, $parameters[0]);
+                self::assertSame('Updating Project Info', $parameters[1]);
+            }
+        });
 
         $this->project_history_dao->method('groupAddHistory');
 
@@ -150,17 +193,35 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withStatusDeleted()
             ->build();
         $request       = $this->createMock(HTTPRequest::class);
-        $request->method('get')->withConsecutive(
-            ['new_name'],
-            ['group_id']
-        )->willReturnOnConsecutiveCalls(null, 111);
+        $matcher       = $this->exactly(2);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('new_name', $parameters[0]);
+                return null;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_id', $parameters[0]);
+                return 111;
+            }
+        });
 
         $this->project_manager->method('getProject')->willReturn($this->project);
+        $matcher = $this->exactly(2);
 
-        $request->method('getValidated')->withConsecutive(
-            ['form_status', 'string', 'D'],
-            ['group_type', 'string', TemplateSingleton::PROJECT]
-        )->willReturnOnConsecutiveCalls('A', TemplateSingleton::PROJECT);
+        $request->expects($matcher)->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('form_status', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame('D', $parameters[2]);
+                return 'A';
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_type', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame(TemplateSingleton::PROJECT, (int) $parameters[2]);
+                return TemplateSingleton::PROJECT;
+            }
+        });
 
         $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR, 'A deleted project can not be restored.');
         $GLOBALS['Response']->expects(self::once())->method('redirect');
@@ -177,17 +238,35 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withStatusDeleted()
             ->build();
         $request       = $this->createMock(HTTPRequest::class);
-        $request->method('get')->withConsecutive(
-            ['new_name'],
-            ['group_id']
-        )->willReturnOnConsecutiveCalls(null, 111);
+        $matcher       = $this->exactly(2);
+        $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('new_name', $parameters[0]);
+                return null;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_id', $parameters[0]);
+                return 111;
+            }
+        });
 
         $this->project_manager->method('getProject')->willReturn($this->project);
+        $matcher = $this->exactly(2);
 
-        $request->method('getValidated')->withConsecutive(
-            ['form_status', 'string', 'D'],
-            ['group_type', 'string', TemplateSingleton::PROJECT]
-        )->willReturnOnConsecutiveCalls('P', TemplateSingleton::PROJECT);
+        $request->expects($matcher)->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('form_status', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame('D', $parameters[2]);
+                return 'P';
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('group_type', $parameters[0]);
+                self::assertSame('string', $parameters[1]);
+                self::assertSame(TemplateSingleton::PROJECT, (int) $parameters[2]);
+                return TemplateSingleton::PROJECT;
+            }
+        });
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')
             ->with(Feedback::ERROR, 'Switching the project status back to "pending" is not possible.');

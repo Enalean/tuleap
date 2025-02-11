@@ -112,14 +112,19 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateIsInvalidWhenProjectNameIsNotProvided(): void
     {
         $request = $this->createMock(HTTPRequest::class);
+        $matcher = self::exactly(2);
         $request
-            ->expects(self::exactly(2))
-            ->method('get')
-            ->withConsecutive(
-                ['form_group_name'],
-                ['form_shortdesc']
-            )
-            ->willReturnOnConsecutiveCalls(false, 'decription');
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return false;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return 'decription';
+                }
+            });
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
@@ -129,13 +134,19 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateIsInvalidWhenDescriptionIsNotProvidedAndFlagIsNotProvided(): void
     {
         $request = $this->createMock(HTTPRequest::class);
+        $matcher = self::exactly(2);
         $request
-            ->expects(self::exactly(2))
-            ->method('get')
-            ->withConsecutive(
-                ['form_group_name'],
-                ['form_shortdesc']
-            )->willReturnOnConsecutiveCalls('project_name', false);
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return false;
+                }
+            });
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
@@ -147,13 +158,19 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('enable_not_mandatory_description', false);
 
         $request = $this->createMock(HTTPRequest::class);
+        $matcher = self::exactly(2);
         $request
-            ->expects(self::exactly(2))
-            ->method('get')
-            ->withConsecutive(
-                ['form_group_name'],
-                ['form_shortdesc']
-            )->willReturnOnConsecutiveCalls('project_name', false);
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return false;
+                }
+            });
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
@@ -166,29 +183,43 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
         $request = $this->createMock(HTTPRequest::class);
+        $matcher = self::atLeast(8);
         $request
-            ->expects(self::atLeast(8))
-            ->method('get')
-            ->withConsecutive(
-                ['form_group_name'],
-                ['form_shortdesc'],
-                ['group_id'],
-                ['group_id'],
-                ['form_group_name'],
-                ['form_shortdesc'],
-                ['group_id'],
-                ['form-group-name-icon'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                'project_name',
-                false,
-                102,
-                102,
-                'project_name',
-                false,
-                102,
-                '😬',
-            );
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return false;
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 4) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 5) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 6) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return false;
+                }
+                if ($matcher->numberOfInvocations() === 7) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 8) {
+                    self::assertSame('form-group-name-icon', $parameters[0]);
+                    return '😬';
+                }
+            });
         $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
         $request->expects(self::exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
@@ -214,37 +245,59 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $request = $this->createMock(HTTPRequest::class);
+        $matcher = self::exactly(12);
         $request
-            ->expects(self::exactly(12))
-            ->method('get')
-            ->withConsecutive(
-                ['form_group_name'],
-                ['form_shortdesc'],
-                ['group_id'],
-                ['group_id'],
-                ['form_group_name'],
-                ['form_shortdesc'],
-                ['group_id'],
-                ['form-group-name-icon'],
-                ['group_id'],
-                ['project_visibility'],
-                ['term_of_service'],
-                ['project_visibility']
-            )
-            ->willReturnOnConsecutiveCalls(
-                'project_name',
-                'decription',
-                102,
-                102,
-                'project_name',
-                'decription',
-                102,
-                '',
-                102,
-                Project::ACCESS_PRIVATE_WO_RESTRICTED,
-                true,
-                Project::ACCESS_PRIVATE_WO_RESTRICTED
-            );
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return 'decription';
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 4) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 5) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 6) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return 'decription';
+                }
+                if ($matcher->numberOfInvocations() === 7) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 8) {
+                    self::assertSame('form-group-name-icon', $parameters[0]);
+                    return '';
+                }
+                if ($matcher->numberOfInvocations() === 9) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 10) {
+                    self::assertSame('project_visibility', $parameters[0]);
+                    return Project::ACCESS_PRIVATE_WO_RESTRICTED;
+                }
+                if ($matcher->numberOfInvocations() === 11) {
+                    self::assertSame('term_of_service', $parameters[0]);
+                    return true;
+                }
+                if ($matcher->numberOfInvocations() === 12) {
+                    self::assertSame('project_visibility', $parameters[0]);
+                    return Project::ACCESS_PRIVATE_WO_RESTRICTED;
+                }
+            });
         $current_user = $this->createMock(PFUser::class);
         $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn($current_user);
         $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
@@ -267,11 +320,18 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->expects(self::once())->method('processEvent');
         $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureProjectVisibility')->willReturn(true);
         $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureTruncatedMail')->willReturn(false);
+        $matcher = self::exactly(2);
 
-        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback')->withConsecutive(
-            [Feedback::INFO, _('Update successful')],
-            [Feedback::ERROR, _('Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.')],
-        );
+        $GLOBALS['Response']->expects($matcher)->method('addFeedback')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(Feedback::INFO, $parameters[0]);
+                self::assertSame(_('Update successful'), $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(Feedback::ERROR, $parameters[0]);
+                self::assertSame(_('Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.'), $parameters[1]);
+            }
+        });
 
         $this->controller->update($request);
     }
@@ -281,31 +341,47 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
         $request = $this->createMock(HTTPRequest::class);
+        $matcher = self::exactly(9);
         $request
-            ->expects(self::exactly(9))
-            ->method('get')
-            ->withConsecutive(
-                ['form_group_name'],
-                ['form_shortdesc'],
-                ['group_id'],
-                ['group_id'],
-                ['form_group_name'],
-                ['form_shortdesc'],
-                ['group_id'],
-                ['form-group-name-icon'],
-                ['group_id']
-            )
-            ->willReturnOnConsecutiveCalls(
-                'project_name',
-                'decription',
-                102,
-                102,
-                'project_name',
-                'decription',
-                102,
-                '',
-                102
-            );
+            ->expects($matcher)
+            ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return 'decription';
+                }
+                if ($matcher->numberOfInvocations() === 3) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 4) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 5) {
+                    self::assertSame('form_group_name', $parameters[0]);
+                    return 'project_name';
+                }
+                if ($matcher->numberOfInvocations() === 6) {
+                    self::assertSame('form_shortdesc', $parameters[0]);
+                    return 'decription';
+                }
+                if ($matcher->numberOfInvocations() === 7) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+                if ($matcher->numberOfInvocations() === 8) {
+                    self::assertSame('form-group-name-icon', $parameters[0]);
+                    return '';
+                }
+                if ($matcher->numberOfInvocations() === 9) {
+                    self::assertSame('group_id', $parameters[0]);
+                    return 102;
+                }
+            });
         $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
         $request->expects(self::exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());

@@ -138,9 +138,17 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $hierarchy_manager = $this->createPartialMock(\Project_HierarchyManager::class, [
             'getParentProject',
         ]);
-        $hierarchy_manager->method('getParentProject')
-            ->withConsecutive([145], [247])
-            ->willReturnOnConsecutiveCalls($father_project, false);
+        $matcher           = $this->exactly(2);
+        $hierarchy_manager->expects($matcher)->method('getParentProject')->willReturnCallback(function (...$parameters) use ($matcher, $father_project) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(145, (int) $parameters[0]);
+                return $father_project;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(247, (int) $parameters[0]);
+                return false;
+            }
+        });
 
         $result   = $hierarchy_manager->getAllParents($project_id);
         $expected = [247];
@@ -159,9 +167,25 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $hierarchy_manager = $this->createPartialMock(\Project_HierarchyManager::class, [
             'getParentProject',
         ]);
-        $hierarchy_manager->method('getParentProject')
-            ->withConsecutive([111], [222], [333], [444])
-            ->willReturnOnConsecutiveCalls($mother_project, $grand_mother_project, $great_grand_mother_project, false);
+        $matcher           = $this->exactly(4);
+        $hierarchy_manager->expects($matcher)->method('getParentProject')->willReturnCallback(function (...$parameters) use ($matcher, $mother_project, $grand_mother_project, $great_grand_mother_project) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(111, (int) $parameters[0]);
+                return $mother_project;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(222, (int) $parameters[0]);
+                return $grand_mother_project;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(333, (int) $parameters[0]);
+                return $great_grand_mother_project;
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame(444, (int) $parameters[0]);
+                return false;
+            }
+        });
 
         $result   = $hierarchy_manager->getAllParents($project_id);
         $expected = [

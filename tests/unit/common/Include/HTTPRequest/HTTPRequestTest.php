@@ -102,7 +102,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testSingleton(): void
     {
-        $this->assertSame(
+        self::assertSame(
             HTTPRequest::instance(),
             HTTPRequest::instance()
         );
@@ -230,11 +230,18 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'validate',
         ]);
         $v->expects(self::once())->method('getKey')->willReturn('testkey_array');
-        $v->method('validate')->withConsecutive(
-            ['testvalue1'],
-            ['testvalue2'],
-            ['testvalue3']
-        );
+        $matcher = $this->exactly(3);
+        $v->expects($matcher)->method('validate')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('testvalue1', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('testvalue2', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('testvalue3', $parameters[0]);
+            }
+        });
         $r = new HTTPRequest();
         $r->validArray($v);
     }

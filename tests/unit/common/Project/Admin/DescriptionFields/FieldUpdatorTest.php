@@ -74,15 +74,24 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ['group_desc_id' => 3],
             ]
         );
+        $matcher = self::exactly(2);
 
         $this->dao
-            ->expects(self::exactly(2))
-            ->method('createGroupDescription')
-            ->withConsecutive(
-                [$group_id, 1, 'My field 1 content'],
-                [$group_id, 2, 'Other content for field 2']
-            )
-            ->willReturnOnConsecutiveCalls(100, 101);
+            ->expects($matcher)
+            ->method('createGroupDescription')->willReturnCallback(function (...$parameters) use ($matcher, $group_id) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($group_id, $parameters[0]);
+                    self::assertSame(1, $parameters[1]);
+                    self::assertSame('My field 1 content', $parameters[2]);
+                    return 100;
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($group_id, $parameters[0]);
+                    self::assertSame(2, $parameters[1]);
+                    self::assertSame('Other content for field 2', $parameters[2]);
+                    return 101;
+                }
+            });
 
         $this->updater->update($project_data, $group_id);
     }

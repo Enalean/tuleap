@@ -52,8 +52,8 @@ final class ArtifactDependenciesDeletorTest extends TestCase
         $computed_dao_cache                = $this->createStub(ComputedFieldDaoCache::class);
         $recently_visited_dao              = $this->createStub(RecentlyVisitedDao::class);
         $artifact_removal                  = $this->createStub(PendingArtifactRemovalDao::class);
-        $this->post_move_deletor           = $this->createStub(PostArtifactMoveReferencesCleaner::class);
-        $this->artifact_deletor            = $this->createStub(PostArtifactDeletionCleaner::class);
+        $this->post_move_deletor           = $this->createMock(PostArtifactMoveReferencesCleaner::class);
+        $this->artifact_deletor            = $this->createMock(PostArtifactDeletionCleaner::class);
 
         $permissions_manager->expects(self::atLeastOnce())->method('clearPermission');
         $dao->expects(self::atLeastOnce())->method('deleteUnsubscribeNotificationForArtifact');

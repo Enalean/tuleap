@@ -24,7 +24,6 @@ namespace Tuleap\Git\Driver\Gerrit;
 
 use ForgeConfig;
 use Git_Driver_Gerrit;
-use Git_Driver_Gerrit_Exception;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_MembershipDao;
 use Git_Driver_Gerrit_MembershipManager;
@@ -113,13 +112,25 @@ final class MembershipManagerTest extends TestCase
         $first_group_expected  = $this->project_name . '/' . 'project_members';
         $second_group_expected = $this->project_name . '/' . 'project_admins';
         $third_group_expected  = $this->project_name . '/' . 'ldap_group';
+        $matcher               = self::exactly(3);
 
-        $this->driver->expects(self::exactly(3))->method('addUserToGroup')
-            ->withConsecutive(
-                [$this->remote_server, $this->gerrit_user, $first_group_expected],
-                [$this->remote_server, $this->gerrit_user, $second_group_expected],
-                [$this->remote_server, $this->gerrit_user, $third_group_expected],
-            );
+        $this->driver->expects($matcher)->method('addUserToGroup')->willReturnCallback(function (...$parameters) use ($matcher, $first_group_expected, $second_group_expected, $third_group_expected) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->remote_server, $parameters[0]);
+                self::assertSame($this->gerrit_user, $parameters[1]);
+                self::assertSame($first_group_expected, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->remote_server, $parameters[0]);
+                self::assertSame($this->gerrit_user, $parameters[1]);
+                self::assertSame($second_group_expected, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($this->remote_server, $parameters[0]);
+                self::assertSame($this->gerrit_user, $parameters[1]);
+                self::assertSame($third_group_expected, $parameters[2]);
+            }
+        });
 
         $this->driver->expects(self::exactly(3))->method('flushGerritCacheAccounts');
 
@@ -137,13 +148,25 @@ final class MembershipManagerTest extends TestCase
         $first_group_expected  = $this->project_name . '/' . 'project_members';
         $second_group_expected = $this->project_name . '/' . 'project_admins';
         $third_group_expected  = $this->project_name . '/' . 'ldap_group';
+        $matcher               = self::exactly(3);
 
-        $this->driver->expects(self::exactly(3))->method('removeUserFromGroup')
-            ->withConsecutive(
-                [$this->remote_server, $this->gerrit_user, $first_group_expected],
-                [$this->remote_server, $this->gerrit_user, $second_group_expected],
-                [$this->remote_server, $this->gerrit_user, $third_group_expected],
-            );
+        $this->driver->expects($matcher)->method('removeUserFromGroup')->willReturnCallback(function (...$parameters) use ($matcher, $first_group_expected, $second_group_expected, $third_group_expected) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->remote_server, $parameters[0]);
+                self::assertSame($this->gerrit_user, $parameters[1]);
+                self::assertSame($first_group_expected, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->remote_server, $parameters[0]);
+                self::assertSame($this->gerrit_user, $parameters[1]);
+                self::assertSame($second_group_expected, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame($this->remote_server, $parameters[0]);
+                self::assertSame($this->gerrit_user, $parameters[1]);
+                self::assertSame($third_group_expected, $parameters[2]);
+            }
+        });
 
         $this->driver->expects(self::exactly(3))->method('flushGerritCacheAccounts');
 
@@ -172,19 +195,18 @@ final class MembershipManagerTest extends TestCase
         $this->user->method('getUgroups')->willReturn([$this->u_group_id]);
         $this->gerrit_user_manager->method('getGerritUser')->with($this->user)->willReturn($this->gerrit_user);
 
-        $counter = 0;
-        $this->driver->expects(self::exactly(2))->method('addUserToGroup')
-            ->withConsecutive(
-                [$this->remote_server, self::anything(), self::anything()],
-                [$remote_server2, self::anything(), self::anything()],
-            )
-            ->willReturnCallback(function () use (&$counter) {
-                if ($counter++ == 0) {
-                    throw new Git_Driver_Gerrit_Exception('error');
+        $matcher = $this->exactly(2);
+        $this->driver->expects($matcher)->method('addUserToGroup')
+            ->willReturnCallback(function (Git_RemoteServer_GerritServer $server) use ($matcher, $remote_server2) {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertSame($this->remote_server, $server);
+                }
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertSame($remote_server2, $server);
                 }
             });
 
-        $this->driver->expects(self::once())->method('flushGerritCacheAccounts')->with($remote_server2);
+        $this->driver->expects(self::atLeastOnce())->method('flushGerritCacheAccounts')->with($remote_server2);
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }

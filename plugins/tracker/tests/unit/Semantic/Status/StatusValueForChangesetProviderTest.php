@@ -98,6 +98,6 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $done = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $value->expects(self::once())->method('getListValues')->willReturn([$todo, $done]);
 
-        $this->assertSame($todo, $this->provider->getStatusValueForChangeset($this->changeset, $this->user));
+        self::assertSame($todo, $this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
 }

@@ -39,12 +39,10 @@ final class UGroupGetMembersTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $garfield = new \PFUser($this->garfield_incomplete_row);
         $goofy    = new \PFUser($this->goofy_incomplete_row);
-        $user_manager->method('getUserById')
-            ->withConsecutive(
-                [$this->garfield_incomplete_row['user_id']],
-                [$this->goofy_incomplete_row['user_id']]
-            )
-            ->willReturnOnConsecutiveCalls($garfield, $goofy);
+        $user_manager->method('getUserById')->willReturnMap([
+            [$this->garfield_incomplete_row['user_id'], $garfield],
+            [$this->goofy_incomplete_row['user_id'], $goofy],
+        ]);
     }
 
     protected function tearDown(): void

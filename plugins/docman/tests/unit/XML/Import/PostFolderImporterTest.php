@@ -42,12 +42,18 @@ final class PostFolderImporterTest extends TestCase
 
         $node_importer = $this->createMock(NodeImporter::class);
         $item          = new Docman_Item();
+        $matcher       = self::exactly(2);
 
-        $node_importer->expects(self::exactly(2))->method('import')
-            ->withConsecutive(
-                [self::callback(static fn(SimpleXMLElement $node) => (string) $node['type'] === 'empty'), $item],
-                [self::callback(static fn(SimpleXMLElement $node) => (string) $node['type'] === 'wiki'), $item],
-            );
+        $node_importer->expects($matcher)->method('import')->willReturnCallback(function (...$parameters) use ($matcher, $item) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('empty', (string) $parameters[0]['type']);
+                self::assertSame($item, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('wiki', (string) $parameters[0]['type']);
+                self::assertSame($item, $parameters[1]);
+            }
+        });
 
         $importer = new PostFolderImporter();
         $importer->postImport($node_importer, $node, $item);

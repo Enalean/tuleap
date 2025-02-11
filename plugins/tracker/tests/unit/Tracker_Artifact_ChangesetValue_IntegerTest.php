@@ -36,10 +36,10 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \Tuleap\Test\PHP
         $field    = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $changest = Mockery::mock(Tracker_Artifact_Changeset::class);
         $integer  = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, 42);
-        $this->assertSame(42, $integer->getInteger());
+        self::assertSame(42, $integer->getInteger());
 
         $string_int = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, '55');
-        $this->assertSame(55, $string_int->getInteger());
+        self::assertSame(55, $string_int->getInteger());
 
         $null_int = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, null);
         $this->assertNull($null_int->getInteger());

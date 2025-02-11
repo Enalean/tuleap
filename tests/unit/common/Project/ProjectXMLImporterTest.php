@@ -170,36 +170,68 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_02 = UserTestBuilder::aUser()->withLdapId('ldap_02')->withUserName('user_02')->withId(102)->build();
         $user_03 = UserTestBuilder::aUser()->withLdapId('ldap_03')->withUserName('user_03')->withId(103)->build();
         $user_04 = UserTestBuilder::aUser()->withUserName('user_04')->withId(104)->build();
+        $matcher = $this->exactly(4);
 
-        $this->user_manager->method('getUserByIdentifier')
-            ->withConsecutive(
-                ['ldapId:ldap_01'],
-                ['ldapId:ldap_02'],
-                ['user_04'],
-                ['ldapId:ldap_03'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $user_01,
-                $user_02,
-                $user_04,
-                $user_03,
-            );
+        $this->user_manager->expects($matcher)->method('getUserByIdentifier')->willReturnCallback(function (...$parameters) use ($matcher, $user_01, $user_02, $user_03, $user_04) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('ldapId:ldap_01', $parameters[0]);
+                return $user_01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('ldapId:ldap_02', $parameters[0]);
+                return $user_02;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('user_04', $parameters[0]);
+                return $user_04;
+            }
+            if ($matcher->numberOfInvocations() === 4) {
+                self::assertSame('ldapId:ldap_03', $parameters[0]);
+                return $user_03;
+            }
+        });
+        $matcher = $this->exactly(3);
 
-        $this->ugroup_manager->method('createEmptyUgroup')
-            ->withConsecutive(
-                [122, 'ug01', 'descr01'],
-                [122, 'ug02', 'descr02'],
-                [122, 'ug03', 'descr03']
-            )
-            ->willReturnOnConsecutiveCalls(555, 556, 557);
+        $this->ugroup_manager->expects($matcher)->method('createEmptyUgroup')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(122, (int) $parameters[0]);
+                self::assertSame('ug01', $parameters[1]);
+                self::assertSame('descr01', $parameters[2]);
+                return 555;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(122, (int) $parameters[0]);
+                self::assertSame('ug02', $parameters[1]);
+                self::assertSame('descr02', $parameters[2]);
+                return 556;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(122, (int) $parameters[0]);
+                self::assertSame('ug03', $parameters[1]);
+                self::assertSame('descr03', $parameters[2]);
+                return 557;
+            }
+        });
 
-        $ug01 = $this->createMock(\ProjectUGroup::class);
-        $ug02 = $this->createMock(\ProjectUGroup::class);
-        $ug03 = $this->createMock(\ProjectUGroup::class);
+        $ug01    = $this->createMock(\ProjectUGroup::class);
+        $ug02    = $this->createMock(\ProjectUGroup::class);
+        $ug03    = $this->createMock(\ProjectUGroup::class);
+        $matcher = $this->exactly(3);
 
-        $this->ugroup_manager->method('getById')
-            ->withConsecutive([555], [556], [557])
-            ->willReturnOnConsecutiveCalls($ug01, $ug02, $ug03);
+        $this->ugroup_manager->expects($matcher)->method('getById')->willReturnCallback(function (...$parameters) use ($matcher, $ug01, $ug02, $ug03) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(555, $parameters[0]);
+                return $ug01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(556, $parameters[0]);
+                return $ug02;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(557, $parameters[0]);
+                return $ug03;
+            }
+        });
         $this->ugroup_manager->method('getDynamicUGoupIdByName');
         $this->ugroup_manager->method('getDynamicUGoupByName');
 
@@ -219,44 +251,52 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->project_manager->method('getValidProjectByShortNameOrId')->willReturn($this->project);
         $this->ugroup_manager->method('getUGroupByName')
-            ->withConsecutive(
-                [$this->project, 'ug01'],
-                [$this->project, 'ug02'],
-                [$this->project, 'ug03'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                null,
-                \Tuleap\Test\Builders\ProjectUGroupTestBuilder::aCustomUserGroup(556)
+            ->willReturnMap([
+                [$this->project, 'ug01', null],
+                [$this->project, 'ug02', \Tuleap\Test\Builders\ProjectUGroupTestBuilder::aCustomUserGroup(556)
                     ->withName('ug02')
                     ->build(),
-                null,
-            );
+                ],
+                [$this->project, 'ug03', null],
+            ]);
 
         $user_01 = UserTestBuilder::aUser()->withLdapId('ldap_01')->withUserName('user_01')->withId(101)->build();
         $user_02 = UserTestBuilder::aUser()->withLdapId('ldap_02')->withUserName('user_02')->withId(102)->build();
         $user_04 = UserTestBuilder::aUser()->withUserName('user_04')->withId(104)->build();
 
         $this->user_manager->method('getUserByIdentifier')
-            ->withConsecutive(
-                ['ldapId:ldap_01'],
-                ['ldapId:ldap_02'],
-                ['user_04']
-            )
-            ->willReturnOnConsecutiveCalls($user_01, $user_02, $user_04);
+            ->willReturnMap([
+                ['ldapId:ldap_01', $user_01],
+                ['ldapId:ldap_02', $user_02],
+                ['user_04', $user_04],
+            ]);
 
-        $this->ugroup_manager->method('createEmptyUgroup')
-            ->withConsecutive(
-                [122, 'ug01', 'descr01'],
-                [122, 'ug03', 'descr03']
-            )
-            ->willReturnOnConsecutiveCalls(555, 557);
+        $matcher = $this->exactly(2);
+
+        $this->ugroup_manager->expects($matcher)->method('createEmptyUgroup')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(122, (int) $parameters[0]);
+                self::assertSame('ug01', $parameters[1]);
+                self::assertSame('descr01', $parameters[2]);
+                return 555;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(122, (int) $parameters[0]);
+                self::assertSame('ug03', $parameters[1]);
+                self::assertSame('descr03', $parameters[2]);
+                return 557;
+            }
+        });
         $ug01 = $this->createMock(\ProjectUGroup::class);
         $ug02 = $this->createMock(\ProjectUGroup::class);
         $ug03 = $this->createMock(\ProjectUGroup::class);
 
-        $this->ugroup_manager->method('getById')
-            ->withConsecutive([555], [557], [556])
-            ->willReturnOnConsecutiveCalls($ug01, $ug03, $ug02);
+        $this->ugroup_manager->method('getById')->willReturnMap([
+            [555, $ug01],
+            [557, $ug03],
+            [556, $ug02],
+        ]);
+
         $this->ugroup_manager->method('getDynamicUGoupIdByName');
         $this->ugroup_manager->method('getDynamicUGoupByName');
 

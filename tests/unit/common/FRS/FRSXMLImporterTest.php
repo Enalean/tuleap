@@ -212,11 +212,20 @@ XML;
     {
         $pm      = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
+        $matcher = self::atLeast(2);
 
-        $this->frs_permission_creator->expects(self::atLeast(2))->method('savePermissions')->withConsecutive(
-            [$project, [2], FRSPermission::FRS_READER],
-            [$project, [3], FRSPermission::FRS_ADMIN]
-        );
+        $this->frs_permission_creator->expects($matcher)->method('savePermissions')->willReturnCallback(function (...$parameters) use ($matcher, $project) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($project, $parameters[0]);
+                self::assertSame([2], $parameters[1]);
+                self::assertSame(FRSPermission::FRS_READER, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($project, $parameters[0]);
+                self::assertSame([3], $parameters[1]);
+                self::assertSame(FRSPermission::FRS_ADMIN, $parameters[2]);
+            }
+        });
 
         $xml = <<<XML
         <project>

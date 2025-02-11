@@ -123,7 +123,7 @@ class BurndownRemainingEffortAdderForLegacyTest extends \Tuleap\Test\PHPUnit\Tes
             1561068000 => 0,
         ];
 
-        $this->assertSame($expected_efforts, $burndown_data->getRemainingEffortsAtDate());
+        self::assertSame($expected_efforts, $burndown_data->getRemainingEffortsAtDate());
     }
 
     public function testItDoesNotAddRemainingEffortDataForLegacyWhenMilesetoneIsInTheFuture()

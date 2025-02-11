@@ -38,12 +38,12 @@ final class AzureADTenantSetupTest extends \Tuleap\Test\PHPUnit\TestCase
         sort($known_setups);
         sort($all_setups);
 
-        $this->assertSame($known_setups, $all_setups);
+        self::assertSame($known_setups, $all_setups);
 
         foreach ($all_setups as $setup) {
             $setup_from_identifier = AzureADTenantSetup::fromIdentifier($setup->getIdentifier());
 
-            $this->assertSame($setup, $setup_from_identifier);
+            self::assertSame($setup, $setup_from_identifier);
         }
     }
 

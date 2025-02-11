@@ -79,7 +79,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $representation = $this->builder->getArtifactRepresentation($current_user, $artifact, $this->buildStatusValueRepresentation());
 
-        $this->assertSame(self::ARTIFACT_ID, $representation->id);
+        self::assertSame(self::ARTIFACT_ID, $representation->id);
     }
 
     public function testGetArtifactRepresentationWithFieldValuesWhenThereAreNoFields(): void
@@ -251,7 +251,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             false
         );
 
-        $this->assertSame([], $representation->toArray());
+        self::assertSame([], $representation->toArray());
     }
 
     public function testGetArtifactChangesetsRepresentationBuildsHistoryOutOfChangeset(): void

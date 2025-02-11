@@ -50,7 +50,7 @@ class FieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $container = Mockery::mock(Tracker_FormElement_Container::class);
         $container->shouldReceive('getFormElements')->andReturn([$field_01, $field_02]);
 
-        $this->assertSame(
+        self::assertSame(
             [$field_01, $field_02],
             $this->extractor->extractFieldsInsideContainer($container)
         );
@@ -73,7 +73,7 @@ class FieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $container = Mockery::mock(Tracker_FormElement_Container::class);
         $container->shouldReceive('getFormElements')->andReturn([$field_01, $column_01]);
 
-        $this->assertSame(
+        self::assertSame(
             [$field_01, $field_02, $field_03],
             $this->extractor->extractFieldsInsideContainer($container)
         );

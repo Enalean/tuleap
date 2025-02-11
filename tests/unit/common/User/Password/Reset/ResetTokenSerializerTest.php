@@ -37,8 +37,8 @@ class ResetTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $identifier = $serializer->getIdentifier($token);
 
         $unserialized_token = $serializer->getSplitToken($identifier);
-        $this->assertSame(100, $unserialized_token->getID());
-        $this->assertSame((string) $verification_string->getString(), (string) $unserialized_token->getVerificationString()->getString());
+        self::assertSame(100, $unserialized_token->getID());
+        self::assertSame((string) $verification_string->getString(), (string) $unserialized_token->getVerificationString()->getString());
     }
 
     /**

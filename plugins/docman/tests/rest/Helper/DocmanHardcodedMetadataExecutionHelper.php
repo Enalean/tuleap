@@ -52,7 +52,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
             $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service')
         );
 
-        $this->assertSame(200, $project_response->getStatusCode());
+        self::assertSame(200, $project_response->getStatusCode());
 
         $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];
@@ -65,7 +65,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertSame(200, $project_response->getStatusCode());
+        self::assertSame(200, $project_response->getStatusCode());
 
         $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];

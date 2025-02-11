@@ -217,11 +217,21 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $user1                = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
         $user2                = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
         $user3                = UserTestBuilder::aUser()->withId(133)->withUserName('Charlie')->build();
-        $controller->feedback->method('log')->withConsecutive(
-            ['warning', 'Monitoring was not active for user "Carol"'],
-            ['warning', 'Monitoring was not active for user "Carlos"'],
-            ['warning', 'Monitoring was not active for user "Charlie"'],
-        );
+        $matcher              = $this->exactly(3);
+        $controller->feedback->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('warning', $parameters[0]);
+                self::assertSame('Monitoring was not active for user "Carol"', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('warning', $parameters[0]);
+                self::assertSame('Monitoring was not active for user "Carlos"', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('warning', $parameters[0]);
+                self::assertSame('Monitoring was not active for user "Charlie"', $parameters[1]);
+            }
+        });
         $notificationsManager                  = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager      = $notificationsManager;
         $actions                               = $this->createPartialMock(Docman_Actions::class, []);
@@ -229,7 +239,19 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
         $params['listeners_ugroups_to_delete'] = [];
         $params['item']                        = new Docman_Item();
-        $notificationsManager->method('userExists')->withConsecutive([123], [132], [133])->willReturn(false);
+        $matcher                               = $this->exactly(3);
+        $notificationsManager->expects($matcher)->method('userExists')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(123, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(132, $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(133, $parameters[0]);
+            }
+            return false;
+        });
         $notificationsManager->expects(self::never())->method('removeUser');
         $actions->update_monitoring($params);
     }
@@ -241,11 +263,21 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $user1                = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
         $user2                = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
         $user3                = UserTestBuilder::aUser()->withId(133)->withUserName('Charlie')->build();
-        $controller->feedback->method('log')->withConsecutive(
-            ['error', 'Unable to remove monitoring for user "Carol"'],
-            ['error', 'Unable to remove monitoring for user "Carlos"'],
-            ['error', 'Unable to remove monitoring for user "Charlie"'],
-        );
+        $matcher              = $this->exactly(3);
+        $controller->feedback->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('error', $parameters[0]);
+                self::assertSame('Unable to remove monitoring for user "Carol"', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('error', $parameters[0]);
+                self::assertSame('Unable to remove monitoring for user "Carlos"', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame('error', $parameters[0]);
+                self::assertSame('Unable to remove monitoring for user "Charlie"', $parameters[1]);
+            }
+        });
         $notificationsManager                  = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager      = $notificationsManager;
         $actions                               = $this->createPartialMock(Docman_Actions::class, []);
@@ -308,10 +340,17 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $actions->_controler = $controller;
         $user1               = UserTestBuilder::aUser()->withId(1)->withUserName('Carol')->build();
         $user2               = UserTestBuilder::aUser()->withId(2)->withUserName('Carlos')->build();
-        $controller->feedback->method('log')->withConsecutive(
-            ['warning', 'Monitoring for user(s) "Carol" already exists'],
-            ['warning', 'Monitoring for user(s) "Carlos" already exists'],
-        );
+        $matcher             = $this->exactly(2);
+        $controller->feedback->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('warning', $parameters[0]);
+                self::assertSame('Monitoring for user(s) "Carol" already exists', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('warning', $parameters[0]);
+                self::assertSame('Monitoring for user(s) "Carlos" already exists', $parameters[1]);
+            }
+        });
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
         $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(true);
@@ -330,12 +369,19 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $docmanPermissionsManager         = $this->createMock(Docman_PermissionsManager::class);
         $docmanPermissionsManager->method('userCanRead')->willReturn(true);
         $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
-        $user1 = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
-        $user2 = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
-        $controller->feedback->method('log')->withConsecutive(
-            ['error', 'Monitoring for user(s) "Carol" has not been added'],
-            ['error', 'Monitoring for user(s) "Carlos" has not been added'],
-        );
+        $user1   = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
+        $user2   = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
+        $matcher = $this->exactly(2);
+        $controller->feedback->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('error', $parameters[0]);
+                self::assertSame('Monitoring for user(s) "Carol" has not been added', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('error', $parameters[0]);
+                self::assertSame('Monitoring for user(s) "Carlos" has not been added', $parameters[1]);
+            }
+        });
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
         $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(false);
@@ -356,12 +402,19 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
         $actions->event_manager = $this->createMock(EventManager::class);
         $actions->event_manager->method('processEvent');
-        $user1 = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
-        $user2 = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
-        $controller->feedback->method('log')->withConsecutive(
-            ['warning', 'Insufficient permissions for user(s) "Carlos"'],
-            ['info', 'Monitoring for user(s) "Carol" has been added'],
-        );
+        $user1   = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
+        $user2   = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
+        $matcher = $this->exactly(2);
+        $controller->feedback->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('warning', $parameters[0]);
+                self::assertSame('Insufficient permissions for user(s) "Carlos"', $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('info', $parameters[0]);
+                self::assertSame('Monitoring for user(s) "Carol" has been added', $parameters[1]);
+            }
+        });
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
         $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(false);

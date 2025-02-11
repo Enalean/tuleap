@@ -179,9 +179,9 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(strtotime($expected_end_date), $date_period->getEndDate());
-        $this->assertSame(10, $date_period->getDuration());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($expected_end_date), $date_period->getEndDate());
+        self::assertSame(10, $date_period->getDuration());
     }
 
     public function testItBuildsADatePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoLastChangesetValueForStartDate(): void
@@ -201,7 +201,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertNull($date_period->getStartDate());
         $this->assertNull($date_period->getEndDate());
-        $this->assertSame(10, $date_period->getDuration());
+        self::assertSame(10, $date_period->getDuration());
     }
 
     public function testItBuildsADatePeriodForRESTWithNullDurationWhenDurationFieldHasNoLastChangeset(): void
@@ -219,7 +219,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
         self::assertNull($date_period->getEndDate());
         self::assertNull($date_period->getDuration());
     }
@@ -242,9 +242,9 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(strtotime($expected_end_date), $date_period->getEndDate());
-        $this->assertSame(10, $date_period->getDuration());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($expected_end_date), $date_period->getEndDate());
+        self::assertSame(10, $date_period->getDuration());
     }
 
     public function testItBuildsADatePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate(): void
@@ -262,9 +262,9 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(0, $date_period->getStartDate());
+        self::assertSame(0, $date_period->getStartDate());
         $this->assertNull($date_period->getEndDate());
-        $this->assertSame(10, $date_period->getDuration());
+        self::assertSame(10, $date_period->getDuration());
     }
 
     public function testItBuildsADatePeriodWithZeroDurationWhenDurationFieldHasNoLastChangeset(): void
@@ -282,9 +282,9 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(strtotime($start_date), $date_period->getEndDate());
-        $this->assertSame(0, $date_period->getDuration());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($start_date), $date_period->getEndDate());
+        self::assertSame(0, $date_period->getDuration());
     }
 
     public function testItBuildsADatePeriodForChartWhenStartDateAndDurationAreSet(): void
@@ -305,9 +305,9 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
-        $this->assertSame(strtotime($expected_end_date), $date_period->getEndDate());
-        $this->assertSame(10, $date_period->getDuration());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($expected_end_date), $date_period->getEndDate());
+        self::assertSame(10, $date_period->getDuration());
     }
 
     public function testItThrowsAnExceptionWhenStartDateIsEmptyOrHasNoValueInChartContext(): void

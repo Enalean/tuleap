@@ -26,7 +26,7 @@ use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBCreator;
 use Tuleap\DB\DBFactory;
 
-abstract class DBTablesDaoLoadKnowDataTest extends \Tuleap\Test\PHPUnit\TestCase
+abstract class DBTablesDaoLoadKnowDataTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const DB_TEST_NAME = 'testdb_dbtablesloadknowdata';
 

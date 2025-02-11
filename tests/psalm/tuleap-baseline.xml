@@ -1357,6 +1357,18 @@
       <code><![CDATA[null]]></code>
     </NullArgument>
   </file>
+  <file src="plugins/agiledashboard/tests/unit/REST/v1/MilestoneResourceValidatorTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
   <file src="plugins/agiledashboard/tests/unit/Stub/Milestone/Sidebar/PromotedMilestoneBuilderStub.php">
     <InaccessibleProperty>
       <code><![CDATA[$this->milestones]]></code>
@@ -4133,110 +4145,12 @@
       <code><![CDATA[$id]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Permission/CrossTrackerPermissionGate.php">
-    <MissingParamType>
-      <code><![CDATA[$user]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/REST/v1/CrossTrackerReportsResource.php">
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$size]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentation.php">
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[getSeparator]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentationBuilder.php">
-    <RedundantCast>
-      <code><![CDATA[(string) $artifact->getDescription()]]></code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentationFactory.php">
-    <MissingReturnType>
-      <code><![CDATA[buildRepresentations]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/BindToValueVisitor.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-    </ArgumentTypeCoercion>
-    <MissingReturnType>
-      <code><![CDATA[getBindValueIds]]></code>
-      <code><![CDATA[visitListBindNull]]></code>
-      <code><![CDATA[visitListBindStatic]]></code>
-      <code><![CDATA[visitListBindUgroups]]></code>
-      <code><![CDATA[visitListBindUsers]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/DateValue.php">
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/EmptyValue.php">
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/FormElementToValueVisitor.php">
-    <MissingReturnType>
-      <code><![CDATA[visitArtifactId]]></code>
-      <code><![CDATA[visitArtifactLink]]></code>
-      <code><![CDATA[visitBurndown]]></code>
-      <code><![CDATA[visitCheckbox]]></code>
-      <code><![CDATA[visitComputed]]></code>
-      <code><![CDATA[visitCrossReferences]]></code>
-      <code><![CDATA[visitDate]]></code>
-      <code><![CDATA[visitExternalField]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFloat]]></code>
-      <code><![CDATA[visitInteger]]></code>
-      <code><![CDATA[visitLastModifiedBy]]></code>
-      <code><![CDATA[visitLastUpdateDate]]></code>
-      <code><![CDATA[visitMultiSelectbox]]></code>
-      <code><![CDATA[visitOpenList]]></code>
-      <code><![CDATA[visitPerTrackerArtifactId]]></code>
-      <code><![CDATA[visitPermissionsOnArtifact]]></code>
-      <code><![CDATA[visitPriority]]></code>
-      <code><![CDATA[visitRadiobutton]]></code>
-      <code><![CDATA[visitSelectbox]]></code>
-      <code><![CDATA[visitString]]></code>
-      <code><![CDATA[visitSubmittedBy]]></code>
-      <code><![CDATA[visitSubmittedOn]]></code>
-      <code><![CDATA[visitText]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/NumericValue.php">
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/TextValue.php">
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/UserValue.php">
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/ValueVisitable.php">
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/SimilarFieldsFormatter.php">
-    <MissingReturnType>
-      <code><![CDATA[getFieldValue]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryBuilder/CrossTrackerExpertQueryReportDao.php">
     <MissingParamType>
@@ -4282,109 +4196,6 @@
       <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/BindNameVisitor.php">
-    <MissingReturnType>
-      <code><![CDATA[visitListBindNull]]></code>
-      <code><![CDATA[visitListBindStatic]]></code>
-      <code><![CDATA[visitListBindUgroups]]></code>
-      <code><![CDATA[visitListBindUsers]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/FieldUsedInSupportedSemanticsVisitor.php">
-    <MissingReturnType>
-      <code><![CDATA[visitArtifactId]]></code>
-      <code><![CDATA[visitArtifactLink]]></code>
-      <code><![CDATA[visitBurndown]]></code>
-      <code><![CDATA[visitCheckbox]]></code>
-      <code><![CDATA[visitComputed]]></code>
-      <code><![CDATA[visitCrossReferences]]></code>
-      <code><![CDATA[visitDate]]></code>
-      <code><![CDATA[visitExternalField]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFloat]]></code>
-      <code><![CDATA[visitInteger]]></code>
-      <code><![CDATA[visitLastModifiedBy]]></code>
-      <code><![CDATA[visitLastUpdateDate]]></code>
-      <code><![CDATA[visitMultiSelectbox]]></code>
-      <code><![CDATA[visitOpenList]]></code>
-      <code><![CDATA[visitPerTrackerArtifactId]]></code>
-      <code><![CDATA[visitPermissionsOnArtifact]]></code>
-      <code><![CDATA[visitPriority]]></code>
-      <code><![CDATA[visitRadiobutton]]></code>
-      <code><![CDATA[visitSelectbox]]></code>
-      <code><![CDATA[visitString]]></code>
-      <code><![CDATA[visitSubmittedBy]]></code>
-      <code><![CDATA[visitSubmittedOn]]></code>
-      <code><![CDATA[visitText]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldCandidate.php">
-    <MissingReturnType>
-      <code><![CDATA[getIdentifierWithBindType]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldCollection.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->candidates_sorted_by_identifier_and_tracker_id]]></code>
-      <code><![CDATA[$this->candidates_sorted_by_identifier_and_tracker_id]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MissingClosureReturnType>
-      <code><![CDATA[function ($identifier_string) {]]></code>
-      <code><![CDATA[function ($identifier_string) {]]></code>
-    </MissingClosureReturnType>
-    <MissingReturnType>
-      <code><![CDATA[sortSimilarFieldsByIdentifierAndTrackerIDIfNeeded]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[$this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string]]]></code>
-      <code><![CDATA[$this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string]]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldIdentifier.php">
-    <MissingParamType>
-      <code><![CDATA[$bind_name]]></code>
-      <code><![CDATA[$field_name]]></code>
-      <code><![CDATA[$identifier_string]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[buildFromIdentifierString]]></code>
-      <code><![CDATA[getIdentifierWithBindType]]></code>
-      <code><![CDATA[getLabel]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldType.php">
-    <MissingParamType>
-      <code><![CDATA[$bind_name]]></code>
-      <code><![CDATA[$field_type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getTypeIdentifierString]]></code>
-    </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $this->bind_name]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldsFilter.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$tracker]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldsMatcher.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$field]]></code>
-    </ArgumentTypeCoercion>
-    <MissingParamType>
-      <code><![CDATA[$type_shortname]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[buildCandidate]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SupportedFieldsDao.php">
-    <MissingReturnType>
-      <code><![CDATA[searchByTrackerIds]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/Widget/ProjectCrossTrackerSearch.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -4412,9 +4223,15 @@
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[uninstall]]></code>
-    </MissingReturnType>
+  </file>
+  <file src="plugins/crosstracker/tests/unit/CrossTracker/Report/Query/Advanced/ResultBuilder/Field/FieldResultBuilderTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
   </file>
   <file src="plugins/docman/bin/DocmanExport/Docman_ExportException.php">
     <MissingParamType>
@@ -11973,6 +11790,35 @@
       <code><![CDATA[\docmanPlugin]]></code>
     </InvalidClass>
   </file>
+  <file src="plugins/document/tests/unit/Config/Admin/FilesDownloadLimitsAdminSaveControllerTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
+  <file src="plugins/document/tests/unit/DownloadFolderAsZip/ErrorsListingBuilderTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[self::returnCallback(function (string $filename, string $contents): void {
+                self::assertStringContainsString('/my folder/my file.jpg', $contents);
+                self::assertStringContainsString('embedded file.html', $contents);
+            })]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/document/tests/unit/DownloadFolderAsZip/ZipStreamFolderFilesVisitorTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
   <file src="plugins/document_generation/include/document_generationPlugin.php">
     <DeprecatedMethod>
       <code><![CDATA[addHook]]></code>
@@ -18335,21 +18181,15 @@
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getName]]></code>
     </PossiblyNullReference>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->project]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->project]]></code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/git/tests/integration/Gitolite/GitoliteDriverTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
     <MissingParamType>
       <code><![CDATA[$filename]]></code>
     </MissingParamType>
@@ -18922,6 +18762,20 @@
       <code><![CDATA[postInitGitRepositoryWithDataEvent]]></code>
       <code><![CDATA[pullRequestDiffRepresentationBuild]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/gitlfs/tests/unit/Lock/Response/LockResponseBuilderTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$serialized_response->locks[0]]]></code>
+      <code><![CDATA[$serialized_response->locks[1]]]></code>
+      <code><![CDATA[$serialized_response->ours[0]]]></code>
+      <code><![CDATA[$serialized_response->theirs[0]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$serialized_response->locks]]></code>
+      <code><![CDATA[$serialized_response->locks]]></code>
+      <code><![CDATA[$serialized_response->ours]]></code>
+      <code><![CDATA[$serialized_response->theirs]]></code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/graphontrackersv5/include/Async/ChartDataController.php">
     <InvalidPropertyAssignmentValue>
@@ -20233,6 +20087,22 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/graphontrackersv5/tests/unit/DataTransformation/GraphOnTrackersV5ChartBarDataBuilderTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+      <code><![CDATA[returnValue]]></code>
+    </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$engine->data]]></code>
       <code><![CDATA[$engine->data]]></code>
@@ -20808,6 +20678,18 @@
       <code><![CDATA[hasPreferences]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/hudson/tests/unit/Reference/HudsonCrossReferenceOrganizerTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
   <file src="plugins/hudson_git/include/HudsonGit/Git/Administration/AdministrationPresenter.php">
     <MissingParamType>
       <code><![CDATA[$project_id]]></code>
@@ -21214,7 +21096,6 @@
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field_change]]></code>
-      <code><![CDATA[$field_change[0]->value]]></code>
       <code><![CDATA[$name_field_change]]></code>
       <code><![CDATA[$permissions]]></code>
       <code><![CDATA[$permissions]]></code>
@@ -21232,8 +21113,6 @@
       <code><![CDATA[$status_field->bind->items->item]]></code>
       <code><![CDATA[$status_semantic]]></code>
       <code><![CDATA[$status_semantic]]></code>
-      <code><![CDATA[$status_semantic[0]->closed_values->closed_value]]></code>
-      <code><![CDATA[$status_semantic[0]->open_values->open_value]]></code>
       <code><![CDATA[$timeframe_semantic]]></code>
       <code><![CDATA[$title_semantic]]></code>
       <code><![CDATA[$xml->agiledashboard->top_backlog->children()]]></code>
@@ -21243,82 +21122,12 @@
       <code><![CDATA[$xml_planning->backlogs->children()]]></code>
     </PossiblyNullArgument>
     <PossiblyNullArrayAccess>
-      <code><![CDATA[$completed_date_field[0]]]></code>
-      <code><![CDATA[$completed_date_field[0]->properties['display_time']]]></code>
-      <code><![CDATA[$completed_date_field[0]['ID']]]></code>
-      <code><![CDATA[$completed_date_field[0]['type']]]></code>
-      <code><![CDATA[$completed_date_field_change[0]]]></code>
-      <code><![CDATA[$completed_date_field_change[0]['type']]]></code>
       <code><![CDATA[$end_date_field[0]]]></code>
-      <code><![CDATA[$end_date_field[0]]]></code>
-      <code><![CDATA[$end_date_field[0]->properties['display_time']]]></code>
       <code><![CDATA[$end_date_field[0]['ID']]]></code>
-      <code><![CDATA[$end_date_field[0]['ID']]]></code>
-      <code><![CDATA[$end_date_field[0]['type']]]></code>
-      <code><![CDATA[$end_date_field_change[0]]]></code>
-      <code><![CDATA[$end_date_field_change[0]['type']]]></code>
       <code><![CDATA[$field['ID']]]></code>
       <code><![CDATA[$field['type']]]></code>
-      <code><![CDATA[$field_change[0]]]></code>
-      <code><![CDATA[$field_change[0]->value[0]]]></code>
-      <code><![CDATA[$field_change[0]->value[1]]]></code>
       <code><![CDATA[$name_field[0]]]></code>
       <code><![CDATA[$name_field[0]['ID']]]></code>
-      <code><![CDATA[$name_field_change[0]]]></code>
-      <code><![CDATA[$name_field_change[0]['type']]]></code>
-      <code><![CDATA[$permissions[0]]]></code>
-      <code><![CDATA[$permissions[0]]]></code>
-      <code><![CDATA[$permissions[0]]]></code>
-      <code><![CDATA[$permissions[0]]]></code>
-      <code><![CDATA[$permissions[0]]]></code>
-      <code><![CDATA[$permissions[0]]]></code>
-      <code><![CDATA[$permissions[0]['type']]]></code>
-      <code><![CDATA[$permissions[0]['type']]]></code>
-      <code><![CDATA[$permissions[0]['type']]]></code>
-      <code><![CDATA[$permissions[0]['type']]]></code>
-      <code><![CDATA[$permissions[0]['type']]]></code>
-      <code><![CDATA[$permissions[0]['type']]]></code>
-      <code><![CDATA[$permissions[0]['ugroup']]]></code>
-      <code><![CDATA[$permissions[0]['ugroup']]]></code>
-      <code><![CDATA[$permissions[0]['ugroup']]]></code>
-      <code><![CDATA[$permissions[0]['ugroup']]]></code>
-      <code><![CDATA[$permissions[0]['ugroup']]]></code>
-      <code><![CDATA[$permissions[1]]]></code>
-      <code><![CDATA[$permissions[1]]]></code>
-      <code><![CDATA[$permissions[1]]]></code>
-      <code><![CDATA[$permissions[1]]]></code>
-      <code><![CDATA[$permissions[1]]]></code>
-      <code><![CDATA[$permissions[1]]]></code>
-      <code><![CDATA[$permissions[1]['type']]]></code>
-      <code><![CDATA[$permissions[1]['type']]]></code>
-      <code><![CDATA[$permissions[1]['type']]]></code>
-      <code><![CDATA[$permissions[1]['type']]]></code>
-      <code><![CDATA[$permissions[1]['type']]]></code>
-      <code><![CDATA[$permissions[1]['type']]]></code>
-      <code><![CDATA[$permissions[1]['ugroup']]]></code>
-      <code><![CDATA[$permissions[1]['ugroup']]]></code>
-      <code><![CDATA[$permissions[1]['ugroup']]]></code>
-      <code><![CDATA[$permissions[1]['ugroup']]]></code>
-      <code><![CDATA[$permissions[1]['ugroup']]]></code>
-      <code><![CDATA[$permissions[2]]]></code>
-      <code><![CDATA[$permissions[2]]]></code>
-      <code><![CDATA[$permissions[2]]]></code>
-      <code><![CDATA[$permissions[2]]]></code>
-      <code><![CDATA[$permissions[2]]]></code>
-      <code><![CDATA[$permissions[2]]]></code>
-      <code><![CDATA[$permissions[2]['type']]]></code>
-      <code><![CDATA[$permissions[2]['type']]]></code>
-      <code><![CDATA[$permissions[2]['type']]]></code>
-      <code><![CDATA[$permissions[2]['type']]]></code>
-      <code><![CDATA[$permissions[2]['type']]]></code>
-      <code><![CDATA[$permissions[2]['type']]]></code>
-      <code><![CDATA[$permissions[2]['ugroup']]]></code>
-      <code><![CDATA[$permissions[2]['ugroup']]]></code>
-      <code><![CDATA[$permissions[2]['ugroup']]]></code>
-      <code><![CDATA[$permissions[2]['ugroup']]]></code>
-      <code><![CDATA[$permissions[2]['ugroup']]]></code>
-      <code><![CDATA[$selected_criterion_value[0]]]></code>
-      <code><![CDATA[$selected_criterion_value[0]['REF']]]></code>
       <code><![CDATA[$sprints[0]]]></code>
       <code><![CDATA[$sprints[0]->xpath('../field_change[@field_name="status"]')[0]]]></code>
       <code><![CDATA[$sprints[1]]]></code>
@@ -21326,14 +21135,7 @@
       <code><![CDATA[$sprints[2]]]></code>
       <code><![CDATA[$sprints[2]->xpath('../field_change[@field_name="status"]')[0]]]></code>
       <code><![CDATA[$start_date_field[0]]]></code>
-      <code><![CDATA[$start_date_field[0]]]></code>
-      <code><![CDATA[$start_date_field[0]->properties['display_time']]]></code>
       <code><![CDATA[$start_date_field[0]['ID']]]></code>
-      <code><![CDATA[$start_date_field[0]['ID']]]></code>
-      <code><![CDATA[$start_date_field[0]['type']]]></code>
-      <code><![CDATA[$start_date_field_change[0]]]></code>
-      <code><![CDATA[$start_date_field_change[0]['type']]]></code>
-      <code><![CDATA[$status_criterion_field[0]]]></code>
       <code><![CDATA[$status_field->bind->items->item[0]['label']]]></code>
       <code><![CDATA[$status_field->bind->items->item[1]['ID']]]></code>
       <code><![CDATA[$status_field->bind->items->item[1]['label']]]></code>
@@ -21341,14 +21143,8 @@
       <code><![CDATA[$status_field->bind['type']]]></code>
       <code><![CDATA[$status_field['ID']]]></code>
       <code><![CDATA[$status_field['type']]]></code>
-      <code><![CDATA[$status_semantic[0]]]></code>
-      <code><![CDATA[$status_semantic[0]]]></code>
-      <code><![CDATA[$status_semantic[0]->closed_values->closed_value[0]]]></code>
       <code><![CDATA[$status_semantic[0]->closed_values->closed_value[0]['REF']]]></code>
-      <code><![CDATA[$status_semantic[0]->field['REF']]]></code>
-      <code><![CDATA[$status_semantic[0]->open_values->open_value[0]]]></code>
       <code><![CDATA[$status_semantic[0]->open_values->open_value[0]['REF']]]></code>
-      <code><![CDATA[$status_semantic[0]->open_values->open_value[1]]]></code>
       <code><![CDATA[$status_semantic[0]->open_values->open_value[1]['REF']]]></code>
       <code><![CDATA[$status_value->value[0]]]></code>
       <code><![CDATA[$status_value->value[0]]]></code>
@@ -21359,11 +21155,6 @@
       <code><![CDATA[$status_value['type']]]></code>
       <code><![CDATA[$status_value['type']]]></code>
       <code><![CDATA[$status_value['type']]]></code>
-      <code><![CDATA[$timeframe_semantic[0]]]></code>
-      <code><![CDATA[$timeframe_semantic[0]->end_date_field['REF']]]></code>
-      <code><![CDATA[$timeframe_semantic[0]->start_date_field['REF']]]></code>
-      <code><![CDATA[$title_semantic[0]]]></code>
-      <code><![CDATA[$title_semantic[0]->field['REF']]]></code>
       <code><![CDATA[$xml->agiledashboard->top_backlog->artifact[0]['artifact_id']]]></code>
       <code><![CDATA[$xml->agiledashboard->top_backlog->artifact[1]['artifact_id']]]></code>
       <code><![CDATA[$xml->agiledashboard->top_backlog->artifact[2]['artifact_id']]]></code>
@@ -21402,31 +21193,15 @@
       <code><![CDATA[$xml_cardwall_tracker->columns->column[2]['label']]]></code>
     </PossiblyNullArrayAccess>
     <PossiblyNullPropertyFetch>
-      <code><![CDATA[$completed_date_field[0]->properties]]></code>
-      <code><![CDATA[$completed_date_field_change[0]->value]]></code>
-      <code><![CDATA[$end_date_field[0]->properties]]></code>
-      <code><![CDATA[$end_date_field_change[0]->value]]></code>
-      <code><![CDATA[$field_change[0]->value]]></code>
-      <code><![CDATA[$name_field_change[0]->value]]></code>
       <code><![CDATA[$sprints[0]->value]]></code>
       <code><![CDATA[$sprints[1]->value]]></code>
       <code><![CDATA[$sprints[2]->value]]></code>
-      <code><![CDATA[$start_date_field[0]->properties]]></code>
-      <code><![CDATA[$start_date_field_change[0]->value]]></code>
       <code><![CDATA[$status_field->bind]]></code>
       <code><![CDATA[$status_field->bind->items]]></code>
       <code><![CDATA[$status_field->bind->items->item]]></code>
-      <code><![CDATA[$status_semantic[0]->closed_values]]></code>
-      <code><![CDATA[$status_semantic[0]->closed_values->closed_value]]></code>
-      <code><![CDATA[$status_semantic[0]->field]]></code>
-      <code><![CDATA[$status_semantic[0]->open_values]]></code>
-      <code><![CDATA[$status_semantic[0]->open_values->open_value]]></code>
       <code><![CDATA[$status_value->value]]></code>
       <code><![CDATA[$status_value->value]]></code>
       <code><![CDATA[$status_value->value]]></code>
-      <code><![CDATA[$timeframe_semantic[0]->end_date_field]]></code>
-      <code><![CDATA[$timeframe_semantic[0]->start_date_field]]></code>
-      <code><![CDATA[$title_semantic[0]->field]]></code>
       <code><![CDATA[$xml->trackers->tracker->formElements->formElement[0]->formElements]]></code>
       <code><![CDATA[$xml->trackers->tracker->formElements->formElement[0]->formElements->formElement]]></code>
       <code><![CDATA[$xml->trackers->tracker->formElements->formElement[0]->label]]></code>
@@ -21453,8 +21228,19 @@
       <code><![CDATA[xpath]]></code>
       <code><![CDATA[xpath]]></code>
       <code><![CDATA[xpath]]></code>
-      <code><![CDATA[xpath]]></code>
     </PossiblyNullReference>
+  </file>
+  <file src="plugins/jira_import/tests/unit/Project/ArtifactLinkType/ArtifactLinkTypeImporterTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$creator->natures[0]]]></code>
+      <code><![CDATA[$creator->natures[0]]]></code>
+      <code><![CDATA[$creator->natures[0]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$creator->natures]]></code>
+      <code><![CDATA[$creator->natures]]></code>
+      <code><![CDATA[$creator->natures]]></code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/kanban/include/Kanban/BreadCrumbBuilder.php">
     <RiskyTruthyFalsyComparison>
@@ -22098,7 +21884,6 @@
     </PossiblyNullArgument>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$this->getGroupDn()]]></code>
-      <code><![CDATA[$this->getGroupDn()]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedMethod>
       <code><![CDATA[linkGroupLdap]]></code>
@@ -22548,6 +22333,12 @@
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/ldap/tests/unit/LDAPGroupManagerTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getMockForAbstractClass]]></code>
+      <code><![CDATA[getMockForAbstractClass]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/mediawiki/bin/identify_lost_databases.php">
     <DeprecatedMethod>
@@ -26757,6 +26548,25 @@
       <code><![CDATA[markManuallyMerged]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/pullrequest/tests/unit/GitReference/GitPullRequestReferenceRemoverTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
+  <file src="plugins/pullrequest/tests/unit/Reviewer/Autocompleter/ReviewerAutocompleterControllerTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$decoded_response[0]]]></code>
+      <code><![CDATA[$decoded_response[1]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$decoded_response]]></code>
+      <code><![CDATA[$decoded_response]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
   <file src="plugins/pullrequest/tests/unit/Tests/Stub/SearchAbandonEventStub.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $this->abandon_date_timestamp]]></code>
@@ -26852,6 +26662,14 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $timestamp]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/roadmap/tests/unit/Roadmap/Widget/RoadmapWidgetPresenterBuilderTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$natures[0]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$natures]]></code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">
     <UndefinedClass>
@@ -30195,6 +30013,21 @@
       <code><![CDATA[$filesize]]></code>
     </InvalidArgument>
   </file>
+  <file src="plugins/svn/tests/unit/SVN/DiskUsage/DiskUsageRetrieverTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
   <file src="plugins/taskboard/include/Admin/ScrumBoardTypeSelectorController.php">
     <MissingParamType>
       <code><![CDATA[$board_type]]></code>
@@ -30886,6 +30719,18 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/testplan/tests/unit/TestPlanHeaderOptionsProviderTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$section->links[0]]]></code>
+      <code><![CDATA[$section->links[0]]]></code>
+      <code><![CDATA[$section->links[1]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$section->links]]></code>
+      <code><![CDATA[$section->links]]></code>
+      <code><![CDATA[$section->links]]></code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Admin/AdminController.php">
     <DeprecatedMethod>
@@ -36447,7 +36292,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
@@ -38498,9 +38342,7 @@
       <code><![CDATA[buildFieldForSubmission]]></code>
       <code><![CDATA[canBeUsedAsReportCriterion]]></code>
       <code><![CDATA[clearCache]]></code>
-      <code><![CDATA[clearFastCompute]]></code>
       <code><![CDATA[clearTargetFieldName]]></code>
-      <code><![CDATA[doNotDisplaySpecialPropertiesAtFieldCreation]]></code>
       <code><![CDATA[fetchArtifactForOverlay]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[fetchComputedValueWithLabel]]></code>
@@ -43209,6 +43051,9 @@
     <PossiblyNullReference>
       <code><![CDATA[duplicate]]></code>
     </PossiblyNullReference>
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[$store_in_session && isset($this->report_session)]]></code>
+    </RedundantPropertyInitializationCheck>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $renderers_data]]></code>
       <code><![CDATA[! $row]]></code>
@@ -43222,12 +43067,6 @@
       <code><![CDATA[Report]]></code>
       <code><![CDATA[Tracker_Report_RendererTableDao]]></code>
     </UndefinedDocblockClass>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->report_session]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->report_session]]></code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_Renderer_Table.php">
     <ArgumentTypeCoercion>
@@ -48718,6 +48557,84 @@
       <code><![CDATA[(string) 'ugroup_nobody_name_key']]></code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/tests/integration/Notifications/Settings/NotificationSettingsDuplicatorTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$notifications[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[0]]]></code>
+      <code><![CDATA[$rows[1]]]></code>
+      <code><![CDATA[$rows[1]]]></code>
+      <code><![CDATA[$rows[1]]]></code>
+      <code><![CDATA[$rows[1]]]></code>
+      <code><![CDATA[$rows[1]]]></code>
+      <code><![CDATA[$rows[1]]]></code>
+      <code><![CDATA[$rows[1]]]></code>
+      <code><![CDATA[$ugroups[0]]]></code>
+      <code><![CDATA[$ugroups[0]]]></code>
+      <code><![CDATA[$users[0]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$rows]]></code>
+      <code><![CDATA[$ugroups]]></code>
+      <code><![CDATA[$ugroups]]></code>
+      <code><![CDATA[$users]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
   <file src="plugins/tracker/tests/integration/PriorityDaoPerformancesTest.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$times]]></code>
@@ -48795,6 +48712,40 @@
       <code><![CDATA[testItRaisesAnExceptionIfWeWantToMove1Before1]]></code>
       <code><![CDATA[testItStartsWithEmptyTable]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Artifact/ArtifactsDeletion/PostArtifactMoveReferencesCleanerTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Masschange/MasschangeUpdaterTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
+  <file src="plugins/tracker/tests/unit/REST/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkChangesetValueBuilderTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$reverse_links[0]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$reverse_links]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="plugins/tracker/tests/unit/REST/Artifact/ChangesetValue/FieldsDataBuilderTest.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$new_links]]></code>
+      <code><![CDATA[$new_links]]></code>
+      <code><![CDATA[$new_links]]></code>
+      <code><![CDATA[$new_links]]></code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/tracker/tests/unit/Test/Builders/Fields/DateFieldBuilder.php">
     <DeprecatedMethod>
@@ -73380,22 +73331,6 @@
       <code><![CDATA[$_SERVER['argv']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="src/vendor/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php">
-    <InternalMethod>
-      <code><![CDATA[addToAssertionCount]]></code>
-    </InternalMethod>
-    <MissingPropertyType>
-      <code><![CDATA[$mockeryOpen]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[addMockeryExpectationsToAssertionCount]]></code>
-      <code><![CDATA[checkMockeryExceptions]]></code>
-      <code><![CDATA[closeMockery]]></code>
-      <code><![CDATA[mockeryAssertPostConditions]]></code>
-      <code><![CDATA[purgeMockeryContainer]]></code>
-      <code><![CDATA[startMockery]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/vendor/symfony/console/Command/Command.php">
     <PossiblyNullArgument>
       <code><![CDATA[$name]]></code>
@@ -76690,6 +76625,9 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="tests/integration/tests/TrackersV3ToV5/DefectTrackerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$renderers]]></code>
+    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$columns]]></code>
       <code><![CDATA[$columns]]></code>
@@ -76711,6 +76649,9 @@
     </PossiblyNullReference>
   </file>
   <file src="tests/integration/tests/TrackersV3ToV5/TaskTrackerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$renderers]]></code>
+    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$columns]]></code>
       <code><![CDATA[$columns]]></code>
@@ -76726,6 +76667,14 @@
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getListValueById]]></code>
     </PossiblyNullReference>
+  </file>
+  <file src="tests/integration/tests/WebAuthn/Challenge/WebAuthnChallengeDaoTest.php">
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$rows[0]]]></code>
+    </PossiblyInvalidArrayAccess>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$rows]]></code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="tests/lib/Builders/ProjectTestBuilder.php">
     <MissingPropertyType>
@@ -76777,6 +76726,18 @@
     <RedundantCast>
       <code><![CDATA[(string) $email]]></code>
     </RedundantCast>
+  </file>
+  <file src="tests/lib/GlobalLanguageMock.php">
+    <DeprecatedMethod>
+      <code><![CDATA[disableArgumentCloning]]></code>
+      <code><![CDATA[disallowMockingUnknownTypes]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="tests/lib/GlobalResponseMock.php">
+    <DeprecatedMethod>
+      <code><![CDATA[disableArgumentCloning]]></code>
+      <code><![CDATA[disallowMockingUnknownTypes]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="tests/lib/Stubs/ExtractReferencesStub.php">
     <LessSpecificReturnStatement>
@@ -76929,6 +76890,25 @@
       <code><![CDATA[false]]></code>
     </InvalidArgument>
   </file>
+  <file src="tests/unit/common/Log/WrapperLoggerTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+  </file>
   <file src="tests/unit/common/OAuth2ServerCore/AccessToken/OAuth2AccessTokenVerifierTest.php">
     <MissingTemplateParam>
       <code><![CDATA[AuthenticationScope]]></code>
@@ -77005,6 +76985,17 @@
     <PossiblyNullReference>
       <code><![CDATA[getIdentifier]]></code>
     </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/Project/ProjectDetails/ProjectDetailsControllerTest.php">
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
   </file>
   <file src="tests/unit/common/Project/Routing/ProjectByNameRetrieverMiddlewareTest.php">
     <PossiblyNullReference>

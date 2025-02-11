@@ -51,7 +51,7 @@ class ForbidWritersTest extends \RestBase
             DocmanForbidWritersDataBuilder::WRITER_USERNAME,
         );
 
-        $this->assertSame(200, $project_response->getStatusCode());
+        self::assertSame(200, $project_response->getStatusCode());
         $ugroups_for_project = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $members_id  = null;
@@ -85,7 +85,7 @@ class ForbidWritersTest extends \RestBase
             DocmanForbidWritersDataBuilder::WRITER_USERNAME,
         );
 
-        $this->assertSame(200, $project_response->getStatusCode());
+        self::assertSame(200, $project_response->getStatusCode());
 
         $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];
@@ -111,7 +111,7 @@ class ForbidWritersTest extends \RestBase
             DocmanForbidWritersDataBuilder::WRITER_USERNAME,
         );
 
-        $this->assertSame(201, $item_response->getStatusCode());
+        self::assertSame(201, $item_response->getStatusCode());
         $item_id = json_decode($item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         self::assertIsInt($item_id);
@@ -138,7 +138,7 @@ class ForbidWritersTest extends \RestBase
             DocmanForbidWritersDataBuilder::MANAGER_USERNAME,
         );
 
-        $this->assertSame(200, $update_response->getStatusCode());
+        self::assertSame(200, $update_response->getStatusCode());
 
         return $item_id;
     }
@@ -162,7 +162,7 @@ class ForbidWritersTest extends \RestBase
             DocmanForbidWritersDataBuilder::WRITER_USERNAME,
         );
 
-        $this->assertSame(403, $update_response->getStatusCode());
+        self::assertSame(403, $update_response->getStatusCode());
 
         return $item_id;
     }
@@ -177,7 +177,7 @@ class ForbidWritersTest extends \RestBase
             DocmanForbidWritersDataBuilder::WRITER_USERNAME,
         );
 
-        $this->assertSame(403, $update_response->getStatusCode());
+        self::assertSame(403, $update_response->getStatusCode());
 
         return $item_id;
     }
@@ -192,6 +192,6 @@ class ForbidWritersTest extends \RestBase
             DocmanForbidWritersDataBuilder::MANAGER_USERNAME,
         );
 
-        $this->assertSame(200, $update_response->getStatusCode());
+        self::assertSame(200, $update_response->getStatusCode());
     }
 }

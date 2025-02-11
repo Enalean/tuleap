@@ -45,7 +45,7 @@ final class CheckProjectCSRFMiddlewareTest extends TestCase
         $request = (new NullServerRequest())
             ->withAttribute(\Project::class, ProjectTestBuilder::aProject()->build());
 
-        $this->assertSame(
+        self::assertSame(
             $response,
             $middleware->process($request, $handler)
         );

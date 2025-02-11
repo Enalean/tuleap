@@ -34,7 +34,7 @@ final class GrantedAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
         $scopes                = [OAuth2SignInScope::fromItself(), OpenIDConnectEmailScope::fromItself()];
         $granted_authorization = new GrantedAuthorization($user, $scopes);
 
-        $this->assertSame($scopes, $granted_authorization->getScopes());
-        $this->assertSame($user, $granted_authorization->getUser());
+        self::assertSame($scopes, $granted_authorization->getScopes());
+        self::assertSame($user, $granted_authorization->getUser());
     }
 }

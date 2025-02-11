@@ -74,7 +74,7 @@ final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
         file_put_contents($this->gitolite_base_dir . '/.gitolite/conf/gitolite.conf', 'definitely not empty');
 
         $deploy = new SiteDeployGitolite3Hooks($this->process_factory, $this->gitolite_base_dir);
-        $this->expectError('symlink(): No such file or directory');
+        $this->expectExceptionMessage('symlink(): No such file or directory');
         $deploy->deploy(new NullLogger());
     }
 }

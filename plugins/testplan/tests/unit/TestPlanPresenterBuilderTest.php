@@ -139,7 +139,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
         );
 
-        $this->assertSame('Parent 01', $presenter->parent_milestone_title);
+        self::assertSame('Parent 01', $presenter->parent_milestone_title);
     }
 
     public function testBuildsPresenterWithAUserThatDoesNotHaveEnoughPermissionsToCreateACampaign(): void

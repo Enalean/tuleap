@@ -38,7 +38,7 @@ final class OAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
             [$scope]
         );
 
-        $this->assertSame(12, $refresh_token->getAssociatedAuthorizationCodeID());
+        self::assertSame(12, $refresh_token->getAssociatedAuthorizationCodeID());
         $this->assertEquals([$scope], $refresh_token->getScopes());
     }
 

@@ -174,12 +174,12 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->testmanagement_trackers_configurator
             ->expects(self::exactly(4))
             ->method('configureTestmanagementTracker')
-            ->withConsecutive(
-                ['campaign', 334],
-                ['test_def', 445],
-                ['test_exec', 556],
-                ['bug', 667]
-            );
+            ->willReturnMap([
+                ['campaign', 334, new TestmanagementConfigTracker('campaign', 'campaign', 334)],
+                ['test_def', 445, new TestmanagementConfigTracker('test_def', 'test_def', 445)],
+                ['test_exec', 556, new TestmanagementConfigTracker('text_exec', 'test_exec', 556)],
+                ['bug', 667, new TestmanagementConfigTracker('bug', 'bug', 667)],
+            ]);
 
         $this->tracker_checker->expects(self::once())->method('checkTrackers');
 

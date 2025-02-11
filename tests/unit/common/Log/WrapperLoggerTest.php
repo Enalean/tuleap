@@ -68,11 +68,20 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddAPrefixDynamicallyAndItsKept(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
+        $matcher = self::exactly(2);
 
-        $this->logger->expects(self::exactly(2))->method('log')->withConsecutive(
-            [LogLevel::INFO, '[tracker][53] bla', []],
-            [LogLevel::INFO, '[tracker][53] coin', []]
-        );
+        $this->logger->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker][53] bla', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker][53] coin', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+        });
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -82,11 +91,20 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddedPrefixAreStacked(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
+        $matcher = self::exactly(2);
 
-        $this->logger->expects(self::exactly(2))->method('log')->withConsecutive(
-            [LogLevel::INFO, '[tracker][53] bla', []],
-            [LogLevel::INFO, '[tracker][53][field] coin', []]
-        );
+        $this->logger->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker][53] bla', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker][53][field] coin', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+        });
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -97,11 +115,20 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItPopPrefixes(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
+        $matcher = self::exactly(2);
 
-        $this->logger->expects(self::exactly(2))->method('log')->withConsecutive(
-            [LogLevel::INFO, '[tracker][53] bla', []],
-            [LogLevel::INFO, '[tracker] coin', []]
-        );
+        $this->logger->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker][53] bla', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker] coin', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+        });
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -112,12 +139,25 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItPopPrefixes2(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
+        $matcher = self::exactly(3);
 
-        $this->logger->expects(self::exactly(3))->method('log')->withConsecutive(
-            [LogLevel::INFO, '[tracker] stuff', []],
-            [LogLevel::INFO, '[tracker][53] bla', []],
-            [LogLevel::INFO, '[tracker][54] coin', []]
-        );
+        $this->logger->expects($matcher)->method('log')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker] stuff', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker][53] bla', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(LogLevel::INFO, $parameters[0]);
+                self::assertSame('[tracker][54] coin', $parameters[1]);
+                self::assertSame([], $parameters[2]);
+            }
+        });
 
         $wrapper->info('stuff');
         $wrapper->push('53');

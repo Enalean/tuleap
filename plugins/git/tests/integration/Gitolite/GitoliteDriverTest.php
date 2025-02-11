@@ -210,9 +210,17 @@ final class GitoliteDriverTest extends GitoliteTestCase
         $this->gitoliterc_reader->method('getHostname')->willReturn($hostname);
 
         touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
+        $matcher = self::exactly(2);
 
-        $this->another_git_exec->expects(self::exactly(2))->method('add')
-            ->withConsecutive(['conf/gitolite.conf'], ['conf/master.conf'])->willReturn(true);
+        $this->another_git_exec->expects($matcher)->method('add')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('conf/gitolite.conf', $parameters[0]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('conf/master.conf', $parameters[0]);
+            }
+            return true;
+        });
 
         $this->another_gitolite_driver->updateMainConfIncludes();
     }

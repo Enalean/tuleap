@@ -77,7 +77,7 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($project);
 
         $result = $this->project_retriever->getProjectFromId($project_id);
-        $this->assertSame($project, $result);
+        self::assertSame($project, $result);
     }
 
     public function testGetProjectFromNameThrowsWhenNoProjectFound(): void

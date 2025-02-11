@@ -90,7 +90,7 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($response);
         $this->app_dao->expects(self::never())->method('create');
 
-        $this->assertSame($response, $this->controller->handle($request));
+        self::assertSame($response, $this->controller->handle($request));
     }
 
     public static function dataProviderInvalidBody(): array
@@ -148,7 +148,7 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $this->assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getProjectAdminURL($project));
+        self::assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getProjectAdminURL($project));
     }
 
     private function buildProjectAdminRequest(): ServerRequestInterface

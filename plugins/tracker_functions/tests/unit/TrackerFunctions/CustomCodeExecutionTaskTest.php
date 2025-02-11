@@ -87,7 +87,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         $task      = new CustomCodeExecutionTask(
             $logger,
             ArtifactPayloadBuilderStub::withEmptyPayload(),
-            WASMFunctionPathHelperStub::withPath(''),
+            WASMFunctionPathHelperStub::withPath('/something'),
             $caller,
             WASMResponseExecutorStub::buildOk(),
             SaveFunctionLogStub::build(),
@@ -112,7 +112,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         $task      = new CustomCodeExecutionTask(
             $logger,
             ArtifactPayloadBuilderStub::withEmptyPayload(),
-            WASMFunctionPathHelperStub::withPath(''),
+            WASMFunctionPathHelperStub::withPath('/something'),
             $caller,
             WASMResponseExecutorStub::buildOk(),
             SaveFunctionLogStub::build(),
@@ -137,7 +137,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         $task      = new CustomCodeExecutionTask(
             $logger,
             ArtifactPayloadBuilderStub::withEmptyPayload(),
-            WASMFunctionPathHelperStub::withPath(''),
+            WASMFunctionPathHelperStub::withPath('/something'),
             $caller,
             WASMResponseExecutorStub::buildOk(),
             SaveFunctionLogStub::build(),

@@ -124,12 +124,10 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
 
     private function moveFile(\Tracker $tracker, UploadedFileInterface $uploaded_file): Ok|Err
     {
+        $path   = $this->function_path_helper->getPathForTracker($tracker);
+        $folder = dirname($path);
         try {
-            $path   = $this->function_path_helper->getPathForTracker($tracker);
-            $folder = dirname($path);
-            if (! is_dir($folder) && ! mkdir($folder, 0700, true) && ! is_dir($folder)) {
-                throw new \Exception(sprintf('Directory "%s" was not created', $folder));
-            }
+            \Psl\Filesystem\create_directory($folder, 0700);
 
             $uploaded_file->moveTo($path);
 

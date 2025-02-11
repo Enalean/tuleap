@@ -129,8 +129,17 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
             ->setConstructorArgs([$this->ugroup_user_dao, $this->ugroup_manager])
             ->onlyMethods(['reloadUgroupBinding'])
             ->getMock();
-        $this->binding->expects(self::exactly(2))->method('reloadUgroupBinding')
-            ->withConsecutive([400, 200], [500, 200]);
+        $matcher       = self::exactly(2);
+        $this->binding->expects($matcher)->method('reloadUgroupBinding')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(400, $parameters[0]);
+                self::assertSame(200, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(500, $parameters[0]);
+                self::assertSame(200, $parameters[1]);
+            }
+        });
 
         $this->binding->reloadUgroupBindingInProject($project);
     }

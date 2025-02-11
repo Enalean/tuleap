@@ -120,7 +120,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:i
         $workflow_factory->shouldReceive('getGlobalRulesManager')->andReturns($tracker_rules_manager);
         $tracker_factory->shouldReceive('getTrackerById')->andReturn(Mockery::mock(Tracker::class));
         $dao->shouldReceive('searchByTrackerId')->with(112)->andReturns(['tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0, 'is_advanced' => 1]);
-        $this->assertSame(
+        self::assertSame(
             $workflow_factory->getWorkflowByTrackerId(112),
             $workflow_factory->getWorkflowByTrackerId(112)
         );

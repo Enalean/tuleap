@@ -72,6 +72,6 @@ final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends \Tule
         };
 
         $exception = new OAuth2AccessTokenDoesNotHaveRequiredScopeException($scope);
-        $this->assertSame($scope, $exception->getNeededScope());
+        self::assertSame($scope, $exception->getNeededScope());
     }
 }

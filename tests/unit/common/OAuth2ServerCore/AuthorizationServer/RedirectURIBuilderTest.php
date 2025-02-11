@@ -43,7 +43,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBuildErrorURI(array $parameters, string $expected_result_uri): void
     {
         $result = $this->builder->buildErrorURI(...$parameters);
-        $this->assertSame((string) $result, $expected_result_uri);
+        self::assertSame((string) $result, $expected_result_uri);
     }
 
     public static function dataProviderValidErrorURIs(): array
@@ -78,7 +78,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBuildSuccessURI(array $parameters, string $expected_result_uri): void
     {
         $result = $this->builder->buildSuccessURI(...$parameters);
-        $this->assertSame((string) $result, $expected_result_uri);
+        self::assertSame((string) $result, $expected_result_uri);
     }
 
     public static function dataProviderValidSuccessURIs(): array

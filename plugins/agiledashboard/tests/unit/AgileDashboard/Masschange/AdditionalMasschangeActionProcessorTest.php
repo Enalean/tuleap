@@ -212,7 +212,17 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->willReturn(true);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
-        $this->unplanned_artifacts_adder->method('addArtifactToTopBacklogFromIds')->withConsecutive([125, 101], [144, 101]);
+        $matcher = $this->exactly(2);
+        $this->unplanned_artifacts_adder->expects($matcher)->method('addArtifactToTopBacklogFromIds')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(125, $parameters[0]);
+                self::assertSame(101, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(144, $parameters[0]);
+                self::assertSame(101, $parameters[1]);
+            }
+        });
 
         $this->processAction(
             $request,

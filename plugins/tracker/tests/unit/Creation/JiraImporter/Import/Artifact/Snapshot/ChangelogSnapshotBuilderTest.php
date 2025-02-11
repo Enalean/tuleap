@@ -89,13 +89,13 @@ final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $jira_field_mapping_collection
         );
 
-        $this->assertSame($user, $snapshot->getUser());
-        $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
+        self::assertSame($user, $snapshot->getUser());
+        self::assertSame(1585141810, $snapshot->getDate()->getTimestamp());
         $this->assertCount(12, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
-        $this->assertSame('9', $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
-        $this->assertSame(
+        self::assertSame('9', $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
+        self::assertSame(
             [
                 ['id' => '10009'],
                 ['id' => '10010'],
@@ -103,49 +103,49 @@ final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $snapshot->getFieldInSnapshot('customfield_10040')->getValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             '*aaaaaaaaa*',
             $snapshot->getFieldInSnapshot('description')->getValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             '<p>aaaaaaaaa</p>',
             $snapshot->getFieldInSnapshot('description')->getRenderedValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             '*def*',
             $snapshot->getFieldInSnapshot('textfield')->getValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             'lorem ipsum',
             $snapshot->getFieldInSnapshot('customfield_10081')->getValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             ['id' => 'Neque porro'],
             $snapshot->getFieldInSnapshot('customfield_10059')->getValue()
         );
 
         $this->assertNull($snapshot->getFieldInSnapshot('textfield')->getRenderedValue());
 
-        $this->assertSame(
+        self::assertSame(
             [10008],
             $snapshot->getFieldInSnapshot('attachment')->getValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             '2020-03-25',
             $snapshot->getFieldInSnapshot('datepicker')->getValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             ['id' => '105'],
             $snapshot->getFieldInSnapshot('assignee')->getValue()
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 ['id' => '105'],
                 ['id' => '106'],
@@ -154,13 +154,13 @@ final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_snapshot_value_when_no_user_value = '100';
-        $this->assertSame(
+        self::assertSame(
             ['id' => $expected_snapshot_value_when_no_user_value],
             $snapshot->getFieldInSnapshot('customfield_10057')->getValue(),
         );
 
         $expected_snapshot_value_when_no_static_value = '';
-        $this->assertSame(
+        self::assertSame(
             ['id' => $expected_snapshot_value_when_no_static_value],
             $snapshot->getFieldInSnapshot('customfield_10058')->getValue(),
         );

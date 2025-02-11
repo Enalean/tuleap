@@ -198,11 +198,20 @@ final class SubmilestoneFinderTest extends TestCase
     {
         $this->release_planning->method('getBacklogTrackers')->willReturn([$this->user_story_tracker]);
         $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->requirement_tracker, $this->sprint_tracker]);
-        $this->tracker_hierarchy_factory->method('getAllParents')
-            ->withConsecutive([$this->team_tracker], [$this->user_story_tracker])->willReturn([]);
-        $this->planning_factory->method('getPlanningByPlanningTracker')
-            ->withConsecutive([$this->user, $this->requirement_tracker], [$this->user, $this->sprint_tracker])
-            ->willReturnOnConsecutiveCalls($this->requirement_planning, $this->sprint_planning);
+        $this->tracker_hierarchy_factory->method('getAllParents')->with($this->team_tracker)->willReturn([]);
+        $matcher = $this->exactly(2);
+        $this->planning_factory->expects($matcher)->method('getPlanningByPlanningTracker')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame($this->requirement_tracker, $parameters[1]);
+                return $this->requirement_planning;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->user, $parameters[0]);
+                self::assertSame($this->sprint_tracker, $parameters[1]);
+                return $this->sprint_planning;
+            }
+        });
 
         self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->user, $this->release_milestone));
     }

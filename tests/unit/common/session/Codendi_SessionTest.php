@@ -56,7 +56,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session['fifi']['riri']['loulou'] = ['picsou'];
         $namespace                         = 'fifi';
         $session_namespace                 = &$this->codendi_session->getNamespace($namespace);
-        $this->assertSame($session_namespace['riri']['loulou'][0], 'picsou');
+        self::assertSame($session_namespace['riri']['loulou'][0], 'picsou');
     }
 
     public function testGetNamespaceEmpty()
@@ -65,7 +65,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session['fifi']['riri']['loulou'] = ['picsou'];
         $namespace                         = '';
         $session_namespace                 = &$this->codendi_session->getNamespace($namespace);
-        $this->assertSame($session_namespace, $session);
+        self::assertSame($session_namespace, $session);
     }
 
     public function testGetNamespaceCreatePath()
@@ -81,7 +81,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session = &$this->codendi_session->getSessionNamespace();
         $this->codendi_session->set('fifi.riri.loulou.oncle', 'picsou');
         $expected = ['fifi' => ['riri' => ['loulou' => ['oncle' => 'picsou']]]];
-        $this->assertSame($expected, $session);
+        self::assertSame($expected, $session);
     }
 
     public function testRemoveWithKey()
@@ -97,7 +97,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session                           = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $this->codendi_session->remove('fifi.riri.loulou.oncle');
-        $this->assertSame($session['fifi']['riri']['loulou']['oncle'], '');
+        self::assertSame($session['fifi']['riri']['loulou']['oncle'], '');
     }
 
     public function testCleanNamespace()
@@ -105,7 +105,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session                           = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $this->codendi_session->cleanNamespace();
-        $this->assertSame($session, '');
+        self::assertSame($session, '');
     }
 
     public function testGetNoKey()
@@ -113,7 +113,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session                           = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $value                             = $this->codendi_session->get('fifi.riri.loulou');
-        $this->assertSame($value, ['oncle' => 'picsou']);
+        self::assertSame($value, ['oncle' => 'picsou']);
     }
 
     public function testGetWithKey()
@@ -121,7 +121,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session                           = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $value                             = $this->codendi_session->get('fifi.riri.loulou', 'oncle');
-        $this->assertSame($value, 'picsou');
+        self::assertSame($value, 'picsou');
     }
 
     public function testGetDoesNotExist()
@@ -129,7 +129,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session                           = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = 'tutu';
         $value                             = $this->codendi_session->get('fifi.riri.toto');
-        $this->assertSame($value, null);
+        self::assertSame($value, null);
     }
 
     public function testGetNotArrayValue()
@@ -137,7 +137,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session                           = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = 'tutu';
         $value                             = $this->codendi_session->get('fifi.riri.loulou');
-        $this->assertSame($value, 'tutu');
+        self::assertSame($value, 'tutu');
     }
 
     public function testGetArrayValue()
@@ -145,7 +145,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session                           = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = ['tutu'];
         $value                             = $this->codendi_session->get('fifi.riri.loulou');
-        $this->assertSame($value, ['tutu']);
+        self::assertSame($value, ['tutu']);
     }
 
     public function testGetUncompletePath()
@@ -162,7 +162,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session = ['fifi' => ['riri' => ['loulou' => ['oncle' => 'picsou']]]];
         $this->codendi_session->changeSessionNamespace('fifi.riri');
         $new_session = &$this->codendi_session->getSessionNamespace();
-        $this->assertSame($new_session, ['loulou' => ['oncle' => 'picsou']]);
+        self::assertSame($new_session, ['loulou' => ['oncle' => 'picsou']]);
     }
 
     public function testChangeSessionNamespaceRelativeDoesntExist()
@@ -170,7 +170,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->codendi_session->changeSessionNamespace('fifi.riri');
         $this->codendi_session->changeSessionNamespace('.Codendi_SessionTest');
         $new_session = $this->codendi_session->getSessionNamespace();
-        $this->assertSame($new_session, ['fifi' => ['riri' => []]]);
+        self::assertSame($new_session, ['fifi' => ['riri' => []]]);
     }
 
     public function testChangeSessionNamespaceAbsolute()
@@ -180,7 +180,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session['fifi']['riri']                                 = 'loulou';
         $this->codendi_session->changeSessionNamespace('.Codendi_SessionTest.toto');
         $new_session = &$this->codendi_session->getSessionNamespace();
-        $this->assertSame($new_session, 'labricot');
+        self::assertSame($new_session, 'labricot');
     }
 
     public function testChangeSessionNamespaceGotoRoot()
@@ -188,8 +188,8 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session = &$this->codendi_session->getSessionNamespace();
         $this->codendi_session->changeSessionNamespace('.');
         $session_bis = &$this->codendi_session->getSessionNamespace();
-        $this->assertSame($session, []);
-        $this->assertSame($session_bis, ['Codendi_SessionTest' => []]);
+        self::assertSame($session, []);
+        self::assertSame($session_bis, ['Codendi_SessionTest' => []]);
     }
 
     public function testOverloading()
@@ -201,8 +201,8 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $session->riri = 'fifi';
         $this->assertTrue(isset($session->riri));
         $this->assertTrue(isset($pseudo_php_session['riri']));
-        $this->assertSame($pseudo_php_session['riri'], $session->riri);
-        $this->assertSame($pseudo_php_session['riri'], 'fifi');
+        self::assertSame($pseudo_php_session['riri'], $session->riri);
+        self::assertSame($pseudo_php_session['riri'], 'fifi');
         unset($session->riri);
         $this->assertFalse(isset($session->riri));
         $this->assertFalse(isset($pseudo_php_session['riri']));
@@ -231,14 +231,14 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->assertTrue(isset($pseudo_php_session['riri']));
 
         $session->fifi = 'loulou';
-        $this->assertSame($pseudo_php_session['riri']['fifi'], 'loulou');
-        $this->assertSame($session->fifi, 'loulou');
+        self::assertSame($pseudo_php_session['riri']['fifi'], 'loulou');
+        self::assertSame($session->fifi, 'loulou');
 
         $session->mickey = ['friend' => 'pluto'];
         $session->changeSessionNamespace('mickey');
-        $this->assertSame($session->friend, 'pluto');
-        $this->assertSame($session->get('friend'), 'pluto');
-        $this->assertSame($pseudo_php_session['riri']['mickey']['friend'], 'pluto');
+        self::assertSame($session->friend, 'pluto');
+        self::assertSame($session->get('friend'), 'pluto');
+        self::assertSame($pseudo_php_session['riri']['mickey']['friend'], 'pluto');
 
         $session->changeSessionNamespace('.');
         $this->assertNull($session->friend);
@@ -264,7 +264,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         //here you get the reference
         $b =& $session->get('fifi');
         $b = 66;
-        $this->assertSame($session->fifi, 66);
+        self::assertSame($session->fifi, 66);
         // }}}
     }
 }

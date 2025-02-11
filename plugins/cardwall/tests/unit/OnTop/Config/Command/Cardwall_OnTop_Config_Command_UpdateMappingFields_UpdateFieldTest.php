@@ -58,12 +58,20 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
                 'field_id'            => null,
             ]
         ));
-        $this->dao->expects(self::exactly(2))->method('save')
-            ->withConsecutive(
-                [$this->tracker_id, 42, 123],
-                [$this->tracker_id, 69, 321],
-            )
-            ->willReturn(true);
+        $matcher = self::exactly(2);
+        $this->dao->expects($matcher)->method('save')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($this->tracker_id, $parameters[0]);
+                self::assertSame(42, $parameters[1]);
+                self::assertSame(123, $parameters[2]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($this->tracker_id, $parameters[0]);
+                self::assertSame(69, $parameters[1]);
+                self::assertSame(321, $parameters[2]);
+            }
+            return true;
+        });
         $this->value_dao->method('delete');
         $this->command->execute($request);
     }

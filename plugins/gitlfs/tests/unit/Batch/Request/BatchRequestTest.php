@@ -48,12 +48,12 @@ JSON;
         $this->assertFalse($batch_request->isRead());
         $objects = $batch_request->getObjects();
         $this->assertCount(2, $objects);
-        $this->assertSame('ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', $objects[0]->getOID()->getValue());
-        $this->assertSame(123, $objects[0]->getSize());
-        $this->assertSame('3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d', $objects[1]->getOID()->getValue());
-        $this->assertSame(456, $objects[1]->getSize());
-        $this->assertSame('basic', $batch_request->getTransfers()[0]->getIdentifier());
-        $this->assertSame('refs/heads/contrib', $batch_request->getReference()?->getName());
+        self::assertSame('ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', $objects[0]->getOID()->getValue());
+        self::assertSame(123, $objects[0]->getSize());
+        self::assertSame('3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d', $objects[1]->getOID()->getValue());
+        self::assertSame(456, $objects[1]->getSize());
+        self::assertSame('basic', $batch_request->getTransfers()[0]->getIdentifier());
+        self::assertSame('refs/heads/contrib', $batch_request->getReference()?->getName());
     }
 
     public function testParsingBatchRequestWithMinimalProperties(): void
@@ -64,7 +64,7 @@ JSON;
         $this->assertFalse($batch_request->isWrite());
         $this->assertTrue($batch_request->isRead());
         $this->assertEmpty($batch_request->getObjects());
-        $this->assertSame('basic', $batch_request->getTransfers()[0]->getIdentifier());
+        self::assertSame('basic', $batch_request->getTransfers()[0]->getIdentifier());
         $this->assertNull($batch_request->getReference());
     }
 

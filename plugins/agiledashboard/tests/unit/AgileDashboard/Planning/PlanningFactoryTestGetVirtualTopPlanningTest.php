@@ -78,9 +78,17 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
             ->build();
 
         $this->partial_factory->method('getRootPlanning')->willReturn($my_planning);
-        $this->tracker_factory->method('getTrackerById')
-            ->withConsecutive([45], [78])
-            ->willReturnOnConsecutiveCalls($backlog_tracker, $planning_tracker);
+        $matcher = $this->exactly(2);
+        $this->tracker_factory->expects($matcher)->method('getTrackerById')->willReturnCallback(function (...$parameters) use ($matcher, $backlog_tracker, $planning_tracker) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(45, $parameters[0]);
+                return $backlog_tracker;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(78, $parameters[0]);
+                return $planning_tracker;
+            }
+        });
 
         $planning = $this->partial_factory->getVirtualTopPlanning(UserTestBuilder::buildWithDefaults(), 56);
 

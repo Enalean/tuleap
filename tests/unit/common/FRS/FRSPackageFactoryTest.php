@@ -115,14 +115,19 @@ final class FRSPackageFactoryTest extends TestCase
         $package2      = $frs_package_factory->getFRSPackageFromArray($packageArray2);
 
         $data_access = $this->createMock(LegacyDataAccessInterface::class);
-        $data_access->method('query')
-            ->withConsecutive(
-                ['SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY `rank` DESC LIMIT 1', []],
-                ['SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 2  ORDER BY `rank` DESC LIMIT 1', []]
-            )->willReturnOnConsecutiveCalls(
-                TestHelper::arrayToDar($packageArray1),
-                TestHelper::arrayToDar($packageArray2)
-            );
+        $matcher     = $this->exactly(2);
+        $data_access->expects($matcher)->method('query')->willReturnCallback(function (...$parameters) use ($matcher, $packageArray1, $packageArray2) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY `rank` DESC LIMIT 1', $parameters[0]);
+                self::assertSame([], $parameters[1]);
+                return TestHelper::arrayToDar($packageArray1);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 2  ORDER BY `rank` DESC LIMIT 1', $parameters[0]);
+                self::assertSame([], $parameters[1]);
+                return TestHelper::arrayToDar($packageArray2);
+            }
+        });
         $data_access->method('escapeInt')->willReturnCallback(function (int $value) {
             return (string) $value;
         });

@@ -55,7 +55,7 @@ class HiddenFieldsetsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(1, $root_xml->postaction_hidden_fieldsets);
         $this->assertCount(2, $root_xml->postaction_hidden_fieldsets->fieldset_id);
 
-        $this->assertSame((string) $root_xml->postaction_hidden_fieldsets->fieldset_id[0]['REF'], 'F101');
-        $this->assertSame((string) $root_xml->postaction_hidden_fieldsets->fieldset_id[1]['REF'], 'F102');
+        self::assertSame((string) $root_xml->postaction_hidden_fieldsets->fieldset_id[0]['REF'], 'F101');
+        self::assertSame((string) $root_xml->postaction_hidden_fieldsets->fieldset_id[1]['REF'], 'F102');
     }
 }

@@ -36,7 +36,7 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
             \TestDataBuilder::ADMIN_USER_NAME
         );
-        $this->assertSame(200, $admin_response->getStatusCode());
+        self::assertSame(200, $admin_response->getStatusCode());
         $admin_result = json_decode($admin_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotNull($admin_result['root_item']);
         $this->assertNotNull($admin_result['permissions_for_groups']);
@@ -48,7 +48,7 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
         $result = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotNull($result['root_item']);
         $this->assertNull($result['permissions_for_groups']);
@@ -61,7 +61,7 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
         $result = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotNull($result['root_item']);
         $this->assertNotNull($result['permissions_for_groups']);

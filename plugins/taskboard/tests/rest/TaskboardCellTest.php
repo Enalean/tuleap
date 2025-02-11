@@ -99,7 +99,7 @@ final class TaskboardCellTest extends \RestBase
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $US4_swimlane_id));
         $this->assertEquals(200, $response->getStatusCode());
         $status_value = $this->searchStatusValue(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['values']);
-        $this->assertSame('Review', $status_value);
+        self::assertSame('Review', $status_value);
     }
 
     public function testPATCHCellChangesChildCardStatusAndReorders(): void
@@ -142,7 +142,7 @@ final class TaskboardCellTest extends \RestBase
             $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/cards'),
             \TestDataBuilder::TEST_USER_1_NAME
         );
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
         return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
@@ -155,7 +155,7 @@ final class TaskboardCellTest extends \RestBase
             $this->request_factory->createRequest('GET', 'taskboard_cards/' . $swimlane_id . '/children?milestone_id=' . self::$milestone_id),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
         return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
@@ -168,7 +168,7 @@ final class TaskboardCellTest extends \RestBase
             $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/columns'),
             \TestDataBuilder::TEST_USER_1_NAME
         );
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
         return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 

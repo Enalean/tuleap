@@ -157,21 +157,35 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $widget_instance_01->method('setOwner');
         $widget_instance_02 = $this->createMock(\Widget::class);
         $widget_instance_02->method('setOwner');
+        $matcher = $this->exactly(2);
 
-        $this->widget_factory->method('getInstanceByWidgetName')->withConsecutive(
-            ['projectimageviewer'],
-            ['projectcontacts'],
-        )->willReturnOnConsecutiveCalls($widget_instance_01, $widget_instance_02);
+        $this->widget_factory->expects($matcher)->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($matcher, $widget_instance_01, $widget_instance_02) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('projectimageviewer', $parameters[0]);
+                return $widget_instance_01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('projectcontacts', $parameters[0]);
+                return $widget_instance_02;
+            }
+        });
 
         $this->widget_dao->expects(self::exactly(2))->method('duplicateWidget');
         $widget_instance_01->expects(self::once())->method('cloneContent');
         $widget_instance_02->expects(self::once())->method('cloneContent');
+        $matcher = $this->exactly(2);
 
-        $this->checker->method('isWidgetDisabled')
-            ->withConsecutive(
-                [$widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE],
-                [$widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE],
-            )->willReturn(false);
+        $this->checker->expects($matcher)->method('isWidgetDisabled')->willReturnCallback(function (...$parameters) use ($matcher, $widget_instance_01, $widget_instance_02) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($widget_instance_01, $parameters[0]);
+                self::assertSame(ProjectDashboardController::DASHBOARD_TYPE, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($widget_instance_02, $parameters[0]);
+                self::assertSame(ProjectDashboardController::DASHBOARD_TYPE, $parameters[1]);
+            }
+            return false;
+        });
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
@@ -197,21 +211,36 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $widget_instance_01 = $this->createMock(\Widget::class);
         $widget_instance_01->method('setOwner');
         $widget_instance_02 = $this->createMock(\Widget::class);
+        $matcher            = $this->exactly(2);
 
-        $this->widget_factory->method('getInstanceByWidgetName')->withConsecutive(
-            ['projectimageviewer'],
-            ['projectcontacts'],
-        )->willReturnOnConsecutiveCalls($widget_instance_01, $widget_instance_02);
+        $this->widget_factory->expects($matcher)->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($matcher, $widget_instance_01, $widget_instance_02) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame('projectimageviewer', $parameters[0]);
+                return $widget_instance_01;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame('projectcontacts', $parameters[0]);
+                return $widget_instance_02;
+            }
+        });
 
         $this->widget_dao->expects(self::once())->method('duplicateWidget');
         $widget_instance_01->expects(self::once())->method('cloneContent');
         $widget_instance_02->expects(self::never())->method('cloneContent');
+        $matcher = $this->exactly(2);
 
-        $this->checker->method('isWidgetDisabled')
-            ->withConsecutive(
-                [$widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE],
-                [$widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE],
-            )->willReturnOnConsecutiveCalls(false, true);
+        $this->checker->expects($matcher)->method('isWidgetDisabled')->willReturnCallback(function (...$parameters) use ($matcher, $widget_instance_01, $widget_instance_02) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame($widget_instance_01, $parameters[0]);
+                self::assertSame(ProjectDashboardController::DASHBOARD_TYPE, $parameters[1]);
+                return false;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame($widget_instance_02, $parameters[0]);
+                self::assertSame(ProjectDashboardController::DASHBOARD_TYPE, $parameters[1]);
+                return true;
+            }
+        });
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }

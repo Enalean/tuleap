@@ -68,7 +68,7 @@ final class DisposeTest extends TestCase
         $was_caught = false;
         try {
             Dispose::using($disposable, static function () {
-                trigger_error('Fatal error', E_USER_ERROR);
+                @trigger_error('Fatal error', E_USER_ERROR);
             });
         } catch (\Throwable) {
             $was_caught = true;

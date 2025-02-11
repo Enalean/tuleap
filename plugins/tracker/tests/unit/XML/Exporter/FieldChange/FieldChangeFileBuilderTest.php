@@ -52,9 +52,9 @@ class FieldChangeFileBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        $this->assertSame('file', (string) $field_change_node['type']);
-        $this->assertSame('field_file_01', (string) $field_change_node['field_name']);
-        $this->assertSame('fileinfo_1456', (string) $field_change_node->value['ref']);
+        self::assertSame('file', (string) $field_change_node['type']);
+        self::assertSame('field_file_01', (string) $field_change_node['field_name']);
+        self::assertSame('fileinfo_1456', (string) $field_change_node->value['ref']);
     }
 
     public function testItBuildsTheFieldChangeNodeWithValueAsNull(): void
@@ -70,8 +70,8 @@ class FieldChangeFileBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        $this->assertSame('file', (string) $field_change_node['type']);
-        $this->assertSame('field_file_01', (string) $field_change_node['field_name']);
-        $this->assertSame('', (string) $field_change_node->value);
+        self::assertSame('file', (string) $field_change_node['type']);
+        self::assertSame('field_file_01', (string) $field_change_node['field_name']);
+        self::assertSame('', (string) $field_change_node->value);
     }
 }

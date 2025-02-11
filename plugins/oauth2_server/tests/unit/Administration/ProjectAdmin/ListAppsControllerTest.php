@@ -81,6 +81,6 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetUrl(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
-        $this->assertSame('/plugins/oauth2_server/project/102/admin', ListAppsController::getUrl($project));
+        self::assertSame('/plugins/oauth2_server/project/102/admin', ListAppsController::getUrl($project));
     }
 }

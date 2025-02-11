@@ -175,11 +175,24 @@ class FRSReleaseFactoryTest extends TestCase
         $release2 = ['release_id' => 2];
         $release3 = ['release_id' => 3];
         $this->frs_release_factory->method('getFRSReleasesInfoListFromDb')->willReturn([$release1, $release2, $release3]);
-        $this->frs_release_factory->method('delete_release')->withConsecutive(
-            [1, 1],
-            [1, 2],
-            [1, 3]
-        )->willReturnOnConsecutiveCalls(true, false, true);
+        $matcher = $this->exactly(3);
+        $this->frs_release_factory->expects($matcher)->method('delete_release')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(1, $parameters[0]);
+                self::assertSame(1, $parameters[1]);
+                return true;
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(1, $parameters[0]);
+                self::assertSame(2, $parameters[1]);
+                return false;
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(1, $parameters[0]);
+                self::assertSame(3, $parameters[1]);
+                return true;
+            }
+        });
         self::assertFalse($this->frs_release_factory->deleteProjectReleases(1));
     }
 
@@ -189,11 +202,22 @@ class FRSReleaseFactoryTest extends TestCase
         $release2 = ['release_id' => 2];
         $release3 = ['release_id' => 3];
         $this->frs_release_factory->method('getFRSReleasesInfoListFromDb')->willReturn([$release1, $release2, $release3]);
-        $this->frs_release_factory->method('delete_release')->withConsecutive(
-            [1, 1],
-            [1, 2],
-            [1, 3]
-        )->willReturn(true);
+        $matcher = $this->exactly(3);
+        $this->frs_release_factory->expects($matcher)->method('delete_release')->willReturnCallback(function (...$parameters) use ($matcher) {
+            if ($matcher->numberOfInvocations() === 1) {
+                self::assertSame(1, $parameters[0]);
+                self::assertSame(1, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 2) {
+                self::assertSame(1, $parameters[0]);
+                self::assertSame(2, $parameters[1]);
+            }
+            if ($matcher->numberOfInvocations() === 3) {
+                self::assertSame(1, $parameters[0]);
+                self::assertSame(3, $parameters[1]);
+            }
+            return true;
+        });
         self::assertTrue($this->frs_release_factory->deleteProjectReleases(1));
     }
 }

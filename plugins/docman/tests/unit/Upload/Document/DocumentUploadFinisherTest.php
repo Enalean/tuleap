@@ -102,7 +102,7 @@ final class DocumentUploadFinisherTest extends TestCase
         $item->method('getGroupId')->willReturn(102);
         $item->method('getParentId')->willReturn(3);
         $item->method('accept')->willReturn(true);
-        $this->item_factory->method('getItemFromDB')->willReturn(null, $item);
+        $this->item_factory->method('getItemFromDB')->willReturn(null, $item, $item);
         $this->on_going_upload_dao->method('searchDocumentOngoingUploadByItemID')->willReturn([
             'item_id'           => $item_id_being_created,
             'parent_id'         => 3,
