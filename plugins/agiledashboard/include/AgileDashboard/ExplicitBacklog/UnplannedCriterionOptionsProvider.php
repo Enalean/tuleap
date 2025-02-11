@@ -38,7 +38,7 @@ class UnplannedCriterionOptionsProvider
         $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
-    public function formatUnplannedAsSelectboxOption(Project $project, int $selected_option_id): string
+    public function formatUnplannedAsSelectboxOption(Project $project, int|string $selected_option_id): string
     {
         if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID())) {
             return '';
@@ -50,7 +50,7 @@ class UnplannedCriterionOptionsProvider
         );
     }
 
-    private function getOptionForSelectBox(int $selected_option_id, string $label): string
+    private function getOptionForSelectBox(int|string $selected_option_id, string $label): string
     {
         $selected = '';
 
