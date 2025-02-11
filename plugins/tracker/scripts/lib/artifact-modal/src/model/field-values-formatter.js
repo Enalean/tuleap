@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Fault, isFault } from "@tuleap/fault";
 import AwkwardCreationFields from "./awkward-creation-fields-constant.js";
-import { formatExistingValue as formatForLinkField } from "../adapters/UI/fields/link-field/link-field-initializer.js";
+import { formatExistingValue as formatForLinkField } from "@tuleap/plugin-tracker-link-field";
 import { buildEditableDateFieldValue } from "../adapters/UI/fields/date-field/date-field-value-builder.ts";
 import {
     formatDefaultValue as defaultForOpenListField,
@@ -27,7 +28,6 @@ import {
 import { formatExistingValue as formatForTextFieldValue } from "../adapters/UI/fields/text-field/text-field-value-formatter.ts";
 import { cleanValue as defaultForIntField } from "../adapters/UI/fields/int-field/int-field-value-formatter";
 import { NewFileToAttach } from "../domain/fields/file-field/NewFileToAttach";
-import { Fault, isFault } from "@tuleap/fault";
 
 /**
  * For every field in the tracker, creates a field object with the value from the given artifact

@@ -18,17 +18,13 @@
  */
 
 import { Fault } from "@tuleap/fault";
+import { ErrorMessageFormatter as LinkFieldFormatter } from "@tuleap/plugin-tracker-link-field";
 import { ErrorMessageFormatter } from "./ErrorMessageFormatter";
 import { setCatalog } from "../../../gettext-catalog";
-import { LinkRetrievalFault } from "../../../domain/fields/link-field/LinkRetrievalFault";
 import { ParentRetrievalFault } from "../../../domain/parent/ParentRetrievalFault";
-import { MatchingArtifactRetrievalFault } from "../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
-import { PossibleParentsRetrievalFault } from "../../../domain/fields/link-field/PossibleParentsRetrievalFault";
-import { UserHistoryRetrievalFault } from "../../../domain/fields/link-field/UserHistoryRetrievalFault";
-import { SearchArtifactsFault } from "../../../domain/fields/link-field/SearchArtifactsFault";
 import { CommentsRetrievalFault } from "../../../domain/comments/CommentsRetrievalFault";
-import { ArtifactCreationFault } from "../../../domain/ArtifactCreationFault";
 import { FileUploadFault } from "../../../domain/fields/file-field/FileUploadFault";
+import { ArtifactCreationFault } from "../../../domain/ArtifactCreationFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
@@ -38,7 +34,7 @@ describe(`ErrorMessageFormatter`, () => {
     });
 
     const format = (fault: Fault): string => {
-        return ErrorMessageFormatter().format(fault);
+        return ErrorMessageFormatter(LinkFieldFormatter()).format(fault);
     };
 
     it(`casts a Fault to string`, () => {
@@ -48,12 +44,7 @@ describe(`ErrorMessageFormatter`, () => {
 
     function* generateFaults(): Generator<[string, Fault]> {
         const previous = Fault.fromMessage(FAULT_MESSAGE);
-        yield ["LinkRetrievalFault", LinkRetrievalFault(previous)];
         yield ["ParentRetrievalFault", ParentRetrievalFault(previous)];
-        yield ["MatchingArtifactRetrievalFault", MatchingArtifactRetrievalFault(previous)];
-        yield ["PossibleParentsRetrievalFault", PossibleParentsRetrievalFault(previous)];
-        yield ["UserHistoryRetrievalFault", UserHistoryRetrievalFault(previous)];
-        yield ["SearchArtifactsFault", SearchArtifactsFault(previous)];
         yield ["CommentsRetrievalFault", CommentsRetrievalFault(previous)];
         yield ["ArtifactCreationFault", ArtifactCreationFault(previous)];
         yield ["FileUploadFault", FileUploadFault(previous, "sempiternity_ringgiver.txt")];

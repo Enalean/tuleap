@@ -19,7 +19,7 @@
 
 @use "./adapters/UI/comments/comments";
 @use "./adapters/UI/footer/quota-display";
-@use "./adapters/UI/fields/link-field/link-field";
+@use "pkg:@tuleap/plugin-tracker-link-field";
 @use "./adapters/UI/fields/burndown-field/bundown-field";
 @use "./adapters/UI/fields/file-field/file-field";
 @use "./adapters/UI/fields/user-avatar-field/user-avatar-field";

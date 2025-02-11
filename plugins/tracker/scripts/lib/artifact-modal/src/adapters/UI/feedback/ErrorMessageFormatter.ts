@@ -19,34 +19,20 @@
 
 import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
+import type { ErrorMessageFormatter as LinkFieldErrorMessageFormatter } from "@tuleap/plugin-tracker-link-field";
 import {
     getArtifactCreationErrorMessage,
     getCommentsRetrievalErrorMessage,
     getFileUploadErrorMessage,
-    getLinkFieldFetchErrorMessage,
-    getMatchingArtifactErrorMessage,
     getParentFetchErrorMessage,
-    getPossibleParentErrorMessage,
-    getSearchArtifactsErrorMessage,
-    getUserHistoryErrorMessage,
 } from "../../../gettext-catalog";
 
 export type ErrorMessageFormatter = {
     format(fault: Fault): string;
 };
 
-const isLinkRetrievalFault = (fault: Fault): boolean =>
-    "isLinkRetrieval" in fault && fault.isLinkRetrieval() === true;
 const isParentRetrievalFault = (fault: Fault): boolean =>
     "isParentRetrieval" in fault && fault.isParentRetrieval() === true;
-const isMatchingArtifactRetrievalFault = (fault: Fault): boolean =>
-    "isMatchingArtifactRetrieval" in fault && fault.isMatchingArtifactRetrieval() === true;
-const isPossibleParentsRetrievalFault = (fault: Fault): boolean =>
-    "isPossibleParentsRetrieval" in fault && fault.isPossibleParentsRetrieval() === true;
-const isUserHistoryFault = (fault: Fault): boolean =>
-    "isUserHistoryRetrieval" in fault && fault.isUserHistoryRetrieval() === true;
-const isSearchArtifacts = (fault: Fault): boolean =>
-    "isSearchArtifacts" in fault && fault.isSearchArtifacts() === true;
 const isCommentsRetrieval = (fault: Fault): boolean =>
     "isCommentsRetrieval" in fault && fault.isCommentsRetrieval() === true;
 const isArtifactCreation = (fault: Fault): boolean =>
@@ -54,25 +40,12 @@ const isArtifactCreation = (fault: Fault): boolean =>
 const isFileUploadFault = (fault: Fault): boolean =>
     "isFileUpload" in fault && fault.isFileUpload() === true;
 
-export const ErrorMessageFormatter = (): ErrorMessageFormatter => ({
+export const ErrorMessageFormatter = (
+    link_field_error_formatter: LinkFieldErrorMessageFormatter,
+): ErrorMessageFormatter => ({
     format: (fault): string => {
-        if (isLinkRetrievalFault(fault)) {
-            return sprintf(getLinkFieldFetchErrorMessage(), fault);
-        }
         if (isParentRetrievalFault(fault)) {
             return sprintf(getParentFetchErrorMessage(), fault);
-        }
-        if (isMatchingArtifactRetrievalFault(fault)) {
-            return sprintf(getMatchingArtifactErrorMessage(), fault);
-        }
-        if (isPossibleParentsRetrievalFault(fault)) {
-            return sprintf(getPossibleParentErrorMessage(), fault);
-        }
-        if (isUserHistoryFault(fault)) {
-            return sprintf(getUserHistoryErrorMessage(), fault);
-        }
-        if (isSearchArtifacts(fault)) {
-            return sprintf(getSearchArtifactsErrorMessage(), fault);
         }
         if (isCommentsRetrieval(fault)) {
             return sprintf(getCommentsRetrievalErrorMessage(), fault);
@@ -86,6 +59,6 @@ export const ErrorMessageFormatter = (): ErrorMessageFormatter => ({
                 error: fault,
             });
         }
-        return String(fault);
+        return link_field_error_formatter.format(fault);
     },
 });

@@ -1,0 +1,45 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-link-field",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "sass": "./dist/style.css",
+      "import": "./dist/plugin-tracker-link-field.js",
+      "require": "./dist/plugin-tracker-link-field.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/dom": "workspace:^",
+    "@tuleap/fault": "workspace:^",
+    "@tuleap/fetch-result": "workspace:^",
+    "@tuleap/gettext": "workspace:^",
+    "@tuleap/lazybox": "workspace:^",
+    "@tuleap/list-picker": "workspace:^",
+    "@tuleap/option": "workspace:^",
+    "@tuleap/plugin-tracker-artifact-common": "workspace:^",
+    "@tuleap/plugin-tracker-constants": "workspace:^",
+    "hybrids": "^9.1.6",
+    "neverthrow": "^6.0.0",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:^",
+    "@tuleap/core-constants": "workspace:^",
+    "@tuleap/core-rest-api-types": "workspace:^",
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:^",
+    "@tuleap/po-gettext-plugin": "workspace:^",
+    "@types/sprintf-js": "^1.1.2"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

@@ -11,9 +11,9 @@ dependencies:
   '@tuleap/ckeditor-image-upload':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/ckeditor-image-upload
-  '@tuleap/core-rest-api-types':
+  '@tuleap/core-constants':
     specifier: workspace:*
-    version: link:../../../../../lib/frontend/rest-api-types
+    version: link:../../../../../lib/frontend/constants
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/date-helper
@@ -26,9 +26,6 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/fetch-result
-  '@tuleap/lazybox':
-    specifier: workspace:*
-    version: link:../../../../../lib/frontend/lazybox
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/list-picker
@@ -44,6 +41,9 @@ dependencies:
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:*
     version: link:../constants
+  '@tuleap/plugin-tracker-link-field':
+    specifier: workspace:^
+    version: link:../link-field
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../rest-api-types
@@ -103,9 +103,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/core-constants':
-    specifier: workspace:*
-    version: link:../../../../../lib/frontend/constants
   '@types/ckeditor':
     specifier: ^4.9.10
     version: 4.9.10

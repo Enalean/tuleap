@@ -13,6 +13,10 @@
             "src": "scripts/lib/artifact-ckeditor-image-upload/src",
             "po": "scripts/lib/artifact-ckeditor-image-upload/po"
         },
+        "link-field": {
+            "src": "scripts/lib/link-field/src",
+            "po": "scripts/lib/link-field/po"
+        },
         "rich-text-editor": {
             "src": "scripts/lib/rich-text-editor/src",
             "po": "scripts/lib/rich-text-editor/po"
@@ -23,31 +27,31 @@
         }
     },
     "gettext-vue": {
+        "tracker-creation": {
+            "src": "scripts/tracker-creation/src",
+            "po": "scripts/tracker-creation/po"
+        }
+    },
+    "gettext-vue3": {
         "colorpicker": {
             "src": "scripts/lib/colorpicker/src",
             "po": "scripts/lib/colorpicker/po"
         },
-        "workflow-transitions": {
-            "src": "scripts/workflow-transitions/src",
-            "po": "scripts/workflow-transitions/po"
+        "move-artifact-action": {
+            "src": "scripts/move-artifact-action/src",
+            "po": "scripts/move-artifact-action/po"
         },
-        "tracker-creation": {
-            "src": "scripts/tracker-creation/src",
-            "po": "scripts/tracker-creation/po"
-        },
-        "timeframe-admin": {
-            "src": "scripts/semantics-timeframe/src",
-            "po": "scripts/semantics-timeframe/po"
-        }
-    },
-    "gettext-vue3": {
         "permissions-per-group": {
             "src": "scripts/permissions-per-group/src",
             "po": "scripts/permissions-per-group/po"
         },
-        "move-artifact-action": {
-            "src": "scripts/move-artifact-action/src",
-            "po": "scripts/move-artifact-action/po"
+        "timeframe-admin": {
+            "src": "scripts/semantics-timeframe/src",
+            "po": "scripts/semantics-timeframe/po"
+        },
+        "workflow-transitions": {
+            "src": "scripts/workflow-transitions/src",
+            "po": "scripts/workflow-transitions/po"
         }
     },
     "gettext-angularjs": {

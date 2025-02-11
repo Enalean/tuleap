@@ -1,0 +1,83 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/dom':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/fetch-result
+  '@tuleap/gettext':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/gettext
+  '@tuleap/lazybox':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/lazybox
+  '@tuleap/list-picker':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/list-picker
+  '@tuleap/option':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/option
+  '@tuleap/plugin-tracker-artifact-common':
+    specifier: workspace:^
+    version: link:../artifact-common
+  '@tuleap/plugin-tracker-constants':
+    specifier: workspace:^
+    version: link:../constants
+  hybrids:
+    specifier: ^9.1.6
+    version: 9.1.6
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-constants':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/constants
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/rest-api-types
+  '@tuleap/plugin-tracker-rest-api-types':
+    specifier: workspace:^
+    version: link:../rest-api-types
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/po-gettext-plugin
+  '@types/sprintf-js':
+    specifier: ^1.1.2
+    version: 1.1.4
+
+packages:
+
+  /@types/sprintf-js@1.1.4:
+    resolution: {integrity: sha512-aWK1reDYWxcjgcIIPmQi3u+OQDuYa9b+lr6eIsGWrekJ9vr1NSjr4Eab8oQ1iKuH1ltFHpXGyerAv1a3FMKxzQ==}
+    dev: true
+
+  /hybrids@9.1.6:
+    resolution: {integrity: sha512-AES51XhSvgXQLSwAHBE4tmjKW8XxnnGBiGSeHWeiPzO638waOX+cYU6VWvfiUOuTMjM/KzxsYHrLfMLLNqVZ3A==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dev: false
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
+
+  /sprintf-js@1.1.2:
+    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
+    dev: false

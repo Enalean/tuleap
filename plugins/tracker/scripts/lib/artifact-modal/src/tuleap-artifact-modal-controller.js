@@ -26,6 +26,17 @@ import {
     CurrentTrackerIdentifier,
     ParentArtifactIdentifier,
 } from "@tuleap/plugin-tracker-artifact-common";
+import {
+    ArtifactCrossReference,
+    LinkFieldCreator,
+    LinkFieldValueFormatter,
+    LinksMarkedForRemovalStore,
+    LinksStore,
+    NewLinksStore,
+    ParentTrackerIdentifier,
+    TrackerShortname,
+    UserIdentifier,
+} from "@tuleap/plugin-tracker-link-field";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
@@ -34,48 +45,28 @@ import { getAllFileFields } from "./adapters/UI/fields/file-field/file-field-det
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { ParentFeedbackController } from "./domain/parent/ParentFeedbackController";
-import { LinkFieldController } from "./domain/fields/link-field/LinkFieldController";
 import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
-import { LinksRetriever } from "./domain/fields/link-field/LinksRetriever";
-import { LinksMarkedForRemovalStore } from "./adapters/Memory/fields/link-field/LinksMarkedForRemovalStore";
-import { LinksStore } from "./adapters/Memory/fields/link-field/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
 import { FileUploadQuotaController } from "./domain/common/FileUploadQuotaController";
-import { LinkFieldValueFormatter } from "./adapters/REST/fields/link-field/LinkFieldValueFormatter";
 import { FileFieldController } from "./domain/fields/file-field/FileFieldController";
-import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./domain/common/FaultFeedbackController";
-import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
-import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field/dropdown/ArtifactLinkSelectorAutoCompleter";
-import { NewLinksStore } from "./adapters/Memory/fields/link-field/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
-import { PossibleParentsCache } from "./adapters/Memory/fields/link-field/PossibleParentsCache";
-import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
 import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
 import { getConfirmClosingModal, getSubmitDisabledReason } from "./gettext-catalog";
-import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesCollector";
-import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
-import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
 import { CommentsController } from "./domain/comments/CommentsController";
 import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 import { FormattedTextController } from "./domain/common/FormattedTextController";
-import { ParentTrackerIdentifierProxy } from "./adapters/REST/fields/link-field/ParentTrackerIdentifierProxy";
-import { ArtifactCreatorController } from "./domain/fields/link-field/creation/ArtifactCreatorController";
 import {
     EventDispatcher,
     WillDisableSubmit,
     WillEnableSubmit,
     WillNotifyFault,
 } from "./domain/AllEvents";
-import { ProjectsCache } from "./adapters/Memory/fields/link-field/ProjectsCache";
-import { LinkableArtifactCreator } from "./adapters/REST/fields/link-field/creation/LinkableArtifactCreator";
 import { StaticOpenListFieldController } from "./adapters/UI/fields/open-list-field/static/StaticOpenListFieldController";
 import { UserGroupOpenListFieldController } from "./adapters/UI/fields/open-list-field/user-groups/UserGroupOpenListFieldController";
-import { LinkFieldAPIClient } from "./adapters/REST/fields/link-field/LinkFieldAPIClient";
-import { ArtifactCreationAPIClient } from "./adapters/REST/fields/link-field/creation/ArtifactCreationAPIClient";
 import { FormattedTextUserPreferences } from "./domain/common/FormattedTextUserPreferences";
 
 export default ArtifactModalController;
@@ -106,28 +97,44 @@ function ArtifactModalController(
     const concurrency_error_code = 412;
     let has_changed_once = false;
 
-    const event_dispatcher = EventDispatcher();
-    const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
     const current_project_identifier = CurrentProjectIdentifier.fromId(
         modal_model.tracker.project.id,
     );
     const current_artifact_option = Option.fromNullable(modal_model.current_artifact_identifier);
-    const api_client = TuleapAPIClient(current_project_identifier);
-    const link_field_api_client = LinkFieldAPIClient(current_artifact_option);
-    const artifact_creation_api_client = ArtifactCreationAPIClient();
-    const links_store = LinksStore();
-    const links_marked_for_removal_store = LinksMarkedForRemovalStore();
-    const new_links_store = NewLinksStore();
-    const possible_parents_cache = PossibleParentsCache(link_field_api_client);
-    const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
+    const current_tracker_identifier = CurrentTrackerIdentifier.fromId(modal_model.tracker_id);
     const parent_artifact_identifier = Option.fromNullable(modal_model.parent_artifact_id).map(
         ParentArtifactIdentifier.fromId,
     );
-    const current_tracker_identifier = CurrentTrackerIdentifier.fromId(modal_model.tracker_id);
-    const file_uploader = FileFieldsUploader(api_client, FileUploader());
-    const user_history_cache = UserHistoryCache(link_field_api_client);
+    const parent_tracker_identifier = Option.fromNullable(modal_model.tracker.parent).map(
+        (parent_tracker) => ParentTrackerIdentifier.fromId(parent_tracker.id),
+    );
+    const user_locale = document.body.getAttribute("data-user-locale") ?? en_US_LOCALE;
 
-    const user_locale = document.body.dataset.userLocale ?? en_US_LOCALE;
+    const event_dispatcher = EventDispatcher();
+    const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
+    const api_client = TuleapAPIClient(current_project_identifier);
+    const file_uploader = FileFieldsUploader(api_client, FileUploader());
+    const links_store = LinksStore();
+    const links_marked_for_removal_store = LinksMarkedForRemovalStore();
+    const new_links_store = NewLinksStore();
+    const link_field_creator = LinkFieldCreator(
+        event_dispatcher,
+        links_store,
+        new_links_store,
+        links_marked_for_removal_store,
+        current_artifact_option,
+        ArtifactCrossReference.fromCurrentArtifact(
+            current_artifact_option,
+            TrackerShortname.fromString(modal_model.tracker.item_name),
+            modal_model.tracker.color_name,
+        ),
+        current_project_identifier,
+        current_tracker_identifier,
+        parent_artifact_identifier,
+        parent_tracker_identifier,
+        UserIdentifier.fromId(modal_model.user_id),
+        user_locale,
+    );
 
     Object.assign(self, {
         $onInit: init,
@@ -175,63 +182,14 @@ function ArtifactModalController(
                 },
             );
         },
-        getLinkFieldController: (field) => {
-            return LinkFieldController(
-                LinksRetriever(
-                    link_field_api_client,
-                    link_field_api_client,
-                    links_store,
-                    current_artifact_option,
-                ),
-                links_store,
-                links_store,
-                links_marked_for_removal_store,
-                links_marked_for_removal_store,
-                links_marked_for_removal_store,
-                new_links_store,
-                new_links_store,
-                new_links_store,
-                new_links_store,
-                possible_parents_cache,
-                event_dispatcher,
-                field,
-                current_tracker_identifier,
-                ParentTrackerIdentifierProxy.fromTrackerModel(modal_model.tracker.parent),
-                ArtifactCrossReference.fromCurrentArtifact(
-                    current_artifact_option,
-                    TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
-                    modal_model.tracker.color_name,
-                ),
-                LinkTypesCollector.buildFromTypesRepresentations(field.allowed_types),
-                current_project_identifier,
-                parent_artifact_identifier,
-            );
+        getLinkFieldController(field) {
+            return link_field_creator.createLinkFieldController(field, field.allowed_types);
         },
-        getLinkFieldAutoCompleter: () => {
-            return ArtifactLinkSelectorAutoCompleter(
-                link_field_api_client,
-                already_linked_verifier,
-                user_history_cache,
-                link_field_api_client,
-                event_dispatcher,
-                current_artifact_option,
-                UserIdentifierProxy.fromUserId(modal_model.user_id),
-            );
+        getLinkFieldAutoCompleter() {
+            return link_field_creator.createLinkSelectorAutoCompleter();
         },
         getArtifactCreatorController() {
-            return ArtifactCreatorController(
-                event_dispatcher,
-                ProjectsCache(artifact_creation_api_client),
-                artifact_creation_api_client,
-                LinkableArtifactCreator(
-                    artifact_creation_api_client,
-                    artifact_creation_api_client,
-                    link_field_api_client,
-                ),
-                current_project_identifier,
-                current_tracker_identifier,
-                user_locale,
-            );
+            return link_field_creator.createArtifactCreatorController();
         },
         getFileFieldController: (field) => {
             return FileFieldController(field, self.values[field.field_id], event_dispatcher);

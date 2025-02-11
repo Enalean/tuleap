@@ -21,6 +21,7 @@ import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import { sprintf } from "sprintf-js";
 import { Option } from "@tuleap/option";
+import { ErrorMessageFormatter as LinkFieldFormatter } from "@tuleap/plugin-tracker-link-field";
 import { getLinkedParentFeedback } from "../../../gettext-catalog";
 import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 import type { ParentFeedbackControllerType } from "../../../domain/parent/ParentFeedbackController";
@@ -83,7 +84,7 @@ export const ModalFeedback = define<ModalFeedback>({
     faultController: {
         value: (host, controller) => controller,
         observe(host, controller) {
-            const formatter = ErrorMessageFormatter();
+            const formatter = ErrorMessageFormatter(LinkFieldFormatter());
             controller.registerFaultListener((fault_option) => {
                 host.error_message_option = fault_option.map(formatter.format);
             });

@@ -18,13 +18,16 @@
  */
 
 import moment from "moment";
-import type { EditableDateFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
-import type { DateFieldIdentifier, Permission } from "@tuleap/plugin-tracker-constants";
+import type {
+    EditableDateFieldStructure,
+    PermissionsArray,
+} from "@tuleap/plugin-tracker-rest-api-types";
+import type { DateFieldIdentifier } from "@tuleap/plugin-tracker-constants";
 
 interface DateFieldValue {
     readonly field_id: number;
     readonly type: DateFieldIdentifier;
-    readonly permissions: ReadonlyArray<Permission>;
+    readonly permissions: PermissionsArray;
     readonly value: string;
 }
 
