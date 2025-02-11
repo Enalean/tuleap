@@ -173,7 +173,7 @@ final class UploadImageControllerTest extends TestCase
         self::assertFalse($creator->isCreated());
     }
 
-    private function getErrorStatus(): array
+    public static function getErrorStatus(): array
     {
         return [
             [UPLOAD_ERR_INI_SIZE],

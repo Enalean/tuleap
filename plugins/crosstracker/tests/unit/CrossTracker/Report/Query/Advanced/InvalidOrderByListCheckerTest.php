@@ -54,7 +54,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
         $checker->metadataListIsSortable(new Metadata('title'), [TrackerTestBuilder::aTracker()->build()]);
     }
 
-    public function generateFields(): iterable
+    public static function generateFields(): iterable
     {
         yield 'It allows radio button' => [RadioButtonFieldBuilder::aRadioButtonField(101)->build(), true];
         yield 'It allows selectbox' => [ListFieldBuilder::aListField(101)->build(), true];

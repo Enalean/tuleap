@@ -58,7 +58,7 @@ final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-    public function dataProviderFields(): array
+    public static function dataProviderFields(): array
     {
         return [
             'Field with an update' => [

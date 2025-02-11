@@ -37,7 +37,7 @@ final class NginxServerNamesHashBucketSizeCalculatorTest extends TestCase
         self::assertSame($expected_hash_bucket_size, $bucket_size_calculator->computeServerNamesHashBucketSize(str_repeat('a', $server_name_size)));
     }
 
-    public function dataProviderServerNamesExpectedHashBucketSize(): array
+    public static function dataProviderServerNamesExpectedHashBucketSize(): array
     {
         return [
             [11, 64],

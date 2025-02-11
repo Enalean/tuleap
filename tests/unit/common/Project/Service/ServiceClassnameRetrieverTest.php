@@ -57,7 +57,7 @@ final class ServiceClassnameRetrieverTest extends TestCase
     /**
      * @return list<string[]>
      */
-    private function getServicesWithoutSpecificImplementation(): array
+    public static function getServicesWithoutSpecificImplementation(): array
     {
         return [
             [Service::SUMMARY],

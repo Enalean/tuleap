@@ -87,27 +87,27 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase
         self::assertNull($this->widget->exportAsXML());
     }
 
-    public function getRenderer(): iterable
+    public static function getRenderer(): iterable
     {
         yield 'renderer does not exist' => [null];
 
         $project        = ProjectTestBuilder::aProject()->withId(self::CURRENT_PROJECT_ID)->build();
         $tracker        = TrackerTestBuilder::aTracker()->withProject($project)->build();
         $private_report = ReportTestBuilder::aPrivateReport()->inTracker($tracker)->build();
-        yield 'report is not public' => [$this->getTable($private_report)];
+        yield 'report is not public' => [self::getTable($private_report)];
 
         $project         = ProjectTestBuilder::aProject()->withId(self::CURRENT_PROJECT_ID)->build();
         $deleted_tracker = TrackerTestBuilder::aTracker()->withDeletionDate(1234567890)->withProject($project)->build();
         $report          = ReportTestBuilder::aPublicReport()->inTracker($deleted_tracker)->build();
-        yield 'tracker is deleted' => [$this->getTable($report)];
+        yield 'tracker is deleted' => [self::getTable($report)];
 
         $another_project = ProjectTestBuilder::aProject()->withId(self::ANOTHER_PROJECT_ID)->build();
         $tracker         = TrackerTestBuilder::aTracker()->withProject($another_project)->build();
         $report          = ReportTestBuilder::aPublicReport()->inTracker($tracker)->build();
-        yield 'widget targets a renderer in another project' => [$this->getTable($report)];
+        yield 'widget targets a renderer in another project' => [self::getTable($report)];
     }
 
-    private function getTable(\Tracker_Report $report): \Tracker_Report_Renderer
+    private static function getTable(\Tracker_Report $report): \Tracker_Report_Renderer
     {
         return new \Tracker_Report_Renderer_Table(
             123,

@@ -66,7 +66,7 @@ final class BlobDataReaderTest extends TestCase
         self::assertTrue(mb_check_encoding($data_reader->convertToUTF8($string), 'UTF-8'));
     }
 
-    public function provideStringInVariousEncodings(): iterable
+    public static function provideStringInVariousEncodings(): iterable
     {
         $lyrics = <<<EOS
         Tes lèvres entrouvertes et puis cette blessure

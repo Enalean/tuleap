@@ -166,7 +166,7 @@ final class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\
         self::assertSame($status_id, $status->getId());
     }
 
-    public function dataProviderDocmanStatus(): array
+    public static function dataProviderDocmanStatus(): array
     {
         return [
             [PLUGIN_DOCMAN_ITEM_STATUS_NONE],

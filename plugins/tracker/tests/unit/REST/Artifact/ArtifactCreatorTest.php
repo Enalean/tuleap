@@ -435,7 +435,7 @@ final class ArtifactCreatorTest extends TestCase
     /**
      * @return list<array{0: \Closure(VerifySubmissionPermissions $submission_permission_verifier, RetrieveUsedFields $all_fields_retriever, TrackerArtifactCreator $artifact_creator, RetrieveTracker $tracker_factory, array $values): ArtifactReference, 1: string}>
      */
-    public function provideCreateCallback(): array
+    public static function provideCreateCallback(): array
     {
         $tracker = TrackerTestBuilder::aTracker()
             ->withProject(ProjectTestBuilder::aProject()->build())
@@ -451,7 +451,7 @@ final class ArtifactCreatorTest extends TestCase
                     TrackerArtifactCreator $artifact_creator,
                     RetrieveTracker $tracker_factory,
                     array $values,
-                ) => $this->getCreator(
+                ) => self::getCreator(
                     $submission_permission_verifier,
                     $all_fields_retriever,
                     $artifact_creator,
@@ -466,7 +466,7 @@ final class ArtifactCreatorTest extends TestCase
                     TrackerArtifactCreator $artifact_creator,
                     RetrieveTracker $tracker_factory,
                     array $values,
-                ) => $this->getCreator(
+                ) => self::getCreator(
                     $submission_permission_verifier,
                     $all_fields_retriever,
                     $artifact_creator,
@@ -477,15 +477,18 @@ final class ArtifactCreatorTest extends TestCase
         ];
     }
 
-    private function getCreator(
+    private static function getCreator(
         VerifySubmissionPermissions $submission_permission_verifier,
         RetrieveUsedFields $all_fields_retriever,
         TrackerArtifactCreator $artifact_creator,
         RetrieveTracker $tracker_factory,
     ): ArtifactCreator {
-        $default_values_adder = $this->createMock(AddDefaultValuesToFieldsData::class);
-        $default_values_adder->method('getUsedFieldsWithDefaultValue')
-            ->willReturnCallback(static fn (Tracker $tracker, array $fields_data, PFUser $user): array => $fields_data);
+        $default_values_adder = new class implements AddDefaultValuesToFieldsData {
+            public function getUsedFieldsWithDefaultValue(\Tracker $tracker, array $fields_data, \PFUser $user): array
+            {
+                return $fields_data;
+            }
+        };
 
         $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();
 

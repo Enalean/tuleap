@@ -67,7 +67,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 'urls' => [
                     'issueLinkTypes' => 'YOU MUST PAY!',
                 ],
-                'missing_type' => null,
+                'type' => null,
                 'creator' => self::getDefaultCreator(),
                 'expectations' => function (ArtifactLinkTypeImporterTest $test_case) {
                     $test_case->expectException(\RuntimeException::class);
@@ -76,7 +76,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             'it returns an artifact link type with accurate labels' => [
                 'urls' => self::getDefaultIssueTypeResponse(),
-                'missing_type' => TypePresenter::buildVisibleType('Blocks', 'blocks', 'is blocked by'),
+                'type' => TypePresenter::buildVisibleType('Blocks', 'blocks', 'is blocked by'),
                 'creator' => self::getDefaultCreator(),
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
@@ -88,7 +88,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             'it does not return anything when type already exists' => [
                 'urls' => self::getDefaultIssueTypeResponse(),
-                'missing_type' => null,
+                'type' => null,
                 'creator' => self::getDefaultCreator(),
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
@@ -97,7 +97,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             'it skips links that cannot be created' => [
                 'urls' => self::getDefaultIssueTypeResponse(),
-                'missing_type' => null,
+                'type' => null,
                 'creator' => new class implements TypeCreatorInterface
                 {
                     public array $natures = [];

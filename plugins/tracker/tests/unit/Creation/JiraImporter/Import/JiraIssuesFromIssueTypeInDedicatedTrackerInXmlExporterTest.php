@@ -99,7 +99,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
     public static function debugTracesProvider(): iterable
     {
         yield 'SBX' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/SBX',
+            'fixture_path' => __DIR__ . '/_fixtures/SBX',
             'is_jira_cloud' => false,
             'jira_major_version' => 8,
             'users' => [
@@ -108,7 +108,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
         ];
 
         yield 'SBXv9' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/SBXv9',
+            'fixture_path' => __DIR__ . '/_fixtures/SBXv9',
             'is_jira_cloud' => false,
             'jira_major_version' => 9,
             'users' => [
@@ -117,7 +117,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
         ];
 
         yield 'IXMC' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/IXMC',
+            'fixture_path' => __DIR__ . '/_fixtures/IXMC',
             'is_jira_cloud' => false,
             'jira_major_version' => 8,
             'users' => [
@@ -130,7 +130,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
         ];
 
         yield 'SP' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/SP',
+            'fixture_path' => __DIR__ . '/_fixtures/SP',
             'is_jira_cloud' => true,
             'jira_major_version' => null,
             'users' => [
@@ -142,7 +142,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
         ];
 
         yield 'IE' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/IE',
+            'fixture_path' => __DIR__ . '/_fixtures/IE',
             'is_jira_cloud' => true,
             'jira_major_version' => null,
             'users' => [
@@ -152,7 +152,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
         ];
 
         yield 'Changelog date and issue creation date within the same second' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/TimestampConflicts',
+            'fixture_path' => __DIR__ . '/_fixtures/TimestampConflicts',
             'is_jira_cloud' => false,
             'jira_major_version' => 8,
             'users' => [

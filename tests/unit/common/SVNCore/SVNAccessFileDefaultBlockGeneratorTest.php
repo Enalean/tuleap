@@ -62,7 +62,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
         );
     }
 
-    public function membersDataProvider(): iterable
+    public static function membersDataProvider(): iterable
     {
         $jmalko    = UserTestBuilder::anActiveUser()->withId(120)->withUserName('jmalko')->build();
         $csteven   = UserTestBuilder::anActiveUser()->withId(121)->withUserName('csteven')->build();
@@ -78,7 +78,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
 
         return [
             'Nominal case' => [
-                'user_groups' => $default_user_groups,
+                'user_group_retriever' => $default_user_groups,
                 'plugin'  => $noop_plugin,
                 'expected' => <<<EOT
                     members = jmalko, csteven, disciplus_simplex
@@ -86,7 +86,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
                     EOT,
             ],
             'Plugin overrides name generator' => [
-                'user_groups' => $default_user_groups,
+                'user_group_retriever' => $default_user_groups,
                 'plugin'  => function (SVNAccessFileDefaultBlockOverride $event) {
                     foreach ($event->user_groups as $user_group) {
                         $event->addSVNGroup(
@@ -112,7 +112,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
                     EOT,
             ],
             'Project members (members) is the only allowed user group' => [
-                'user_groups' => UGroupRetrieverStub::buildWithUserGroups(
+                'user_group_retriever' => UGroupRetrieverStub::buildWithUserGroups(
                     ProjectUGroupTestBuilder::buildAnonymous(),
                     ProjectUGroupTestBuilder::buildRegistered(),
                     ProjectUGroupTestBuilder::buildProjectMembersWith($jmalko, $csteven, $disciplus),
@@ -127,7 +127,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
                     EOT,
             ],
             'Empty user group should not be present' => [
-                'user_groups' => UGroupRetrieverStub::buildWithUserGroups(
+                'user_group_retriever' => UGroupRetrieverStub::buildWithUserGroups(
                     ProjectUGroupTestBuilder::buildProjectMembersWith($jmalko, $csteven, $disciplus),
                     ProjectUGroupTestBuilder::aCustomUserGroup(230)->withName('Developers')->withoutUsers()->build()
                 ),
@@ -176,7 +176,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
         );
     }
 
-    public function permissionsDataProvider(): iterable
+    public static function permissionsDataProvider(): iterable
     {
         $noop_plugin    = fn (SVNAccessFileDefaultBlockOverride $event) => 1;
         $public_project = ProjectTestBuilder::aProject()->withAccessPublic()->build();

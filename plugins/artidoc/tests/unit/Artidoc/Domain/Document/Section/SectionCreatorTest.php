@@ -165,7 +165,7 @@ final class SectionCreatorTest extends TestCase
         self::assertFalse($saver->isSaved(1));
     }
 
-    private function provideArtidocPOSTSectionRepresentation(): array
+    public static function provideArtidocPOSTSectionRepresentation(): array
     {
         return [
             [101, null],
