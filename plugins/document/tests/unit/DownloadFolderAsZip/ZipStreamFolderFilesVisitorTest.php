@@ -81,7 +81,11 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->method('addFileFromPath')->willThrowException(new FileNotFoundException('/path'));
+        $this->zip->method('addFileFromPath')->willThrowException(new class extends FileNotFoundException {
+            public function __construct()
+            {
+            }
+        });
 
         $this->error_logging_helper->expects(self::atLeast(1))->method('logFileNotFoundException');
 
@@ -98,7 +102,12 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->method('addFileFromPath')->willThrowException(new FileNotReadableException('/path'));
+        $this->zip->method('addFileFromPath')->willThrowException(new class extends FileNotReadableException
+        {
+            public function __construct()
+            {
+            }
+        });
 
         $this->error_logging_helper->expects(self::atLeast(1))->method('logFileNotReadableException');
 

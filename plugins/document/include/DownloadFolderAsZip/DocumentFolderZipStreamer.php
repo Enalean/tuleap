@@ -36,8 +36,9 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use ZipStream\CompressionMethod;
 use ZipStream\Exception\OverflowException;
-use ZipStream\Option\Archive;
+use ZipStream\OperationMode;
 use ZipStream\ZipStream;
 
 final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implements DispatchableWithProject
@@ -155,15 +156,16 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
     private function buildStreamFolderArchiveCallback(\Docman_Folder $folder, Project $project, \PFUser $user, \DateTimeImmutable $current_date): callable
     {
         return function () use ($folder, $project, $user, $current_date): void {
-            $options = new Archive();
-            $options->setStatFiles(true);
-            $options->setLargeFileSize(0);
-            $options->setZeroHeader(true);
-            $options->setComment(
-                sprintf('Tuleap does not generate stable archive, fingerprint the content if needed (%d)', $current_date->getTimestamp())
+            $zip                    = new ZipStream(
+                OperationMode::NORMAL,
+                sprintf('Tuleap does not generate stable archive, fingerprint the content if needed (%d)', $current_date->getTimestamp()),
+                null,
+                CompressionMethod::STORE,
+                6,
+                true,
+                true,
+                false,
             );
-
-            $zip                    = new ZipStream(null, $options);
             $errors_listing_builder = new ErrorsListingBuilder();
 
             ini_set('max_execution_time', '0');
