@@ -34,15 +34,12 @@ uploader.cancelOngoingUpload();
         upload_url: string,
         // callback to build the payload that can varies depending on context
         getUploadJsonPayload: (file: File) => unknown,
+    },
     // callback to call in case of error, allowing to display it in the UI for example
     onErrorCallback: (error: UploadError, file_name: string) => void,
     // callback to call in case of successful upload
     onSuccessCallback: (id: number, download_href: string, file_name: string) => void,
     // callback to call every time a progress is made on a file upload
     onProgressCallback: (file_name: string, global_progress: number) => void,
-    },
-    // Not used, will be removed later
-    max_size_upload: number,
-    onStartUploadCallback: (files: FileList) => OnGoingUploadFile[],
 };
 ```

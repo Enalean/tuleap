@@ -19,7 +19,7 @@
 
 import type { Ref } from "vue";
 import { ref } from "vue";
-import type { FileUploadOptions } from "@tuleap/file-upload";
+import type { UploadPostInformation } from "@tuleap/file-upload";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { isFreetextSection } from "@/helpers/artidoc-section.type";
@@ -31,7 +31,7 @@ export type MergedAttachmentFiles = { field_id: number; value: number[] };
 export type ManageSectionAttachmentFiles = {
     addAttachmentToWaitingList(new_pending_attachment: PendingAttachment): void;
     mergeArtifactAttachments(section: ArtidocSection, description: string): MergedAttachmentFiles;
-    getPostInformation(): FileUploadOptions["post_information"];
+    getPostInformation(): UploadPostInformation;
     getWaitingListAttachments(): Ref<PendingAttachment[]>;
     setWaitingListAttachments(new_value: PendingAttachment[]): void;
 };

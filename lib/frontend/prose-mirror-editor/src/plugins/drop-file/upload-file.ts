@@ -42,8 +42,13 @@ export const VALID_FILE_TYPES = [
     "image/svg+xml",
 ];
 
+export type PluginUploadOptions = FileUploadOptions & {
+    max_size_upload: number;
+    onStartUploadCallback: (files: FileList) => OnGoingUploadFile[];
+};
+
 export function fileUploadHandler(
-    options: FileUploadOptions,
+    options: PluginUploadOptions,
     gettext_provider: GetText,
     uploader: FileUploader,
 ) {
@@ -62,7 +67,7 @@ function isFileTypeValid(file: File): boolean {
 
 export async function uploadAndDisplayFileInEditor(
     files: FileList,
-    options: FileUploadOptions,
+    options: PluginUploadOptions,
     gettext_provider: GetText,
     uploader: FileUploader,
 ): Promise<Option<ReadonlyArray<OngoingUpload>>> {

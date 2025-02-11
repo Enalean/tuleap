@@ -44,7 +44,6 @@ describe("FileUpload", () => {
     let file: File, other_file: File;
     let options: FileUploadOptions;
     const upload_url = "upload_url";
-    const max_size_upload = 123456789;
     let uploadFileOnServerMock: MockInstance;
     let uploadFileMock: MockInstance;
 
@@ -73,18 +72,7 @@ describe("FileUpload", () => {
                 },
                 upload_url,
             },
-            max_size_upload,
             onErrorCallback: vi.fn(),
-            onStartUploadCallback: vi.fn().mockReturnValue([
-                {
-                    file_name: "file_1",
-                    progress: 5,
-                },
-                {
-                    file_name: "file_2",
-                    progress: 0,
-                },
-            ]),
             onProgressCallback: vi.fn(),
             onSuccessCallback: vi.fn(),
         };

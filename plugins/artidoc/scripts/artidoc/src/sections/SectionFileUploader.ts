@@ -26,7 +26,10 @@ import type {
 import type { NotificationsCollection } from "@/sections/NotificationsCollection";
 
 export type UploadSectionFile = {
-    file_upload_options: FileUploadOptions;
+    file_upload_options: FileUploadOptions & {
+        max_size_upload: number;
+        onStartUploadCallback: (files: FileList) => OnGoingUploadFile[];
+    };
     resetProgressCallback: () => void;
 };
 
@@ -77,16 +80,15 @@ export function getSectionFileUploader(
         file_uploads_collection.cancelSectionUploads(section_id);
     };
 
-    const file_upload_options: FileUploadOptions = {
-        post_information: manage_section_attachments.getPostInformation(),
-        max_size_upload: upload_max_size,
-        onStartUploadCallback,
-        onErrorCallback,
-        onSuccessCallback,
-        onProgressCallback,
-    };
     return {
-        file_upload_options,
+        file_upload_options: {
+            post_information: manage_section_attachments.getPostInformation(),
+            max_size_upload: upload_max_size,
+            onStartUploadCallback,
+            onErrorCallback,
+            onSuccessCallback,
+            onProgressCallback,
+        },
         resetProgressCallback,
     };
 }
