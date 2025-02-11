@@ -18,11 +18,11 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import useSaveSection from "@/composables/useSaveSection";
-import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { flushPromises } from "@vue/test-utils";
-import * as rest_querier from "@/helpers/rest-querier";
 import { okAsync } from "neverthrow";
+import * as rest_querier from "@/helpers/rest-querier";
+import { getSectionSaver } from "@/sections/SectionSaver";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { PendingSectionsReplacerStub } from "@/sections/stubs/PendingSectionsReplacerStub";
@@ -42,7 +42,7 @@ const freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
 );
 const document_id = 105;
 
-describe("useSaveSection", () => {
+describe("SectionSaver", () => {
     describe("forceSave", () => {
         it("should save artifact section", async () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section.value));
@@ -51,7 +51,7 @@ describe("useSaveSection", () => {
                 .spyOn(rest_querier, "putArtifact")
                 .mockReturnValue(okAsync(new Response()));
 
-            const { forceSave } = useSaveSection(
+            const { forceSave } = getSectionSaver(
                 document_id,
                 artifact_section,
                 SectionStateStub.withEditedContent(),
@@ -75,7 +75,7 @@ describe("useSaveSection", () => {
                 .spyOn(rest_querier, "putSection")
                 .mockReturnValue(okAsync(new Response()));
 
-            const { forceSave } = useSaveSection(
+            const { forceSave } = getSectionSaver(
                 document_id,
                 freetext_section,
                 SectionStateStub.withEditedContent(),
@@ -101,7 +101,7 @@ describe("useSaveSection", () => {
                 .spyOn(rest_querier, "putArtifact")
                 .mockReturnValue(okAsync({} as Response));
 
-            const { save } = useSaveSection(
+            const { save } = getSectionSaver(
                 document_id,
                 artifact_section,
                 SectionStateStub.withEditedContent(),
@@ -126,7 +126,7 @@ describe("useSaveSection", () => {
                 .spyOn(rest_querier, "putSection")
                 .mockReturnValue(okAsync({} as Response));
 
-            const { save } = useSaveSection(
+            const { save } = getSectionSaver(
                 document_id,
                 freetext_section,
                 SectionStateStub.withEditedContent(),
@@ -148,7 +148,7 @@ describe("useSaveSection", () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section.value));
 
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
-            const { save } = useSaveSection(
+            const { save } = getSectionSaver(
                 document_id,
                 ReactiveStoredArtidocSectionStub.fromSection(
                     PendingArtifactSectionFactory.create(),
@@ -182,7 +182,7 @@ describe("useSaveSection", () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section.value));
 
             const replacer = PendingSectionsReplacerStub.withExpectedCall();
-            const { save } = useSaveSection(
+            const { save } = getSectionSaver(
                 document_id,
                 ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.pending()),
                 SectionStateStub.withEditedContent(),

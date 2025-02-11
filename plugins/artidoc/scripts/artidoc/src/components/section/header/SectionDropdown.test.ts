@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { describe, expect, it, vi } from "vitest";
+import { describe, beforeEach, expect, it, vi } from "vitest";
+import type { MockInstance } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { DeleteSection } from "@/sections/SectionDeletor";
 import SectionDropdown from "./SectionDropdown.vue";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
@@ -29,25 +31,34 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { injectInternalId } from "@/helpers/inject-internal-id";
-import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
+import { SectionDeletorStub } from "@/sections/stubs/SectionDeletorStub";
 
 vi.mock("@tuleap/tlp-dropdown");
 vi.mock("@/helpers/move-dropdownmenu-in-document-body");
 
 describe("SectionDropdown", () => {
+    let delete_section: DeleteSection, openConfirmFreetextDeletionModal: MockInstance;
+
+    beforeEach(() => {
+        delete_section = SectionDeletorStub.withNoExpectedCall();
+        openConfirmFreetextDeletionModal = vi.fn();
+    });
+
     function getWrapper(section: ArtidocSection, section_state: SectionState): VueWrapper {
         return shallowMount(SectionDropdown, {
             propsData: {
-                editor: SectionEditorStub.build(),
                 section: injectInternalId(section),
                 section_state,
+                delete_section,
             },
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]: true,
-                    [REMOVE_FREETEXT_SECTION_MODAL.valueOf()]: true,
+                    [REMOVE_FREETEXT_SECTION_MODAL.valueOf()]: {
+                        openModal: openConfirmFreetextDeletionModal,
+                    },
                 },
             },
         });
@@ -127,6 +138,27 @@ describe("SectionDropdown", () => {
             );
 
             expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);
+        });
+    });
+
+    describe("Delete section", () => {
+        it("Given an artifact section, then it should delete it directly", () => {
+            const delete_section_stub = SectionDeletorStub.withExpectedCall();
+            delete_section = delete_section_stub;
+
+            getWrapper(ArtifactSectionFactory.create(), SectionStateStub.withDefaults())
+                .find("[data-test=delete]")
+                .trigger("click");
+
+            expect(delete_section_stub.hasSectionBeenDeleted()).toBe(true);
+        });
+
+        it("Given a freetext section, then it should open the confirmation modal", () => {
+            getWrapper(FreetextSectionFactory.create(), SectionStateStub.withDefaults())
+                .find("[data-test=delete]")
+                .trigger("click");
+
+            expect(openConfirmFreetextDeletionModal).toHaveBeenCalledOnce();
         });
     });
 });

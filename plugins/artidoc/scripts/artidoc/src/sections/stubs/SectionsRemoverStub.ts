@@ -40,6 +40,13 @@ export const SectionsRemoverStub = {
             },
         };
     },
+    withExpectedFault(fault: Fault): RemoveSections {
+        return {
+            removeSection(): ResultAsync<boolean, Fault> {
+                return errAsync(fault);
+            },
+        };
+    },
     withNoExpectedCall(): RemoveSections {
         return {
             removeSection(): ResultAsync<boolean, Fault> {

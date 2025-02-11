@@ -21,22 +21,31 @@ import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 
 export type CloseSectionEditorStub = CloseSectionEditor & {
     hasEditorBeenClosed(): boolean;
+    hasEditorBeenCanceledAndClosed(): boolean;
+};
+
+const throwUnexpectedCallError = (method_name: string): void => {
+    throw new Error(`Did not expect CloseSectionEditor::${method_name} to be called.`);
 };
 
 export const SectionEditorCloserStub = {
     withExpectedCall: (): CloseSectionEditorStub => {
         let has_editor_been_closed = false;
+        let has_editor_been_canceled_and_closed = false;
 
         return {
+            hasEditorBeenCanceledAndClosed: () => has_editor_been_canceled_and_closed,
+            hasEditorBeenClosed: (): boolean => has_editor_been_closed,
             closeAndCancelEditor(): void {
-                has_editor_been_closed = true;
+                has_editor_been_canceled_and_closed = true;
             },
             closeEditor(): void {
                 has_editor_been_closed = true;
             },
-            hasEditorBeenClosed(): boolean {
-                return has_editor_been_closed;
-            },
         };
     },
+    withNoExpectedCall: (): CloseSectionEditor => ({
+        closeEditor: (): void => throwUnexpectedCallError("closeEditor"),
+        closeAndCancelEditor: (): void => throwUnexpectedCallError("closeAndCancelEditor"),
+    }),
 };

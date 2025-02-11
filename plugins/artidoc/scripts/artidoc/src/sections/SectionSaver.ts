@@ -46,12 +46,12 @@ import type { ManageErrorState } from "@/sections/SectionErrorManager";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
 
-export type SaveEditor = {
+export type SaveSection = {
     forceSave: () => void;
     save: () => void;
 };
 
-export default function useSaveSection(
+export const getSectionSaver = (
     document_id: number,
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
@@ -61,7 +61,7 @@ export default function useSaveSection(
     retrieve_positions: RetrieveSectionsPositionForSave,
     manage_section_attachments: ManageSectionAttachmentFiles,
     close_section_editor: CloseSectionEditor,
-): SaveEditor {
+): SaveSection => {
     function getLatestVersionOfCurrentSection(): ResultAsync<ArtidocSection, Fault> {
         if (isArtifactSection(section.value) || isFreetextSection(section.value)) {
             return getSection(section.value.id);
@@ -71,7 +71,10 @@ export default function useSaveSection(
     }
 
     function forceSave(): void {
-        if (!isArtifactSection(section.value) && !isFreetextSection(section.value)) {
+        if (
+            !section_state.is_save_allowed.value ||
+            (!isArtifactSection(section.value) && !isFreetextSection(section.value))
+        ) {
             return;
         }
 
@@ -110,6 +113,10 @@ export default function useSaveSection(
     }
 
     const save = (): void => {
+        if (!section_state.is_save_allowed.value) {
+            return;
+        }
+
         manage_error_state.resetErrorStates();
         section_state.is_being_saved.value = true;
 
@@ -197,4 +204,4 @@ export default function useSaveSection(
         forceSave,
         save,
     };
-}
+};
