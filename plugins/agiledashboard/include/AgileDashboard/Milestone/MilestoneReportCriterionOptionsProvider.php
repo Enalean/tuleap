@@ -67,7 +67,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:
      *
      * @return string[]
      */
-    public function getSelectboxOptions(Tracker $backlog_tracker, int $selected_milestone_id, PFUser $user): array
+    public function getSelectboxOptions(Tracker $backlog_tracker, int|string $selected_milestone_id, PFUser $user): array
     {
         $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($user, $backlog_tracker, $this->hierarchy_factory);
         if (! $nearest_planning_tracker) {
@@ -80,7 +80,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:
     }
 
     /** @return string[] */
-    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, int $selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
+    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, int|string $selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
     {
         $hp                = Codendi_HTMLPurifier::instance();
         $options           = [];
@@ -121,7 +121,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:
         return $options;
     }
 
-    private function getOptionForSelectBox(int $selected_milestone_id, int $milestone_id, string $content): string
+    private function getOptionForSelectBox(int|string $selected_milestone_id, int $milestone_id, string $content): string
     {
         $selected = '';
 
@@ -136,7 +136,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:
         return $option;
     }
 
-    private function addTopBacklogPlanningEntry(int $selected_milestone_id, Tracker $backlog_tracker, PFUser $user): string
+    private function addTopBacklogPlanningEntry(int|string $selected_milestone_id, Tracker $backlog_tracker, PFUser $user): string
     {
         try {
             $top_planning = $this->planning_factory->getVirtualTopPlanning($user, (int) $backlog_tracker->getGroupId());

@@ -23,10 +23,6 @@
  */
 class AgileDashboard_Milestone_SelectedMilestoneProvider
 {
-    public const FIELD_NAME             = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
-    public const ANY                    = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
-    public const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
-
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
@@ -63,18 +59,18 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider
 
     private function loadMilestone(): void
     {
-        if (! isset($this->additional_criteria[self::FIELD_NAME])) {
+        if (! isset($this->additional_criteria[AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME])) {
             return;
         }
 
-        if ($this->additional_criteria[self::FIELD_NAME]->getValue() == self::TOP_BACKLOG_IDENTIFIER) {
+        if ($this->additional_criteria[AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME]->getValue() == AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER) {
             $this->milestone = $this->milestone_factory->getVirtualTopMilestone($this->user, $this->project);
             return;
         }
 
         $this->milestone = $this->milestone_factory->getBareMilestoneByArtifactId(
             $this->user,
-            $this->additional_criteria[self::FIELD_NAME]->getValue()
+            $this->additional_criteria[AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME]->getValue()
         );
 
         $this->milestone_has_been_loaded = true;
@@ -87,12 +83,12 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider
         }
 
         if (! $this->milestone) {
-            return self::ANY;
+            return AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
         }
 
         $artifact_id = $this->milestone->getArtifactId();
         if ($artifact_id === null) {
-            return self::TOP_BACKLOG_IDENTIFIER;
+            return AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
         }
 
         return $artifact_id;
