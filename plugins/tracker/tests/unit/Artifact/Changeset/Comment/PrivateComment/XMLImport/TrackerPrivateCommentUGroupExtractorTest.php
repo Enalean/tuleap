@@ -22,50 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use UGroupManager;
 
-final class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var TrackerPrivateCommentUGroupExtractor
-     */
-    private $extractor;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Project
-     */
-    private $project;
+    private TrackerPrivateCommentUGroupEnabledDao&MockObject $dao;
+    private UGroupManager&MockObject $ugroup_manager;
+    private TrackerPrivateCommentUGroupExtractor $extractor;
+    private Artifact $artifact;
+    private Project $project;
 
     protected function setUp(): void
     {
-        $this->dao            = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
-        $this->ugroup_manager = \Mockery::mock(\UGroupManager::class);
+        $this->dao            = $this->createMock(TrackerPrivateCommentUGroupEnabledDao::class);
+        $this->ugroup_manager = $this->createMock(UGroupManager::class);
 
         $this->project = ProjectTestBuilder::aProject()->build();
 
-        $this->artifact = \Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(52);
-        $this->artifact
-            ->shouldReceive('getTracker')
-            ->andReturn(\Mockery::mock(Tracker::class, ['getProject' => $this->project]));
+        $this->artifact = ArtifactTestBuilder::anArtifact(135)
+            ->inTracker(TrackerTestBuilder::aTracker()->withProject($this->project)->withId(52)->build())
+            ->build();
 
         $this->extractor = new TrackerPrivateCommentUGroupExtractor($this->dao, $this->ugroup_manager);
     }
@@ -79,9 +65,9 @@ final class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUni
             EOS
         );
 
-        $this->dao->shouldReceive('isTrackerEnabledPrivateComment')->never();
+        $this->dao->expects(self::never())->method('isTrackerEnabledPrivateComment');
 
-        $this->assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
+        self::assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
     }
 
     public function testGetEmptyArrayIfTrackerDontUsePrivateComment(): void
@@ -96,9 +82,9 @@ final class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUni
             EOS
         );
 
-        $this->dao->shouldReceive('isTrackerEnabledPrivateComment')->with(52)->once()->andReturnFalse();
+        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')->with(52)->willReturn(false);
 
-        $this->assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
+        self::assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
     }
 
     public function testGetEmptyArrayIfNoUgroupKey(): void
@@ -113,9 +99,9 @@ final class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUni
             EOS
         );
 
-        $this->dao->shouldReceive('isTrackerEnabledPrivateComment')->with(52)->once()->andReturnTrue();
+        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')->with(52)->willReturn(true);
 
-        $this->assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
+        self::assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
     }
 
     public function testGetEmptyArrayIfUgroupDoesNotExist(): void
@@ -131,17 +117,15 @@ final class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUni
             EOS
         );
 
-        $this->dao->shouldReceive('isTrackerEnabledPrivateComment')
+        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')
             ->with(52)
-            ->once()
-            ->andReturnTrue();
-        $this->ugroup_manager
-            ->shouldReceive('getUGroupByName')
+            ->willReturn(true);
+        $this->ugroup_manager->expects(self::once())
+            ->method('getUGroupByName')
             ->with($this->project, 'my_group')
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $this->assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
+        self::assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
     }
 
     public function testGetProjectUgroupArray(): void
@@ -157,22 +141,20 @@ final class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUni
             EOS
         );
 
-        $ugroup_expected = \Mockery::mock(\ProjectUGroup::class);
+        $ugroup_expected = ProjectUGroupTestBuilder::aCustomUserGroup(452)->withName('my_group')->build();
 
-        $this->dao->shouldReceive('isTrackerEnabledPrivateComment')
+        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')
             ->with(52)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->ugroup_manager
-            ->shouldReceive('getUGroupByName')
+        $this->ugroup_manager->expects(self::once())
+            ->method('getUGroupByName')
             ->with($this->project, 'my_group')
-            ->once()
-            ->andReturn($ugroup_expected);
+            ->willReturn($ugroup_expected);
 
         $ugroup = $this->extractor->extractUGroupsFromXML($this->artifact, $xml);
 
-        $this->assertCount(1, $ugroup);
-        $this->assertEquals($ugroup_expected, $ugroup[0]);
+        self::assertCount(1, $ugroup);
+        self::assertSame($ugroup_expected, $ugroup[0]);
     }
 }
