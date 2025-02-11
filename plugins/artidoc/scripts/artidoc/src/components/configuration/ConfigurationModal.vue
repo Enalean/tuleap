@@ -91,10 +91,11 @@ import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 const { $gettext } = useGettext();
 
-const configuration_helper = useConfigurationScreenHelper();
+const configuration_helper = useConfigurationScreenHelper(strictInject(CONFIGURATION_STORE));
 
 const { is_submit_button_disabled, submit_button_icon, is_success, is_error, error_message } =
     configuration_helper;

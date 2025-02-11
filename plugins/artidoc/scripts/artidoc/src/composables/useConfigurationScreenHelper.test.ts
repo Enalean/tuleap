@@ -18,19 +18,15 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { ref } from "vue";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import type { ConfigurationStore } from "@/stores/configuration-store";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { ref } from "vue";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 
 describe("useConfigurationScreenHelper", () => {
     it("should act as a proxy for configuration store", () => {
         const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
-        mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-        const helper = useConfigurationScreenHelper();
+        const helper = useConfigurationScreenHelper(store);
 
         expect(helper.is_success).toBe(store.is_success);
         expect(helper.is_error).toBe(store.is_error);
@@ -41,18 +37,14 @@ describe("useConfigurationScreenHelper", () => {
     describe("no_allowed_trackers", () => {
         it("should be true if there is no tracker", () => {
             const store = ConfigurationStoreStub.withoutAllowedTrackers();
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             expect(helper.no_allowed_trackers).toBe(true);
         });
 
         it("should be false if there are trackers", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             expect(helper.no_allowed_trackers).toBe(false);
         });
@@ -61,9 +53,7 @@ describe("useConfigurationScreenHelper", () => {
     describe("is_submit_button_disabled", () => {
         it("should be false by default", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             helper.new_selected_tracker.value = ConfigurationStoreStub.tasks;
 
@@ -72,27 +62,21 @@ describe("useConfigurationScreenHelper", () => {
 
         it("should be true if no allowed trackers", () => {
             const store = ConfigurationStoreStub.withoutAllowedTrackers();
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             expect(helper.is_submit_button_disabled.value).toBe(true);
         });
 
         it("should be true if saving is in progress", () => {
             const store = ConfigurationStoreStub.withSavingInProgress();
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             expect(helper.is_submit_button_disabled.value).toBe(true);
         });
 
         it("should be true if selected tracker is NO_SELECTED_TRACKER", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             helper.new_selected_tracker.value = helper.NO_SELECTED_TRACKER;
 
@@ -101,9 +85,7 @@ describe("useConfigurationScreenHelper", () => {
 
         it("should be true if selected tracker does not change", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             expect(helper.is_submit_button_disabled.value).toBe(true);
         });
@@ -112,18 +94,14 @@ describe("useConfigurationScreenHelper", () => {
     describe("submit_button_icon", () => {
         it("should display default icon", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             expect(helper.submit_button_icon.value).toBe("fa-solid fa-floppy-disk");
         });
 
         it("should display spinner icon if saving is in progress", () => {
             const store = ConfigurationStoreStub.withSavingInProgress();
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
-
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             expect(helper.submit_button_icon.value).toBe("fa-solid fa-spin fa-circle-notch");
         });
@@ -135,9 +113,8 @@ describe("useConfigurationScreenHelper", () => {
                 ...ConfigurationStoreStub.withSuccessfulSave(),
                 selected_tracker: ref(ConfigurationStoreStub.bugs),
             };
-            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
-            const helper = useConfigurationScreenHelper();
+            const helper = useConfigurationScreenHelper(store);
 
             helper.new_selected_tracker.value = ConfigurationStoreStub.tasks;
 

@@ -23,16 +23,14 @@ import { shallowMount } from "@vue/test-utils";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { createGettext } from "vue3-gettext";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 describe("TrackerSelection", () => {
     it("should display error if there is no allowed trackers", () => {
-        mockStrictInject([[CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()]]);
-
         const wrapper = shallowMount(TrackerSelection, {
             props: {
-                configuration_helper: useConfigurationScreenHelper(),
+                configuration_helper: useConfigurationScreenHelper(
+                    ConfigurationStoreStub.withoutAllowedTrackers(),
+                ),
                 disabled: false,
             },
             global: { plugins: [createGettext({ silent: true })] },

@@ -24,7 +24,7 @@ import { createGettext } from "vue3-gettext";
 import NotificationMessage, {
     type NotificationMessageProps,
 } from "@/components/section/description/NotificationMessage.vue";
-import type { NotificationType } from "@/stores/useNotificationsStore";
+import type { NotificationType } from "@/sections/NotificationsCollection";
 
 const default_props: NotificationMessageProps = {
     notification: {

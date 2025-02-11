@@ -18,36 +18,33 @@
  */
 
 import type { FileUploadOptions, UploadError, OnGoingUploadFile } from "@tuleap/file-upload";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import type {
     FileUploadsCollection,
     OnGoingUploadFileWithId,
 } from "@/sections/FileUploadsCollection";
-import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
+import type { NotificationsCollection } from "@/sections/NotificationsCollection";
 
-export type UseUploadFileType = {
+export type UploadSectionFile = {
     file_upload_options: FileUploadOptions;
     resetProgressCallback: () => void;
 };
 
-export function useUploadFile(
+export function getSectionFileUploader(
     section_id: string,
     manage_section_attachments: ManageSectionAttachmentFiles,
     file_uploads_collection: FileUploadsCollection,
-): UseUploadFileType {
-    const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
-
+    notifications_collection: NotificationsCollection,
+    upload_max_size: number,
+): UploadSectionFile {
     const onStartUploadCallback = (files: FileList): OnGoingUploadFile[] => {
         for (const file of files) {
             file_uploads_collection.addPendingUpload(file.name, section_id);
         }
         return file_uploads_collection.pending_uploads.value;
     };
-    const { addNotification } = strictInject(NOTIFICATION_STORE);
     const onErrorCallback = (error: UploadError, file_name: string): void => {
-        addNotification({ message: error.message, type: "danger" });
+        notifications_collection.addNotification({ message: error.message, type: "danger" });
         const file_to_delete = file_uploads_collection.pending_uploads.value.find(
             (upload) => upload.file_name === file_name && upload.section_id === section_id,
         );

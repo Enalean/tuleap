@@ -19,8 +19,6 @@
 
 import { describe, expect, it } from "vitest";
 import type { Tracker } from "@/stores/configuration-store";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { shallowMount } from "@vue/test-utils";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
@@ -37,13 +35,11 @@ describe("IntroductoryText", () => {
     ])(
         `Given the tracker %s Then warning will be displayed = %s`,
         (tracker: Tracker, expected: boolean) => {
-            mockStrictInject([
-                [CONFIGURATION_STORE, ConfigurationStoreStub.withSelectedTracker(tracker)],
-            ]);
-
             const wrapper = shallowMount(IntroductoryText, {
                 props: {
-                    configuration_helper: useConfigurationScreenHelper(),
+                    configuration_helper: useConfigurationScreenHelper(
+                        ConfigurationStoreStub.withSelectedTracker(tracker),
+                    ),
                 },
                 global: { plugins: [createGettext({ silent: true })] },
             });

@@ -32,7 +32,7 @@ import type {
 import { initPluginDropFile, initPluginInput, useEditor } from "@tuleap/prose-mirror-editor";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { GetText } from "@tuleap/gettext";
-import { useUploadFile } from "@/composables/useUploadFile";
+import { getSectionFileUploader } from "@/sections/SectionFileUploader";
 import type { FileUploadOptions } from "@tuleap/file-upload";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/SectionStateBuilder";
@@ -41,6 +41,8 @@ import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { PROJECT_ID } from "@/project-id-injection-key";
+import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
+import { NOTIFICATION_COLLECTION } from "@/sections/notification-collection-injection-key";
 import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
 import { setupMonoEditorPlugins } from "../mono-editor/setupMonoEditorPlugins";
@@ -65,10 +67,12 @@ const file_uploads_collection = strictInject(FILE_UPLOADS_COLLECTION);
 const document_id = strictInject(DOCUMENT_ID);
 const current_project_id = strictInject(PROJECT_ID);
 
-const { file_upload_options, resetProgressCallback } = useUploadFile(
+const { file_upload_options, resetProgressCallback } = getSectionFileUploader(
     props.section.value.id,
     getSectionAttachmentFilesManager(props.section, document_id),
     file_uploads_collection,
+    strictInject(NOTIFICATION_COLLECTION),
+    strictInject(UPLOAD_MAX_SIZE),
 );
 
 function setupUploadPlugin(gettext_provider: GetText): PluginDropFile {

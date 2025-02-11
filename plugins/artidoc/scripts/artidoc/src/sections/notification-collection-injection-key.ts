@@ -18,7 +18,8 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
+import type { NotificationsCollection } from "@/sections/NotificationsCollection";
 
-export const NOTIFICATION_STORE: StrictInjectionKey<UseNotificationsStoreType> =
-    Symbol("notifications");
+export const NOTIFICATION_COLLECTION: StrictInjectionKey<NotificationsCollection> = Symbol(
+    "notifications-collection",
+);

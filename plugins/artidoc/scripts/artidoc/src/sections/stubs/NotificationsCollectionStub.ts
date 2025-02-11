@@ -17,28 +17,23 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ref } from "vue";
-import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
-import { noop } from "@/helpers/noop";
+import type { NotificationsCollection } from "@/sections/NotificationsCollection";
+import { buildNotificationsCollection } from "@/sections/NotificationsCollection";
 
-export const NotificationsSub = {
-    withMessages: (): UseNotificationsStoreType => ({
-        messages: ref([
-            {
-                message: "a success message",
-                type: "success",
-            },
-            {
-                message: "an error message",
-                type: "danger",
-            },
-        ]),
-        addNotification: noop,
-        deleteNotification: noop,
-    }),
-    withoutMessages: (): UseNotificationsStoreType => ({
-        messages: ref([]),
-        addNotification: noop,
-        deleteNotification: noop,
-    }),
+export const NotificationsCollectionStub = {
+    withMessages: (): NotificationsCollection => {
+        const collection = buildNotificationsCollection();
+
+        collection.addNotification({
+            message: "a success message",
+            type: "success",
+        });
+
+        collection.addNotification({
+            message: "an error message",
+            type: "danger",
+        });
+
+        return collection;
+    },
 };
