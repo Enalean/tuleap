@@ -18,101 +18,138 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard;
 
-require_once __DIR__ . '/../bootstrap.php';
-
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var \PFUser */
-    private $user;
-
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
-    /** @var RemainingEffortValueRetriever */
-    private $remaining_effort_retriever;
-
-    /** @var \Tuleap\Tracker\Artifact\Artifact */
-    private $artifact;
-
-    /** @var \Tracker */
-    private $tracker;
-
-    /** @var \Tracker_FormElement_Field_Float */
-    private $remaining_effort_field;
+    private \PFUser $user;
+    private \Tracker_FormElementFactory & MockObject $form_element_factory;
+    private RemainingEffortValueRetriever $remaining_effort_retriever;
+    private Artifact $artifact;
+    private \Tracker $tracker;
+    private \Tracker_FormElement_Field $field;
 
     public function setUp(): void
     {
-        parent::setUp();
         $this->form_element_factory       = $this->createMock(Tracker_FormElementFactory::class);
         $this->remaining_effort_retriever = new RemainingEffortValueRetriever($this->form_element_factory);
-        $this->user                       = $this->createMock(\PFUser::class);
+        $this->user                       = UserTestBuilder::buildWithDefaults();
 
-        $this->tracker  = $this->createMock(\Tracker::class);
-        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
     }
 
-    public function testItReturnsTheRemainingEffortValue()
+    private function getRemainingEffortValue(): ?float
     {
-        $float_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Float::class);
-        $float_value->method('getValue')->willReturn(6.7);
-        $this->setUpChangesetValue($float_value);
+        return $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
+    }
+
+    public function testItReturnsTheFloatRemainingEffortValue(): void
+    {
         $this->setUpField();
+        $this->setUpChangesetValue('6.7001');
 
-        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
-
-        $this->assertEquals(6.7, $value);
+        self::assertSame(6.7001, $this->getRemainingEffortValue());
     }
 
-    public function testItReturnsNullWhenThereIsNoLastChangeset()
+    public function testItReturnsNullWhenTheChangesetValueIsEmpty(): void
     {
-        $this->artifact->method('getLastChangeset')->willReturn(null);
         $this->setUpField();
-
-        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
-
-        $this->assertEquals(null, $value);
-    }
-
-    public function testItReturnsNullWhenThereIsNoValue()
-    {
         $this->setUpChangesetValue(null);
-        $this->setUpField();
 
-        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
-
-        $this->assertEquals(null, $value);
+        self::assertNull($this->getRemainingEffortValue());
     }
 
-    public function testItReturnsNullWhenThereIsNoField()
+    public function testItReturnsTheIntRemainingEffortValueConvertedToFloat(): void
+    {
+        $value = 76;
+
+        $this->field = IntFieldBuilder::anIntField(39)
+            ->withName(\Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->build();
+        $this->form_element_factory->method('getNumericFieldByNameForUser')->willReturn($this->field);
+
+        $changeset       = ChangesetTestBuilder::aChangeset(775)->build();
+        $changeset_value = new \Tracker_Artifact_ChangesetValue_Integer(376, $changeset, $this->field, true, $value);
+        $changeset->setFieldValue($this->field, $changeset_value);
+        $this->artifact = ArtifactTestBuilder::anArtifact(86)
+            ->inTracker($this->tracker)
+            ->withChangesets($changeset)
+            ->build();
+
+        self::assertSame(76.0, $this->getRemainingEffortValue());
+    }
+
+    public function testItReturnsNullWhenThereIsNoLastChangeset(): void
+    {
+        $field = FloatFieldBuilder::aFloatField(760)
+            ->withName(\Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->build();
+        $this->form_element_factory->method('getNumericFieldByNameForUser')->willReturn($field);
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $this->artifact->method('getLastChangeset')->willReturn(null);
+
+        self::assertNull($this->getRemainingEffortValue());
+    }
+
+    public function testItReturnsNullWhenThereIsNoChangesetValue(): void
+    {
+        $this->setUpField();
+        $changeset = ChangesetTestBuilder::aChangeset(775)->build();
+        $changeset->setFieldValue($this->field, null);
+        $this->artifact = ArtifactTestBuilder::anArtifact(86)
+            ->inTracker($this->tracker)
+            ->withChangesets($changeset)
+            ->build();
+
+        self::assertNull($this->getRemainingEffortValue());
+    }
+
+    public function testItReturnsNullWhenThereIsNoField(): void
     {
         $this->form_element_factory->method('getNumericFieldByNameForUser')->willReturn(null);
+        $this->artifact = ArtifactTestBuilder::anArtifact(86)
+            ->inTracker($this->tracker)
+            ->build();
 
-        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
-
-        $this->assertEquals(null, $value);
+        self::assertNull($this->getRemainingEffortValue());
     }
 
-    private function setUpField()
+    private function setUpField(): void
     {
-        $this->remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $this->field = FloatFieldBuilder::aFloatField(760)
+            ->withName(\Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->build();
+
         $this->form_element_factory->method('getNumericFieldByNameForUser')->with(
             $this->tracker,
             $this->user,
             'remaining_effort',
         )->willReturn(
-            $this->remaining_effort_field
+            $this->field
         );
     }
 
-    private function setUpChangesetValue($float_value)
+    private function setUpChangesetValue(?string $value): void
     {
-        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
-        $changeset->method('getValue')->willReturn($float_value);
-        $this->artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset       = ChangesetTestBuilder::aChangeset(775)->build();
+        $changeset_value = new \Tracker_Artifact_ChangesetValue_Float(376, $changeset, $this->field, true, $value);
+        $changeset->setFieldValue($this->field, $changeset_value);
+        $this->artifact = ArtifactTestBuilder::anArtifact(86)
+            ->inTracker($this->tracker)
+            ->withChangesets($changeset)
+            ->build();
     }
 }
