@@ -20,11 +20,12 @@
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
 use Tuleap\Tracker\Artifact\Attachment\PaginatedTemporaryFiles;
+use Tuleap\User\RetrieveUserById;
 
 /**
  * Manage temporary uploaded files
  */
-class Tracker_Artifact_Attachment_TemporaryFileManager
+class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const TEMP_FILE_PREFIX = 'rest_attachement_temp_';
 
@@ -43,17 +44,14 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
      */
     private $retention_delay_in_days;
 
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
+    private RetrieveUserById $user_manager;
     /**
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
 
     public function __construct(
-        UserManager $user_manager,
+        RetrieveUserById $user_manager,
         Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao,
         System_Command $system,
         $retention_delay,

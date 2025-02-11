@@ -24,49 +24,40 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Attachment;
 
 use ForgeConfig;
-use Mockery;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use System_Command;
+use TestHelper;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
-use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\FakeDataAccessResult;
+use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
-class TemporaryFileManagerPurgeTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TemporaryFileManagerPurgeTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    private $file_to_delete;
-    protected $file_manager;
-    protected $cache_dir;
-
-    /** @var \Tracker_Artifact_Attachment_TemporaryFileManagerDao */
-    protected $dao;
-
-    /** @var \PFUser */
-    protected $user;
+    private string $file_to_delete;
+    private Tracker_Artifact_Attachment_TemporaryFileManager $file_manager;
+    private string $cache_dir;
+    private Tracker_Artifact_Attachment_TemporaryFileManagerDao&MockObject $dao;
 
     public function setUp(): void
     {
-        ForgeConfig::store();
-
         $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
 
-        $this->user   = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
-        $user_manager = Mockery::mock(\UserManager::class);
-        $user_manager->shouldReceive('getUserById')->with(101)->andReturn($this->user);
-
-        $this->dao = Mockery::mock(\Tracker_Artifact_Attachment_TemporaryFileManagerDao::class, ['create' =>  1]);
-
-        $system = new System_Command();
-
-        $retention_delay = 3;
+        $this->dao = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManagerDao::class);
+        $this->dao->method('create')->willReturn(1);
 
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
-            $user_manager,
+            RetrieveUserByIdStub::withUser(new PFUser(['user_id' => 101, 'language_id' => 'en_US'])),
             $this->dao,
-            $system,
-            $retention_delay,
-            Mockery::mock(DBTransactionExecutor::class),
+            new System_Command(),
+            3,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->file_to_delete = $this->cache_dir . '/rest_attachement_temp_101_XyKoe';
@@ -77,33 +68,30 @@ class TemporaryFileManagerPurgeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function tearDown(): void
     {
         exec('rm -rf ' . escapeshellarg($this->cache_dir));
-        ForgeConfig::restore();
     }
 
-    public function testItPurgesOldFiles()
+    public function testItPurgesOldFiles(): void
     {
         $ten_days_ago = $_SERVER['REQUEST_TIME'] - 10 * 3600 * 24;
-        $this->dao->shouldReceive('delete')->with(1)->once();
-        $this->dao->shouldReceive('searchTemporaryFilesOlderThan')->with($_SERVER['REQUEST_TIME'] - 3 * 3600 * 24)->once()->andReturn(
-            new FakeDataAccessResult(
+        $this->dao->expects(self::once())->method('delete')->with(1);
+        $this->dao->expects(self::once())->method('searchTemporaryFilesOlderThan')->with($_SERVER['REQUEST_TIME'] - 3 * 3600 * 24)->willReturn(
+            TestHelper::argListToDar([
                 [
-                    [
-                        'id'            => 1,
-                        'filename'      => 'mona_lisa.png',
-                        'tempname'      => 'XyKoe',
-                        'description'   => 'le smile',
-                        'last_modified' => $ten_days_ago,
-                        'offset'        => 1,
-                        'submitted_by'  => 101,
-                        'filesize'      => 12345,
-                        'filetype'      => 'image/png',
-                    ],
-                ]
-            )
+                    'id'            => 1,
+                    'filename'      => 'mona_lisa.png',
+                    'tempname'      => 'XyKoe',
+                    'description'   => 'le smile',
+                    'last_modified' => $ten_days_ago,
+                    'offset'        => 1,
+                    'submitted_by'  => 101,
+                    'filesize'      => 12345,
+                    'filetype'      => 'image/png',
+                ],
+            ])
         );
 
         $this->file_manager->purgeOldTemporaryFiles();
 
-        $this->assertFileDoesNotExist($this->file_to_delete);
+        self::assertFileDoesNotExist($this->file_to_delete);
     }
 }

@@ -24,82 +24,73 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Attachment;
 
 use ForgeConfig;
-use Mockery;
+use PFUser;
 use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
-use Tuleap\DB\DBTransactionExecutor;
+use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
-class TemporaryFileManagerGetDiskUsageTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TemporaryFileManagerGetDiskUsageTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    protected $file_manager;
-    protected $cache_dir;
-
-    /** @var \Tracker_Artifact_Attachment_TemporaryFileManagerDao */
-    protected $dao;
-
-    /** @var \PFUser */
-    protected $user;
+    private Tracker_Artifact_Attachment_TemporaryFileManager $file_manager;
+    private string $cache_dir;
+    private PFUser $user;
 
     public function setUp(): void
     {
-        ForgeConfig::store();
-
         $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
 
-        $this->user   = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
-        $user_manager = Mockery::mock(\UserManager::class);
-        $user_manager->shouldReceive('getUserById')->with(101)->andReturn($this->user);
+        $this->user = new PFUser(['user_id' => 101, 'language_id' => 'en_US']);
 
-        $this->dao = Mockery::mock(\Tracker_Artifact_Attachment_TemporaryFileManagerDao::class, ['create' =>  1]);
-
-        $system = new System_Command();
-
-        $retention_delay = 3;
+        $dao = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManagerDao::class);
+        $dao->method('create')->willReturn(1);
 
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
-            $user_manager,
-            $this->dao,
-            $system,
-            $retention_delay,
-            Mockery::mock(DBTransactionExecutor::class),
+            RetrieveUserByIdStub::withUser($this->user),
+            $dao,
+            new System_Command(),
+            3,
+            new DBTransactionExecutorPassthrough(),
         );
     }
 
     public function tearDown(): void
     {
         exec('rm -rf ' . escapeshellarg($this->cache_dir));
-        ForgeConfig::restore();
     }
 
-    public function testItReturns0WhenNoFiles()
+    public function testItReturns0WhenNoFiles(): void
     {
-        $this->assertEquals(0, $this->file_manager->getDiskUsage($this->user));
+        self::assertEquals(0, $this->file_manager->getDiskUsage($this->user));
     }
 
-    public function testItReturnsTheSizeOfTheOnlyFile()
+    public function testItReturnsTheSizeOfTheOnlyFile(): void
     {
         file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content');
 
-        $this->assertEquals(7, $this->file_manager->getDiskUsage($this->user));
+        self::assertEquals(7, $this->file_manager->getDiskUsage($this->user));
     }
 
-    public function testItSumsUpAllTheFiles()
+    public function testItSumsUpAllTheFiles(): void
     {
         file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content');
         file_put_contents($this->cache_dir . '/rest_attachement_temp_101_liza_monet.png', 'Another content');
 
-        $this->assertEquals(22, $this->file_manager->getDiskUsage($this->user));
+        self::assertEquals(22, $this->file_manager->getDiskUsage($this->user));
     }
 
-    public function testItSumsOnlyCurrentUserFiles()
+    public function testItSumsOnlyCurrentUserFiles(): void
     {
         file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content');
         file_put_contents($this->cache_dir . '/rest_attachement_temp_101_liza_monet.png', 'Another content');
         file_put_contents($this->cache_dir . '/rest_attachement_temp_102_hannibal_lecteur.png', 'Whatever');
 
-        $this->assertEquals(22, $this->file_manager->getDiskUsage($this->user));
+        self::assertEquals(22, $this->file_manager->getDiskUsage($this->user));
     }
 }
