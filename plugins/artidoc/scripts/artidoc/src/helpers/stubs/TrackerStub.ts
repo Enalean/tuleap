@@ -54,6 +54,14 @@ export const TrackerStub = {
         },
     }),
 
+    withProjectId: (project_id: number): Tracker => ({
+        ...base,
+        project: {
+            ...base.project,
+            id: project_id,
+        },
+    }),
+
     withDescription: (): Tracker => ({
         ...base,
         description: {

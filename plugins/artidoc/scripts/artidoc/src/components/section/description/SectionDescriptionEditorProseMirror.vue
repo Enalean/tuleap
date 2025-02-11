@@ -40,16 +40,17 @@ import type { ManageSectionEditorState } from "@/sections/SectionEditorStateMana
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { PROJECT_ID } from "@/project-id-injection-key";
 import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
 import { setupMonoEditorPlugins } from "../mono-editor/setupMonoEditorPlugins";
 import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
+import { getProjectIdFromSection } from "@/helpers/get-project-id-from-section";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 
 const props = defineProps<{
     post_information: FileUploadOptions["post_information"];
-    project_id: number;
     section: ReactiveStoredArtidocSection;
     section_state: SectionState;
     manage_section_editor_state: ManageSectionEditorState;
@@ -62,6 +63,7 @@ const editorView = ref<EditorView | null>(null);
 
 const file_uploads_collection = strictInject(FILE_UPLOADS_COLLECTION);
 const document_id = strictInject(DOCUMENT_ID);
+const current_project_id = strictInject(PROJECT_ID);
 
 const { file_upload_options, resetProgressCallback } = useUploadFile(
     props.section.value.id,
@@ -116,7 +118,7 @@ onMounted(async () => {
         () => setupMonoEditorPlugins(toolbar_bus),
         is_upload_allowed,
         renderArtidocSectionNode(props.section),
-        props.project_id,
+        getProjectIdFromSection(props.section.value) ?? current_project_id,
         toolbar_bus,
         artidoc_editor_schema,
     );

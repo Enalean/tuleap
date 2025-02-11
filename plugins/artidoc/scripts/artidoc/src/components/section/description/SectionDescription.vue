@@ -24,7 +24,6 @@
         <component
             v-bind:is="async_editor"
             v-bind:post_information="post_information"
-            v-bind:project_id="project_id"
             v-bind:section="section"
             v-bind:section_state="section_state"
             v-bind:manage_section_editor_state="manage_section_editor_state"
@@ -51,7 +50,6 @@ import type { ManageSectionEditorState } from "@/sections/SectionEditorStateMana
 
 defineProps<{
     post_information: FileUploadOptions["post_information"];
-    project_id: number;
     section: ReactiveStoredArtidocSection;
     section_state: SectionState;
     manage_section_editor_state: ManageSectionEditorState;

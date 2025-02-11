@@ -61,6 +61,7 @@ import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSection
 import { getSectionsStatesCollection } from "@/sections/SectionsStatesCollection";
 import { getSectionStateBuilder } from "@/sections/SectionStateBuilder";
 import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
+import { PROJECT_ID } from "@/project-id-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -142,6 +143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         Number(getDatasetItemOrThrow(document.body, "data-user-id")) === 0,
     );
 
+    app.provide(PROJECT_ID, getDatasetItemOrThrow(vue_mount_point, "data-project-id"));
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);
