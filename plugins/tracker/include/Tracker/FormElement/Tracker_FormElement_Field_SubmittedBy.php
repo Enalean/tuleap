@@ -30,18 +30,6 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
 {
     public array $default_properties = [];
 
-    /**
-     * The field is permanently deleted from the db
-     * This hooks is here to delete specific properties,
-     * or specific values of the field.
-     * (The field itself will be deleted later)
-     * @return bool true if success
-     */
-    public function delete()
-    {
-        return true;
-    }
-
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return $this->getCriteriaWhereFragment($criteria)->mapOr(

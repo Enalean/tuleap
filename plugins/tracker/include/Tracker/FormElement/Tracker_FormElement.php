@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
@@ -271,11 +272,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
                 break;
             case 'admin-formElement-delete':
-                if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
-                    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field deleted'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
-                }
-                $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
+                $this->delete();
+                Tracker_FormElementFactory::instance()->deleteFormElement($this->id);
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field deleted'));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
                 break;
             default:
                 break;
@@ -564,6 +564,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * Get the dao enabling specific properties to be duplicated
      */
     protected function getDuplicateSpecificPropertiesDao(): ?DuplicateSpecificProperties
+    {
+        return null;
+    }
+
+    /**
+     * Get the dao enabling specific properties to be deleted
+     */
+    protected function getDeleteSpecificPropertiesDao(): ?DeleteSpecificProperties
     {
         return null;
     }
@@ -1026,12 +1034,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * This hooks is here to delete specific properties,
      *  specific values of the element... all its dependencies.
      * (The element itself will be deleted later)
-     *
-     * @return bool true if success
      */
-    public function delete()
+    public function delete(): void
     {
-        return true;
+        $dao = $this->getDeleteSpecificPropertiesDao();
+        if (! $dao) {
+            return;
+        }
+        $dao->delete($this->id);
     }
 
     /**
