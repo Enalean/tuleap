@@ -19,6 +19,6 @@
     }
   },
   "require": {
-    "maennchen/zipstream-php": "^2.0"
+    "maennchen/zipstream-php": "^3.1"
   }
 }

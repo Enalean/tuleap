@@ -31,6 +31,8 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\User\ProvideCurrentUser;
+use ZipStream\CompressionMethod;
+use ZipStream\OperationMode;
 use ZipStream\ZipStream;
 
 final class PayloadDownloaderController extends DispatchablePSR15Compatible
@@ -59,8 +61,17 @@ final class PayloadDownloaderController extends DispatchablePSR15Compatible
 
                 return $this->binary_file_response_builder->fromCallback(
                     $request,
-                    function () use ($log_payloads): void {
-                        $zip_stream = new ZipStream();
+                    function () use ($log_payloads, $changeset_id): void {
+                        $zip_stream = new ZipStream(
+                            OperationMode::NORMAL,
+                            sprintf('Changeset ID %d', $changeset_id),
+                            null,
+                            CompressionMethod::STORE,
+                            6,
+                            true,
+                            true,
+                            false,
+                        );
 
                         $zip_stream->addFile('source_payload.json', $log_payloads->source_payload);
                         $log_payloads->generated_payload->apply(
