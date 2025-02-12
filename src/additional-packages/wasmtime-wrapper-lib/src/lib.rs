@@ -170,6 +170,7 @@ fn compile_and_exec(
     ctx_builder.stdout(stdout.clone());
     ctx_builder.allow_tcp(false);
     ctx_builder.allow_udp(false);
+    ctx_builder.arg("./tuleap-function.wasm");
 
     for mount_point in mount_points {
         ctx_builder.preopened_dir(
