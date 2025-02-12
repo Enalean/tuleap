@@ -50,10 +50,10 @@
             />
             <section-header-skeleton v-if="is_loading_sections" class="section-header" />
             <section-description
-                v-bind:post_information="section_attachments_manager.getPostInformation()"
                 v-bind:section="section"
                 v-bind:section_state="section_state"
                 v-bind:manage_section_editor_state="section_editor_state_manager"
+                v-bind:manage_section_attachment_files="section_attachments_manager"
             />
             <section-footer
                 v-bind:section="section.value"

@@ -23,10 +23,10 @@
     <template v-if="!is_loading_sections && can_section_be_edited">
         <component
             v-bind:is="async_editor"
-            v-bind:post_information="post_information"
             v-bind:section="section"
             v-bind:section_state="section_state"
             v-bind:manage_section_editor_state="manage_section_editor_state"
+            v-bind:manage_section_attachment_files="manage_section_attachment_files"
             data-test="editor"
         />
     </template>
@@ -39,20 +39,20 @@
 import { defineAsyncComponent, onMounted, computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { loadTooltips } from "@tuleap/tooltip";
-import type { FileUploadOptions } from "@tuleap/file-upload";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
+import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
-import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
 
 defineProps<{
-    post_information: FileUploadOptions["post_information"];
     section: ReactiveStoredArtidocSection;
     section_state: SectionState;
     manage_section_editor_state: ManageSectionEditorState;
+    manage_section_attachment_files: ManageSectionAttachmentFiles;
 }>();
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
