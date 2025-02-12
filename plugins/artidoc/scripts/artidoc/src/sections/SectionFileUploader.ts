@@ -16,8 +16,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-import type { FileUploadOptions, UploadError, OnGoingUploadFile } from "@tuleap/file-upload";
+import type {
+    FileIdentifier,
+    FileUploadOptions,
+    UploadError,
+    OnGoingUploadFile,
+} from "@tuleap/file-upload";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import type {
     FileUploadsCollection,
@@ -69,7 +73,11 @@ export function getSectionFileUploader(
         }
         return false;
     };
-    const onSuccessCallback = (id: number, download_href: string, file_name: string): void => {
+    const onSuccessCallback = (
+        id: FileIdentifier,
+        download_href: string,
+        file_name: string,
+    ): void => {
         updateProgress(file_name, 100);
         manage_section_attachments.addAttachmentToWaitingList({ id, upload_url: download_href });
     };

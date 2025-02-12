@@ -38,7 +38,7 @@ uploader.cancelOngoingUpload();
     // callback to call in case of error, allowing to display it in the UI for example
     onErrorCallback: (error: UploadError, file_name: string) => void,
     // callback to call in case of successful upload
-    onSuccessCallback: (id: number, download_href: string, file_name: string) => void,
+    onSuccessCallback: (id: FileIdentifier, download_href: string, file_name: string) => void,
     // callback to call every time a progress is made on a file upload
     onProgressCallback: (file_name: string, global_progress: number) => void,
 };

@@ -24,7 +24,7 @@ import type { PluginUploadOptions } from "./upload-file";
 import { fileUploadHandler } from "./upload-file";
 import type { GetText } from "@tuleap/gettext";
 import { insertPoint } from "prosemirror-transform";
-import type { FileUploader } from "@tuleap/file-upload";
+import type { FileUploader, FileIdentifier } from "@tuleap/file-upload";
 import { getFileUploader } from "@tuleap/file-upload";
 
 function insertFile(view: EditorView, insert_point: number, url: string): void {
@@ -55,7 +55,7 @@ function handleEvent(
     append_image_callback: (url: string) => void,
 ): void {
     const success_callback_with_insert_file = (
-        id: number,
+        id: FileIdentifier,
         download_href: string,
         file_name: string,
     ): void => {

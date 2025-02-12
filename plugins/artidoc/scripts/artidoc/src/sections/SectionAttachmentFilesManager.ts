@@ -19,14 +19,14 @@
 
 import type { Ref } from "vue";
 import { ref } from "vue";
-import type { UploadPostInformation } from "@tuleap/file-upload";
+import type { UploadPostInformation, FileIdentifier } from "@tuleap/file-upload";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import { noop } from "@/helpers/noop";
 
-type PendingAttachment = { id: number; upload_url: string };
-export type MergedAttachmentFiles = { field_id: number; value: number[] };
+type PendingAttachment = { id: FileIdentifier; upload_url: string };
+export type MergedAttachmentFiles = { field_id: number; value: FileIdentifier[] };
 
 export type ManageSectionAttachmentFiles = {
     addAttachmentToWaitingList(new_pending_attachment: PendingAttachment): void;
@@ -88,8 +88,8 @@ export const getSectionAttachmentFilesManager = (
     function filterAttachmentsToAdd(
         attachments: PendingAttachment[],
         description: string,
-    ): number[] {
-        return attachments.reduce((result: number[], item: PendingAttachment) => {
+    ): FileIdentifier[] {
+        return attachments.reduce((result: FileIdentifier[], item: PendingAttachment) => {
             if (description.includes(item.upload_url)) {
                 result.push(item.id);
             }
@@ -102,7 +102,7 @@ export const getSectionAttachmentFilesManager = (
         description: string,
     ): {
         field_id: number;
-        value: number[];
+        value: FileIdentifier[];
     } {
         const section_artifact_attachments = section.attachments
             ? section.attachments.file_descriptions.map((file_description) => file_description.id)
