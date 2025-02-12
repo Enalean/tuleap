@@ -19,11 +19,12 @@
 
 import type { MockedFunction } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { PluginUploadOptions } from "./upload-file";
 import { uploadAndDisplayFileInEditor } from "./upload-file";
 import { InvalidFileUploadError, MaxSizeUploadExceededError, NoUploadError } from "./types";
 import type { GetText } from "@tuleap/gettext";
 import { Option } from "@tuleap/option";
-import type { FileUploadOptions, FileUploader, OnGoingUploadFile } from "@tuleap/file-upload";
+import type { FileUploader, OnGoingUploadFile } from "@tuleap/file-upload";
 
 const gettext_provider = {
     gettext: vi.fn(),
@@ -32,7 +33,7 @@ const gettext_provider = {
 describe("uploadFile", () => {
     describe("uploadAndDisplayFileInEditor", () => {
         let file: File, other_file: File;
-        let options: FileUploadOptions;
+        let options: PluginUploadOptions;
         let uploader: FileUploader;
         let createOngoingUpload: MockedFunction<FileUploader["createOngoingUpload"]>;
         const upload_url = "upload_url";

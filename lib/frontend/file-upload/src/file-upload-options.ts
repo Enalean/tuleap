@@ -35,9 +35,7 @@ export type UploadPostInformation = {
 
 export type FileUploadOptions = {
     readonly post_information: UploadPostInformation;
-    max_size_upload: number;
     onErrorCallback: (error: UploadError, file_name: string) => void;
     onSuccessCallback: (id: number, download_href: string, file_name: string) => void;
     onProgressCallback: (file_name: string, global_progress: number) => void;
-    onStartUploadCallback: (files: FileList) => OnGoingUploadFile[];
 };

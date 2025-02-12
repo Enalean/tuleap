@@ -20,10 +20,11 @@
 import type { EditorView } from "prosemirror-view";
 import type { EditorState } from "prosemirror-state";
 import { Plugin } from "prosemirror-state";
+import type { PluginUploadOptions } from "./upload-file";
 import { fileUploadHandler } from "./upload-file";
 import type { GetText } from "@tuleap/gettext";
 import { insertPoint } from "prosemirror-transform";
-import type { FileUploadOptions, FileUploader } from "@tuleap/file-upload";
+import type { FileUploader } from "@tuleap/file-upload";
 import { getFileUploader } from "@tuleap/file-upload";
 
 function insertFile(view: EditorView, insert_point: number, url: string): void {
@@ -48,7 +49,7 @@ function replaceSelectionWithFile(view: EditorView, url: string): void {
 
 function handleEvent(
     files: FileList,
-    options: FileUploadOptions,
+    options: PluginUploadOptions,
     gettext_provider: GetText,
     uploader: FileUploader,
     append_image_callback: (url: string) => void,
@@ -100,7 +101,7 @@ const isPositionValid = (state: EditorState, image_position: number): boolean =>
 export class PluginDropFile extends Plugin {
     uploader: FileUploader;
 
-    constructor(options: FileUploadOptions, gettext_provider: GetText) {
+    constructor(options: PluginUploadOptions, gettext_provider: GetText) {
         super({
             props: {
                 handleDOMEvents: {
@@ -168,7 +169,7 @@ export class PluginDropFile extends Plugin {
 }
 
 export function initPluginDropFile(
-    options: FileUploadOptions,
+    options: PluginUploadOptions,
     gettext_provider: GetText,
 ): PluginDropFile {
     return new PluginDropFile(options, gettext_provider);

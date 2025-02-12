@@ -33,7 +33,7 @@ import { initPluginDropFile, initPluginInput, useEditor } from "@tuleap/prose-mi
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { GetText } from "@tuleap/gettext";
 import { getSectionFileUploader } from "@/sections/SectionFileUploader";
-import type { FileUploadOptions } from "@tuleap/file-upload";
+import type { UploadPostInformation } from "@tuleap/file-upload";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
@@ -52,7 +52,7 @@ import { getProjectIdFromSection } from "@/helpers/get-project-id-from-section";
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 
 const props = defineProps<{
-    post_information: FileUploadOptions["post_information"];
+    post_information: UploadPostInformation;
     section: ReactiveStoredArtidocSection;
     section_state: SectionState;
     manage_section_editor_state: ManageSectionEditorState;
