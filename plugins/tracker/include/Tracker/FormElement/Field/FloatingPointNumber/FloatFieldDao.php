@@ -58,14 +58,4 @@ class FloatFieldDao extends SpecificPropertiesDao
                 VALUES ($field_id, $maxchars, $size, $default_value)";
         return $this->retrieve($sql);
     }
-
-    public function duplicate(int $from_field_id, int $to_field_id): bool
-    {
-        $from_field_id = $this->da->escapeInt($from_field_id);
-        $to_field_id   = $this->da->escapeInt($to_field_id);
-
-        $sql = "REPLACE INTO $this->table_name (field_id, maxchars, size, default_value)
-                SELECT $to_field_id, maxchars, size, default_value FROM $this->table_name WHERE field_id = $from_field_id";
-        return $this->update($sql);
-    }
 }

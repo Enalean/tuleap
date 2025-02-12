@@ -46,16 +46,4 @@ class MultiSelectboxFieldDao extends SpecificPropertiesDao
                 VALUES ($field_id, $size)";
         return $this->retrieve($sql);
     }
-
-    public function duplicate(int $from_field_id, int $to_field_id): bool
-    {
-        $from_field_id = $this->da->escapeInt($from_field_id);
-        $to_field_id   = $this->da->escapeInt($to_field_id);
-
-        $sql = "REPLACE INTO $this->table_name (field_id, size)
-                SELECT $to_field_id, size
-                FROM $this->table_name
-                WHERE field_id = $from_field_id";
-        return $this->update($sql);
-    }
 }

@@ -22,6 +22,7 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\BurndownSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
@@ -599,6 +600,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     protected function getDao()
     {
         return new BurndownFieldDao();
+    }
+
+    protected function getDuplicateSpecificPropertiesDao(): ?BurndownSpecificPropertiesDAO
+    {
+        return new BurndownSpecificPropertiesDAO();
     }
 
     /**

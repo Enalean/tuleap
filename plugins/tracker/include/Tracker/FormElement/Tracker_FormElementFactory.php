@@ -945,14 +945,14 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             if ($id = $this->getDao()->duplicate($from_row['id'], $to_tracker_id)) {
                 $created_form_element = $this->getFormElementById($id);
                 if ($created_form_element) {
-                    $created_values = $created_form_element->duplicate($from_row['id'], $id);
+                    $element_duplicator = $created_form_element->duplicate((int) $from_row['id']);
                     if ($has_workflow) {
                         $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
                     }
                     $mapping[] = [
                         'from'    => (int) $from_row['id'],
                         'to'      => $id,
-                        'values'  => $created_values,
+                        'values'  => $element_duplicator->getMapping(),
                         'workflow' => $has_workflow,
                     ];
                     $type      = $this->getType($created_form_element);

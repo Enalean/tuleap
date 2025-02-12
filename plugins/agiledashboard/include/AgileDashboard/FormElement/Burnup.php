@@ -262,10 +262,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return Option::nothing(ParametrizedFromWhere::class);
     }
 
-    protected function getDao()
-    {
-    }
-
     public function isCSVImportable(): bool
     {
         return false;

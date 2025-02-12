@@ -21,6 +21,8 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
@@ -97,20 +99,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $this->bind = $bind;
     }
 
-    /**
-     * Duplicate a field. If the field has custom properties,
-     * they should be propagated to the new one
-     * @param int $from_field_id
-     * @return array the mapping between old values and new ones
-     */
-    public function duplicate($from_field_id)
+    public function duplicate(int $from_field_id): SpecificPropertiesWithMappingDuplicator
     {
-        $dao = new ListFieldDao();
-        if ($dao->duplicate($from_field_id, $this->id)) {
-            $bf = new Tracker_FormElement_Field_List_BindFactory();
-            return $bf->duplicate($from_field_id, $this->id);
-        }
-        return [];
+        $duplicator = new SpecificPropertiesWithMappingDuplicator(new ListFieldSpecificPropertiesDAO());
+
+        $bind_values_mapping = (new Tracker_FormElement_Field_List_BindFactory())->duplicate($from_field_id, $this->id);
+        $duplicator->duplicateWithMapping($from_field_id, $this->id, $bind_values_mapping);
+
+        return $duplicator;
     }
 
     public function canBeUsedToSortReport()

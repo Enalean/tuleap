@@ -22,6 +22,7 @@
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\StringFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\StringField\StringFieldDao;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
@@ -50,6 +51,11 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
     protected function getDao(): StringFieldDao
     {
         return new StringFieldDao();
+    }
+
+    protected function getDuplicateSpecificPropertiesDao(): ?StringFieldSpecificPropertiesDAO
+    {
+        return new StringFieldSpecificPropertiesDAO();
     }
 
     /**
