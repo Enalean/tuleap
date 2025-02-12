@@ -27,13 +27,21 @@ use BrowserPlugin;
 use ForgeConfig;
 use Sabre\DAV\Locks\Plugin;
 use Sabre\DAV\Server;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use WebDAVRoot;
 use WebDAVTree;
 
+#[ConfigKeyCategory('WebDAV')]
 final class ServerBuilder
 {
+    #[ConfigKey('Maximum file size allowed in bits (default: 2147583647 bit = 2^31-1 bit =2GB)')]
+    #[ConfigKeyInt(2147583647)]
+    public const CONFIG_MAX_FILE_SIZE = 'webdav_max_file_size';
+
     /**
      * @var int
      */
@@ -45,7 +53,7 @@ final class ServerBuilder
 
     public function __construct(\WebDAVPlugin $plugin)
     {
-        $this->max_file_size = (int) $plugin->getPluginInfo()->getPropertyValueForName('max_file_size');
+        $this->max_file_size = ForgeConfig::getInt(self::CONFIG_MAX_FILE_SIZE);
         $this->plugin        = $plugin;
     }
 

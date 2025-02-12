@@ -18,13 +18,18 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\FRS\FRSPermissionManager;
 
-/**
- * This class contains methods used in WebDAV plugin
- */
-class WebDAVUtils
+#[ConfigKeyCategory('WebDAV')]
+class WebDAVUtils // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    #[ConfigKey('Enable/disable write access for WebDAV plugin (default: false)')]
+    #[ConfigKeyLegacyBool(false)]
+    public const CONFIG_WRITE_ACCESS_ENABLED = 'webdav_write_access_enabled';
+
     protected static $instance;
 
     /**
@@ -265,19 +270,9 @@ class WebDAVUtils
         return new Docman_VersionFactory();
     }
 
-    /**
-     * Tells if write acces is enabled or not for the WebDAV plugin
-     *
-     * @return bool
-     */
-    public function isWriteEnabled()
+    public function isWriteEnabled(): bool
     {
-        $pluginManager = PluginManager::instance();
-        $p             = $pluginManager->getPluginByName('webdav');
-        assert($p instanceof WebDAVPlugin);
-        $info = $p->getPluginInfo();
-
-        return $info->getPropertyValueForName('write_access_enabled');
+        return ForgeConfig::getStringAsBool(self::CONFIG_WRITE_ACCESS_ENABLED);
     }
 
     /**

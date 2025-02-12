@@ -23,6 +23,8 @@
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Docman\View\Admin\FilenamePatternWarningsCollector;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -40,7 +42,7 @@ require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class WebDAVPlugin extends Plugin
+class WebDAVPlugin extends Plugin implements PluginWithConfigKeys
 {
     public const LOG_IDENTIFIER = 'webdav_syslog';
 
@@ -49,15 +51,18 @@ class WebDAVPlugin extends Plugin
         parent::__construct($id);
         bindtextdomain('tuleap-webdav', __DIR__ . '/../site-content');
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->addHook(AccessKeyScopeBuilderCollector::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(FilenamePatternWarningsCollector::NAME);
     }
 
-    public function getPluginInfo(): WebDAVPluginInfo
+    public function getPluginInfo(): PluginInfo
     {
-        if (! $this->pluginInfo instanceof WebDAVPluginInfo) {
-            $this->pluginInfo = new WebDAVPluginInfo($this);
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    $GLOBALS['Language']->getText('plugin_webdav', 'descriptor_name'),
+                    $GLOBALS['Language']->getText('plugin_webdav', 'descriptor_description'),
+                )
+            );
         }
         return $this->pluginInfo;
     }
@@ -67,6 +72,13 @@ class WebDAVPlugin extends Plugin
         return ['docman'];
     }
 
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(WebDAVUtils::class);
+        $event->addConfigClass(ServerBuilder::class);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function filenamePatternWarningsCollector(FilenamePatternWarningsCollector $collector): void
     {
         if (! $this->isAllowed($collector->getProjectId())) {
@@ -90,6 +102,7 @@ class WebDAVPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addRoute(
@@ -107,6 +120,7 @@ class WebDAVPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void
     {
         $collector->addAccessKeyScopeBuilder($this->buildAccessKeyScopeBuilder());
