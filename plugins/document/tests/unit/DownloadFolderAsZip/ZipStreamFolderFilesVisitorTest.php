@@ -63,7 +63,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::assertSame('/path/to/file', $parameters[1]);
             }
             if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('/my files/an embedded file.html', $parameters[0]);
+                self::assertSame('/my files/an embedded_file.html', $parameters[0]);
                 self::assertSame('/path/to/embedded', $parameters[1]);
             }
         });
@@ -122,7 +122,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::assertSame('/path/to/file', $parameters[1]);
             }
             if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('/my files/an embedded file.html', $parameters[0]);
+                self::assertSame('/my files/an embedded_file.html', $parameters[0]);
                 self::assertSame('/path/to/embedded', $parameters[1]);
             }
         });
@@ -159,7 +159,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = new Docman_File(['item_id' => 5, 'title' => 'a file in pdf']);
         $file->setCurrentVersion(new Docman_Version(['path' => '/path/to/file', 'filename' => 'file.pdf']));
 
-        $embedded = new Docman_EmbeddedFile(['item_id' => 6, 'title' => 'an embedded file']);
+        $embedded = new Docman_EmbeddedFile(['item_id' => 6, 'title' => 'an embedded/file']);
         $embedded->setCurrentVersion(new Docman_Version(['path' => '/path/to/embedded']));
 
         $subfolder->setItems(
