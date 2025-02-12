@@ -29,11 +29,10 @@ use Docman_PermissionsManagerDao;
 use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Plugin;
-use PluginFileInfo;
 use Project;
 use Project_AccessPrivateException;
 use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -42,6 +41,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class Docman_PermissionsManagerTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     private PFUser $user;
     private Docman_PermissionsManager&MockObject $permissions_manager;
     private Project $project;
@@ -56,7 +57,6 @@ final class Docman_PermissionsManagerTest extends TestCase
             'getProject',
             'getProjectAccessChecker',
             'getForbidWritersSettings',
-            'getPlugin',
             '_itemIsLockedForUser',
             '_isUserDocmanAdmin',
             '_getPermissionManagerInstance',
@@ -69,15 +69,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $this->forbid_writers_settings = $this->createMock(ITellIfWritersAreAllowedToUpdatePropertiesOrDelete::class);
         $this->permissions_manager->method('getForbidWritersSettings')->willReturn($this->forbid_writers_settings);
 
-        $plugin_info = $this->createMock(PluginFileInfo::class);
-        $plugin_info->method('getPropertyValueForName')
-            ->with(Docman_PermissionsManager::PLUGIN_OPTION_DELETE)
-            ->willReturn(false);
-
-        $plugin = $this->createMock(Plugin::class);
-        $plugin->method('getPluginInfo')->willReturn($plugin_info);
-
-        $this->permissions_manager->method('getPlugin')->willReturn($plugin);
+        \ForgeConfig::set(Docman_PermissionsManager::PLUGIN_OPTION_DELETE, false);
     }
 
     /**

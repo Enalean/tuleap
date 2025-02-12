@@ -76,12 +76,6 @@ class Docman_SystemCheck
     private function checkIncFolderAndFileOwnership()
     {
         $this->config_checker->checkFolder($this->docman_plugin);
-        $this->config_checker->checkIncFile($this->getIncFile());
-    }
-
-    private function getIncFile()
-    {
-        return $this->docman_plugin->getPluginEtcRoot() . '/docman.inc';
     }
 
     /**
@@ -102,6 +96,6 @@ class Docman_SystemCheck
 
     private function getDocmanRootPath()
     {
-        return $this->docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
+        return \ForgeConfig::get(\DocmanPlugin::CONFIG_ROOT_DIRECTORY) . '/';
     }
 }

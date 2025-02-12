@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PluginConfigChecker
+class PluginConfigChecker // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var \Psr\Log\LoggerInterface
@@ -38,15 +38,6 @@ class PluginConfigChecker
 
         try {
             $this->checkFolderOwnedByAppUser($plugin_etc_root);
-        } catch (Exception $exception) {
-            $this->logger->warning($exception->getMessage());
-        }
-    }
-
-    public function checkIncFile($inc_file)
-    {
-        try {
-            $this->checkIncFileOwnedByAppUser($inc_file);
         } catch (Exception $exception) {
             $this->logger->warning($exception->getMessage());
         }

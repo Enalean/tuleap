@@ -32,7 +32,6 @@ use Docman_PermissionsManager;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use PermissionsManager;
-use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
@@ -545,9 +544,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
 
     private function getEmbeddedFileVersionCreator(): EmbeddedFileVersionCreator
     {
-        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-        assert($docman_plugin instanceof \DocmanPlugin);
-        $docman_root          = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $docman_root          = \ForgeConfig::get(\DocmanPlugin::CONFIG_ROOT_DIRECTORY);
         $item_updator_builder = new DocmanItemUpdatorBuilder();
         return new EmbeddedFileVersionCreator(
             new Docman_FileStorage($docman_root),

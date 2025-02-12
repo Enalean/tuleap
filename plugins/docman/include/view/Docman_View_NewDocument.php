@@ -20,7 +20,7 @@
  */
 
 
-class Docman_View_NewDocument extends Docman_View_New
+class Docman_View_NewDocument extends Docman_View_New // phpcs:ignoreFile
 {
     public function _getTitle($params)
     {
@@ -85,7 +85,7 @@ class Docman_View_NewDocument extends Docman_View_New
             'checked' => ($currentItemType !== null) ? ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) : true,
         ];
 
-        if ($this->_controller->getProperty('embedded_are_allowed')) {
+        if (\ForgeConfig::get(\DocmanPlugin::CONFIG_EMBEDDED_ARE_ALLOWED)) {
             $specifics[] = [
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
                 'label'   => dgettext('tuleap-docman', 'Embedded File'),

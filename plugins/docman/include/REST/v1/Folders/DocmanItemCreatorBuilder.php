@@ -33,7 +33,6 @@ use Docman_SettingsBo;
 use Docman_VersionFactory;
 use EventManager;
 use PermissionsManager;
-use PluginManager;
 use Project;
 use ProjectManager;
 use ReferenceManager;
@@ -79,9 +78,7 @@ final class DocmanItemCreatorBuilder
         $document_on_going_upload_dao   = new DocumentOngoingUploadDAO();
         $document_upload_path_allocator = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
 
-        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-        assert($docman_plugin instanceof \DocmanPlugin);
-        $docman_root = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $docman_root = \ForgeConfig::get(\DocmanPlugin::CONFIG_ROOT_DIRECTORY);
 
         $docman_file_storage = new Docman_FileStorage($docman_root);
 

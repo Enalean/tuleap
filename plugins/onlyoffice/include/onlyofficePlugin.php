@@ -186,9 +186,7 @@ final class onlyofficePlugin extends Plugin
         $logger           = self::getLogger();
         $versions_factory = new Docman_VersionFactory();
         $event_manager    = EventManager::instance();
-        $docman_plugin    = PluginManager::instance()->getPluginByName('docman');
-        assert($docman_plugin instanceof DocmanPlugin);
-        $docman_root_path = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $docman_root_path = ForgeConfig::get(DocmanPlugin::CONFIG_ROOT_DIRECTORY);
 
         $encryption = new DocumentServerKeyEncryption(new KeyFactory());
 

@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Tree;
 
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\FeatureFlagConfigKey;
 
+#[ConfigKeyCategory('Document')]
 final class SwitchToOldUi
 {
     #[FeatureFlagConfigKey(<<<'EOF'
@@ -31,6 +34,7 @@ final class SwitchToOldUi
     ⚠️  Please warn us if you activate this flag.
     EOF
     )]
+    #[ConfigKeyHidden]
     public const FEATURE_FLAG = 'allow_temporary_access_to_old_ui_that_will_be_removed_soon';
 
     public static function isAllowed(\PFUser $user, \Project $project): bool

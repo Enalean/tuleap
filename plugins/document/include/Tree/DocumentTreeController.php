@@ -50,7 +50,6 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 {
     public function __construct(
         private DocumentTreeProjectExtractor $project_extractor,
-        private \DocmanPluginInfo $docman_plugin_info,
         private FileDownloadLimitsBuilder $file_download_limits_builder,
         private ModalDisplayer $modal_display_handler,
         private FilenamePatternRetriever $filename_pattern_retriever,
@@ -92,10 +91,10 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $project,
                 $root_id,
                 $request->getCurrentUser(),
-                (bool) $this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed'),
+                \ForgeConfig::getStringAsBool(\DocmanPlugin::CONFIG_EMBEDDED_ARE_ALLOWED),
                 $is_item_status_used,
                 $is_obsolescence_date_used,
-                (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete'),
+                \ForgeConfig::getStringAsBool(\Docman_PermissionsManager::PLUGIN_OPTION_DELETE),
                 $forbid_writers_to_update,
                 $forbid_writers_to_delete,
                 new CSRFSynchronizerToken('plugin-document'),

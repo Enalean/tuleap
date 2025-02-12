@@ -35,11 +35,9 @@ use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElementDao;
 use Docman_PermissionsManager;
 use Docman_Wiki;
-use DocmanPlugin;
 use EventManager;
 use Luracast\Restler\RestException;
 use PermissionsManager;
-use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
@@ -512,10 +510,7 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $this->addAllEvent($project);
 
-        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-        assert($docman_plugin instanceof DocmanPlugin);
-        $docman_plugin_info   = $docman_plugin->getPluginInfo();
-        $are_embedded_allowed = $docman_plugin_info->getPropertyValueForName('embedded_are_allowed');
+        $are_embedded_allowed = \ForgeConfig::get(\DocmanPlugin::CONFIG_EMBEDDED_ARE_ALLOWED);
 
         if ($are_embedded_allowed === false) {
             throw new RestException(403, 'Embedded files are not allowed');
@@ -935,9 +930,6 @@ class DocmanFoldersResource extends AuthenticatedResource
 
     private function getDocmanRootPath(): string
     {
-        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-        assert($docman_plugin instanceof DocmanPlugin);
-
-        return (string) $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        return (string) \ForgeConfig::get(\DocmanPlugin::CONFIG_ROOT_DIRECTORY);
     }
 }

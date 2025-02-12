@@ -21,27 +21,25 @@
 
 declare(strict_types=1);
 
-use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableInteger;
+use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableBoolean;
 use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableString;
-use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\ImportConfigVariablesToDb;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202501091552_import_configuration_variables extends \Tuleap\ForgeUpgrade\Bucket
+final class b202501161544_import_docman_configuration_variables extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
-        return 'Import configuration variables';
+        return 'Import docman configuration variables';
     }
 
     public function up(): void
     {
-        $importer = new ImportConfigVariablesToDb($this->api->dbh, '/etc/tuleap/plugins/git/etc/config.inc');
+        $importer = new \Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\ImportConfigVariablesToDb($this->api->dbh, '/etc/tuleap/plugins/docman/etc/docman.inc');
         $importer->import(
             [
-                VariableString::withSameName('git_backup_dir', '/tmp'),
-                VariableInteger::withNewName('weeks_number', 'git_weeks_number', 12),
-                VariableString::withSameName('git_ssh_url', 'ssh://gitolite@%server_name%/'),
-                VariableString::withSameName('git_http_url', 'https://%server_name%/plugins/git'),
+                VariableString::withSameName('docman_root', '/var/lib/tuleap/docman'),
+                VariableBoolean::withNewName('embedded_are_allowed', 'docman_embedded_are_allowed', true),
+                VariableBoolean::withNewName('only_siteadmin_can_delete', 'docman_only_siteadmin_can_delete', false),
             ]
         );
     }
