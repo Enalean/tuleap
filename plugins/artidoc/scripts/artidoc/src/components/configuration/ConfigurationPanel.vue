@@ -68,6 +68,7 @@ import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import { TITLE } from "@/title-injection-key";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 const { $gettext, interpolate } = useGettext();
 
@@ -75,7 +76,7 @@ const title = strictInject(TITLE);
 
 const pane_title = interpolate($gettext("Configuration of %{ title }"), { title });
 
-const configuration_helper = useConfigurationScreenHelper();
+const configuration_helper = useConfigurationScreenHelper(strictInject(CONFIGURATION_STORE));
 
 const { is_submit_button_disabled, submit_button_icon, is_error, error_message } =
     configuration_helper;

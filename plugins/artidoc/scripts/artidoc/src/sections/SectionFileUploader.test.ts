@@ -18,22 +18,20 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { useUploadFile } from "@/composables/useUploadFile";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import type { UploadSectionFile } from "@/sections/SectionFileUploader";
+import { getSectionFileUploader } from "@/sections/SectionFileUploader";
 import { mockFileList } from "@/helpers/mock-file-list";
-import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
-import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
 import type { UploadError } from "@tuleap/file-upload";
 import type {
     FileUploadsCollection,
     OnGoingUploadFileWithId,
 } from "@/sections/FileUploadsCollection";
-import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
 import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
-import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
 import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import type { NotificationsCollection } from "@/sections/NotificationsCollection";
+import { NotificationsCollectionStub } from "@/sections/stubs/NotificationsCollectionStub";
 
 function getCurrentSectionUploads(
     section_id: string,
@@ -50,9 +48,11 @@ class DummyUploadError extends Error implements UploadError {
     }
 }
 
-describe("useUploadFile", () => {
+const upload_max_size = 222;
+
+describe("SectionFileUploader", () => {
     let file_uploads_collection: FileUploadsCollection,
-        mocked_notifications_data: UseNotificationsStoreType,
+        notifications_collection: NotificationsCollection,
         manage_section_attachments: ManageSectionAttachmentFiles;
 
     const section_id: string =
@@ -60,52 +60,39 @@ describe("useUploadFile", () => {
 
     beforeEach(() => {
         file_uploads_collection = FileUploadsCollectionStub.withUploadsInProgress();
-        mocked_notifications_data = NotificationsSub.withMessages();
+        notifications_collection = NotificationsCollectionStub.withMessages();
         manage_section_attachments = SectionAttachmentFilesManagerStub.forSection(
             FreetextSectionFactory.create(),
         );
-        mockStrictInject([
-            [UPLOAD_MAX_SIZE, 222],
-            [NOTIFICATION_STORE, mocked_notifications_data],
-        ]);
     });
+
+    const buildSectionFileUploader = (): UploadSectionFile =>
+        getSectionFileUploader(
+            section_id,
+            manage_section_attachments,
+            file_uploads_collection,
+            notifications_collection,
+            upload_max_size,
+        );
 
     describe("error_message", () => {
         it("should return the upload error message", () => {
-            const mocked_add_notification = vi.fn();
-            mockStrictInject([
-                [UPLOAD_MAX_SIZE, 222],
-                [
-                    NOTIFICATION_STORE,
-                    { ...mocked_notifications_data, addNotification: mocked_add_notification },
-                ],
-            ]);
+            const addNotification = vi.spyOn(notifications_collection, "addNotification");
 
-            const { file_upload_options } = useUploadFile(
-                section_id,
-                manage_section_attachments,
-                file_uploads_collection,
-            );
+            const { file_upload_options } = buildSectionFileUploader();
 
             file_upload_options.onErrorCallback(new DummyUploadError(), "file_name");
 
-            expect(mocked_add_notification).toHaveBeenCalledWith({
+            expect(addNotification).toHaveBeenCalledWith({
                 message: "An error occurred during upload",
                 type: "danger",
             });
         });
+
         it("should delete the current file pending upload", () => {
             const deleteUpload = vi.spyOn(file_uploads_collection, "deleteUpload");
-            mockStrictInject([
-                [UPLOAD_MAX_SIZE, 222],
-                [NOTIFICATION_STORE, mocked_notifications_data],
-            ]);
 
-            const { file_upload_options } = useUploadFile(
-                section_id,
-                manage_section_attachments,
-                file_uploads_collection,
-            );
+            const { file_upload_options } = buildSectionFileUploader();
 
             const current_file = file_uploads_collection.pending_uploads.value[0];
             file_upload_options.onErrorCallback(new DummyUploadError(), current_file.file_name);
@@ -117,16 +104,8 @@ describe("useUploadFile", () => {
     describe("resetProgressCallback", () => {
         it("should reset progress", () => {
             const cancelUploads = vi.spyOn(file_uploads_collection, "cancelSectionUploads");
-            mockStrictInject([
-                [UPLOAD_MAX_SIZE, 222],
-                [NOTIFICATION_STORE, mocked_notifications_data],
-            ]);
 
-            const { resetProgressCallback } = useUploadFile(
-                section_id,
-                manage_section_attachments,
-                file_uploads_collection,
-            );
+            const { resetProgressCallback } = buildSectionFileUploader();
 
             resetProgressCallback();
 
@@ -137,16 +116,8 @@ describe("useUploadFile", () => {
     describe("onStartUploadCallback", () => {
         it("should add the current upload to the store pending uploads", () => {
             const addPendingUpload = vi.spyOn(file_uploads_collection, "addPendingUpload");
-            mockStrictInject([
-                [UPLOAD_MAX_SIZE, 222],
-                [NOTIFICATION_STORE, mocked_notifications_data],
-            ]);
 
-            const { file_upload_options } = useUploadFile(
-                section_id,
-                manage_section_attachments,
-                file_uploads_collection,
-            );
+            const { file_upload_options } = buildSectionFileUploader();
 
             const list: FileList = mockFileList([new File(["123"], "file_1")]);
             file_upload_options.onStartUploadCallback(list);
@@ -161,11 +132,7 @@ describe("useUploadFile", () => {
                 manage_section_attachments,
                 "addAttachmentToWaitingList",
             );
-            const { file_upload_options } = useUploadFile(
-                section_id,
-                manage_section_attachments,
-                file_uploads_collection,
-            );
+            const { file_upload_options } = buildSectionFileUploader();
 
             file_upload_options.onSuccessCallback(123, "download_href", "file_name");
             expect(add_attachment_to_waiting_list_mock).toHaveBeenCalledWith({
@@ -173,12 +140,9 @@ describe("useUploadFile", () => {
                 upload_url: "download_href",
             });
         });
+
         it("should actualize progress of upload to 100%", () => {
-            const { file_upload_options } = useUploadFile(
-                section_id,
-                manage_section_attachments,
-                file_uploads_collection,
-            );
+            const { file_upload_options } = buildSectionFileUploader();
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
@@ -203,11 +167,7 @@ describe("useUploadFile", () => {
 
     describe("onProgressCallback", () => {
         it("should actualize progress of upload", () => {
-            const { file_upload_options } = useUploadFile(
-                section_id,
-                manage_section_attachments,
-                file_uploads_collection,
-            );
+            const { file_upload_options } = buildSectionFileUploader();
 
             const current_uploads_section = getCurrentSectionUploads(
                 section_id,
@@ -227,13 +187,10 @@ describe("useUploadFile", () => {
 
             expect(new_current_uploads_section[0].progress).toBe(new_progress);
         });
+
         describe("if the file is not found in upload list", () => {
             it("should not actualize upload list state", () => {
-                const { file_upload_options } = useUploadFile(
-                    section_id,
-                    manage_section_attachments,
-                    file_uploads_collection,
-                );
+                const { file_upload_options } = buildSectionFileUploader();
 
                 const save_upload_files = [...file_uploads_collection.pending_uploads.value];
 

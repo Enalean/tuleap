@@ -22,27 +22,27 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
 import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
 import NotificationMessage from "@/components/section/description/NotificationMessage.vue";
-import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
-import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
-import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
+import { NOTIFICATION_COLLECTION } from "@/sections/notification-collection-injection-key";
+import { NotificationsCollectionStub } from "@/sections/stubs/NotificationsCollectionStub";
 import NotificationRemainingPendingUploads from "@/components/NotificationRemainingPendingUploads.vue";
 
 describe("NotificationContainer", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
-    let mocked_notifications_data: UseNotificationsStoreType;
 
     beforeAll(() => {
-        mocked_notifications_data = NotificationsSub.withMessages();
-        mockStrictInject([
-            [FILE_UPLOADS_COLLECTION, FileUploadsCollectionStub.withUploadsInProgress()],
-            [NOTIFICATION_STORE, mocked_notifications_data],
-        ]);
-        wrapper = shallowMount(NotificationContainer, {});
+        wrapper = shallowMount(NotificationContainer, {
+            global: {
+                provide: {
+                    [FILE_UPLOADS_COLLECTION.valueOf()]:
+                        FileUploadsCollectionStub.withUploadsInProgress(),
+                    [NOTIFICATION_COLLECTION.valueOf()]: NotificationsCollectionStub.withMessages(),
+                },
+            },
+        });
     });
 
     it("should display a notification progress for each pending uploads", () => {

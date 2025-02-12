@@ -40,13 +40,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { Notification, UseNotificationsStoreType } from "@/stores/useNotificationsStore";
+import type { Notification, NotificationsCollection } from "@/sections/NotificationsCollection";
 
 const { $gettext } = useGettext();
 
 export type NotificationMessageProps = {
     notification: Notification;
-    delete_notification: UseNotificationsStoreType["deleteNotification"];
+    delete_notification: NotificationsCollection["deleteNotification"];
 };
 
 const props = defineProps<NotificationMessageProps>();

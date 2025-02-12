@@ -31,7 +31,7 @@ import { TITLE } from "@/title-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
-import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
+import { NOTIFICATION_COLLECTION } from "@/sections/notification-collection-injection-key";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
@@ -55,7 +55,7 @@ import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { userLocale } from "@/helpers/user-locale";
 import { preventPageLeave } from "@/helpers/on-before-unload";
 import { getFileUploadsCollection } from "@/sections/FileUploadsCollection";
-import { useNotificationsStore } from "@/stores/useNotificationsStore";
+import { buildNotificationsCollection } from "@/sections/NotificationsCollection";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
 import { getSectionsStatesCollection } from "@/sections/SectionsStatesCollection";
@@ -90,13 +90,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selected_tracker = JSON.parse(
         getDatasetItemOrThrow(vue_mount_point, "data-selected-tracker"),
     );
-    const file_uploads_colletion = getFileUploadsCollection();
+    const file_uploads_collection = getFileUploadsCollection();
     const states_collection = getSectionsStatesCollection(
-        getSectionStateBuilder(can_user_edit_document, file_uploads_colletion.pending_uploads),
+        getSectionStateBuilder(can_user_edit_document, file_uploads_collection.pending_uploads),
     );
     const sections_collection = buildSectionsCollection(states_collection);
-    const notifications_store = useNotificationsStore();
-
     sections_collection.replaceAll(skeleton_sections_collection);
 
     const configuration_store = initConfigurationStore(
@@ -114,8 +112,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     app.provide(SECTIONS_COLLECTION, sections_collection);
     app.provide(SECTIONS_STATES_COLLECTION, states_collection);
-    app.provide(FILE_UPLOADS_COLLECTION, file_uploads_colletion);
-    app.provide(NOTIFICATION_STORE, notifications_store);
+    app.provide(FILE_UPLOADS_COLLECTION, file_uploads_collection);
+    app.provide(NOTIFICATION_COLLECTION, buildNotificationsCollection());
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document);
     app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore());

@@ -24,13 +24,13 @@ export type Notification = {
     message: string;
     type: NotificationType;
 };
-export type UseNotificationsStoreType = {
+export type NotificationsCollection = {
     messages: Ref<Notification[]>;
     addNotification(notification: Notification): void;
     deleteNotification(notification: Notification): void;
 };
 
-export function useNotificationsStore(): UseNotificationsStoreType {
+export function buildNotificationsCollection(): NotificationsCollection {
     const messages: Ref<Notification[]> = ref([]);
 
     function deleteNotification(notification: Notification): void {
