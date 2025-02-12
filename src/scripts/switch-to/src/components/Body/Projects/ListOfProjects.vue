@@ -24,9 +24,8 @@
             <h2
                 class="tlp-modal-subtitle switch-to-modal-body-title"
                 id="switch-to-modal-projects-title"
-                v-translate
             >
-                My projects
+                {{ $gettext("My projects") }}
             </h2>
             <nav
                 class="switch-to-projects"
@@ -51,15 +50,16 @@
         <projects-empty-state v-else />
     </div>
 </template>
-
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { useRootStore } from "../../../stores/root";
 import { storeToRefs } from "pinia";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 
+const { $gettext } = useGettext();
 const store = useRootStore();
 const { projects, filtered_projects, is_in_search_mode } = storeToRefs(store);
 

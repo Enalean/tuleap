@@ -1,9 +1,8 @@
 {
     "name": "projectmilestones",
-    "gettext-vue": {
+    "gettext-vue3": {
         "projectmilestones": {
-            "src": "scripts/projectmilestones",
-
+            "src": "scripts/projectmilestones/src",
             "po": "scripts/projectmilestones/po"
         }
     }

@@ -42,7 +42,7 @@
                 class="switch-to-modal-header-legacy-search-button"
                 data-test="legacy-search-button"
             >
-                <translate>Legacy search</translate>
+                {{ $gettext("Legacy search") }}
                 <i
                     class="fas fa-long-arrow-alt-right switch-to-modal-header-legacy-search-button-icon"
                     aria-hidden="true"
@@ -51,14 +51,16 @@
         </template>
     </form>
 </template>
-
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { useRootStore } from "../../stores/root";
 import { computed, inject } from "vue";
 import type { SearchForm } from "../../type";
 import { IS_SEARCH_AVAILABLE, SEARCH_FORM } from "../../injection-keys";
+
+const { $gettext } = useGettext();
 
 defineProps<{ modal: Modal | null }>();
 const store = useRootStore();

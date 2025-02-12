@@ -20,15 +20,20 @@
 
 <template>
     <div>
-        <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
+        <h2 class="tlp-modal-subtitle switch-to-modal-body-title">
+            {{ $gettext("Recent items") }}
+        </h2>
         <div class="switch-to-recent-items-error">
             <i
                 class="fa-solid fa-triangle-exclamation switch-to-recent-items-error-icon"
                 aria-hidden="true"
             ></i>
-            <translate>An error occurred while loading your recent items.</translate>
+            {{ $gettext("An error occurred while loading your recent items.") }}
         </div>
     </div>
 </template>
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 
-<script setup lang="ts"></script>
+const { $gettext } = useGettext();
+</script>

@@ -45,9 +45,9 @@
         <search-results-list v-else />
     </div>
 </template>
-
 <script setup lang="ts">
 import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 import { useRootStore } from "../../../../stores/root";
 import { useFullTextStore } from "../../../../stores/fulltext";
 import SearchResultsError from "./SearchResultsError.vue";
@@ -55,6 +55,8 @@ import SearchResultsEmpty from "./SearchResultsEmpty.vue";
 import SearchResultsList from "./SearchResultsList.vue";
 import SearchQueryTooSmall from "./SearchQueryTooSmall.vue";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../../stores/type";
+
+const { $gettext } = useGettext();
 
 const root_store = useRootStore();
 const fulltext_store = useFullTextStore();

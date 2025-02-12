@@ -24,6 +24,11 @@
             class="fa-solid fa-triangle-exclamation switch-to-search-results-error-icon"
             aria-hidden="true"
         ></i>
-        <translate>An error occurred while searching for results.</translate>
+        {{ $gettext("An error occurred while searching for results.") }}
     </div>
 </template>
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+</script>

@@ -16,7 +16,7 @@
             "po": "scripts/planning-v2/po"
         }
     },
-    "gettext-vue": {
+    "gettext-vue3": {
         "permissions-per-group": {
             "src": "scripts/permissions-per-group/src/",
             "po": "scripts/permissions-per-group/po"

@@ -31,14 +31,16 @@
         ref="input"
     />
 </template>
-
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { Modal } from "@tuleap/tlp-modal";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { useRootStore } from "../../stores/root";
 import { storeToRefs } from "pinia";
 import { useKeyboardNavigationStore } from "../../stores/keyboard-navigation";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ modal: Modal | null }>();
 const store = useRootStore();

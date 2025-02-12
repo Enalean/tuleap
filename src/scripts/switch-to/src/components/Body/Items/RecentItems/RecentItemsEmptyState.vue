@@ -21,15 +21,14 @@
 <template>
     <section class="empty-state-pane switch-to-recent-items-empty">
         <recent-items-empty-state-svg />
-        <p
-            class="empty-state-text empty-state-text-smaller switch-to-recent-items-empty-text"
-            v-translate
-        >
-            Your Tuleap history will appear here
+        <p class="empty-state-text empty-state-text-smaller switch-to-recent-items-empty-text">
+            {{ $gettext("Your Tuleap history will appear here") }}
         </p>
     </section>
 </template>
-
 <script setup lang="ts">
 import RecentItemsEmptyStateSvg from "./RecentItemsEmptyStateSvg.vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 </script>

@@ -95,9 +95,9 @@
         </div>
     </div>
 </template>
-
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { ItemDefinition } from "../../../type";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
 import type { FocusFromItemPayload } from "../../../stores/type";
@@ -106,6 +106,8 @@ import { storeToRefs } from "pinia";
 import QuickLink from "../QuickLink.vue";
 import { useRootStore } from "../../../stores/root";
 import ItemBadge from "./ItemBadge.vue";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     entry: ItemDefinition;

@@ -33,8 +33,10 @@
         </trove-cat-link>
     </section>
 </template>
-
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import GlobalEmptyStateSvg from "./GlobalEmptyStateSvg.vue";
 import TroveCatLink from "./TroveCatLink.vue";
+
+const { $gettext } = useGettext();
 </script>

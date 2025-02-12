@@ -31,13 +31,15 @@
         <switch-to-body class="modal-body" />
     </div>
 </template>
-
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import jQuery from "jquery";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
 import { useRootStore } from "../stores/root";
+
+const { $gettext } = useGettext();
 
 const modal = ref<HTMLElement | null>(null);
 

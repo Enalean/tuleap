@@ -28,9 +28,8 @@
             <h2
                 class="tlp-modal-subtitle switch-to-modal-body-title"
                 id="switch-to-modal-recent-items-title"
-                v-translate
             >
-                Recent items
+                {{ $gettext("Recent items") }}
             </h2>
             <nav
                 class="switch-to-recent-items-list"
@@ -47,7 +46,7 @@
                 />
             </nav>
             <p class="switch-to-modal-no-matching-history" v-else>
-                <translate>You didn't visit recently any items matching your query.</translate>
+                {{ $gettext("You didn't visit recently any items matching your query.") }}
             </p>
         </template>
         <recent-items-error-state v-if="is_history_in_error" />
@@ -55,9 +54,9 @@
         <recent-items-empty-state v-else-if="has_no_history" />
     </div>
 </template>
-
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import ItemEntry from "../ItemEntry.vue";
@@ -67,6 +66,7 @@ import type { FocusFromItemPayload } from "../../../../stores/type";
 import { storeToRefs } from "pinia";
 import { useKeyboardNavigationStore } from "../../../../stores/keyboard-navigation";
 
+const { $gettext } = useGettext();
 const store = useRootStore();
 
 const {
