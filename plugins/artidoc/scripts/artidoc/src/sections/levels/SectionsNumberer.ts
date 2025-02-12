@@ -20,6 +20,11 @@
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
+export type Level = 1 | 2 | 3;
+export const LEVEL_1: Level = 1;
+export const LEVEL_2: Level = 2;
+export const LEVEL_3: Level = 3;
+
 function setSectionsLevels(sections: ArtidocSection[]): ArtidocSection[] {
     let level1 = 0;
     let level2 = 0;

@@ -21,9 +21,9 @@ import { describe, expect, it, vi } from "vitest";
 import * as fetch from "@tuleap/fetch-result";
 import { errAsync, okAsync } from "neverthrow";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { getAllSections, getSection, putArtifact, putSection } from "@/helpers/rest-querier";
+import { getAllSections, getSection, putSection } from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
-import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { Fault } from "@tuleap/fault";
 import { uri } from "@tuleap/fetch-result";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
@@ -404,139 +404,13 @@ describe("rest-querier", () => {
         });
     });
 
-    describe("putArtifactDescription", () => {
-        it("should update artifact, when title is a string", async () => {
-            const put = vi
-                .spyOn(fetch, "putResponse")
-                .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
-
-            putArtifact(
-                123,
-                "New title",
-                {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "string",
-                    value: "Old title",
-                },
-                "New description",
-                1002,
-                {
-                    field_id: 171,
-                    value: [123, 456],
-                },
-            );
-
-            await flushPromises();
-
-            expect(put).toHaveBeenCalledWith(
-                uri`/api/artifacts/123`,
-                {},
-                {
-                    values: [
-                        {
-                            field_id: 1002,
-                            value: {
-                                content: "New description",
-                                format: "html",
-                            },
-                        },
-                        {
-                            field_id: 1001,
-                            value: "New title",
-                        },
-                        {
-                            field_id: 171,
-                            value: [123, 456],
-                        },
-                    ],
-                },
-            );
-        });
-
-        it.each<[ArtifactSection["title"]]>([
-            [
-                {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "text",
-                    format: "text",
-                    value: "Old title",
-                    post_processed_value: "Old title",
-                },
-            ],
-            [
-                {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "text",
-                    format: "html",
-                    value: "<p>Old title</p>",
-                    post_processed_value: "<p>Old title</p>",
-                },
-            ],
-            [
-                {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "text",
-                    format: "html",
-                    value: "<p>Old title</p>",
-                    post_processed_value: "<p>Old title</p>",
-                    commonmark: "Old title",
-                },
-            ],
-        ])(
-            "should update artifact, when title is a text field with %s",
-            async (title: ArtifactSection["title"]) => {
-                const put = vi
-                    .spyOn(fetch, "putResponse")
-                    .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
-
-                putArtifact(123, "New title", title, "New description", 1002, {
-                    field_id: 171,
-                    value: [123, 456],
-                });
-
-                await flushPromises();
-
-                expect(put).toHaveBeenCalledWith(
-                    uri`/api/artifacts/123`,
-                    {},
-                    {
-                        values: [
-                            {
-                                field_id: 1002,
-                                value: {
-                                    content: "New description",
-                                    format: "html",
-                                },
-                            },
-                            {
-                                field_id: 1001,
-                                value: {
-                                    content: "New title",
-                                    format: "text",
-                                },
-                            },
-                            {
-                                field_id: 171,
-                                value: [123, 456],
-                            },
-                        ],
-                    },
-                );
-            },
-        );
-    });
-
     describe("putSection", () => {
         it("should update freetext", async () => {
             const put = vi
                 .spyOn(fetch, "putResponse")
                 .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
 
-            putSection("123", "New title", "New description");
+            putSection("123", "New title", "New description", [], 1);
 
             await flushPromises();
 

@@ -35,6 +35,7 @@ import type { Tracker } from "@/stores/configuration-store";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { MergedAttachmentFiles } from "@/sections/attachments/SectionAttachmentFilesManager";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import type { Level } from "@/sections/levels/SectionsNumberer";
 import { injectDisplayLevel } from "@/sections/levels/SectionsNumberer";
 
 export function putConfiguration(
@@ -46,44 +47,6 @@ export function putConfiguration(
         {},
         {
             selected_tracker_ids: [selected_tracker_id],
-        },
-    );
-}
-
-export function putArtifact(
-    artifact_id: number,
-    new_title: string,
-    title: ArtifactSection["title"],
-    new_description: string,
-    description_field_id: number,
-    merged_attachments: MergedAttachmentFiles,
-): ResultAsync<Response, Fault> {
-    const values: { field_id: number; value: unknown }[] = [
-        {
-            field_id: description_field_id,
-            value: {
-                content: new_description,
-                format: "html",
-            },
-        },
-        {
-            field_id: title.field_id,
-            ...(isTitleAString(title)
-                ? { value: new_title }
-                : { value: { content: new_title, format: "text" } }),
-        },
-    ];
-    if (merged_attachments && merged_attachments.field_id > 0) {
-        values.push({
-            field_id: merged_attachments.field_id,
-            value: merged_attachments.value,
-        });
-    }
-    return putResponse(
-        uri`/api/artifacts/${artifact_id}`,
-        {},
-        {
-            values,
         },
     );
 }
@@ -196,6 +159,8 @@ export function putSection(
     section_id: string,
     title: string,
     description: string,
+    attachments: number[],
+    level: Level,
 ): ResultAsync<Response, Fault> {
     return putResponse(
         uri`/api/artidoc_sections/${section_id}`,
@@ -203,8 +168,8 @@ export function putSection(
         {
             title,
             description,
-            attachments: [],
-            level: 1,
+            attachments,
+            level,
         },
     );
 }
