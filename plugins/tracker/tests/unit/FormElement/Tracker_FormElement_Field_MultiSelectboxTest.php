@@ -96,6 +96,7 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\
 
         $this->user->shouldReceive('isSuperUser')->andReturnFalse();
         $this->user->shouldReceive('getUgroups')->andReturn([]);
+        $this->user->shouldReceive('getId')->andReturn(101);
     }
 
     protected function tearDown(): void

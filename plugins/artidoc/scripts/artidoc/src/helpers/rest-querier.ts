@@ -200,6 +200,7 @@ export function putSection(
         {
             title,
             description,
+            attachments: [],
             level: 1,
         },
     );

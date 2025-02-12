@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\Adapter\Document\Section;
 
-namespace Tuleap\Artidoc\REST\v1;
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 
-/**
- * @psalm-immutable
- */
-final class PUTSectionRepresentation
+interface UpdateLevel
 {
-    /**
-     * @param list<int> $attachments
-     */
-    private function __construct(
-        public string $title,
-        public string $description,
-        public array $attachments,
-        public int $level,
-    ) {
-    }
+    public function updateLevel(
+        SectionIdentifier $section_identifier,
+        Level $level,
+    ): void;
 }

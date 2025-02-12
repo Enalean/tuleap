@@ -546,6 +546,7 @@ describe("rest-querier", () => {
                 {
                     title: "New title",
                     description: "New description",
+                    attachments: [],
                     level: 1,
                 },
             );

@@ -722,6 +722,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                         [
                             'title' => 'My updated title',
                             'description' => 'My updated description',
+                            'attachments' => [],
                             'level' => 1,
                         ],
                     ),
@@ -736,6 +737,48 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             },
             $document_content
         ));
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testUpdateArtifactSection(int $root_id): void
+    {
+        $artidoc_id = $this->createArtidoc($root_id, 'Artidoc update requirement ' . $this->now)['id'];
+        $req_id     = $this->createRequirementArtifact('Section 1', 'Content of section 1');
+        $this->setSectionsForArtidoc($artidoc_id, $req_id);
+
+        $document_content = $this->getArtidocSections($artidoc_id);
+
+        self::assertCount(1, $document_content);
+
+        $section_id = $document_content[0]['id'];
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'artidoc_sections/' . $section_id
+            )->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'title' => 'My updated title',
+                            'description' => 'My updated description',
+                            'attachments' => [],
+                            'level' => 2,
+                        ],
+                    ),
+                )
+            )
+        );
+        self::assertSame(200, $response->getStatusCode());
+
+        $document_content = $this->getArtidocSections($artidoc_id);
+
+        self::assertCount(1, $document_content);
+        self::assertSame('My updated title', $document_content[0]['title']['value']);
+        self::assertSame('My updated description', $document_content[0]['description']['value']);
+        self::assertSame(2, $document_content[0]['level']);
     }
 
     /**

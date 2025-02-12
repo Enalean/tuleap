@@ -1183,6 +1183,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
+     * @var array<int, bool>
+     */
+    private array $user_can_update = [];
+    public function setUserCanUpdate(PFUser $user, bool $can_update): void
+    {
+        $this->user_can_update[(int) $user->getId()] = $can_update;
+    }
+
+    /**
      * return true if user has Read or Update permission on this field
      *
      * @param PFUser $user The user. if not given or null take the current user
@@ -1211,7 +1220,17 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function userCanUpdate(?PFUser $user = null)
     {
-        return $this->isUpdateable() && $this->userHasPermission(self::PERMISSION_UPDATE, $user);
+        if (! $user) {
+            $user = $this->getCurrentUser();
+        }
+
+        $user_id = (int) $user->getId();
+        if (! isset($this->user_can_update[$user_id])) {
+            $this->user_can_update[$user_id] = $this->isUpdateable()
+                && $this->userHasPermission(self::PERMISSION_UPDATE, $user);
+        }
+
+        return $this->user_can_update[$user_id];
     }
 
     /**

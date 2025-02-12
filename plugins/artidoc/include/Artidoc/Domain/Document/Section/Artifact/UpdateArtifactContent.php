@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section\Artifact;
 
-/**
- * @psalm-immutable
- */
-final class PUTSectionRepresentation
+use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Domain\Document\Section\SectionContent;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+
+interface UpdateArtifactContent
 {
     /**
-     * @param list<int> $attachments
+     * @return Ok<null>|Err<Fault>
      */
-    private function __construct(
-        public string $title,
-        public string $description,
-        public array $attachments,
-        public int $level,
-    ) {
-    }
+    public function updateArtifactContent(
+        SectionIdentifier $section_identifier,
+        int $artifact_id,
+        SectionContent $content,
+    ): Ok|Err;
 }

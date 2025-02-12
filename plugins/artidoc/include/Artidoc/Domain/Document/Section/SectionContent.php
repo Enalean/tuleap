@@ -20,21 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section;
 
 /**
  * @psalm-immutable
  */
-final class PUTSectionRepresentation
+final readonly class SectionContent
 {
     /**
      * @param list<int> $attachments
      */
-    private function __construct(
+    public function __construct(
         public string $title,
         public string $description,
         public array $attachments,
-        public int $level,
+        public Level $level,
     ) {
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Tracker\REST\Artifact;
 
-namespace Tuleap\Artidoc\REST\v1;
+use Luracast\Restler\RestException;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-/**
- * @psalm-immutable
- */
-final class PUTSectionRepresentation
+interface HandlePUT
 {
     /**
-     * @param list<int> $attachments
+     * @param ArtifactValuesRepresentation[] $values
+     * @throws RestException
      */
-    private function __construct(
-        public string $title,
-        public string $description,
-        public array $attachments,
-        public int $level,
-    ) {
-    }
+    public function handle(
+        array $values,
+        Artifact $artifact,
+        \PFUser $submitter,
+        ?NewChangesetCommentRepresentation $comment,
+    ): void;
 }
