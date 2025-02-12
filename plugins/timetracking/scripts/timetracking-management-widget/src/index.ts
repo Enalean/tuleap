@@ -40,8 +40,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
         )
-        .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
+        .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "data-user-locale"))
         .provide(RETRIEVE_QUERY, QueryRetriever())
-        .provide(WIDGET_ID, Number.parseInt(getDatasetItemOrThrow(mount_point, "widgetId"), 10))
+        .provide(
+            WIDGET_ID,
+            Number.parseInt(getDatasetItemOrThrow(mount_point, "data-widget-id"), 10),
+        )
         .mount(mount_point);
 });

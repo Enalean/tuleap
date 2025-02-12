@@ -33,28 +33,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const locale = getDatasetItemOrThrow(document.body, "userLocale");
+    const locale = getDatasetItemOrThrow(document.body, "data-user-locale");
 
     const gettext_plugin = await initVueGettext(
         createGettext,
         (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
-    const project_name = getDatasetItemOrThrow(vue_mount_point, "projectName");
-    const project_short_name = getDatasetItemOrThrow(vue_mount_point, "projectShortName");
-    const project_privacy = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "projectPrivacy"));
-    const project_flags = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "projectFlags"));
-    const program_id = parseInt(getDatasetItemOrThrow(vue_mount_point, "programId"), 10);
+    const project_name = getDatasetItemOrThrow(vue_mount_point, "data-project-name");
+    const project_short_name = getDatasetItemOrThrow(vue_mount_point, "data-project-short-name");
+    const project_privacy = JSON.parse(
+        getDatasetItemOrThrow(vue_mount_point, "data-project-privacy"),
+    );
+    const project_flags = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-project-flags"));
+    const program_id = parseInt(getDatasetItemOrThrow(vue_mount_point, "data-program-id"), 10);
     const program_increment_tracker_id = parseInt(
-        getDatasetItemOrThrow(vue_mount_point, "programIncrementTrackerId"),
+        getDatasetItemOrThrow(vue_mount_point, "data-program-increment-tracker-id"),
         10,
     );
-    const program_increment_label = getDatasetItemOrThrow(vue_mount_point, "programIncrementLabel");
+    const program_increment_label = getDatasetItemOrThrow(
+        vue_mount_point,
+        "data-program-increment-label",
+    );
     const program_increment_sub_label = getDatasetItemOrThrow(
         vue_mount_point,
-        "programIncrementSubLabel",
+        "data-program-increment-sub-label",
     );
-    const iteration_label = getDatasetItemOrThrow(vue_mount_point, "iterationLabel");
+    const iteration_label = getDatasetItemOrThrow(vue_mount_point, "data-iteration-label");
 
     const is_program_admin = Boolean(vue_mount_point.dataset.isProgramAdmin);
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
@@ -62,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const has_plan_permissions = Boolean(vue_mount_point.dataset.hasPlanPermissions);
     const is_iteration_tracker_defined = Boolean(vue_mount_point.dataset.isIterationTrackerDefined);
     const is_configured = Boolean(vue_mount_point.dataset.isConfigured);
-    const project_icon = getDatasetItemOrThrow(vue_mount_point, "projectIcon");
+    const project_icon = getDatasetItemOrThrow(vue_mount_point, "data-project-icon");
 
     const configuration_state: ConfigurationState = {
         public_name: project_name,

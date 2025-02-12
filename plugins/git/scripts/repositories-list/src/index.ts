@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const locale = getDatasetItemOrThrow(document.body, "userLocale");
+    const locale = getDatasetItemOrThrow(document.body, "data-user-Locale");
 
     const gettext_plugin = await initVueGettext(
         createGettext,
@@ -55,21 +55,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     setBreadcrumbSettings(
-        getDatasetItemOrThrow(vue_mount_point, "repositoriesAdministrationUrl"),
-        getDatasetItemOrThrow(vue_mount_point, "repositoryListUrl"),
-        getDatasetItemOrThrow(vue_mount_point, "repositoriesForkUrl"),
-        getDatasetItemOrThrow(vue_mount_point, "projectPublicName"),
-        getDatasetItemOrThrow(vue_mount_point, "projectUrl"),
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "privacy")),
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "projectFlags")),
+        getDatasetItemOrThrow(vue_mount_point, "data-repositories-administration-url"),
+        getDatasetItemOrThrow(vue_mount_point, "data-repository-list-url"),
+        getDatasetItemOrThrow(vue_mount_point, "data-repositories-fork-url"),
+        getDatasetItemOrThrow(vue_mount_point, "data-project-public-name"),
+        getDatasetItemOrThrow(vue_mount_point, "data-project-url"),
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-privacy")),
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-project-flags")),
         vue_mount_point.dataset.projectIcon || "",
     );
 
-    const repositories_owners = getDatasetItemOrThrow(vue_mount_point, "repositoriesOwners");
+    const repositories_owners = getDatasetItemOrThrow(vue_mount_point, "data-repositories-owners");
 
     buildRepositoryListPresenter(
-        Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10),
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10),
+        Number.parseInt(getDatasetItemOrThrow(document.body, "data-user-id"), 10),
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-project-id"), 10),
         Boolean(vue_mount_point.dataset.isAdmin),
         locale,
         JSON.parse(repositories_owners).sort(function (
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
             return user_a.display_name.localeCompare(user_b.display_name);
         }),
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "externalPlugins")),
+        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-external-plugins")),
     );
 
     const state: State = {
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         display_mode: display_mode,
         is_first_load_done: false,
         services_name_used: JSON.parse(
-            getDatasetItemOrThrow(vue_mount_point, "externalServicesNameUsed"),
+            getDatasetItemOrThrow(vue_mount_point, "data-external-services-name-used"),
         ),
         add_gitlab_repository_modal: null,
         unlink_gitlab_repository_modal: null,

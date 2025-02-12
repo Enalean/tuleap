@@ -22,22 +22,18 @@ import { getDatasetItemOrThrow, selectOrThrow } from "./main";
 
 describe(`DOM`, () => {
     describe(`getDatasetItemOrThrow`, () => {
-        const DATASET_VALUE = "lingberry";
+        const DATA_ATTRIBUTE_VALUE = "lingberry";
 
         function createElement(key: string): HTMLDivElement {
             const doc = document.implementation.createHTMLDocument();
             const element = doc.createElement("div");
-            if (key.startsWith("data-")) {
-                element.setAttribute(key, DATASET_VALUE);
-            } else {
-                element.dataset[key] = DATASET_VALUE;
-            }
+
+            element.setAttribute(key, DATA_ATTRIBUTE_VALUE);
+
             return element;
         }
 
         function* generateKeys(): Generator<[string]> {
-            yield ["name"];
-            yield ["myDatasetName"];
             yield ["data-name"];
             yield ["data-my-dataset-name"];
         }
@@ -46,7 +42,7 @@ describe(`DOM`, () => {
             `returns the string value of the item's data-attribute for the given key`,
             (key) => {
                 const element = createElement(key);
-                expect(getDatasetItemOrThrow(element, key)).toBe(DATASET_VALUE);
+                expect(getDatasetItemOrThrow(element, key)).toBe(DATA_ATTRIBUTE_VALUE);
             },
         );
 
@@ -54,9 +50,7 @@ describe(`DOM`, () => {
             `throws when the item has no matching data-attribute for the given key`,
             (key) => {
                 const element = createElement("unknownKey");
-                const error = key.startsWith("data-")
-                    ? `Missing attribute ${key}`
-                    : `Missing item ${key} in dataset`;
+                const error = `Missing attribute ${key}`;
 
                 expect(() => getDatasetItemOrThrow(element, key)).toThrowError(error);
             },

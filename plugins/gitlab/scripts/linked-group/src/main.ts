@@ -31,7 +31,7 @@ const UNLINK_SELECTOR = "#unlink-button";
 const SECTION_SELECTOR = "#buttons-section";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const locale = getDatasetItemOrThrow(document.body, "userLocale");
+    const locale = getDatasetItemOrThrow(document.body, "data-user-locale");
     const gettext_provider = await initGettext(
         locale,
         "plugin-gitlab/linked-group",
@@ -39,10 +39,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     const buttons_section = selectOrThrow(document.body, SECTION_SELECTOR);
-    const group_id = Number.parseInt(getDatasetItemOrThrow(buttons_section, "groupId"), 10);
-    const gitlab_server_uri = getDatasetItemOrThrow(buttons_section, "gitlabUri");
+    const group_id = Number.parseInt(getDatasetItemOrThrow(buttons_section, "data-group-id"), 10);
+    const gitlab_server_uri = getDatasetItemOrThrow(buttons_section, "data-gitlab-uri");
     const gitlab_group_id = Number.parseInt(
-        getDatasetItemOrThrow(buttons_section, "gitlabGroupId"),
+        getDatasetItemOrThrow(buttons_section, "data-gitlab-group-id"),
         10,
     );
     const group: GroupInformation = { id: group_id, gitlab_server_uri, gitlab_group_id };
