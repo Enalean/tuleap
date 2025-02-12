@@ -4493,9 +4493,6 @@ msgstr "Utiliser le champ \"capacity\" pour la courbe théorique"
 msgid "Use a Canned Response:"
 msgstr "Utiliser une réponse type&nbsp;:"
 
-msgid "Use cache"
-msgstr "Utiliser la mémoire cache"
-
 #, php-format
 msgid "User '%s' couldn't be added."
 msgid_plural "Users '%s' couldn't be added."

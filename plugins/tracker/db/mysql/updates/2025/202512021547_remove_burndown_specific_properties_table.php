@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,19 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
-
-use Tuleap\DB\DataAccessObject;
-
-final class BurndownSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202512021547_remove_burndown_specific_properties_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function duplicate(int $from_field_id, int $to_field_id): void
+    public function description(): string
     {
-        $sql = 'REPLACE INTO tracker_field_burndown (field_id, use_cache)
-                SELECT ?, use_cache
-                FROM tracker_field_burndown
-                WHERE field_id = ?';
+        return 'Drop burndown specific properties table';
+    }
 
-        $this->getDB()->run($sql, $to_field_id, $from_field_id);
+    public function up(): void
+    {
+        $this->api->dbh->exec('DROP TABLE IF EXISTS tracker_field_burndown');
     }
 }

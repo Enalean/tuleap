@@ -2,7 +2,6 @@
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
-      <code><![CDATA[getDao]]></code>
       <code><![CDATA[getQueryFrom]]></code>
       <code><![CDATA[keepValue]]></code>
     </InvalidReturnType>
@@ -567,11 +566,6 @@
       <code><![CDATA[options]]></code>
       <code><![CDATA[sendAllowHeaders]]></code>
       <code><![CDATA[sendPaginationHeaders]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/RemainingEffortValueRetriever.php">
-    <MissingReturnType>
-      <code><![CDATA[getRemainingEffortValue]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Scrum/ScrumPresenterBuilder.php">
@@ -4132,14 +4126,6 @@
       <code><![CDATA[searchArtifactsFromTracker]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerReportDao.php">
-    <MissingParamType>
-      <code><![CDATA[$content_id]]></code>
-      <code><![CDATA[$expert_query]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerReportFactory.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -5099,11 +5085,6 @@
       <code><![CDATA[! $b]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/docman/include/DocmanPluginInfo.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/docman/include/Docman_Actions.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$newParentItem]]></code>
@@ -5465,7 +5446,6 @@
       <code><![CDATA[$metadataArray]]></code>
       <code><![CDATA[$mode]]></code>
       <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$plugin]]></code>
       <code><![CDATA[$pluginPath]]></code>
@@ -5488,7 +5468,6 @@
       <code><![CDATA[$item_factory]]></code>
       <code><![CDATA[$logger]]></code>
       <code><![CDATA[$metadataFactory]]></code>
-      <code><![CDATA[$plugin]]></code>
       <code><![CDATA[$reportId]]></code>
       <code><![CDATA[$themePath]]></code>
       <code><![CDATA[$this->groupId]]></code>
@@ -5511,7 +5490,6 @@
       <code><![CDATA[getItemFactory]]></code>
       <code><![CDATA[getItemHierarchy]]></code>
       <code><![CDATA[getLogger]]></code>
-      <code><![CDATA[getProperty]]></code>
       <code><![CDATA[getReportId]]></code>
       <code><![CDATA[getThemePath]]></code>
       <code><![CDATA[getValueInArrays]]></code>
@@ -8011,7 +7989,6 @@
       <code><![CDATA[$dao]]></code>
       <code><![CDATA[$instance]]></code>
       <code><![CDATA[$lockFactory]]></code>
-      <code><![CDATA[$plugin]]></code>
       <code><![CDATA[$subItemsWritableVisitor]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -10314,7 +10291,6 @@
       <code><![CDATA[checkIncFolderAndFileOwnership]]></code>
       <code><![CDATA[createFolderWithRightAccessRights]]></code>
       <code><![CDATA[getDocmanRootPath]]></code>
-      <code><![CDATA[getIncFile]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
@@ -10439,9 +10415,6 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/docmanPlugin.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['DocmanPluginInfo']]></code>
-    </ArgumentTypeCoercion>
     <DeprecatedMethod>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[getRow]]></code>
@@ -10496,7 +10469,6 @@
       <code><![CDATA[getItemFactory]]></code>
       <code><![CDATA[getNotificationsForProjectMemberCleaner]]></code>
       <code><![CDATA[getNotifiedPeopleRetriever]]></code>
-      <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[getSystemDocmanReferenceByKeyword]]></code>
       <code><![CDATA[getUGroupManager]]></code>
       <code><![CDATA[getUGroupToNotifyDao]]></code>
@@ -10654,7 +10626,6 @@
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$dfltParams]]></code>
-      <code><![CDATA[$this->_controller->plugin]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_buildSearchUrl]]></code>
@@ -31882,22 +31853,18 @@
   <file src="plugins/tracker/include/REST/v1/ArtifactValuesRepresentation.php">
     <InvalidDocblock>
       <code><![CDATA[public $bind_value_ids;]]></code>
-      <code><![CDATA[public $field_id;]]></code>
       <code><![CDATA[public $is_autocomputed;]]></code>
       <code><![CDATA[public $links;]]></code>
       <code><![CDATA[public $manual_value;]]></code>
       <code><![CDATA[public $parent;]]></code>
-      <code><![CDATA[public $value;]]></code>
       <code><![CDATA[public ?array $all_links = null;]]></code>
     </InvalidDocblock>
     <MissingPropertyType>
       <code><![CDATA[$bind_value_ids]]></code>
-      <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$is_autocomputed]]></code>
       <code><![CDATA[$links]]></code>
       <code><![CDATA[$manual_value]]></code>
       <code><![CDATA[$parent]]></code>
-      <code><![CDATA[$value]]></code>
     </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactsResource.php">
@@ -36222,29 +36189,17 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownFieldDao.php">
     <DeprecatedMethod>
+      <code><![CDATA[\DataAccessObject]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownRemainingEffortAdderForLegacy.php">
     <MissingReturnType>
@@ -36290,8 +36245,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
@@ -36308,7 +36261,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -36391,10 +36343,7 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
@@ -36776,11 +36725,8 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
@@ -36826,11 +36772,8 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
@@ -37224,23 +37167,17 @@
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$bind_type]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$from_field_id]]></code>
-      <code><![CDATA[$to_field_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[duplicate]]></code>
       <code><![CDATA[save]]></code>
       <code><![CDATA[searchByFieldId]]></code>
     </MissingReturnType>
@@ -37275,11 +37212,8 @@
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
@@ -37320,12 +37254,9 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
@@ -37465,12 +37396,9 @@
   <file src="plugins/tracker/include/Tracker/FormElement/Field/StaticField/RichText/RichTextFieldDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
@@ -37485,12 +37413,9 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/TextFieldDao.php">
@@ -37498,12 +37423,9 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
@@ -37710,7 +37632,6 @@
     </PossiblyNullReference>
     <UndefinedMethod>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[duplicate]]></code>
       <code><![CDATA[save]]></code>
       <code><![CDATA[searchByFieldId]]></code>
     </UndefinedMethod>
@@ -37873,9 +37794,6 @@
       <code><![CDATA[$name]]></code>
       <code><![CDATA[array_search($field::class, array_merge($this->classnames, $this->special_classnames))]]></code>
     </RiskyTruthyFalsyComparison>
-    <TooManyArguments>
-      <code><![CDATA[duplicate]]></code>
-    </TooManyArguments>
     <TypeDoesNotContainType>
       <code><![CDATA[$form_element instanceof Tracker_FormElement_Shared]]></code>
     </TypeDoesNotContainType>
@@ -38281,9 +38199,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -54308,7 +54223,6 @@
   <file src="src/common/Plugin/PluginConfigChecker.php">
     <MissingParamType>
       <code><![CDATA[$inc_file]]></code>
-      <code><![CDATA[$inc_file]]></code>
       <code><![CDATA[$plugin_etc_root]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -54317,7 +54231,6 @@
     <MissingReturnType>
       <code><![CDATA[checkFolder]]></code>
       <code><![CDATA[checkFolderOwnedByAppUser]]></code>
-      <code><![CDATA[checkIncFile]]></code>
       <code><![CDATA[checkIncFileOwnedByAppUser]]></code>
     </MissingReturnType>
   </file>

@@ -3949,9 +3949,6 @@ msgstr ""
 msgid "Use a Canned Response:"
 msgstr ""
 
-msgid "Use cache"
-msgstr ""
-
 #, php-format
 msgid "User '%s' couldn't be added."
 msgid_plural "Users '%s' couldn't be added."
