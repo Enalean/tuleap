@@ -30,28 +30,24 @@ export type ManageSectionEditorState = {
 export const getSectionEditorStateManager = (
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
-): ManageSectionEditorState => {
-    const original_title = section.value.display_title;
-    const original_description = getSectionHtmlDescription(section);
+): ManageSectionEditorState => ({
+    setEditedContent(new_title, new_description): void {
+        const has_content_been_edited =
+            new_title !== section.value.display_title ||
+            new_description !== getSectionHtmlDescription(section);
 
-    return {
-        setEditedContent(new_title, new_description): void {
-            const has_content_been_edited =
-                new_title !== original_title || new_description !== original_description;
+        section_state.is_editor_reset_needed.value = has_content_been_edited;
+        section_state.is_section_in_edit_mode.value = has_content_been_edited;
 
-            section_state.is_editor_reset_needed.value = has_content_been_edited;
-            section_state.is_section_in_edit_mode.value = has_content_been_edited;
-
-            section_state.edited_title.value = new_title;
-            section_state.edited_description.value = new_description;
-        },
-        resetContent(): void {
-            section_state.edited_title.value = section.value.display_title;
-            section_state.edited_description.value = getSectionHtmlDescription(section);
-            section_state.is_section_in_edit_mode.value = false;
-        },
-        markEditorAsReset(): void {
-            section_state.is_editor_reset_needed.value = false;
-        },
-    };
-};
+        section_state.edited_title.value = new_title;
+        section_state.edited_description.value = new_description;
+    },
+    resetContent(): void {
+        section_state.edited_title.value = section.value.display_title;
+        section_state.edited_description.value = getSectionHtmlDescription(section);
+        section_state.is_section_in_edit_mode.value = false;
+    },
+    markEditorAsReset(): void {
+        section_state.is_editor_reset_needed.value = false;
+    },
+});
