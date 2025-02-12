@@ -97,7 +97,7 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
             $name            = $current_version->getFilename();
             $document_path   = $params['path'];
 
-            $this->addFileToArchive($item, $document_path . '/' . $name);
+            $this->addFileToArchive($item, $this->getName($document_path, $name));
         } catch (DocmanFileCorruptedException $exception) {
             $this->error_logging_helper->logCorruptedFile($item);
             $this->errors_listing_builder->addBadFilePath((string) $item->getTitle());
@@ -109,7 +109,7 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         $name          = $item->getTitle();
         $document_path = $params['path'];
 
-        $this->addFileToArchive($item, $document_path . '/' . $name . '.html');
+        $this->addFileToArchive($item, $this->getName($document_path, $name . '.html'));
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []): void
@@ -179,5 +179,10 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         }
 
         return $current_version;
+    }
+
+    private function getName(string $dirname, string $basename): string
+    {
+        return $dirname . '/' . str_replace('/', '_', $basename);
     }
 }
