@@ -18,92 +18,94 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class RecipientFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Tracker\Artifact\MailGateway;
+
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_MailGateway_ArtifactDoesNotExistException;
+use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tracker_Artifact_MailGateway_RecipientInvalidHashException;
+use Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException;
+use Tracker_ArtifactFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use UserManager;
+
+final class RecipientFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $changeset;
+    private Tracker_Artifact_Changeset $changeset;
     private PFUser $user;
-    /**
-     * @var \Mockery\MockInterface&\Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-    private string $salt;
-    private string $host;
-    /**
-     * @var \Mockery\MockInterface&Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \Mockery\MockInterface&UserManager
-     */
-    private $user_manager;
+    private Artifact $artifact;
     private Tracker_Artifact_MailGateway_RecipientFactory $factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->user      = new PFUser(['user_id' => 123, 'language_id' => 'en']);
-        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(200)->getMock();
-        $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturns(101)->getMock();
-        $this->artifact->shouldReceive('getChangeset')->with(200)->andReturns($this->changeset);
-        $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
+        $this->user                = new PFUser(['user_id' => 123, 'language_id' => 'en']);
+        $this->changeset           = ChangesetTestBuilder::aChangeset(200)->build();
+        $this->artifact            = ArtifactTestBuilder::anArtifact(101)->withChangesets($this->changeset)->build();
+        $this->changeset->artifact = $this->artifact;
 
-        $this->salt = 'whatever';
-        $this->host = 'tuleap.example.com';
-
-        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactById')->with(101)->andReturns($this->artifact)->getMock();
-        $this->user_manager     = \Mockery::spy(\UserManager::class)->shouldReceive('getUserById')->with(123)->andReturns($this->user)->getMock();
+        $artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $artifact_factory->method('getArtifactById')->willReturnCallback(fn(int $id) => match ($id) {
+            101     => $this->artifact,
+            default => null,
+        });
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getUserById')->willReturnCallback(fn(int $id) => match ($id) {
+            123     => $this->user,
+            default => null,
+        });
 
         $this->factory = new Tracker_Artifact_MailGateway_RecipientFactory(
-            $this->artifact_factory,
-            $this->user_manager,
-            $this->salt,
-            $this->host
+            $artifact_factory,
+            $user_manager,
+            'whatever',
+            'tuleap.example.com'
         );
     }
 
-    public function testItGeneratesAMailGatewayRecipientFromEmail()
+    public function testItGeneratesAMailGatewayRecipientFromEmail(): void
     {
         $email     = '<101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
         $recipient = $this->factory->getFromEmail($email);
 
-        $this->assertEquals($this->artifact, $recipient->getArtifact());
-        $this->assertEquals($this->user, $recipient->getUser());
-        $this->assertEquals($email, $recipient->getEmail());
+        self::assertEquals($this->artifact, $recipient->getArtifact());
+        self::assertEquals($this->user, $recipient->getUser());
+        self::assertEquals($email, $recipient->getEmail());
     }
 
-    public function testItThrowsAnAxceptionWhenArtifactDoesNotExist()
+    public function testItThrowsAnAxceptionWhenArtifactDoesNotExist(): void
     {
         $email = '<000000-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
-        $this->expectException(\Tracker_Artifact_MailGateway_ArtifactDoesNotExistException::class);
+        $this->expectException(Tracker_Artifact_MailGateway_ArtifactDoesNotExistException::class);
         $this->factory->getFromEmail($email);
     }
 
-    public function testItThrowsAnAxceptionWhenUserDoesNotExist()
+    public function testItThrowsAnAxceptionWhenUserDoesNotExist(): void
     {
         $email = '<101-5a2a341193b34695885091bbf5f75d68-00000-200@tuleap.example.com>';
-        $this->expectException(\Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException::class);
+        $this->expectException(Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException::class);
         $this->factory->getFromEmail($email);
     }
 
-    public function testItThrowsAnAxceptionWhenHashIsInvalid()
+    public function testItThrowsAnAxceptionWhenHashIsInvalid(): void
     {
         $email = '<101-invalidhash-123-200@tuleap.example.com>';
-        $this->expectException(\Tracker_Artifact_MailGateway_RecipientInvalidHashException::class);
+        $this->expectException(Tracker_Artifact_MailGateway_RecipientInvalidHashException::class);
         $this->factory->getFromEmail($email);
     }
 
-    public function testItGeneratesAMailGatewayRecipientFromUserAndArtifact()
+    public function testItGeneratesAMailGatewayRecipientFromUserAndArtifact(): void
     {
         $email     = '101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com';
         $recipient = $this->factory->getFromUserAndChangeset($this->user, $this->changeset);
 
-        $this->assertEquals($this->artifact, $recipient->getArtifact());
-        $this->assertEquals($this->user, $recipient->getUser());
-        $this->assertEquals($email, $recipient->getEmail());
+        self::assertEquals($this->artifact, $recipient->getArtifact());
+        self::assertEquals($this->user, $recipient->getUser());
+        self::assertEquals($email, $recipient->getEmail());
     }
 }

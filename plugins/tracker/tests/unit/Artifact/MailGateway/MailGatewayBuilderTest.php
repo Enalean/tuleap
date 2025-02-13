@@ -18,19 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Artifact\MailGateway;
+
+use Psr\Log\NullLogger;
+use Tracker_Artifact_Changeset_IncomingMailDao;
+use Tracker_Artifact_MailGateway_CitationStripper;
+use Tracker_Artifact_MailGateway_IncomingMessageFactory;
+use Tracker_Artifact_MailGateway_InsecureMailGateway;
+use Tracker_Artifact_MailGateway_MailGatewayBuilder;
+use Tracker_Artifact_MailGateway_Notifier;
+use Tracker_Artifact_MailGateway_TokenMailGateway;
+use Tracker_ArtifactByEmailStatus;
+use Tracker_FormElementFactory;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
-class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class MailGatewayBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var Tracker_Artifact_MailGateway_MailGatewayBuilder */
-    private $mailgateway_builder;
-
-    private $insecure_mail;
-    private $token_mail;
+    private Tracker_Artifact_MailGateway_MailGatewayBuilder $mailgateway_builder;
+    private IncomingMail $insecure_mail;
+    private IncomingMail $token_mail;
 
     protected function setUp(): void
     {
@@ -39,24 +48,16 @@ class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:igno
         $this->insecure_mail = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/insecure-reply-comment.plain.eml'));
         $this->token_mail    = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/reply-comment.plain.eml'));
 
-        $incoming_message_factory = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
-        $artifact_creator         = \Mockery::spy(TrackerArtifactCreator::class);
-        $tracker_artifactbyemail  = \Mockery::spy(\Tracker_ArtifactByEmailStatus::class);
-        $logger                   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $notifier                 = \Mockery::spy(\Tracker_Artifact_MailGateway_Notifier::class);
-        $incoming_mail_dao        = \Mockery::spy(\Tracker_Artifact_Changeset_IncomingMailDao::class);
-        $citation_stripper        = \Mockery::spy(\Tracker_Artifact_MailGateway_CitationStripper::class);
-
         $this->mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
-            $incoming_message_factory,
-            $citation_stripper,
-            $notifier,
-            $incoming_mail_dao,
-            $artifact_creator,
-            \Mockery::spy(\Tracker_FormElementFactory::class),
-            $tracker_artifactbyemail,
-            $logger,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter::class)
+            $this->createMock(Tracker_Artifact_MailGateway_IncomingMessageFactory::class),
+            $this->createMock(Tracker_Artifact_MailGateway_CitationStripper::class),
+            $this->createMock(Tracker_Artifact_MailGateway_Notifier::class),
+            $this->createMock(Tracker_Artifact_Changeset_IncomingMailDao::class),
+            $this->createMock(TrackerArtifactCreator::class),
+            $this->createMock(Tracker_FormElementFactory::class),
+            $this->createMock(Tracker_ArtifactByEmailStatus::class),
+            new NullLogger(),
+            new MailGatewayFilter(),
         );
     }
 
@@ -64,13 +65,13 @@ class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:igno
     {
         $mailgateway = $this->mailgateway_builder->build($this->insecure_mail);
 
-        $this->assertInstanceOf(Tracker_Artifact_MailGateway_InsecureMailGateway::class, $mailgateway);
+        self::assertInstanceOf(Tracker_Artifact_MailGateway_InsecureMailGateway::class, $mailgateway);
     }
 
     public function testItReturnsATokenMailGateway(): void
     {
         $mailgateway = $this->mailgateway_builder->build($this->token_mail);
 
-        $this->assertInstanceOf(Tracker_Artifact_MailGateway_TokenMailGateway::class, $mailgateway);
+        self::assertInstanceOf(Tracker_Artifact_MailGateway_TokenMailGateway::class, $mailgateway);
     }
 }
