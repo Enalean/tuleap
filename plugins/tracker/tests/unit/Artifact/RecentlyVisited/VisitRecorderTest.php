@@ -22,47 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-final class VisitRecorderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VisitRecorderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface&RecentlyVisitedDao
-     */
-    private $dao;
-    /**
-     * @var VisitRecorder
-     */
-    private $visit_recorder;
+    private RecentlyVisitedDao&MockObject $dao;
+    private VisitRecorder $visit_recorder;
 
     public function setUp(): void
     {
-        $this->dao            = \Mockery::mock(RecentlyVisitedDao::class);
+        $this->dao            = $this->createMock(RecentlyVisitedDao::class);
         $this->visit_recorder = new VisitRecorder($this->dao);
     }
 
     public function testVisitOfAnAuthenticatedUserIsSaved(): void
     {
-        $this->dao->shouldReceive('save')->once();
+        $this->dao->expects(self::once())->method('save');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAnonymous')->andReturn(false);
-        $user->shouldReceive('getId')->andReturn(102);
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1003);
+        $user     = UserTestBuilder::anActiveUser()->withId(102)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(1003)->build();
 
         $this->visit_recorder->record($user, $artifact);
     }
 
     public function testVisitOfAnAnonymousUserIsNotSaved(): void
     {
-        $this->dao->shouldNotReceive('save');
+        $this->dao->expects(self::never())->method('save');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAnonymous')->andReturn(true);
+        $user = UserTestBuilder::anAnonymousUser()->build();
 
-        $this->visit_recorder->record($user, \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->visit_recorder->record($user, ArtifactTestBuilder::anArtifact(45)->build());
     }
 }
