@@ -24,6 +24,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition } from "../../../type";
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
 import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
+import type Vue from "vue";
 
 const todo: ColumnDefinition = {
     id: 2,
@@ -41,7 +42,7 @@ const done: ColumnDefinition = {
     is_collapsed: true,
 } as ColumnDefinition;
 
-function createWrapper(backlog_items_have_children: boolean): Wrapper<TaskBoardHeader> {
+function createWrapper(backlog_items_have_children: boolean): Wrapper<Vue> {
     return shallowMount(TaskBoardHeader, {
         mocks: {
             $store: createStoreMock({
