@@ -278,7 +278,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                         [
                             'artidoc_id' => $artidoc_id,
                             'section' => [
-                                'artifact' => ['id' => $section_id],
+                                'import' => ['artifact' => ['id' => $section_id]],
                                 'position' => null,
                                 'content' => null,
                                 'level' => 1,
@@ -312,7 +312,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                 $this->stream_factory->createStream(json_encode([
                     'artidoc_id' => $artidoc_id,
                     'section' => [
-                        'artifact' => ['id' => $section_3_art_id],
+                        'import' => ['artifact' => ['id' => $section_3_art_id]],
                         'position' => null,
                         'content' => null,
                         'level' => 1,
@@ -340,7 +340,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                 $this->stream_factory->createStream(json_encode([
                     'artidoc_id' => $artidoc_id,
                     'section' => [
-                        'artifact' => ['id' => $section_4_art_id],
+                        'import' => ['artifact' => ['id' => $section_4_art_id]],
                         'position' => [
                             'before' => $new_section_id,
                         ],

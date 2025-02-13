@@ -28,11 +28,12 @@ namespace Tuleap\Artidoc\REST\v1;
 final class ArtidocSectionPOSTRepresentation
 {
     /**
-     * @var \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionArtifactRepresentation | null The artifact representation {@type \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionArtifactRepresentation} {@required false}
+     * @var \Tuleap\Artidoc\REST\v1\POSTSectionImportRepresentation | null The already existing content to import {@type \Tuleap\Artidoc\REST\v1\POSTSectionImportRepresentation} {@required false}
      */
-    public ?ArtidocPOSTSectionArtifactRepresentation $artifact = null;
+    public ?POSTSectionImportRepresentation $import = null;
+
     /**
-     * @var \Tuleap\Artidoc\REST\v1\POSTContentSectionRepresentation | null The content representation {@type \Tuleap\Artidoc\REST\v1\POSTContentSectionRepresentation} {@required false}
+     * @var \Tuleap\Artidoc\REST\v1\POSTContentSectionRepresentation | null The content to create {@type \Tuleap\Artidoc\REST\v1\POSTContentSectionRepresentation} {@required false}
      */
     public ?POSTContentSectionRepresentation $content = null;
 
@@ -47,12 +48,12 @@ final class ArtidocSectionPOSTRepresentation
     public int $level;
 
     public function __construct(
-        ?ArtidocPOSTSectionArtifactRepresentation $artifact,
+        ?POSTSectionImportRepresentation $import,
         ?ArtidocPOSTSectionPositionBeforeRepresentation $position,
         ?POSTContentSectionRepresentation $content,
         int $level,
     ) {
-        $this->artifact = $artifact;
+        $this->import   = $import;
         $this->position = $position;
         $this->content  = $content;
         $this->level    = $level;

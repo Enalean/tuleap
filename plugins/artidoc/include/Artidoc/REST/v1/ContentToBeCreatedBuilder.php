@@ -33,14 +33,14 @@ final class ContentToBeCreatedBuilder
 {
     public static function buildFromRepresentation(ArtidocSectionPOSTRepresentation $section): SectionContentToBeCreated
     {
-        if ($section->artifact !== null && $section->content !== null) {
-            throw new RestException(400, dgettext('tuleap-artidoc', "The properties 'artifact' and 'content' can not be used at the same time"));
+        if ($section->import !== null && $section->content !== null) {
+            throw new RestException(400, dgettext('tuleap-artidoc', "The properties 'import' and 'content' can not be used at the same time"));
         }
 
         $content = null;
-        if ($section->artifact !== null) {
-            $content = SectionContentToBeCreated::fromArtifact(
-                $section->artifact->id
+        if ($section->import !== null) {
+            $content = SectionContentToBeCreated::fromImportedArtifact(
+                $section->import->artifact->id
             );
         } elseif ($section->content) {
             $content = SectionContentToBeCreated::fromFreetext(
@@ -50,7 +50,7 @@ final class ContentToBeCreatedBuilder
         }
 
         if (! $content) {
-            throw new RestException(400, dgettext('tuleap-artidoc', 'No artifact id or section content provided'));
+            throw new RestException(400, dgettext('tuleap-artidoc', 'No artifact to import or section content provided'));
         }
 
         return $content;

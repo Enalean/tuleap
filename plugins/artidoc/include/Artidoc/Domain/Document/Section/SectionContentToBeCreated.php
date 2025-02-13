@@ -42,7 +42,7 @@ final readonly class SectionContentToBeCreated
     ) {
     }
 
-    public static function fromArtifact(int $artifact_id): self
+    public static function fromImportedArtifact(int $artifact_id): self
     {
         return new self(
             Option::fromValue($artifact_id),

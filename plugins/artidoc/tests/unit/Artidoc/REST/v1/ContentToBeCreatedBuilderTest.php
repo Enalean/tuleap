@@ -35,13 +35,15 @@ final class ContentToBeCreatedBuilderTest extends TestCase
     public function testItThrowsWhenArtifactAndContentAreBothProvided(): void
     {
         $section = new ArtidocSectionPOSTRepresentation(
-            new ArtidocPOSTSectionArtifactRepresentation(101),
+            new POSTSectionImportRepresentation(
+                new ArtidocPOSTSectionArtifactRepresentation(101),
+            ),
             null,
             new POSTContentSectionRepresentation('title', 'description', 'freetext'),
             Level::One->value,
         );
         $this->expectException(RestException::class);
-        $this->expectExceptionMessage("The properties 'artifact' and 'content' can not be used at the same time");
+        $this->expectExceptionMessage("The properties 'import' and 'content' can not be used at the same time");
 
         ContentToBeCreatedBuilder::buildFromRepresentation($section);
     }
@@ -50,7 +52,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
     {
         $section = new ArtidocSectionPOSTRepresentation(null, null, null, Level::One->value);
         $this->expectException(RestException::class);
-        $this->expectExceptionMessage('No artifact id or section content provided');
+        $this->expectExceptionMessage('No artifact to import or section content provided');
 
         ContentToBeCreatedBuilder::buildFromRepresentation($section);
     }
@@ -59,7 +61,9 @@ final class ContentToBeCreatedBuilderTest extends TestCase
     {
         $id      = 101;
         $section = new ArtidocSectionPOSTRepresentation(
-            new ArtidocPOSTSectionArtifactRepresentation($id),
+            new POSTSectionImportRepresentation(
+                new ArtidocPOSTSectionArtifactRepresentation($id),
+            ),
             null,
             null,
             Level::One->value,
