@@ -32,8 +32,8 @@ import {
     useOpenConfigurationModalBusStore,
 } from "@/stores/useOpenConfigurationModalBusStore";
 import { createGettext } from "vue3-gettext";
-import type { InsertSections } from "@/sections/SectionsInserter";
-import { AT_THE_END } from "@/sections/SectionsInserter";
+import type { InsertSections } from "@/sections/insert/SectionsInserter";
+import { AT_THE_END } from "@/sections/insert/SectionsInserter";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import type { OpenAddExistingSectionModalBus } from "@/composables/useOpenAddExistingSectionModalBus";
 import {

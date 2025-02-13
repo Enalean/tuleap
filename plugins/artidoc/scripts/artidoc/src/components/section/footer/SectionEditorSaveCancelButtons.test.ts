@@ -23,12 +23,12 @@ import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import SectionEditorSaveCancelButtons from "./SectionEditorSaveCancelButtons.vue";
-import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { SectionEditorCloserStub } from "@/sections/stubs/SectionEditorCloserStub";
 import { SaveSectionStub } from "@/sections/stubs/SaveSectionStub";
-import type { SaveSection } from "@/sections/SectionSaver";
-import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
+import type { SaveSection } from "@/sections/save/SectionSaver";
+import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
 
 describe("SectionEditorSaveCancelButtons", () => {
     function getWrapper(

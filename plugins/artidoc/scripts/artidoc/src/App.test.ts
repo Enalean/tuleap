@@ -25,7 +25,7 @@ import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import * as rest_querier from "./helpers/rest-querier";
 

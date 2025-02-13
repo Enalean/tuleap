@@ -23,14 +23,14 @@ import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import { createGettext } from "vue3-gettext";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import {
     OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
     useOpenAddExistingSectionModalBus,
 } from "@/composables/useOpenAddExistingSectionModalBus";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-import { AT_THE_END } from "@/sections/SectionsInserter";
+import { AT_THE_END } from "@/sections/insert/SectionsInserter";
 import { noop } from "@/helpers/noop";
 
 describe("AddExistingSectionModal", () => {

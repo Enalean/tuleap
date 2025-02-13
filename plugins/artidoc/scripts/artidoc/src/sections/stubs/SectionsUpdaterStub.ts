@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UpdateSections } from "@/sections/SectionsUpdater";
+import type { UpdateSections } from "@/sections/update/SectionsUpdater";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 export type SectionsUpdaterStub = UpdateSections & {

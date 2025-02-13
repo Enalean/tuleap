@@ -20,8 +20,8 @@
 import { describe, expect, it } from "vitest";
 import { useOpenAddExistingSectionModalBus } from "@/composables/useOpenAddExistingSectionModalBus";
 import { noop } from "@/helpers/noop";
-import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
-import { AT_THE_END } from "@/sections/SectionsInserter";
+import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
+import { AT_THE_END } from "@/sections/insert/SectionsInserter";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 

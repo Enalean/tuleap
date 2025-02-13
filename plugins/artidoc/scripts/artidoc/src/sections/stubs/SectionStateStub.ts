@@ -18,7 +18,7 @@
  */
 
 import { ref, computed } from "vue";
-import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { SectionState } from "@/sections/states/SectionStateBuilder";
 
 const initial_state = {
     is_image_upload_allowed: computed(() => true),

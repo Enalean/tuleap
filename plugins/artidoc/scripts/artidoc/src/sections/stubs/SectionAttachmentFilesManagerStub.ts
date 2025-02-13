@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
-import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
+import type { ManageSectionAttachmentFiles } from "@/sections/attachments/SectionAttachmentFilesManager";
+import { getSectionAttachmentFilesManager } from "@/sections/attachments/SectionAttachmentFilesManager";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 

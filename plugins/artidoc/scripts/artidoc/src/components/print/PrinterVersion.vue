@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import SectionPrinterVersion from "@/components/print/SectionPrinterVersion.vue";
 import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import { computed } from "vue";

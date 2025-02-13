@@ -37,7 +37,7 @@ import EmptyState from "@/views/EmptyState.vue";
 import NoAccessState from "@/views/NoAccessState.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import {
     IS_LOADING_SECTIONS,
     IS_LOADING_SECTIONS_FAILED,

@@ -51,7 +51,7 @@ import type {
     ReactiveStoredArtidocSection,
 } from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { SectionsReorderer } from "@/sections/SectionsReorderer";
+import type { SectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 
 const props = defineProps<{
     is_first: boolean;

@@ -18,7 +18,7 @@
  */
 
 import { ref } from "vue";
-import type { FileUploadsCollection } from "@/sections/FileUploadsCollection";
+import type { FileUploadsCollection } from "@/sections/attachments/FileUploadsCollection";
 import { noop } from "@/helpers/noop";
 
 export const FileUploadsCollectionStub = {

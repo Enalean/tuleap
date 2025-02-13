@@ -32,10 +32,10 @@ import TurndownService from "turndown";
 import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
-import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
-import type { MergedAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
-import { injectDisplayLevel } from "@/sections/SectionsNumberer";
+import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
+import type { MergedAttachmentFiles } from "@/sections/attachments/SectionAttachmentFilesManager";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { injectDisplayLevel } from "@/sections/levels/SectionsNumberer";
 
 export function putConfiguration(
     document_id: number,

@@ -17,8 +17,8 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { NotificationsCollection } from "@/sections/NotificationsCollection";
-import { buildNotificationsCollection } from "@/sections/NotificationsCollection";
+import type { NotificationsCollection } from "@/sections/notifications/NotificationsCollection";
+import { buildNotificationsCollection } from "@/sections/notifications/NotificationsCollection";
 
 export const NotificationsCollectionStub = {
     withMessages: (): NotificationsCollection => {

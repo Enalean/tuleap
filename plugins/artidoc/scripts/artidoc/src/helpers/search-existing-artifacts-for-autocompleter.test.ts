@@ -26,7 +26,7 @@ import type { Language } from "vue3-gettext";
 import { okAsync } from "neverthrow";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 
 describe("search-existing-artifacts-for-autocompleter", () => {
     it("should empty the results if query is empty", () => {

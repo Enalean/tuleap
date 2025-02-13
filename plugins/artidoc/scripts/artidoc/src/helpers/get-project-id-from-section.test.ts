@@ -19,7 +19,7 @@
 
 import { describe, it, expect } from "vitest";
 import type { ArtifactSection } from "@/helpers/artidoc-section.type";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";

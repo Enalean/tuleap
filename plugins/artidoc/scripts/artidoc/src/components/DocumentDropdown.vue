@@ -44,7 +44,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 

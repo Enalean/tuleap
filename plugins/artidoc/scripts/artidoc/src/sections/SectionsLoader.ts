@@ -23,7 +23,7 @@ import { okAsync } from "neverthrow";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import { getAllSections } from "@/helpers/rest-querier";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { CreateStoredSections } from "@/sections/CreateStoredSections";
+import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 
 export type LoadSections = {
     loadSections: () => ResultAsync<StoredArtidocSection[], Fault>;

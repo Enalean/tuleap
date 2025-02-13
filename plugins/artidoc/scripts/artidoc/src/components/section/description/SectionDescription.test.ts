@@ -24,7 +24,7 @@ import { ref } from "vue";
 import SectionDescription from "./SectionDescription.vue";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
@@ -32,7 +32,7 @@ import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttac
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
-import { getSectionEditorStateManager } from "@/sections/SectionEditorStateManager";
+import { getSectionEditorStateManager } from "@/sections/editors/SectionEditorStateManager";
 
 describe("SectionDescription", () => {
     let are_sections_loading: boolean, can_user_edit_document: boolean;

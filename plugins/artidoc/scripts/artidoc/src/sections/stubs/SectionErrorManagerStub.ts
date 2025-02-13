@@ -18,7 +18,7 @@
  */
 
 import type { Fault } from "@tuleap/fault";
-import type { ManageErrorState } from "@/sections/SectionErrorManager";
+import type { ManageErrorState } from "@/sections/states/SectionErrorManager";
 import { noop } from "@/helpers/noop";
 
 export type ManageErrorStateStub = ManageErrorState & {

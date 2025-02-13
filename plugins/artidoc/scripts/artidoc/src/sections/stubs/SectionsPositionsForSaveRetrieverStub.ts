@@ -20,8 +20,8 @@
 import type {
     PositionForSection,
     RetrieveSectionsPositionForSave,
-} from "@/sections/SectionsPositionsForSaveRetriever";
-import { AT_THE_END } from "@/sections/SectionsInserter";
+} from "@/sections/save/SectionsPositionsForSaveRetriever";
+import { AT_THE_END } from "@/sections/insert/SectionsInserter";
 
 export const SectionsPositionsForSaveRetrieverStub = {
     withDefaultPositionAtTheEnd: (): RetrieveSectionsPositionForSave => ({

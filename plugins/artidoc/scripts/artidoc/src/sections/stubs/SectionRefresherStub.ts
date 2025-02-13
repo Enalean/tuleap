@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RefreshSection } from "@/sections/SectionRefresher";
+import type { RefreshSection } from "@/sections/update/SectionRefresher";
 
 export type RefreshSectionStub = RefreshSection & {
     hasSectionBeenRefreshed(): boolean;

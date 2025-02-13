@@ -49,8 +49,8 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { RefreshSection } from "@/sections/SectionRefresher";
-import type { SaveSection } from "@/sections/SectionSaver";
+import type { RefreshSection } from "@/sections/update/SectionRefresher";
+import type { SaveSection } from "@/sections/save/SectionSaver";
 
 defineProps<{
     save_section: SaveSection;

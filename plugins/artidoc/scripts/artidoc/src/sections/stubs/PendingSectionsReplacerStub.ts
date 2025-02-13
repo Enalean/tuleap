@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ReplacePendingSections } from "@/sections/PendingSectionsReplacer";
+import type { ReplacePendingSections } from "@/sections/insert/PendingSectionsReplacer";
 
 export type ReplacePendingSectionsStub = ReplacePendingSections & {
     hasBeenCalled(): boolean;

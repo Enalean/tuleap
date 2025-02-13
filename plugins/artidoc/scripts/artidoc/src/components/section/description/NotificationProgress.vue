@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { computed, toRefs, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
 
 export type NotificationProgressProps = {
     upload_progress?: number;

@@ -28,7 +28,7 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 import { TITLE } from "@/title-injection-key";
-import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";

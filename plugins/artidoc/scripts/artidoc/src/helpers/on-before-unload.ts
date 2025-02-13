@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
+import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 
 export function preventPageLeave(states_collection: SectionsStatesCollection): void {
     window.addEventListener("beforeunload", (event) => {

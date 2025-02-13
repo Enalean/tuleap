@@ -48,8 +48,8 @@
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
-import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
-import { NOTIFICATION_COLLECTION } from "@/sections/notification-collection-injection-key";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
+import { NOTIFICATION_COLLECTION } from "@/sections/notifications/notification-collection-injection-key";
 import NotificationMessage from "@/components/section/description/NotificationMessage.vue";
 import { computed } from "vue";
 import NotificationRemainingPendingUploads from "@/components/NotificationRemainingPendingUploads.vue";

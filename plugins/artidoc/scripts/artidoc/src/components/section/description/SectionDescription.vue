@@ -41,10 +41,10 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { loadTooltips } from "@tuleap/tooltip";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
-import type { SectionState } from "@/sections/SectionStateBuilder";
+import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
-import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
+import type { ManageSectionEditorState } from "@/sections/editors/SectionEditorStateManager";
+import type { ManageSectionAttachmentFiles } from "@/sections/attachments/SectionAttachmentFilesManager";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 

@@ -46,10 +46,10 @@ import NotFoundError from "./NotFoundError.vue";
 import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import GenericError from "./GenericError.vue";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
-import type { SectionState } from "@/sections/SectionStateBuilder";
-import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
-import type { RefreshSection } from "@/sections/SectionRefresher";
-import type { SaveSection } from "@/sections/SectionSaver";
+import type { SectionState } from "@/sections/states/SectionStateBuilder";
+import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
+import type { RefreshSection } from "@/sections/update/SectionRefresher";
+import type { SaveSection } from "@/sections/save/SectionSaver";
 
 const props = defineProps<{
     section: StoredArtidocSection;

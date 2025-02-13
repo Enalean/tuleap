@@ -20,7 +20,7 @@
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { SectionsReorderer } from "@/sections/SectionsReorderer";
+import type { SectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 
 const result_fault =
     (fault: Fault): (() => ResultAsync<never, Fault>) =>

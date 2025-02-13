@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DeleteSection } from "@/sections/SectionDeletor";
+import type { DeleteSection } from "@/sections/remove/SectionDeletor";
 
 export type DeleteSectionStub = DeleteSection & {
     hasSectionBeenDeleted(): boolean;
