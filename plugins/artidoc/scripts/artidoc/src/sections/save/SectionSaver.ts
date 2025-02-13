@@ -33,7 +33,6 @@ import {
     createFreetextSection,
     getSection,
     postArtifact,
-    putArtifact,
     putSection,
 } from "@/helpers/rest-querier";
 import { getSectionInItsLatestVersion } from "@/helpers/get-section-in-its-latest-version";
@@ -45,6 +44,7 @@ import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { ManageErrorState } from "@/sections/states/SectionErrorManager";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
+import { LEVEL_1 } from "@/sections/levels/SectionsNumberer";
 
 export type SaveSection = {
     forceSave: () => void;
@@ -72,6 +72,15 @@ export const getSectionSaver = (
         return okAsync(section.value);
     }
 
+    function getAttachementsForSave(section: ReactiveStoredArtidocSection): number[] {
+        if (!isFreetextSection(section.value) && section.value.attachments) {
+            return section.value.attachments.file_descriptions.map(
+                (file_descriptions) => file_descriptions.id,
+            );
+        }
+        return [];
+    }
+
     function forceSave(): void {
         if (
             !section_state.is_save_allowed.value ||
@@ -85,33 +94,28 @@ export const getSectionSaver = (
 
         const { edited_title, edited_description } = section_state;
 
-        const put = isFreetextSection(section.value)
-            ? putSection(section.value.id, edited_title.value, edited_description.value)
-            : putArtifact(
-                  section.value.artifact.id,
-                  edited_title.value,
-                  section.value.title,
-                  edited_description.value,
-                  section.value.description.field_id,
-                  manage_section_attachments.mergeArtifactAttachments(
-                      section.value,
-                      edited_description.value,
-                  ),
-              );
-        put.andThen(() => getLatestVersionOfCurrentSection()).match(
-            (artidoc_section: ArtidocSection) => {
-                if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
-                    update_sections.updateSection(artidoc_section);
-                }
-                close_section_editor.closeEditor();
-                section_state.is_being_saved.value = false;
-                section_state.is_just_saved.value = true;
-            },
-            (fault: Fault) => {
-                manage_error_state.handleError(fault);
-                section_state.is_being_saved.value = false;
-            },
-        );
+        putSection(
+            section.value.id,
+            edited_title.value,
+            edited_description.value,
+            getAttachementsForSave(section),
+            LEVEL_1,
+        )
+            .andThen(() => getLatestVersionOfCurrentSection())
+            .match(
+                (artidoc_section: ArtidocSection) => {
+                    if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
+                        update_sections.updateSection(artidoc_section);
+                    }
+                    close_section_editor.closeEditor();
+                    section_state.is_being_saved.value = false;
+                    section_state.is_just_saved.value = true;
+                },
+                (fault: Fault) => {
+                    manage_error_state.handleError(fault);
+                    section_state.is_being_saved.value = false;
+                },
+            );
     }
 
     const save = (): void => {
@@ -185,19 +189,13 @@ export const getSectionSaver = (
                     );
                 }
 
-                return isFreetextSection(section.value)
-                    ? putSection(section.value.id, edited_title.value, edited_description.value)
-                    : putArtifact(
-                          section.value.artifact.id,
-                          edited_title.value,
-                          section.value.title,
-                          edited_description.value,
-                          section.value.description.field_id,
-                          manage_section_attachments.mergeArtifactAttachments(
-                              section.value,
-                              edited_description.value,
-                          ),
-                      );
+                return putSection(
+                    section.value.id,
+                    edited_title.value,
+                    edited_description.value,
+                    getAttachementsForSave(section),
+                    LEVEL_1,
+                );
             })
             .andThen(() => getLatestVersionOfCurrentSection());
     }

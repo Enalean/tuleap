@@ -60,7 +60,7 @@ describe("SectionSaver", () => {
             const updater = SectionsUpdaterStub.withExpectedCall();
 
             const mock_put_artifact_description = vi
-                .spyOn(rest_querier, "putArtifact")
+                .spyOn(rest_querier, "putSection")
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = getSectionSaver(
@@ -114,7 +114,7 @@ describe("SectionSaver", () => {
             const updater = SectionsUpdaterStub.withExpectedCall();
 
             const mock_put_artifact_description = vi
-                .spyOn(rest_querier, "putArtifact")
+                .spyOn(rest_querier, "putSection")
                 .mockReturnValue(okAsync({} as Response));
 
             const { save } = getSectionSaver(

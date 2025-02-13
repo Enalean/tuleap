@@ -120,13 +120,13 @@ describe("Artidoc", () => {
         });
 
         cy.get("[data-test=artidoc-section]:last-child").within(() => {
-            cy.intercept("PUT", "*/artifacts/*").as("updateArtifact");
+            cy.intercept("PUT", "*/artidoc_sections/*").as("updateSection");
             cy.intercept("GET", "*/artidoc_sections/*").as("editSection");
 
             pasteImageInSectionDescription("/uploads/tracker/file/*");
             cy.contains("button", "Save").click();
 
-            cy.wait(["@updateArtifact", "@editSection"]);
+            cy.wait(["@updateSection", "@editSection"]);
 
             getSectionTitle().should("contain.text", "Security Requirement (edited)");
             // ignore rule for image pasted in ProseMirror
