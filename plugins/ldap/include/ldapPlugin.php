@@ -157,6 +157,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
                     new Cocur\Slugify\Slugify()
                 ),
                 new PasswordVerifier(new StandardPasswordHandler()),
+                $this->getLogger()
             );
         }
         return $this->_ldapUmInstance;

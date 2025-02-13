@@ -31,25 +31,18 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\User\PasswordVerifier;
 
-class LDAP_DirectorySynchronization
+class LDAP_DirectorySynchronization //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var LDAP
-     */
-    protected $ldap;
     protected $ldapTime;
     protected $sync;
-    protected $lum;
+    protected ?LDAP_UserManager $lum = null;
     protected $um;
 
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    public function __construct(LDAP $ldap, \Psr\Log\LoggerInterface $logger)
-    {
+    public function __construct(
+        protected LDAP $ldap,
+        private readonly \Psr\Log\LoggerInterface $logger,
+    ) {
         $this->ldapTime = 0;
-        $this->ldap     = $ldap;
-        $this->logger   = $logger;
     }
 
     public function syncAll()
@@ -175,7 +168,7 @@ class LDAP_DirectorySynchronization
         return UserManager::instance();
     }
 
-    public function getLdapUserManager()
+    public function getLdapUserManager(): LDAP_UserManager
     {
         if (! isset($this->lum)) {
             $this->lum = new LDAP_UserManager(
@@ -186,6 +179,7 @@ class LDAP_DirectorySynchronization
                     new Cocur\Slugify\Slugify()
                 ),
                 new PasswordVerifier(new StandardPasswordHandler()),
+                $this->logger
             );
         }
         return $this->lum;
