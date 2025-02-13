@@ -178,6 +178,7 @@ tracker =
             attribute default_value { xsd:string }?,
             attribute hint { xsd:string }?,
             attribute target_field_name { xsd:string }?,
+            attribute fast_compute  { "0" | "1" }?,
             attribute use_capacity { "0" | "1" }?,
             attribute include_weekends  { "0" | "1" }?,
             attribute display_time  { "0" | "1" }?,
