@@ -21,6 +21,8 @@ import type { TrackerProjectRepresentation } from "@tuleap/plugin-tracker-rest-a
 
 export type Report = {
     readonly expert_query: string;
+    readonly title: string;
+    readonly description: string;
 };
 
 export type Artifact = {

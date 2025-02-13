@@ -24,6 +24,7 @@ import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
 import type { ReportState } from "./domain/ReportState";
 import type { NotifyFaultCallback, ClearFeedbacksCallback } from "./composables/useFeedbacks";
 import type { GetColumnName } from "./domain/ColumnNameGetter";
+import type { EmitterProvider } from "./helpers/emitter-provider";
 
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
@@ -36,3 +37,5 @@ export const REPORT_ID: StrictInjectionKey<number> = Symbol();
 export const IS_USER_ADMIN: StrictInjectionKey<boolean> = Symbol();
 export const DOCUMENTATION_BASE_URL: StrictInjectionKey<string> = Symbol();
 export const GET_COLUMN_NAME: StrictInjectionKey<GetColumnName> = Symbol();
+export const EMITTER: StrictInjectionKey<EmitterProvider> = Symbol();
+export const IS_MULTIPLE_QUERY_SUPPORTED: StrictInjectionKey<boolean> = Symbol();

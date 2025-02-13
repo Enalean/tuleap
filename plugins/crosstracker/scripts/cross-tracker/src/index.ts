@@ -30,7 +30,9 @@ import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
     DOCUMENTATION_BASE_URL,
+    EMITTER,
     GET_COLUMN_NAME,
+    IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     REPORT_ID,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -39,6 +41,9 @@ import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { ColumnNameGetter } from "./domain/ColumnNameGetter";
+import type { Events } from "./helpers/emitter-provider";
+import mitt from "mitt";
+import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -62,24 +67,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const report_id_string = widget_element.dataset.reportId;
-        if (!report_id_string) {
-            throw new Error("Can not find report id");
-        }
-
-        const documentation_url = widget_element.dataset.documentationBaseUrl;
-
+        const documentation_url = getDatasetItemOrThrow(widget_element, "documentationBaseUrl");
+        const report_id_string = getDatasetItemOrThrow(widget_element, "reportId");
         const report_id = Number.parseInt(report_id_string, 10);
-        const is_widget_admin = widget_element.dataset.isWidgetAdmin === "true";
+        const is_widget_admin = Boolean(getDatasetItemOrThrow(widget_element, "isWidgetAdmin"));
+        const is_multiple_query_supported = Boolean(
+            getDatasetItemOrThrow(widget_element, "isMultipleQuerySupported"),
+        );
 
         const backend_report = new BackendCrossTrackerReport();
         const reading_report = new ReadingCrossTrackerReport();
         const writing_report = new WritingCrossTrackerReport();
 
-        const vue_mount_point = widget_element.querySelector(".vue-mount-point");
-        if (!vue_mount_point || !(vue_mount_point instanceof HTMLElement)) {
-            throw new Error("vue-mount-point DOM element is not found");
-        }
+        const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
 
         createApp(CrossTrackerWidget, {
             backend_cross_tracker_report: backend_report,
@@ -98,6 +98,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(IS_USER_ADMIN, is_widget_admin)
             .provide(DOCUMENTATION_BASE_URL, documentation_url)
             .provide(GET_COLUMN_NAME, column_name_getter)
+            .provide(EMITTER, mitt<Events>())
+            .provide(IS_MULTIPLE_QUERY_SUPPORTED, is_multiple_query_supported)
             .mount(vue_mount_point);
     }
 });

@@ -33,4 +33,8 @@ export class ReadingCrossTrackerReport {
     duplicateFromWritingReport(report: WritingCrossTrackerReport): void {
         this.expert_query = report.expert_query;
     }
+
+    setNewQuery(query: string): void {
+        this.expert_query = query;
+    }
 }

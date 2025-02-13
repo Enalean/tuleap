@@ -27,6 +27,8 @@ describe("rest-querier", () => {
         it(`will query the REST API and return the report`, async () => {
             const report = {
                 expert_query: '@title = "bla"',
+                title: "TQL title",
+                description: '@title = "bla"',
             };
             const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync([report]));
             const report_id = 16;
@@ -40,6 +42,8 @@ describe("rest-querier", () => {
                 throw Error("Expected an ok");
             }
             expect(result.value[0].expert_query).toBe(report.expert_query);
+            expect(result.value[0].title).toBe(report.title);
+            expect(result.value[0].description).toBe(report.description);
         });
     });
 
@@ -50,6 +54,8 @@ describe("rest-querier", () => {
                 "Select  @id, @project.name from @project = MY_PROJECTS() where @id > 2";
             const report = {
                 expert_query,
+                title: " My TQL query",
+                description: "My description",
             };
             const putJSON = vi.spyOn(fetch_result, "putJSON").mockReturnValue(okAsync(report));
             const report_id = 59;

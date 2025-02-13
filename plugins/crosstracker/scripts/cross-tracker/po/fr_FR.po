@@ -31,6 +31,9 @@ msgstr "Assigné à"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Choose another query"
+msgstr "Choisir une autre requête"
+
 msgid "Description"
 msgstr "Description"
 
