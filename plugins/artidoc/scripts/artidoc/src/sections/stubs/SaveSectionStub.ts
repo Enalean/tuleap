@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SaveSection } from "@/sections/SectionSaver";
+import type { SaveSection } from "@/sections/save/SectionSaver";
 
 export type SaveSectionStub = SaveSection & {
     hasBeenForceSaved(): boolean;

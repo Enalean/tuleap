@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue";
-import type { OnGoingUploadFileWithId } from "@/sections/FileUploadsCollection";
+import type { OnGoingUploadFileWithId } from "@/sections/attachments/FileUploadsCollection";
 import { useGettext } from "vue3-gettext";
 
 export type NotificationRemainingProps = {

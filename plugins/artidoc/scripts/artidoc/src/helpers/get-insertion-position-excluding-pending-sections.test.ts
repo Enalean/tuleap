@@ -19,7 +19,7 @@
 
 import { describe, expect, it } from "vitest";
 import { getInsertionPositionExcludingPendingSections } from "@/helpers/get-insertion-position-excluding-pending-sections";
-import { AT_THE_END } from "@/sections/SectionsInserter";
+import { AT_THE_END } from "@/sections/insert/SectionsInserter";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";

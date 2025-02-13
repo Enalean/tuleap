@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
+import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
 
 export type CloseSectionEditorStub = CloseSectionEditor & {
     hasEditorBeenClosed(): boolean;

@@ -43,9 +43,9 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { SectionState } from "@/sections/SectionStateBuilder";
-import type { CloseSectionEditor } from "@/sections/SectionEditorCloser";
-import type { SaveSection } from "@/sections/SectionSaver";
+import type { SectionState } from "@/sections/states/SectionStateBuilder";
+import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
+import type { SaveSection } from "@/sections/save/SectionSaver";
 
 const props = defineProps<{
     section_state: SectionState;

@@ -18,8 +18,8 @@
  */
 
 import type { SectionsCollection } from "@/sections/SectionsCollection";
-import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
-import { AT_THE_END } from "@/sections/SectionsInserter";
+import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
+import { AT_THE_END } from "@/sections/insert/SectionsInserter";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 
 export function getInsertionPositionExcludingPendingSections(

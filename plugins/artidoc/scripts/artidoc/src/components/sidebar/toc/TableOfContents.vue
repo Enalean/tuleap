@@ -98,7 +98,7 @@ import type { Ref } from "vue";
 import { isArtifactSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import DragndropGripIllustration from "@/components/sidebar/toc/DragndropGripIllustration.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
@@ -110,12 +110,12 @@ import type {
     ReactiveStoredArtidocSection,
 } from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
+import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/components/temporary-flag-duration";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
-import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
-import { isCannotReorderSectionsFault } from "@/sections/CannotReorderSectionsFault";
-import { buildSectionsReorderer } from "@/sections/SectionsReorderer";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
+import { isCannotReorderSectionsFault } from "@/sections/reorder/CannotReorderSectionsFault";
+import { buildSectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 
 const { $gettext } = useGettext();
 

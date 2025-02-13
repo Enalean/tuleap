@@ -22,8 +22,8 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { v4 as uuidv4 } from "uuid";
 import { noop } from "@/helpers/noop";
-import type { FileUploadsCollection } from "@/sections/FileUploadsCollection";
-import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
+import type { FileUploadsCollection } from "@/sections/attachments/FileUploadsCollection";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
 import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
 

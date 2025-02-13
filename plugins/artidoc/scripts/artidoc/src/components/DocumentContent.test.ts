@@ -27,10 +27,10 @@ import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub"
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import AddNewSectionButton from "./AddNewSectionButton.vue";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
-import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("DocumentContent", () => {

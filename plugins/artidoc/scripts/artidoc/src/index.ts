@@ -24,18 +24,18 @@ import { createGettext } from "vue3-gettext";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import App from "./App.vue";
 
-import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-key";
+import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { TITLE } from "@/title-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
-import { NOTIFICATION_COLLECTION } from "@/sections/notification-collection-injection-key";
+import { NOTIFICATION_COLLECTION } from "@/sections/notifications/notification-collection-injection-key";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
-import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
-import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
 import { CONFIGURATION_STORE, initConfigurationStore } from "@/stores/configuration-store";
 import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
 import {
@@ -54,12 +54,12 @@ import {
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { userLocale } from "@/helpers/user-locale";
 import { preventPageLeave } from "@/helpers/on-before-unload";
-import { getFileUploadsCollection } from "@/sections/FileUploadsCollection";
-import { buildNotificationsCollection } from "@/sections/NotificationsCollection";
+import { getFileUploadsCollection } from "@/sections/attachments/FileUploadsCollection";
+import { buildNotificationsCollection } from "@/sections/notifications/NotificationsCollection";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { watchForNeededPendingSectionInsertion } from "@/sections/PendingSectionInserter";
-import { getSectionsStatesCollection } from "@/sections/SectionsStatesCollection";
-import { getSectionStateBuilder } from "@/sections/SectionStateBuilder";
+import { watchForNeededPendingSectionInsertion } from "@/sections/insert/PendingSectionInserter";
+import { getSectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
+import { getSectionStateBuilder } from "@/sections/states/SectionStateBuilder";
 import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 import { PROJECT_ID } from "@/project-id-injection-key";
 

@@ -97,7 +97,7 @@ import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import { TITLE } from "@/title-injection-key";
 import { createModal } from "@tuleap/tlp-modal";
 import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
-import { SECTIONS_STATES_COLLECTION } from "@/sections/sections-states-collection-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 
 const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);

@@ -69,14 +69,14 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { OPEN_ADD_EXISTING_SECTION_MODAL_BUS } from "@/composables/useOpenAddExistingSectionModalBus";
 import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/configuration-store";
-import type { PositionForSection } from "@/sections/SectionsPositionsForSaveRetriever";
+import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection, PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import type { InsertSections } from "@/sections/SectionsInserter";
+import type { InsertSections } from "@/sections/insert/SectionsInserter";
 import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
 
 const props = defineProps<{

@@ -22,11 +22,11 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
-import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
+import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
 import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
 import NotificationMessage from "@/components/section/description/NotificationMessage.vue";
-import { NOTIFICATION_COLLECTION } from "@/sections/notification-collection-injection-key";
+import { NOTIFICATION_COLLECTION } from "@/sections/notifications/notification-collection-injection-key";
 import { NotificationsCollectionStub } from "@/sections/stubs/NotificationsCollectionStub";
 import NotificationRemainingPendingUploads from "@/components/NotificationRemainingPendingUploads.vue";
 

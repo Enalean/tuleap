@@ -21,7 +21,7 @@ import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { extractSavedSectionsFromArtidocSections } from "@/helpers/extract-saved-sections-from-artidoc-sections";
-import type { SectionsStatesCollection } from "@/sections/SectionsStatesCollection";
+import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 
 export type StoredArtidocSection = ArtidocSection & InternalArtidocSectionId;
 export type ReactiveStoredArtidocSection = Ref<StoredArtidocSection>;

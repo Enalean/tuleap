@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InsertSections } from "@/sections/SectionsInserter";
+import type { InsertSections } from "@/sections/insert/SectionsInserter";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 export type InsertSectionsStub = InsertSections & {

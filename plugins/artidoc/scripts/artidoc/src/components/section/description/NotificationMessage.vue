@@ -40,7 +40,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { Notification, NotificationsCollection } from "@/sections/NotificationsCollection";
+import type {
+    Notification,
+    NotificationsCollection,
+} from "@/sections/notifications/NotificationsCollection";
 
 const { $gettext } = useGettext();
 

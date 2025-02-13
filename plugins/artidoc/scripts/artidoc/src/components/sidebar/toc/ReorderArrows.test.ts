@@ -26,7 +26,7 @@ import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { SectionsReorderer } from "@/sections/SectionsReorderer";
+import type { SectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 import { SectionsReordererStub } from "@/sections/stubs/SectionsReordererStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
