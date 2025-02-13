@@ -59,6 +59,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Class
             LDAP_UserSync::instance(),
             new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()),
             new PasswordVerifier(new StandardPasswordHandler()),
+            $this->logger,
         );
         $userIds         = $ldapUserManager->getUserIdsFromUserList($userList);
         foreach ($userIds as $userId) {

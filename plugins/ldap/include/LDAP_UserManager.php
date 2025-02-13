@@ -29,38 +29,27 @@ use Tuleap\LDAP\User\LdapLoginFromTuleapUserIdProvider;
 use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
 use Tuleap\User\UserNameNormalizer;
 
-class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider
+class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
 
     /**
-     * @type LDAP
-     */
-    private $ldap;
-
-    /**
      * @var array<string, LDAPResult|false>
      */
-    private $ldapResultCache = [];
+    private array $ldapResultCache = [];
 
     /**
      * @var PFUser[]
      */
-    private $usersLoginChanged = [];
-
-    /**
-     * @var LDAP_UserSync
-     */
-    private $user_sync;
+    private array $usersLoginChanged = [];
 
     public function __construct(
-        LDAP $ldap,
-        LDAP_UserSync $user_sync,
-        private UserNameNormalizer $username_generator,
-        private \Tuleap\User\PasswordVerifier $user_password_verifier,
+        private readonly LDAP $ldap,
+        private readonly LDAP_UserSync $user_sync,
+        private readonly UserNameNormalizer $username_generator,
+        private readonly \Tuleap\User\PasswordVerifier $user_password_verifier,
+        private readonly \Psr\Log\LoggerInterface $logger,
     ) {
-        $this->ldap      = $ldap;
-        $this->user_sync = $user_sync;
     }
 
     /**
@@ -142,10 +131,12 @@ class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider
      */
     public function getUserFromLdap(LDAPResult $lr)
     {
-        $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
+        $eduid = $lr->getEdUid();
+        $user  = $this->getUserManager()->getUserByLdapId($eduid);
         if (! $user) {
-            $user = $this->createAccountFromLdap($lr);
+            return $this->createAccountFromLdap($lr);
         }
+        $this->logger->debug(sprintf('Found Tuleap user #%s matching LDAP EdUid \'%s\'', $user->getId(), $eduid));
         return $user;
     }
 
@@ -160,11 +151,12 @@ class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider
     public function getUserIdsForLdapUser($ldapIds)
     {
         $userIds = [];
-        $dao     = $this->getDao();
         foreach ($ldapIds as $lr) {
-            $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
+            $eduid = $lr->getEdUid();
+            $user  = $this->getUserManager()->getUserByLdapId($eduid);
             if ($user) {
                 $userIds[$user->getId()] = $user->getId();
+                $this->logger->debug(sprintf('Found Tuleap user #%s matching LDAP EdUid \'%s\'', $user->getId(), $eduid));
             } else {
                 $user = $this->createAccountFromLdap($lr);
                 if ($user) {
@@ -229,8 +221,14 @@ class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider
      */
     public function createAccountFromLdap(LDAPResult $lr)
     {
-        $user = $this->createAccount($lr->getEdUid(), $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
-        return $user;
+        $eduid = $lr->getEdUid();
+        $user  = $this->createAccount($eduid, $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
+        if ($user !== false) {
+            $this->logger->debug(sprintf('Created Tuleap user #%s matching LDAP EdUid \'%s\'', $user->getId(), $eduid));
+            return $user;
+        }
+        $this->logger->debug(sprintf('Could not create user account from LDAP EdUid \'%s\'', $eduid));
+        return false;
     }
 
     /**
