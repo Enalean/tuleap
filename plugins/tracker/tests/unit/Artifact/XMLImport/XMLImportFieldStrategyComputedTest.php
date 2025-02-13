@@ -18,29 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\XMLImport;
 
-use Mockery;
-use PFUser;
+use SimpleXMLElement;
 use Tracker_FormElement_Field_Computed;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
 
-final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLImportFieldStrategyComputedTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItShouldWorkWithAManualValue(): void
     {
-        $field             = Mockery::mock(Tracker_FormElement_Field_Computed::class);
-        $user              = Mockery::mock(PFUser::class);
-        $xml_change        = new \SimpleXMLElement('<?xml version="1.0"?>
+        $field             = ComputedFieldBuilder::aComputedField(45)->build();
+        $user              = UserTestBuilder::buildWithDefaults();
+        $xml_change        = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                     <manual_value>0</manual_value>
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, ArtifactTestBuilder::anArtifact(89)->build(), PostCreationContext::withNoConfig(false));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0'];
 
         self::assertSame($expected_result, $change_computed);
@@ -48,15 +50,15 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItShouldWorkWhenIsAutocomputed(): void
     {
-        $field             = Mockery::mock(Tracker_FormElement_Field_Computed::class);
-        $user              = Mockery::mock(PFUser::class);
-        $xml_change        = new \SimpleXMLElement('<?xml version="1.0"?>
+        $field             = ComputedFieldBuilder::aComputedField(45)->build();
+        $user              = UserTestBuilder::buildWithDefaults();
+        $xml_change        = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                     <is_autocomputed>1</is_autocomputed>
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, ArtifactTestBuilder::anArtifact(89)->build(), PostCreationContext::withNoConfig(false));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'];
 
         self::assertSame($expected_result, $change_computed);
@@ -64,18 +66,18 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItShouldWorkWithAManualValueAndIsAutocomputed(): void
     {
-        $field             = Mockery::mock(Tracker_FormElement_Field_Computed::class);
-        $user              = Mockery::mock(PFUser::class);
-        $xml_change        = new \SimpleXMLElement('<?xml version="1.0"?>
+        $field             = ComputedFieldBuilder::aComputedField(45)->build();
+        $user              = UserTestBuilder::buildWithDefaults();
+        $xml_change        = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                     <manual_value></manual_value>
                     <is_autocomputed>1</is_autocomputed>
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, ArtifactTestBuilder::anArtifact(89)->build(), PostCreationContext::withNoConfig(false));
         $expected_result = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
         ];
 
