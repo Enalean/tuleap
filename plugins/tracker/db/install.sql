@@ -255,11 +255,6 @@ CREATE TABLE tracker_field_list_bind_static_value(
     INDEX idx_bind_value_field_id(field_id, id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
-CREATE TABLE IF NOT EXISTS tracker_field_burndown (
-    field_id INT(11) NOT NULL PRIMARY KEY,
-    use_cache TINYINT DEFAULT 0
-) ENGINE=InnoDB;
-
 CREATE TABLE IF NOT EXISTS tracker_field_computed_cache (
     artifact_id INT(11) NOT NULL,
     field_id    INT(11) NOT NULL,
