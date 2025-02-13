@@ -27,21 +27,12 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class StringFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+
     private string $label     = 'Title';
     private string $name      = 'title';
     private bool $is_required = false;
     private \Tracker $tracker;
-    /** @var list<\PFUser> */
-    private array $user_with_read_permissions = [];
-    /** @var array<int, bool> */
-    private array $read_permissions = [];
-    /** @var list<\PFUser> */
-    private array $user_with_update_permissions = [];
-    /** @var array<int, bool> */
-    private array $update_permissions           = [];
-    private array $user_with_submit_permissions = [];
-    /** @var array<int, bool> */
-    private array $submit_permissions = [];
 
     private function __construct(private readonly int $id)
     {
@@ -77,27 +68,6 @@ final class StringFieldBuilder
         return $this;
     }
 
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
-    {
-        $this->user_with_read_permissions[]           = $user;
-        $this->read_permissions[(int) $user->getId()] = $user_can_read;
-        return $this;
-    }
-
-    public function withUpdatePermission(\PFUser $user, bool $user_can_update): self
-    {
-        $this->user_with_update_permissions[]           = $user;
-        $this->update_permissions[(int) $user->getId()] = $user_can_update;
-        return $this;
-    }
-
-    public function withSubmitPermission(\PFUser $user, bool $user_can_submit): self
-    {
-        $this->user_with_submit_permissions[]           = $user;
-        $this->submit_permissions[(int) $user->getId()] = $user_can_submit;
-        return $this;
-    }
-
     public function build(): Tracker_FormElement_Field_String
     {
         $field = new Tracker_FormElement_Field_String(
@@ -115,15 +85,7 @@ final class StringFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
-        foreach ($this->user_with_read_permissions as $user) {
-            $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
-        }
-        foreach ($this->user_with_update_permissions as $user) {
-            $field->setUserCanUpdate($user, $this->update_permissions[(int) $user->getId()]);
-        }
-        foreach ($this->user_with_submit_permissions as $user) {
-            $field->setUserCanSubmit($user, $this->submit_permissions[(int) $user->getId()]);
-        }
+        $this->setPermissions($field);
 
         return $field;
     }

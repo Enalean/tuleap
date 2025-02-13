@@ -27,24 +27,14 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TextFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+
     private string $name  = 'text';
     private string $label = 'Text';
     private \Tracker $tracker;
-    /** @var list<\PFUser> $user_with_read_permissions */
-    private array $user_with_read_permissions = [];
-    /** @var array<int, bool> $read_permissions */
-    private array $read_permissions = [];
-    /** @var list<\PFUser> */
-    private array $user_with_update_permissions = [];
-    /** @var array<int, bool> */
-    private array $update_permissions = [];
-    /** @var list<\PFUser> */
-    private array $user_with_submit_permissions = [];
-    /** @var array<int, bool> */
-    private array $submit_permissions = [];
-    private bool $is_required         = false;
-    private int $number_of_rows       = 0;
-    private int $number_of_columns    = 0;
+    private bool $is_required      = false;
+    private int $number_of_rows    = 0;
+    private int $number_of_columns = 0;
 
     private function __construct(private readonly int $id)
     {
@@ -65,28 +55,6 @@ final class TextFieldBuilder
     public function withLabel(string $label): self
     {
         $this->label = $label;
-        return $this;
-    }
-
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
-    {
-        $this->user_with_read_permissions[]           = $user;
-        $this->read_permissions[(int) $user->getId()] = $user_can_read;
-
-        return $this;
-    }
-
-    public function withUpdatePermission(\PFUser $user, bool $user_can_update): self
-    {
-        $this->user_with_update_permissions[]           = $user;
-        $this->update_permissions[(int) $user->getId()] = $user_can_update;
-        return $this;
-    }
-
-    public function withSubmitPermission(\PFUser $user, bool $user_can_submit): self
-    {
-        $this->user_with_submit_permissions[]           = $user;
-        $this->submit_permissions[(int) $user->getId()] = $user_can_submit;
         return $this;
     }
 
@@ -146,15 +114,7 @@ final class TextFieldBuilder
         );
         $field->setTracker($this->tracker);
         $this->setProperties($field);
-        foreach ($this->user_with_read_permissions as $user) {
-            $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
-        }
-        foreach ($this->user_with_update_permissions as $user) {
-            $field->setUserCanUpdate($user, $this->update_permissions[(int) $user->getId()]);
-        }
-        foreach ($this->user_with_submit_permissions as $user) {
-            $field->setUserCanSubmit($user, $this->submit_permissions[(int) $user->getId()]);
-        }
+        $this->setPermissions($field);
 
         return $field;
     }
