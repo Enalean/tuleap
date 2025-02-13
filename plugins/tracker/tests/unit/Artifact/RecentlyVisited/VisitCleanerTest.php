@@ -18,22 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class VisitCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VisitCleanerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItClearsVisitedArtifacts(): void
     {
         $user_id = 101;
-        $user    = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns($user_id);
+        $user    = UserTestBuilder::anActiveUser()->withId($user_id)->build();
 
-        $recently_visited_dao = \Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
-        $recently_visited_dao->shouldReceive('deleteVisitByUserId')->with($user_id)->once();
+        $recently_visited_dao = $this->createMock(RecentlyVisitedDao::class);
+        $recently_visited_dao->expects(self::once())->method('deleteVisitByUserId')->with($user_id);
 
         $visit_cleaner = new VisitCleaner($recently_visited_dao);
         $visit_cleaner->clearVisitedArtifacts($user);
