@@ -19,7 +19,8 @@
   -->
 <template>
     <div v-if="!can_header_be_edited">
-        <h1 class="section-title">{{ title }}</h1>
+        <h1 v-if="is_print_mode" class="section-title">{{ display_level + title }}</h1>
+        <h1 v-else class="section-title">{{ title }}</h1>
     </div>
 </template>
 
@@ -30,6 +31,7 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const props = withDefaults(
     defineProps<{
+        display_level: string;
         title: string;
         is_print_mode?: boolean;
     }>(),

@@ -46,6 +46,7 @@
             <section-header
                 class="section-header"
                 v-if="!is_loading_sections"
+                v-bind:display_level="''"
                 v-bind:title="section.value.display_title"
             />
             <section-header-skeleton v-if="is_loading_sections" class="section-header" />

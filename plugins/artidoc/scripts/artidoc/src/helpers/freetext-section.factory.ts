@@ -28,6 +28,8 @@ const FreetextSectionFactory = {
         description: "",
         attachments: null,
         is_pending: false,
+        level: 1,
+        display_level: "",
     }),
 
     pending: (): FreetextSection => ({

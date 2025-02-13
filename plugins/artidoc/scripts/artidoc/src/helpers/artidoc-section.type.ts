@@ -65,6 +65,8 @@ export type FreetextSection = {
     description: string;
     attachments: null;
     is_pending: boolean;
+    level: number;
+    display_level: string;
 };
 
 export type SectionBasedOnArtifact = {
@@ -73,6 +75,8 @@ export type SectionBasedOnArtifact = {
     display_title: string;
     description: ArtifactTextFieldValueRepresentation;
     attachments: ArtifactFieldValueFileFullRepresentation | null;
+    level: number;
+    display_level: string;
 };
 
 export interface ArtifactSection extends SectionBasedOnArtifact {

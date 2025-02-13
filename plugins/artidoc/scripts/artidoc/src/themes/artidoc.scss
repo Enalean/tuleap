@@ -27,6 +27,7 @@
     --artidoc-container-height: calc(var(--artidoc-app-height) - #{size.$header-height} - 1px);
     --artidoc-sticky-top-position: 0px;
     --artidoc-sidebar-button-width: 30px;
+    --editor-padding: var(--tlp-form-element-padding-horizontal);
 
     display: flex;
     flex-direction: column;

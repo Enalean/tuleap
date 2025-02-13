@@ -31,6 +31,7 @@ import type {
     ReactiveStoredArtidocSection,
 } from "@/sections/SectionsCollection";
 import { CannotReorderSectionsFault } from "@/sections/CannotReorderSectionsFault";
+import { updateDisplayLevelToSections } from "@/sections/SectionsNumberer";
 
 export type SectionsReorderer = {
     moveSectionUp(
@@ -91,7 +92,9 @@ export const buildSectionsReorderer = (
             return okAsync(null);
         }
 
-        return reorderSections(document_id, section.id, "before", next_section.id);
+        return reorderSections(document_id, section.id, "before", next_section.id).map(() => {
+            updateDisplayLevelToSections(sections_collection.sections.value);
+        });
     }
 
     function moveArtifactOrFreetextSectionAfterSibling(
@@ -109,7 +112,9 @@ export const buildSectionsReorderer = (
             return okAsync(null);
         }
 
-        return reorderSections(document_id, section.id, "after", previous_section.id);
+        return reorderSections(document_id, section.id, "after", previous_section.id).map(() => {
+            updateDisplayLevelToSections(sections_collection.sections.value);
+        });
     }
 
     function moveSectionUp(

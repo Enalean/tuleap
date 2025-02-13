@@ -38,22 +38,23 @@
                         ></div>
                         <div class="document-page">
                             <h1>Table of contents</h1>
-                            <ol>
-                                <li
-                                    v-for="section in saved_sections"
-                                    v-bind:key="'toc-' + section.value.id"
+                            <div
+                                v-for="section in saved_sections"
+                                v-bind:key="'toc-' + section.value.id"
+                            >
+                                <span class="artidoc-display-level">{{
+                                    section.value.display_level
+                                }}</span>
+                                <a
+                                    v-if="are_internal_links_allowed"
+                                    v-bind:href="`#pdf-section-${section.value.id}`"
                                 >
-                                    <a
-                                        v-if="are_internal_links_allowed"
-                                        v-bind:href="`#pdf-section-${section.value.id}`"
-                                    >
-                                        {{ section.value.display_title }}
-                                    </a>
-                                    <template v-else>
-                                        {{ section.value.display_title }}
-                                    </template>
-                                </li>
-                            </ol>
+                                    {{ section.value.display_title }}
+                                </a>
+                                <template v-else>
+                                    {{ section.value.display_title }}
+                                </template>
+                            </div>
                         </div>
                         <div class="document-page">
                             <section class="document-content">
@@ -61,16 +62,14 @@
                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAuIwAAAABAQMAAADTaEu9AAAAA1BMVEX///+nxBvIAAAAG0lEQVQYGe3BAQEAAACCoP6vdkjAAAAAAADgQxcTAAGjL+moAAAAAElFTkSuQmCC"
                                     style="visibility: hidden"
                                 />
-                                <ol>
-                                    <li
-                                        v-for="section in saved_sections"
-                                        v-bind:key="section.value.id"
-                                        class="document-section"
-                                        v-bind:id="`pdf-section-${section.value.id}`"
-                                    >
-                                        <section-printer-version v-bind:section="section" />
-                                    </li>
-                                </ol>
+                                <div
+                                    v-for="section in saved_sections"
+                                    v-bind:key="section.value.id"
+                                    class="document-section"
+                                    v-bind:id="`pdf-section-${section.value.id}`"
+                                >
+                                    <section-printer-version v-bind:section="section" />
+                                </div>
                             </section>
                         </div>
                     </td>

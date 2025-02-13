@@ -37,7 +37,7 @@
 
 /* stylelint-disable selector-class-pattern */
 .ProseMirror {
-    padding: var(--tlp-form-element-padding-horizontal);
+    padding: var(--editor-padding, var(--tlp-form-element-padding-horizontal));
     border-radius: var(--tlp-form-element-border-radius);
     word-wrap: break-word;
     white-space: pre-wrap;

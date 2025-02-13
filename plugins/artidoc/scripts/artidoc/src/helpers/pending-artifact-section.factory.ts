@@ -47,6 +47,8 @@ const PendingArtifactSectionFactory = {
             type: "file",
             file_descriptions: [],
         },
+        level: 1,
+        display_level: "",
     }),
 
     override: (overrides: Partial<PendingArtifactSection>): PendingArtifactSection => ({
