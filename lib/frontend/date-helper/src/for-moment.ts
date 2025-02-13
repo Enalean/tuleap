@@ -38,6 +38,8 @@ export function formatFromPhpToMoment(php_date_format: string): string {
         case en_US_DATE_TIME_FORMAT:
             return "YYYY-MM-DD HH:mm";
         default:
-            throw new Error("Only french and english date are supported for display");
+            return php_date_format.includes("H") && php_date_format.includes("i")
+                ? "YYYY-MM-DD HH:mm"
+                : "YYYY-MM-DD";
     }
 }
