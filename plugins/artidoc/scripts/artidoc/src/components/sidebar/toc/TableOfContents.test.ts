@@ -172,7 +172,7 @@ describe("TableOfContents", () => {
         });
 
         it("should display the number according to display_level", () => {
-            const display_levels = getWrapper().findAll("#display-level");
+            const display_levels = getWrapper().findAll("[data-test=display-level]");
             expect(display_levels[0].text()).toBe(display_level_section1);
             expect(display_levels[1].text()).toBe(display_level_section2);
             expect(display_levels[2].text()).toBe(display_level_section3);
