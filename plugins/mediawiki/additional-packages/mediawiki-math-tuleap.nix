@@ -5,12 +5,41 @@ let
     url = "https://github.com/NixOS/nixpkgs/archive/ab6176ac5b0ee4f18e9cb380a41a6e1816c7bc89.tar.gz";
     sha256 = "14d5xrm6vywqg8gkyvqsaf93x9kqmdfqcsfdj9a5xxl1qds5naiz";
   }) { };
+  mathExtensionTarballSrc = pkgs.stdenvNoCC.mkDerivation {
+    name = "mediawiki-extensions-Math-src";
+    src = pkgs.fetchFromGitHub {
+      owner = "wikimedia";
+      repo = "mediawiki-extensions-Math";
+      rev = "5d564a6b6796638ee2566f2963e9c386b276d2bf";
+      hash = "sha256-ecTqFBswRr1rLfOpOmQfpPSrcwnVwjPwE2vrNyhyhuE=";
+    };
+
+    dontConfigure = true;
+    dontBuild = true;
+    dontPatch = true;
+    dontFixup = true;
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir $out/
+      pushd $src/
+
+      tar cf $out/mediawiki-extensions-Math-src.tar *
+
+      popd
+
+      runHook postInstall
+    '';
+  };
 in pkgs.stdenv.mkDerivation {
   name = "mediawiki-math-tuleap";
-  src = pkgs.fetchgit {
-    url = "https://tuleap.net/plugins/git/tuleap/deps/tuleap/mediawiki-math-tuleap.git";
-    rev = "b4a2ddae9673530398de382411828b6009b2ecc5";
-    sha256 = "08q8mrhznf0brnl282dar06s0nhgjapm87z955h7l0hvq86i2vvf";
+  src = pkgs.symlinkJoin {
+    name = "mediawiki-math-tuleap-src";
+    paths = [
+      (./mediawiki-math-tuleap)
+      mathExtensionTarballSrc
+    ];
   };
 
   buildInputs = [ pkgs.glibc.static ];

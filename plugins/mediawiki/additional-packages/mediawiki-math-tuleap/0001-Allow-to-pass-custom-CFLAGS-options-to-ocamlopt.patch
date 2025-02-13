@@ -1,0 +1,99 @@
+From f1d4a18b10d21b70d8440023d8723c9fd9273cea Mon Sep 17 00:00:00 2001
+From: Thomas Gerbet <thomas.gerbet@enalean.com>
+Date: Mon, 18 Jun 2018 13:34:34 +0200
+Subject: [PATCH] Allow to pass custom CFLAGS options to ocamlopt
+
+---
+ math/Makefile       | 56 ++++++++++++++++++++++-----------------------
+ texvccheck/Makefile |  2 +-
+ 2 files changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/math/Makefile b/math/Makefile
+index 804f085..4c92c6c 100644
+--- a/math/Makefile
++++ b/math/Makefile
+@@ -22,11 +22,11 @@ clean:
+ 
+ # Native versions
+ texvc: $(COMMON_NATIVE_OBJ) render.cmx texvc.cmx
+-	ocamlopt -o $@ unix.cmxa $^
++	ocamlopt -ccopt '$(CFLAGS)' -o $@ unix.cmxa $^
+ texvc_test: $(COMMON_NATIVE_OBJ) lexer.cmx texvc_test.cmx
+-	ocamlopt -o $@ $^
++	ocamlopt -ccopt '$(CFLAGS)' -o $@ $^
+ texvc_tex: $(COMMON_NATIVE_OBJ) texvc_tex.cmx
+-	ocamlopt -o $@ $^
++	ocamlopt -ccopt '$(CFLAGS)' -o $@ $^
+ 
+ # Bytecode version
+ texvc.bc: $(COMMON_BYTECODE_OBJ) render.cmo texvc.cmo
+@@ -60,28 +60,28 @@ texvc_cgi: util.cmo parser.cmo texutil.cmo render.cmo lexer.cmo texvc_cgi.cmo
+ 
+ # Various dependencies
+ 
+-html.cmo: render_info.cmi tex.cmi util.cmo html.cmi 
+-html.cmx: render_info.cmi tex.cmi util.cmx html.cmi 
+-html.cmi: tex.cmi 
+-lexer.cmo: parser.cmi render_info.cmi tex.cmi texutil.cmi 
+-lexer.cmx: parser.cmx render_info.cmi tex.cmi texutil.cmx 
+-mathml.cmo: tex.cmi mathml.cmi 
+-mathml.cmx: tex.cmi mathml.cmi 
+-mathml.cmi: tex.cmi 
+-parser.cmo: render_info.cmi tex.cmi parser.cmi 
+-parser.cmx: render_info.cmi tex.cmi parser.cmi 
+-parser.cmi: render_info.cmi tex.cmi 
+-render.cmo: texutil.cmi util.cmo 
+-render.cmx: texutil.cmx util.cmx 
+-tex.cmi: render_info.cmi 
+-texutil.cmo: html.cmi parser.cmi render_info.cmi tex.cmi util.cmo texutil.cmi 
+-texutil.cmx: html.cmx parser.cmx render_info.cmi tex.cmi util.cmx texutil.cmi 
+-texutil.cmi: parser.cmi tex.cmi 
+-texvc.cmo: html.cmi lexer.cmo mathml.cmi parser.cmi render.cmo texutil.cmi util.cmo 
+-texvc.cmx: html.cmx lexer.cmx mathml.cmx parser.cmx render.cmx texutil.cmx util.cmx 
+-texvc_cgi.cmo: lexer.cmo parser.cmi render.cmo texutil.cmi util.cmo 
+-texvc_cgi.cmx: lexer.cmx parser.cmx render.cmx texutil.cmx util.cmx 
+-texvc_test.cmo: html.cmi lexer.cmo parser.cmi texutil.cmi util.cmo 
+-texvc_test.cmx: html.cmx lexer.cmx parser.cmx texutil.cmx util.cmx 
+-texvc_tex.cmo: lexer.cmo parser.cmi texutil.cmi util.cmo 
+-texvc_tex.cmx: lexer.cmx parser.cmx texutil.cmx util.cmx 
++html.cmo: render_info.cmi tex.cmi util.cmo html.cmi
++html.cmx: render_info.cmi tex.cmi util.cmx html.cmi
++html.cmi: tex.cmi
++lexer.cmo: parser.cmi render_info.cmi tex.cmi texutil.cmi
++lexer.cmx: parser.cmx render_info.cmi tex.cmi texutil.cmx
++mathml.cmo: tex.cmi mathml.cmi
++mathml.cmx: tex.cmi mathml.cmi
++mathml.cmi: tex.cmi
++parser.cmo: render_info.cmi tex.cmi parser.cmi
++parser.cmx: render_info.cmi tex.cmi parser.cmi
++parser.cmi: render_info.cmi tex.cmi
++render.cmo: texutil.cmi util.cmo
++render.cmx: texutil.cmx util.cmx
++tex.cmi: render_info.cmi
++texutil.cmo: html.cmi parser.cmi render_info.cmi tex.cmi util.cmo texutil.cmi
++texutil.cmx: html.cmx parser.cmx render_info.cmi tex.cmi util.cmx texutil.cmi
++texutil.cmi: parser.cmi tex.cmi
++texvc.cmo: html.cmi lexer.cmo mathml.cmi parser.cmi render.cmo texutil.cmi util.cmo
++texvc.cmx: html.cmx lexer.cmx mathml.cmx parser.cmx render.cmx texutil.cmx util.cmx
++texvc_cgi.cmo: lexer.cmo parser.cmi render.cmo texutil.cmi util.cmo
++texvc_cgi.cmx: lexer.cmx parser.cmx render.cmx texutil.cmx util.cmx
++texvc_test.cmo: html.cmi lexer.cmo parser.cmi texutil.cmi util.cmo
++texvc_test.cmx: html.cmx lexer.cmx parser.cmx texutil.cmx util.cmx
++texvc_tex.cmo: lexer.cmo parser.cmi texutil.cmi util.cmo
++texvc_tex.cmx: lexer.cmx parser.cmx texutil.cmx util.cmx
+diff --git a/texvccheck/Makefile b/texvccheck/Makefile
+index 14b44f7..6b14229 100644
+--- a/texvccheck/Makefile
++++ b/texvccheck/Makefile
+@@ -19,7 +19,7 @@ clean:
+ 
+ # Native versions
+ texvccheck: $(COMMON_NATIVE_OBJ) texvccheck.cmx
+-	ocamlopt -o $@ unix.cmxa $^
++	ocamlopt -ccopt '$(CFLAGS)' -o $@ unix.cmxa $^
+ 
+ # Bytecode version
+ texvccheck.bc: $(COMMON_BYTECODE_OBJ) texvccheck.cmo
+-- 
+2.17.1
+

@@ -1,0 +1,35 @@
+From 7bd30eb5379cb144cc90b259e98f9790d79d7ada Mon Sep 17 00:00:00 2001
+From: Thomas Gerbet <thomas.gerbet@enalean.com>
+Date: Fri, 10 Jul 2020 10:26:39 +0200
+Subject: [PATCH] Use absolute paths to call LaTeX tools
+
+---
+ math/render.ml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/math/render.ml b/math/render.ml
+index 5a02b67..b550190 100644
+--- a/math/render.ml
++++ b/math/render.ml
+@@ -1,7 +1,7 @@
+ (* vim: set sw=8 ts=8 et: *)
+ 
+-let cmd_dvips tmpprefix = "dvips -q -R -E " ^ tmpprefix ^ ".dvi -f >" ^ tmpprefix ^ ".ps"
+-let cmd_latex tmpprefix = "latex " ^ tmpprefix ^ ".tex >/dev/null"
++let cmd_dvips tmpprefix = "/usr/bin/dvips -q -R -E " ^ tmpprefix ^ ".dvi -f >" ^ tmpprefix ^ ".ps"
++let cmd_latex tmpprefix = "/usr/bin/latex " ^ tmpprefix ^ ".tex >/dev/null"
+ 
+ (* Putting -transparent white in converts arguments will sort-of give you transperancy *)
+ let cmd_convert tmpprefix finalpath = "convert -quality 100 -density 120 " ^ tmpprefix ^ ".ps " ^ finalpath ^ " >/dev/null 2>/dev/null"
+@@ -9,7 +9,7 @@ let cmd_convert tmpprefix finalpath = "convert -quality 100 -density 120 " ^ tmp
+ (* Putting -bg Transparent in dvipng's arguments will give full-alpha transparency *)
+ (* Note that IE have problems with such PNGs and need an additional javascript snippet *)
+ (* Putting -bg transparent in dvipng's arguments will give binary transparency *)
+-let cmd_dvipng tmpprefix finalpath backcolor = "dvipng -bg \'" ^ backcolor ^ "\' -gamma 1.5 -D 120 -T tight --strict " ^ tmpprefix ^ ".dvi -o " ^ finalpath ^ " >/dev/null 2>/dev/null"
++let cmd_dvipng tmpprefix finalpath backcolor = "/usr/bin/dvipng -bg \'" ^ backcolor ^ "\' -gamma 1.5 -D 120 -T tight --strict " ^ tmpprefix ^ ".dvi -o " ^ finalpath ^ " >/dev/null 2>/dev/null"
+ 
+ exception ExternalCommandFailure of string
+ 
+-- 
+2.27.0
+
