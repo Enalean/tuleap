@@ -1,7 +1,0 @@
-<?php
-
-// Maximum file size allowed ( 2147583647 bit = 2^31-1 bit =2GB )
-$max_file_size = 2147483647;
-
-// Used to enable/disable write access from WebDAV
-$write_access_enabled = false;
