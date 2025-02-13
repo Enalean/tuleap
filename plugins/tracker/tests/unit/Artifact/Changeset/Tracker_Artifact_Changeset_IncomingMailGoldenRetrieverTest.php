@@ -20,108 +20,100 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Tracker\Artifact\Changeset;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use TestHelper;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_Changeset_IncomingMailDao;
+use Tracker_Artifact_Changeset_IncomingMailGoldenRetriever;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private const RAW_MAIL_UPDATE   = 'raw mail content for update';
+    private const RAW_MAIL_CREATION = 'raw mail content for creation';
 
-    /** @var Tracker_Artifact_Changeset_IncomingMailDao */
-    private $dao;
-
-    /** @var Tracker_Artifact_Changeset_IncomingMailGoldenRetriever */
-    private $retriever;
-
-    /** @var Artifact */
-    private $artifact_by_mail;
-
-    /** @var Artifact */
-    private $artifact_by_web;
-
-    /** @var Tracker_Artifact_Changeset */
-    private $changeset_by_mail;
-
-    /** @var Tracker_Artifact_Changeset */
-    private $changeset_by_web;
-
-    private $raw_mail_creation = 'raw mail content for creation';
-    private $raw_mail_update   = 'raw mail content for update';
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $other_changeset_by_mail;
+    private Tracker_Artifact_Changeset_IncomingMailDao&MockObject $dao;
+    private Tracker_Artifact_Changeset_IncomingMailGoldenRetriever $retriever;
+    private Artifact $artifact_by_mail;
+    private Artifact $artifact_by_web;
+    private Tracker_Artifact_Changeset $changeset_by_mail;
+    private Tracker_Artifact_Changeset $changeset_by_web;
+    private Tracker_Artifact_Changeset $other_changeset_by_mail;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(\Tracker_Artifact_Changeset_IncomingMailDao::class);
+        $this->dao = $this->createMock(Tracker_Artifact_Changeset_IncomingMailDao::class);
 
-        $this->changeset_by_mail       = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(1)->getMock();
-        $this->other_changeset_by_mail = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(2)->getMock();
+        $this->changeset_by_mail                 = ChangesetTestBuilder::aChangeset(1)->build();
+        $this->other_changeset_by_mail           = ChangesetTestBuilder::aChangeset(2)->build();
+        $this->artifact_by_mail                  = ArtifactTestBuilder::anArtifact(123)
+            ->inTracker(TrackerTestBuilder::aTracker()->withId(123)->build())
+            ->withChangesets($this->other_changeset_by_mail, $this->changeset_by_mail)
+            ->build();
+        $this->changeset_by_mail->artifact       = $this->artifact_by_mail;
+        $this->other_changeset_by_mail->artifact = $this->artifact_by_mail;
 
-        $this->artifact_by_mail = $this->buildArtifactWithChangesets(123, [$this->changeset_by_mail, $this->other_changeset_by_mail]);
-        $this->changeset_by_mail->shouldReceive('getArtifact')->andReturns($this->artifact_by_mail);
-        $this->other_changeset_by_mail->shouldReceive('getArtifact')->andReturns($this->artifact_by_mail);
-
-        $this->changeset_by_web = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(3)->getMock();
-        $changeset_by_web_2     = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(4)->getMock();
-        $this->artifact_by_web  = $this->buildArtifactWithChangesets(456, [$this->changeset_by_web, $changeset_by_web_2]);
-        $this->changeset_by_web->shouldReceive('getArtifact')->andReturns($this->artifact_by_web);
+        $this->changeset_by_web           = ChangesetTestBuilder::aChangeset(3)->build();
+        $changeset_by_web_2               = ChangesetTestBuilder::aChangeset(4)->build();
+        $this->artifact_by_web            = ArtifactTestBuilder::anArtifact(456)
+            ->inTracker(TrackerTestBuilder::aTracker()->withId(123)->build())
+            ->withChangesets($changeset_by_web_2, $this->changeset_by_web)
+            ->build();
+        $this->changeset_by_web->artifact = $this->artifact_by_web;
 
         $this->retriever = new Tracker_Artifact_Changeset_IncomingMailGoldenRetriever($this->dao);
     }
 
-    private function buildArtifactWithChangesets(int $id, array $changesets): Artifact
-    {
-        $artifact = new Artifact($id, 123, null, 10, null);
-        $artifact->setChangesets($changesets);
-
-        return $artifact;
-    }
-
     public function testItRetrievesRawMailThatCreatedArtifact(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
+        $this->dao->method('searchByArtifactId')->with(123)->willReturn(TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => self::RAW_MAIL_CREATION], ['changeset_id' => 2, 'raw_mail' => self::RAW_MAIL_UPDATE]));
         $raw_mail = $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_mail);
 
-        $this->assertEquals($this->raw_mail_creation, $raw_mail);
+        self::assertEquals(self::RAW_MAIL_CREATION, $raw_mail);
     }
 
     public function testItRetrievesNoRawMailIfArtifactWasNotCreatedByMail(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(456)->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('searchByArtifactId')->with(456)->willReturn(TestHelper::emptyDar());
         $raw_mail = $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_web);
 
-        $this->assertNull($raw_mail);
+        self::assertNull($raw_mail);
     }
 
     public function testItRetrievesRawMailThatCreatedChangeset(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
+        $this->dao->method('searchByArtifactId')->with(123)->willReturn(TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => self::RAW_MAIL_CREATION], ['changeset_id' => 2, 'raw_mail' => self::RAW_MAIL_UPDATE]));
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_mail);
 
-        $this->assertEquals($this->raw_mail_creation, $raw_mail);
+        self::assertEquals(self::RAW_MAIL_CREATION, $raw_mail);
     }
 
     public function testItRetrievesRawMailThatCreatedOtherChangeset(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
+        $this->dao->method('searchByArtifactId')->with(123)->willReturn(TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => self::RAW_MAIL_CREATION], ['changeset_id' => 2, 'raw_mail' => self::RAW_MAIL_UPDATE]));
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->other_changeset_by_mail);
 
-        $this->assertEquals($this->raw_mail_update, $raw_mail);
+        self::assertEquals(self::RAW_MAIL_UPDATE, $raw_mail);
     }
 
     public function testItRetrievesNoRawMailIfChangesetWasNotCreatedByMail(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(456)->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('searchByArtifactId')->with(456)->willReturn(TestHelper::emptyDar());
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_web);
 
-        $this->assertNull($raw_mail);
+        self::assertNull($raw_mail);
     }
 
     public function testItCachesResultsToSaveTheRainForestAndKittens(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->once()->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
+        $this->dao->expects(self::once())->method('searchByArtifactId')->with(123)->willReturn(TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => self::RAW_MAIL_CREATION], ['changeset_id' => 2, 'raw_mail' => self::RAW_MAIL_UPDATE]));
 
         $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_mail);
         $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_mail);
