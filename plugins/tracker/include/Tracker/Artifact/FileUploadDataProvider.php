@@ -60,4 +60,17 @@ class FileUploadDataProvider implements GetFileUploadData
         }
         return null;
     }
+
+    public function getFileUploadDataForSubmit(Tracker $tracker, PFUser $user): ?FileUploadData
+    {
+        $file_fields = $this->formelement_factory->getUsedFileFields($tracker);
+        foreach ($file_fields as $field) {
+            if (! $field->userCanSubmit($user)) {
+                continue;
+            }
+
+            return new FileUploadData($field);
+        }
+        return null;
+    }
 }

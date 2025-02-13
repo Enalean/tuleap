@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Tracker\REST\Artifact;
 
-namespace Tuleap\Artidoc\REST\v1;
+use PFUser;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-/**
- * @psalm-immutable
- */
-final class POSTContentSectionRepresentation
+interface CreateArtifact
 {
     /**
-     * @var string type of content {@choice freetext,artifact}
+     * @param ArtifactValuesRepresentation[] $values
+     * @throws \Luracast\Restler\RestException
      */
-    public string $type;
-
-    /**
-     * @param list<int> $attachments
-     */
-    public function __construct(public string $title, public string $description, string $type, public array $attachments)
-    {
-        $this->type = $type;
-    }
+    public function create(
+        PFUser $submitter,
+        TrackerReference $tracker_reference,
+        array $values,
+        bool $should_visit_be_recorded,
+    ): ArtifactReference;
 }

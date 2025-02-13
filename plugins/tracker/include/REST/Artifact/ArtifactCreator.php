@@ -32,11 +32,10 @@ use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 
-class ArtifactCreator
+class ArtifactCreator implements CreateArtifact
 {
     public function __construct(
         private readonly FieldsDataBuilder $fields_data_builder,
@@ -48,11 +47,6 @@ class ArtifactCreator
     ) {
     }
 
-    /**
-     *
-     * @param ArtifactValuesRepresentation[] $values
-     * @throws \Luracast\Restler\RestException
-     */
     public function create(
         PFUser $submitter,
         TrackerReference $tracker_reference,

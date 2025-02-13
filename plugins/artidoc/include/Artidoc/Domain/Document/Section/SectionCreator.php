@@ -24,6 +24,8 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\CreateArtifactContent;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeCreatedArtifact;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
@@ -36,6 +38,7 @@ final readonly class SectionCreator
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
         private SaveOneSection $save_section,
+        private CreateArtifactContent $artifact_content_creator,
         private CollectRequiredSectionInformation $collect_required_section_information_for_creation,
     ) {
     }
@@ -52,7 +55,9 @@ final readonly class SectionCreator
                 fn (int $artifact_id) => $this->collect_required_section_information_for_creation
                     ->collectRequiredSectionInformation($artidoc, $artifact_id)
                     ->andThen(fn () => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id, $level), $before_section_id)),
-                fn (SectionContentToBeCreatedFreetext $freetext) => $this->saveSection($artidoc, ContentToInsert::fromFreetext($freetext->content, $level), $before_section_id)
+                fn (SectionContentToBeCreatedFreetext $freetext) => $this->saveSection($artidoc, ContentToInsert::fromFreetext($freetext->content, $level), $before_section_id),
+                fn (SectionContentToBeCreatedArtifact $artifact) => $this->artifact_content_creator->createArtifact($artidoc, $artifact->content)
+                    ->andThen(fn (int $artifact_id) => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id, $level), $before_section_id)),
             ));
     }
 

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeCreatedArtifact;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
 use Tuleap\NeverThrow\Err;
@@ -33,20 +35,23 @@ use Tuleap\Option\Option;
 final readonly class SectionContentToBeCreated
 {
     /**
-     * @param Option<int> $artifact_id
+     * @param Option<int> $imported_artifact_id
      * @param Option<SectionContentToBeCreatedFreetext> $freetext
+     * @param Option<SectionContentToBeCreatedArtifact> $artifact
      */
     private function __construct(
-        private Option $artifact_id,
+        private Option $imported_artifact_id,
         private Option $freetext,
+        private Option $artifact,
     ) {
     }
 
-    public static function fromImportedArtifact(int $artifact_id): self
+    public static function fromImportedArtifact(int $imported_artifact_id): self
     {
         return new self(
-            Option::fromValue($artifact_id),
+            Option::fromValue($imported_artifact_id),
             Option::nothing(SectionContentToBeCreatedFreetext::class),
+            Option::nothing(SectionContentToBeCreatedArtifact::class),
         );
     }
 
@@ -59,23 +64,48 @@ final readonly class SectionContentToBeCreated
                     new FreetextContent($title, $description),
                 ),
             ),
+            Option::nothing(SectionContentToBeCreatedArtifact::class),
         );
     }
 
     /**
-     * @template TArtifactReturn
-     * @template TFreetextReturn
-     * @psalm-param callable(int): (Ok<TArtifactReturn>|Err<Fault>) $artifact_callback
-     * @psalm-param callable(SectionContentToBeCreatedFreetext): (Ok<TFreetextReturn>|Err<Fault>)    $freetext_callback
-     * @return Ok<TArtifactReturn>|Ok<TFreetextReturn>|Err<Fault>
+     * @param list<int> $attachments
      */
-    public function apply(callable $artifact_callback, callable $freetext_callback): Ok|Err
+    public static function fromArtifact(string $title, string $description, array $attachments): self
     {
-        return $this->artifact_id->match(
-            fn ($artifact_id) => $artifact_callback($artifact_id),
+        return new self(
+            Option::nothing(\Psl\Type\int()),
+            Option::nothing(SectionContentToBeCreatedFreetext::class),
+            Option::fromValue(
+                new SectionContentToBeCreatedArtifact(
+                    new ArtifactContent($title, $description, $attachments),
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @template TImportedArtifactReturn
+     * @template TFreetextReturn
+     * @template TArtifactReturn
+     * @psalm-param callable(int): (Ok<TImportedArtifactReturn>|Err<Fault>) $imported_artifact_callback
+     * @psalm-param callable(SectionContentToBeCreatedFreetext): (Ok<TFreetextReturn>|Err<Fault>) $freetext_callback
+     * @psalm-param callable(SectionContentToBeCreatedArtifact): (Ok<TArtifactReturn>|Err<Fault>) $artifact_callback
+     * @return Ok<TImportedArtifactReturn>|Ok<TFreetextReturn>|Ok<TArtifactReturn>|Err<Fault>
+     */
+    public function apply(
+        callable $imported_artifact_callback,
+        callable $freetext_callback,
+        callable $artifact_callback,
+    ): Ok|Err {
+        return $this->imported_artifact_id->match(
+            fn ($artifact_id) => $imported_artifact_callback($artifact_id),
             fn () => $this->freetext->match(
                 fn ($freetext) => $freetext_callback($freetext),
-                fn () => Result::err(UnknownSectionContentFault::build())
+                fn () => $this->artifact->match(
+                    fn ($artifact) => $artifact_callback($artifact),
+                    fn () => Result::err(UnknownSectionContentFault::build()),
+                ),
             ),
         );
     }

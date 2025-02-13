@@ -141,4 +141,46 @@ class FileUploadDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertNull($result);
     }
+
+    public function testGetFileUploadDataForSubmit(): void
+    {
+        $file_1 = Mockery::mock(Tracker_FileInfo::class);
+        $file_1->shouldReceive('getId')->andReturn(12);
+
+        $field_1 = Mockery::mock(\Tracker_FormElement_Field_File::class);
+        $field_1->shouldReceive('getId')->andReturn(1);
+        $field_1->shouldReceive('userCanSubmit')->andReturn(true);
+
+        $field_2 = Mockery::mock(\Tracker_FormElement_Field_File::class);
+        $field_2->shouldReceive('getId')->andReturn(2);
+        $field_2->shouldReceive('userCanSubmit')->never();
+
+        $this->form_element_factory->shouldReceive('getUsedFileFields')->andReturn([$field_1, $field_2]);
+
+        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->andReturn(false);
+
+        $result = $this->file_upload_data_provider->getFileUploadDataForSubmit($this->tracker, $this->user);
+
+        $this->assertEquals(1, $result->getField()->getId());
+        $this->assertEquals('/api/v1/tracker_fields/1/files', $result->getUploadUrl());
+    }
+
+    public function testGetFileUploadDataForSubmitReturnNullIfUserCannotSubmit(): void
+    {
+        $file_1 = Mockery::mock(Tracker_FileInfo::class);
+        $file_1->shouldReceive('getId')->andReturn(12);
+
+        $field_1 = Mockery::mock(\Tracker_FormElement_Field_File::class);
+        $field_1->shouldReceive('getId')->andReturn(1);
+        $field_1->shouldReceive('userCanSubmit')->andReturn(false);
+
+
+        $this->form_element_factory->shouldReceive('getUsedFileFields')->andReturn([$field_1]);
+
+        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->never();
+
+        $result = $this->file_upload_data_provider->getFileUploadDataForSubmit($this->tracker, $this->user);
+
+        $this->assertNull($result);
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Stubs\Document;
 
-/**
- * @psalm-immutable
- */
-final class POSTContentSectionRepresentation
+use Tuleap\Artidoc\Document\RetrieveConfiguredTracker;
+use Tuleap\Artidoc\Domain\Document\Artidoc;
+
+final readonly class RetrieveConfiguredTrackerStub implements RetrieveConfiguredTracker
 {
-    /**
-     * @var string type of content {@choice freetext,artifact}
-     */
-    public string $type;
-
-    /**
-     * @param list<int> $attachments
-     */
-    public function __construct(public string $title, public string $description, string $type, public array $attachments)
+    private function __construct(private ?\Tracker $tracker)
     {
-        $this->type = $type;
+    }
+
+    public static function withTracker(\Tracker $tracker): self
+    {
+        return new self($tracker);
+    }
+
+    public static function withoutTracker(): self
+    {
+        return new self(null);
+    }
+
+    public function getTracker(Artidoc $document): ?\Tracker
+    {
+        return $this->tracker;
     }
 }

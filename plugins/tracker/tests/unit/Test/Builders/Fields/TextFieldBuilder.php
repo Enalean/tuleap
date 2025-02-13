@@ -38,6 +38,10 @@ final class TextFieldBuilder
     private array $user_with_update_permissions = [];
     /** @var array<int, bool> */
     private array $update_permissions = [];
+    /** @var list<\PFUser> */
+    private array $user_with_submit_permissions = [];
+    /** @var array<int, bool> */
+    private array $submit_permissions = [];
     private bool $is_required         = false;
     private int $number_of_rows       = 0;
     private int $number_of_columns    = 0;
@@ -76,6 +80,13 @@ final class TextFieldBuilder
     {
         $this->user_with_update_permissions[]           = $user;
         $this->update_permissions[(int) $user->getId()] = $user_can_update;
+        return $this;
+    }
+
+    public function withSubmitPermission(\PFUser $user, bool $user_can_submit): self
+    {
+        $this->user_with_submit_permissions[]           = $user;
+        $this->submit_permissions[(int) $user->getId()] = $user_can_submit;
         return $this;
     }
 
@@ -140,6 +151,9 @@ final class TextFieldBuilder
         }
         foreach ($this->user_with_update_permissions as $user) {
             $field->setUserCanUpdate($user, $this->update_permissions[(int) $user->getId()]);
+        }
+        foreach ($this->user_with_submit_permissions as $user) {
+            $field->setUserCanSubmit($user, $this->submit_permissions[(int) $user->getId()]);
         }
 
         return $field;
