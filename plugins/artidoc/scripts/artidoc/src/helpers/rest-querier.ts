@@ -151,7 +151,7 @@ export function createArtifactSection(
     return postJSON<ArtidocSection>(uri`/api/artidoc_sections`, {
         artidoc_id,
         section: {
-            artifact: { id: artifact_id },
+            import: { artifact: { id: artifact_id } },
             position,
             level: 1,
             content: null,
