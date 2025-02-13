@@ -22,28 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Presenter;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Followup_Item;
+use Tracker_Artifact_Presenter_FollowUpCommentsPresenter;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class FollowUpCommentsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FollowUpCommentsPresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetOnlyFollowUpWithContent(): void
     {
-        $follow_up_can_see = \Mockery::mock(Tracker_Artifact_Followup_Item::class);
-        $follow_up_can_see->shouldReceive('diffToPrevious')->once()->andReturn('');
-        $follow_up_can_see->shouldReceive('getFollowupContent')->once()->andReturn('<div></div>');
-        $follow_up_can_see->shouldReceive('getId')->once()->andReturn(123);
-        $follow_up_can_see->shouldReceive('getAvatar')->once()->andReturn("<div class='tracker_artifact_followup_avatar'></div>");
-        $follow_up_can_see->shouldReceive('getUserLink')->once()->andReturn('<span class="tracker_artifact_followup_title_user"></span>');
-        $follow_up_can_see->shouldReceive('getTimeAgo')->once()->andReturn('<div></div>');
+        $follow_up_can_see = $this->createMock(Tracker_Artifact_Followup_Item::class);
+        $follow_up_can_see->expects(self::once())->method('diffToPrevious')->willReturn('');
+        $follow_up_can_see->expects(self::once())->method('getFollowupContent')->willReturn('<div></div>');
+        $follow_up_can_see->expects(self::once())->method('getId')->willReturn(123);
+        $follow_up_can_see->expects(self::once())->method('getAvatar')->willReturn("<div class='tracker_artifact_followup_avatar'></div>");
+        $follow_up_can_see->expects(self::once())->method('getUserLink')->willReturn('<span class="tracker_artifact_followup_title_user"></span>');
+        $follow_up_can_see->expects(self::once())->method('getTimeAgo')->willReturn('<div></div>');
 
-        $follow_up_no_content = \Mockery::mock(Tracker_Artifact_Followup_Item::class);
-        $follow_up_no_content->shouldReceive('diffToPrevious')->once()->andReturn('');
-        $follow_up_no_content->shouldReceive('getFollowupContent')->once()->andReturn('');
+        $follow_up_no_content = $this->createMock(Tracker_Artifact_Followup_Item::class);
+        $follow_up_no_content->expects(self::once())->method('diffToPrevious')->willReturn('');
+        $follow_up_no_content->expects(self::once())->method('getFollowupContent')->willReturn('');
 
-        $presenter = new \Tracker_Artifact_Presenter_FollowUpCommentsPresenter([$follow_up_can_see, $follow_up_no_content], \Mockery::mock(\PFUser::class));
+        $presenter = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter([$follow_up_can_see, $follow_up_no_content], UserTestBuilder::buildWithDefaults());
 
         self::assertCount(1, $presenter->followups);
         self::assertEquals('<div></div>', $presenter->followups[0]['getFollowupContent']);
