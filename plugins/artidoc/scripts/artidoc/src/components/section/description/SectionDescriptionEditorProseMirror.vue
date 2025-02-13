@@ -33,29 +33,27 @@ import { initPluginDropFile, initPluginInput, useEditor } from "@tuleap/prose-mi
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { GetText } from "@tuleap/gettext";
 import { getSectionFileUploader } from "@/sections/SectionFileUploader";
-import type { UploadPostInformation } from "@tuleap/file-upload";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/SectionStateBuilder";
 import type { ManageSectionEditorState } from "@/sections/SectionEditorStateManager";
+import type { ManageSectionAttachmentFiles } from "@/sections/SectionAttachmentFilesManager";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/sections-file-uploads-collection-injection-key";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { PROJECT_ID } from "@/project-id-injection-key";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { NOTIFICATION_COLLECTION } from "@/sections/notification-collection-injection-key";
 import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
 import { setupMonoEditorPlugins } from "../mono-editor/setupMonoEditorPlugins";
-import { getSectionAttachmentFilesManager } from "@/sections/SectionAttachmentFilesManager";
 import { getProjectIdFromSection } from "@/helpers/get-project-id-from-section";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 
 const props = defineProps<{
-    post_information: UploadPostInformation;
     section: ReactiveStoredArtidocSection;
     section_state: SectionState;
     manage_section_editor_state: ManageSectionEditorState;
+    manage_section_attachment_files: ManageSectionAttachmentFiles;
 }>();
 
 let useEditorInstance: UseEditorType | undefined;
@@ -64,12 +62,11 @@ const area_editor = ref<HTMLElement | null>(null);
 const editorView = ref<EditorView | null>(null);
 
 const file_uploads_collection = strictInject(FILE_UPLOADS_COLLECTION);
-const document_id = strictInject(DOCUMENT_ID);
 const current_project_id = strictInject(PROJECT_ID);
 
 const { file_upload_options, resetProgressCallback } = getSectionFileUploader(
     props.section.value.id,
-    getSectionAttachmentFilesManager(props.section, document_id),
+    props.manage_section_attachment_files,
     file_uploads_collection,
     strictInject(NOTIFICATION_COLLECTION),
     strictInject(UPLOAD_MAX_SIZE),
@@ -113,7 +110,8 @@ onMounted(async () => {
         return;
     }
 
-    const is_upload_allowed = props.post_information.upload_url !== "";
+    const is_upload_allowed =
+        props.manage_section_attachment_files.getPostInformation().upload_url !== "";
 
     useEditorInstance = await useEditor(
         area_editor.value,

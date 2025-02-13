@@ -28,7 +28,7 @@ import { SECTIONS_COLLECTION } from "@/sections/sections-collection-injection-ke
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
-import { noop } from "@/helpers/noop";
+import { SectionAttachmentFilesManagerStub } from "@/sections/stubs/SectionAttachmentFilesManagerStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
@@ -59,13 +59,12 @@ describe("SectionDescription", () => {
                 },
             },
             props: {
-                post_information: {
-                    upload_url: "/file/upload",
-                    getUploadJsonPayload: noop,
-                },
                 section,
                 section_state,
                 manage_section_editor_state: getSectionEditorStateManager(section, section_state),
+                manage_section_attachment_files: SectionAttachmentFilesManagerStub.forSection(
+                    section.value,
+                ),
             },
         });
 
