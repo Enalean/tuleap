@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFact
 use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\SectionsAsserter;
+use Tuleap\Artidoc\Adapter\Document\Section\UpdateLevelDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
@@ -61,7 +62,7 @@ final class UpdateFreetextContentDaoTest extends TestIntegrationTestCase
         self::assertTrue(Result::isOk($paginated_retrieved_sections->rows[0]->content->apply(
             static fn () => Result::err(Fault::fromMessage('Should get freetext, not an artifact section')),
             static function (RetrievedSectionContentFreetext $freetext) use ($artidoc, $ids) {
-                $dao = new UpdateFreetextContentDao();
+                $dao = new UpdateFreetextContentDao(new UpdateLevelDao());
 
                 $dao->updateFreetextContent($ids[0], $freetext->id, new FreetextContent('Introduction', ''), Level::One);
 
