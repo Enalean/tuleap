@@ -235,7 +235,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         $updater = new SectionUpdater(
             $this->getSectionRetriever($user, $collector),
-            new UpdateFreetextContentDao(),
+            new UpdateFreetextContentDao(new UpdateLevelDao()),
             new ArtifactContentUpdater(
                 Tracker_ArtifactFactory::instance(),
                 $this->getFileUploadDataProvider(),
