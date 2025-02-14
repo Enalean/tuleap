@@ -111,13 +111,14 @@ export function createArtifactSection(
     artidoc_id: number,
     artifact_id: number,
     position: PositionForSection,
+    level: number,
 ): ResultAsync<ArtidocSection, Fault> {
     return postJSON<ArtidocSection>(uri`/api/artidoc_sections`, {
         artidoc_id,
         section: {
             import: { artifact: { id: artifact_id } },
             position,
-            level: 1,
+            level,
             content: null,
         },
     }).map(injectDisplayTitle);
@@ -128,12 +129,13 @@ export function createFreetextSection(
     title: string,
     description: string,
     position: PositionForSection,
+    level: number,
 ): ResultAsync<ArtidocSection, Fault> {
     return postJSON<ArtidocSection>(uri`/api/v1/artidoc_sections`, {
         artidoc_id,
         section: {
             content: { title, description, type: "freetext", attachments: [] },
-            level: 1,
+            level,
             position,
         },
     }).map(injectDisplayTitle);

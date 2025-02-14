@@ -24,6 +24,7 @@ import type {
 } from "@/helpers/artidoc-section.type";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
+import { updateDisplayLevelToSections } from "@/sections/levels/SectionsNumberer";
 
 export type ReplacePendingSections = {
     replacePendingSection(
@@ -49,5 +50,6 @@ export const getPendingSectionsReplacer = (
             internal_id: sections_collection.sections.value[index].value.internal_id,
         };
         states_collection.createStateForSection(sections_collection.sections.value[index]);
+        updateDisplayLevelToSections(sections_collection.sections.value);
     },
 });

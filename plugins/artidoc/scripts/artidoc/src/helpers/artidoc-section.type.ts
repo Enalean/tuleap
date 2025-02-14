@@ -19,6 +19,7 @@
 
 import type { Tracker } from "@/stores/configuration-store";
 import type { Project } from "@/helpers/project.type";
+import type { Level } from "@/sections/levels/SectionsNumberer";
 
 interface ArtifactFieldValueRepresentation {
     readonly field_id: number;
@@ -65,7 +66,7 @@ export type FreetextSection = {
     description: string;
     attachments: null;
     is_pending: boolean;
-    level: number;
+    level: Level;
     display_level: string;
 };
 
@@ -75,7 +76,7 @@ export type SectionBasedOnArtifact = {
     display_title: string;
     description: ArtifactTextFieldValueRepresentation;
     attachments: ArtifactFieldValueFileFullRepresentation | null;
-    level: number;
+    level: Level;
     display_level: string;
 };
 

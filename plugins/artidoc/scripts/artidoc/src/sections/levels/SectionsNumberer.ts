@@ -19,6 +19,9 @@
 
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
+import { AT_THE_END } from "@/sections/insert/SectionsInserter";
+import { isFreetextSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 
 export type Level = 1 | 2 | 3;
 export const LEVEL_1: Level = 1;
@@ -67,4 +70,42 @@ export function injectDisplayLevel(sections: ArtidocSection[]): ArtidocSection[]
 
 export function updateDisplayLevelToSections(sections: ReactiveStoredArtidocSection[]): void {
     setSectionsLevels(sections.map((section) => section.value));
+}
+
+export function initLevelAccordingToPreviousSectionLevel(
+    sections: ReactiveStoredArtidocSection[],
+    index: number,
+): Level {
+    const previous_section = sections[index - 1];
+    if (!previous_section) {
+        return 1;
+    }
+    if (
+        isFreetextSection(previous_section.value) &&
+        isSectionBasedOnArtifact(sections[index].value)
+    ) {
+        return previous_section.value.level === LEVEL_1 ? LEVEL_2 : LEVEL_3;
+    }
+    return previous_section.value.level;
+}
+
+export function initLevelAccordingToPreviousSectionLevelForImportExistingArtifactSection(
+    sections: ReactiveStoredArtidocSection[],
+    position: PositionForSection,
+): Level {
+    const index =
+        position === AT_THE_END
+            ? sections.length
+            : sections.findIndex((sibling) => sibling.value.id === position?.before);
+
+    const previous_section = sections[index - 1];
+
+    if (!previous_section) {
+        return LEVEL_1;
+    }
+
+    if (isFreetextSection(previous_section.value)) {
+        return previous_section.value.level === LEVEL_1 ? LEVEL_2 : LEVEL_3;
+    }
+    return previous_section.value.level;
 }

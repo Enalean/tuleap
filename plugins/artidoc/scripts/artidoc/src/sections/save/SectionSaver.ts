@@ -44,7 +44,6 @@ import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { ManageErrorState } from "@/sections/states/SectionErrorManager";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
-import { LEVEL_1 } from "@/sections/levels/SectionsNumberer";
 
 export type SaveSection = {
     forceSave: () => void;
@@ -99,7 +98,7 @@ export const getSectionSaver = (
             edited_title.value,
             edited_description.value,
             getAttachementsForSave(section),
-            LEVEL_1,
+            section.value.level,
         )
             .andThen(() => getLatestVersionOfCurrentSection())
             .match(
@@ -168,6 +167,7 @@ export const getSectionSaver = (
                     document_id,
                     id,
                     retrieve_positions.getSectionPositionForSave(section.value),
+                    section.value.level,
                 ),
             );
         }
@@ -178,6 +178,7 @@ export const getSectionSaver = (
                 edited_title.value,
                 edited_description.value,
                 retrieve_positions.getSectionPositionForSave(section.value),
+                section.value.level,
             );
         }
 
@@ -194,7 +195,7 @@ export const getSectionSaver = (
                     edited_title.value,
                     edited_description.value,
                     getAttachementsForSave(section),
-                    LEVEL_1,
+                    section.value.level,
                 );
             })
             .andThen(() => getLatestVersionOfCurrentSection());
