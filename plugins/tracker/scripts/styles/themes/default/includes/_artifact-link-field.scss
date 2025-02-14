@@ -45,6 +45,8 @@
 }
 
 .tracker-form-element-artifactlink-list-nav {
+    margin: var(--tlp-small-spacing) 0 var(--tlp-medium-spacing);
+
     > li:not(.tracker-form-element-artifactlink-list-nav-label)
         + .tracker-form-element-artifactlink-list-nav-label {
         margin-left: 30px;
@@ -63,6 +65,7 @@ body .nav-tabs > li.tracker-form-element-artifactlink-list-nav-label:hover {
 
 /* stylelint-disable-next-line selector-no-qualifying-type, selector-class-pattern */
 h5.artifack_link_subtitle {
+    margin: 0;
     color: #606060;
 }
 
@@ -84,6 +87,16 @@ ul.tracker-form-element-artifactlink-list {
     margin-top: 0;
     padding-left: 0.5em;
     list-style-type: none;
+}
+
+.tracker-form-element-artifactlink-trackerpanel {
+    > .table {
+        margin: 0;
+    }
+}
+
+.artifact-link-value-reverse {
+    padding: var(--tlp-x-large-spacing) 0 0;
 }
 
 /* stylelint-disable-next-line selector-class-pattern */

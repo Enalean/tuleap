@@ -1711,6 +1711,9 @@ msgid ""
 "artifacts. Here is the list of allowed types for this platform."
 msgstr ""
 
+msgid "Links from and to current artifact"
+msgstr ""
+
 msgid "Links to other artifacts"
 msgstr ""
 
@@ -1821,6 +1824,9 @@ msgid "Minimum"
 msgstr ""
 
 msgid "Missing Parameters"
+msgstr ""
+
+msgid "Missing artifact link field"
 msgstr ""
 
 msgid "Missing field in data:"
