@@ -71,14 +71,14 @@ final readonly class SectionContentToBeCreated
     /**
      * @param list<int> $attachments
      */
-    public static function fromArtifact(string $title, string $description, array $attachments): self
+    public static function fromArtifact(string $title, string $description, array $attachments, Level $level): self
     {
         return new self(
             Option::nothing(\Psl\Type\int()),
             Option::nothing(SectionContentToBeCreatedFreetext::class),
             Option::fromValue(
                 new SectionContentToBeCreatedArtifact(
-                    new ArtifactContent($title, $description, $attachments),
+                    new ArtifactContent($title, $description, $attachments, $level),
                 ),
             ),
         );

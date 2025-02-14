@@ -29,9 +29,9 @@ use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
-use Tuleap\Artidoc\Domain\Document\Section\SectionContent;
 use Tuleap\Artidoc\Stubs\Domain\Document\Section\UpdateLevelStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
@@ -94,7 +94,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -134,7 +134,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -174,7 +174,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -218,7 +218,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -262,7 +262,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -308,7 +308,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -350,7 +350,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -406,7 +406,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [],
@@ -470,7 +470,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $result = $updater->updateArtifactContent(
             $this->section_identifier,
             self::ARTIFACT_ID,
-            new SectionContent(
+            new ArtifactContent(
                 'Le title',
                 'Le description',
                 [

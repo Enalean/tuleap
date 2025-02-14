@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\SectionContentToBeCreated;
 
 /**
@@ -31,7 +32,7 @@ use Tuleap\Artidoc\Domain\Document\Section\SectionContentToBeCreated;
  */
 final class ContentToBeCreatedBuilder
 {
-    public static function buildFromRepresentation(POSTSectionRepresentation $section): SectionContentToBeCreated
+    public static function buildFromRepresentation(POSTSectionRepresentation $section, Level $level): SectionContentToBeCreated
     {
         if ($section->import !== null && $section->content !== null) {
             throw new RestException(400, dgettext('tuleap-artidoc', "The properties 'import' and 'content' can not be used at the same time"));
@@ -52,6 +53,7 @@ final class ContentToBeCreatedBuilder
                 $section->content->title,
                 $section->content->description,
                 $section->content->attachments,
+                $level,
             );
         }
 

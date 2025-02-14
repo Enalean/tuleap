@@ -385,7 +385,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         }
 
         return $this->getSectionCreator($user, $collector)
-            ->create($artidoc_id, $before_section_id, $level, ContentToBeCreatedBuilder::buildFromRepresentation($section))
+            ->create($artidoc_id, $before_section_id, $level, ContentToBeCreatedBuilder::buildFromRepresentation($section, $level))
             ->andThen(
                 fn (SectionIdentifier $section_identifier) =>
                 $this->getSectionRetriever($user, $collector)
