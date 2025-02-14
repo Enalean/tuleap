@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 /**
  * @psalm-immutable
  */
-final class ArtidocSectionPOSTRepresentation
+final class POSTSectionRepresentation
 {
     /**
      * @var \Tuleap\Artidoc\REST\v1\POSTSectionImportRepresentation | null The already existing content to import {@type \Tuleap\Artidoc\REST\v1\POSTSectionImportRepresentation} {@required false}
@@ -38,7 +38,7 @@ final class ArtidocSectionPOSTRepresentation
     public ?POSTContentSectionRepresentation $content = null;
 
     /**
-     * @var \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionPositionBeforeRepresentation | null The position {@type \Tuleap\Artidoc\REST\v1\ArtidocPOSTSectionPositionBeforeRepresentation} {@required false}
+     * @var \Tuleap\Artidoc\REST\v1\POSTSectionPositionBeforeRepresentation | null The position {@type \Tuleap\Artidoc\REST\v1\POSTSectionPositionBeforeRepresentation} {@required false}
      */
     public mixed $position;
 
@@ -49,7 +49,7 @@ final class ArtidocSectionPOSTRepresentation
 
     public function __construct(
         ?POSTSectionImportRepresentation $import,
-        ?ArtidocPOSTSectionPositionBeforeRepresentation $position,
+        ?POSTSectionPositionBeforeRepresentation $position,
         ?POSTContentSectionRepresentation $content,
         int $level,
     ) {

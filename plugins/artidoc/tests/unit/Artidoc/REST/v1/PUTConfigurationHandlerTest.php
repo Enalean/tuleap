@@ -68,7 +68,7 @@ final class PUTConfigurationHandlerTest extends TestCase
 
         $result = $handler->handle(
             1,
-            new ArtidocPUTConfigurationRepresentation([self::TRACKER_ID]),
+            new PUTConfigurationRepresentation([self::TRACKER_ID]),
             $this->user,
         );
 
@@ -95,7 +95,7 @@ final class PUTConfigurationHandlerTest extends TestCase
 
         $result = $handler->handle(
             1,
-            new ArtidocPUTConfigurationRepresentation([self::TRACKER_ID]),
+            new PUTConfigurationRepresentation([self::TRACKER_ID]),
             $this->user,
         );
 
@@ -125,7 +125,7 @@ final class PUTConfigurationHandlerTest extends TestCase
 
         $result = $handler->handle(
             1,
-            new ArtidocPUTConfigurationRepresentation([self::TRACKER_ID]),
+            new PUTConfigurationRepresentation([self::TRACKER_ID]),
             $this->user,
         );
 
@@ -151,7 +151,7 @@ final class PUTConfigurationHandlerTest extends TestCase
 
         $result = $handler->handle(
             1,
-            new ArtidocPUTConfigurationRepresentation([self::TRACKER_ID]),
+            new PUTConfigurationRepresentation([self::TRACKER_ID]),
             $this->user,
         );
 
@@ -181,7 +181,7 @@ final class PUTConfigurationHandlerTest extends TestCase
 
         $result = $handler->handle(
             1,
-            new ArtidocPUTConfigurationRepresentation([self::TRACKER_ID]),
+            new PUTConfigurationRepresentation([self::TRACKER_ID]),
             $this->user,
         );
 

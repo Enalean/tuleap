@@ -35,9 +35,9 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 {
     public function testItThrowsWhenImportAndContentAreBothProvided(): void
     {
-        $section = new ArtidocSectionPOSTRepresentation(
+        $section = new POSTSectionRepresentation(
             new POSTSectionImportRepresentation(
-                new ArtidocPOSTSectionArtifactRepresentation(101),
+                new POSTSectionArtifactRepresentation(101),
             ),
             null,
             new POSTContentSectionRepresentation('title', 'description', 'freetext', []),
@@ -51,7 +51,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
     public function testItThrowsWhenImportAndContentAreBothAbsent(): void
     {
-        $section = new ArtidocSectionPOSTRepresentation(null, null, null, Level::One->value);
+        $section = new POSTSectionRepresentation(null, null, null, Level::One->value);
         $this->expectException(RestException::class);
         $this->expectExceptionMessage('No artifact to import or section content provided');
 
@@ -61,9 +61,9 @@ final class ContentToBeCreatedBuilderTest extends TestCase
     public function testHappyPatchForImportedArtifact(): void
     {
         $id      = 101;
-        $section = new ArtidocSectionPOSTRepresentation(
+        $section = new POSTSectionRepresentation(
             new POSTSectionImportRepresentation(
-                new ArtidocPOSTSectionArtifactRepresentation($id),
+                new POSTSectionArtifactRepresentation($id),
             ),
             null,
             null,
@@ -89,7 +89,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
     public function testHappyPatchForFreetext(): void
     {
-        $section = new ArtidocSectionPOSTRepresentation(
+        $section = new POSTSectionRepresentation(
             null,
             null,
             new POSTContentSectionRepresentation('title', 'description', 'freetext', []),
@@ -115,7 +115,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
     public function testHappyPatchForArtifact(): void
     {
-        $section = new ArtidocSectionPOSTRepresentation(
+        $section = new POSTSectionRepresentation(
             null,
             null,
             new POSTContentSectionRepresentation('title', 'description', 'artifact', []),

@@ -298,12 +298,12 @@ final class ArtidocResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the document
-     * @param ArtidocPUTConfigurationRepresentation $configuration {@from body}
+     * @param PUTConfigurationRepresentation $configuration {@from body}
      *
      * @status 200
      * @throws RestException
      */
-    public function putConfiguration(int $id, ArtidocPUTConfigurationRepresentation $configuration): void
+    public function putConfiguration(int $id, PUTConfigurationRepresentation $configuration): void
     {
         $this->checkAccess();
 

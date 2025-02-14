@@ -46,7 +46,7 @@ final readonly class PUTConfigurationHandler
     /**
      * @return Ok<true>|Err<Fault>
      */
-    public function handle(int $id, ArtidocPUTConfigurationRepresentation $configuration, \PFUser $user): Ok|Err
+    public function handle(int $id, PUTConfigurationRepresentation $configuration, \PFUser $user): Ok|Err
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
@@ -58,7 +58,7 @@ final readonly class PUTConfigurationHandler
      */
     private function saveConfiguration(
         ArtidocWithContext $document_information,
-        ArtidocPUTConfigurationRepresentation $configuration,
+        PUTConfigurationRepresentation $configuration,
         \PFUser $user,
     ): Ok|Err {
         $tracker = $this->retrieve_tracker->getTrackerById($configuration->selected_tracker_ids[0]);

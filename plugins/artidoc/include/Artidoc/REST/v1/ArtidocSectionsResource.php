@@ -353,12 +353,12 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $artidoc_id Id of the document {@from body}
-     * @param ArtidocSectionPOSTRepresentation $section {@from body}
+     * @param POSTSectionRepresentation $section {@from body}
      *
      * @status 200
      * @throws RestException
      */
-    public function postSection(int $artidoc_id, ArtidocSectionPOSTRepresentation $section): SectionRepresentation
+    public function postSection(int $artidoc_id, POSTSectionRepresentation $section): SectionRepresentation
     {
         $this->checkAccess();
 

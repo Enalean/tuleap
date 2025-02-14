@@ -28,7 +28,7 @@ namespace Tuleap\Artidoc\REST\v1;
 final class POSTSectionImportRepresentation
 {
     public function __construct(
-        public ArtidocPOSTSectionArtifactRepresentation $artifact,
+        public POSTSectionArtifactRepresentation $artifact,
     ) {
     }
 }
