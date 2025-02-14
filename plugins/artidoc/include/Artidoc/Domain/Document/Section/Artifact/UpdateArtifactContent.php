@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Domain\Document\Section\Artifact;
 
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\SectionContent;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -36,6 +35,6 @@ interface UpdateArtifactContent
     public function updateArtifactContent(
         SectionIdentifier $section_identifier,
         int $artifact_id,
-        SectionContent $content,
+        ArtifactContent $content,
     ): Ok|Err;
 }

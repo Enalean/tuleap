@@ -46,7 +46,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionMessage("The properties 'import' and 'content' can not be used at the same time");
 
-        ContentToBeCreatedBuilder::buildFromRepresentation($section);
+        ContentToBeCreatedBuilder::buildFromRepresentation($section, Level::One);
     }
 
     public function testItThrowsWhenImportAndContentAreBothAbsent(): void
@@ -55,7 +55,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionMessage('No artifact to import or section content provided');
 
-        ContentToBeCreatedBuilder::buildFromRepresentation($section);
+        ContentToBeCreatedBuilder::buildFromRepresentation($section, Level::One);
     }
 
     public function testHappyPatchForImportedArtifact(): void
@@ -70,7 +70,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
             Level::One->value,
         );
 
-        $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
+        $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section, Level::One);
         $content_to_insert->apply(
             function (int $artifact_id) use ($id) {
                 assertSame($id, $artifact_id);
@@ -96,7 +96,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
             Level::One->value,
         );
 
-        $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
+        $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section, Level::One);
         $content_to_insert->apply(
             function (int $artifact_id) {
                 assertSame(null, $artifact_id);
@@ -122,7 +122,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
             Level::One->value,
         );
 
-        $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
+        $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section, Level::One);
         $content_to_insert->apply(
             function (int $artifact_id) {
                 assertSame(null, $artifact_id);

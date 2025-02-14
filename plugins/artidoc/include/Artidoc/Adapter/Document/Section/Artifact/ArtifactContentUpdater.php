@@ -25,9 +25,9 @@ namespace Tuleap\Artidoc\Adapter\Document\Section\Artifact;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\Section\UpdateLevel;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\UpdateArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\SectionContent;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -51,7 +51,7 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
     public function updateArtifactContent(
         SectionIdentifier $section_identifier,
         int $artifact_id,
-        SectionContent $content,
+        ArtifactContent $content,
     ): Ok|Err {
         return $this->delegateUpdateOfArtifactToTrackerAPI($artifact_id, $content)
             ->andThen(function () use ($section_identifier, $content) {
@@ -64,7 +64,7 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function delegateUpdateOfArtifactToTrackerAPI(int $artifact_id, SectionContent $content): Ok|Err
+    private function delegateUpdateOfArtifactToTrackerAPI(int $artifact_id, ArtifactContent $content): Ok|Err
     {
         $artifact = $this->artifact_retriever->getArtifactById($artifact_id);
         if (! $artifact || ! $artifact->userCanUpdate($this->current_user)) {

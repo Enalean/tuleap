@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\UpdateArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
@@ -55,8 +56,18 @@ final readonly class SectionUpdater
         return $this->retriever
             ->retrieveSectionUserCanWrite($section_identifier)
             ->andThen(fn (RetrievedSection $section) => $section->content->apply(
-                fn (int $artifact_id) => $this->updateArtifactSection($section_identifier, $artifact_id, new SectionContent($title, $description, $attachments, $level)),
-                fn (RetrievedSectionContentFreetext $freetext) => $this->updateFreetextSection($section_identifier, $freetext, $title, $description, $level),
+                fn (int $artifact_id) => $this->updateArtifactSection(
+                    $section_identifier,
+                    $artifact_id,
+                    new ArtifactContent($title, $description, $attachments, $level)
+                ),
+                fn (RetrievedSectionContentFreetext $freetext) => $this->updateFreetextSection(
+                    $section_identifier,
+                    $freetext,
+                    $title,
+                    $description,
+                    $level,
+                ),
             ));
     }
 
@@ -66,7 +77,7 @@ final readonly class SectionUpdater
     private function updateArtifactSection(
         SectionIdentifier $section_identifier,
         int $artifact_id,
-        SectionContent $content,
+        ArtifactContent $content,
     ): Ok|Err {
         return $this->update_artifact->updateArtifactContent($section_identifier, $artifact_id, $content);
     }

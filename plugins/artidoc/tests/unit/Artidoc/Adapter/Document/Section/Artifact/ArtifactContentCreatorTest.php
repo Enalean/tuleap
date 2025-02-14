@@ -31,6 +31,7 @@ use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Stubs\Document\RetrieveConfiguredTrackerStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -98,6 +99,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -128,6 +130,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -158,6 +161,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -192,6 +196,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -226,6 +231,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -262,6 +268,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -296,6 +303,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -345,6 +353,7 @@ final class ArtifactContentCreatorTest extends TestCase
                 'Le title',
                 'Le description',
                 [],
+                Level::One,
             )
         );
 
@@ -405,6 +414,7 @@ final class ArtifactContentCreatorTest extends TestCase
                     123,
                     124,
                 ],
+                Level::One,
             )
         );
 

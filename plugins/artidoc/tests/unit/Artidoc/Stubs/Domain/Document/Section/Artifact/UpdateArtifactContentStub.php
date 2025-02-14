@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Domain\Document\Section\Artifact;
 
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\UpdateArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\SectionContent;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -45,7 +45,7 @@ final class UpdateArtifactContentStub implements UpdateArtifactContent
     public function updateArtifactContent(
         SectionIdentifier $section_identifier,
         int $artifact_id,
-        SectionContent $content,
+        ArtifactContent $content,
     ): Ok|Err {
         $this->called = true;
 

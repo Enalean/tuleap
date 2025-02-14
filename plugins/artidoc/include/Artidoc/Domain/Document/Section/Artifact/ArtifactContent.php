@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Artifact;
 
+use Tuleap\Artidoc\Domain\Document\Section\Level;
+
 /**
  * @psalm-immutable
  */
@@ -34,6 +36,7 @@ final readonly class ArtifactContent
         public string $title,
         public string $description,
         public array $attachments,
+        public Level $level,
     ) {
     }
 }
