@@ -22,12 +22,15 @@
  *
  */
 
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Tuleap\Project\UserPermissionsDao;
 
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
+
+$console_output = new \Symfony\Component\Console\Output\ConsoleOutput();
 
 $time_start = microtime(true);
 
@@ -42,25 +45,25 @@ if ($ldapPlugin instanceof LdapPlugin) {
         $nbr_users_to_suspend = count($users_to_suspend);
         $nbr_active_users     = $ldapQuery->getLdapUserManager()->getNbrActiveUsers();
         if ($nbr_users_to_suspend == 0) {
-            echo "No user will be suspended \n";
+            $console_output->writeln('No user will be suspended');
             return;
         }
         $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_active_users) * 100;
-        echo 'Number of users that will be suspended     : ' . $nbr_users_to_suspend . "\n";
-        echo 'Number of active users                     : ' . $nbr_active_users . "\n";
+        $console_output->writeln('Number of users that will be suspended     : ' . OutputFormatter::escape((string) $nbr_users_to_suspend));
+        $console_output->writeln('Number of active users                     : ' . OutputFormatter::escape((string) $nbr_active_users));
         if (! $threshold_users_suspension = $ldapPlugin->getLdap()->getLDAPParam('threshold_users_suspension')) {
-            echo "Threshold                                  : Is Not defined \n";
+            $console_output->writeln('Threshold                                  : Is Not defined');
         } else {
-            echo 'Threshold                                  : ' . $threshold_users_suspension . " % \n";
+            $console_output->writeln('Threshold                                  : ' . OutputFormatter::escape($threshold_users_suspension) . ' %');
         }
-        echo 'Percentage of users that will be suspended : ' . $percentage_users_to_suspend . " % \n";
-        echo "--------------------------------------------------- List of users that will be suspended :  \n";
+        $console_output->writeln('Percentage of users that will be suspended : ' . OutputFormatter::escape((string) $percentage_users_to_suspend) . ' %');
+        $console_output->writeln('--------------------------------------------------- List of users that will be suspended :');
         foreach ($users_to_suspend as $user) {
-            echo 'id     : ' . $user->getId() . "\n";
-            echo 'login  : ' . $user->getUserName() . "\n";
-            echo 'name   : ' . $user->getRealName() . "\n";
-            echo 'e-mail : ' . $user->getEmail() . "\n";
-            echo "--------------------------------------------------- \n";
+            $console_output->writeln('id     : ' . OutputFormatter::escape((string) $user->getId()));
+            $console_output->writeln('login  : ' . OutputFormatter::escape($user->getUserName()));
+            $console_output->writeln('name   : ' . OutputFormatter::escape($user->getRealName()));
+            $console_output->writeln('e-mail : ' . OutputFormatter::escape((string) $user->getEmail()));
+            $console_output->writeln('---------------------------------------------------');
         }
     } else {
         $ldapQuery->syncAll();
@@ -84,7 +87,7 @@ if ($ldapPlugin instanceof LdapPlugin) {
         $time_end = microtime(true);
         $time     = $time_end - $time_start;
 
-        echo 'Time elapsed: ' . $time . "\n";
-        echo 'LDAP time: ' . $ldapQuery->getElapsedLdapTime() . "\n";
+        $console_output->writeln('Time elapsed: ' . OutputFormatter::escape((string) $time));
+        $console_output->writeln('LDAP time: ' . OutputFormatter::escape((string) $ldapQuery->getElapsedLdapTime()));
     }
 }
