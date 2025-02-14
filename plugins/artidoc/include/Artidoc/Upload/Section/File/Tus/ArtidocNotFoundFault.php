@@ -32,6 +32,11 @@ final readonly class ArtidocNotFoundFault extends Fault
 {
     public static function build(TusFileInformation $file_information): self
     {
-        return new self("Unable to find corresponding artidoc id from tus file information #{$file_information->getID()}");
+        return new self(
+            sprintf(
+                'Unable to find corresponding artidoc id from tus file information #%s',
+                $file_information->getID()->toString(),
+            )
+        );
     }
 }

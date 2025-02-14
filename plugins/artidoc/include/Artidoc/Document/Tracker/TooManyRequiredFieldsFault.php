@@ -32,6 +32,11 @@ final readonly class TooManyRequiredFieldsFault extends Fault
 {
     public static function forDocument(Artidoc $document): Fault
     {
-        return new self("The tracker for artidoc #{$document->getId()} should not have other required field than title and description fields.");
+        return new self(
+            sprintf(
+                'The tracker for artidoc #%s should not have other required field than title and description fields.',
+                $document->getId(),
+            )
+        );
     }
 }

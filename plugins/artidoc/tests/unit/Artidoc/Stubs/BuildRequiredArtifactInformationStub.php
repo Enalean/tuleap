@@ -29,7 +29,6 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\Artifact\Artifact;
 
 final readonly class BuildRequiredArtifactInformationStub implements BuildRequiredArtifactInformation
 {
@@ -58,16 +57,14 @@ final readonly class BuildRequiredArtifactInformationStub implements BuildRequir
         return new self(null);
     }
 
-    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, Artifact|int $artifact, \PFUser $user): Ok|Err
+    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, \PFUser $user): Ok|Err
     {
         if ($this->info === null) {
             throw new \Exception('Unexpected call to ' . __METHOD__);
         }
 
-        $id = $artifact instanceof Artifact ? $artifact->getId() : $artifact;
-
-        if (isset($this->info[$id])) {
-            return Result::ok($this->info[$id]);
+        if (isset($this->info[$artifact_id])) {
+            return Result::ok($this->info[$artifact_id]);
         }
 
         return Result::err(Fault::fromMessage('You cannot see the artifact'));
