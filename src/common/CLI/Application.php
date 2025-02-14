@@ -20,6 +20,7 @@
 
 namespace Tuleap\CLI;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -40,12 +41,12 @@ class Application extends \Symfony\Component\Console\Application
         );
     }
 
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         if ($input->hasParameterOption(['--version', '-V', '-v'], true)) {
             $output->writeln($this->getVersion());
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         if ($input->hasParameterOption(['-c', '--clear-caches'], true)) {

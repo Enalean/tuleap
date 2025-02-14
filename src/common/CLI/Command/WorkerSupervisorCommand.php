@@ -88,7 +88,7 @@ class WorkerSupervisorCommand extends Command
             ->addOption('daemon', 'd', InputOption::VALUE_NONE, 'No output on stdout, should be used with & to run in background. Option only valid for `start`');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         switch ($input->getArgument('action')) {
             case 'start':
@@ -104,7 +104,7 @@ class WorkerSupervisorCommand extends Command
 
             default:
                 $output->writeln('<error>Invalid action</error>');
-                return 1;
+                return Command::FAILURE;
         }
     }
 

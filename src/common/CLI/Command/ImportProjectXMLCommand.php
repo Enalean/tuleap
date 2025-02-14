@@ -65,7 +65,7 @@ class ImportProjectXMLCommand extends Command
             ->addOption('use-lame-password');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('mapping-path') === null && $input->getOption('automap') === null) {
             throw new InvalidArgumentException('Need mapping-path (--mapping-path / -m) or automap (--automap)');

@@ -77,7 +77,7 @@ final class ReplayImportCommand extends Command
             ->addOption('tracker-name', '', InputOption::VALUE_REQUIRED, 'New name for tracker');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $logger = new ConsoleLogger($output, [LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL]);
         try {

@@ -33,7 +33,7 @@ $application->setDefaultCommand($import_project_xml_command->getName(), $is_sing
 
 $console_output = new ConsoleOutput();
 
-$argv = $_SERVER['argv'];
+$argv = $_SERVER['argv'] ?? [];
 
 foreach ($argv as $index => $value) {
     if ($value === '-n') {
@@ -44,4 +44,4 @@ foreach ($argv as $index => $value) {
 }
 $console_output->writeln('<fg=yellow;options=bold>Please use tuleap import-project-xml -u < username > -m < mapping > -i < archive > -p < project > ... </>');
 
-$application->run(new ArgvInput($argv), $console_output);
+$application->run(new ArgvInput(array_values($argv)), $console_output);

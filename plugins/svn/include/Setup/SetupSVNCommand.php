@@ -38,7 +38,7 @@ final class SetupSVNCommand extends Command
         parent::__construct(self::NAME);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $httpd_vhost = '/etc/httpd/conf.d/tuleap-vhost.conf';
         if (! file_exists($httpd_vhost)) {

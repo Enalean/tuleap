@@ -2,7 +2,7 @@
   "require": {
     "nikic/php-parser": "^4.2",
     "composer/xdebug-handler": "^2.0",
-    "symfony/console": "^6.0"
+    "symfony/console": "^7.2"
   },
   "autoload": {
     "psr-4": {
