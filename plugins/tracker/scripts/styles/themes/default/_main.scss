@@ -37,7 +37,7 @@ body.tracker-artifact-view-body .main .content {
 }
 
 .tracker-artifact-view-content {
-    padding: 12px 12px 0;
+    padding: var(--tlp-medium-spacing);
 }
 
 /* {{{ New trackers */
@@ -1219,6 +1219,10 @@ div.tracker-admin-field-controls {
     .artifact-link-value-reverse {
         padding: 5px 10px;
         border-left: 1px dotted #c7c7c7;
+    }
+
+    .artifact-link-value-reverse {
+        padding: var(--tlp-x-large-spacing) 10px 0;
     }
 
     .artifact-link-value,

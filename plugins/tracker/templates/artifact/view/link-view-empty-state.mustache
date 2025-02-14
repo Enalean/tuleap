@@ -1,11 +1,35 @@
-<div class="tlp-card">
-    {{# dgettext }}tuleap-tracker |The tracker does not have an artifact link field, nothing can be displayed here.{{/ dgettext }}
-    {{# is_tracker_administrator }}
-        <br>
-        {{# dgettext }} tuleap-tracker
-            | You can add an artifact link field %sin your tracker fields administration%s.
-            | <a href="{{ tracker_administration_url }}">
-            | </a>
-        {{/ dgettext }}
-    {{/ is_tracker_administrator }}
-</div>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                {{# dgettext }} tuleap-tracker | Links from and to current artifact {{/ dgettext }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="empty-state-pane">
+                <div class="empty-state-illustration">
+                    {{> svg-empty-state-tumbleweed }}
+                </div>
+                <p class="empty-state-title">
+                    {{# dgettext }} tuleap-tracker
+                        | Missing artifact link field
+                    {{/ dgettext }}
+                </p>
+                <p class="empty-state-text">
+                    {{# dgettext }} tuleap-tracker
+                        | The tracker does not have an artifact link field, nothing can be displayed here.
+                    {{/ dgettext }}
+                </p>
+                {{# is_tracker_administrator }}
+                    <p class="empty-state-text">
+                    {{# dgettext }} tuleap-tracker
+                        | You can add an artifact link field %sin your tracker fields administration%s.
+                        | <a href="{{ tracker_administration_url }}">
+                            | </a>
+                    {{/ dgettext }}
+                    </p>
+                {{/ is_tracker_administrator }}
+            </div>
+        </section>
+    </div>
+</section>

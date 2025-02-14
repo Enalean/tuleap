@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -1927,6 +1927,9 @@ msgstr ""
 "Les liens entre artéfacts peuvent être typés en spécifiant pour chaque lien "
 "sa nature. La liste des natures possibles est définie ci-dessous."
 
+msgid "Links from and to current artifact"
+msgstr "Liens depuis et vers l'artéfact courant"
+
 msgid "Links to other artifacts"
 msgstr "Liens vers d'autres artéfacts"
 
@@ -2052,6 +2055,9 @@ msgstr "Minimum"
 
 msgid "Missing Parameters"
 msgstr "Paramètres manquants"
+
+msgid "Missing artifact link field"
+msgstr "Champ de lien d'artéfacts manquant"
 
 msgid "Missing field in data:"
 msgstr "Valeur de champ manquant:"

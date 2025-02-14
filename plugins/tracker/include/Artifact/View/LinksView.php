@@ -58,9 +58,16 @@ final readonly class LinksView extends TrackerArtifactView
             );
         }
 
-        return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-type"></div>'
-            . '<div class=tlp-card>'
-            . $field->fetchArtifactValueReadOnly($this->artifact, $this->artifact->getValue($field))
-            . '</div>';
+        return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-type"></div>
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">' . dgettext('tuleap-tracker', 'Links from and to current artifact') . '</h1>
+                    </div>
+                    <section class="tlp-pane-section">'
+                . $field->fetchArtifactValueReadOnly($this->artifact, $this->artifact->getValue($field))
+                . '</section>
+                </div>
+            </section>';
     }
 }
