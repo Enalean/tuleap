@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 /**
  * @psalm-immutable
  */
-final class ArtidocPOSTSectionPositionBeforeRepresentation
+final class POSTSectionPositionBeforeRepresentation
 {
     public string $before;
 

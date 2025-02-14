@@ -25,12 +25,16 @@ namespace Tuleap\Artidoc\REST\v1;
 /**
  * @psalm-immutable
  */
-final class ArtidocPOSTSectionArtifactRepresentation
+final class PUTConfigurationRepresentation
 {
-    public int $id;
+    /**
+     * @var int[] Selected trackers for document {@required true} {@min 1}{@max 1}
+     * @psalm-param array{0:int} $selected_tracker_ids
+     */
+    public array $selected_tracker_ids;
 
-    public function __construct(int $id)
+    public function __construct(array $selected_tracker_ids)
     {
-        $this->id = $id;
+        $this->selected_tracker_ids = $selected_tracker_ids;
     }
 }

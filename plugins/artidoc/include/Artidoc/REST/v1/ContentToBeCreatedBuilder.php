@@ -31,7 +31,7 @@ use Tuleap\Artidoc\Domain\Document\Section\SectionContentToBeCreated;
  */
 final class ContentToBeCreatedBuilder
 {
-    public static function buildFromRepresentation(ArtidocSectionPOSTRepresentation $section): SectionContentToBeCreated
+    public static function buildFromRepresentation(POSTSectionRepresentation $section): SectionContentToBeCreated
     {
         if ($section->import !== null && $section->content !== null) {
             throw new RestException(400, dgettext('tuleap-artidoc', "The properties 'import' and 'content' can not be used at the same time"));
