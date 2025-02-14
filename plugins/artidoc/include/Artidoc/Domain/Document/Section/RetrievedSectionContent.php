@@ -51,14 +51,14 @@ final readonly class RetrievedSectionContent
         );
     }
 
-    public static function fromFreetext(FreetextIdentifier $id, string $title, string $description): self
+    public static function fromFreetext(FreetextIdentifier $id, string $title, string $description, Level $level): self
     {
         return new self(
             Option::nothing(\Psl\Type\int()),
             Option::fromValue(
                 new RetrievedSectionContentFreetext(
                     $id,
-                    new FreetextContent($title, $description),
+                    new FreetextContent($title, $description, $level),
                 ),
             ),
         );

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Freetext;
 
+use Tuleap\Artidoc\Domain\Document\Section\Level;
+
 /**
  * @psalm-immutable
  */
@@ -30,6 +32,7 @@ final readonly class FreetextContent
     public function __construct(
         public string $title,
         public string $description,
+        public Level $level,
     ) {
     }
 }

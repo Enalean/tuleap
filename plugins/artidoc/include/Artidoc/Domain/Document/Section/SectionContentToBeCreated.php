@@ -55,13 +55,13 @@ final readonly class SectionContentToBeCreated
         );
     }
 
-    public static function fromFreetext(string $title, string $description): self
+    public static function fromFreetext(string $title, string $description, Level $level): self
     {
         return new self(
             Option::nothing(\Psl\Type\int()),
             Option::fromValue(
                 new SectionContentToBeCreatedFreetext(
-                    new FreetextContent($title, $description),
+                    new FreetextContent($title, $description, $level),
                 ),
             ),
             Option::nothing(SectionContentToBeCreatedArtifact::class),

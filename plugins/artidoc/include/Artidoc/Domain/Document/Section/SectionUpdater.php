@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\UpdateArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\UpdateFreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -63,10 +64,8 @@ final readonly class SectionUpdater
                 ),
                 fn (RetrievedSectionContentFreetext $freetext) => $this->updateFreetextSection(
                     $section_identifier,
-                    $freetext,
-                    $title,
-                    $description,
-                    $level,
+                    $freetext->id,
+                    new FreetextContent($title, $description, $level),
                 ),
             ));
     }
@@ -87,12 +86,10 @@ final readonly class SectionUpdater
      */
     private function updateFreetextSection(
         SectionIdentifier $section_identifier,
-        RetrievedSectionContentFreetext $freetext,
-        string $title,
-        string $description,
-        Level $level,
+        FreetextIdentifier $id,
+        FreetextContent $content,
     ): Ok|Err {
-        $this->update_freetext->updateFreetextContent($section_identifier, $freetext->id, new FreetextContent($title, $description), $level);
+        $this->update_freetext->updateFreetextContent($section_identifier, $id, $content);
 
         return Result::ok(null);
     }

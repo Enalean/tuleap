@@ -133,7 +133,7 @@ final class SectionCreatorTest extends TestCase
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
             Level::One,
-            SectionContentToBeCreated::fromFreetext('my title', 'my description'),
+            SectionContentToBeCreated::fromFreetext('my title', 'my description', Level::One),
         );
 
         self::assertTrue(Result::isOk($result));

@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Domain\Document\Section\Freetext;
 
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Level;
 
 interface UpdateFreetextContent
 {
@@ -32,6 +31,5 @@ interface UpdateFreetextContent
         SectionIdentifier $section_identifier,
         FreetextIdentifier $id,
         FreetextContent $content,
-        Level $level,
     ): void;
 }

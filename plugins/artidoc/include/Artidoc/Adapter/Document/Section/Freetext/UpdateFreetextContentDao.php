@@ -27,7 +27,6 @@ use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\UpdateFreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DataAccessObject;
 
 final class UpdateFreetextContentDao extends DataAccessObject implements UpdateFreetextContent
@@ -41,10 +40,9 @@ final class UpdateFreetextContentDao extends DataAccessObject implements UpdateF
         SectionIdentifier $section_identifier,
         FreetextIdentifier $id,
         FreetextContent $content,
-        Level $level,
     ): void {
-        $this->getDB()->tryFlatTransaction(function () use ($section_identifier, $id, $content, $level) {
-            $this->level_updater->updateLevel($section_identifier, $level);
+        $this->getDB()->tryFlatTransaction(function () use ($section_identifier, $id, $content) {
+            $this->level_updater->updateLevel($section_identifier, $content->level);
 
             $this->getDB()->update(
                 'plugin_artidoc_section_freetext',
