@@ -42,7 +42,6 @@
                         'artidoc-display-level-for-edition': has_add_button,
                         'artidoc-display-level-for-readonly': !has_add_button,
                     }"
-                    id="display-level"
                 >
                     {{ section.value.display_level }}
                 </div>

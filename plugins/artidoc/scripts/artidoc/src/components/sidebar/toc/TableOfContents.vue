@@ -45,14 +45,7 @@
                 <dragndrop-grip-illustration />
             </span>
 
-            <span
-                class="artidoc-display-level"
-                id="display-level"
-                v-bind:class="{
-                    'artidoc-level2': section.value.level === 2,
-                    'artidoc-level3': section.value.level === 3,
-                }"
-            >
+            <span class="toc-display-level" data-test="display-level">
                 {{ section.value.display_level }}
             </span>
 
@@ -278,14 +271,6 @@ li {
         background: var(--tlp-main-color-lighter-90);
     }
 
-    &:has(> .artidoc-level2) {
-        padding-left: var(--tlp-large-spacing);
-    }
-
-    &:has(> .artidoc-level3) {
-        padding-left: calc(var(--tlp-large-spacing) * 2);
-    }
-
     &:not(:hover) > .dragndrop-grip {
         display: none;
     }
@@ -379,6 +364,10 @@ $arrows-overflow: calc(var(--tlp-small-spacing) / 2);
     &.reorder-arrows-when-sections-loading {
         visibility: hidden;
     }
+}
+
+.toc-display-level {
+    font-variant-numeric: tabular-nums;
 }
 
 .section-title,
