@@ -26,14 +26,16 @@ use DateTime;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $project_member;
     private PFUser $project_admin;
     private int $release_artifact_past_1_id;
@@ -56,7 +58,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -90,11 +92,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date = '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -106,11 +109,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date = '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -122,11 +126,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date = '2023-03-08 10:25'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -138,11 +143,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date = '2023-03-08' OR @last_update_date = '1970-01-01'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -154,11 +160,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date != '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -170,11 +177,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date != '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -186,11 +194,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date != '2023-03-08 10:25'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -202,11 +211,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date != '2023-03-08' AND @last_update_date != '1970-01-01'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -218,11 +228,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date < '2023-03-09'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -234,11 +245,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date < '2023-03-09'",
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -250,11 +262,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date < '2023-03-08 15:52'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -266,11 +279,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date < NOW()",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -282,11 +296,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date < NOW() OR @last_update_date < '1970-01-01'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -298,11 +313,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date <= '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -314,11 +330,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date <= '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -330,11 +347,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date <= '2023-03-08 15:52'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -346,11 +364,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date <= NOW()",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -365,11 +384,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date <= NOW() OR @last_update_date <= '1970-01-01'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -384,11 +404,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date > '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -400,11 +421,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date > '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -416,11 +438,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date > '2023-03-08 10:25'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -432,11 +455,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanYesterday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date > NOW() - 1d",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -448,11 +472,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date > '2023-03-08' OR @last_update_date > NOW()",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -464,11 +489,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date >= '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -483,11 +509,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date >= '2023-03-08'",
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -503,11 +530,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date >= '2023-03-08 10:25'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -522,11 +550,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date >= NOW()",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -538,11 +567,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date >= '2023-03-08' OR @last_update_date >= NOW()",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -557,11 +587,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -573,11 +604,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -589,11 +621,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date BETWEEN('2023-03-01', '2023-03-31')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -605,11 +638,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenYesterdayAndTomorrow(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date BETWEEN(NOW() - 1d, NOW() + 1d)",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -621,11 +655,12 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE @last_update_date BETWEEN(NOW() - 1d, NOW() + 1d) OR @last_update_date BETWEEN('2023-03-01', '2023-03-31')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );

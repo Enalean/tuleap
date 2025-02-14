@@ -90,10 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .use(VueDOMPurifyHTML)
             .provide(DATE_FORMATTER, date_formatter)
             .provide(DATE_TIME_FORMATTER, date_time_formatter)
-            .provide(
-                RETRIEVE_ARTIFACTS_TABLE,
-                ArtifactsTableRetriever(ArtifactsTableBuilder(), report_id),
-            )
+            .provide(RETRIEVE_ARTIFACTS_TABLE, ArtifactsTableRetriever(ArtifactsTableBuilder()))
             .provide(REPORT_ID, report_id)
             .provide(IS_USER_ADMIN, is_widget_admin)
             .provide(DOCUMENTATION_BASE_URL, documentation_url)

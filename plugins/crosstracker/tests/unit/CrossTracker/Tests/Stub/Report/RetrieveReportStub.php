@@ -22,19 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub\Report;
 
+use Tuleap\DB\UUID;
+
 final readonly class RetrieveReportStub implements \Tuleap\CrossTracker\Report\RetrieveReport
 {
     /**
-     * @param list<array{id: int, query: string, title: string, description: string}> $reports
+     * @param list<array{id: UUID, query: string, title: string, description: string, widget_id: int}> $reports
      */
     private function __construct(private array $reports)
     {
     }
 
-    public function searchWidgetById(int $widget_id): ?array
+    public function searchQueryByUuid(string $uuid_hex): ?array
     {
         foreach ($this->reports as $row) {
-            if ($row['id'] === $widget_id) {
+            if ($row['id']->toString() === $uuid_hex) {
                 return $row;
             }
         }
@@ -45,7 +47,7 @@ final readonly class RetrieveReportStub implements \Tuleap\CrossTracker\Report\R
     {
         $result = [];
         foreach ($this->reports as $row) {
-            if ($row['id'] === $widget_id) {
+            if ($row['widget_id'] === $widget_id) {
                 $result[] = $row;
             }
         }
@@ -53,8 +55,8 @@ final readonly class RetrieveReportStub implements \Tuleap\CrossTracker\Report\R
     }
 
     /**
-     * @param array{id: int, query: string, title: string, description: string} $first_report
-     * @param array{id: int, query: string, title: string, description: string} ...$other_reports
+     * @param array{id: UUID, query: string, title: string, description: string, widget_id: int} $first_report
+     * @param array{id: UUID, query: string, title: string, description: string, widget_id: int} ...$other_reports
      * @no-named-arguments
      */
     public static function withReports(array $first_report, array ...$other_reports): self

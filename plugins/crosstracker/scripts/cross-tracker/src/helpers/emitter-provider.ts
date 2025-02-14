@@ -22,11 +22,14 @@ import type { Report } from "../type";
 
 export type EmitterProvider = Pick<Emitter<Events>, "off" | "on" | "emit">;
 
+export const SWITCH_QUERY_EVENT = "switch-query";
+export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";
+
 export type Events = {
-    "update-chosen-query-display": void;
-    "refresh-artifacts": RefreshArtifactEvent;
+    [SWITCH_QUERY_EVENT]: void;
+    [REFRESH_ARTIFACTS_EVENT]: RefreshArtifactsEvent;
 };
 
-export type RefreshArtifactEvent = {
+export type RefreshArtifactsEvent = {
     readonly query: Report;
 };

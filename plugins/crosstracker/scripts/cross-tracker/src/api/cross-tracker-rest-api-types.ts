@@ -23,6 +23,7 @@ import type { ColorName } from "@tuleap/core-constants";
 export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
 
 export type ReportRepresentation = {
+    readonly uuid: string;
     readonly expert_query: string;
     readonly title: string;
     readonly description: string;

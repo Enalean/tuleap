@@ -28,11 +28,12 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProjectsCollection;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -42,6 +43,7 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $user;
     private EventManager&MockObject $event_manager;
     private Project $top_project;
@@ -79,7 +81,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_2->getId()));
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_3->getId()));
 
-        $this->addReportToProject(1, $top_project_id);
+        $this->uuid = $this->addReportToProject(1, $top_project_id);
         $this->addReportToProject(2, $sub_project_1_id);
     }
 
@@ -117,7 +119,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturn($new_event);
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1', '', '', 1),
             $this->user,
         );
         $this->assertItContainsTrackers(['Tracker 2', 'Tracker 3'], $result);
@@ -135,7 +137,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturn($new_event);
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project IN("aggregated", "self") WHERE @id >= 1', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @tracker.name FROM @project IN("aggregated", "self") WHERE @id >= 1', '', '', 1),
             $this->user,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2', 'Tracker 3'], $result);

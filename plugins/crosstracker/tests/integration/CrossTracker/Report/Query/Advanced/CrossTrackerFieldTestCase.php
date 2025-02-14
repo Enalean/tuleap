@@ -26,7 +26,7 @@ use EventManager;
 use ForgeConfig;
 use LogicException;
 use PFUser;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
@@ -36,6 +36,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -69,12 +70,13 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         unset($_SERVER['REQUEST_URI']);
     }
 
-    protected function addReportToProject(int $widget_id, int $project_id): void
+    protected function addReportToProject(int $widget_id, int $project_id): UUID
     {
-        $db   = DBFactory::getMainTuleapDBConnection()->getDB();
-        $uuid = new DatabaseUUIDV7Factory();
+        $db           = DBFactory::getMainTuleapDBConnection()->getDB();
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        $uuid         = $uuid_factory->buildUUIDBytes();
         $db->insert('plugin_crosstracker_query', [
-            'id'        => $uuid->buildUUIDBytes(),
+            'id'        => $uuid,
             'query'     => '',
             'title'     => '',
             'widget_id' => $widget_id,
@@ -93,6 +95,8 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         self::assertTrue($widget_dao->insertWidgetInColumnWithRank(ProjectCrossTrackerSearch::NAME, $widget_id, $column_id, 0));
         $db->insert('plugin_crosstracker_widget', ['id' => $widget_id]);
         self::assertNotNull((new CrossTrackerWidgetDao())->searchCrossTrackerWidgetDashboardById($widget_id));
+
+        return $uuid_factory->buildUUIDFromBytesData($uuid);
     }
 
     /**
@@ -100,7 +104,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    final protected function getMatchingArtifactIds(CrossTrackerExpertReport $report, PFUser $user): array
+    final protected function getMatchingArtifactIds(CrossTrackerQuery $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -114,7 +118,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         }, $result->artifacts));
     }
 
-    final protected function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    final protected function getQueryResults(CrossTrackerQuery $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()

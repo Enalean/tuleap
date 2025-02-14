@@ -57,6 +57,7 @@ describe("CrossTrackerWidget", () => {
         vi.spyOn(rest_querier, "getReports").mockReturnValue(
             okAsync([
                 {
+                    uuid: "0194dfd6-a489-703b-aabd-9d473212d908",
                     expert_query: "",
                     title: "My title",
                     description: "",
@@ -208,8 +209,9 @@ describe("CrossTrackerWidget", () => {
     describe("loadBackendReport()", () => {
         it("When I load the report, then the reports will be initialized", async () => {
             const expert_query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
+            const uuid = "0194dfd6-a489-703b-aabd-9d473212d908";
             vi.spyOn(rest_querier, "getReports").mockReturnValue(
-                okAsync([{ expert_query, title: " TQL query title", description: "" }]),
+                okAsync([{ expert_query, title: " TQL query title", description: "", uuid }]),
             );
             const init = vi.spyOn(backend_cross_tracker_report, "init");
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
@@ -276,7 +278,7 @@ describe("CrossTrackerWidget", () => {
         it(`when user is admin and there is an error selected in the report,
             it does not allow XLSX export`, async () => {
             vi.spyOn(rest_querier, "getReports").mockReturnValue(
-                okAsync([{ expert_query: "", title: "title", description: "" }]),
+                okAsync([{ expert_query: "", title: "title", description: "", uuid: "" }]),
             );
 
             const wrapper = getWrapper();

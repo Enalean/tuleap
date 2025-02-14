@@ -31,11 +31,11 @@ describe(`ArtifactsTableRetriever`, () => {
     describe(`getSelectableQueryResult()`, () => {
         const limit = 30;
         const offset = 30;
-        const report_id = 583;
+        const query_id = "0194dfd6-a489-703b-aabd-9d473212d908";
         const expert_query = `SELECT start_date WHERE @title = "forevouched"`;
 
         const getRetriever = (): RetrieveArtifactsTable => {
-            return ArtifactsTableRetriever(ArtifactsTableBuilder(), report_id);
+            return ArtifactsTableRetriever(ArtifactsTableBuilder());
         };
 
         it(`will send the given tracker ids and expert query to the REST API
@@ -63,13 +63,14 @@ describe(`ArtifactsTableRetriever`, () => {
             );
 
             const result = await getRetriever().getSelectableQueryResult(
+                query_id,
                 expert_query,
                 limit,
                 offset,
             );
 
             expect(getResponse).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                fetch_result.uri`/api/v1/cross_tracker_reports/${query_id}/content`,
                 {
                     params: {
                         limit,
@@ -112,10 +113,10 @@ describe(`ArtifactsTableRetriever`, () => {
                 } as Response),
             );
 
-            const result = await getRetriever().getSelectableReportContent(limit, offset);
+            const result = await getRetriever().getSelectableReportContent(query_id, limit, offset);
 
             expect(getResponse).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                fetch_result.uri`/api/v1/cross_tracker_reports/${query_id}/content`,
                 {
                     params: {
                         limit,
@@ -166,10 +167,10 @@ describe(`ArtifactsTableRetriever`, () => {
                 .spyOn(fetch_result, "getAllJSON")
                 .mockReturnValue(okAsync([report_content, report_content_second_page]));
 
-            const result = await getRetriever().getSelectableFullReport();
+            const result = await getRetriever().getSelectableFullReport(query_id);
 
             expect(getAllJSON).toHaveBeenCalledWith(
-                uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                uri`/api/v1/cross_tracker_reports/${query_id}/content`,
                 {
                     params: {
                         limit: 50,

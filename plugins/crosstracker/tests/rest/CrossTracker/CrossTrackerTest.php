@@ -30,6 +30,8 @@ use function Psl\Json\encode;
 
 final class CrossTrackerTest extends RestBase
 {
+    private const UUID_PATTERN = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
+
     public function setUp(): void
     {
         parent::setUp();
@@ -58,39 +60,31 @@ final class CrossTrackerTest extends RestBase
 
     private function assertGetIdReport(ResponseInterface $response): void
     {
-        $expected_cross_tracker = [
-            'id'               => 1,
-            'uri'              => 'cross_tracker_reports/1',
-            'expert_query'     => '',
-            'title'            => 'My query',
-            'description'      => '',
-        ];
-
         $json_response = decode($response->getBody()->getContents());
         self::assertIsArray($json_response);
         self::assertCount(1, $json_response);
-        self::assertEqualsCanonicalizing($expected_cross_tracker, $json_response[0]);
+        self::assertSame('cross_tracker_reports/1', $json_response[0]['uri']);
+        self::assertSame('', $json_response[0]['expert_query']);
+        self::assertSame('My query', $json_response[0]['title']);
+        self::assertSame('', $json_response[0]['description']);
+        self::assertMatchesRegularExpression(self::UUID_PATTERN, $json_response[0]['uuid']);
     }
 
     public function testPut(): void
     {
         $params   = [
-            'trackers_id'  => [],
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
         ];
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/3')->withBody($this->stream_factory->createStream(encode($params))));
 
         self::assertSame(201, $response->getStatusCode());
 
-        $expected_cross_tracker = [
-            'id'           => 3,
-            'uri'          => 'cross_tracker_reports/3',
-            'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
-            'title'        => 'My query',
-            'description'  => '',
-        ];
-
-        self::assertEquals($expected_cross_tracker, decode($response->getBody()->getContents()));
+        $json_response = decode($response->getBody()->getContents());
+        self::assertSame('cross_tracker_reports/3', $json_response['uri']);
+        self::assertSame("SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}", $json_response['expert_query']);
+        self::assertSame('My query', $json_response['title']);
+        self::assertSame('', $json_response['description']);
+        self::assertMatchesRegularExpression(self::UUID_PATTERN, $json_response['uuid']);
     }
 
     public function testPutForReadOnlyUser(): void
@@ -108,11 +102,14 @@ final class CrossTrackerTest extends RestBase
 
     public function testGetContentIdForReadOnlyUser(): void
     {
+        $query_response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/3'));
+        $query_id       = urlencode(decode($query_response->getBody()->getContents())[0]['uuid']);
+
         $query    = encode([
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
         ]);
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'cross_tracker_reports/3/content?limit=50&offset=0&query=' . urlencode($query)),
+            $this->request_factory->createRequest('GET', "cross_tracker_reports/$query_id/content?limit=50&offset=0&query=" . urlencode($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -128,11 +125,14 @@ final class CrossTrackerTest extends RestBase
 
     public function testGetContentIdWithExpertMode(): void
     {
+        $query_response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/3'));
+        $query_id       = urlencode(decode($query_response->getBody()->getContents())[0]['uuid']);
+
         $query    = encode([
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
         ]);
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'cross_tracker_reports/3/content?report_mode=expert&limit=50&offset=0&query=' . urlencode($query)),
+            $this->request_factory->createRequest('GET', "cross_tracker_reports/$query_id/content?limit=50&offset=0&query=" . urlencode($query)),
         );
 
         self::assertSame(200, $response->getStatusCode());
@@ -147,11 +147,14 @@ final class CrossTrackerTest extends RestBase
 
     public function testGetReportWithoutArtifacts(): void
     {
+        $query_response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/3'));
+        $query_id       = urlencode(decode($query_response->getBody()->getContents())[0]['uuid']);
+
         $query    = encode([
             'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id < 1",
         ]);
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'cross_tracker_reports/3/content?report_mode=expert&limit=50&offset=0&query=' . urlencode($query)),
+            $this->request_factory->createRequest('GET', "cross_tracker_reports/$query_id/content?limit=50&offset=0&query=" . urlencode($query)),
         );
 
         self::assertSame(200, $response->getStatusCode());

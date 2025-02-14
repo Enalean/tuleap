@@ -25,16 +25,18 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use UserHelper;
 
 final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $user;
     /**
      * @var array<int, UserRepresentation>
@@ -56,7 +58,7 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
         $bob   = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
         $core_builder->addUserToProjectMembers((int) $alice->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $bob->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -91,11 +93,12 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @submitted_by FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by != 'bob'",
                 '',
                 '',
+                1,
             ),
             $this->user,
         );

@@ -27,10 +27,11 @@ import type { GetColumnName } from "../../domain/ColumnNameGetter";
 export function downloadXLSXDocument(
     artifact_table_retriever: RetrieveArtifactsTable,
     report_id: number,
+    query_id: string,
     column_name_getter: GetColumnName,
     download_document: (formated_data: ReportSection, report_id: number) => void,
 ): ResultAsync<null, Fault> {
-    return artifact_table_retriever.getSelectableFullReport().andThen((table) => {
+    return artifact_table_retriever.getSelectableFullReport(query_id).andThen((table) => {
         const formated_data = formatData(table, column_name_getter);
         download_document(formated_data, report_id);
         return ok(null);

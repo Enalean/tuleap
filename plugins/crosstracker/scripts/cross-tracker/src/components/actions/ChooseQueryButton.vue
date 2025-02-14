@@ -29,11 +29,13 @@
         </button>
         <div class="tlp-dropdown-menu dropdown-menu-filter" role="menu" ref="dropdown_menu">
             <div
-                v-for="query in getQueries()"
-                v-bind:key="report_id + query.expert_query"
+                v-for="query in queries"
+                v-bind:key="query.uuid"
+                v-bind:title="query.description"
+                v-bind:class="{ 'current-query': query.uuid === current_query?.uuid }"
                 class="tlp-dropdown-menu-item"
                 role="menuitem"
-                v-on:click.prevent="updateDisplayedQuery(query)"
+                v-on:click.prevent="updateSelectedQuery(query)"
                 data-test="query"
             >
                 {{ query.title }}
@@ -46,25 +48,27 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { EMITTER, REPORT_ID } from "../../injection-symbols";
+import { EMITTER } from "../../injection-symbols";
 import type { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
 import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 import type { Report } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { ALL_OPEN_ARTIFACT_IN_PROJECT_EXAMPLE } from "../../domain/Query";
+import { REFRESH_ARTIFACTS_EVENT, SWITCH_QUERY_EVENT } from "../../helpers/emitter-provider";
 
 const dropdown_trigger = ref<HTMLElement>();
 const dropdown_menu = ref<HTMLElement>();
 let dropdown: Dropdown | null = null;
 
-const report_id = strictInject(REPORT_ID);
 const emitter = strictInject(EMITTER);
 
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
     reading_cross_tracker_report: ReadingCrossTrackerReport;
     queries: ReadonlyArray<Report>;
+    selected_query: Report | null;
 }>();
+
+const current_query = ref<Report | null>(null);
 
 onMounted((): void => {
     if (dropdown_trigger.value && dropdown_menu.value) {
@@ -76,20 +80,23 @@ onMounted((): void => {
     }
 });
 
-function getQueries(): ReadonlyArray<Report> {
-    return [...props.queries, ALL_OPEN_ARTIFACT_IN_PROJECT_EXAMPLE];
-}
-
-function updateDisplayedQuery(query: Report): void {
-    if (report_id !== undefined) {
-        props.writing_cross_tracker_report.setExpertQuery(query.expert_query);
-        props.reading_cross_tracker_report.setNewQuery(query.expert_query);
-        emitter.emit("refresh-artifacts", { query });
-        emitter.emit("update-chosen-query-display");
-        dropdown?.hide();
-    }
+function updateSelectedQuery(query: Report): void {
+    props.writing_cross_tracker_report.setExpertQuery(query.expert_query);
+    props.reading_cross_tracker_report.setNewQuery(query.expert_query);
+    emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
+    emitter.emit(SWITCH_QUERY_EVENT);
+    current_query.value = query;
+    dropdown?.hide();
 }
 onBeforeUnmount(() => {
     dropdown?.destroy();
 });
 </script>
+
+<style lang="scss" scoped>
+.current-query {
+    opacity: 0.5;
+    background-color: var(--tlp-main-color-hover-background);
+    pointer-events: none;
+}
+</style>

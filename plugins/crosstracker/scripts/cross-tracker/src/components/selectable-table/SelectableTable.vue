@@ -23,7 +23,7 @@
         v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
     />
     <div class="tlp-table-actions" v-if="should_show_export_button">
-        <export-x-l-s-x-button />
+        <export-x-l-s-x-button v-bind:query_id="selected_query?.uuid ?? null" />
     </div>
     <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
     <div class="overflow-wrapper" v-if="total > 0">
@@ -82,7 +82,9 @@ import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
 import EditCell from "./EditCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
-import type { RefreshArtifactEvent } from "../../helpers/emitter-provider";
+import type { RefreshArtifactsEvent } from "../../helpers/emitter-provider";
+import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import type { Report } from "../../type";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
@@ -93,7 +95,7 @@ const is_xslx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
-    there_is_no_query: boolean;
+    selected_query: Report | null;
 }>();
 
 const is_loading = ref(false);
@@ -134,15 +136,15 @@ function resetArtifactList(): void {
 
 onMounted(() => {
     refreshArtifactList();
-    emitter.on("refresh-artifacts", refreshChosenQuery);
+    emitter.on(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
 });
 
 onBeforeUnmount(() => {
-    emitter.off("refresh-artifacts");
+    emitter.off(REFRESH_ARTIFACTS_EVENT);
 });
 
 function loadArtifacts(): void {
-    if (props.there_is_no_query) {
+    if (props.selected_query === null) {
         is_loading.value = false;
         return;
     }
@@ -162,16 +164,10 @@ function loadArtifacts(): void {
         });
 }
 
-function refreshChosenQuery(event: RefreshArtifactEvent): void {
+function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
     resetArtifactList();
-
-    if (props.there_is_no_query) {
-        is_loading.value = false;
-        return;
-    }
-
     artifacts_retriever
-        .getSelectableQueryResult(event.query.expert_query, limit, offset)
+        .getSelectableQueryResult(event.query.uuid, event.query.expert_query, limit, offset)
         .match(
             (report_with_total) => {
                 columns.value = report_with_total.table.columns;
@@ -189,10 +185,15 @@ function refreshChosenQuery(event: RefreshArtifactEvent): void {
 
 function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithTotal, Fault> {
     if (report_state.value === "report-saved") {
-        return artifacts_retriever.getSelectableReportContent(limit, offset);
+        return artifacts_retriever.getSelectableReportContent(
+            props.selected_query?.uuid ?? "",
+            limit,
+            offset,
+        );
     }
 
     return artifacts_retriever.getSelectableQueryResult(
+        props.selected_query?.uuid ?? "",
         props.writing_cross_tracker_report.expert_query,
         limit,
         offset,

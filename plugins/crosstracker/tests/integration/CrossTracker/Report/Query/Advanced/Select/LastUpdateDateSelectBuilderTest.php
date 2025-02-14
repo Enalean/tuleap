@@ -27,15 +27,17 @@ use DateTimeZone;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $user;
     /**
      * @var array<int, string>
@@ -52,7 +54,7 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
         $project_id = (int) $project->getID();
         $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -88,11 +90,12 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @last_update_date FROM @project = 'self' WHERE @last_update_date >= '1970-01-01'",
                 '',
                 '',
+                1,
             ),
             $this->user,
         );

@@ -26,7 +26,7 @@ use LogicException;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
@@ -60,7 +60,7 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
     ) {
     }
 
-    public function getReportTrackers(CrossTrackerExpertReport $report, PFUser $current_user, int $limit): array
+    public function getReportTrackers(CrossTrackerQuery $report, PFUser $current_user, int $limit): array
     {
         return $this->retrieveForExpertReport($report, $current_user, $limit);
     }
@@ -71,7 +71,7 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
      * @throws FromIsInvalidException
      * @throws MissingFromException
      */
-    private function retrieveForExpertReport(CrossTrackerExpertReport $report, PFUser $current_user, int $limit): array
+    private function retrieveForExpertReport(CrossTrackerQuery $report, PFUser $current_user, int $limit): array
     {
         $query = $this->parser->parse($report->getQuery());
 
@@ -85,13 +85,13 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
                     $this->project_factory,
                     $this->event_dispatcher,
                 ),
-                $report->getId(),
+                $report->getWidgetId(),
             ),
             $current_user,
         );
 
         assert($query->getFrom() !== null); // From part is checked for expert query, so it cannot be null
-        $additional_from = $this->from_builder->buildFromWhere($query->getFrom(), $report->getId(), $current_user);
+        $additional_from = $this->from_builder->buildFromWhere($query->getFrom(), $report->getWidgetId(), $current_user);
         return $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
             $this->getTrackers(array_map(

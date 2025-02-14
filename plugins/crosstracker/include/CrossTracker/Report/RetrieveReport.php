@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report;
 
+use Tuleap\DB\UUID;
+
 interface RetrieveReport
 {
-    /** @return array{id: int, query: string, title: string, description: string}|null */
-    public function searchWidgetById(int $widget_id): ?array;
+    /** @return array{id: UUID, query: string, title: string, description: string, widget_id: int}|null */
+    public function searchQueryByUuid(string $uuid_hex): ?array;
 
-    /** @return list<array{id: int, query: string, title: string, description: string}> */
+    /** @return list<array{id: UUID, query: string, title: string, description: string, widget_id: int}> */
     public function searchQueriesByWidgetId(int $widget_id): array;
 }

@@ -26,14 +26,16 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field_List;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $project_member;
     private int $release_artifact_empty_id;
     private int $release_artifact_with_cheese_id;
@@ -51,7 +53,7 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $project_id           = (int) $project->getID();
         $this->project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -131,11 +133,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field = ''",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -147,11 +150,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field = 'cheese'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -163,11 +167,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field = 'cheese' OR list_field = 'lead'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -182,11 +187,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqualAnd(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field = 'cheese' AND list_field = 'lead'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -198,11 +204,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field != ''",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -217,11 +224,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field != 'lead'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -236,11 +244,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field != 'cheese' AND list_field != 'lead'",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -252,11 +261,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field IN('cheese')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -268,11 +278,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInValues(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field IN('lead', 'cheese')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -287,11 +298,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field IN('lead') AND list_field IN('cheese')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -303,11 +315,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field NOT IN('lead')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -322,11 +335,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInValues(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field NOT IN('lead', 'cheese')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -338,11 +352,12 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotInValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE list_field NOT IN('lead') AND list_field NOT IN ('cheese')",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );

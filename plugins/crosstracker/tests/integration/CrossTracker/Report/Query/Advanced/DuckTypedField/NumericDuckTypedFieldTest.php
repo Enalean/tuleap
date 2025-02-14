@@ -25,14 +25,16 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $project_member;
     private PFUser $project_admin;
     private int $release_empty_id;
@@ -57,7 +59,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $this->project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $this->project_admin->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -121,11 +123,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE initial_effort=''",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -137,11 +140,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort = 5',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -153,11 +157,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort = 5',
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -172,11 +177,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE initial_effort = '' OR initial_effort = 5",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -191,11 +197,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE initial_effort != ''",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -210,11 +217,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort != 5',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -229,11 +237,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort != 5',
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -249,11 +258,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 "SELECT @id FROM @project = 'self' WHERE initial_effort != 5 AND initial_effort != ''",
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -265,11 +275,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort < 5',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -281,11 +292,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort < 5',
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -297,11 +309,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort < 5 OR initial_effort < 8',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -316,11 +329,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort <= 5',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -335,11 +349,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort <= 5',
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -355,11 +370,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort <= 5 OR initial_effort <= 8',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -374,11 +390,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort > 3',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -390,11 +407,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort > 3',
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -406,11 +424,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort > 3 OR initial_effort > 1',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -425,11 +444,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort >= 3',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -444,11 +464,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort >= 3',
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -464,11 +485,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort >= 3 OR initial_effort >= 5',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -483,11 +505,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort BETWEEN(2, 4)',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -499,11 +522,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort BETWEEN(2, 4)',
                 '',
                 '',
+                1,
             ),
             $this->project_admin
         );
@@ -515,11 +539,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort BETWEEN(2, 4) OR initial_effort BETWEEN(5, 8)',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );
@@ -534,11 +559,12 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testIntegerFieldComparisonIsValid(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $this->uuid,
                 'SELECT @id FROM @project = "self" WHERE initial_effort > 3.00',
                 '',
                 '',
+                1,
             ),
             $this->project_member
         );

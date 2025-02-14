@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -43,7 +43,7 @@ final class PermissionsTest extends CrossTrackerFieldTestCase
         $user_2     = $core_builder->buildUser('user_2', 'User 2', 'user_2@example.com');
         $core_builder->addUserToProjectMembers((int) $user_1->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $user_1->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $uuid = $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_SUBMITTER, ProjectUGroup::PROJECT_MEMBERS);
@@ -54,11 +54,12 @@ final class PermissionsTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($user_2_artifact);
 
         $result = $this->getMatchingArtifactIds(
-            new CrossTrackerExpertReport(
-                1,
+            new CrossTrackerQuery(
+                $uuid,
                 "SELECT @id FROM @project = 'self' WHERE @id >= 1",
                 '',
                 '',
+                1,
             ),
             $user_1,
         );

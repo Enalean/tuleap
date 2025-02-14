@@ -54,10 +54,17 @@ const column_name_getter = strictInject(GET_COLUMN_NAME);
 const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
 const notifyFault = strictInject(NOTIFY_FAULT);
 
+const props = defineProps<{
+    query_id: string | null;
+}>();
+
 const is_loading = ref(false);
 const { $gettext } = useGettext();
 
 async function exportXSLX(): Promise<void> {
+    if (props.query_id === null) {
+        return;
+    }
     is_loading.value = true;
     clearFeedbacks();
     const export_document_module = import("../helpers/exporter/export-document");
@@ -68,6 +75,7 @@ async function exportXSLX(): Promise<void> {
     await downloadXLSXDocument(
         artifact_table_retriever,
         report_id,
+        props.query_id,
         column_name_getter,
         downloadXLSX,
     ).mapErr((fault) => {

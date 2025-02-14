@@ -26,16 +26,18 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
-use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use UserHelper;
 
 final class UserListOrderByBuilderTest extends CrossTrackerFieldTestCase
 {
+    private UUID $uuid;
     private PFUser $user;
     /** @var list<int> */
     private array $result_descending;
@@ -53,7 +55,7 @@ final class UserListOrderByBuilderTest extends CrossTrackerFieldTestCase
         $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $this->user->setPreference(PFUser::PREFERENCE_NAME_DISPLAY_USERS, (string) UserHelper::PREFERENCES_LOGIN);
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
-        $this->addReportToProject(1, $project_id);
+        $this->uuid = $this->addReportToProject(1, $project_id);
 
         $alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $bob   = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
@@ -110,7 +112,7 @@ final class UserListOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testUserListDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY user_list_field DESC', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY user_list_field DESC', '', '', 1),
             $this->user,
         );
 
@@ -128,7 +130,7 @@ final class UserListOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testUserListAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY user_list_field ASC', '', ''),
+            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY user_list_field ASC', '', '', 1),
             $this->user,
         );
 

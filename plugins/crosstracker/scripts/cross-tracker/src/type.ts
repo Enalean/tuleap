@@ -20,6 +20,7 @@
 import type { TrackerProjectRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 
 export type Report = {
+    readonly uuid: string;
     readonly expert_query: string;
     readonly title: string;
     readonly description: string;
