@@ -30,20 +30,14 @@ describe("formatFromPhpToMoment", () => {
     it.each([
         ["french date", fr_FR_DATE_FORMAT, "DD/MM/YYYY"],
         ["english date", en_US_DATE_FORMAT, "YYYY-MM-DD"],
+        ["random foreign date", "Y/m/d", "YYYY-MM-DD"],
         ["french time", fr_FR_DATE_TIME_FORMAT, "DD/MM/YYYY HH:mm"],
         ["english time", en_US_DATE_TIME_FORMAT, "YYYY-MM-DD HH:mm"],
+        ["random foreign time", "Y/m/d H:i", "YYYY-MM-DD HH:mm"],
     ])(
         `Given %s is provided, then it returns the moment format`,
         (format_title, php_date_format, expected_moment_format) => {
             expect(formatFromPhpToMoment(php_date_format)).toBe(expected_moment_format);
         },
     );
-
-    it("Given non supported format is provided, then it throws an Error", () => {
-        const php_date_format = "dd/mm/YYYY";
-
-        expect(() => formatFromPhpToMoment(php_date_format)).toThrow(
-            "Only french and english date are supported for display",
-        );
-    });
 });
