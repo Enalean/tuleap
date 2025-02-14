@@ -214,6 +214,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 @use "pkg:@tuleap/drag-and-drop";
+@use "@/themes/includes/viewport-breakpoint";
 
 @keyframes blink-toc-item {
     0% {
@@ -242,6 +243,10 @@ ul {
     overflow: hidden auto;
     list-style-position: inside;
     color: var(--tlp-dimmed-color);
+
+    @media (max-width: viewport-breakpoint.$small-screen-size) {
+        height: fit-content;
+    }
 }
 
 li {
@@ -375,15 +380,5 @@ $arrows-overflow: calc(var(--tlp-small-spacing) / 2);
     color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     font-weight: 600;
-}
-
-@media (max-width: 1024px) {
-    .table-of-contents-container {
-        padding-top: 0;
-    }
-
-    ol {
-        height: fit-content;
-    }
 }
 </style>
