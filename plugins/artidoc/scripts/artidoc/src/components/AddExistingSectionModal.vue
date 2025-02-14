@@ -84,7 +84,7 @@ import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { LazyAutocompleter } from "@tuleap/lazybox/src/LazyAutocompleterElement";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { createArtifactSection } from "@/helpers/rest-querier";
+import { createSectionFromExistingArtifact } from "@/helpers/rest-querier";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import { AT_THE_END } from "@/sections/insert/SectionsInserter";
@@ -241,7 +241,7 @@ function onSubmit(event: Event): void {
         return;
     }
 
-    createArtifactSection(
+    createSectionFromExistingArtifact(
         documentId,
         selected.value.id,
         getInsertionPositionExcludingPendingSections(add_position, sections_collection),

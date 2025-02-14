@@ -28,13 +28,7 @@ import {
     isPendingArtifactSection,
     isPendingFreetextSection,
 } from "@/helpers/artidoc-section.type";
-import {
-    createArtifactSection,
-    createFreetextSection,
-    getSection,
-    postArtifact,
-    putSection,
-} from "@/helpers/rest-querier";
+import { createSection, getSection, putSection } from "@/helpers/rest-querier";
 import { getSectionInItsLatestVersion } from "@/helpers/get-section-in-its-latest-version";
 import type { ManageSectionAttachmentFiles } from "@/sections/attachments/SectionAttachmentFilesManager";
 import type { ReplacePendingSections } from "@/sections/insert/PendingSectionsReplacer";
@@ -151,34 +145,26 @@ export const getSectionSaver = (
         const { edited_title, edited_description } = section_state;
 
         if (isPendingArtifactSection(section.value)) {
-            const merged_attachments = manage_section_attachments.mergeArtifactAttachments(
-                section.value,
-                edited_description.value,
-            );
-            return postArtifact(
-                section.value.tracker,
-                edited_title.value,
-                section.value.title,
-                edited_description.value,
-                section.value.description.field_id,
-                merged_attachments,
-            ).andThen(({ id }) =>
-                createArtifactSection(
-                    document_id,
-                    id,
-                    retrieve_positions.getSectionPositionForSave(section.value),
-                    section.value.level,
-                ),
-            );
-        }
-
-        if (isPendingFreetextSection(section.value)) {
-            return createFreetextSection(
+            return createSection(
                 document_id,
                 edited_title.value,
                 edited_description.value,
                 retrieve_positions.getSectionPositionForSave(section.value),
                 section.value.level,
+                "artifact",
+                getAttachementsForSave(section),
+            );
+        }
+
+        if (isPendingFreetextSection(section.value)) {
+            return createSection(
+                document_id,
+                edited_title.value,
+                edited_description.value,
+                retrieve_positions.getSectionPositionForSave(section.value),
+                section.value.level,
+                "freetext",
+                getAttachementsForSave(section),
             );
         }
 

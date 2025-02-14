@@ -30,7 +30,7 @@ import {
     updateDisplayLevelToSections,
 } from "@/sections/levels/SectionsNumberer";
 import * as rest from "@/helpers/rest-querier";
-import { createArtifactSection } from "@/helpers/rest-querier";
+import { createSectionFromExistingArtifact } from "@/helpers/rest-querier";
 import { AT_THE_END, getSectionsInserter } from "@/sections/insert/SectionsInserter";
 import type { InsertSections } from "@/sections/insert/SectionsInserter";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
@@ -385,7 +385,7 @@ describe("SectionsNumberer", () => {
         });
 
         function importExistingArtifact(position: PositionForSection): void {
-            createArtifactSection(
+            createSectionFromExistingArtifact(
                 artidoc_id,
                 artifact_id,
                 position,
@@ -397,7 +397,7 @@ describe("SectionsNumberer", () => {
         }
 
         it("should create a section with level 1, when it is added at the very top", () => {
-            const spy = vi.spyOn(rest, "createArtifactSection");
+            const spy = vi.spyOn(rest, "createSectionFromExistingArtifact");
 
             const before_section_radiation = { before: section_radiation.value.id };
             importExistingArtifact(before_section_radiation);
@@ -406,7 +406,7 @@ describe("SectionsNumberer", () => {
         });
 
         it("should create a section with level 1, when it is added after a level 1 artifact section", () => {
-            const spy = vi.spyOn(rest, "createArtifactSection");
+            const spy = vi.spyOn(rest, "createSectionFromExistingArtifact");
 
             const before_section_requirements = { before: section_requirements.value.id };
             importExistingArtifact(before_section_requirements);
@@ -420,7 +420,7 @@ describe("SectionsNumberer", () => {
         });
 
         it("should create a section with level 2, when it is added after a level 1 freetext section", () => {
-            const spy = vi.spyOn(rest, "createArtifactSection");
+            const spy = vi.spyOn(rest, "createSectionFromExistingArtifact");
 
             const before_section_random = { before: section_random.value.id };
             importExistingArtifact(before_section_random);
@@ -429,7 +429,7 @@ describe("SectionsNumberer", () => {
         });
 
         it("should create a section with level 2, when it is added at the end, and after a level 1 freetext section", () => {
-            const spy = vi.spyOn(rest, "createArtifactSection");
+            const spy = vi.spyOn(rest, "createSectionFromExistingArtifact");
 
             importExistingArtifact(AT_THE_END);
 

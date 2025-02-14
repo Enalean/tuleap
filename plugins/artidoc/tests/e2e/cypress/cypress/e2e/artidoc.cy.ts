@@ -233,14 +233,13 @@ function fillInSectionTitleAndDescription({
     title: string;
     description: string;
 }): void {
-    cy.intercept("POST", "*/artifacts").as("createArtifact");
-    cy.intercept("POST", "*/artidoc_sections").as("addSection");
+    cy.intercept("POST", "/api/v1/artidoc_sections").as("addSection");
 
     getSectionTitle().type(title);
     getSectionDescription().type(description);
 
     cy.get("[data-test=section-edition]").contains("button", "Save").click();
-    cy.wait(["@createArtifact", "@addSection"]);
+    cy.wait("@addSection");
 }
 
 function fillInFreeTextSectionTitleAndDescription({
