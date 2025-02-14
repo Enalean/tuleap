@@ -42,10 +42,16 @@ final class ContentToBeCreatedBuilder
             $content = SectionContentToBeCreated::fromImportedArtifact(
                 $section->import->artifact->id
             );
-        } elseif ($section->content) {
+        } elseif ($section->content !== null && $section->content->type === 'freetext') {
             $content = SectionContentToBeCreated::fromFreetext(
                 $section->content->title,
                 $section->content->description
+            );
+        } elseif ($section->content !== null && $section->content->type === 'artifact') {
+            $content = SectionContentToBeCreated::fromArtifact(
+                $section->content->title,
+                $section->content->description,
+                $section->content->attachments,
             );
         }
 

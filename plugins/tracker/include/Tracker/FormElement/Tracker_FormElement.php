@@ -1142,15 +1142,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
-     * Say if a user has permission. Checks super user status.
-     * Do not call this directly. Use userCanRead, userCanUpdate or userCanSubmit instead.
-     *
-     * @param string $permission_type PLUGIN_TRACKER_FIELD_READ | PLUGIN_TRACKER_FIELD_UPDATE | PLUGIN_TRACKER_FIELD_SUBMIT
-     * @param PFUser  $user             The user. if null given take the current user
-     *
-     * @return bool
+     * @param self::PERMISSION_* $permission_type
      */
-    protected function userHasPermission($permission_type, ?PFUser $user = null)
+    private function userHasPermission(string $permission_type, PFUser $user): bool
     {
         if ($user instanceof Tracker_Workflow_WorkflowUser) {
             return true;
@@ -1164,9 +1158,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             return true;
         }
 
-        if (! $user) {
-            $user = $this->getCurrentUser();
-        }
         return $user->isSuperUser() || PermissionsManager::instance()->userHasPermission(
             $this->id,
             $permission_type,
@@ -1192,6 +1183,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function setUserCanUpdate(PFUser $user, bool $can_update): void
     {
         $this->user_can_update[(int) $user->getId()] = $can_update;
+    }
+
+    /**
+     * @var array<int, bool>
+     */
+    private array $user_can_submit = [];
+    public function setUserCanSubmit(PFUser $user, bool $can_submit): void
+    {
+        $this->user_can_submit[(int) $user->getId()] = $can_submit;
     }
 
     /**
@@ -1245,7 +1245,17 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function userCanSubmit(?PFUser $user = null)
     {
-        return $this->isSubmitable() && $this->userHasPermission(self::PERMISSION_SUBMIT, $user);
+        if (! $user) {
+            $user = $this->getCurrentUser();
+        }
+
+        $user_id = (int) $user->getId();
+        if (! isset($this->user_can_submit[$user_id])) {
+            $this->user_can_submit[$user_id] = $this->isSubmitable()
+                && $this->userHasPermission(self::PERMISSION_SUBMIT, $user);
+        }
+
+        return $this->user_can_submit[$user_id];
     }
 
     /**

@@ -37,7 +37,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\REST\Artifact\HandlePUT;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-final class ArtifactContentUpdater implements UpdateArtifactContent
+final readonly class ArtifactContentUpdater implements UpdateArtifactContent
 {
     public function __construct(
         private RetrieveArtifact $artifact_retriever,
@@ -48,8 +48,11 @@ final class ArtifactContentUpdater implements UpdateArtifactContent
     ) {
     }
 
-    public function updateArtifactContent(SectionIdentifier $section_identifier, int $artifact_id, SectionContent $content,): Ok|Err
-    {
+    public function updateArtifactContent(
+        SectionIdentifier $section_identifier,
+        int $artifact_id,
+        SectionContent $content,
+    ): Ok|Err {
         return $this->delegateUpdateOfArtifactToTrackerAPI($artifact_id, $content)
             ->andThen(function () use ($section_identifier, $content) {
                 $this->level_updater->updateLevel($section_identifier, $content->level);

@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Tracker\RetrieveTracker;
 
-final readonly class ConfiguredTrackerRetriever
+final readonly class ConfiguredTrackerRetriever implements RetrieveConfiguredTracker
 {
     public function __construct(
         private SearchConfiguredTracker $dao,

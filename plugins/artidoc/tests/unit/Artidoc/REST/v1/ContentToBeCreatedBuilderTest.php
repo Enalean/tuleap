@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeCreatedArtifact;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\NeverThrow\Result;
@@ -32,14 +33,14 @@ use function PHPUnit\Framework\assertSame;
 
 final class ContentToBeCreatedBuilderTest extends TestCase
 {
-    public function testItThrowsWhenArtifactAndContentAreBothProvided(): void
+    public function testItThrowsWhenImportAndContentAreBothProvided(): void
     {
         $section = new ArtidocSectionPOSTRepresentation(
             new POSTSectionImportRepresentation(
                 new ArtidocPOSTSectionArtifactRepresentation(101),
             ),
             null,
-            new POSTContentSectionRepresentation('title', 'description', 'freetext'),
+            new POSTContentSectionRepresentation('title', 'description', 'freetext', []),
             Level::One->value,
         );
         $this->expectException(RestException::class);
@@ -48,7 +49,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         ContentToBeCreatedBuilder::buildFromRepresentation($section);
     }
 
-    public function testItThrowsWhenArtifactAndContentAreBothAbsent(): void
+    public function testItThrowsWhenImportAndContentAreBothAbsent(): void
     {
         $section = new ArtidocSectionPOSTRepresentation(null, null, null, Level::One->value);
         $this->expectException(RestException::class);
@@ -57,7 +58,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         ContentToBeCreatedBuilder::buildFromRepresentation($section);
     }
 
-    public function testHappyPatchForArtifact(): void
+    public function testHappyPatchForImportedArtifact(): void
     {
         $id      = 101;
         $section = new ArtidocSectionPOSTRepresentation(
@@ -78,7 +79,11 @@ final class ContentToBeCreatedBuilderTest extends TestCase
             function (SectionContentToBeCreatedFreetext $freetext) {
                 assertSame(null, $freetext);
                 return Result::ok($freetext);
-            }
+            },
+            function (SectionContentToBeCreatedArtifact $artifact) {
+                assertSame(null, $artifact);
+                return Result::ok($artifact);
+            },
         );
     }
 
@@ -87,7 +92,7 @@ final class ContentToBeCreatedBuilderTest extends TestCase
         $section = new ArtidocSectionPOSTRepresentation(
             null,
             null,
-            new POSTContentSectionRepresentation('title', 'description', 'freetext'),
+            new POSTContentSectionRepresentation('title', 'description', 'freetext', []),
             Level::One->value,
         );
 
@@ -100,7 +105,37 @@ final class ContentToBeCreatedBuilderTest extends TestCase
             function (SectionContentToBeCreatedFreetext $freetext) {
                 assertSame('title', $freetext->content->title);
                 return Result::ok($freetext);
-            }
+            },
+            function (SectionContentToBeCreatedArtifact $artifact) {
+                assertSame(null, $artifact);
+                return Result::ok($artifact);
+            },
+        );
+    }
+
+    public function testHappyPatchForArtifact(): void
+    {
+        $section = new ArtidocSectionPOSTRepresentation(
+            null,
+            null,
+            new POSTContentSectionRepresentation('title', 'description', 'artifact', []),
+            Level::One->value,
+        );
+
+        $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
+        $content_to_insert->apply(
+            function (int $artifact_id) {
+                assertSame(null, $artifact_id);
+                return Result::ok($artifact_id);
+            },
+            function (SectionContentToBeCreatedFreetext $freetext) {
+                assertSame(null, $freetext);
+                return Result::ok($freetext);
+            },
+            function (SectionContentToBeCreatedArtifact $artifact) {
+                assertSame('title', $artifact->content->title);
+                return Result::ok($artifact);
+            },
         );
     }
 }

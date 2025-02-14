@@ -132,7 +132,7 @@ export function createFreetextSection(
     return postJSON<ArtidocSection>(uri`/api/v1/artidoc_sections`, {
         artidoc_id,
         section: {
-            content: { title, description, type: "freetext" },
+            content: { title, description, type: "freetext", attachments: [] },
             level: 1,
             position,
         },

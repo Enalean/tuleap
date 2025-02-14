@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
+use Tuleap\Artidoc\Stubs\Domain\Document\Section\Artifact\CreateArtifactContentStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Section\CollectRequiredSectionInformationStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Section\SaveOneSectionStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -64,6 +65,7 @@ final class SectionCreatorTest extends TestCase
                 ),
             ),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 
@@ -93,6 +95,7 @@ final class SectionCreatorTest extends TestCase
                 ),
             ),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 
@@ -110,7 +113,7 @@ final class SectionCreatorTest extends TestCase
         self::assertSame(self::NEW_SECTION_ID, $result->value->toString());
     }
 
-    public function testHappyPathFreeTextContent(): void
+    public function testHappyPathFreetextContent(): void
     {
         $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
         $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
@@ -122,6 +125,7 @@ final class SectionCreatorTest extends TestCase
                 ),
             ),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 
@@ -138,6 +142,36 @@ final class SectionCreatorTest extends TestCase
         self::assertSame(self::NEW_SECTION_ID, $result->value->toString());
     }
 
+    public function testHappyPathArtifactContent(): void
+    {
+        $saver     = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
+
+        $creator = new SectionCreator(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite(
+                new ArtidocWithContext(
+                    new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
+                ),
+            ),
+            $saver,
+            CreateArtifactContentStub::withCreatedArtifactId(123),
+            $collector,
+        );
+
+        $result = $creator->create(
+            1,
+            Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
+            Level::One,
+            SectionContentToBeCreated::fromArtifact('my title', 'my description', []),
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertTrue($saver->isSaved(1));
+        self::assertFalse($collector->isCalled());
+        self::assertSame(123, $saver->getSavedBeforeForId(1)->artifact_id->unwrapOr(null));
+        self::assertSame(self::NEW_SECTION_ID, $result->value->toString());
+    }
+
     public function testFaultWhenUnableToFindSiblingSection(): void
     {
         $saver     = SaveOneSectionStub::withUnableToFindSiblingSection(self::NEW_SECTION_ID);
@@ -150,6 +184,7 @@ final class SectionCreatorTest extends TestCase
                 ),
             ),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 
@@ -190,6 +225,7 @@ final class SectionCreatorTest extends TestCase
                 ),
             ),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 
@@ -219,6 +255,7 @@ final class SectionCreatorTest extends TestCase
                 ),
             ),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 
@@ -241,6 +278,7 @@ final class SectionCreatorTest extends TestCase
         $creator = new SectionCreator(
             RetrieveArtidocWithContextStub::withoutDocument(),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 
@@ -267,6 +305,7 @@ final class SectionCreatorTest extends TestCase
                 ),
             ),
             $saver,
+            CreateArtifactContentStub::shouldNotBeCalled(),
             $collector,
         );
 

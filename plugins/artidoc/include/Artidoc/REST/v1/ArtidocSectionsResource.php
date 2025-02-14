@@ -32,14 +32,17 @@ use ProjectManager;
 use ReferenceManager;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_CommentDao;
+use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use TrackerFactory;
 use TransitionFactory;
 use Tuleap\Artidoc\Adapter\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Adapter\Document\ArtidocWithContextDecorator;
 use Tuleap\Artidoc\Adapter\Document\SearchArtidocDocumentDao;
 use Tuleap\Artidoc\Adapter\Document\Section\AlreadyExistingSectionWithSameArtifactFault;
+use Tuleap\Artidoc\Adapter\Document\Section\Artifact\ArtifactContentCreator;
 use Tuleap\Artidoc\Adapter\Document\Section\Artifact\ArtifactContentUpdater;
 use Tuleap\Artidoc\Adapter\Document\Section\DeleteOneSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIdentifierFactory;
@@ -51,6 +54,8 @@ use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\UnableToFindSiblingSectionFault;
 use Tuleap\Artidoc\Adapter\Document\Section\UpdateLevelDao;
 use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
+use Tuleap\Artidoc\Document\ArtidocDao;
+use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
@@ -85,6 +90,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
@@ -97,6 +103,8 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
@@ -104,10 +112,14 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
+use Tuleap\Tracker\REST\Artifact\CreateArtifact;
 use Tuleap\Tracker\REST\Artifact\HandlePUT;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -120,6 +132,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
 use WorkflowFactory;
+use WrapperLogger;
 
 final class ArtidocSectionsResource extends AuthenticatedResource
 {
@@ -292,7 +305,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      *
      * Create one section in an artidoc document.
      *
-     * <p>Example payload, to create a section based on artifact #123. The new section will be placed before its sibling:</p>
+     * <p>Example payload, to create a section based on an existing artifact #123. The new section will be placed before its sibling:</p>
      * <pre>
      * {<br>
      * &nbsp;&nbsp;id: 456,<br>
@@ -314,12 +327,23 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      * }
      * </pre>
      *
-     *  <p>Example payload, to create a section based on free text. The new section will be placed before its sibling:</p>
+     *  <p>Example payload, to create a section based on freetext. The new section will be placed before its sibling:</p>
      *  <pre>
      * {<br>
      * &nbsp;&nbsp;id: 456,<br>
      * &nbsp;&nbsp;section:{<br>
-     *  &nbsp;&nbsp;&nbsp;&nbsp;"content": { "title": "My title", "description": "My freetext description", type: "freetext" },<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;"content": { "title": "My title", "description": "My freetext description", type: "freetext", attachments: [] },<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;"position": { "before": "550e8400-e29b-41d4-a716-446655440000" },<br>
+     * &nbsp;&nbsp;}<br>
+     *  }
+     *  </pre>
+     *
+     *  <p>Example payload, to create a section based on artifact. The artifact will be created in the configured tracker of the document.</p>
+     *  <pre>
+     * {<br>
+     * &nbsp;&nbsp;id: 456,<br>
+     * &nbsp;&nbsp;section:{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;"content": { "title": "My title", "description": "My artifact description", type: "artifact", attachments: [] },<br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;"position": { "before": "550e8400-e29b-41d4-a716-446655440000" },<br>
      * &nbsp;&nbsp;}<br>
      *  }
@@ -404,6 +428,19 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         return new SectionCreator(
             $this->getArtidocWithContextRetriever($user),
             new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory()),
+            new ArtifactContentCreator(
+                new ConfiguredTrackerRetriever(
+                    new ArtidocDao(
+                        new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
+                        new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory()),
+                    ),
+                    TrackerFactory::instance(),
+                    RESTLogger::getLogger(),
+                ),
+                $this->getFileUploadDataProvider(),
+                $this->getArtifactPostHandler(),
+                $user,
+            ),
             $collector,
         );
     }
@@ -559,6 +596,51 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 $changeset_creator
             ),
             $update_conditions_checker,
+        );
+    }
+
+    private function getArtifactPostHandler(): CreateArtifact
+    {
+        $artifact_factory     = Tracker_ArtifactFactory::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $tracker_factory      = TrackerFactory::instance();
+
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+
+        $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();
+
+        $logger = new WrapperLogger(RESTLogger::getLogger(), self::class);
+
+        return new ArtifactCreator(
+            new FieldsDataBuilder(
+                $form_element_factory,
+                new NewArtifactLinkChangesetValueBuilder(
+                    new ArtifactForwardLinksRetriever(
+                        new ArtifactLinksByChangesetCache(),
+                        new ChangesetValueArtifactLinkDao(),
+                        $artifact_factory
+                    )
+                ),
+                $artifact_link_initial_builder
+            ),
+            TrackerArtifactCreator::build(
+                new InitialChangesetCreator(
+                    Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                    $fields_retriever,
+                    new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                    $logger,
+                    ArtifactChangesetSaver::build(),
+                    new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+                    \WorkflowFactory::instance(),
+                    new InitialChangesetValueSaver(),
+                ),
+                Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                $logger,
+            ),
+            $tracker_factory,
+            new FieldsDataFromValuesByFieldBuilder($form_element_factory, $artifact_link_initial_builder),
+            $form_element_factory,
+            SubmissionPermissionVerifier::instance(),
         );
     }
 
