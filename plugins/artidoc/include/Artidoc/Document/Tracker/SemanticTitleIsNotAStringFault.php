@@ -32,6 +32,11 @@ final readonly class SemanticTitleIsNotAStringFault extends Fault
 {
     public static function forDocument(Artidoc $document): Fault
     {
-        return new self("The tracker semantic title for artidoc #{$document->getId()} is not a string");
+        return new self(
+            sprintf(
+                'The tracker semantic title for artidoc #%s is not a string',
+                $document->getId(),
+            )
+        );
     }
 }

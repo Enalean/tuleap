@@ -68,23 +68,48 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
     {
         $artifact = $this->artifact_retriever->getArtifactById($artifact_id);
         if (! $artifact || ! $artifact->userCanUpdate($this->current_user)) {
-            return Result::err(Fault::fromMessage("User cannot update artifact #{$artifact_id}"));
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    'User cannot update artifact #%s',
+                    $artifact_id,
+                )
+            ));
         }
 
         $title_field = Tracker_Semantic_Title::load($artifact->getTracker())->getField();
         if (! $title_field) {
-            return Result::err(Fault::fromMessage("There is no title field for artifact #{$artifact->getId()}"));
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    'There is no title field for artifact #%s',
+                    $artifact_id,
+                )
+            ));
         }
         if (! $title_field->userCanUpdate($this->current_user)) {
-            return Result::err(Fault::fromMessage("User cannot update title of artifact #{$artifact->getId()}"));
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    'User cannot update title of artifact #%s',
+                    $artifact_id,
+                )
+            ));
         }
 
         $description_field = Tracker_Semantic_Description::load($artifact->getTracker())->getField();
         if (! $description_field) {
-            return Result::err(Fault::fromMessage("There is no description field for artifact #{$artifact->getId()}"));
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    'There is no description field for artifact #%s',
+                    $artifact_id,
+                )
+            ));
         }
         if (! $description_field->userCanUpdate($this->current_user)) {
-            return Result::err(Fault::fromMessage("User cannot update description of artifact #{$artifact->getId()}"));
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    'User cannot update description of artifact #%s',
+                    $artifact_id,
+                )
+            ));
         }
 
         $title_value           = new ArtifactValuesRepresentation();

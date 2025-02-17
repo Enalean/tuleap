@@ -32,6 +32,11 @@ final readonly class TrackerNotFoundFault extends Fault
 {
     public static function forDocument(Artidoc $document): Fault
     {
-        return new self("Tracker not found for artidoc #{$document->getId()}");
+        return new self(
+            sprintf(
+                'Tracker not found for artidoc #%s',
+                $document->getId(),
+            )
+        );
     }
 }

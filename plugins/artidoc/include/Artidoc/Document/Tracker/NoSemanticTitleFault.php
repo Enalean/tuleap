@@ -32,6 +32,11 @@ final readonly class NoSemanticTitleFault extends Fault
 {
     public static function forDocument(Artidoc $document): Fault
     {
-        return new self("The tracker does not have a semantic title for artidoc #{$document->getId()}");
+        return new self(
+            sprintf(
+                'The tracker does not have a semantic title for artidoc #%s',
+                $document->getId(),
+            )
+        );
     }
 }

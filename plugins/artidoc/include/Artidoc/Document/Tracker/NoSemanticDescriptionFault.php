@@ -32,6 +32,11 @@ final readonly class NoSemanticDescriptionFault extends Fault
 {
     public static function forDocument(Artidoc $document): Fault
     {
-        return new self("The tracker does not have a semantic description for artidoc #{$document->getId()}");
+        return new self(
+            sprintf(
+                'The tracker does not have a semantic description for artidoc #%s',
+                $document->getId(),
+            )
+        );
     }
 }
