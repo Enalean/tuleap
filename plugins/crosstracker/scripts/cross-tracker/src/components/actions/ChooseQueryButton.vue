@@ -37,6 +37,15 @@
                     ref="filter_element"
                     data-test="query-filter"
                 />
+                <button
+                    class="tlp-button-primary tlp-button-small"
+                    v-bind:title="$gettext('Query creation is under implementation')"
+                    v-on:click="handleCreateNewQueryButton()"
+                    data-test="query-create-new-button"
+                >
+                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                    {{ $gettext("Create new query") }}
+                </button>
             </div>
             <div
                 v-for="query in filtered_queries"
@@ -61,7 +70,11 @@ import { createDropdown } from "@tuleap/tlp-dropdown";
 import { EMITTER } from "../../injection-symbols";
 import type { Query } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { REFRESH_ARTIFACTS_EVENT, SWITCH_QUERY_EVENT } from "../../helpers/emitter-provider";
+import {
+    CREATE_NEW_QUERY,
+    REFRESH_ARTIFACTS_EVENT,
+    SWITCH_QUERY_EVENT,
+} from "../../helpers/emitter-provider";
 
 const dropdown_trigger = ref<HTMLElement>();
 const dropdown_menu = ref<HTMLElement>();
@@ -116,6 +129,10 @@ function resetFilter(): void {
     }
 }
 
+function handleCreateNewQueryButton(): void {
+    emitter.emit(CREATE_NEW_QUERY);
+}
+
 onBeforeUnmount(() => {
     dropdown?.destroy();
 });
@@ -126,5 +143,13 @@ onBeforeUnmount(() => {
     opacity: 0.5;
     background-color: var(--tlp-main-color-hover-background);
     pointer-events: none;
+}
+
+.dropdown-menu-filter {
+    min-width: 400px;
+
+    > .tlp-dropdown-menu-actions > input {
+        width: 50%;
+    }
 }
 </style>

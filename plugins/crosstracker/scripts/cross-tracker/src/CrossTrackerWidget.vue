@@ -18,45 +18,52 @@
   -->
 
 <template>
-    <section
-        class="tlp-pane-section"
-        v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
+    <div v-if="widget_pane === 'query-active'" data-test="reading-pane">
+        <section
+            class="tlp-pane-section"
+            v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
+        >
+            <div
+                class="action-buttons"
+                v-if="is_multiple_query_supported && report_state !== 'edit-query'"
+            >
+                <action-buttons v-bind:backend_query="backend_query" v-bind:queries="queries" />
+            </div>
+            <error-message v-bind:fault="current_fault" v-bind:writing_query="writing_query" />
+            <div
+                class="tlp-alert-success cross-tracker-report-success"
+                v-if="current_success.isValue()"
+                data-test="cross-tracker-report-success"
+            >
+                {{ current_success.unwrapOr("") }}
+            </div>
+            <div class="cross-tracker-loader" v-if="is_loading"></div>
+            <reading-mode
+                v-if="is_reading_mode_shown"
+                v-bind:backend_query="backend_query"
+                v-bind:reading_query="reading_query"
+                v-bind:has_error="has_error"
+                v-on:switch-to-writing-mode="handleSwitchWriting"
+                v-on:saved="reportSaved"
+                v-on:discard-unsaved-report="unsavedReportDiscarded"
+            />
+            <writing-mode
+                v-if="report_state === 'edit-query'"
+                v-bind:writing_query="writing_query"
+                v-bind:backend_query="backend_query"
+                v-on:preview-result="handlePreviewResult"
+                v-on:cancel-query-edition="handleCancelQueryEdition"
+            />
+        </section>
+        <section class="tlp-pane-section" v-if="!is_loading">
+            <selectable-table v-bind:writing_query="writing_query" />
+        </section>
+    </div>
+    <div
+        v-else-if="widget_pane === 'query-creation' && is_multiple_query_supported && is_user_admin"
     >
-        <div
-            class="action-buttons"
-            v-if="is_multiple_query_supported && report_state !== 'edit-query'"
-        >
-            <action-buttons v-bind:backend_query="backend_query" v-bind:queries="queries" />
-        </div>
-        <error-message v-bind:fault="current_fault" v-bind:writing_query="writing_query" />
-        <div
-            class="tlp-alert-success cross-tracker-report-success"
-            v-if="current_success.isValue()"
-            data-test="cross-tracker-report-success"
-        >
-            {{ current_success.unwrapOr("") }}
-        </div>
-        <div class="cross-tracker-loader" v-if="is_loading"></div>
-        <reading-mode
-            v-if="is_reading_mode_shown"
-            v-bind:backend_query="backend_query"
-            v-bind:reading_query="reading_query"
-            v-bind:has_error="has_error"
-            v-on:switch-to-writing-mode="handleSwitchWriting"
-            v-on:saved="reportSaved"
-            v-on:discard-unsaved-report="unsavedReportDiscarded"
-        />
-        <writing-mode
-            v-if="report_state === 'edit-query'"
-            v-bind:writing_query="writing_query"
-            v-bind:backend_query="backend_query"
-            v-on:preview-result="handlePreviewResult"
-            v-on:cancel-query-edition="handleCancelQueryEdition"
-        />
-    </section>
-    <section class="tlp-pane-section" v-if="!is_loading">
-        <selectable-table v-bind:writing_query="writing_query" />
-    </section>
+        <create-new-query v-on:return-to-active-query-pane="displayActiveQuery" />
+    </div>
 </template>
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, provide, ref } from "vue";
@@ -83,12 +90,16 @@ import { useFeedbacks } from "./composables/useFeedbacks";
 import { ReportRetrievalFault } from "./domain/ReportRetrievalFault";
 import ActionButtons from "./components/actions/ActionButtons.vue";
 import type { SwitchQueryEvent } from "./helpers/emitter-provider";
-import { SWITCH_QUERY_EVENT } from "./helpers/emitter-provider";
+import { CREATE_NEW_QUERY, SWITCH_QUERY_EVENT } from "./helpers/emitter-provider";
+import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
+import { QUERY_ACTIVE_PANE, QUERY_CREATION_PANE } from "./domain/WidgetPaneDisplay";
 
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
 const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
+
+const widget_pane = ref(QUERY_ACTIVE_PANE);
 
 const gettext_provider = useGettext();
 
@@ -131,6 +142,10 @@ function initQueries(): void {
     writing_query.value = backend_query.value;
 }
 
+function displayActiveQuery(): void {
+    widget_pane.value = QUERY_ACTIVE_PANE;
+}
+
 function loadBackendReport(): void {
     is_loading.value = true;
     getQueries(widget_id)
@@ -140,6 +155,9 @@ function loadBackendReport(): void {
                 if (reports.length === 0) {
                     if (is_user_admin) {
                         report_state.value = "edit-query";
+                        if (is_multiple_query_supported) {
+                            widget_pane.value = QUERY_CREATION_PANE;
+                        }
                     }
 
                     return;
@@ -159,11 +177,16 @@ function loadBackendReport(): void {
 onMounted(() => {
     loadBackendReport();
     emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
+    emitter.on(CREATE_NEW_QUERY, handleCreateNewQuery);
 });
 
 onBeforeUnmount(() => {
     emitter.off(SWITCH_QUERY_EVENT);
 });
+
+function handleCreateNewQuery(): void {
+    widget_pane.value = QUERY_CREATION_PANE;
+}
 
 function handleSwitchWriting(): void {
     if (!is_user_admin) {
@@ -218,6 +241,7 @@ defineExpose({
     current_fault,
     current_success,
     is_export_allowed,
+    widget_pane,
 });
 </script>
 
