@@ -32,6 +32,7 @@ export const watchForNeededPendingSectionInsertion = (
     states_collection: SectionsStatesCollection,
     tracker: Ref<Tracker | null>,
     can_user_edit_document: boolean,
+    is_loading_failed: Ref<boolean>,
 ): void => {
     if (!can_user_edit_document) {
         return;
@@ -59,7 +60,7 @@ export const watchForNeededPendingSectionInsertion = (
     watch(
         () => sections_collection.sections.value.length === 0,
         (is_document_empty: boolean) => {
-            if (!is_document_empty) {
+            if (is_loading_failed.value || !is_document_empty) {
                 return;
             }
 
@@ -70,7 +71,7 @@ export const watchForNeededPendingSectionInsertion = (
     watch(
         () => tracker.value,
         (old_value, new_value) => {
-            if (sections_collection.sections.value.length > 0) {
+            if (is_loading_failed.value || sections_collection.sections.value.length > 0) {
                 return;
             }
 
