@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3561dd98f4f9b60fd42d925a42e04f34",
+    "content-hash": "d08bdb4633a4c0301d126748f0d92095",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -7199,6 +7199,51 @@
             "time": "2023-01-05T11:28:13+00:00"
         },
         {
+            "name": "deptrac/deptrac",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/deptrac/deptrac.git",
+                "reference": "f646695c1468051138e1347d89590f9084fa6256"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/deptrac/deptrac/zipball/f646695c1468051138e1347d89590f9084fa6256",
+                "reference": "f646695c1468051138e1347d89590f9084fa6256",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^8.1"
+            },
+            "suggest": {
+                "ext-dom": "For using the JUnit output formatter"
+            },
+            "bin": [
+                "bin/deptrac",
+                "deptrac.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Qossmic\\Deptrac\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Deptrac is a static code analysis tool that helps to enforce rules for dependencies between software layers.",
+            "support": {
+                "issues": "https://github.com/qossmic/deptrac/issues",
+                "source": "https://github.com/qossmic/deptrac/tree/2.0.1"
+            },
+            "time": "2024-06-17T10:43:11+00:00"
+        },
+        {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "v0.1.1",
             "source": {
@@ -8867,51 +8912,6 @@
                 "source": "https://github.com/psalm/psalm-plugin-phpunit/tree/0.18.4"
             },
             "time": "2022-12-03T07:47:07+00:00"
-        },
-        {
-            "name": "qossmic/deptrac",
-            "version": "2.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/qossmic/deptrac.git",
-                "reference": "f646695c1468051138e1347d89590f9084fa6256"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/qossmic/deptrac/zipball/f646695c1468051138e1347d89590f9084fa6256",
-                "reference": "f646695c1468051138e1347d89590f9084fa6256",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^8.1"
-            },
-            "suggest": {
-                "ext-dom": "For using the JUnit output formatter"
-            },
-            "bin": [
-                "bin/deptrac",
-                "deptrac.phar"
-            ],
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Qossmic\\Deptrac\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Deptrac is a static code analysis tool that helps to enforce rules for dependencies between software layers.",
-            "support": {
-                "issues": "https://github.com/qossmic/deptrac/issues",
-                "source": "https://github.com/qossmic/deptrac/tree/2.0.1"
-            },
-            "time": "2024-06-17T10:43:11+00:00"
         },
         {
             "name": "rector/rector",
