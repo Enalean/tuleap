@@ -26,3 +26,7 @@ path = "src/read-from-preopened-dir/main.rs"
 [[bin]]
 name = "write-to-preopened-dir"
 path = "src/write-to-preopened-dir/main.rs"
+
+[[bin]]
+name = "explicit-exit"
+path = "src/explicit-exit/main.rs"
