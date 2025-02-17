@@ -43,18 +43,12 @@ describe("SectionsUpdater", () => {
         const section_a = ArtifactSectionFactory.override({
             ...section,
             id: "section-a",
-            title: {
-                ...section.title,
-                value: "Section A",
-            },
+            title: "Section A",
         });
         const section_b = ArtifactSectionFactory.override({
             ...section,
             id: "section-b",
-            title: {
-                ...section.title,
-                value: "Section B",
-            },
+            title: "Section B",
         });
 
         const collection = getCollectionWithSections([section_a, section_b]);
@@ -63,10 +57,7 @@ describe("SectionsUpdater", () => {
         updater.updateSection(
             ArtifactSectionFactory.override({
                 ...section_b,
-                title: {
-                    ...section_b.title,
-                    value: "Updated section B",
-                },
+                title: "Updated section B",
             }),
         );
 
@@ -76,8 +67,8 @@ describe("SectionsUpdater", () => {
             .value as SectionBasedOnArtifact;
 
         expect(collection.sections.value).toHaveLength(2);
-        expect(section_0.title.value).toBe("Section A");
-        expect(section_1.title.value).toBe("Updated section B");
+        expect(section_0.title).toBe("Section A");
+        expect(section_1.title).toBe("Updated section B");
     });
 
     it("should update the freetext section", () => {

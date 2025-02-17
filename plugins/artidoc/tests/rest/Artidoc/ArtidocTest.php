@@ -530,7 +530,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(
             $titles,
             array_map(
-                static fn (array $section) => is_array($section['title']) ? $section['title']['value'] : $section['title'],
+                static fn (array $section) => $section['title'],
                 $document_content,
             ),
         );
@@ -814,7 +814,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $document_content = $this->getArtidocSections($artidoc_id);
 
         self::assertCount(1, $document_content);
-        self::assertSame('My updated title', $document_content[0]['title']['value']);
+        self::assertSame('My updated title', $document_content[0]['title']);
         self::assertSame('My updated description', $document_content[0]['description']['value']);
         self::assertSame(2, $document_content[0]['level']);
     }

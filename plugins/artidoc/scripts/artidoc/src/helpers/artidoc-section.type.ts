@@ -26,11 +26,6 @@ interface ArtifactFieldValueRepresentation {
     readonly label: string;
 }
 
-interface ArtifactFieldValueStringRepresentation extends ArtifactFieldValueRepresentation {
-    readonly type: "string";
-    readonly value: string;
-}
-
 interface ArtifactFieldValueTextRepresentation extends ArtifactFieldValueRepresentation {
     readonly type: "text";
     readonly value: string;
@@ -72,7 +67,7 @@ export type FreetextSection = {
 
 export type SectionBasedOnArtifact = {
     id: string;
-    title: ArtifactFieldValueStringRepresentation | ArtifactTextFieldValueRepresentation;
+    title: string;
     display_title: string;
     description: ArtifactTextFieldValueRepresentation;
     attachments: ArtifactFieldValueFileFullRepresentation | null;
@@ -128,17 +123,11 @@ export function isArtifactSection(section: ArtidocSection): section is ArtifactS
 export function isSectionBasedOnArtifact(
     section: ArtidocSection,
 ): section is SectionBasedOnArtifact {
-    return typeof section.title !== "string";
+    return typeof section.description !== "string";
 }
 
 export function isFreetextSection(section: ArtidocSection): section is FreetextSection {
-    return typeof section.title === "string";
-}
-
-export function isTitleAString(
-    title: SectionBasedOnArtifact["title"],
-): title is ArtifactFieldValueStringRepresentation {
-    return title.type === "string";
+    return typeof section.description === "string";
 }
 
 export function isCommonmark(

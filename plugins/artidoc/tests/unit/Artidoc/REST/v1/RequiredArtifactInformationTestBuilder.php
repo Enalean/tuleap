@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -41,9 +40,6 @@ final class RequiredArtifactInformationTestBuilder
 
     public function build(): RequiredArtifactInformation
     {
-        $title = new ArtifactFieldValueFullRepresentation();
-        $title->build(1001, 'string', 'Summary', 'Lorem ipsum');
-
         $description = new ArtifactFieldValueTextRepresentation(
             1001,
             'text',
@@ -56,7 +52,7 @@ final class RequiredArtifactInformationTestBuilder
         return new RequiredArtifactInformation(
             ChangesetTestBuilder::aChangeset(1)->ofArtifact($this->artifact)->build(),
             TextFieldBuilder::aTextField(1001)->build(),
-            $title,
+            'Lorem ipsum',
             TextFieldBuilder::aTextField(1002)->build(),
             $description,
         );

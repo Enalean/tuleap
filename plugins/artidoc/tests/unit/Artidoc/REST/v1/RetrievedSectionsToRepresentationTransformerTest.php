@@ -235,8 +235,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             static function (array $expected, int $index) use ($result) {
                 self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
-                self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
-                self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
+                self::assertSame($expected['title'], $result->value->sections[$index]->title);
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
@@ -325,8 +324,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         $second = $result->value->sections[1];
         self::assertInstanceOf(ArtifactSectionRepresentation::class, $second);
         self::assertSame(1, $second->artifact->id);
-        self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $second->title);
-        self::assertSame('Title for #1', $second->title->value);
+        self::assertSame('Title for #1', $second->title);
     }
 
     public function testArtifactHasEmptyAttachmentFieldThatHasBeenCreatedAfterArtifactCreation(): void
@@ -454,8 +452,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             static function (array $expected, int $index) use ($result) {
                 self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
-                self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
-                self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
+                self::assertSame($expected['title'], $result->value->sections[$index]->title);
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
@@ -547,8 +544,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             static function (array $expected, int $index) use ($result) {
                 self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
-                self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
-                self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
+                self::assertSame($expected['title'], $result->value->sections[$index]->title);
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
             }
