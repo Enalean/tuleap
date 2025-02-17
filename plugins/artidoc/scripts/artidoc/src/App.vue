@@ -51,11 +51,10 @@ const error_message = ref<GlobalErrorMessage | null>(null);
 const has_error_message = computed(() => error_message.value !== null);
 const container = ref<HTMLElement>();
 const is_loading_sections = ref(true);
-const is_loading_failed = ref(false);
+const is_loading_failed = strictInject(IS_LOADING_SECTIONS_FAILED);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 
 provide(IS_LOADING_SECTIONS, is_loading_sections);
-provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed);
 provide(
     SET_GLOBAL_ERROR_MESSAGE,
     (message: GlobalErrorMessage | null) => (error_message.value = message),

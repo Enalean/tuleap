@@ -18,7 +18,7 @@
  */
 
 import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
-import { createApp } from "vue";
+import { createApp, ref } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createGettext } from "vue3-gettext";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
@@ -62,6 +62,7 @@ import { getSectionsStatesCollection } from "@/sections/states/SectionsStatesCol
 import { getSectionStateBuilder } from "@/sections/states/SectionStateBuilder";
 import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 import { PROJECT_ID } from "@/project-id-injection-key";
+import { IS_LOADING_SECTIONS_FAILED } from "@/is-loading-sections-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -103,11 +104,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-allowed-trackers")),
     );
 
+    const is_loading_failed = ref(false);
+
     watchForNeededPendingSectionInsertion(
         sections_collection,
         states_collection,
         configuration_store.selected_tracker,
         can_user_edit_document,
+        is_loading_failed,
     );
 
     app.provide(SECTIONS_COLLECTION, sections_collection);
@@ -142,6 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     app.provide(PROJECT_ID, getDatasetItemOrThrow(vue_mount_point, "data-project-id"));
+    app.provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed);
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);

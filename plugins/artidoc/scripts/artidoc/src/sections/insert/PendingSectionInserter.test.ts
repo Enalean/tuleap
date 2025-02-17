@@ -36,7 +36,8 @@ describe("PendingSectionInserter", () => {
     let sections_collection: SectionsCollection,
         sections_states: SectionsStatesCollection,
         selected_tracker: Ref<Tracker | null>,
-        can_user_edit_document: boolean;
+        can_user_edit_document: boolean,
+        is_loading_failed: boolean;
 
     beforeEach(() => {
         sections_states = SectionsStatesCollectionStub.build();
@@ -47,6 +48,7 @@ describe("PendingSectionInserter", () => {
 
         selected_tracker = ref(null);
         can_user_edit_document = true;
+        is_loading_failed = false;
     });
 
     const watchAndInsertPendingSectionIfNeeded = (): void => {
@@ -55,6 +57,7 @@ describe("PendingSectionInserter", () => {
             sections_states,
             ref(selected_tracker),
             can_user_edit_document,
+            ref(is_loading_failed),
         );
     };
 
@@ -170,5 +173,25 @@ describe("PendingSectionInserter", () => {
 
         expect(sections_collection.sections.value).toHaveLength(1);
         expect(isPendingArtifactSection(sections_collection.sections.value[0].value)).toBe(true);
+    });
+
+    it(`Given a document that:
+        - is configured
+        - has one section
+        And a user that:
+        - can edit the document
+        - can submit artifacts in the selected tracker
+        When the loading of the sections has failed
+        Then it should not insert a pending artifact section`, async () => {
+        selected_tracker.value = TrackerStub.withTitleAndDescription();
+
+        is_loading_failed = true;
+        watchAndInsertPendingSectionIfNeeded();
+
+        sections_collection.replaceAll([]);
+
+        await flushPromises();
+
+        expect(sections_collection.sections.value).toHaveLength(0);
     });
 });
