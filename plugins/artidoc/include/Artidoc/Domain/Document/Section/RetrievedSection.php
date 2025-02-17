@@ -55,11 +55,13 @@ final readonly class RetrievedSection
      */
     public static function fromFreetext(array $row): self
     {
+        $level = Level::from($row['level']);
+
         return new self(
             $row['id'],
-            Level::from($row['level']),
+            $level,
             $row['item_id'],
-            RetrievedSectionContent::fromFreetext($row['freetext_id'], $row['freetext_title'], $row['freetext_description']),
+            RetrievedSectionContent::fromFreetext($row['freetext_id'], $row['freetext_title'], $row['freetext_description'], $level),
             $row['rank'],
         );
     }

@@ -46,7 +46,8 @@ final class ContentToBeCreatedBuilder
         } elseif ($section->content !== null && $section->content->type === 'freetext') {
             $content = SectionContentToBeCreated::fromFreetext(
                 $section->content->title,
-                $section->content->description
+                $section->content->description,
+                $level,
             );
         } elseif ($section->content !== null && $section->content->type === 'artifact') {
             $content = SectionContentToBeCreated::fromArtifact(

@@ -55,7 +55,7 @@ final readonly class SectionCreator
                 fn (int $artifact_id) => $this->collect_required_section_information_for_creation
                     ->collectRequiredSectionInformation($artidoc, $artifact_id)
                     ->andThen(fn () => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id, $level), $before_section_id)),
-                fn (SectionContentToBeCreatedFreetext $freetext) => $this->saveSection($artidoc, ContentToInsert::fromFreetext($freetext->content, $level), $before_section_id),
+                fn (SectionContentToBeCreatedFreetext $freetext) => $this->saveSection($artidoc, ContentToInsert::fromFreetext($freetext->content), $before_section_id),
                 fn (SectionContentToBeCreatedArtifact $artifact) => $this->artifact_content_creator->createArtifact($artidoc, $artifact->content)
                     ->andThen(fn (int $artifact_id) => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id, $level), $before_section_id)),
             ));

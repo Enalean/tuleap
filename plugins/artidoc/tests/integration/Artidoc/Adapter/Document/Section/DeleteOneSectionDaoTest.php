@@ -51,7 +51,7 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
 
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
-            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum'), Level::One),
+            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum', Level::One)),
         )->match(
             function (SectionIdentifier $identifier) {
                 $this->uuid_intro = $identifier;
@@ -77,7 +77,7 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
         );
         $save_dao->saveSectionAtTheEnd(
             $this->artidoc,
-            ContentToInsert::fromFreetext(new FreetextContent('Legal', 'doloret'), Level::One),
+            ContentToInsert::fromFreetext(new FreetextContent('Legal', 'doloret', Level::One)),
         );
     }
 

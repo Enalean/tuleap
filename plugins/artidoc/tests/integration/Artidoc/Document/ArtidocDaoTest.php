@@ -83,8 +83,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao = $this->getDao();
         $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert(1001));
         $this->createArtidocSections($this->artidoc_102, [
-            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum'), Level::One),
-            ContentToInsert::fromFreetext(new FreetextContent('Requirements', ''), Level::One),
+            ContentToInsert::fromFreetext(new FreetextContent('Introduction', 'Lorem ipsum', Level::One)),
+            ContentToInsert::fromFreetext(new FreetextContent('Requirements', '', Level::One)),
             ContentToInsert::fromArtifactId(2001, Level::Two),
             ContentToInsert::fromArtifactId(1001, Level::Two),
         ]);

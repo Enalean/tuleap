@@ -48,8 +48,8 @@ final class UpdateFreetextContentDaoTest extends TestIntegrationTestCase
     {
         $artidoc = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));
         $ids     = $this->createArtidocSections($artidoc, [
-            ContentToInsert::fromFreetext(new FreetextContent('Intro', ''), Level::One),
-            ContentToInsert::fromFreetext(new FreetextContent('Requirements', ''), Level::One),
+            ContentToInsert::fromFreetext(new FreetextContent('Intro', '', Level::One)),
+            ContentToInsert::fromFreetext(new FreetextContent('Requirements', '', Level::One)),
             ContentToInsert::fromArtifactId(1001, Level::One),
             ContentToInsert::fromArtifactId(1002, Level::One),
         ]);
@@ -64,7 +64,7 @@ final class UpdateFreetextContentDaoTest extends TestIntegrationTestCase
             static function (RetrievedSectionContentFreetext $freetext) use ($artidoc, $ids) {
                 $dao = new UpdateFreetextContentDao(new UpdateLevelDao());
 
-                $dao->updateFreetextContent($ids[0], $freetext->id, new FreetextContent('Introduction', ''), Level::One);
+                $dao->updateFreetextContent($ids[0], $freetext->id, new FreetextContent('Introduction', '', Level::One));
 
                 SectionsAsserter::assertSectionsForDocument($artidoc, ['Introduction', 'Requirements', 1001, 1002]);
 

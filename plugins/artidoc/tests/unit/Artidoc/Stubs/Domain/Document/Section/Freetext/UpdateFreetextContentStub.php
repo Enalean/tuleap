@@ -26,7 +26,6 @@ use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\UpdateFreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Level;
 
 final class UpdateFreetextContentStub implements UpdateFreetextContent
 {
@@ -45,7 +44,6 @@ final class UpdateFreetextContentStub implements UpdateFreetextContent
         SectionIdentifier $section_identifier,
         FreetextIdentifier $id,
         FreetextContent $content,
-        Level $level,
     ): void {
         $this->called = true;
     }

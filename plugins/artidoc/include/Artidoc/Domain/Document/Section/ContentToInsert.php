@@ -50,12 +50,12 @@ final readonly class ContentToInsert
         );
     }
 
-    public static function fromFreetext(FreetextContent $freetext, Level $level): self
+    public static function fromFreetext(FreetextContent $freetext): self
     {
         return new self(
             Option::nothing(\Psl\Type\int()),
             Option::fromValue($freetext),
-            $level,
+            $freetext->level,
         );
     }
 }
