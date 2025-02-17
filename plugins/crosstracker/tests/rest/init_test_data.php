@@ -22,6 +22,6 @@
 require_once __DIR__ . '/../../../../src/www/include/pre.php';
 require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
 require_once __DIR__ . '/../../include/crosstrackerPlugin.php';
-require_once __DIR__ . '/CrossTracker/CrossTrackerDataBuilder.php';
+require_once __DIR__ . '/CrossTrackerDataBuilder.php';
 
-(new Tuleap\CrossTracker\REST\v1\CrossTrackerDataBuilder())->setUp();
+(new Tuleap\CrossTracker\CrossTrackerDataBuilder())->setUp();

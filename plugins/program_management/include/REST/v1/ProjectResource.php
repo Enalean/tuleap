@@ -100,6 +100,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use URLVerification;
 
 final class ProjectResource extends AuthenticatedResource
 {
@@ -139,7 +140,8 @@ final class ProjectResource extends AuthenticatedResource
             $project_manager_adapter,
             $program_dao,
             $explicit_backlog_dao,
-            $this->user_manager_adapter
+            $this->user_manager_adapter,
+            new URLVerification(),
         );
         $this->team_creator = new TeamCreator(
             $project_retriever,

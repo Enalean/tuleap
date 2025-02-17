@@ -30,7 +30,7 @@ import type {
     PrettyTitleSelectableRepresentation,
     ProjectSelectableRepresentation,
     Selectable,
-    SelectableReportContentRepresentation,
+    SelectableQueryContentRepresentation,
     SelectableRepresentation,
     StaticListSelectableRepresentation,
     TextSelectableRepresentation,
@@ -67,7 +67,7 @@ import {
 } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
-    mapReportToArtifactsTable(report: SelectableReportContentRepresentation): ArtifactsTable;
+    mapReportToArtifactsTable(report: SelectableQueryContentRepresentation): ArtifactsTable;
 };
 
 function findArtifactSelectable(selected: ReadonlyArray<Selectable>): Option<ArtifactSelectable> {

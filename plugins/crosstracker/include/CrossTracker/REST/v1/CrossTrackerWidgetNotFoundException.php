@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\CrossTracker\REST\v1;
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced;
+use Exception;
 
-use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
-
-final readonly class WidgetInProjectChecker
+class CrossTrackerWidgetNotFoundException extends Exception
 {
-    public function __construct(private SearchCrossTrackerWidget $widget_retriever)
-    {
-    }
-
-    public function isWidgetInProjectDashboard(int $report_id): bool
-    {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($report_id);
-
-        return $row !== null && $row['dashboard_type'] === 'project';
-    }
 }

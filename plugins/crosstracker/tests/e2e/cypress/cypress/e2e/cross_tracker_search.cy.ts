@@ -18,14 +18,14 @@
  *
  */
 
-describe("Cross tracker search", function () {
+describe("CrossTracker search", function () {
     let now: number;
 
     before(function () {
         now = Date.now();
     });
 
-    it("User should be able to set trackers from widgets", function () {
+    it("User should be able to use CrossTracker search widget", function () {
         const project_name = `x-tracker-${now}`;
         cy.projectMemberSession();
 
@@ -85,22 +85,13 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=crosstrackersearch]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
-        updateSearchQuery(
-            `SELECT @pretty_title FROM @project.name = "${project_name}" WHERE @id >= 1`,
-        );
-        cy.log("Save results");
-        cy.get("[data-test=cross-tracker-save-report]").click();
-        cy.get("[data-test=cross-tracker-report-success]");
-        cy.reload();
-
-        cy.intercept("/api/v1/cross_tracker_reports/*/content*").as("getReportContent");
+        cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
 
         cy.log("Regular user should be able to run queries");
-        editWidget();
         updateSearchQuery(
             `SELECT @title FROM @project.name = "${project_name}" AND @tracker.name IN ("bug", "task") WHERE @last_update_date > "2018-01-01"`,
         );
-        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.wait("@getQueryContent", { timeout: 5000 });
         cy.get("[data-test=column-header]").should("contain", "Title");
         cy.get("[data-test=cross-tracker-search-widget] [data-test=cell]").then((cell) => {
             cy.wrap(cell).should("contain", "bug");
@@ -115,9 +106,10 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=cross-tracker-save-report]").click();
         cy.get("[data-test=cross-tracker-report-success]");
 
+        cy.intercept("/api/v1/crosstracker_query/*/content*").as("getSpecificQueryContent");
         cy.log("reload page and check report still has results");
         cy.reload();
-        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.wait("@getSpecificQueryContent", { timeout: 5000 });
         cy.get("[data-test=cross-tracker-search-widget] [data-test=cell]").then((cell) => {
             cy.wrap(cell).should("contain", "bug");
             cy.wrap(cell).should("contain", "bug 1");
@@ -128,10 +120,6 @@ describe("Cross tracker search", function () {
         });
     });
 });
-
-function editWidget(): void {
-    cy.get("[data-test=cross-tracker-reading-mode]").click();
-}
 
 function updateSearchQuery(search_query: string): void {
     cy.get("[data-test=cross-tracker-search-widget] [data-test=expert-query]")

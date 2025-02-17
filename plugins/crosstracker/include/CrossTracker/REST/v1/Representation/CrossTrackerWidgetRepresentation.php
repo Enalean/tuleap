@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced;
+namespace Tuleap\CrossTracker\REST\v1\Representation;
 
-use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
-
-final readonly class WidgetInProjectChecker
+/**
+ * @psalm-immutable
+ */
+final readonly class CrossTrackerWidgetRepresentation
 {
-    public function __construct(private SearchCrossTrackerWidget $widget_retriever)
-    {
-    }
-
-    public function isWidgetInProjectDashboard(int $report_id): bool
-    {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($report_id);
-
-        return $row !== null && $row['dashboard_type'] === 'project';
+    /**
+     * @param CrossTrackerQueryRepresentation[] $queries
+     */
+    public function __construct(
+        public array $queries,
+    ) {
     }
 }

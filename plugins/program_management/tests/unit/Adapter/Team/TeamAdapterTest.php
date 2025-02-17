@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
@@ -34,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 
 final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,11 +47,13 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private ExplicitBacklogDao & Stub $explicit_backlog_dao;
     private RetrieveUserStub $retrieve_user;
     private \Project $team_project;
+    private CheckUserCanAccessProjectAndIsAdmin $url_verification;
 
     protected function setUp(): void
     {
         $this->explicit_backlog_dao = $this->createStub(ExplicitBacklogDao::class);
         $this->program_verifier     = VerifyIsProgramStub::withNotValidProgram();
+        $this->url_verification     = CheckUserCanAccessProjectStub::build();
 
         $this->team_project = ProjectTestBuilder::aProject()->withId(self::TEAM_ID)->build();
 
@@ -75,7 +79,8 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveFullProjectStub::withProject($this->team_project),
             $this->program_verifier,
             $this->explicit_backlog_dao,
-            $this->retrieve_user
+            $this->retrieve_user,
+            $this->url_verification,
         );
         $adapter->checkProjectIsATeam(self::TEAM_ID, UserIdentifierStub::withId(self::USER_ID));
     }
@@ -96,6 +101,10 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowExceptionWhenTeamProjectIsAlreadyAProgram(): void
     {
+        $this->url_verification = CheckUserCanAccessProjectStub::build()->withUserAdminOf(
+            UserTestBuilder::buildWithId(self::USER_ID),
+            $this->team_project,
+        );
         $this->program_verifier = VerifyIsProgramStub::withValidProgram();
         $this->expectException(ProjectIsAProgramException::class);
         $this->check();
@@ -103,6 +112,10 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testThrowsExceptionWhenTeamProjectDoesNotHaveTheExplicitBacklogModeEnabled(): void
     {
+        $this->url_verification = CheckUserCanAccessProjectStub::build()->withUserAdminOf(
+            UserTestBuilder::buildWithId(self::USER_ID),
+            $this->team_project,
+        );
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
         $this->expectException(TeamMustHaveExplicitBacklogEnabledException::class);
@@ -111,6 +124,10 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksAProjectCanBecomeATeam(): void
     {
+        $this->url_verification = CheckUserCanAccessProjectStub::build()->withUserAdminOf(
+            UserTestBuilder::buildWithId(self::USER_ID),
+            $this->team_project,
+        );
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(true);
 
         $this->expectNotToPerformAssertions();

@@ -24,16 +24,23 @@ namespace Tuleap\Test\Stubs\include;
 
 use PFUser;
 use Project;
+use Project_AccessNotAdminException;
 use Project_AccessPrivateException;
 use Tuleap\include\CheckUserCanAccessProject;
+use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
 
-final class CheckUserCanAccessProjectStub implements CheckUserCanAccessProject
+final class CheckUserCanAccessProjectStub implements CheckUserCanAccessProject, CheckUserCanAccessProjectAndIsAdmin
 {
     /**
      * array<user_id, project_id[]>
      * @var array<int, int[]>
      */
     private array $private_projects_per_user = [];
+    /**
+     * array<user_id, project_id[]>
+     * @var array<int, int[]>
+     */
+    private array $admins_users = [];
 
     public static function build(): self
     {
@@ -61,5 +68,23 @@ final class CheckUserCanAccessProjectStub implements CheckUserCanAccessProject
         }
 
         return true;
+    }
+
+    public function withUserAdminOf(PFUser $user, Project $project): self
+    {
+        if (! isset($this->admins_users[(int) $user->getId()])) {
+            $this->admins_users[(int) $user->getId()] = [];
+        }
+
+        $this->admins_users[(int) $user->getId()][] = (int) $project->getID();
+
+        return $this;
+    }
+
+    public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project): void
+    {
+        if (! isset($this->admins_users[(int) $user->getId()]) || ! in_array((int) $project->getID(), $this->admins_users[(int) $user->getId()])) {
+            throw new Project_AccessNotAdminException();
+        }
     }
 }

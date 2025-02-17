@@ -22,7 +22,7 @@
         <empty-state-tumbleweed />
         <p class="empty-state-title" data-test="selectable-empty-state-title">
             {{
-                writing_cross_tracker_report.expert_query !== ""
+                writing_query.tql_query !== ""
                     ? $gettext("No artifact found")
                     : $gettext("Query is empty")
             }}
@@ -35,17 +35,17 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { WritingCrossTrackerReport } from "../domain/WritingCrossTrackerReport";
 import EmptyStateTumbleweed from "./EmptyStateTumbleweed.vue";
+import type { Query } from "../type";
 
 const props = defineProps<{
-    writing_cross_tracker_report: WritingCrossTrackerReport;
+    writing_query: Query;
 }>();
 
 const { $gettext } = useGettext();
 
 function getEmptyStateMessage(): string {
-    if (props.writing_cross_tracker_report.expert_query === "") {
+    if (props.writing_query.tql_query === "") {
         return $gettext("Please create a new query.");
     }
     return $gettext("There is no artifact matching the query.");

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\REST\v1\Representation;
 
 use Tuleap\CrossTracker\CrossTrackerQuery;
-use Tuleap\CrossTracker\REST\v1\CrossTrackerReportsResource;
 
 /**
  * @psalm-immutable
@@ -31,9 +30,8 @@ use Tuleap\CrossTracker\REST\v1\CrossTrackerReportsResource;
 final readonly class CrossTrackerQueryRepresentation
 {
     private function __construct(
-        public string $uuid,
-        public string $uri,
-        public string $expert_query,
+        public string $id,
+        public string $tql_query,
         public string $title,
         public string $description,
     ) {
@@ -44,7 +42,6 @@ final readonly class CrossTrackerQueryRepresentation
         $uuid = $query->getUUID()->toString();
         return new self(
             $uuid,
-            CrossTrackerReportsResource::ROUTE . '/' . $query->getWidgetId(),
             $query->getQuery(),
             $query->getTitle(),
             $query->getDescription(),

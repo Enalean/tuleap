@@ -26,17 +26,9 @@
             class="action-buttons"
             v-if="is_multiple_query_supported && report_state !== 'edit-query'"
         >
-            <action-buttons
-                v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-                v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
-                v-bind:queries="queries"
-                v-bind:selected_query="selected_query"
-            />
+            <action-buttons v-bind:backend_query="backend_query" v-bind:queries="queries" />
         </div>
-        <error-message
-            v-bind:fault="current_fault"
-            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-        />
+        <error-message v-bind:fault="current_fault" v-bind:writing_query="writing_query" />
         <div
             class="tlp-alert-success cross-tracker-report-success"
             v-if="current_success.isValue()"
@@ -47,8 +39,8 @@
         <div class="cross-tracker-loader" v-if="is_loading"></div>
         <reading-mode
             v-if="is_reading_mode_shown"
-            v-bind:backend_cross_tracker_report="backend_cross_tracker_report"
-            v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
+            v-bind:backend_query="backend_query"
+            v-bind:reading_query="reading_query"
             v-bind:has_error="has_error"
             v-on:switch-to-writing-mode="handleSwitchWriting"
             v-on:saved="reportSaved"
@@ -56,16 +48,14 @@
         />
         <writing-mode
             v-if="report_state === 'edit-query'"
-            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+            v-bind:writing_query="writing_query"
+            v-bind:backend_query="backend_query"
             v-on:preview-result="handlePreviewResult"
             v-on:cancel-query-edition="handleCancelQueryEdition"
         />
     </section>
     <section class="tlp-pane-section" v-if="!is_loading">
-        <selectable-table
-            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-            v-bind:selected_query="selected_query"
-        />
+        <selectable-table v-bind:writing_query="writing_query" />
     </section>
 </template>
 <script setup lang="ts">
@@ -75,11 +65,8 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import ReadingMode from "./components/reading-mode/ReadingMode.vue";
 import WritingMode from "./components/writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
-import { getReports } from "./api/rest-querier";
-import type { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
-import type { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
-import type { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
-import type { Report } from "./type";
+import { getQueries } from "./api/rest-querier";
+import type { Query } from "./type";
 import SelectableTable from "./components/selectable-table/SelectableTable.vue";
 import type { ReportState } from "./domain/ReportState";
 import {
@@ -89,32 +76,31 @@ import {
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     NOTIFY_FAULT,
-    REPORT_ID,
+    WIDGET_ID,
     REPORT_STATE,
 } from "./injection-symbols";
 import { useFeedbacks } from "./composables/useFeedbacks";
 import { ReportRetrievalFault } from "./domain/ReportRetrievalFault";
 import ActionButtons from "./components/actions/ActionButtons.vue";
+import type { SwitchQueryEvent } from "./helpers/emitter-provider";
 import { SWITCH_QUERY_EVENT } from "./helpers/emitter-provider";
 
-const report_id = strictInject(REPORT_ID);
+const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
 const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
 
 const gettext_provider = useGettext();
 
-const props = defineProps<{
-    backend_cross_tracker_report: BackendCrossTrackerReport;
-    reading_cross_tracker_report: ReadingCrossTrackerReport;
-    writing_cross_tracker_report: WritingCrossTrackerReport;
-}>();
+const EmptyQuery: Query = { id: "", tql_query: "", title: "", description: "" };
+const backend_query = ref<Query>(EmptyQuery);
+const reading_query = ref<Query>(EmptyQuery);
+const writing_query = ref<Query>(EmptyQuery);
 
 const report_state = ref<ReportState>("report-saved");
 provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
-const queries = ref<ReadonlyArray<Report>>([]);
-const selected_query = ref<Report | null>(null);
+const queries = ref<ReadonlyArray<Query>>([]);
 
 const is_reading_mode_shown = computed(
     () =>
@@ -140,30 +126,26 @@ const is_export_allowed = computed<boolean>(() => {
 
 provide(IS_EXPORT_ALLOWED, is_export_allowed);
 
-function initReports(): void {
-    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
-    props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
+function initQueries(): void {
+    reading_query.value = backend_query.value;
+    writing_query.value = backend_query.value;
 }
 
 function loadBackendReport(): void {
     is_loading.value = true;
-    getReports(report_id)
+    getQueries(widget_id)
         .match(
-            (reports: ReadonlyArray<Report>) => {
+            (reports: ReadonlyArray<Query>) => {
                 queries.value = reports;
                 if (reports.length === 0) {
-                    selected_query.value = null;
-                    props.backend_cross_tracker_report.init("");
-                    initReports();
                     if (is_user_admin) {
                         report_state.value = "edit-query";
                     }
 
                     return;
                 }
-                selected_query.value = reports[0];
-                props.backend_cross_tracker_report.init(reports[0].expert_query);
-                initReports();
+                backend_query.value = reports[0];
+                initQueries();
             },
             (fault) => {
                 notifyFault(ReportRetrievalFault(fault));
@@ -188,46 +170,45 @@ function handleSwitchWriting(): void {
         return;
     }
 
-    props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
+    writing_query.value = reading_query.value;
     report_state.value = "edit-query";
     clearFeedbacks();
 }
 
-function handleSwitchQuery(): void {
+function handleSwitchQuery(event: SwitchQueryEvent): void {
     if (!is_user_admin) {
         return;
     }
 
+    backend_query.value = event.query;
+    initQueries();
+
     clearFeedbacks();
-    // Dummy report state to make sure the change is taken in account after changing the selected query
-    // This will be removed later when the report_state will be removed or reworked
-    report_state.value = "report-saved";
-    report_state.value = "result-preview";
 }
 
-function handlePreviewResult(): void {
-    props.reading_cross_tracker_report.duplicateFromWritingReport(
-        props.writing_cross_tracker_report,
-    );
+function handlePreviewResult(query: Query): void {
+    writing_query.value = query;
+    reading_query.value = query;
     report_state.value = "result-preview";
     clearFeedbacks();
 }
 
 function handleCancelQueryEdition(): void {
-    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
+    reading_query.value = backend_query.value;
     report_state.value = "report-saved";
     clearFeedbacks();
 }
 
-function reportSaved(): void {
-    initReports();
+function reportSaved(query: Query): void {
+    backend_query.value = query;
+    initQueries();
     report_state.value = "report-saved";
     clearFeedbacks();
     notifySuccess(gettext_provider.$gettext("Report has been successfully saved"));
 }
 
 function unsavedReportDiscarded(): void {
-    initReports();
+    initQueries();
     report_state.value = "report-saved";
     clearFeedbacks();
 }

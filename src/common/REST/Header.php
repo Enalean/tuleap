@@ -75,7 +75,7 @@ class Header
         self::sendHeader(self::ETAG, $hash);
     }
 
-    public static function Location($uri)
+    public static function Location($uri) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $route = ServerHostname::HTTPSUrl() . $uri;
 
@@ -140,6 +140,11 @@ class Header
     public static function allowOptionsPut()
     {
         self::sendAllowHeaders([self::OPTIONS, self::PUT]);
+    }
+
+    public static function allowOptionsPutDelete(): void
+    {
+        self::sendAllowHeaders([self::OPTIONS, self::PUT, self::DELETE]);
     }
 
     public static function allowOptionsPost()

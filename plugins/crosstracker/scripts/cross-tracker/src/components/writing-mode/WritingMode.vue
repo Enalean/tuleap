@@ -20,7 +20,7 @@
 <template>
     <div class="writing-mode">
         <query-editor
-            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+            v-bind:writing_query="writing_query"
             v-on:trigger-search="search"
             ref="editor"
         />
@@ -49,24 +49,41 @@
 import { ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import QueryEditor from "./QueryEditor.vue";
-import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
+import type { Query } from "../../type";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { EMITTER } from "../../injection-symbols";
+import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 
 const { $gettext } = useGettext();
 
-defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
+const props = defineProps<{
+    writing_query: Query;
+    backend_query: Query;
+}>();
 const emit = defineEmits<{
-    (e: "preview-result"): void;
+    (e: "preview-result", query: Query): void;
     (e: "cancel-query-edition"): void;
 }>();
+const emitter = strictInject(EMITTER);
 
 const editor = ref<InstanceType<typeof QueryEditor>>();
 
 function cancel(): void {
     emit("cancel-query-edition");
+    emitter.emit(REFRESH_ARTIFACTS_EVENT, { query: props.backend_query });
 }
 
 function search(): void {
-    emit("preview-result");
+    if (editor.value !== undefined) {
+        const query = {
+            id: props.writing_query.id,
+            tql_query: editor.value.tql_query,
+            title: props.writing_query.title,
+            description: props.writing_query.description,
+        };
+        emit("preview-result", query);
+        emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
+    }
 }
 </script>
 

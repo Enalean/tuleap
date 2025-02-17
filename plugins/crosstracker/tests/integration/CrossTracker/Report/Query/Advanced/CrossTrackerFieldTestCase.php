@@ -27,11 +27,11 @@ use ForgeConfig;
 use LogicException;
 use PFUser;
 use Tuleap\CrossTracker\CrossTrackerQuery;
-use Tuleap\CrossTracker\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactoryBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
+use Tuleap\CrossTracker\Widget\CrossTrackerSearchWidget;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -92,7 +92,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         $dashboard_id = $dao->save($project_id, 'Main Dashboard');
         $line_id      = $widget_dao->createLine($dashboard_id, 'project', 0);
         $column_id    = $widget_dao->createColumn($line_id, 0);
-        self::assertTrue($widget_dao->insertWidgetInColumnWithRank(ProjectCrossTrackerSearch::NAME, $widget_id, $column_id, 0));
+        self::assertTrue($widget_dao->insertWidgetInColumnWithRank(CrossTrackerSearchWidget::NAME, $widget_id, $column_id, 0));
         $db->insert('plugin_crosstracker_widget', ['id' => $widget_id]);
         self::assertNotNull((new CrossTrackerWidgetDao())->searchCrossTrackerWidgetDashboardById($widget_id));
 
@@ -106,8 +106,8 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
      */
     final protected function getMatchingArtifactIds(CrossTrackerQuery $report, PFUser $user): array
     {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
+        $result = (new CrossTrackerArtifactReportFactoryBuilder())
+            ->getArtifactFactory()
             ->getArtifactsMatchingReport($report, $user, 10, 0);
         return array_values(array_map(static function (array $artifact): int {
             if (! isset($artifact['@id']) || ! ($artifact['@id'] instanceof NumericResultRepresentation)) {
@@ -118,12 +118,12 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         }, $result->artifacts));
     }
 
-    final protected function getQueryResults(CrossTrackerQuery $report, PFUser $user): CrossTrackerReportContentRepresentation
+    final protected function getQueryResults(CrossTrackerQuery $report, PFUser $user): CrossTrackerQueryContentRepresentation
     {
-        $result = (new ArtifactReportFactoryInstantiator())
-            ->getFactory()
+        $result = (new CrossTrackerArtifactReportFactoryBuilder())
+            ->getArtifactFactory()
             ->getArtifactsMatchingReport($report, $user, 10, 0);
-        assert($result instanceof CrossTrackerReportContentRepresentation);
+        assert($result instanceof CrossTrackerQueryContentRepresentation);
         return $result;
     }
 }

@@ -27,7 +27,6 @@ import { en_US_LOCALE } from "@tuleap/core-constants";
 import { nextTick, ref } from "vue";
 import SelectableTable from "./SelectableTable.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
@@ -35,7 +34,7 @@ import {
     GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
-    REPORT_ID,
+    WIDGET_ID,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
@@ -56,6 +55,7 @@ import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
+import type { Query } from "../../type";
 
 vi.useFakeTimers();
 
@@ -67,15 +67,19 @@ describe(`SelectableTable`, () => {
     let errorSpy: Mock,
         report_state: ReportState,
         is_xslx_export_allowed: boolean,
-        writing_cross_tracker_report: WritingCrossTrackerReport;
+        writing_query: Query;
 
     beforeEach(() => {
         errorSpy = vi.fn();
         report_state = "report-saved";
         is_xslx_export_allowed = true;
 
-        writing_cross_tracker_report = new WritingCrossTrackerReport();
-        writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
+        writing_query = {
+            id: "",
+            tql_query: `SELECT start_date WHERE start_date != ''`,
+            title: "",
+            description: "",
+        };
     });
 
     const getWrapper = (
@@ -97,7 +101,7 @@ describe(`SelectableTable`, () => {
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
                     [REPORT_STATE.valueOf()]: ref(report_state),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
-                    [REPORT_ID.valueOf()]: 15,
+                    [WIDGET_ID.valueOf()]: 15,
                     [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xslx_export_allowed),
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
                         createVueGettextProviderPassThrough(),
@@ -106,13 +110,7 @@ describe(`SelectableTable`, () => {
                 },
             },
             props: {
-                writing_cross_tracker_report,
-                selected_query: {
-                    uuid: "0194dfd6-a489-703b-aabd-9d473212d908",
-                    expert_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id = 1",
-                    title: "My awesome query",
-                    description: "",
-                },
+                writing_query,
             },
         });
     };

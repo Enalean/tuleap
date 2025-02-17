@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\CrossTracker\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 
 final readonly class ReportInheritanceHandler
 {
     public function __construct(
-        private CrossTrackerWidgetDao $widget_dao,
+        private SearchCrossTrackerWidget $widget_dao,
         private CloneWidget $report_cloner,
         private LoggerInterface $logger,
     ) {

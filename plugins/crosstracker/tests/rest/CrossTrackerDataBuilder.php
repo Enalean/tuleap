@@ -21,12 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\CrossTracker;
 
 use EventManager;
 use LogicException;
 use REST_TestDataBuilder;
-use Tuleap\CrossTracker\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryDao;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Widget\WidgetFactory;
@@ -42,11 +43,12 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 
         echo "Generate Cross Tracker\n";
 
-        $report_dao = new CrossTrackerWidgetDao();
-        $report_id  = $report_dao->createWidget();
-        $report_dao->insertQuery($report_id, '');
+        $widget_dao = new CrossTrackerWidgetDao();
+        $query_dao  = new CrossTrackerQueryDao();
+        $widget_id  = $widget_dao->createWidget();
+        $query_dao->create('', 'Title 1', 'Description', $widget_id);
 
-        $widget_dao = new DashboardWidgetDao(
+        $dashboard_widget_dao = new DashboardWidgetDao(
             new WidgetFactory(
                 UserManager::instance(),
                 new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
@@ -54,7 +56,7 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
             )
         );
 
-        $project_dashboard_dao = new ProjectDashboardDao($widget_dao);
+        $project_dashboard_dao = new ProjectDashboardDao($dashboard_widget_dao);
         $dashboards            = $project_dashboard_dao->searchAllProjectDashboards(
             (int) $this->getTrackerInProjectPrivateMember(self::EPICS_TRACKER_SHORTNAME)->getProject()->getID()
         );
@@ -64,11 +66,11 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 
         $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
 
-        $user_report_id = $report_dao->createWidget();
-        $report_dao->insertQuery($user_report_id, '');
-        $widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
-        $project_report_id = $report_dao->createWidget();
-        $report_dao->insertQuery($project_report_id, '');
-        $widget_dao->create($dashboards[0]['project_id'], 'g', $dashboards[0]['id'], 'crosstrackersearch', $project_report_id);
+        $user_report_id = $widget_dao->createWidget();
+        $query_dao->create('', 'Title 2', '', $user_report_id);
+        $dashboard_widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
+        $project_report_id = $widget_dao->createWidget();
+        $query_dao->create('', 'Title 3', '', $project_report_id);
+        $dashboard_widget_dao->create($dashboards[0]['project_id'], 'g', $dashboards[0]['id'], 'crosstrackersearch', $project_report_id);
     }
 }

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker;
+namespace Tuleap\CrossTracker\Widget;
 
 interface SearchCrossTrackerWidget
 {
@@ -28,4 +28,6 @@ interface SearchCrossTrackerWidget
      * @psalm-return array{dashboard_id: int, dashboard_type: string, user_id: int, project_id: int}|null
      */
     public function searchCrossTrackerWidgetDashboardById(int $content_id): ?array;
+
+    public function searchWidgetExistence(int $widget_id): bool;
 }

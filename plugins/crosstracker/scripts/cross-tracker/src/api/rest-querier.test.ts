@@ -20,56 +20,96 @@
 import { describe, expect, it, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
-import { getReports, updateReport } from "./rest-querier";
+import { createQuery, getQueries, updateQuery } from "./rest-querier";
 
 describe("rest-querier", () => {
-    describe("getReport()", () => {
-        it(`will query the REST API and return the report`, async () => {
-            const report = {
-                expert_query: '@title = "bla"',
-                title: "TQL title",
-                description: '@title = "bla"',
+    describe("getQueries()", () => {
+        it(`will query the REST API and return the queries`, async () => {
+            const widget = {
+                queries: [
+                    {
+                        id: "0194d59b-f37b-73e1-a553-cf143a3c1203",
+                        tql_query: '@title = "bla"',
+                        title: "TQL title",
+                        description: '@title = "bla"',
+                    },
+                ],
             };
-            const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync([report]));
-            const report_id = 16;
+            const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(widget));
+            const widget_id = 16;
 
-            const result = await getReports(report_id);
+            const result = await getQueries(widget_id);
 
             expect(getJSON).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}`,
+                fetch_result.uri`/api/v1/crosstracker_widget/${widget_id}`,
             );
             if (!result.isOk()) {
                 throw Error("Expected an ok");
             }
-            expect(result.value[0].expert_query).toBe(report.expert_query);
-            expect(result.value[0].title).toBe(report.title);
-            expect(result.value[0].description).toBe(report.description);
+            expect(result.value[0].tql_query).toBe(widget.queries[0].tql_query);
+            expect(result.value[0].title).toBe(widget.queries[0].title);
+            expect(result.value[0].description).toBe(widget.queries[0].description);
         });
     });
 
-    describe("updateReport()", () => {
-        it(`will send the given tracker ids and expert query to be saved by the REST API
-                and will return the report from the response`, async () => {
-            const expert_query =
+    describe("updateQuery()", () => {
+        it(`will send the given expert query to be saved by the REST API
+                and will return the query from the response`, async () => {
+            const tql_query =
                 "Select  @id, @project.name from @project = MY_PROJECTS() where @id > 2";
-            const report = {
-                expert_query,
+            const query = {
+                id: "0194d59b-f37b-73e1-a553-cf143a3c1203",
+                tql_query,
                 title: " My TQL query",
                 description: "My description",
             };
-            const putJSON = vi.spyOn(fetch_result, "putJSON").mockReturnValue(okAsync(report));
-            const report_id = 59;
+            const putJSON = vi.spyOn(fetch_result, "putJSON").mockReturnValue(okAsync(query));
 
-            const result = await updateReport(report_id, expert_query);
+            const result = await updateQuery(query, 15);
 
             expect(putJSON).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}`,
+                fetch_result.uri`/api/v1/crosstracker_query/${query.id}`,
                 expect.any(Object),
             );
             if (!result.isOk()) {
                 throw Error("Expected an Ok");
             }
-            expect(result.value.expert_query).toBe(report.expert_query);
+            expect(result.value.tql_query).toBe(query.tql_query);
+        });
+    });
+
+    describe("createQuery()", () => {
+        it(`will send the given query to be saved by the REST API
+            and will return the created one from the response`, async () => {
+            const tql_query =
+                "Select  @id, @project.name from @project = MY_PROJECTS() where @id > 2";
+            const query = {
+                id: "",
+                tql_query,
+                title: " My TQL query",
+                description: "My description",
+            };
+            const query_id = "0194d59b-f37b-73e1-a553-cf143a3c1203";
+            const postJSON = vi.spyOn(fetch_result, "postJSON").mockReturnValue(
+                okAsync({
+                    id: query_id,
+                    tql_query,
+                    title: query.title,
+                    description: query.description,
+                }),
+            );
+
+            const result = await createQuery(query, 15);
+
+            expect(postJSON).toHaveBeenCalledWith(
+                fetch_result.uri`/api/v1/crosstracker_query`,
+                expect.any(Object),
+            );
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value.id).toBe(query_id);
+            expect(result.value.tql_query).toBe(query.tql_query);
         });
     });
 });

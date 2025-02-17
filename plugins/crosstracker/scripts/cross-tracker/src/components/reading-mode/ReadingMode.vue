@@ -26,7 +26,7 @@
     >
         <tlp-syntax-highlighting v-if="!isExpertQueryEmpty()" data-test="tql-reading-mode-query">
             <code class="language-tql cross-tracker-reading-mode-query">{{
-                props.reading_cross_tracker_report.expert_query
+                props.reading_query.tql_query
             }}</code>
         </tlp-syntax-highlighting>
     </div>
@@ -62,37 +62,43 @@
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { updateReport } from "../../api/rest-querier";
-import type { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
-import type { Report } from "../../type";
-import type { BackendCrossTrackerReport } from "../../domain/BackendCrossTrackerReport";
-import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../../injection-symbols";
+import { updateQuery, createQuery } from "../../api/rest-querier";
+import type { Query } from "../../type";
+import {
+    EMITTER,
+    IS_USER_ADMIN,
+    NOTIFY_FAULT,
+    REPORT_STATE,
+    WIDGET_ID,
+} from "../../injection-symbols";
 import { SaveReportFault } from "../../domain/SaveReportFault";
+import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);
 const notifyFault = strictInject(NOTIFY_FAULT);
-const report_id = strictInject(REPORT_ID);
+const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 
 const props = defineProps<{
     has_error: boolean;
-    reading_cross_tracker_report: ReadingCrossTrackerReport;
-    backend_cross_tracker_report: BackendCrossTrackerReport;
+    reading_query: Query;
+    backend_query: Query;
 }>();
 
 const emit = defineEmits<{
     (e: "switch-to-writing-mode"): void;
-    (e: "saved"): void;
+    (e: "saved", query: Query): void;
     (e: "discard-unsaved-report"): void;
 }>();
+const emitter = strictInject(EMITTER);
 
 const is_loading = ref(false);
 
 const is_save_disabled = computed(() => is_loading.value === true || props.has_error);
 
 function isExpertQueryEmpty(): boolean {
-    return props.reading_cross_tracker_report.expert_query === "";
+    return props.reading_query.tql_query === "";
 }
 
 function switchToWritingMode(): void {
@@ -108,14 +114,27 @@ function saveReport(): void {
     }
     is_loading.value = true;
 
-    props.backend_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
-    const new_expert_query = props.backend_cross_tracker_report.getExpertQuery();
+    if (props.reading_query.id === "") {
+        // It is a new query
+        createQuery(props.reading_query, widget_id)
+            .match(
+                (query: Query) => {
+                    emit("saved", query);
+                },
+                (fault) => {
+                    notifyFault(SaveReportFault(fault));
+                },
+            )
+            .then(() => {
+                is_loading.value = false;
+            });
+        return;
+    }
 
-    updateReport(report_id, new_expert_query)
+    updateQuery(props.reading_query, widget_id)
         .match(
-            (report: Report) => {
-                props.backend_cross_tracker_report.init(report.expert_query);
-                emit("saved");
+            (query: Query) => {
+                emit("saved", query);
             },
             (fault) => {
                 notifyFault(SaveReportFault(fault));
@@ -128,6 +147,7 @@ function saveReport(): void {
 
 function cancelReport(): void {
     emit("discard-unsaved-report");
+    emitter.emit(REFRESH_ARTIFACTS_EVENT, { query: props.backend_query });
 }
 </script>
 

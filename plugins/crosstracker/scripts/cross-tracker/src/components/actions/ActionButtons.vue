@@ -18,24 +18,15 @@
   -->
 
 <template>
-    <choose-query-button
-        v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-        v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
-        v-bind:queries="queries"
-        v-bind:selected_query="selected_query"
-    />
+    <choose-query-button v-bind:backend_query="backend_query" v-bind:queries="queries" />
 </template>
 
 <script setup lang="ts">
 import ChooseQueryButton from "./ChooseQueryButton.vue";
-import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
-import type { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
-import type { Report } from "../../type";
+import type { Query } from "../../type";
 
 defineProps<{
-    writing_cross_tracker_report: WritingCrossTrackerReport;
-    reading_cross_tracker_report: ReadingCrossTrackerReport;
-    queries: ReadonlyArray<Report>;
-    selected_query: Report | null;
+    backend_query: Query;
+    queries: ReadonlyArray<Query>;
 }>();
 </script>

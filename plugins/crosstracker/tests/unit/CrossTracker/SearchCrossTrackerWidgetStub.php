@@ -19,11 +19,14 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker;
+
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 
 final class SearchCrossTrackerWidgetStub implements SearchCrossTrackerWidget
 {
-    private function __construct(private readonly array $row)
+    private function __construct(private readonly ?array $row)
     {
     }
 
@@ -35,5 +38,15 @@ final class SearchCrossTrackerWidgetStub implements SearchCrossTrackerWidget
     public static function withExistingWidget(array $row): self
     {
         return new self($row);
+    }
+
+    public static function withoutExistingWidget(): self
+    {
+        return new self(null);
+    }
+
+    public function searchWidgetExistence(int $widget_id): bool
+    {
+        return $this->row !== null;
     }
 }

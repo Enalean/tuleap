@@ -31,20 +31,21 @@ describe(`ArtifactsTableRetriever`, () => {
     describe(`getSelectableQueryResult()`, () => {
         const limit = 30;
         const offset = 30;
+        const widget_id = 15;
         const query_id = "0194dfd6-a489-703b-aabd-9d473212d908";
-        const expert_query = `SELECT start_date WHERE @title = "forevouched"`;
+        const tql_query = `SELECT start_date WHERE @title = "forevouched"`;
 
         const getRetriever = (): RetrieveArtifactsTable => {
-            return ArtifactsTableRetriever(ArtifactsTableBuilder());
+            return ArtifactsTableRetriever(widget_id, ArtifactsTableBuilder());
         };
 
-        it(`will send the given tracker ids and expert query to the REST API
+        it(`will send the given expert query to the REST API
             and will return them organized in ArtifactsTable
             with the total number of artifacts`, async () => {
             const date_field_name = "start_date";
             const total = 45;
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const report_content = SelectableReportContentRepresentationStub.build(
+            const query_content = SelectableReportContentRepresentationStub.build(
                 [{ type: "date", name: date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
@@ -58,25 +59,21 @@ describe(`ArtifactsTableRetriever`, () => {
             const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
                 okAsync({
                     headers: new Headers({ "X-PAGINATION-SIZE": String(total) }),
-                    json: () => Promise.resolve(report_content),
+                    json: () => Promise.resolve(query_content),
                 } as Response),
             );
 
-            const result = await getRetriever().getSelectableQueryResult(
-                query_id,
-                expert_query,
-                limit,
-                offset,
-            );
+            const result = await getRetriever().getSelectableQueryResult(tql_query, limit, offset);
 
             expect(getResponse).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/cross_tracker_reports/${query_id}/content`,
+                fetch_result.uri`/api/v1/crosstracker_query/content`,
                 {
                     params: {
                         limit,
                         offset,
                         query: JSON.stringify({
-                            expert_query,
+                            widget_id,
+                            tql_query,
                         }),
                     },
                 },
@@ -95,7 +92,7 @@ describe(`ArtifactsTableRetriever`, () => {
             const date_field_name = "start_date";
             const total = 45;
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const report_content = SelectableReportContentRepresentationStub.build(
+            const widget_content = SelectableReportContentRepresentationStub.build(
                 [{ type: "date", name: date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
@@ -109,14 +106,14 @@ describe(`ArtifactsTableRetriever`, () => {
             const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
                 okAsync({
                     headers: new Headers({ "X-PAGINATION-SIZE": String(total) }),
-                    json: () => Promise.resolve(report_content),
+                    json: () => Promise.resolve(widget_content),
                 } as Response),
             );
 
             const result = await getRetriever().getSelectableReportContent(query_id, limit, offset);
 
             expect(getResponse).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/cross_tracker_reports/${query_id}/content`,
+                fetch_result.uri`/api/v1/crosstracker_query/${query_id}/content`,
                 {
                     params: {
                         limit,
@@ -136,7 +133,7 @@ describe(`ArtifactsTableRetriever`, () => {
             from an already existing report and not from a saved query`, async () => {
             const date_field_name = "start_date";
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const report_content = SelectableReportContentRepresentationStub.build(
+            const widget_content = SelectableReportContentRepresentationStub.build(
                 [{ type: "date", name: date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
@@ -165,12 +162,12 @@ describe(`ArtifactsTableRetriever`, () => {
             );
             const getAllJSON = vi
                 .spyOn(fetch_result, "getAllJSON")
-                .mockReturnValue(okAsync([report_content, report_content_second_page]));
+                .mockReturnValue(okAsync([widget_content, report_content_second_page]));
 
             const result = await getRetriever().getSelectableFullReport(query_id);
 
             expect(getAllJSON).toHaveBeenCalledWith(
-                uri`/api/v1/cross_tracker_reports/${query_id}/content`,
+                uri`/api/v1/crosstracker_query/${query_id}/content`,
                 {
                     params: {
                         limit: 50,

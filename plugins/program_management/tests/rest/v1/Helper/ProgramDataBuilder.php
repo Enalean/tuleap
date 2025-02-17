@@ -44,6 +44,7 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use UserManager;
@@ -79,7 +80,8 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
             new ProjectManagerAdapter($this->project_manager, $user_adapter),
             $program_dao,
             new ExplicitBacklogDao(),
-            $user_adapter
+            $user_adapter,
+            CheckUserCanAccessProjectStub::build(),
         );
 
         $null_logger               = new NullLogger();

@@ -20,25 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker;
+namespace Tuleap\CrossTracker\Report\Query;
 
-use Tuleap\CrossTracker\Report\RetrieveReport;
+use Tuleap\CrossTracker\CrossTrackerQuery;
+use Tuleap\CrossTracker\REST\v1\CrossTrackerQueryNotFoundException;
 
-final readonly class CrossTrackerReportFactory
+final readonly class CrossTrackerQueryFactory
 {
     public function __construct(
-        private RetrieveReport $report_retriever,
+        private RetrieveQueries $query_retriever,
     ) {
     }
 
     /**
-     * @throws CrossTrackerReportNotFoundException
+     * @throws CrossTrackerQueryNotFoundException
      */
     public function getById(string $uuid): CrossTrackerQuery
     {
-        $query_row = $this->report_retriever->searchQueryByUuid($uuid);
-        if (! $query_row) {
-            throw new CrossTrackerReportNotFoundException();
+        $query_row = $this->query_retriever->searchQueryByUuid($uuid);
+        if ($query_row === null) {
+            throw new CrossTrackerQueryNotFoundException();
         }
 
         return new CrossTrackerQuery($query_row['id'], $query_row['query'], $query_row['title'], $query_row['description'], $query_row['widget_id']);
@@ -49,7 +50,7 @@ final readonly class CrossTrackerReportFactory
      */
     public function getByWidgetId(int $id): array
     {
-        $rows = $this->report_retriever->searchQueriesByWidgetId($id);
+        $rows = $this->query_retriever->searchQueriesByWidgetId($id);
 
         $result = [];
         foreach ($rows as $row) {

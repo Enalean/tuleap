@@ -460,7 +460,7 @@ class UserGroupResource extends AuthenticatedResource
         if ($ugroup->getId() === ProjectUGroup::PROJECT_MEMBERS) {
             ProjectAuthorization::userCanAccessProjectAndCanManageMembership($user, $project);
         } else {
-            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project, new URLVerification());
         }
     }
 
@@ -551,7 +551,7 @@ class UserGroupResource extends AuthenticatedResource
                 $project
             );
 
-            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project, new URLVerification());
 
             $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
                 $project_id,

@@ -20,15 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report;
+namespace Tuleap\CrossTracker\REST\v1\Representation;
 
-use Tuleap\DB\UUID;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 
-interface RetrieveReport
+/**
+ * @psalm-immutable
+ */
+final readonly class CrossTrackerQueryContentRepresentation
 {
-    /** @return array{id: UUID, query: string, title: string, description: string, widget_id: int}|null */
-    public function searchQueryByUuid(string $uuid_hex): ?array;
+    /**
+     * @param array<array<string, SelectedValueRepresentation>> $artifacts
+     * @param CrossTrackerSelectedRepresentation[] $selected
+     */
+    public function __construct(
+        public array $artifacts,
+        public array $selected,
+        private int $total_size,
+    ) {
+    }
 
-    /** @return list<array{id: UUID, query: string, title: string, description: string, widget_id: int}> */
-    public function searchQueriesByWidgetId(int $widget_id): array;
+    public function getTotalSize(): int
+    {
+        return $this->total_size;
+    }
 }

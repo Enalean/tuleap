@@ -22,9 +22,6 @@ import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getLocaleOrThrow, getTimezoneOrThrow, IntlFormatter } from "@tuleap/date-helper";
-import { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
-import { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
-import { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import {
     DATE_FORMATTER,
@@ -34,7 +31,7 @@ import {
     GET_COLUMN_NAME,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
-    REPORT_ID,
+    WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
@@ -71,8 +68,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             widget_element,
             "data-documentation-base-url",
         );
-        const report_id_string = getDatasetItemOrThrow(widget_element, "data-report-id");
-        const report_id = Number.parseInt(report_id_string, 10);
+        const widget_id_string = getDatasetItemOrThrow(widget_element, "data-widget-id");
+        const widget_id = Number.parseInt(widget_id_string, 10);
         const is_widget_admin = Boolean(
             getDatasetItemOrThrow(widget_element, "data-is-widget-admin"),
         );
@@ -80,23 +77,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             getDatasetItemOrThrow(widget_element, "data-is-multiple-query-supported"),
         );
 
-        const backend_report = new BackendCrossTrackerReport();
-        const reading_report = new ReadingCrossTrackerReport();
-        const writing_report = new WritingCrossTrackerReport();
-
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
 
-        createApp(CrossTrackerWidget, {
-            backend_cross_tracker_report: backend_report,
-            reading_cross_tracker_report: reading_report,
-            writing_cross_tracker_report: writing_report,
-        })
+        createApp(CrossTrackerWidget)
             .use(gettext_plugin)
             .use(VueDOMPurifyHTML)
             .provide(DATE_FORMATTER, date_formatter)
             .provide(DATE_TIME_FORMATTER, date_time_formatter)
-            .provide(RETRIEVE_ARTIFACTS_TABLE, ArtifactsTableRetriever(ArtifactsTableBuilder()))
-            .provide(REPORT_ID, report_id)
+            .provide(
+                RETRIEVE_ARTIFACTS_TABLE,
+                ArtifactsTableRetriever(widget_id, ArtifactsTableBuilder()),
+            )
+            .provide(WIDGET_ID, widget_id)
             .provide(IS_USER_ADMIN, is_widget_admin)
             .provide(DOCUMENTATION_BASE_URL, documentation_url)
             .provide(GET_COLUMN_NAME, column_name_getter)

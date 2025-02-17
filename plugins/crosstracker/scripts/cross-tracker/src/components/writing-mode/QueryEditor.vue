@@ -73,25 +73,28 @@ import {
     insertAllowedFieldInCodeMirror,
 } from "@tuleap/plugin-tracker-tql-codemirror";
 import { Option } from "@tuleap/option";
-import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
+import type { Query } from "../../type";
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
+const props = defineProps<{ writing_query: Query }>();
 const emit = defineEmits<{ (e: "trigger-search"): void }>();
+const tql_query = ref<string>(props.writing_query.tql_query);
 
 let code_mirror_instance: Option<TQLCodeMirrorEditor> = Option.nothing();
 
 const query_label = ref<HTMLElement>();
 
 onMounted(() => {
+    tql_query.value = props.writing_query.tql_query;
+
     const submit_form_callback = (editor: TQLCodeMirrorEditor): void => {
-        props.writing_cross_tracker_report.setExpertQuery(editor.state.doc.toString());
+        tql_query.value = editor.state.doc.toString();
         emit("trigger-search");
     };
 
     const update_callback = (editor: TQLCodeMirrorEditor): void => {
-        props.writing_cross_tracker_report.setExpertQuery(editor.state.doc.toString());
+        tql_query.value = editor.state.doc.toString();
     };
 
     const editor = buildTQLEditor(
@@ -102,7 +105,7 @@ onMounted(() => {
         $gettext(
             `Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title = 'value'`,
         ),
-        props.writing_cross_tracker_report.expert_query,
+        tql_query.value,
         submit_form_callback,
         update_callback,
     );
@@ -125,5 +128,5 @@ function clearEditor(): void {
     });
 }
 
-defineExpose({ clearEditor });
+defineExpose({ clearEditor, tql_query });
 </script>

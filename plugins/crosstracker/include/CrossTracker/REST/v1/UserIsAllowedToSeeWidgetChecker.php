@@ -24,8 +24,9 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\CrossTracker\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\include\CheckUserCanAccessProject;
+use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\REST\ProjectAuthorization;
 
@@ -34,7 +35,7 @@ final readonly class UserIsAllowedToSeeWidgetChecker
     public function __construct(
         private SearchCrossTrackerWidget $cross_tracker_dao,
         private ProjectByIDFactory $project_manager,
-        private CheckUserCanAccessProject $url_verification,
+        private CheckUserCanAccessProject&CheckUserCanAccessProjectAndIsAdmin $url_verification,
     ) {
     }
 
@@ -45,12 +46,42 @@ final readonly class UserIsAllowedToSeeWidgetChecker
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetDashboardById($widget_id);
         if ($widget !== null && $widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
-            throw new RestException(403);
+            throw new RestException(404);
         }
 
         if ($widget !== null && $widget['dashboard_type'] === 'project') {
             $project = $this->project_manager->getProjectById($widget['project_id']);
-            ProjectAuthorization::userCanAccessProject($user, $project, $this->url_verification);
+            try {
+                ProjectAuthorization::userCanAccessProject($user, $project, $this->url_verification);
+            } catch (RestException $e) {
+                if ($e->getCode() === 403) {
+                    throw new RestException(404);
+                }
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    public function checkUserIsAllowedToUpdateWidget(PFUser $user, int $widget_id): void
+    {
+        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetDashboardById($widget_id);
+        if ($widget !== null && $widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
+            throw new RestException(404);
+        }
+
+        if ($widget !== null && $widget['dashboard_type'] === 'project') {
+            $project = $this->project_manager->getProjectById($widget['project_id']);
+            try {
+                ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project, $this->url_verification);
+            } catch (RestException $e) {
+                if ($e->getCode() === 403) {
+                    throw new RestException(404);
+                }
+                throw $e;
+            }
         }
     }
 }

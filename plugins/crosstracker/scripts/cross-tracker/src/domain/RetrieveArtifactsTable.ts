@@ -28,7 +28,6 @@ export type ArtifactsTableWithTotal = {
 
 export type RetrieveArtifactsTable = {
     getSelectableQueryResult(
-        query_id: string,
         expert_query: string,
         limit: number,
         offset: number,

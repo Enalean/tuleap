@@ -20,28 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1\Representation;
+namespace Tuleap\CrossTracker\Widget;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-/**
- * @psalm-immutable
- */
-final readonly class CrossTrackerReportContentRepresentation
+final class CrossTrackerWidgetDaoTest extends TestIntegrationTestCase
 {
-    /**
-     * @param array<array<string, SelectedValueRepresentation>> $artifacts
-     * @param CrossTrackerSelectedRepresentation[] $selected
-     */
-    public function __construct(
-        public array $artifacts,
-        public array $selected,
-        private int $total_size,
-    ) {
+    private CrossTrackerWidgetDao $widget_dao;
+
+    protected function setUp(): void
+    {
+        $this->widget_dao = new CrossTrackerWidgetDao();
     }
 
-    public function getTotalSize(): int
+    public function testCreateThenDelete(): void
     {
-        return $this->total_size;
+        self::assertFalse($this->widget_dao->searchWidgetExistence(1));
+        $widget_id = $this->widget_dao->createWidget();
+        self::assertTrue($this->widget_dao->searchWidgetExistence($widget_id));
+        $this->widget_dao->deleteWidget($widget_id);
+        self::assertFalse($this->widget_dao->searchWidgetExistence(1));
     }
 }

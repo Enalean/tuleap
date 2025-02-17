@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\CrossTracker\Report;
 
 use BaseLanguageFactory;
 use Codendi_HTMLPurifier;
 use EventManager;
-use Exception;
-use ForgeConfig;
-use Luracast\Restler\RestException;
-use PFUser;
 use ProjectManager;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
@@ -43,22 +38,13 @@ use Tracker_Semantic_TitleDao;
 use Tracker_Semantic_TitleFactory;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
-use Tuleap\CrossTracker\CrossTrackerQuery;
-use Tuleap\CrossTracker\CrossTrackerReportFactory;
-use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
-use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
-use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByListChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
@@ -122,32 +108,18 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\Pre
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
-use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
-use Tuleap\DB\DatabaseUUIDFactory;
-use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Markdown\CommonMarkInterpreter;
-use Tuleap\REST\AuthenticatedResource;
-use Tuleap\REST\Exceptions\InvalidJsonException;
-use Tuleap\REST\Header;
-use Tuleap\REST\I18NRestException;
-use Tuleap\REST\JsonDecoder;
-use Tuleap\REST\QueryParameterException;
-use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Errors\QueryErrorsTranslator;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
-use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
@@ -159,19 +131,9 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNo
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectException;
-use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
-use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
-use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
@@ -179,322 +141,17 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use UGroupManager;
-use URLVerification;
 use UserHelper;
 use UserManager;
 
-final class CrossTrackerReportsResource extends AuthenticatedResource
+final class CrossTrackerArtifactReportFactoryBuilder
 {
-    public const ROUTE = 'cross_tracker_reports';
-
-    public const  MAX_LIMIT = 50;
-
-    private readonly UserManager $user_manager;
-
-    public function __construct()
+    public function getInstrumentation(): CrossTrackerInstrumentation
     {
-        $this->user_manager = UserManager::instance();
+        return new CrossTrackerInstrumentation(Prometheus::instance());
     }
 
-    /**
-     * @url OPTIONS {id}
-     *
-     * @param int $id Id of the report
-     */
-    public function optionsId(int $id): void
-    {
-        $this->sendAllowHeaders();
-    }
-
-    /**
-     * Get cross tracker report
-     *
-     * Get the definition of the given report id
-     *
-     * @url GET {id}
-     * @access hybrid
-     *
-     * @param int $id Id of the report
-     *
-     * @return CrossTrackerQueryRepresentation[]
-     *
-     * @throws RestException 404
-     */
-    public function getId(int $id): array
-    {
-        $this->checkAccess();
-        try {
-            if (! $this->getCrossTrackerDao()->searchWidgetExistence($id)) {
-                throw new CrossTrackerReportNotFoundException();
-            }
-            $queries         = $this->getWidgetQueries($id);
-            $representations = [];
-            foreach ($queries as $query) {
-                $representations[] = $this->getReportRepresentation($query);
-            }
-        } catch (CrossTrackerReportNotFoundException) {
-            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $id));
-        }
-
-        $this->sendAllowHeaders();
-
-        return $representations;
-    }
-
-    /**
-     * Get cross artifacts linked to tracker report
-     *
-     * <pre>/!\ route under construction</pre>
-     * Get open artifacts linked to given trackers.
-     * <br>
-     * <br>
-     * ?query is optional. When filled, it is a json object:
-     * <ul>
-     *   <li>With a property "expert_query" to customize the search.
-     *     Example: <pre>{"trackers_id": [1,2,3],"expert_query": "@title = 'Critical'"}</pre>
-     *   </li>
-     * </ul>
-     * @url GET {uuid}/content
-     * @access hybrid
-     *
-     * @param string $uuid UUID of the report
-     * @param string|null $query With a property "expert_query" to customize the search. {@required false}
-     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
-     * @param int $offset Position of the first element to display {@from path}{@min 0}
-     *
-     * @throws RestException 404
-     */
-    public function getIdContent(string $uuid, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0): CrossTrackerReportContentRepresentation
-    {
-        $this->checkAccess();
-        Header::allowOptionsGet();
-
-        try {
-            $current_user = $this->user_manager->getCurrentUser();
-            $report       = $this->getQuery($uuid);
-
-            $query_parser = new QueryParameterParser(new JsonDecoder());
-
-            $expert_query = $this->getExpertQueryFromRoute($query, $report, $query_parser);
-
-            $expected_report = new CrossTrackerQuery($report->getUUID(), $expert_query, $report->getTitle(), $report->getDescription(), $report->getWidgetId());
-
-            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $report->getWidgetId());
-
-            $artifacts = $this->getInstrumentation()->updateQueryDuration(
-                fn() => $this->getArtifactFactory()->getArtifactsMatchingReport(
-                    $expected_report,
-                    $current_user,
-                    $limit,
-                    $offset,
-                )
-            );
-
-            assert($artifacts instanceof CrossTrackerReportContentRepresentation);
-            $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
-            return $artifacts;
-        } catch (CrossTrackerReportNotFoundException) {
-            throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Report not found'));
-        } catch (SyntaxError $error) {
-            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        } catch (LimitSizeIsExceededException | InvalidSelectException | SelectablesMustBeUniqueException | SelectLimitExceededException | MissingFromException $exception) {
-            throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getMessage());
-        } catch (FromIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (OrderByIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (ExpertQueryIsEmptyException) {
-            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Expert query is required and cannot be empty'));
-        }
-    }
-
-    /**
-     * Update a cross tracker report
-     *
-     * <br>
-     * <pre>
-     * {<br>
-     *   &nbsp;"trackers_id": [1, 2, 3],<br>
-     *   &nbsp;"expert_query": "",<br>
-     * }<br>
-     * </pre>
-     *
-     * ⚠️ WARNING: Expert mode of Cross Tracker Report is not yet stable,
-     * future release may break your report.
-     *
-     * @url PUT {id}
-     *
-     * @param int $id Id of the report
-     * @param string $expert_query The TQL query saved with the report
-     *
-     * @status 201
-     * @access hybrid
-     *
-     *
-     * @throws RestException 400
-     * @throws RestException 404
-     */
-    protected function put(int $id, string $expert_query = ''): CrossTrackerQueryRepresentation
-    {
-        $this->sendAllowHeaders();
-
-        $current_user = $this->user_manager->getCurrentUser();
-        try {
-            $reports = $this->getWidgetQueries($id);
-            if ($reports === []) {
-                $uuid_factory    = $this->getUUIDFactory();
-                $uuid            = $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes());
-                $expected_report = new CrossTrackerQuery($uuid, $expert_query, '', '', $id);
-                $trackers        = $this->getReportTrackersRetriever()->getReportTrackers($expected_report, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
-                $this->checkQueryIsValid($trackers, $expert_query, $current_user, $id);
-                $uuid            = $this->getCrossTrackerDao()->insertQuery($id, $expert_query);
-                $expected_report = $this->getQuery($uuid->toString());
-            } else {
-                $report          = $reports[0];
-                $expected_report = new CrossTrackerQuery($report->getUUID(), $expert_query, $report->getTitle(), $report->getDescription(), $id);
-                $trackers        = $this->getReportTrackersRetriever()->getReportTrackers($expected_report, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
-                $this->checkQueryIsValid($trackers, $expert_query, $current_user, $id);
-
-                $this->getCrossTrackerDao()->updateQuery($id, $expert_query);
-            }
-        } catch (CrossTrackerReportNotFoundException) {
-            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $id));
-        } catch (FromIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (SyntaxError $error) {
-            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        }
-
-        return $this->getReportRepresentation($expected_report);
-    }
-
-    private function getUUIDFactory(): DatabaseUUIDFactory
-    {
-        return new DatabaseUUIDV7Factory();
-    }
-
-    /**
-     * @param Tracker[] $trackers
-     * @throws RestException
-     */
-    private function checkQueryIsValid(array $trackers, string $expert_query, PFUser $user, int $report_id): void
-    {
-        if ($expert_query === '') {
-            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Expert query is required and cannot be empty'));
-        }
-
-        try {
-            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($user, $report_id);
-            $field_checker    = $this->getDuckTypedFieldChecker();
-            $metadata_checker = $this->getMetadataChecker();
-            $this->getExpertQueryValidator()->validateExpertQuery(
-                $expert_query,
-                new InvalidSearchablesCollectionBuilder($this->getInvalidComparisonsCollector(), $trackers, $user),
-                new InvalidSelectablesCollectionBuilder(
-                    new InvalidSelectablesCollectorVisitor($field_checker, $metadata_checker),
-                    $trackers,
-                    $user
-                ),
-                new InvalidOrderByBuilder($field_checker, $metadata_checker, $trackers, $user),
-            );
-        } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (SyntaxError $error) {
-            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        } catch (OrderByIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (LimitSizeIsExceededException | SelectLimitExceededException | SelectablesMustBeUniqueException $exception) {
-            throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
-        } catch (Exception $exception) {
-            throw new RestException(400, $exception->getMessage());
-        }
-    }
-
-    private function sendAllowHeaders(): void
-    {
-        Header::allowOptionsGetPut();
-    }
-
-    private function getReportRepresentation(CrossTrackerQuery $report): CrossTrackerQueryRepresentation
-    {
-        return CrossTrackerQueryRepresentation::fromQuery($report);
-    }
-
-    private function sendPaginationHeaders($limit, $offset, $size): void
-    {
-        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
-    /**
-     * @throws InvalidJsonException
-     * @throws RestException
-     */
-    private function getExpertQueryFromRoute(
-        ?string $query_parameter,
-        CrossTrackerQuery $report,
-        QueryParameterParser $query_parser,
-    ): string {
-        if ($query_parameter === null || $query_parameter === '') {
-            return $report->getQuery();
-        }
-        $query_parameter = trim($query_parameter);
-
-        try {
-            return $query_parser->getString($query_parameter, 'expert_query');
-        } catch (QueryParameterException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        }
-    }
-
-    private function getCrossTrackerDao(): CrossTrackerWidgetDao
-    {
-        return new CrossTrackerWidgetDao();
-    }
-
-    private function getUserIsAllowedToSeeWidgetChecker(): UserIsAllowedToSeeWidgetChecker
-    {
-        return new UserIsAllowedToSeeWidgetChecker(
-            $this->getCrossTrackerDao(),
-            ProjectManager::instance(),
-            new URLVerification()
-        );
-    }
-
-    /**
-     * @throws CrossTrackerReportNotFoundException
-     * @throws RestException 403
-     */
-    private function getQuery(string $uuid): CrossTrackerQuery
-    {
-        $report_factory = new CrossTrackerReportFactory(new CrossTrackerWidgetDao());
-
-        $query        = $report_factory->getById($uuid);
-        $current_user = $this->user_manager->getCurrentUser();
-        $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $query->getWidgetId());
-
-        return $query;
-    }
-
-    /**
-     * @return CrossTrackerQuery[]
-     * @throws RestException 403
-     */
-    private function getWidgetQueries(int $id): array
-    {
-        $report_factory = new CrossTrackerReportFactory(new CrossTrackerWidgetDao());
-
-        $queries      = $report_factory->getByWidgetId($id);
-        $current_user = $this->user_manager->getCurrentUser();
-        $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
-
-        return $queries;
-    }
-
-    private function getDuckTypedFieldChecker(): DuckTypedFieldChecker
+    public function getDuckTypedFieldChecker(): DuckTypedFieldChecker
     {
         $form_element_factory             = Tracker_FormElementFactory::instance();
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
@@ -531,14 +188,14 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     ),
                     $ugroup_label_converter
                 ),
-                new ArtifactSubmitterChecker($this->user_manager),
+                new ArtifactSubmitterChecker(UserManager::instance()),
                 true,
             ),
             $field_retriever
         );
     }
 
-    private function getMetadataChecker(): MetadataChecker
+    public function getMetadataChecker(): MetadataChecker
     {
         return new MetadataChecker(
             new MetadataUsageChecker(
@@ -546,14 +203,14 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new Tracker_Semantic_TitleDao(),
                 new Tracker_Semantic_DescriptionDao(),
                 new Tracker_Semantic_StatusDao(),
-                new Tracker_Semantic_ContributorDao()
+                new Tracker_Semantic_ContributorDao(),
             ),
             new InvalidMetadataChecker(
                 new TextSemanticChecker(),
                 new StatusChecker(),
-                new AssignedToChecker($this->user_manager),
-                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
-                    $this->user_manager
+                new AssignedToChecker(UserManager::instance()),
+                new Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
+                    UserManager::instance()
                 ),
                 new SubmissionDateChecker(),
                 new ArtifactIdMetadataChecker(),
@@ -565,7 +222,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         );
     }
 
-    private function getExpertQueryValidator(): ExpertQueryValidator
+    public function getQueryValidator(): ExpertQueryValidator
     {
         $report_config = new TrackerReportConfig(
             new TrackerReportConfigDao()
@@ -577,7 +234,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         );
     }
 
-    private function getInvalidComparisonsCollector(): InvalidTermCollectorVisitor
+    public function getInvalidComparisonsCollector(): InvalidTermCollectorVisitor
     {
         return new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor($this->getMetadataChecker(), $this->getDuckTypedFieldChecker()),
@@ -598,11 +255,11 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     private function getFromBuilderVisitor(): FromBuilderVisitor
     {
         $event_manager = EventManager::instance();
-        $report_dao    = new CrossTrackerWidgetDao();
+        $widget_dao    = new CrossTrackerWidgetDao();
         return new FromBuilderVisitor(
-            new FromTrackerBuilderVisitor($report_dao),
+            new FromTrackerBuilderVisitor($widget_dao),
             new FromProjectBuilderVisitor(
-                $report_dao,
+                $widget_dao,
                 ProjectManager::instance(),
                 $event_manager,
             ),
@@ -639,16 +296,16 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
                 new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
                 new Metadata\Semantic\Status\StatusFromWhereBuilder(),
-                new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($this->user_manager),
+                new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder(UserManager::instance()),
                 new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
-                new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder($this->user_manager),
+                new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder(UserManager::instance()),
                 new Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder(),
                 $form_element_factory,
             ),
         );
     }
 
-    private function getArtifactFactory(): CrossTrackerArtifactReportFactory
+    public function getArtifactFactory(): CrossTrackerArtifactReportFactory
     {
         $form_element_factory      = Tracker_FormElementFactory::instance();
         $tracker_artifact_factory  = Tracker_ArtifactFactory::instance();
@@ -687,15 +344,15 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new NumericResultBuilder(),
                 new StaticListResultBuilder(),
                 new UGroupListResultBuilder($tracker_artifact_factory, $user_group_manager),
-                new UserListResultBuilder($this->user_manager, $this->user_manager, $this->user_manager, UserHelper::instance()),
+                new UserListResultBuilder(UserManager::instance(), UserManager::instance(), UserManager::instance(), UserHelper::instance()),
                 $field_retriever
             ),
             new MetadataResultBuilder(
                 new MetadataTextResultBuilder($tracker_artifact_factory, $text_value_interpreter),
                 new StatusResultBuilder(),
-                new AssignedToResultBuilder($this->user_manager, UserHelper::instance()),
+                new AssignedToResultBuilder(UserManager::instance(), UserHelper::instance()),
                 new MetadataDateResultBuilder(),
-                new MetadataUserResultBuilder($this->user_manager, UserHelper::instance()),
+                new MetadataUserResultBuilder(UserManager::instance(), UserHelper::instance()),
                 new ArtifactIdResultBuilder(),
                 new ProjectNameResultBuilder(),
                 new TrackerNameResultBuilder(),
@@ -732,7 +389,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         $field_checker             = $this->getDuckTypedFieldChecker();
         $metadata_checker          = $this->getMetadataChecker();
         return new CrossTrackerArtifactReportFactory(
-            $this->getExpertQueryValidator(),
+            $this->getQueryValidator(),
             $this->getQueryBuilderVisitor(),
             $select_builder_visitor,
             $order_builder_visitor,
@@ -750,25 +407,20 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         );
     }
 
-    private function getReportTrackersRetriever(): ReportTrackersRetriever
+    public function getReportTrackersRetriever(): ReportTrackersRetriever
     {
-        $report_dao = new CrossTrackerWidgetDao();
+        $widget_dao = new CrossTrackerWidgetDao();
         return new ReportTrackersRetriever(
-            $this->getExpertQueryValidator(),
+            $this->getQueryValidator(),
             $this->getParser(),
             $this->getFromBuilderVisitor(),
             TrackersPermissionsRetriever::build(),
             new CrossTrackerExpertQueryReportDao(),
             TrackerFactory::instance(),
-            new WidgetInProjectChecker($report_dao),
-            $report_dao,
+            new WidgetInProjectChecker($widget_dao),
+            $widget_dao,
             ProjectManager::instance(),
             EventManager::instance(),
         );
-    }
-
-    private function getInstrumentation(): CrossTrackerInstrumentation
-    {
-        return new CrossTrackerInstrumentation(Prometheus::instance());
     }
 }

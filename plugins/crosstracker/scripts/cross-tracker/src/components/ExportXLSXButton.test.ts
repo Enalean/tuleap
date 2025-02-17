@@ -25,7 +25,7 @@ import {
     CLEAR_FEEDBACKS,
     GET_COLUMN_NAME,
     NOTIFY_FAULT,
-    REPORT_ID,
+    WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../injection-symbols";
 import ExportXLSXButton from "./ExportXLSXButton.vue";
@@ -70,14 +70,19 @@ describe("ExportXLSXButton", () => {
                     [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]:
                         RetrieveArtifactsTableStub.withDefaultContent(),
-                    [REPORT_ID.valueOf()]: report_id,
+                    [WIDGET_ID.valueOf()]: report_id,
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
                         createVueGettextProviderPassThrough(),
                     ),
                 },
             },
             props: {
-                query_id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                current_query: {
+                    id: "",
+                    tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
+                    title: "",
+                    description: "",
+                },
             },
         });
     }

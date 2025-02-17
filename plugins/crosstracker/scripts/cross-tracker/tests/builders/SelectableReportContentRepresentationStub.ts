@@ -20,7 +20,7 @@
 import type {
     ArtifactRepresentation,
     Selectable,
-    SelectableReportContentRepresentation,
+    SelectableQueryContentRepresentation,
 } from "../../src/api/cross-tracker-rest-api-types";
 import { ARTIFACT_SELECTABLE_TYPE } from "../../src/api/cross-tracker-rest-api-types";
 import { ARTIFACT_COLUMN_NAME } from "../../src/domain/ColumnName";
@@ -29,7 +29,7 @@ export const SelectableReportContentRepresentationStub = {
     build: (
         selected: ReadonlyArray<Selectable>,
         artifacts: ReadonlyArray<ArtifactRepresentation>,
-    ): SelectableReportContentRepresentation => ({
+    ): SelectableQueryContentRepresentation => ({
         selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }, ...selected],
         artifacts,
     }),

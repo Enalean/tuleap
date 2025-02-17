@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker;
+declare(strict_types=1);
 
-use Exception;
+namespace Tuleap\CrossTracker\REST\v1\Representation;
 
-class CrossTrackerReportNotFoundException extends Exception
+/**
+ * @psalm-immutable
+ */
+final class CrossTrackerQueryPutRepresentation
 {
+    /**
+     * @var string The TQL query {@required true}
+     */
+    public string $tql_query;
+    /**
+     * @var string The query title {@required true}
+     */
+    public string $title;
+    /**
+     * @var string The query description {@required false}
+     */
+    public string $description;
+    /**
+     * @var int The id of the widget the query belongs to {@required true}
+     */
+    public int $widget_id;
 }

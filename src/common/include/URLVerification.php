@@ -28,6 +28,7 @@ use Tuleap\Error\PermissionDeniedRestrictedAccountProjectController;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\include\CheckUserCanAccessProject;
+use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Project\AccessNotActiveException;
@@ -44,7 +45,7 @@ use Tuleap\User\Account\UpdatePasswordController;
  * Check the URL validity (protocol, host name, query) regarding server constraints
  * (anonymous, user status, project privacy, ...) and manage redirection when needed
  */
-class URLVerification implements CheckUserCanAccessProject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class URLVerification implements CheckUserCanAccessProject, CheckUserCanAccessProjectAndIsAdmin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     protected $urlChunks = null;
 

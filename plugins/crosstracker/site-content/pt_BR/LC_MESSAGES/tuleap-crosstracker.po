@@ -141,21 +141,18 @@ msgid ""
 "Error while parsing the query. Expected to find one of the following: %s"
 msgstr ""
 
-msgid "Expert query is required and cannot be empty"
-msgstr ""
-
 #, php-format
 msgid ""
 "Field '%s' is present in trackers '%s' but their types cannot be compared. "
 "Please refine your query or check the configuration of the trackers."
 msgstr ""
 
+msgid "Given 'widget_id' parameter is invalid"
+msgstr ""
+
 msgid ""
 "In the context of a personal dashboard, you must provide a @project "
 "condition in the FROM part of your query"
-msgstr ""
-
-msgid "My query"
 msgstr ""
 
 msgid "No tracker found"
@@ -167,11 +164,14 @@ msgstr ""
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr ""
 
-msgid "Report not found"
+msgid "Parameter 'query' is invalid"
 msgstr ""
 
 #, php-format
-msgid "Report with id %d not found"
+msgid "Parameter 'query' is invalid: %s"
+msgstr ""
+
+msgid "Query not found"
 msgstr ""
 
 msgid "Search artifacts that are in different trackers"
@@ -186,10 +186,17 @@ msgid ""
 "the configuration of the trackers."
 msgstr ""
 
+msgid "TQL query is required and cannot be empty"
+msgstr ""
+
 msgid ""
 "The both conditions of 'FROM' must be on \"tracker\" and \"project\". If you "
 "want to search on several trackers or projects, please use 'IN' operator "
 "instead. (e.g @tracker.name IN('t1', ...))"
+msgstr ""
+
+#, php-format
+msgid "Widget with id %d not found"
 msgstr ""
 
 msgid "You can use @project with 'aggregated' only in a Program project"

@@ -26,9 +26,6 @@ import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
-import { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
-import { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
 import * as rest_querier from "./api/rest-querier";
 import ReadingMode from "./components/reading-mode/ReadingMode.vue";
 import WritingMode from "./components/writing-mode/WritingMode.vue";
@@ -36,29 +33,23 @@ import {
     EMITTER,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
-    REPORT_ID,
+    WIDGET_ID,
 } from "./injection-symbols";
 import { EmitterStub } from "../tests/stubs/EmitterStub";
 
 vi.useFakeTimers();
 
 describe("CrossTrackerWidget", () => {
-    let backend_cross_tracker_report: BackendCrossTrackerReport,
-        reading_cross_tracker_report: ReadingCrossTrackerReport,
-        writing_cross_tracker_report: WritingCrossTrackerReport,
-        is_user_admin: boolean;
+    let is_user_admin: boolean;
 
     beforeEach(() => {
-        backend_cross_tracker_report = new BackendCrossTrackerReport();
-        reading_cross_tracker_report = new ReadingCrossTrackerReport();
-        writing_cross_tracker_report = new WritingCrossTrackerReport();
         is_user_admin = true;
 
-        vi.spyOn(rest_querier, "getReports").mockReturnValue(
+        vi.spyOn(rest_querier, "getQueries").mockReturnValue(
             okAsync([
                 {
-                    uuid: "0194dfd6-a489-703b-aabd-9d473212d908",
-                    expert_query: "",
+                    id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                    tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
                     title: "My title",
                     description: "",
                 },
@@ -68,15 +59,10 @@ describe("CrossTrackerWidget", () => {
 
     function getWrapper(): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
         return shallowMount(CrossTrackerWidget, {
-            props: {
-                writing_cross_tracker_report,
-                backend_cross_tracker_report,
-                reading_cross_tracker_report,
-            },
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
-                    [REPORT_ID.valueOf()]: 96,
+                    [WIDGET_ID.valueOf()]: 96,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: EmitterStub(),
                     [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
@@ -91,29 +77,24 @@ describe("CrossTrackerWidget", () => {
             then the report will be in "edit-query" state
             and the writing report will be updated
             and it will clear the feedback messages`, async () => {
-            const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
             expect(wrapper.vm.report_state).toBe("edit-query");
-            expect(duplicate).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(wrapper.vm.current_fault.isNothing()).toBe(true);
         });
 
         it(`Given I am not admin,
             when I try to switch to writing mode, then nothing will happen`, async () => {
             is_user_admin = false;
-            const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
-            duplicate.mockReset(); // It is called once during onMounted
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(duplicate).not.toHaveBeenCalled();
         });
     });
 
@@ -123,7 +104,6 @@ describe("CrossTrackerWidget", () => {
             then the report will be back to its "report-saved" state
             and the reading report will be reset
             and it will clear the feedback messages`, async () => {
-            const duplicate = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
@@ -132,7 +112,6 @@ describe("CrossTrackerWidget", () => {
             wrapper.findComponent(WritingMode).vm.$emit("cancel-query-edition");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(duplicate).toHaveBeenCalledWith(backend_cross_tracker_report);
             expect(wrapper.vm.current_fault.isNothing()).toBe(true);
             expect(wrapper.vm.current_success.isNothing()).toBe(true);
         });
@@ -144,16 +123,19 @@ describe("CrossTrackerWidget", () => {
             then the report will be in "result-preview" state
             and the reading report will be updated
             and it will clear the feedback messages`, async () => {
-            const duplicate = vi.spyOn(reading_cross_tracker_report, "duplicateFromWritingReport");
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
-            wrapper.findComponent(WritingMode).vm.$emit("preview-result");
+            wrapper.findComponent(WritingMode).vm.$emit("preview-result", {
+                id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
+                title: "My title",
+                description: "",
+            });
 
             expect(wrapper.vm.report_state).toBe("result-preview");
-            expect(duplicate).toHaveBeenCalledWith(writing_cross_tracker_report);
             expect(wrapper.vm.current_fault.isNothing()).toBe(true);
             expect(wrapper.vm.current_success.isNothing()).toBe(true);
         });
@@ -164,19 +146,25 @@ describe("CrossTrackerWidget", () => {
             then the reports will be updated
             and it will set a success message`, async () => {
             const wrapper = getWrapper();
-            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
-            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
-            wrapper.findComponent(WritingMode).vm.$emit("preview-result");
+            wrapper.findComponent(WritingMode).vm.$emit("preview-result", {
+                id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
+                title: "My title",
+                description: "",
+            });
             await nextTick();
-            wrapper.findComponent(ReadingMode).vm.$emit("saved");
+            wrapper.findComponent(ReadingMode).vm.$emit("saved", {
+                id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
+                title: "My title",
+                description: "",
+            });
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
-            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(wrapper.vm.current_fault.isNothing()).toBe(true);
             expect(wrapper.vm.current_success.unwrapOr(null)).toStrictEqual(expect.any(String));
         });
@@ -188,19 +176,20 @@ describe("CrossTrackerWidget", () => {
             then it will restore the reading and writing reports
             and will clear the feedback messages`, async () => {
             const wrapper = getWrapper();
-            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
-            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
-            wrapper.findComponent(WritingMode).vm.$emit("preview-result");
+            wrapper.findComponent(WritingMode).vm.$emit("preview-result", {
+                id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
+                title: "My title",
+                description: "",
+            });
             await nextTick();
             wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-report");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
-            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(wrapper.vm.current_fault.isNothing()).toBe(true);
             expect(wrapper.vm.current_success.isNothing()).toBe(true);
         });
@@ -208,24 +197,19 @@ describe("CrossTrackerWidget", () => {
 
     describe("loadBackendReport()", () => {
         it("When I load the report, then the reports will be initialized", async () => {
-            const expert_query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
+            const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
             const uuid = "0194dfd6-a489-703b-aabd-9d473212d908";
-            vi.spyOn(rest_querier, "getReports").mockReturnValue(
-                okAsync([{ expert_query, title: " TQL query title", description: "", uuid }]),
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(
+                okAsync([
+                    { tql_query: query, title: " TQL query title", description: "", id: uuid },
+                ]),
             );
-            const init = vi.spyOn(backend_cross_tracker_report, "init");
-            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
-            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
-
-            expect(init).toHaveBeenCalledWith(expert_query);
-            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
-            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
         });
 
         it("When there is a REST error, it will be shown", async () => {
-            vi.spyOn(rest_querier, "getReports").mockReturnValue(
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(
                 errAsync(Fault.fromMessage("Report 41 not found")),
             );
             const wrapper = getWrapper();
@@ -235,16 +219,10 @@ describe("CrossTrackerWidget", () => {
         });
 
         it("Force edit mode when widget has no query", async () => {
-            vi.spyOn(rest_querier, "getReports").mockReturnValue(okAsync([]));
-            const init = vi.spyOn(backend_cross_tracker_report, "init");
-            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
-            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync([]));
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(init).toHaveBeenCalledWith("");
-            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
-            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(wrapper.vm.report_state).toBe("edit-query");
         });
     });
@@ -277,8 +255,8 @@ describe("CrossTrackerWidget", () => {
 
         it(`when user is admin and there is an error selected in the report,
             it does not allow XLSX export`, async () => {
-            vi.spyOn(rest_querier, "getReports").mockReturnValue(
-                okAsync([{ expert_query: "", title: "title", description: "", uuid: "" }]),
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(
+                okAsync([{ tql_query: "", title: "title", description: "", id: "" }]),
             );
 
             const wrapper = getWrapper();

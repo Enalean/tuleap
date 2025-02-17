@@ -30,13 +30,13 @@ import { computed } from "vue";
 import { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
 import { useGettext } from "vue3-gettext";
-import type { WritingCrossTrackerReport } from "../domain/WritingCrossTrackerReport";
+import type { Query } from "../type";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
     fault: Option<Fault>;
-    writing_cross_tracker_report: WritingCrossTrackerReport;
+    writing_query: Query;
 }>();
 
 const error_message = computed<Option<string>>(() =>
@@ -100,7 +100,7 @@ const code_to_show = computed(
             if (details.line <= 0) {
                 return Option.nothing();
             }
-            const query = props.writing_cross_tracker_report.expert_query;
+            const query = props.writing_query.tql_query;
             const lines = query.split("\n");
             if (lines.length < details.line) {
                 return Option.nothing();
