@@ -140,6 +140,11 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new IntegerFieldSpecificPropertiesDAO();
     }
 
+    protected function getSearchSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
+    {
+        return new IntegerFieldSpecificPropertiesDAO();
+    }
+
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Integer');

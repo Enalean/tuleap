@@ -624,6 +624,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return new ComputedFieldSpecificPropertiesDAO();
     }
 
+    protected function getSearchSpecificPropertiesDao(): ComputedFieldSpecificPropertiesDAO
+    {
+        return new ComputedFieldSpecificPropertiesDAO();
+    }
+
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);

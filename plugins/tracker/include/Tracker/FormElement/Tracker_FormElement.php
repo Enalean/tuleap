@@ -22,6 +22,8 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\FieldPropertiesRetriever;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
 use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
@@ -538,7 +540,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $found = null;
         if (isset($array[$key])) {
             $found = $array[$key]['value'];
-        } else {
+        } elseif ($array !== null) {
             foreach ($array as $k => $v) {
                 if ($v['type'] == 'radio') {
                     if (($found = $this->getPropertyValueInCollection($v['choices'], $key)) !== null) {
@@ -576,21 +578,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return null;
     }
 
-    /**
-     * Get the properties of the field
-     *
-     * @return array
-     */
-    public function getProperties()
+    protected function getSearchSpecificPropertiesDao(): ?SearchSpecificProperties
     {
-        if (! $this->cache_specific_properties) {
-            $this->cache_specific_properties = $this->default_properties;
-            if ($this->getDao() && ($row = $this->getDao()->searchByFieldId($this->id)->getRow())) {
-                foreach ($row as $key => $value) {
-                    $this->setPropertyValue($this->cache_specific_properties, $key, $value);
-                }
-            }
-        }
+        return null;
+    }
+
+    public function getProperties(): array
+    {
+        $retriever                       = new FieldPropertiesRetriever($this->getSearchSpecificPropertiesDao());
+        $this->cache_specific_properties = $retriever->getProperties($this->cache_specific_properties, $this->default_properties, $this->id);
+
         return $this->cache_specific_properties;
     }
 
@@ -639,31 +636,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             }
         }
         return $properties;
-    }
-
-    /**
-     * Look for a suitable property and set its value
-     *
-     * @param mixed &$array The array or subarray storing properties
-     * @param mixed $key    The property to search
-     * @param array $value  The value to set if the property is found
-     *
-     * @see getProperties
-     * @return void
-     */
-    protected function setPropertyValue(&$array, $key, $value)
-    {
-        if ($key !== 'field_id') {
-            if (isset($array[$key])) {
-                $array[$key]['value'] = $value;
-            } else {
-                foreach ($array as $k => $v) {
-                    if ($v['type'] == 'radio') {
-                        $this->setPropertyValue($array[$k]['choices'], $key, $value);
-                    }
-                }
-            }
-        }
     }
 
     /**

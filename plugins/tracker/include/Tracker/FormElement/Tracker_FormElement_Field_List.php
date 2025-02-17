@@ -67,14 +67,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getBind()
     {
         if (! $this->bind) {
-            $this->bind = null;
-            //retrieve the type of the bind first...
-            $dao = new ListFieldDao();
-            if ($row = $dao->searchByFieldId($this->id)->getRow()) {
-                //...and build the bind
-                $bind_factory = $this->getFormElementFieldListBindFactory();
-                $this->bind   = $bind_factory->getBind($this, $row['bind_type']);
-            }
+            $dao          = new ListFieldSpecificPropertiesDAO();
+            $bind_factory = $this->getFormElementFieldListBindFactory();
+            $this->bind   = $dao->searchBindByFieldId($this->id)
+                ->mapOr(fn (string $bind_type): ?Tracker_FormElement_Field_List_Bind => $bind_factory->getBind($this, $bind_type), null);
         }
         return $this->bind;
     }
