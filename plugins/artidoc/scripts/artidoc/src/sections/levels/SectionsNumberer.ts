@@ -28,7 +28,7 @@ export const LEVEL_1: Level = 1;
 export const LEVEL_2: Level = 2;
 export const LEVEL_3: Level = 3;
 
-function setSectionsLevels(sections: ArtidocSection[]): ArtidocSection[] {
+function setSectionsLevels(sections: readonly ArtidocSection[]): ArtidocSection[] {
     let level1 = 0;
     let level2 = 0;
     let level3 = 0;
@@ -64,7 +64,7 @@ function setSectionsLevels(sections: ArtidocSection[]): ArtidocSection[] {
     });
 }
 
-export function injectDisplayLevel(sections: ArtidocSection[]): ArtidocSection[] {
+export function injectDisplayLevel(sections: readonly ArtidocSection[]): ArtidocSection[] {
     return setSectionsLevels(sections);
 }
 

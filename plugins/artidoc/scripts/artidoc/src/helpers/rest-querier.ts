@@ -29,9 +29,7 @@ import {
 } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
-import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 import { injectDisplayLevel } from "@/sections/levels/SectionsNumberer";
 
@@ -81,7 +79,7 @@ export function createSectionFromExistingArtifact(
             level,
             content: null,
         },
-    }).map(injectDisplayTitle);
+    });
 }
 
 export function createSection(
@@ -100,7 +98,7 @@ export function createSection(
             level,
             position,
         },
-    }).map(injectDisplayTitle);
+    });
 }
 
 export function getAllSections(document_id: number): ResultAsync<readonly ArtidocSection[], Fault> {
@@ -108,15 +106,11 @@ export function getAllSections(document_id: number): ResultAsync<readonly Artido
         params: {
             limit: 50,
         },
-    })
-        .map((sections: readonly ArtidocSection[]) => sections.map(injectDisplayTitle))
-        .map((sections: ArtidocSection[]) => injectDisplayLevel(sections));
+    }).map((sections: readonly ArtidocSection[]) => injectDisplayLevel(sections));
 }
 
 export function getSection(section_id: string): ResultAsync<ArtidocSection, Fault> {
-    return getJSON<ArtidocSection>(uri`/api/artidoc_sections/${section_id}`).map(
-        injectDisplayTitle,
-    );
+    return getJSON<ArtidocSection>(uri`/api/artidoc_sections/${section_id}`);
 }
 
 export function putSection(
@@ -140,20 +134,4 @@ export function putSection(
 
 export function deleteSection(section_id: string): ResultAsync<Response, Fault> {
     return del(uri`/api/artidoc_sections/${section_id}`);
-}
-
-function injectDisplayTitle(section: ArtidocSection): ArtidocSection {
-    if (isFreetextSection(section)) {
-        return FreetextSectionFactory.override({
-            ...section,
-            display_title: section.title,
-        });
-    }
-
-    const display_title = section.title;
-
-    return {
-        ...section,
-        display_title: display_title.replace(/([\r\n]+)/g, " "),
-    };
 }

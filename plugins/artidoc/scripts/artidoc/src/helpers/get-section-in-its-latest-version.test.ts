@@ -52,13 +52,13 @@ describe("get-section-in-its-latest-version", () => {
             vi.spyOn(rest, "getSection").mockReturnValue(
                 okAsync({
                     ...section,
-                    display_title: "Remotely updated title",
+                    title: "Remotely updated title",
                 }),
             );
 
             const result = await getSectionInItsLatestVersion({
                 ...section,
-                display_title: "Original title",
+                title: "Original title",
             });
 
             expect(result.isErr()).toBe(true);

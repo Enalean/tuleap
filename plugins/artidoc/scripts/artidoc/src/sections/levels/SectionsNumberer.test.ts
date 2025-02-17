@@ -38,21 +38,21 @@ import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesC
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 const section_requirements = ReactiveStoredArtidocSectionStub.fromSection(
-    FreetextSectionFactory.override({ display_title: "Requirements", level: 1 }),
+    FreetextSectionFactory.override({ title: "Requirements", level: 1 }),
 );
 const section_radiation = ReactiveStoredArtidocSectionStub.fromSection(
-    PendingArtifactSectionFactory.override({ display_title: "Radiation", level: 1 }),
+    PendingArtifactSectionFactory.override({ title: "Radiation", level: 1 }),
 );
 const section_advanced = ReactiveStoredArtidocSectionStub.fromSection(
-    ArtifactSectionFactory.override({ display_title: "Advanced spacecraft", level: 2 }),
+    ArtifactSectionFactory.override({ title: "Advanced spacecraft", level: 2 }),
 );
 const section_life = ReactiveStoredArtidocSectionStub.fromSection(
-    ArtifactSectionFactory.override({ display_title: "Life support", level: 3 }),
+    ArtifactSectionFactory.override({ title: "Life support", level: 3 }),
 );
 const section_random = ReactiveStoredArtidocSectionStub.fromSection(
     FreetextSectionFactory.override({
         ...FreetextSectionFactory.pending(),
-        display_title: "Random stuff",
+        title: "Random stuff",
         level: 1,
     }),
 );
@@ -79,7 +79,7 @@ describe("SectionsNumberer", () => {
         expect(
             sections_collection.sections.value.map((section) => [
                 section.value.display_level,
-                section.value.display_title,
+                section.value.title,
             ]),
         ).toStrictEqual([
             ["1. ", "Requirements"],
@@ -97,7 +97,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Requirements"],
@@ -114,7 +114,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1.1.1. ", "Life support"],
@@ -131,7 +131,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Radiation"],
@@ -148,7 +148,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Radiation"],
@@ -165,7 +165,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Radiation"],
@@ -182,7 +182,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1.1. ", "Advanced spacecraft"],
@@ -197,7 +197,7 @@ describe("SectionsNumberer", () => {
     describe("Create a new freetext section must follow the level of the previous section", () => {
         const new_freetext_section = FreetextSectionFactory.override({
             ...FreetextSectionFactory.pending(),
-            display_title: "Technologies section",
+            title: "Technologies section",
         });
 
         beforeEach(() => {
@@ -215,7 +215,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Technologies section"],
@@ -233,7 +233,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Requirements"],
@@ -251,7 +251,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Requirements"],
@@ -269,7 +269,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Requirements"],
@@ -287,7 +287,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Requirements"],
@@ -319,7 +319,7 @@ describe("SectionsNumberer", () => {
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
-                    section.value.display_title,
+                    section.value.title,
                 ]),
             ).toStrictEqual([
                 ["1. ", "Technologies section"],
@@ -338,7 +338,7 @@ describe("SectionsNumberer", () => {
                 expect(
                     sections_collection.sections.value.map((section) => [
                         section.value.display_level,
-                        section.value.display_title,
+                        section.value.title,
                     ]),
                 ).toStrictEqual([
                     ["1. ", "Requirements"],
@@ -358,7 +358,7 @@ describe("SectionsNumberer", () => {
                 expect(
                     sections_collection.sections.value.map((section) => [
                         section.value.display_level,
-                        section.value.display_title,
+                        section.value.title,
                     ]),
                 ).toStrictEqual([
                     ["1. ", "Requirements"],

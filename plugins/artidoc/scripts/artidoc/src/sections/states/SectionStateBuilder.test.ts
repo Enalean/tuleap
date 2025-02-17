@@ -199,7 +199,7 @@ describe("SectionStateBuilder", () => {
         ])(
             "When the section is %s, then it should have the section's display title as default value",
             (section_type, section) => {
-                expect(createState(section).edited_title.value).toBe(section.display_title);
+                expect(createState(section).edited_title.value).toBe(section.title);
             },
         );
     });

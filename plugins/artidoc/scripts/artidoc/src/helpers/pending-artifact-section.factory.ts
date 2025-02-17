@@ -26,7 +26,6 @@ const PendingArtifactSectionFactory = {
     create: (): PendingArtifactSection => ({
         id: uuidv4(),
         tracker: TrackerStub.withoutTitleAndDescription(),
-        display_title: "Technologies section",
         title: "Technologies section",
         description: {
             field_id: 111,
@@ -55,7 +54,6 @@ const PendingArtifactSectionFactory = {
         PendingArtifactSectionFactory.override({
             tracker,
             title: tracker.title.default_value,
-            display_title: tracker.title.default_value,
             description: {
                 ...tracker.description,
                 value: tracker.description.default_value.content,

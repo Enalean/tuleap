@@ -49,10 +49,10 @@
                                     v-if="are_internal_links_allowed"
                                     v-bind:href="`#pdf-section-${section.value.id}`"
                                 >
-                                    {{ section.value.display_title }}
+                                    {{ section.value.title }}
                                 </a>
                                 <template v-else>
-                                    {{ section.value.display_title }}
+                                    {{ section.value.title }}
                                 </template>
                             </div>
                         </div>

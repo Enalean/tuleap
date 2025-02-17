@@ -48,7 +48,7 @@ export function getSectionInItsLatestVersion(
             if (
                 isSectionBasedOnArtifact(new_section) &&
                 isSectionBasedOnArtifact(old_section) &&
-                new_section.display_title === old_section.display_title &&
+                new_section.title === old_section.title &&
                 convertDescriptionToHtml(new_section.description) ===
                     convertDescriptionToHtml(old_section.description)
             ) {
@@ -57,7 +57,7 @@ export function getSectionInItsLatestVersion(
             if (
                 isFreetextSection(new_section) &&
                 isFreetextSection(old_section) &&
-                new_section.display_title === old_section.display_title &&
+                new_section.title === old_section.title &&
                 new_section.description === old_section.description
             ) {
                 return okAsync(new_section);

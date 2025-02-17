@@ -33,7 +33,7 @@ export const getSectionEditorStateManager = (
 ): ManageSectionEditorState => ({
     setEditedContent(new_title, new_description): void {
         const has_content_been_edited =
-            new_title !== section.value.display_title ||
+            new_title !== section.value.title ||
             new_description !== getSectionHtmlDescription(section);
 
         section_state.is_editor_reset_needed.value = has_content_been_edited;
@@ -43,7 +43,7 @@ export const getSectionEditorStateManager = (
         section_state.edited_description.value = new_description;
     },
     resetContent(): void {
-        section_state.edited_title.value = section.value.display_title;
+        section_state.edited_title.value = section.value.title;
         section_state.edited_description.value = getSectionHtmlDescription(section);
         section_state.is_section_in_edit_mode.value = false;
     },

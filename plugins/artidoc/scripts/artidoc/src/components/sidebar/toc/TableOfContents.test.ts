@@ -112,7 +112,7 @@ describe("TableOfContents", () => {
             );
             freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
                 FreetextSectionFactory.override({
-                    display_title: "Freetext section",
+                    title: "Freetext section",
                     display_level: display_level_section3,
                 }),
             );

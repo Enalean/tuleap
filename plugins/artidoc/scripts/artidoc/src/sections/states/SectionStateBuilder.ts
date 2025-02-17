@@ -92,7 +92,7 @@ export const getSectionStateBuilder = (
             is_outdated: ref(false),
             is_not_found: ref(false),
             error_message: ref(""),
-            edited_title: ref(section.value.display_title),
+            edited_title: ref(section.value.title),
             edited_description: ref(getSectionHtmlDescription(section)),
             is_editor_reset_needed: ref(false),
         }),

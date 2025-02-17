@@ -24,11 +24,11 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("render-artidoc-section-node", () => {
     it("Given a title and a description, Then it should render an artidoc-section node", () => {
-        const display_title = "The title";
+        const title = "The title";
         const description = "<p>The description</p>";
         const section = ReactiveStoredArtidocSectionStub.fromSection(
             FreetextSectionFactory.override({
-                display_title,
+                title,
                 description,
             }),
         );
@@ -45,7 +45,7 @@ describe("render-artidoc-section-node", () => {
             throw new Error("Unable to find the section title or the section description.");
         }
 
-        expect(title_element.textContent).toBe(display_title);
+        expect(title_element.textContent).toBe(title);
         expect(
             description_element.innerHTML.trim().replace(/<!--\?lit\$[0-9]+\$-->|<!--\??-->/g, ""),
         ).toBe(description);
