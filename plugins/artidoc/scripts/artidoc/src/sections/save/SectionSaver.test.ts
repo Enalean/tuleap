@@ -183,17 +183,13 @@ describe("SectionSaver", () => {
 
             const pending_section = PendingArtifactSectionFactory.create();
             const createArtifact = vi
-                .spyOn(rest_querier, "postArtifact")
-                .mockReturnValue(okAsync({ id: 105 }));
-            const createArtifactSection = vi
-                .spyOn(rest_querier, "createArtifactSection")
+                .spyOn(rest_querier, "createSection")
                 .mockReturnValue(okAsync(ArtifactSectionFactory.override(pending_section)));
 
             save();
             await flushPromises();
 
             expect(createArtifact).toHaveBeenCalledOnce();
-            expect(createArtifactSection).toHaveBeenCalledOnce();
             expect(replacer.hasBeenCalled()).toBe(true);
         });
 
@@ -215,7 +211,7 @@ describe("SectionSaver", () => {
 
             const pending_section = FreetextSectionFactory.pending();
             const createFreetextSection = vi
-                .spyOn(rest_querier, "createFreetextSection")
+                .spyOn(rest_querier, "createSection")
                 .mockReturnValue(okAsync(FreetextSectionFactory.override(pending_section)));
 
             save();

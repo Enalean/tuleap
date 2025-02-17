@@ -29,11 +29,9 @@ import {
 } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import TurndownService from "turndown";
-import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
-import type { Tracker } from "@/stores/configuration-store";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
-import type { MergedAttachmentFiles } from "@/sections/attachments/SectionAttachmentFilesManager";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 import { injectDisplayLevel } from "@/sections/levels/SectionsNumberer";
@@ -49,43 +47,6 @@ export function putConfiguration(
             selected_tracker_ids: [selected_tracker_id],
         },
     );
-}
-
-export function postArtifact(
-    tracker: Tracker,
-    new_title: string,
-    title: ArtifactSection["title"],
-    new_description: string,
-    description_field_id: number,
-    merged_attachments: MergedAttachmentFiles,
-): ResultAsync<{ id: number }, Fault> {
-    const values: { field_id: number; value: unknown }[] = [
-        {
-            field_id: description_field_id,
-            value: {
-                content: new_description,
-                format: "html",
-            },
-        },
-        {
-            field_id: title.field_id,
-            ...(isTitleAString(title)
-                ? { value: new_title }
-                : { value: { content: new_title, format: "text" } }),
-        },
-    ];
-
-    if (merged_attachments && merged_attachments.field_id > 0) {
-        values.push({
-            field_id: merged_attachments.field_id,
-            value: merged_attachments.value,
-        });
-    }
-
-    return postJSON<{ id: number }>(uri`/api/artifacts`, {
-        tracker: { id: tracker.id },
-        values,
-    });
 }
 
 export function reorderSections(
@@ -107,7 +68,7 @@ export function reorderSections(
     );
 }
 
-export function createArtifactSection(
+export function createSectionFromExistingArtifact(
     artidoc_id: number,
     artifact_id: number,
     position: PositionForSection,
@@ -124,17 +85,19 @@ export function createArtifactSection(
     }).map(injectDisplayTitle);
 }
 
-export function createFreetextSection(
+export function createSection(
     artidoc_id: number,
     title: string,
     description: string,
     position: PositionForSection,
-    level: number,
+    level: Level,
+    type: "freetext" | "artifact",
+    attachments: number[],
 ): ResultAsync<ArtidocSection, Fault> {
     return postJSON<ArtidocSection>(uri`/api/v1/artidoc_sections`, {
         artidoc_id,
         section: {
-            content: { title, description, type: "freetext", attachments: [] },
+            content: { title, description, type, attachments },
             level,
             position,
         },
