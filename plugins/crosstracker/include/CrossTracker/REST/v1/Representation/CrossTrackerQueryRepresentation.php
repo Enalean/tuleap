@@ -20,9 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\CrossTracker\REST\v1\Representation;
 
 use Tuleap\CrossTracker\CrossTrackerQuery;
+use Tuleap\CrossTracker\REST\v1\CrossTrackerReportsResource;
 
 /**
  * @psalm-immutable
