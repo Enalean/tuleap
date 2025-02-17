@@ -28,8 +28,18 @@
             <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
         </button>
         <div class="tlp-dropdown-menu dropdown-menu-filter" role="menu" ref="dropdown_menu">
+            <div class="tlp-dropdown-menu-actions">
+                <input
+                    type="search"
+                    class="tlp-search tlp-search-small"
+                    v-bind:placeholder="$gettext('Search')"
+                    v-on:input="updateFilter"
+                    ref="filter_element"
+                    data-test="query-filter"
+                />
+            </div>
             <div
-                v-for="query in queries"
+                v-for="query in filtered_queries"
                 v-bind:key="query.uuid"
                 v-bind:title="query.description"
                 v-bind:class="{ 'current-query': query.uuid === current_query?.uuid }"
@@ -45,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { EMITTER } from "../../injection-symbols";
@@ -70,6 +80,17 @@ const props = defineProps<{
 
 const current_query = ref<Report | null>(null);
 
+const filter_input = ref("");
+const filter_element = ref<InstanceType<typeof HTMLInputElement>>();
+
+const filtered_queries = computed(
+    (): ReadonlyArray<Report> =>
+        props.queries.filter(
+            (query: Report) =>
+                query.title.toLowerCase().indexOf(filter_input.value.toLowerCase()) !== -1,
+        ),
+);
+
 onMounted((): void => {
     if (dropdown_trigger.value && dropdown_menu.value) {
         dropdown = createDropdown(dropdown_trigger.value, {
@@ -80,13 +101,28 @@ onMounted((): void => {
     }
 });
 
+function updateFilter(event: Event): void {
+    const event_target = event.currentTarget;
+    if (event_target instanceof HTMLInputElement) {
+        filter_input.value = event_target.value;
+    }
+}
+
 function updateSelectedQuery(query: Report): void {
     props.writing_cross_tracker_report.setExpertQuery(query.expert_query);
     props.reading_cross_tracker_report.setNewQuery(query.expert_query);
     emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
     emitter.emit(SWITCH_QUERY_EVENT);
     current_query.value = query;
+    resetFilter();
     dropdown?.hide();
+}
+
+function resetFilter(): void {
+    if (filter_element.value instanceof HTMLInputElement) {
+        filter_input.value = "";
+        filter_element.value.value = "";
+    }
 }
 onBeforeUnmount(() => {
     dropdown?.destroy();
