@@ -31,6 +31,7 @@ export const TAG = "link-item";
 export type Link = {
     toolbar_bus: ToolbarBus;
     gettext_provider: GetText;
+    is_toolbar_disabled: boolean;
 };
 
 export type InternalLinkButtonElement = Readonly<Link> &
@@ -45,6 +46,9 @@ export type HostElement = InternalLinkButtonElement & HTMLElement;
 export const connect = (host: InternalLinkButtonElement): void => {
     host.toolbar_bus.setView({
         activateLink: (link_state: LinkState) => {
+            if (host.is_toolbar_disabled) {
+                return;
+            }
             host.is_activated = link_state.is_activated;
             host.link_href = link_state.link_href;
             host.link_title = link_state.link_title;
@@ -57,6 +61,7 @@ define<InternalLinkButtonElement>({
     tag: TAG,
     is_activated: false,
     is_disabled: true,
+    is_toolbar_disabled: true,
     link_href: "",
     link_title: "",
     popover_instance: (host, popover_instance) => popover_instance,

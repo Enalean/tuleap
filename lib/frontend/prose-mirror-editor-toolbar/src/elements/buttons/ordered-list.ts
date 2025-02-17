@@ -29,6 +29,7 @@ export const ORDERED_LIST_TAG_NAME = "ordered-list-item";
 export type OrderedListElement = {
     toolbar_bus: ToolbarBus;
     gettext_provider: GetText;
+    is_toolbar_disabled: boolean;
 };
 
 type InternalOrderedListElement = Readonly<OrderedListElement> & ToolbarButtonWithState;
@@ -58,6 +59,9 @@ export const renderOrderedListItem = (
 export const connect = (host: InternalOrderedListElement): void => {
     host.toolbar_bus.setView({
         activateOrderedList: (list_state: ListState): void => {
+            if (host.is_toolbar_disabled) {
+                return;
+            }
             host.is_activated = list_state.is_activated;
             host.is_disabled = list_state.is_disabled;
         },
@@ -68,6 +72,7 @@ define<InternalOrderedListElement>({
     tag: ORDERED_LIST_TAG_NAME,
     is_activated: false,
     is_disabled: true,
+    is_toolbar_disabled: true,
     toolbar_bus: {
         value: (host: OrderedListElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

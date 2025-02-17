@@ -140,6 +140,7 @@ export const renderToolbar = (
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
               is_disabled="${host.is_disabled}"
+              is_toolbar_disabled="${host.is_disabled}"
           ></ordered-list-item>`
         : html``;
 
@@ -149,6 +150,7 @@ export const renderToolbar = (
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
               is_disabled="${host.is_disabled}"
+              is_toolbar_disabled="${host.is_disabled}"
           ></bullet-list-item>`
         : html``;
 
@@ -188,6 +190,7 @@ export const renderToolbar = (
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
               is_disabled="${host.is_disabled}"
+              is_toolbar_disabled="${host.is_disabled}"
           ></link-item>`
         : html``;
 

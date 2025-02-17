@@ -29,6 +29,7 @@ export const BULLET_LIST_TAG_NAME = "bullet-list-item";
 export type BulletListElement = {
     toolbar_bus: ToolbarBus;
     gettext_provider: GetText;
+    is_toolbar_disabled: boolean;
 };
 
 type InternalBulletListElement = Readonly<BulletListElement> & ToolbarButtonWithState;
@@ -58,6 +59,9 @@ export const renderBulletListItem = (
 export const connect = (host: InternalBulletListElement): void => {
     host.toolbar_bus.setView({
         activateBulletList: (list_state: ListState): void => {
+            if (host.is_toolbar_disabled) {
+                return;
+            }
             host.is_activated = list_state.is_activated;
             host.is_disabled = list_state.is_disabled;
         },
@@ -68,6 +72,7 @@ define<InternalBulletListElement>({
     tag: BULLET_LIST_TAG_NAME,
     is_activated: false,
     is_disabled: true,
+    is_toolbar_disabled: true,
     toolbar_bus: {
         value: (host: BulletListElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

@@ -76,3 +76,7 @@ $height-of-separator: calc(
         color: var(--tlp-dimmed-color);
     }
 }
+
+.prose-mirror-toolbar-select-disabled {
+    cursor: not-allowed;
+}
