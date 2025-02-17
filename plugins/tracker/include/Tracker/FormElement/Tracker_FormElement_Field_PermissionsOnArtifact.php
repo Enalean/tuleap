@@ -55,19 +55,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * The field is permanently deleted from the db
-     * This hooks is here to delete specific properties,
-     * or specific values of the field.
-     * (The field itself will be deleted later)
-     *
-     * @return bool true if success
-     */
-    public function delete()
-    {
-        return true;
-    }
-
-    /**
      * @return string
      */
     private function fetchChangesetRegardingPermissions($artifact_id, $changeset_id)

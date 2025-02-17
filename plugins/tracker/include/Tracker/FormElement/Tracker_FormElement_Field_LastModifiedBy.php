@@ -29,14 +29,6 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 {
     public array $default_properties = [];
 
-    /**
-     * Dynamic value does not really get deleted
-     */
-    public function delete()
-    {
-        return true;
-    }
-
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return $this->getCriteriaWhereFragment($criteria)->mapOr(
