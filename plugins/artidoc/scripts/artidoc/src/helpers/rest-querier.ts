@@ -28,6 +28,7 @@ import {
     postJSON,
 } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
+import type { FileIdentifier } from "@tuleap/file-upload";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
@@ -91,7 +92,7 @@ export function createSection(
     position: PositionForSection,
     level: Level,
     type: "freetext" | "artifact",
-    attachments: number[],
+    attachments: FileIdentifier[],
 ): ResultAsync<ArtidocSection, Fault> {
     return postJSON<ArtidocSection>(uri`/api/v1/artidoc_sections`, {
         artidoc_id,
@@ -123,7 +124,7 @@ export function putSection(
     section_id: string,
     title: string,
     description: string,
-    attachments: number[],
+    attachments: FileIdentifier[],
     level: Level,
 ): ResultAsync<Response, Fault> {
     return putResponse(
