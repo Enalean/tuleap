@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
@@ -30,7 +31,6 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
 final readonly class RequiredArtifactInformationBuilder implements BuildRequiredArtifactInformation
@@ -82,8 +82,8 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
             ));
         }
 
-        $title = $title_field->getFullRESTValue($user, $last_changeset);
-        if (! $title instanceof ArtifactFieldValueFullRepresentation && ! $title instanceof ArtifactTextFieldValueRepresentation) {
+        $title_field_value = $last_changeset->getValue($title_field);
+        if (! $title_field_value instanceof Tracker_Artifact_ChangesetValue_Text) {
             return Result::err(Fault::fromMessage(
                 sprintf(
                     'There is no title data for artifact #%s of artidoc #%s',
@@ -92,6 +92,7 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
                 )
             ));
         }
+        $title = $title_field_value->getContentAsText();
 
         $description_field = Tracker_Semantic_Description::load($artifact->getTracker())->getField();
         if (! $description_field) {

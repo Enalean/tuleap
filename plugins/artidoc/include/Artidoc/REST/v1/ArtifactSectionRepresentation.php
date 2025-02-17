@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
@@ -32,14 +31,11 @@ use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
  */
 final readonly class ArtifactSectionRepresentation implements SectionRepresentation
 {
-    /**
-     * @psalm-param ArtifactFieldValueFullRepresentation|ArtifactTextFieldValueRepresentation $title
-     */
     public function __construct(
         public string $id,
         public int $level,
         public ArtifactReference $artifact,
-        public mixed $title,
+        public string $title,
         public ArtifactTextFieldValueRepresentation $description,
         public bool $can_user_edit_section,
         public ?ArtifactFieldValueFileFullRepresentation $attachments,

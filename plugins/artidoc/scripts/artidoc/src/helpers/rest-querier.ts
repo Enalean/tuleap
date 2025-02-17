@@ -28,9 +28,8 @@ import {
     postJSON,
 } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
-import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isFreetextSection, isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
+import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import type { Level } from "@/sections/levels/SectionsNumberer";
@@ -143,8 +142,6 @@ export function deleteSection(section_id: string): ResultAsync<Response, Fault> 
     return del(uri`/api/artidoc_sections/${section_id}`);
 }
 
-const turndown_service = new TurndownService({ emDelimiter: "*" });
-
 function injectDisplayTitle(section: ArtidocSection): ArtidocSection {
     if (isFreetextSection(section)) {
         return FreetextSectionFactory.override({
@@ -153,14 +150,7 @@ function injectDisplayTitle(section: ArtidocSection): ArtidocSection {
         });
     }
 
-    const title = section.title;
-    const display_title = isTitleAString(title)
-        ? title.value
-        : isCommonmark(title)
-          ? title.commonmark
-          : title.format === "text"
-            ? title.value
-            : turndown_service.turndown(title.value);
+    const display_title = section.title;
 
     return {
         ...section,

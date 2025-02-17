@@ -53,19 +53,18 @@ describe("DocumentContent", () => {
 
     beforeEach(() => {
         const default_artifact_section = ArtifactSectionFactory.create();
-        const default_pending_artifact_section = PendingArtifactSectionFactory.create();
         section_1 = ArtifactSectionFactory.override({
-            title: { ...default_artifact_section.title, value: "Title 1" },
+            title: "Title 1",
             artifact: { ...default_artifact_section.artifact, id: 1 },
             level: 1,
         });
         section_2 = ArtifactSectionFactory.override({
-            title: { ...default_artifact_section.title, value: "Title 2" },
+            title: "Title 2",
             artifact: { ...default_artifact_section.artifact, id: 2 },
             level: 2,
         });
         section_3 = PendingArtifactSectionFactory.override({
-            title: { ...default_pending_artifact_section.title, value: "Title 3" },
+            title: "Title 3",
             level: 3,
         });
 

@@ -27,12 +27,7 @@ const PendingArtifactSectionFactory = {
         id: uuidv4(),
         tracker: TrackerStub.withoutTitleAndDescription(),
         display_title: "Technologies section",
-        title: {
-            field_id: 110,
-            type: "string",
-            label: "Summary",
-            value: "Technologies section",
-        },
+        title: "Technologies section",
         description: {
             field_id: 111,
             type: "text",
@@ -59,13 +54,7 @@ const PendingArtifactSectionFactory = {
     overrideFromTracker: (tracker: TrackerWithSubmittableSection): PendingArtifactSection =>
         PendingArtifactSectionFactory.override({
             tracker,
-            title: {
-                ...tracker.title,
-                value: tracker.title.default_value,
-                ...(tracker.title.type === "string"
-                    ? { type: "string" }
-                    : { type: "text", post_processed_value: "", format: "html" }),
-            },
+            title: tracker.title.default_value,
             display_title: tracker.title.default_value,
             description: {
                 ...tracker.description,

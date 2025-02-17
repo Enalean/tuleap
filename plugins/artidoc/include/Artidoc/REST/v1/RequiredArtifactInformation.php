@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tracker_FormElement_Field_Text;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
 final readonly class RequiredArtifactInformation
@@ -31,7 +30,7 @@ final readonly class RequiredArtifactInformation
     public function __construct(
         public \Tracker_Artifact_Changeset $last_changeset,
         public Tracker_FormElement_Field_Text $title_field,
-        public ArtifactFieldValueFullRepresentation|ArtifactTextFieldValueRepresentation $title,
+        public string $title,
         public Tracker_FormElement_Field_Text $description_field,
         public ArtifactTextFieldValueRepresentation $description,
     ) {

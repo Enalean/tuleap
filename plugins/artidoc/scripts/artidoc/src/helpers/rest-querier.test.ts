@@ -30,26 +30,18 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("rest-querier", () => {
     describe("getAllSections", () => {
-        it("should returns retrieved sections when title is a string field", async () => {
+        it("should returns retrieved sections", async () => {
             const section_a = ArtifactSectionFactory.create();
             const section_b = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getAllJSON").mockReturnValue(
                 okAsync([
                     ArtifactSectionFactory.override({
                         ...section_a,
-                        title: {
-                            ...section_a.title,
-                            type: "string",
-                            value: "Le title A",
-                        },
+                        title: "Le title A",
                     }),
                     ArtifactSectionFactory.override({
                         ...section_b,
-                        title: {
-                            ...section_b.title,
-                            type: "string",
-                            value: "Le title B",
-                        },
+                        title: "Le title B",
                     }),
                 ]),
             );
@@ -71,144 +63,7 @@ describe("rest-querier", () => {
             expect(all_sections[1].display_title).toBe("Le title B");
         });
 
-        it("should returns retrieved sections when title is a text field in text format, replacing line breaks", async () => {
-            const section_a = ArtifactSectionFactory.create();
-            const section_b = ArtifactSectionFactory.create();
-            vi.spyOn(fetch, "getAllJSON").mockReturnValue(
-                okAsync([
-                    ArtifactSectionFactory.override({
-                        ...section_a,
-                        title: {
-                            ...section_a.title,
-                            type: "text",
-                            format: "text",
-                            value: "Le title\r\nA",
-                            post_processed_value: "Le title<br>A",
-                        },
-                    }),
-                    ArtifactSectionFactory.override({
-                        ...section_b,
-                        title: {
-                            ...section_b.title,
-                            type: "text",
-                            format: "text",
-                            value: "Le title\r\nB",
-                            post_processed_value: "Le title<br>B",
-                        },
-                    }),
-                ]),
-            );
-
-            let all_sections: readonly ArtidocSection[] = [];
-            getAllSections(123).match(
-                (sections) => {
-                    all_sections = sections;
-                },
-                () => {
-                    throw new Error();
-                },
-            );
-
-            await flushPromises();
-
-            expect(all_sections).toHaveLength(2);
-            expect(all_sections[0].display_title).toBe("Le title A");
-            expect(all_sections[1].display_title).toBe("Le title B");
-        });
-
-        it("should returns retrieved sections when title is a text field in html format, replacing line breaks", async () => {
-            const section_a = ArtifactSectionFactory.create();
-            const section_b = ArtifactSectionFactory.create();
-            vi.spyOn(fetch, "getAllJSON").mockReturnValue(
-                okAsync([
-                    ArtifactSectionFactory.override({
-                        ...section_a,
-                        title: {
-                            ...section_a.title,
-                            type: "text",
-                            format: "html",
-                            value: "<p>Le title</p>\r\n<p>A</p>",
-                            post_processed_value: "<p>Le title</p>\r\n<p>A</p>",
-                        },
-                    }),
-                    ArtifactSectionFactory.override({
-                        ...section_b,
-                        title: {
-                            ...section_b.title,
-                            type: "text",
-                            format: "html",
-                            value: "<p>Le title</p>\r\n<p>B</p>",
-                            post_processed_value: "<p>Le title</p>\r\n<p>B</p>",
-                        },
-                    }),
-                ]),
-            );
-
-            let all_sections: readonly ArtidocSection[] = [];
-            getAllSections(123).match(
-                (sections) => {
-                    all_sections = sections;
-                },
-                () => {
-                    throw new Error();
-                },
-            );
-
-            await flushPromises();
-
-            expect(all_sections).toHaveLength(2);
-            expect(all_sections[0].display_title).toBe("Le title A");
-            expect(all_sections[1].display_title).toBe("Le title B");
-        });
-
-        it("should returns retrieved sections when title is a text field in markdown format, replacing line breaks", async () => {
-            const section_a = ArtifactSectionFactory.create();
-            const section_b = ArtifactSectionFactory.create();
-            vi.spyOn(fetch, "getAllJSON").mockReturnValue(
-                okAsync([
-                    ArtifactSectionFactory.override({
-                        ...section_a,
-                        title: {
-                            ...section_a.title,
-                            type: "text",
-                            format: "html",
-                            value: "<p>Le title</p>\r\n<p>A</p>",
-                            post_processed_value: "<p>Le title</p>\r\n<p>A</p>",
-                            commonmark: "Le title\r\nA",
-                        },
-                    }),
-                    ArtifactSectionFactory.override({
-                        ...section_b,
-                        title: {
-                            ...section_b.title,
-                            type: "text",
-                            format: "html",
-                            value: "<p>Le title</p>\r\n<p>B</p>",
-                            post_processed_value: "<p>Le title</p>\r\n<p>B</p>",
-                            commonmark: "Le title\r\nB",
-                        },
-                    }),
-                ]),
-            );
-
-            let all_sections: readonly ArtidocSection[] = [];
-            getAllSections(123).match(
-                (sections) => {
-                    all_sections = sections;
-                },
-                () => {
-                    throw new Error();
-                },
-            );
-
-            await flushPromises();
-
-            expect(all_sections).toHaveLength(2);
-            expect(all_sections[0].display_title).toBe("Le title A");
-            expect(all_sections[1].display_title).toBe("Le title B");
-        });
-
-        it("should returns retrieved sections when title is a text in a freetext section", async () => {
+        it("should returns retrieved sections including freetext section", async () => {
             const section_a = FreetextSectionFactory.create();
             const section_b = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getAllJSON").mockReturnValue(
@@ -219,14 +74,7 @@ describe("rest-querier", () => {
                     }),
                     ArtifactSectionFactory.override({
                         ...section_b,
-                        title: {
-                            ...section_b.title,
-                            type: "text",
-                            format: "html",
-                            value: "<p>Le title</p>\r\n<p>B</p>",
-                            post_processed_value: "<p>Le title</p>\r\n<p>B</p>",
-                            commonmark: "Le title\r\nB",
-                        },
+                        title: "Le title B",
                     }),
                 ]),
             );
@@ -250,17 +98,13 @@ describe("rest-querier", () => {
     });
 
     describe("getSection", () => {
-        it("should returns retrieved section when title is a string field", async () => {
+        it("should returns retrieved section", async () => {
             const section = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getJSON").mockReturnValue(
                 okAsync(
                     ArtifactSectionFactory.override({
                         ...section,
-                        title: {
-                            ...section.title,
-                            type: "string",
-                            value: "Le title A",
-                        },
+                        title: "Le title A",
                     }),
                 ),
             );
@@ -280,104 +124,7 @@ describe("rest-querier", () => {
             expect(retrieved_section.display_title).toBe("Le title A");
         });
 
-        it("should returns retrieved section when title is a text field in text format, replacing line breaks", async () => {
-            const section = ArtifactSectionFactory.create();
-            vi.spyOn(fetch, "getJSON").mockReturnValue(
-                okAsync(
-                    ArtifactSectionFactory.override({
-                        ...section,
-                        title: {
-                            ...section.title,
-                            type: "text",
-                            format: "text",
-                            value: "Le title\r\nA",
-                            post_processed_value: "Le title<br>A",
-                        },
-                    }),
-                ),
-            );
-
-            let retrieved_section: ArtidocSection = ArtifactSectionFactory.create();
-            getSection("section-id").match(
-                (section) => {
-                    retrieved_section = section;
-                },
-                () => {
-                    throw new Error();
-                },
-            );
-
-            await flushPromises();
-
-            expect(retrieved_section.display_title).toBe("Le title A");
-        });
-
-        it("should returns retrieved section when title is a text field in html format, replacing line breaks", async () => {
-            const section = ArtifactSectionFactory.create();
-            vi.spyOn(fetch, "getJSON").mockReturnValue(
-                okAsync(
-                    ArtifactSectionFactory.override({
-                        ...section,
-                        title: {
-                            ...section.title,
-                            type: "text",
-                            format: "html",
-                            value: "<p>Le title</p>\r\n<p>A</p>",
-                            post_processed_value: "<p>Le title</p>\r\n<p>A</p>",
-                        },
-                    }),
-                ),
-            );
-
-            let retrieved_section: ArtidocSection = ArtifactSectionFactory.create();
-            getSection("section-id").match(
-                (section) => {
-                    retrieved_section = section;
-                },
-                () => {
-                    throw new Error();
-                },
-            );
-
-            await flushPromises();
-
-            expect(retrieved_section.display_title).toBe("Le title A");
-        });
-
-        it("should returns retrieved section when title is a text field in markdown format, replacing line breaks", async () => {
-            const section = ArtifactSectionFactory.create();
-            vi.spyOn(fetch, "getJSON").mockReturnValue(
-                okAsync(
-                    ArtifactSectionFactory.override({
-                        ...section,
-                        title: {
-                            ...section.title,
-                            type: "text",
-                            format: "html",
-                            value: "<p>Le title</p>\r\n<p>A</p>",
-                            post_processed_value: "<p>Le title</p>\r\n<p>A</p>",
-                            commonmark: "Le title\r\nA",
-                        },
-                    }),
-                ),
-            );
-
-            let retrieved_section: ArtidocSection = ArtifactSectionFactory.create();
-            getSection("section-id").match(
-                (section) => {
-                    retrieved_section = section;
-                },
-                () => {
-                    throw new Error();
-                },
-            );
-
-            await flushPromises();
-
-            expect(retrieved_section.display_title).toBe("Le title A");
-        });
-
-        it("should returns retrieved section when title is a text in a freetext section", async () => {
+        it("should returns retrieved freetext section", async () => {
             const section = FreetextSectionFactory.create();
             vi.spyOn(fetch, "getJSON").mockReturnValue(
                 okAsync(
