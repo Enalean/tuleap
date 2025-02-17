@@ -18,53 +18,44 @@
  */
 
 import UserStoryDisplayer from "./UserStoryDisplayer.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { UserStory } from "../../helpers/UserStories/user-stories-retriever";
 import type { Project, TrackerMinimalRepresentation } from "../../type";
+import type { ConfigurationState } from "../../store/configuration";
+import { createConfigurationModule } from "../../store/configuration";
 
 describe("UserStoryDisplayer", () => {
-    const getWrapper = async (
-        user_story?: Partial<UserStory>,
-        accessibility = false,
-    ): Promise<Wrapper<Vue>> => {
+    const getWrapper = (user_story?: Partial<UserStory>, accessibility = false): VueWrapper => {
         const defaulted_user_story = {
             id: 14,
             title: "My US",
             xref: "us #14",
             background_color: "lake-placid-blue",
-            tracker: {
-                color_name: "fiesta-red",
-            } as TrackerMinimalRepresentation,
+            tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
             is_open: true,
             uri: "tracker?aid=14",
-            project: {
-                label: "project",
-            } as Project,
+            project: { label: "project" } as Project,
             ...user_story,
         };
 
-        const component_options = {
-            propsData: {
-                user_story: defaulted_user_story,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { accessibility },
+        return shallowMount(UserStoryDisplayer, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: createConfigurationModule({
+                            accessibility,
+                        } as ConfigurationState),
                     },
                 }),
             },
-        };
-
-        return shallowMount(UserStoryDisplayer, component_options);
+            props: { user_story: defaulted_user_story },
+        });
     };
 
-    it("Displays user story with accessibility", async () => {
-        const wrapper = await getWrapper({}, true);
+    it("Displays user story with accessibility", () => {
+        const wrapper = getWrapper({}, true);
 
         const card_classes = wrapper.get("[data-test=user-story-card]").classes();
         expect(card_classes).toContain("element-card-with-accessibility");
@@ -73,16 +64,16 @@ describe("UserStoryDisplayer", () => {
         expect(wrapper.find("[data-test=user-story-accessibility]").exists()).toBe(true);
     });
 
-    it("Displays user story without accessibility", async () => {
-        const wrapper = await getWrapper();
+    it("Displays user story without accessibility", () => {
+        const wrapper = getWrapper();
 
         const card_classes = wrapper.get("[data-test=user-story-card]").classes();
         expect(card_classes).not.toContain("element-card-with-accessibility");
         expect(wrapper.find("[data-test=user-story-accessibility]").exists()).toBe(false);
     });
 
-    it("Displays a closed user story with accessibility", async () => {
-        const wrapper = await getWrapper({ is_open: false }, true);
+    it("Displays a closed user story with accessibility", () => {
+        const wrapper = getWrapper({ is_open: false }, true);
 
         const card_classes = wrapper.get("[data-test=user-story-card]").classes();
         expect(card_classes).toContain("element-card-with-accessibility");

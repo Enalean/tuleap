@@ -19,8 +19,7 @@
 
 import type { Store } from "vuex";
 import type { State } from "../type";
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 import state from "./state";
 import * as mutations from "./mutations";
 import * as getters from "./getters";
@@ -28,12 +27,10 @@ import * as actions from "./actions";
 import type { ConfigurationState } from "./configuration";
 import { createConfigurationModule } from "./configuration";
 
-Vue.use(Vuex);
-
-export function createStore(configuration_state: ConfigurationState): Store<State> {
+export function createInitializedStore(configuration_state: ConfigurationState): Store<State> {
     const configuration = createConfigurationModule(configuration_state);
 
-    return new Vuex.Store({
+    return createStore({
         actions,
         mutations,
         getters,

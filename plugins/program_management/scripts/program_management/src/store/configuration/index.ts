@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { State } from "../../type";
 import type { Module } from "vuex";
-import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
+import type { State } from "../../type";
 
 export interface ConfigurationState {
     readonly public_name: string;
     readonly short_name: string;
     readonly project_icon: string;
     readonly privacy: ProjectPrivacy;
-    readonly flags: Array<ProjectFlag>;
+    readonly flags: ReadonlyArray<ProjectFlag>;
     readonly program_id: number;
     readonly accessibility: boolean;
     readonly user_locale: string;

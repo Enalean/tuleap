@@ -17,34 +17,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ToBePlanned from "./ToBePlanned.vue";
-import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import type { Feature } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import type { Feature, State } from "../../../type";
+import type { ConfigurationState } from "../../../store/configuration";
+import { createConfigurationModule } from "../../../store/configuration";
 
 jest.useFakeTimers();
 
 const PROGRAM_ID = 202;
 describe("ToBePlanned", () => {
-    let store: Store;
+    let retrieveSpy: jest.Mock;
     beforeEach(() => {
-        store = createStoreMock({
-            state: { to_be_planned_elements: [], configuration: { program_id: PROGRAM_ID } },
-        });
+        retrieveSpy = jest.fn();
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(
+        features_in_store: Feature[],
+    ): VueWrapper<InstanceType<typeof ToBePlanned>> {
         return shallowMount(ToBePlanned, {
-            localVue: await createProgramManagementLocalVue(),
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        to_be_planned_elements: features_in_store,
+                    } as State,
+                    actions: {
+                        retrieveToBePlannedElement: (_state, program_id) => retrieveSpy(program_id),
+                    },
+                    modules: {
+                        configuration: createConfigurationModule({
+                            program_id: PROGRAM_ID,
+                        } as ConfigurationState),
+                    },
+                }),
+            },
         });
     }
 
     it("Displays the empty state when no artifact are found", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper([]);
         await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
@@ -54,8 +67,9 @@ describe("ToBePlanned", () => {
     });
 
     it("Displays an error when rest route fail", async () => {
-        const wrapper = await getWrapper();
-        wrapper.setData({ has_error: true, error_message: "Oups, something happened" });
+        const wrapper = getWrapper([]);
+        wrapper.vm.has_error = true;
+        wrapper.vm.error_message = "Oups, something happened";
         await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
@@ -76,20 +90,10 @@ describe("ToBePlanned", () => {
             tracker: { label: "user_stories" },
         } as Feature;
 
-        store = createStoreMock({
-            state: {
-                to_be_planned_elements: [element_one, element_two],
-                configuration: { program_id: PROGRAM_ID },
-            },
-        });
-
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper([element_one, element_two]);
         await jest.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "retrieveToBePlannedElement",
-            PROGRAM_ID,
-        );
+        expect(retrieveSpy).toHaveBeenCalledWith(PROGRAM_ID);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(true);

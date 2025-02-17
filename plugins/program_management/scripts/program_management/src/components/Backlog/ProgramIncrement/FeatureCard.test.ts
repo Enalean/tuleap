@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import FeatureCard from "./FeatureCard.vue";
-import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import type { Feature } from "../../../type";
 import type { ConfigurationState } from "../../../store/configuration";
+import { createConfigurationModule } from "../../../store/configuration";
 
 describe("FeatureCard", () => {
-    const getWrapper = async (
+    const getWrapper = (
         feature?: Partial<Feature>,
         configuration?: Partial<ConfigurationState>,
         user_can_plan = true,
-    ): Promise<Wrapper<Vue>> => {
+    ): VueWrapper => {
         const defaulted_feature = {
             id: 100,
             title: "My artifact",
@@ -42,34 +42,32 @@ describe("FeatureCard", () => {
             has_user_story_planned: false,
             has_user_story_linked: false,
             ...feature,
-        };
+        } as Feature;
 
         const defaulted_configuration = {
             accessibility: false,
             can_create_program_increment: true,
             has_plan_permissions: true,
             ...configuration,
-        };
+        } as ConfigurationState;
 
-        const component_options = {
-            localVue: await createProgramManagementLocalVue(),
-            propsData: {
-                feature: defaulted_feature,
-                program_increment: { user_can_plan } as ProgramIncrement,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: defaulted_configuration,
+        return shallowMount(FeatureCard, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: createConfigurationModule(defaulted_configuration),
                     },
                 }),
             },
-        };
-        return shallowMount(FeatureCard, component_options);
+            props: {
+                feature: defaulted_feature,
+                program_increment: { user_can_plan } as ProgramIncrement,
+            },
+        });
     };
 
-    it("Displays a draggable card with accessibility pattern", async () => {
-        const wrapper = await getWrapper(
+    it("Displays a draggable card with accessibility pattern", () => {
+        const wrapper = getWrapper(
             {
                 background_color: "peggy-pink",
                 tracker: {
@@ -81,45 +79,45 @@ describe("FeatureCard", () => {
             },
             { accessibility: true },
         );
-        const card = wrapper.find("[data-test=feature-card]");
+        const card = wrapper.get("[data-test=feature-card]");
         expect(card.classes()).toContain("element-draggable-item");
         expect(card.classes()).toContain("element-card-sherwood-green");
         expect(card.classes()).toContain("element-card-with-accessibility");
         expect(card.classes()).toContain("element-card-background-peggy-pink");
     });
 
-    it(`Adds a closed class to the card`, async () => {
-        const wrapper = await getWrapper({ is_open: false });
-        expect(wrapper.find("[data-test=feature-card]").classes()).toContain("element-card-closed");
+    it(`Adds a closed class to the card`, () => {
+        const wrapper = getWrapper({ is_open: false });
+        expect(wrapper.get("[data-test=feature-card]").classes()).toContain("element-card-closed");
     });
 
-    it("Displays a card without accessibility pattern", async () => {
-        const wrapper = await getWrapper({}, { accessibility: false });
-        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain(
+    it("Displays a card without accessibility pattern", () => {
+        const wrapper = getWrapper({}, { accessibility: false });
+        expect(wrapper.get("[data-test=feature-card]").classes()).not.toContain(
             "element-card-with-accessibility",
         );
     });
 
-    it("Displays a not draggable card when user can not plan/unplan features", async () => {
-        const wrapper = await getWrapper({}, { has_plan_permissions: false });
-        const card = wrapper.find("[data-test=feature-card]");
-        const tooltip = wrapper.find("[data-test=card-tooltip]");
+    it("Displays a not draggable card when user can not plan/unplan features", () => {
+        const wrapper = getWrapper({}, { has_plan_permissions: false });
+        const card = wrapper.get("[data-test=feature-card]");
+        const tooltip = wrapper.get("[data-test=card-tooltip]");
         expect(card.classes()).not.toContain("element-draggable-item");
         expect(card.classes()).not.toContain("element-card-with-accessibility");
         expect(tooltip.classes()).toContain("tlp-tooltip");
     });
 
-    it(`Displays a not draggable card when user cannot plan in the given program increment`, async () => {
-        const wrapper = await getWrapper({}, { has_plan_permissions: true }, false);
-        const card = wrapper.find("[data-test=feature-card]");
-        const tooltip = wrapper.find("[data-test=card-tooltip]");
+    it(`Displays a not draggable card when user cannot plan in the given program increment`, () => {
+        const wrapper = getWrapper({}, { has_plan_permissions: true }, false);
+        const card = wrapper.get("[data-test=feature-card]");
+        const tooltip = wrapper.get("[data-test=card-tooltip]");
         expect(card.classes()).not.toContain("element-draggable-item");
         expect(card.classes()).not.toContain("element-card-with-accessibility");
         expect(tooltip.classes()).toContain("tlp-tooltip");
     });
 
-    it("Displays a not draggable card with items backlog container", async () => {
-        const wrapper = await getWrapper({ has_user_story_linked: true }, {}, false);
+    it("Displays a not draggable card with items backlog container", () => {
+        const wrapper = getWrapper({ has_user_story_linked: true }, {}, false);
         expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBe(true);
     });
 });

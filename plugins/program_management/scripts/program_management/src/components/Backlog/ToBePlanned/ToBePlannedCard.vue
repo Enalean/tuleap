@@ -55,20 +55,21 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { Feature } from "../../../type";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import {
     getAccessibilityClasses,
     showAccessibilityPattern,
 } from "../../../helpers/element-card-css-extractor";
+import type { ConfigurationState } from "../../../store/configuration";
 
 const { $gettext } = useGettext();
 
-const { accessibility, has_plan_permissions } = useNamespacedState<{
-    accessibility: boolean;
-    has_plan_permissions: boolean;
-}>("configuration", ["accessibility", "has_plan_permissions"]);
+const { accessibility, has_plan_permissions } = useNamespacedState<ConfigurationState>(
+    "configuration",
+    ["accessibility", "has_plan_permissions"],
+);
 
 const props = defineProps<{ feature: Feature }>();
 

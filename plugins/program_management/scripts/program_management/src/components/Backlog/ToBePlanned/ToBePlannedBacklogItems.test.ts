@@ -17,12 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
-import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { Feature, TrackerMinimalRepresentation } from "../../../type";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
@@ -32,33 +30,39 @@ import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 jest.useFakeTimers();
 
 describe("ToBePlannedBacklogItems", () => {
-    let store: Store, feature: Feature;
+    let feature: Feature;
     beforeEach(() => {
-        store = createStoreMock({ state: {} });
         feature = { id: 100 } as Feature;
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(
+        remote_user_stories: UserStory[],
+    ): VueWrapper<InstanceType<typeof ToBePlannedBacklogItems>> {
         return shallowMount(ToBePlannedBacklogItems, {
-            localVue: await createProgramManagementLocalVue(),
-            propsData: { to_be_planned_element: feature },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        linkUserStoriesToBePlannedElements: () =>
+                            Promise.resolve(remote_user_stories),
+                    },
+                }),
+            },
+            props: { to_be_planned_element: feature },
         });
     }
 
     it("Displays a skeleton during get user stories", async () => {
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([]));
+        const wrapper = getWrapper([]);
 
-        const wrapper = await getWrapper();
-
-        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
     });
 
     it("Displays error message if api rest error exists", async () => {
-        const wrapper = await getWrapper();
-        wrapper.setData({ message_error_rest: "404 Not Found" });
+        const wrapper = getWrapper([]);
+        wrapper.vm.message_error_rest = "404 Not Found";
 
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await jest.runOnlyPendingTimersAsync();
@@ -69,22 +73,18 @@ describe("ToBePlannedBacklogItems", () => {
     });
 
     it("When user stories are loaded, Then UserStoryDisplayer is rendered", async () => {
-        jest.spyOn(store, "dispatch").mockReturnValue(
-            Promise.resolve([
-                {
-                    id: 14,
-                    title: "My US",
-                    xref: "us #14",
-                    background_color: "lake-placid-blue",
-                    tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
-                    is_open: true,
-                    uri: "tracker?aid=14",
-                    project: { label: "project" },
-                } as UserStory,
-            ]),
-        );
-
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper([
+            {
+                id: 14,
+                title: "My US",
+                xref: "us #14",
+                background_color: "lake-placid-blue",
+                tracker: { color_name: "fiesta-red" } as TrackerMinimalRepresentation,
+                is_open: true,
+                uri: "tracker?aid=14",
+                project: { label: "project" },
+            } as UserStory,
+        ]);
 
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await jest.runOnlyPendingTimersAsync();
@@ -111,13 +111,11 @@ describe("ToBePlannedBacklogItems", () => {
             ],
         } as Feature;
 
-        const dispatchSpy = jest.spyOn(store, "dispatch");
-
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper([]);
 
         await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
-        expect(dispatchSpy).not.toHaveBeenCalled();
+        expect(wrapper.findAllComponents(UserStoryDisplayer)).toHaveLength(1);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorDisplayer).exists()).toBe(false);
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBe(true);

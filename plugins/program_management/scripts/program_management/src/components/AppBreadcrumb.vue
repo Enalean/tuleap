@@ -20,7 +20,7 @@
 <template>
     <div class="breadcrumb-container">
         <breadcrumb-privacy
-            v-bind:project_flags="project_flags"
+            v-bind:project_flags="Array.from(project_flags)"
             v-bind:privacy="project_privacy"
             v-bind:project_public_name="project_public_name"
         />
@@ -60,8 +60,8 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
-import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
+import { BreadcrumbPrivacy } from "@tuleap/vue3-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 const props = defineProps<{
@@ -69,7 +69,7 @@ const props = defineProps<{
     project_short_name: string;
     project_icon: string;
     project_privacy: ProjectPrivacy;
-    project_flags: ProjectFlag[];
+    project_flags: ReadonlyArray<ProjectFlag>;
     is_program_admin: boolean;
 }>();
 

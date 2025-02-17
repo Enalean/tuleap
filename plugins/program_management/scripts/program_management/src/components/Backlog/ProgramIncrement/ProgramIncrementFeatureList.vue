@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useGetters, useActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
 import FeatureCard from "./FeatureCard.vue";
@@ -103,4 +103,6 @@ onMounted(async () => {
 function doesIncrementAcceptPlannableItems(): boolean {
     return props.increment.user_can_plan;
 }
+
+defineExpose({ has_error, error_message });
 </script>

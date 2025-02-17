@@ -49,8 +49,9 @@ import {
     getAccessibilityClasses,
     showAccessibilityPattern,
 } from "../../helpers/element-card-css-extractor";
+import type { ConfigurationState } from "../../store/configuration";
 
-const { accessibility } = useNamespacedState<{ accessibility: boolean }>("configuration", [
+const { accessibility } = useNamespacedState<ConfigurationState>("configuration", [
     "accessibility",
 ]);
 

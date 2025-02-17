@@ -37,21 +37,18 @@
 </template>
 <script setup lang="ts">
 import { useNamespacedState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import EmptySvg from "./EmptySvg.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
+import type { ConfigurationState } from "../../../store/configuration";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const {
     can_create_program_increment,
     tracker_program_increment_id,
     tracker_program_increment_sub_label,
-} = useNamespacedState<{
-    can_create_program_increment: boolean;
-    tracker_program_increment_id: number;
-    tracker_program_increment_sub_label: string;
-}>("configuration", [
+} = useNamespacedState<ConfigurationState>("configuration", [
     "can_create_program_increment",
     "tracker_program_increment_id",
     "tracker_program_increment_sub_label",
@@ -61,8 +58,7 @@ const create_new_program_increment = buildCreateNewProgramIncrement(
     tracker_program_increment_id.value,
 );
 
-const create_first_label = gettext_provider.interpolate(
-    gettext_provider.$gettext("Create the first %{ program_increment_sub_label }"),
-    { program_increment_sub_label: tracker_program_increment_sub_label.value },
-);
+const create_first_label = $gettext("Create the first %{ program_increment_sub_label }", {
+    program_increment_sub_label: tracker_program_increment_sub_label.value,
+});
 </script>

@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { createStore } from "vuex";
+import type { Store } from "vuex";
 import * as drag_drop from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { VueGettextProvider } from "./vue-gettext-provider";
-import type { Store } from "vuex";
 import type { State } from "../type";
 import { getFeatureInProgramIncrement } from "../store/getters";
+import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 
 describe(`drag-drop helper`, () => {
     describe(`isContainer()`, () => {
@@ -86,12 +87,10 @@ describe(`drag-drop helper`, () => {
         };
 
         beforeEach(() => {
-            store = createStoreMock({
-                state,
-                getters: {
-                    getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
-                },
-            }) as unknown as Store<State>;
+            store = createStore({
+                state: { program_increments: [] as ProgramIncrement[] } as State,
+                getters: { getFeatureInProgramIncrement },
+            });
         });
 
         it(`Given can plan attribute is not provided, Then the drop is rejected`, () => {
@@ -151,12 +150,7 @@ describe(`drag-drop helper`, () => {
                     { id: 14, features: [{ id: 1, has_user_story_planned: true }] },
                 ],
             } as State;
-            store = createStoreMock({
-                state,
-                getters: {
-                    getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
-                },
-            }) as unknown as Store<State>;
+            store = createStore({ state, getters: { getFeatureInProgramIncrement } });
 
             const dropped_card = createElement();
             dropped_card.setAttribute("data-element-id", "1");
@@ -190,12 +184,7 @@ describe(`drag-drop helper`, () => {
                     { id: 14, features: [{ id: 1, has_user_story_planned: true }] },
                 ],
             } as State;
-            store = createStoreMock({
-                state,
-                getters: {
-                    getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
-                },
-            }) as unknown as Store<State>;
+            store = createStore({ state, getters: { getFeatureInProgramIncrement } });
 
             const dropped_card = createElement();
             dropped_card.setAttribute("data-element-id", "1");
@@ -228,12 +217,7 @@ describe(`drag-drop helper`, () => {
                     { id: 14, features: [{ id: 1, has_user_story_planned: true }] },
                 ],
             } as State;
-            store = createStoreMock({
-                state,
-                getters: {
-                    getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
-                },
-            }) as unknown as Store<State>;
+            store = createStore({ state, getters: { getFeatureInProgramIncrement } });
 
             const dropped_card = createElement();
             dropped_card.setAttribute("data-element-id", "1");
