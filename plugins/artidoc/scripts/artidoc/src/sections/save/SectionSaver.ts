@@ -21,6 +21,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import type { FileIdentifier } from "@tuleap/file-upload";
 import {
     isPendingSection,
     isArtifactSection,
@@ -65,11 +66,15 @@ export const getSectionSaver = (
         return okAsync(section.value);
     }
 
-    function getAttachementsForSave(section: ReactiveStoredArtidocSection): number[] {
+    function getAttachementsForSave(
+        section: ReactiveStoredArtidocSection,
+        edited_description: string,
+    ): FileIdentifier[] {
         if (!isFreetextSection(section.value) && section.value.attachments) {
-            return section.value.attachments.file_descriptions.map(
-                (file_descriptions) => file_descriptions.id,
-            );
+            return manage_section_attachments.mergeArtifactAttachments(
+                section.value,
+                edited_description,
+            ).value;
         }
         return [];
     }
@@ -91,7 +96,7 @@ export const getSectionSaver = (
             section.value.id,
             edited_title.value,
             edited_description.value,
-            getAttachementsForSave(section),
+            getAttachementsForSave(section, edited_description.value),
             section.value.level,
         )
             .andThen(() => getLatestVersionOfCurrentSection())
@@ -152,7 +157,7 @@ export const getSectionSaver = (
                 retrieve_positions.getSectionPositionForSave(section.value),
                 section.value.level,
                 "artifact",
-                getAttachementsForSave(section),
+                getAttachementsForSave(section, edited_description.value),
             );
         }
 
@@ -164,7 +169,7 @@ export const getSectionSaver = (
                 retrieve_positions.getSectionPositionForSave(section.value),
                 section.value.level,
                 "freetext",
-                getAttachementsForSave(section),
+                getAttachementsForSave(section, edited_description.value),
             );
         }
 
@@ -180,7 +185,7 @@ export const getSectionSaver = (
                     section.value.id,
                     edited_title.value,
                     edited_description.value,
-                    getAttachementsForSave(section),
+                    getAttachementsForSave(section, edited_description.value),
                     section.value.level,
                 );
             })
