@@ -92,7 +92,7 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
 
         assert($query->getFrom() !== null); // From part is checked for expert query, so it cannot be null
         $additional_from = $this->from_builder->buildFromWhere($query->getFrom(), $report->getWidgetId(), $current_user);
-        return $this->trackers_permissions->retrieveUserPermissionOnTrackers(
+        $trackers        = $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
             $this->getTrackers(array_map(
                 static fn(array $row): int => $row['id'],
@@ -100,6 +100,10 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
             )),
             TrackerPermissionType::PERMISSION_VIEW,
         )->allowed;
+        if ($trackers === []) {
+            throw new FromIsInvalidException([dgettext('tuleap-crosstracker', 'No tracker found')]);
+        }
+        return $trackers;
     }
 
     /**
