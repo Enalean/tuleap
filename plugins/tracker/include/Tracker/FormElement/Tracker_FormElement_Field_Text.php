@@ -29,7 +29,6 @@ use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\TextFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
@@ -65,6 +64,18 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     ];
 
     private bool $is_artifact_copy = false;
+
+    /**
+     * The field is permanently deleted from the db
+     * This hooks is here to delete specific properties,
+     * or specific values of the field.
+     * (The field itself will be deleted later)
+     * @return bool true if success
+     */
+    public function delete()
+    {
+        return $this->getDao()->delete($this->id);
+    }
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
@@ -217,12 +228,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return new TextFieldDao();
     }
 
-    protected function getDuplicateSpecificPropertiesDao(): DuplicateSpecificProperties
-    {
-        return new TextFieldSpecificPropertiesDAO();
-    }
-
-    protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
+    protected function getDuplicateSpecificPropertiesDao(): ?DuplicateSpecificProperties
     {
         return new TextFieldSpecificPropertiesDAO();
     }
