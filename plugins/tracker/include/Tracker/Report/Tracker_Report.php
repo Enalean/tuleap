@@ -77,7 +77,7 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 /**
  * Set of criteria + set of Renderer to search and display artifacts
  */
-class Tracker_Report implements Tracker_Dispatchable_Interface
+class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Get the various criteria that may enhance a report
@@ -1092,7 +1092,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return Tracker_Report_RendererFactory::instance();
     }
 
-    protected function _fetchAddCriteria($used)
+    protected function _fetchAddCriteria($used) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html = '';
 
@@ -1645,12 +1645,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         //populate $this->criteria
         $this->getCriteria();
-        //Delete criteria value
-        foreach ($this->criteria as $c) {
-            if ($c->field->getCriteriaValue($c)) {
-                $c->field->delete($c->id);
-            }
-        }
+
         //Delete criteria in the db
         $this->deleteAllCriteria();
 
