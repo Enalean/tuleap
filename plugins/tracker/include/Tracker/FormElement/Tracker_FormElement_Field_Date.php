@@ -23,7 +23,6 @@ use Tuleap\Date\DateHelper;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -263,9 +262,17 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return new DateFieldSpecificPropertiesDAO();
     }
 
-    protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
+    /**
+     * The field is permanently deleted from the db
+     * This hooks is here to delete specific properties,
+     * or specific values of the field.
+     * (The field itself will be deleted later)
+     *
+     * @return bool true if success
+     */
+    public function delete()
     {
-        return new DateFieldSpecificPropertiesDAO();
+        return $this->getDao()->delete($this->id);
     }
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option

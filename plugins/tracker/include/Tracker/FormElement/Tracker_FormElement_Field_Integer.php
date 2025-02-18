@@ -130,12 +130,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new IntegerFieldDao();
     }
 
-    protected function getDuplicateSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
-    {
-        return new IntegerFieldSpecificPropertiesDAO();
-    }
-
-    protected function getDeleteSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
+    protected function getDuplicateSpecificPropertiesDao(): ?IntegerFieldSpecificPropertiesDAO
     {
         return new IntegerFieldSpecificPropertiesDAO();
     }

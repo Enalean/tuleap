@@ -35,5 +35,13 @@ abstract class SpecificPropertiesDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function delete($field_id)
+    {
+        $field_id = $this->da->escapeInt($field_id);
+        $sql      = "DELETE FROM $this->table_name
+                WHERE field_id = $field_id ";
+        return $this->retrieve($sql);
+    }
+
     abstract public function save($field_id, $row);
 }
