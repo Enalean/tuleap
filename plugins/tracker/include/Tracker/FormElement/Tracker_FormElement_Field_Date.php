@@ -28,6 +28,8 @@ use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificPr
 use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Report\Criteria\CriteriaDateValueDAO;
+use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
@@ -459,6 +461,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     protected function getCriteriaDao()
     {
         return new Tracker_Report_Criteria_Date_ValueDao();
+    }
+
+    public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
+    {
+        return new CriteriaDateValueDAO();
     }
 
     public function fetchChangesetValue(

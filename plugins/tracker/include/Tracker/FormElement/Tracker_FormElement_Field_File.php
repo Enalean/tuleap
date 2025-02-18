@@ -35,6 +35,8 @@ use Tuleap\Tracker\FormElement\Field\File\FileInfoForTusUploadedFileReadyToBeAtt
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
+use Tuleap\Tracker\Report\Criteria\CriteriaFileValueDAO;
+use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
@@ -98,6 +100,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     protected function getCriteriaDao()
     {
         return new Tracker_Report_Criteria_File_ValueDao();
+    }
+
+    public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
+    {
+        return new CriteriaFileValueDAO();
     }
 
     public function fetchChangesetValue(

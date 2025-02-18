@@ -25,6 +25,7 @@ use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
@@ -90,6 +91,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return Tracker_Report_Criteria_ValueDao|null
      */
     abstract protected function getCriteriaDao();
+
+    public function getDeleteCriteriaValueDAO(): ?DeleteReportCriteriaValue
+    {
+        return null;
+    }
 
     protected $criteria_value;
     /**
@@ -323,12 +329,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Delete the criteria value
-     * @param Criteria $criteria the corresponding criteria
      */
-    public function deleteCriteriaValue($criteria)
+    public function deleteCriteriaValue(Tracker_Report_Criteria $criteria): void
     {
-        $this->getCriteriaDao()->delete($criteria->report->id, $criteria->id);
-        return $this;
+        $dao = $this->getDeleteCriteriaValueDAO();
+        if (! $dao) {
+            return;
+        }
+        $dao->deleteCriteriaFieldValue($criteria);
     }
 
     /**

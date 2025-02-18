@@ -32,6 +32,8 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\Report\Criteria\CriteriaOpenListValueDAO;
+use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
@@ -283,6 +285,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new OpenListSpecificPropertiesDAO();
+    }
+
+    public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
+    {
+        return new CriteriaOpenListValueDAO();
     }
 
     public static function getFactoryLabel()

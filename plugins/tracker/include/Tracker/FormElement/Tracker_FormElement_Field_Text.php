@@ -40,6 +40,8 @@ use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
+use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
+use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
@@ -66,6 +68,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     ];
 
     private bool $is_artifact_copy = false;
+
+    public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
+    {
+        return new CriteriaAlphaNumValueDAO();
+    }
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
