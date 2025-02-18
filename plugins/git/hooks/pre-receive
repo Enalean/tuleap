@@ -21,4 +21,9 @@ set -euo pipefail
 git_dir_path=$(/usr/lib/tuleap/git/bin/git rev-parse --git-dir 2>/dev/null)
 repository_path=$(cd "$git_dir_path"; pwd)
 
+if [[ "$GIT_QUARANTINE_PATH" =~ "$repository_path"* ]]; then
+    # Allow read access to the gitolite group
+    chmod g+rx "$GIT_QUARANTINE_PATH"
+fi
+
 sudo -u codendiadm /usr/bin/tuleap git:pre-receive -- "$repository_path"
