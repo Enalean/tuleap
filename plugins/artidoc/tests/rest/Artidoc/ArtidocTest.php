@@ -815,7 +815,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         self::assertCount(1, $document_content);
         self::assertSame('My updated title', $document_content[0]['title']);
-        self::assertSame('My updated description', $document_content[0]['description']['value']);
+        self::assertSame('My updated description', $document_content[0]['description']);
         self::assertSame(2, $document_content[0]['level']);
     }
 

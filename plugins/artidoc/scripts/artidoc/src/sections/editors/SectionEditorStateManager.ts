@@ -19,7 +19,6 @@
 
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { getSectionHtmlDescription } from "@/helpers/get-section-html-description";
 
 export type ManageSectionEditorState = {
     setEditedContent(new_title: string, new_description: string): void;
@@ -33,8 +32,7 @@ export const getSectionEditorStateManager = (
 ): ManageSectionEditorState => ({
     setEditedContent(new_title, new_description): void {
         const has_content_been_edited =
-            new_title !== section.value.title ||
-            new_description !== getSectionHtmlDescription(section);
+            new_title !== section.value.title || new_description !== section.value.description;
 
         section_state.is_editor_reset_needed.value = has_content_been_edited;
         section_state.is_section_in_edit_mode.value = has_content_been_edited;
@@ -44,7 +42,7 @@ export const getSectionEditorStateManager = (
     },
     resetContent(): void {
         section_state.edited_title.value = section.value.title;
-        section_state.edited_description.value = getSectionHtmlDescription(section);
+        section_state.edited_description.value = section.value.description;
         section_state.is_section_in_edit_mode.value = false;
     },
     markEditorAsReset(): void {

@@ -19,14 +19,13 @@
   -->
 
 <template>
-    <div v-dompurify-html="getSectionHtmlDescription(section)" ref="root"></div>
+    <div v-dompurify-html="section.value.description" ref="root"></div>
 </template>
 
 <script setup lang="ts">
 import { loadTooltips } from "@tuleap/tooltip";
 import { onMounted, ref } from "vue";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { getSectionHtmlDescription } from "@/helpers/get-section-html-description";
 
 defineProps<{
     section: ReactiveStoredArtidocSection;

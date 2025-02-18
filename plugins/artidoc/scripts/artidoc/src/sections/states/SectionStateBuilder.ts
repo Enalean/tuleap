@@ -27,7 +27,6 @@ import {
 } from "@/helpers/artidoc-section.type";
 import type { OnGoingUploadFileWithId } from "@/sections/attachments/FileUploadsCollection";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { getSectionHtmlDescription } from "@/helpers/get-section-html-description";
 
 export type SectionState = {
     is_image_upload_allowed: ComputedRef<boolean>;
@@ -93,7 +92,7 @@ export const getSectionStateBuilder = (
             is_not_found: ref(false),
             error_message: ref(""),
             edited_title: ref(section.value.title),
-            edited_description: ref(getSectionHtmlDescription(section)),
+            edited_description: ref(section.value.description),
             is_editor_reset_needed: ref(false),
         }),
     };

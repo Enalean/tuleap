@@ -30,7 +30,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 /**
  * Manage values in changeset for string fields
  */
-class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue
+class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @const Changeset comment format is text.
@@ -297,7 +297,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $interpreted_content_with_references;
     }
 
-    private static function getCommonMarkInterpreter(Codendi_HTMLPurifier $purifier): CommonMarkInterpreter
+    public static function getCommonMarkInterpreter(Codendi_HTMLPurifier $purifier): CommonMarkInterpreter
     {
         return CommonMarkInterpreter::build(
             $purifier,

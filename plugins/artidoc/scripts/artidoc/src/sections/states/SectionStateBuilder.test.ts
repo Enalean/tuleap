@@ -29,7 +29,6 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
-import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
 
 describe("SectionStateBuilder", () => {
     let can_user_edit_document: boolean, pending_uploads: Ref<OnGoingUploadFileWithId[]>;
@@ -211,9 +210,7 @@ describe("SectionStateBuilder", () => {
         ])(
             "When the section is %s, then it should have the section's HTML description as default value",
             (section_type, section) => {
-                expect(createState(section).edited_description.value).toBe(
-                    convertDescriptionToHtml(section.description),
-                );
+                expect(createState(section).edited_description.value).toBe(section.description);
             },
         );
 

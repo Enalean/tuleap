@@ -26,7 +26,6 @@ import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStore
 import type { BuildSectionState } from "@/sections/states/SectionStateBuilder";
 import { getSectionStateBuilder } from "@/sections/states/SectionStateBuilder";
 import { getSectionEditorStateManager } from "@/sections/editors/SectionEditorStateManager";
-import { getSectionHtmlDescription } from "@/helpers/get-section-html-description";
 
 describe("SectionEditorStateManager", () => {
     let state_builder: BuildSectionState;
@@ -67,7 +66,7 @@ describe("SectionEditorStateManager", () => {
 
             getSectionEditorStateManager(section, section_state).setEditedContent(
                 "New title",
-                getSectionHtmlDescription(section),
+                section.value.description,
             );
 
             expect(section_state.is_editor_reset_needed.value).toBe(true);

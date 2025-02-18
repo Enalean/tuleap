@@ -23,7 +23,6 @@ import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { getSection } from "@/helpers/rest-querier";
-import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
 
 export interface OutdatedSectionFault extends Fault {
     isOutdatedSectionFault: () => true;
@@ -49,8 +48,7 @@ export function getSectionInItsLatestVersion(
                 isSectionBasedOnArtifact(new_section) &&
                 isSectionBasedOnArtifact(old_section) &&
                 new_section.title === old_section.title &&
-                convertDescriptionToHtml(new_section.description) ===
-                    convertDescriptionToHtml(old_section.description)
+                new_section.description === old_section.description
             ) {
                 return okAsync(new_section);
             }

@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const ArtifactSectionFactory = {
     create: (): ArtifactSection => ({
+        type: "artifact",
         id: uuidv4(),
         artifact: {
             id: 0,
@@ -40,14 +41,7 @@ const ArtifactSectionFactory = {
             },
         },
         title: "Technologies section",
-        description: {
-            field_id: 111,
-            type: "text",
-            label: "Original Submission",
-            value: "<h2>Title 1</h2><p>description 1</p>",
-            format: "html",
-            post_processed_value: "<h2>Title 1</h2><p>description 1</p>",
-        },
+        description: "<h2>Title 1</h2><p>description 1</p>",
         can_user_edit_section: true,
         attachments: {
             field_id: 171,

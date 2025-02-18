@@ -31,7 +31,6 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
-use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
 final readonly class RequiredArtifactInformationBuilder implements BuildRequiredArtifactInformation
 {
@@ -114,8 +113,8 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
             ));
         }
 
-        $description = $description_field->getFullRESTValue($user, $last_changeset);
-        if (! $description instanceof ArtifactTextFieldValueRepresentation) {
+        $description_field_value = $last_changeset->getValue($description_field);
+        if (! $description_field_value instanceof Tracker_Artifact_ChangesetValue_Text) {
             return Result::err(Fault::fromMessage(
                 sprintf(
                     'There is no description data for artifact #%s of artidoc #%s',
@@ -125,6 +124,21 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
             ));
         }
 
-        return Result::ok(new RequiredArtifactInformation($last_changeset, $title_field, $title, $description_field, $description));
+        $textual_formats = [
+            Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+        ];
+        $description     = in_array($description_field_value->getFormat(), $textual_formats, true)
+            ? Tracker_Artifact_ChangesetValue_Text::getCommonMarkInterpreter(\Codendi_HTMLPurifier::instance())
+                ->getInterpretedContent($description_field_value->getText())
+            : $description_field_value->getText();
+
+        return Result::ok(new RequiredArtifactInformation(
+            $last_changeset,
+            $title_field,
+            $title,
+            $description_field,
+            $description,
+        ));
     }
 }
