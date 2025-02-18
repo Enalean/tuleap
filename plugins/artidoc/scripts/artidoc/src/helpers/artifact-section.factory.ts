@@ -39,7 +39,6 @@ const ArtifactSectionFactory = {
                 },
             },
         },
-        display_title: "Technologies section",
         title: "Technologies section",
         description: {
             field_id: 111,

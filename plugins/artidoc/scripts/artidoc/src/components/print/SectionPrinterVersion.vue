@@ -23,7 +23,7 @@
         <section-header
             class="section-header"
             v-bind:display_level="section.value.display_level"
-            v-bind:title="section.value.display_title"
+            v-bind:title="section.value.title"
             v-bind:is_print_mode="true"
             v-bind:is_freetext="!isArtifactSection(section.value)"
         />

@@ -28,7 +28,7 @@ export const renderArtidocSectionNode = (section: ReactiveStoredArtidocSection):
 
     const template = html`
         <artidoc-section>
-            <artidoc-section-title>${section.value.display_title}</artidoc-section-title>
+            <artidoc-section-title>${section.value.title}</artidoc-section-title>
             <artidoc-section-description>
                 ${unsafeHTML(DOMPurify.sanitize(getSectionHtmlDescription(section)))}
             </artidoc-section-description>

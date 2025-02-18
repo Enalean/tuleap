@@ -59,8 +59,8 @@ describe("rest-querier", () => {
             await flushPromises();
 
             expect(all_sections).toHaveLength(2);
-            expect(all_sections[0].display_title).toBe("Le title A");
-            expect(all_sections[1].display_title).toBe("Le title B");
+            expect(all_sections[0].title).toBe("Le title A");
+            expect(all_sections[1].title).toBe("Le title B");
         });
 
         it("should returns retrieved sections including freetext section", async () => {
@@ -92,8 +92,8 @@ describe("rest-querier", () => {
             await flushPromises();
 
             expect(all_sections).toHaveLength(2);
-            expect(all_sections[0].display_title).toBe("Le title A");
-            expect(all_sections[1].display_title).toBe("Le title B");
+            expect(all_sections[0].title).toBe("Le title A");
+            expect(all_sections[1].title).toBe("Le title B");
         });
     });
 
@@ -121,7 +121,7 @@ describe("rest-querier", () => {
 
             await flushPromises();
 
-            expect(retrieved_section.display_title).toBe("Le title A");
+            expect(retrieved_section.title).toBe("Le title A");
         });
 
         it("should returns retrieved freetext section", async () => {
@@ -147,7 +147,7 @@ describe("rest-querier", () => {
 
             await flushPromises();
 
-            expect(retrieved_section.display_title).toBe("Le title A");
+            expect(retrieved_section.title).toBe("Le title A");
         });
     });
 

@@ -57,7 +57,6 @@ export type ArtidocSection = FreetextSection | SectionBasedOnArtifact;
 export type FreetextSection = {
     id: string;
     title: string;
-    display_title: string;
     description: string;
     attachments: null;
     is_pending: boolean;
@@ -68,7 +67,6 @@ export type FreetextSection = {
 export type SectionBasedOnArtifact = {
     id: string;
     title: string;
-    display_title: string;
     description: ArtifactTextFieldValueRepresentation;
     attachments: ArtifactFieldValueFileFullRepresentation | null;
     level: Level;

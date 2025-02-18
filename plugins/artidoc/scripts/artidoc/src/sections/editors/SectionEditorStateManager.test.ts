@@ -81,7 +81,7 @@ describe("SectionEditorStateManager", () => {
             const section_state = state_builder.forSection(section);
 
             getSectionEditorStateManager(section, section_state).setEditedContent(
-                section.value.display_title,
+                section.value.title,
                 "New description",
             );
 
@@ -94,7 +94,7 @@ describe("SectionEditorStateManager", () => {
         it("Given that the edition was canceled, then title/description and is_section_in_edit_mode should be reset to their former values", () => {
             const section = ReactiveStoredArtidocSectionStub.fromSection(
                 FreetextSectionFactory.override({
-                    display_title: "Current title",
+                    title: "Current title",
                     description: "Current description",
                 }),
             );
@@ -115,7 +115,7 @@ describe("SectionEditorStateManager", () => {
         it("Given that the title/description were saved, Then edited title/description should match the new title/description", () => {
             const section = ReactiveStoredArtidocSectionStub.fromSection(
                 FreetextSectionFactory.override({
-                    display_title: "Current title",
+                    title: "Current title",
                     description: "Current description",
                 }),
             );
@@ -124,7 +124,7 @@ describe("SectionEditorStateManager", () => {
             manager.resetContent();
 
             manager.setEditedContent("New title", "New description");
-            section.value.display_title = "New title";
+            section.value.title = "New title";
             section.value.description = "New description";
 
             manager.resetContent();

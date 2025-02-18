@@ -23,7 +23,6 @@ import { v4 as uuidv4 } from "uuid";
 const FreetextSectionFactory = {
     create: (): FreetextSection => ({
         id: uuidv4(),
-        display_title: "",
         title: "",
         description: "",
         attachments: null,
