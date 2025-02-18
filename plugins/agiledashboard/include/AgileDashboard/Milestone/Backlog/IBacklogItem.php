@@ -32,9 +32,9 @@ interface IBacklogItem
 {
     public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
 
-    public function setInitialEffort(?int $value): void;
+    public function setInitialEffort(?float $value): void;
 
-    public function getInitialEffort(): ?int;
+    public function getInitialEffort(): ?float;
 
     public function setStatus(string $status, string $status_semantic): void;
 
