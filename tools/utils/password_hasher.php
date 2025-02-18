@@ -19,45 +19,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$password_hasher_short_options = 'p:u';
-$password_hasher_long_options  = ['password:', 'unix'];
+$password_hasher_short_options = 'p:';
+$password_hasher_long_options  = ['password:'];
 
 $options  = getopt($password_hasher_short_options, $password_hasher_long_options);
 $password = false;
-$is_unix  = false;
 foreach ($options as $option => $value) {
     switch ($option) {
         case 'p':
         case 'password':
             $password = $value;
             break;
-        case 'u':
-        case 'unix':
-            $is_unix = true;
-            break;
     }
 }
 
+require_once __DIR__ . '/../../src/vendor/autoload.php';
+
+$console_output = new \Symfony\Component\Console\Output\ConsoleOutput();
+
 if ($password === false) {
-    echo("Usage: password_hasher.php --password='pass'
-
-    Options:
-
-    -u, --unix Generate a UNIX compatible password\n");
+    $console_output->writeln("Usage: password_hasher.php --password='pass'");
     exit(1);
 }
-
-require_once __DIR__ . '/../../src/vendor/autoload.php';
 
 $password_handler = PasswordHandlerFactory::getPasswordHandler();
 
 $concealed_password = new \Tuleap\Cryptography\ConcealedString($password);
 sodium_memzero($password);
 
-if ($is_unix) {
-    $hashed_password = $password_handler->computeUnixPassword($concealed_password);
-} else {
-    $hashed_password = $password_handler->computeHashPassword($concealed_password);
-}
+$hashed_password = $password_handler->computeHashPassword($concealed_password);
 
-echo($hashed_password);
+$console_output->write(\Symfony\Component\Console\Formatter\OutputFormatter::escape($hashed_password));

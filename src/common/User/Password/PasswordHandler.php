@@ -23,17 +23,9 @@ use Tuleap\Cryptography\ConcealedString;
 
 interface PasswordHandler
 {
-    // We need 16 hex chars (8 bytes) to use as a salt to generate the UNIX password
-    public const SALT_SIZE = 8;
-
     public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool;
 
     public function computeHashPassword(ConcealedString $plain_password): string;
 
     public function isPasswordNeedRehash(string $hash_password): bool;
-
-    /**
-     * Generate Unix shadow password
-     */
-    public function computeUnixPassword(ConcealedString $plain_password): string;
 }

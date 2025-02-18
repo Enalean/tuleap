@@ -28,6 +28,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class SVN_TokenHandlerTest extends TestCase
 {
     private const VALID_TOKEN = 'valid_token';
+    // crypt(self::VALID_TOKEN, '$6$rounds=20000$16$')
+    private const VALID_TOKEN_PASSWORD_HASH = '$6$rounds=20000$bf679aec72b28967$zt8Hv8kaQlRekiSvswUGQDvBl8Z8HR45CaFlaJUogQfxVdWzp.Y4JAT4h31zOgurbCT.p9tVmrFCaSNLsapIe1';
 
     /**
      * @var \SVN_TokenDao&\PHPUnit\Framework\MockObject\Stub
@@ -41,7 +43,7 @@ final class SVN_TokenHandlerTest extends TestCase
         $this->token_dao  = $this->createStub(\SVN_TokenDao::class);
         $this->token_dao->method('getSVNTokensForUser')->willReturn([
             ['id' => 100, 'token' => 'some_token', 'generated_date' => 1, 'last_usage' => 2, 'last_ip' => '2001:db8::3', 'comment' => ''],
-            ['id' => 200, 'token' => $password_handler->computeUnixPassword(new ConcealedString(self::VALID_TOKEN)), 'generated_date' => 1, 'last_usage' => 2, 'last_ip' => '2001:db8::3', 'comment' => ''],
+            ['id' => 200, 'token' => self::VALID_TOKEN_PASSWORD_HASH, 'generated_date' => 1, 'last_usage' => 2, 'last_ip' => '2001:db8::3', 'comment' => ''],
         ]);
         $this->token_handler = new \SVN_TokenHandler($this->token_dao, $password_handler);
     }
