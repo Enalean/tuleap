@@ -55,7 +55,7 @@ $duMgr          = new Statistics_DiskUsageManager(
     EventManager::instance()
 );
 
-$statPeriod = $duMgr->getProperty('statistics_period');
+$statPeriod = ForgeConfig::getInt(Statistics_DiskUsageManager::CONFIG_PERIOD);
 if (! $statPeriod) {
     $statPeriod = 3;
 }

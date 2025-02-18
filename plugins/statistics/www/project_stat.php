@@ -94,8 +94,7 @@ if ($project && ! $project->isError()) {
     }
 
     //Get dates for start and end period to watch statistics
-    $info       = $p->getPluginInfo();
-    $statPeriod = $info->getPropertyValueForName('statistics_period');
+    $statPeriod = ForgeConfig::getInt(Statistics_DiskUsageManager::CONFIG_PERIOD);
     if (! $statPeriod) {
         $statPeriod = 3;
     }
@@ -119,8 +118,8 @@ if ($project && ! $project->isError()) {
 
     echo '<h2>' . dgettext('tuleap-statistics', 'Disk usage') . '</h2>';
     $usedProportion        = $disk_usage_manager->returnTotalProjectSize($groupId);
-    $allowedQuota          = $disk_usage_manager->getProperty('allowed_quota');
     $project_quota_manager = new ProjectQuotaManager();
+    $allowedQuota          = $project_quota_manager->getDefaultQuota();
     $customQuota           = $project_quota_manager->getProjectCustomQuota($groupId);
     if ($customQuota) {
         $allowedQuota = $customQuota;

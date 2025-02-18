@@ -23,10 +23,14 @@ use Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult;
 use Tuleap\Statistics\Events\StatisticsRefreshDiskUsage;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Statistics_DiskUsageManager
+#[\Tuleap\Config\ConfigKeyCategory('Statistics')]
+class Statistics_DiskUsageManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private array $services = [];
+
+    #[\Tuleap\Config\ConfigKey('The statistics period (default: 3)')]
+    #[\Tuleap\Config\ConfigKeyInt(3)]
+    public const CONFIG_PERIOD = 'statistics_period';
 
     public const SVN           = 'svn';
     public const FRS           = 'frs';
@@ -561,22 +565,5 @@ class Statistics_DiskUsageManager
     public function _getDao()
     {
         return $this->dao;
-    }
-
-    /**
-     * Retreive a param config giving its name
-     *
-     * @param String $name
-     *
-     * @return String
-     */
-    public function getProperty($name)
-    {
-        $pluginManager = PluginManager::instance();
-        $p             = $pluginManager->getPluginByName('statistics');
-        assert($p instanceof StatisticsPlugin);
-        $info = $p->getPluginInfo();
-
-        return $info->getPropertyValueForName($name);
     }
 }

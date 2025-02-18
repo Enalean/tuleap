@@ -22,11 +22,17 @@
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 
-/**
- * Management of custom quota by project
- */
-class ProjectQuotaManager
+#[\Tuleap\Config\ConfigKeyCategory('Statistics')]
+class ProjectQuotaManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    #[\Tuleap\Config\ConfigKey('Maximum disk size quota allowed by project (size in GB, default: 50)')]
+    #[\Tuleap\Config\ConfigKeyInt(50)]
+    public const CONFIG_MAXIMUM_QUOTA = 'statistics_maximum_quota';
+
+    #[\Tuleap\Config\ConfigKey('The allowed disk size quota (size in GB, default: 5)')]
+    #[\Tuleap\Config\ConfigKeyInt(5)]
+    public const CONFIG_ALLOWED_QUOTA = 'statistics_allowed_quota';
+
     /**
      * The Projects dao used to fetch data
      *
@@ -222,12 +228,10 @@ class ProjectQuotaManager
 
     /**
      * Get the default quota defined for the platform
-     *
-     * @return int
      */
-    public function getDefaultQuota()
+    public function getDefaultQuota(): int
     {
-        $quota = intval($this->diskUsageManager->getProperty('allowed_quota'));
+        $quota = ForgeConfig::getInt(self::CONFIG_ALLOWED_QUOTA);
         if (! $quota) {
             $quota = 5;
         }
@@ -236,12 +240,10 @@ class ProjectQuotaManager
 
     /**
      * Get the maximum quota defined for the platform
-     *
-     * @return int
      */
-    public function getMaximumQuota()
+    public function getMaximumQuota(): int
     {
-        $maxQuota = intval($this->diskUsageManager->getProperty('maximum_quota'));
+        $maxQuota = ForgeConfig::getInt(self::CONFIG_MAXIMUM_QUOTA);
         if (! $maxQuota) {
             $maxQuota = 50;
         }
@@ -250,7 +252,7 @@ class ProjectQuotaManager
 
     public function deleteCustomQuota(Project $project)
     {
-        $defaultQuota = $this->diskUsageManager->getProperty('allowed_quota');
+        $defaultQuota = $this->getDefaultQuota();
         $historyDao   = new ProjectHistoryDao();
         if ($this->dao->deleteCustomQuota($project->getId())) {
             $historyDao->groupAddHistory('restore_default_quota', intval($defaultQuota), $project->getId());
