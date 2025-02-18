@@ -45,13 +45,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
@@ -80,8 +80,13 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         Tracker_Semantic_Title::clearInstances();
     }
 
-    private function getArtifact(int $id, Tracker_FormElement_Field_String $title, PFUser $user): Artifact
-    {
+    private function getArtifact(
+        int $id,
+        Tracker_FormElement_Field_String $title,
+        Tracker_FormElement_Field_Text $description,
+        string $format,
+        PFUser $user,
+    ): Artifact {
         $artifact = ArtifactTestBuilder::anArtifact($id)
             ->inTracker($this->tracker)
             ->userCanView($user)
@@ -92,6 +97,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
 
         $this->setTitleValue($title, $changeset, $id);
+        $this->setDescriptionValue($description, $changeset, $format, $id);
 
         $artifact->setChangesets([$changeset]);
 
@@ -107,33 +113,23 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $changeset->setFieldValue(
             $title,
-            ChangesetValueTextTestBuilder::aValue(1, $changeset, $title)->withValue("Title for #{$id}")->build()
+            ChangesetValueTextTestBuilder::aValue(1, $changeset, $title)->withValue("Title for {$id}")->build()
         );
     }
 
-    private function getDescriptionValue(Artifact $artifact): ArtifactFieldValueCommonmarkRepresentation
-    {
-        return new ArtifactFieldValueCommonmarkRepresentation(
-            100 * $artifact->getId(),
-            'text',
-            'Description',
-            "Desc <b>for</b> #{$artifact->getId()}",
-            "Desc **for** #{$artifact->getId()}",
-            "Desc <b>for</b> #{$artifact->getId()}",
+    private function setDescriptionValue(
+        Tracker_FormElement_Field_Text $description,
+        Tracker_Artifact_Changeset $changeset,
+        string $format,
+        int $id,
+    ): void {
+        $changeset->setFieldValue(
+            $description,
+            ChangesetValueTextTestBuilder::aValue(1, $changeset, $description)
+                ->withFormat($format)
+                ->withValue("Desc *for* {$id}")
+                ->build()
         );
-    }
-
-    private function getTitleValue(Artifact $artifact): ArtifactFieldValueFullRepresentation
-    {
-        $representation = new ArtifactFieldValueFullRepresentation();
-        $representation->build(
-            200 * $artifact->getId(),
-            'string',
-            'Summary',
-            "Title for #{$artifact->getId()}",
-        );
-
-        return $representation;
     }
 
     /**
@@ -149,42 +145,28 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     ): void {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
-        $title->method('userCanUpdate')->willReturn($can_user_edit_title);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, $can_user_edit_title)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
-        $description->method('userCanUpdate')->willReturn($can_user_edit_description);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, $can_user_edit_description)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
 
-        $art1 = $this->getArtifact(1, $title, $user);
-        $art2 = $this->getArtifact(2, $title, $user);
-        $art3 = $this->getArtifact(3, $title, $user);
-        $art4 = $this->getArtifact(4, $title, $user);
-
-        $title->method('getFullRESTValue')
-            ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getTitleValue($art1),
-                $art2->getLastChangeset() => $this->getTitleValue($art2),
-                $art3->getLastChangeset() => $this->getTitleValue($art3),
-                $art4->getLastChangeset() => $this->getTitleValue($art4),
-            });
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
-                $art3->getLastChangeset() => $this->getDescriptionValue($art3),
-                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
-            });
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = GetFileUploadDataStub::withField($file);
 
@@ -224,10 +206,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         self::assertCount(4, $result->value->sections);
 
         $expected = [
-            ['id' => 1, 'title' => 'Title for #1', 'description' => 'Desc <b>for</b> #1', 'can_user_edit_section' => $expected_can_user_edit_section],
-            ['id' => 2, 'title' => 'Title for #2', 'description' => 'Desc <b>for</b> #2', 'can_user_edit_section' => $expected_can_user_edit_section],
-            ['id' => 3, 'title' => 'Title for #3', 'description' => 'Desc <b>for</b> #3', 'can_user_edit_section' => $expected_can_user_edit_section],
-            ['id' => 4, 'title' => 'Title for #4', 'description' => 'Desc <b>for</b> #4', 'can_user_edit_section' => $expected_can_user_edit_section],
+            ['id' => 1, 'title' => 'Title for 1', 'description' => 'Desc *for* 1', 'can_user_edit_section' => $expected_can_user_edit_section],
+            ['id' => 2, 'title' => 'Title for 2', 'description' => 'Desc *for* 2', 'can_user_edit_section' => $expected_can_user_edit_section],
+            ['id' => 3, 'title' => 'Title for 3', 'description' => 'Desc *for* 3', 'can_user_edit_section' => $expected_can_user_edit_section],
+            ['id' => 4, 'title' => 'Title for 4', 'description' => 'Desc *for* 4', 'can_user_edit_section' => $expected_can_user_edit_section],
         ];
 
         array_walk(
@@ -236,45 +218,158 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title);
-                self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
-                self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
+                self::assertSame($expected['description'], $result->value->sections[$index]->description);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
                 self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[$index]->attachments);
             }
         );
     }
 
-    public function testHappyPathWithFreetext(): void
+    public function testHappyPathWithDescriptionInMarkdownFormat(): void
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
-        $title->method('userCanUpdate')->willReturn(true);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
-        $description->method('userCanUpdate')->willReturn(true);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
 
-        $art1 = $this->getArtifact(1, $title, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT, $user);
 
-        $title->method('getFullRESTValue')
+        $file_upload_provider = GetFileUploadDataStub::withField($file);
+
+        $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getTitleValue($art1),
+                $art1->getLastChangeset() => $this->getFileValue($file, $art1),
             });
 
-        $description->method('getFullRESTValue')
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
+            ),
+        );
+        $result      = $transformer->getRepresentation(
+            new PaginatedRetrievedSections(
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
+                [
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+                ],
+                10,
+            ),
+            $user
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(10, $result->value->total);
+        self::assertCount(1, $result->value->sections);
+
+        $second = $result->value->sections[0];
+        self::assertInstanceOf(ArtifactSectionRepresentation::class, $second);
+        self::assertSame(1, $second->artifact->id);
+        self::assertSame("<p>Desc <em>for</em> 1</p>\n", $second->description);
+    }
+
+    public function testHappyPathWithDescriptionInTextFormat(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
+        $this->semantic_title->method('getField')->willReturn($title);
+
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
+        $this->semantic_description->method('getField')->willReturn($description);
+
+        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file->method('getId')->willReturn(600);
+        $file->method('getLabel')->willReturn('Attachments');
+
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, $user);
+
+        $file_upload_provider = GetFileUploadDataStub::withField($file);
+
+        $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
+                $art1->getLastChangeset() => $this->getFileValue($file, $art1),
             });
+
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+            ),
+            new RequiredSectionInformationCollector(
+                $user,
+                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
+            ),
+        );
+        $result      = $transformer->getRepresentation(
+            new PaginatedRetrievedSections(
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
+                [
+                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+                ],
+                10,
+            ),
+            $user
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(10, $result->value->total);
+        self::assertCount(1, $result->value->sections);
+
+        $second = $result->value->sections[0];
+        self::assertInstanceOf(ArtifactSectionRepresentation::class, $second);
+        self::assertSame(1, $second->artifact->id);
+        self::assertSame("<p>Desc <em>for</em> 1</p>\n", $second->description);
+    }
+
+    public function testHappyPathWithFreetext(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
+        $this->semantic_title->method('getField')->willReturn($title);
+
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
+        $this->semantic_description->method('getField')->willReturn($description);
+
+        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file->method('getId')->willReturn(600);
+        $file->method('getLabel')->willReturn('Attachments');
+
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = GetFileUploadDataStub::withField($file);
 
@@ -324,36 +419,32 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         $second = $result->value->sections[1];
         self::assertInstanceOf(ArtifactSectionRepresentation::class, $second);
         self::assertSame(1, $second->artifact->id);
-        self::assertSame('Title for #1', $second->title);
+        self::assertSame('Title for 1', $second->title);
     }
 
     public function testArtifactHasEmptyAttachmentFieldThatHasBeenCreatedAfterArtifactCreation(): void
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
-        $title->method('userCanUpdate')->willReturn(true);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
-        $description->method('userCanUpdate')->willReturn(true);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
 
-        $art1 = $this->getArtifact(1, $title, $user);
-
-        $title->method('getFullRESTValue')
-            ->willReturn($this->getTitleValue($art1));
-
-        $description->method('getFullRESTValue')
-            ->willReturn($this->getDescriptionValue($art1));
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = GetFileUploadDataStub::withField($file);
 
@@ -390,29 +481,21 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
-        $title->method('userCanUpdate')->willReturn(true);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
-        $description->method('userCanUpdate')->willReturn(true);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, true)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $user);
-
-        $title->method('getFullRESTValue')
-            ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getTitleValue($art1),
-            });
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-            });
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = GetFileUploadDataStub::withoutField();
 
@@ -444,7 +527,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         self::assertCount(1, $result->value->sections);
 
         $expected = [
-            ['id' => 1, 'title' => 'Title for #1', 'description' => 'Desc <b>for</b> #1', 'can_user_edit_section' => true],
+            ['id' => 1, 'title' => 'Title for 1', 'description' => 'Desc *for* 1', 'can_user_edit_section' => true],
         ];
 
         array_walk(
@@ -453,8 +536,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title);
-                self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
-                self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
+                self::assertSame($expected['description'], $result->value->sections[$index]->description);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
                 self::assertnull($result->value->sections[$index]->attachments);
             }
@@ -465,38 +547,24 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
-        $title->method('userCanUpdate')->willReturn(false);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, false)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
-        $description->method('userCanUpdate')->willReturn(false);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->withUpdatePermission($user, false)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $user);
-        $art2 = $this->getArtifact(2, $title, $user);
-        $art3 = $this->getArtifact(3, $title, $user);
-        $art4 = $this->getArtifact(4, $title, $user);
-
-        $title->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getTitleValue($art1),
-                $art2->getLastChangeset() => $this->getTitleValue($art2),
-                $art3->getLastChangeset() => $this->getTitleValue($art3),
-                $art4->getLastChangeset() => $this->getTitleValue($art4),
-            });
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
-                $art3->getLastChangeset() => $this->getDescriptionValue($art3),
-                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
-            });
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
@@ -534,10 +602,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         self::assertCount(4, $result->value->sections);
 
         $expected = [
-            ['id' => 1, 'title' => 'Title for #1', 'description' => 'Desc <b>for</b> #1'],
-            ['id' => 2, 'title' => 'Title for #2', 'description' => 'Desc <b>for</b> #2'],
-            ['id' => 3, 'title' => 'Title for #3', 'description' => 'Desc <b>for</b> #3'],
-            ['id' => 4, 'title' => 'Title for #4', 'description' => 'Desc <b>for</b> #4'],
+            ['id' => 1, 'title' => 'Title for 1', 'description' => 'Desc *for* 1'],
+            ['id' => 2, 'title' => 'Title for 2', 'description' => 'Desc *for* 2'],
+            ['id' => 3, 'title' => 'Title for 3', 'description' => 'Desc *for* 3'],
+            ['id' => 4, 'title' => 'Title for 4', 'description' => 'Desc *for* 4'],
         ];
         array_walk(
             $expected,
@@ -545,8 +613,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title);
-                self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
-                self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
+                self::assertSame($expected['description'], $result->value->sections[$index]->description);
             }
         );
     }
@@ -555,28 +622,22 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_title->method('getField')->willReturn(null);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $user);
-        $art2 = $this->getArtifact(2, $title, $user);
-        $art3 = $this->getArtifact(3, $title, $user);
-        $art4 = $this->getArtifact(4, $title, $user);
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
-                $art3->getLastChangeset() => $this->getDescriptionValue($art3),
-                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
-            });
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
@@ -612,28 +673,22 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(false);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, false)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $user);
-        $art2 = $this->getArtifact(2, $title, $user);
-        $art3 = $this->getArtifact(3, $title, $user);
-        $art4 = $this->getArtifact(4, $title, $user);
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
-                $art3->getLastChangeset() => $this->getDescriptionValue($art3),
-                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
-            });
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
@@ -669,36 +724,22 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(false);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, false)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $user);
-        $art2 = $this->getArtifact(2, $title, $user);
-        $art3 = $this->getArtifact(3, $title, $user);
-        $art4 = $this->getArtifact(4, $title, $user);
-
-        $title->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getTitleValue($art1),
-                $art2->getLastChangeset() => $this->getTitleValue($art2),
-                $art3->getLastChangeset() => $this->getTitleValue($art3),
-                $art4->getLastChangeset() => $this->getTitleValue($art4),
-            });
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
-                $art3->getLastChangeset() => $this->getDescriptionValue($art3),
-                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
-            });
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
@@ -734,36 +775,22 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_description->method('getField')->willReturn(null);
 
-        $art1 = $this->getArtifact(1, $title, $user);
-        $art2 = $this->getArtifact(2, $title, $user);
-        $art3 = $this->getArtifact(3, $title, $user);
-        $art4 = $this->getArtifact(4, $title, $user);
-
-        $title->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getTitleValue($art1),
-                $art2->getLastChangeset() => $this->getTitleValue($art2),
-                $art3->getLastChangeset() => $this->getTitleValue($art3),
-                $art4->getLastChangeset() => $this->getTitleValue($art4),
-            });
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
-                $art3->getLastChangeset() => $this->getDescriptionValue($art3),
-                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
-            });
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(
@@ -799,34 +826,22 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $title = $this->createMock(Tracker_FormElement_Field_String::class);
-        $title->method('getId')->willReturn(1001);
-        $title->method('userCanRead')->willReturn(true);
+        $title = StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
-        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $description->method('getId')->willReturn(1002);
-        $description->method('userCanRead')->willReturn(true);
+        $description = TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($user, true)
+            ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $user);
-        $art2 = $this->getArtifact(2, $title, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
         $art3 = $this->getArtifactUserCannotView(3, $user);
-        $art4 = $this->getArtifact(4, $title, $user);
-
-        $title->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getTitleValue($art1),
-                $art2->getLastChangeset() => $this->getTitleValue($art2),
-                $art4->getLastChangeset() => $this->getTitleValue($art4),
-            });
-
-        $description->method('getFullRESTValue')
-            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getDescriptionValue($art1),
-                $art2->getLastChangeset() => $this->getDescriptionValue($art2),
-                $art4->getLastChangeset() => $this->getDescriptionValue($art4),
-            });
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
 
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(

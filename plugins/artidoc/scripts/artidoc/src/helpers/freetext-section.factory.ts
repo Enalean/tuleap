@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const FreetextSectionFactory = {
     create: (): FreetextSection => ({
+        type: "freetext",
         id: uuidv4(),
         title: "",
         description: "",

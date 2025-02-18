@@ -31,12 +31,15 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
  */
 final readonly class FreetextSectionRepresentation implements SectionRepresentation
 {
+    public string $type;
+
     private function __construct(
         public string $id,
         public int $level,
         public string $title,
         public string $description,
     ) {
+        $this->type = 'freetext';
     }
 
     public static function fromRetrievedSectionContentFreetext(

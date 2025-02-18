@@ -55,6 +55,7 @@ export type ArtifactTextFieldValueRepresentation =
 export type ArtidocSection = FreetextSection | SectionBasedOnArtifact;
 
 export type FreetextSection = {
+    readonly type: "freetext";
     id: string;
     title: string;
     description: string;
@@ -65,9 +66,10 @@ export type FreetextSection = {
 };
 
 export type SectionBasedOnArtifact = {
+    readonly type: "artifact";
     id: string;
     title: string;
-    description: ArtifactTextFieldValueRepresentation;
+    description: string;
     attachments: ArtifactFieldValueFileFullRepresentation | null;
     level: Level;
     display_level: string;
@@ -121,15 +123,9 @@ export function isArtifactSection(section: ArtidocSection): section is ArtifactS
 export function isSectionBasedOnArtifact(
     section: ArtidocSection,
 ): section is SectionBasedOnArtifact {
-    return typeof section.description !== "string";
+    return section.type === "artifact";
 }
 
 export function isFreetextSection(section: ArtidocSection): section is FreetextSection {
-    return typeof section.description === "string";
-}
-
-export function isCommonmark(
-    value: ArtifactTextFieldValueRepresentation,
-): value is ArtifactFieldValueCommonmarkRepresentation {
-    return "commonmark" in value;
+    return section.type === "freetext";
 }
