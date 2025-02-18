@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,24 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-
 /**
  * @psalm-immutable
  */
-final readonly class ArtifactSectionRepresentation implements SectionRepresentation
+final readonly class ArtifactSectionAttachmentsRepresentation
 {
-    public string $type;
-
+    /**
+     * @param list<int> $attachment_ids
+     */
     public function __construct(
-        public string $id,
-        public int $level,
-        public ArtifactReference $artifact,
-        public string $title,
-        public string $description,
-        public bool $can_user_edit_section,
-        public ?ArtifactSectionAttachmentsRepresentation $attachments,
+        public string $upload_url,
+        public array $attachment_ids,
     ) {
-        $this->type = 'artifact';
     }
 }

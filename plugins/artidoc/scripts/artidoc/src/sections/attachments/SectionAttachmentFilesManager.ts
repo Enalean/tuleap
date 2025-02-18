@@ -26,11 +26,10 @@ import { isFreetextSection } from "@/helpers/artidoc-section.type";
 import { noop } from "@/helpers/noop";
 
 type PendingAttachment = { id: FileIdentifier; upload_url: string };
-export type MergedAttachmentFiles = { field_id: number; value: FileIdentifier[] };
 
 export type ManageSectionAttachmentFiles = {
     addAttachmentToWaitingList(new_pending_attachment: PendingAttachment): void;
-    mergeArtifactAttachments(section: ArtidocSection, description: string): MergedAttachmentFiles;
+    mergeArtifactAttachments(section: ArtidocSection, description: string): FileIdentifier[];
     getPostInformation(): UploadPostInformation;
     getWaitingListAttachments(): Ref<PendingAttachment[]>;
     setWaitingListAttachments(new_value: PendingAttachment[]): void;
@@ -62,8 +61,7 @@ export const getSectionAttachmentFilesManager = (
         };
     }
 
-    const field_id = section.value.attachments ? section.value.attachments.field_id : 0;
-    if (field_id === 0) {
+    if (section.value.attachments === null) {
         return {
             getPostInformation: () => ({
                 upload_url: "",
@@ -76,7 +74,7 @@ export const getSectionAttachmentFilesManager = (
         };
     }
 
-    const upload_url = `/api/v1/tracker_fields/${field_id}/files`;
+    const upload_url = section.value.attachments.upload_url;
 
     function addAttachmentToWaitingList(new_pending_attachment: PendingAttachment): void {
         not_saved_yet_description_attachments.value.push({
@@ -100,21 +98,15 @@ export const getSectionAttachmentFilesManager = (
     function mergeArtifactAttachments(
         section: ArtidocSection,
         description: string,
-    ): {
-        field_id: number;
-        value: FileIdentifier[];
-    } {
+    ): FileIdentifier[] {
         const section_artifact_attachments = section.attachments
-            ? section.attachments.file_descriptions.map((file_description) => file_description.id)
+            ? section.attachments.attachment_ids
             : [];
         const filteredAttachmentToAdd = filterAttachmentsToAdd(
             not_saved_yet_description_attachments.value,
             description,
         );
-        return {
-            field_id,
-            value: filteredAttachmentToAdd.concat(section_artifact_attachments),
-        };
+        return filteredAttachmentToAdd.concat(section_artifact_attachments);
     }
 
     function getWaitingListAttachments(): Ref<PendingAttachment[]> {

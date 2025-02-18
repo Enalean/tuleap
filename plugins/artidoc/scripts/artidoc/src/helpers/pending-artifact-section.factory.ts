@@ -31,10 +31,8 @@ const PendingArtifactSectionFactory = {
         title: "Technologies section",
         description: "<h2>Title 1</h2><p>description 1</p>",
         attachments: {
-            field_id: 171,
-            label: "attachment",
-            type: "file",
-            file_descriptions: [],
+            upload_url: "/api/v1/tracker_fields/171/files",
+            attachment_ids: [],
         },
         level: 1,
         display_level: "",
@@ -52,7 +50,12 @@ const PendingArtifactSectionFactory = {
             description: ["commonmark", "text"].includes(tracker.description.default_value.format)
                 ? parse(tracker.description.default_value.content)
                 : tracker.description.default_value.content,
-            attachments: tracker.file ? { ...tracker.file, file_descriptions: [] } : null,
+            attachments: tracker.file
+                ? {
+                      upload_url: `/api/v1/tracker_fields/${tracker.file.field_id}/files`,
+                      attachment_ids: [],
+                  }
+                : null,
         }),
 };
 

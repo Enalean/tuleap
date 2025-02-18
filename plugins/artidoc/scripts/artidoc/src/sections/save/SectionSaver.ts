@@ -74,7 +74,7 @@ export const getSectionSaver = (
             return manage_section_attachments.mergeArtifactAttachments(
                 section.value,
                 edited_description,
-            ).value;
+            );
         }
         return [];
     }

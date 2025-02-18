@@ -44,10 +44,8 @@ const ArtifactSectionFactory = {
         description: "<h2>Title 1</h2><p>description 1</p>",
         can_user_edit_section: true,
         attachments: {
-            field_id: 171,
-            label: "attachment",
-            type: "file",
-            file_descriptions: [],
+            upload_url: "/api/v1/tracker_fields/171/files",
+            attachment_ids: [],
         },
         level: 1,
         display_level: "",

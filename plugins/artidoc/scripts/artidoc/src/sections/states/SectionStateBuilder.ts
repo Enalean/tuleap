@@ -59,11 +59,8 @@ export const getSectionStateBuilder = (
                 if (isFreetextSection(section.value)) {
                     return false;
                 }
-                return (
-                    section.value.attachments !== null &&
-                    undefined !== section.value.attachments.field_id &&
-                    0 !== section.value.attachments?.field_id
-                );
+
+                return section.value.attachments !== null;
             }),
             is_section_editable: computed(() => {
                 if (isPendingArtifactSection(section.value) || isFreetextSection(section.value)) {
