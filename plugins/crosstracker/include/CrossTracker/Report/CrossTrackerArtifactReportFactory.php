@@ -148,9 +148,6 @@ final readonly class CrossTrackerArtifactReportFactory
         int $offset,
     ): CrossTrackerReportContentRepresentation {
         $trackers = $this->report_trackers_retriever->getReportTrackers($report, $current_user, ForgeConfig::getInt(self::MAX_TRACKER_FROM));
-        if ($trackers === []) {
-            throw new FromIsInvalidException([dgettext('tuleap-crosstracker', 'No tracker found')]);
-        }
         $this->instrumentation->updateTrackerCount(count($trackers));
 
         $query = $this->getQueryFromReport($report, $current_user, $trackers);
