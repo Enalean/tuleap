@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\RichTextFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\Field\StaticField\RichText\RichTextFieldDao;
 
@@ -53,6 +54,11 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     }
 
     protected function getDuplicateSpecificPropertiesDao(): ?RichTextFieldSpecificPropertiesDAO
+    {
+        return new RichTextFieldSpecificPropertiesDAO();
+    }
+
+    protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new RichTextFieldSpecificPropertiesDAO();
     }
