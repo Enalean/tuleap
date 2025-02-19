@@ -23,10 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
-use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeCreatedArtifact;
-use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeImported;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ImportContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -36,9 +34,9 @@ use Tuleap\Option\Option;
 final readonly class SectionContentToBeCreated
 {
     /**
-     * @param Option<SectionContentToBeImported> $import
-     * @param Option<SectionContentToBeCreatedFreetext> $freetext
-     * @param Option<SectionContentToBeCreatedArtifact> $artifact
+     * @param Option<ImportContent> $import
+     * @param Option<FreetextContent> $freetext
+     * @param Option<ArtifactContent> $artifact
      */
     private function __construct(
         private Option $import,
@@ -50,22 +48,20 @@ final readonly class SectionContentToBeCreated
     public static function fromImportedArtifact(int $import, Level $level): self
     {
         return new self(
-            Option::fromValue(new SectionContentToBeImported($import, $level)),
-            Option::nothing(SectionContentToBeCreatedFreetext::class),
-            Option::nothing(SectionContentToBeCreatedArtifact::class),
+            Option::fromValue(new ImportContent($import, $level)),
+            Option::nothing(FreetextContent::class),
+            Option::nothing(ArtifactContent::class),
         );
     }
 
     public static function fromFreetext(string $title, string $description, Level $level): self
     {
         return new self(
-            Option::nothing(SectionContentToBeImported::class),
+            Option::nothing(ImportContent::class),
             Option::fromValue(
-                new SectionContentToBeCreatedFreetext(
-                    new FreetextContent($title, $description, $level),
-                ),
+                new FreetextContent($title, $description, $level),
             ),
-            Option::nothing(SectionContentToBeCreatedArtifact::class),
+            Option::nothing(ArtifactContent::class),
         );
     }
 
@@ -75,12 +71,10 @@ final readonly class SectionContentToBeCreated
     public static function fromArtifact(string $title, string $description, array $attachments, Level $level): self
     {
         return new self(
-            Option::nothing(SectionContentToBeImported::class),
-            Option::nothing(SectionContentToBeCreatedFreetext::class),
+            Option::nothing(ImportContent::class),
+            Option::nothing(FreetextContent::class),
             Option::fromValue(
-                new SectionContentToBeCreatedArtifact(
-                    new ArtifactContent($title, $description, $attachments, $level),
-                ),
+                new ArtifactContent($title, $description, $attachments, $level),
             ),
         );
     }
@@ -89,9 +83,9 @@ final readonly class SectionContentToBeCreated
      * @template TImportedArtifactReturn
      * @template TFreetextReturn
      * @template TArtifactReturn
-     * @psalm-param callable(SectionContentToBeImported): (Ok<TImportedArtifactReturn>|Err<Fault>) $imported_artifact_callback
-     * @psalm-param callable(SectionContentToBeCreatedFreetext): (Ok<TFreetextReturn>|Err<Fault>) $freetext_callback
-     * @psalm-param callable(SectionContentToBeCreatedArtifact): (Ok<TArtifactReturn>|Err<Fault>) $artifact_callback
+     * @psalm-param callable(ImportContent): (Ok<TImportedArtifactReturn>|Err<Fault>) $imported_artifact_callback
+     * @psalm-param callable(FreetextContent): (Ok<TFreetextReturn>|Err<Fault>) $freetext_callback
+     * @psalm-param callable(ArtifactContent): (Ok<TArtifactReturn>|Err<Fault>) $artifact_callback
      * @return Ok<TImportedArtifactReturn>|Ok<TFreetextReturn>|Ok<TArtifactReturn>|Err<Fault>
      */
     public function apply(

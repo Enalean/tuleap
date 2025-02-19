@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,13 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Artifact;
 
+use Tuleap\Artidoc\Domain\Document\Section\Level;
+
 /**
  * @psalm-immutable
  */
-final readonly class SectionContentToBeCreatedArtifact
+final readonly class ImportContent
 {
-    public function __construct(
-        public ArtifactContent $content,
-    ) {
+    public function __construct(public int $artifact_id, public Level $level)
+    {
     }
 }
