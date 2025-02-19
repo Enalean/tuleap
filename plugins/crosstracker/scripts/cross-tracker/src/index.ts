@@ -67,12 +67,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const documentation_url = getDatasetItemOrThrow(widget_element, "documentationBaseUrl");
-        const report_id_string = getDatasetItemOrThrow(widget_element, "reportId");
+        const documentation_url = getDatasetItemOrThrow(
+            widget_element,
+            "data-documentation-base-url",
+        );
+        const report_id_string = getDatasetItemOrThrow(widget_element, "data-report-id");
         const report_id = Number.parseInt(report_id_string, 10);
-        const is_widget_admin = Boolean(getDatasetItemOrThrow(widget_element, "isWidgetAdmin"));
+        const is_widget_admin = Boolean(
+            getDatasetItemOrThrow(widget_element, "data-is-widget-admin"),
+        );
         const is_multiple_query_supported = Boolean(
-            getDatasetItemOrThrow(widget_element, "isMultipleQuerySupported"),
+            getDatasetItemOrThrow(widget_element, "data-is-multiple-query-supported"),
         );
 
         const backend_report = new BackendCrossTrackerReport();

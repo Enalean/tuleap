@@ -73,7 +73,7 @@ export function initiatePrintPreview(
         printAsPdf(
             fake_document,
             template,
-            JSON.parse(getDatasetItemOrThrow(button, "variables")),
+            JSON.parse(getDatasetItemOrThrow(button, "data-variables")),
         ).mapErr((fault) => {
             details.innerText = fault.toString();
 

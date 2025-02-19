@@ -39,8 +39,8 @@ import {
 } from "./constants";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
-    const project_id = getDatasetItemOrThrow(mount_point, "projectId");
-    const current_repository_id = getDatasetItemOrThrow(mount_point, "repositoryId");
+    const project_id = getDatasetItemOrThrow(mount_point, "data-project-id");
+    const current_repository_id = getDatasetItemOrThrow(mount_point, "data-repository-id");
     const base_url = buildBaseUrl(window.location, current_repository_id, project_id);
 
     createApp(OverviewApp)
@@ -49,18 +49,23 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
             CURRENT_USER_ID,
-            Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10),
+            Number.parseInt(getDatasetItemOrThrow(document.body, "data-user-id"), 10),
         )
         .provide(PROJECT_ID, Number.parseInt(project_id, 10))
         .provide(CURRENT_REPOSITORY_ID, Number.parseInt(current_repository_id, 10))
-        .provide(CURRENT_USER_AVATAR_URL, getDatasetItemOrThrow(mount_point, "userAvatarUrl"))
+        .provide(
+            CURRENT_USER_AVATAR_URL,
+            getDatasetItemOrThrow(mount_point, "data-user-avatar-url"),
+        )
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-            getDatasetItemOrThrow(mount_point, "relativeDateDisplay"),
+            getDatasetItemOrThrow(mount_point, "data-relative-date-display"),
         )
         .provide(
             ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
-            Boolean(getDatasetItemOrThrow(mount_point, "areMergeCommitsAllowedInRepository")),
+            Boolean(
+                getDatasetItemOrThrow(mount_point, "data-are-merge-commits-allowed-in-repository"),
+            ),
         )
         .use(createOverviewRouter(base_url))
         .use(

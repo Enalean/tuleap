@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const root_store = useRootStore();
 
     // Retrieve the JSON data from the mount point. The dataset key is in CamelCase.
-    const user_info = JSON.parse(getDatasetItemOrThrow(mount_point, "userInfo"));
+    const user_info = JSON.parse(getDatasetItemOrThrow(mount_point, "data-user-info"));
 
     // Pass the mount-point data to the pinia store
     root_store.setUserInfo(user_info);

@@ -19,23 +19,16 @@
 
 /**
  * Read the value of element's dataset at the given key. If the element has no dataset
- * (no data-${key} attribute for example), it throws an error. It also accepts the full data-attribute name in kebab-case.
- * @param element The element on which to read the data-attribute or dataset.
- * @param key The name of the data-attribute or dataset key. It must either start with `data-` and match the full data-attribute name, or it must be in camelCase.
+ * (no data-${key} attribute for example), it throws an error.
+ * @param element The element on which to read the data-attribute.
+ * @param key The name of the data-attribute. It must start with `data-` and match the full data-attribute name.
  * @returns The value of the data-attribute for the given key.
  * @throws Error
  */
 export const getDatasetItemOrThrow = (element: HTMLElement, key: string): string => {
-    if (key.startsWith("data-")) {
-        const value = element.getAttribute(key);
-        if (value === null) {
-            throw Error(`Missing attribute ${key}`);
-        }
-        return value;
-    }
-    const value = element.dataset[key];
-    if (value === undefined) {
-        throw Error(`Missing item ${key} in dataset`);
+    const value = element.getAttribute(key);
+    if (value === null) {
+        throw Error(`Missing attribute ${key}`);
     }
     return value;
 };
