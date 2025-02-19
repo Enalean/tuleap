@@ -32,7 +32,7 @@ use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 /**
  * I build collections of IBacklogItem
  */
-class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
+class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var BacklogItemDao */
     private $dao;
@@ -524,7 +524,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     protected function setInitialEffort(IBacklogItem $backlog_item, array $semantics_per_artifact): void
     {
         if (isset($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME])) {
-            $backlog_item->setInitialEffort((int) $semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
+            $backlog_item->setInitialEffort((float) $semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
         }
     }
 

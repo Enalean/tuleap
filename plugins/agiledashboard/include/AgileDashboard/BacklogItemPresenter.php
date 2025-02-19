@@ -40,7 +40,7 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
     private readonly string $short_type;
     private string $status                  = '';
     private string $normalized_status_label = '';
-    private ?int $initial_effort            = null;
+    private ?float $initial_effort          = null;
     private ?float $remaining_effort        = null;
     private ?Artifact $parent               = null;
     private ?bool $has_children             = null;
@@ -68,12 +68,12 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         return $this->parent;
     }
 
-    public function setInitialEffort(?int $value): void
+    public function setInitialEffort(?float $value): void
     {
         $this->initial_effort = $value;
     }
 
-    public function getInitialEffort(): ?int
+    public function getInitialEffort(): ?float
     {
         return $this->initial_effort;
     }
@@ -104,17 +104,17 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         return $this->getUrlWithRedirect($this->url);
     }
 
-    public function points(): ?int
+    public function points(): ?float
     {
         return $this->initial_effort;
     }
 
-    public function parent_title(): ?string
+    public function parent_title(): ?string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->parent?->getTitle();
     }
 
-    public function parent_url(): ?string
+    public function parent_url(): ?string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->parent !== null) {
             return $this->getUrlWithRedirect($this->parent->getUri());
@@ -123,7 +123,7 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         return null;
     }
 
-    public function parent_id(): ?int
+    public function parent_id(): ?int //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->parent?->getId();
     }

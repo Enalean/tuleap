@@ -37,7 +37,7 @@ class BacklogItem implements IBacklogItem
     private readonly string $color;
     private string $status                  = '';
     private string $normalized_status_label = '';
-    private ?int $initial_effort            = null;
+    private ?float $initial_effort          = null;
     private ?float $remaining_effort        = null;
     private ?Artifact $parent               = null;
     private ?bool $has_children             = null;
@@ -63,12 +63,12 @@ class BacklogItem implements IBacklogItem
         return $this->parent;
     }
 
-    public function setInitialEffort(?int $value): void
+    public function setInitialEffort(?float $value): void
     {
         $this->initial_effort = $value;
     }
 
-    public function getInitialEffort(): ?int
+    public function getInitialEffort(): ?float
     {
         return $this->initial_effort;
     }
@@ -99,12 +99,12 @@ class BacklogItem implements IBacklogItem
         return $this->short_type;
     }
 
-    public function points(): ?int
+    public function points(): ?float
     {
         return $this->initial_effort;
     }
 
-    public function parent_title(): ?string
+    public function parent_title(): ?string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->parent?->getTitle();
     }

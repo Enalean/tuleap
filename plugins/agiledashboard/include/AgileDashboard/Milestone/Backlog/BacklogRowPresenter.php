@@ -32,9 +32,9 @@ interface BacklogRowPresenter
 
     public function url(): string;
 
-    public function points(): ?int;
+    public function points(): ?float;
 
-    public function parent_title(): ?string;
+    public function parent_title(): ?string; //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 
-    public function parent_url(): ?string;
+    public function parent_url(): ?string; //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 }
