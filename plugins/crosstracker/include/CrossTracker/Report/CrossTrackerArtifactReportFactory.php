@@ -27,6 +27,7 @@ use ForgeConfig;
 use PFUser;
 use Tracker;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
@@ -67,6 +68,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 
+#[ConfigKeyCategory('CrossTracker Search')]
 final readonly class CrossTrackerArtifactReportFactory
 {
     #[ConfigKey('Configure the maximum quantity of tracker a cross tracker search expert query can use (default to 0 for no limit)')]
