@@ -32,7 +32,7 @@ use Tuleap\Artidoc\Domain\Document\Section\SectionContentToBeCreated;
  */
 final class ContentToBeCreatedBuilder
 {
-    public static function buildFromRepresentation(POSTSectionRepresentation $section, Level $level): SectionContentToBeCreated
+    public static function buildFromRepresentation(POSTSectionRepresentation $section): SectionContentToBeCreated
     {
         if ($section->import !== null && $section->content !== null) {
             throw new RestException(400, dgettext('tuleap-artidoc', "The properties 'import' and 'content' can not be used at the same time"));
@@ -41,20 +41,21 @@ final class ContentToBeCreatedBuilder
         $content = null;
         if ($section->import !== null) {
             $content = SectionContentToBeCreated::fromImportedArtifact(
-                $section->import->artifact->id
+                $section->import->artifact->id,
+                self::getLevel($section->import->level),
             );
         } elseif ($section->content !== null && $section->content->type === 'freetext') {
             $content = SectionContentToBeCreated::fromFreetext(
                 $section->content->title,
                 $section->content->description,
-                $level,
+                self::getLevel($section->content->level),
             );
         } elseif ($section->content !== null && $section->content->type === 'artifact') {
             $content = SectionContentToBeCreated::fromArtifact(
                 $section->content->title,
                 $section->content->description,
                 $section->content->attachments,
-                $level,
+                self::getLevel($section->content->level),
             );
         }
 
@@ -63,5 +64,15 @@ final class ContentToBeCreatedBuilder
         }
 
         return $content;
+    }
+
+    private static function getLevel(int $submitted_level): Level
+    {
+        $level = Level::tryFrom($submitted_level);
+        if ($level === null) {
+            throw new RestException(400, 'Unknown level. Allowed values: ' . implode(', ', Level::allowed()));
+        }
+
+        return $level;
     }
 }

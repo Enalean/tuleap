@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section\Artifact;
+
+use Tuleap\Artidoc\Domain\Document\Section\Level;
 
 /**
  * @psalm-immutable
  */
-final class POSTContentSectionRepresentation
+final readonly class SectionContentToBeImported
 {
-    /**
-     * @var string type of content {@choice freetext,artifact}
-     */
-    public string $type;
-
-    /**
-     * @param list<int> $attachments
-     */
-    public function __construct(
-        public string $title,
-        public string $description,
-        string $type,
-        public array $attachments,
-        public int $level,
-    ) {
-        $this->type = $type;
+    public function __construct(public int $artifact_id, public Level $level)
+    {
     }
 }

@@ -72,8 +72,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::nothing(SectionIdentifier::class),
-            Level::One,
-            SectionContentToBeCreated::fromImportedArtifact(101)
+            SectionContentToBeCreated::fromImportedArtifact(101, Level::One)
         );
 
         self::assertTrue(Result::isOk($result));
@@ -102,8 +101,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
-            SectionContentToBeCreated::fromImportedArtifact(101)
+            SectionContentToBeCreated::fromImportedArtifact(101, Level::One)
         );
 
         self::assertTrue(Result::isOk($result));
@@ -132,7 +130,6 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
             SectionContentToBeCreated::fromFreetext('my title', 'my description', Level::One),
         );
 
@@ -161,7 +158,6 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
             SectionContentToBeCreated::fromArtifact('my title', 'my description', [], Level::One),
         );
 
@@ -191,8 +187,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
-            SectionContentToBeCreated::fromImportedArtifact(101)
+            SectionContentToBeCreated::fromImportedArtifact(101, Level::One)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -234,8 +229,7 @@ final class SectionCreatorTest extends TestCase
             $before_section_id === null
                 ? Option::nothing(SectionIdentifier::class)
             : Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
-            SectionContentToBeCreated::fromImportedArtifact($artifact_id)
+            SectionContentToBeCreated::fromImportedArtifact($artifact_id, Level::One)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -262,8 +256,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
-            SectionContentToBeCreated::fromImportedArtifact(101)
+            SectionContentToBeCreated::fromImportedArtifact(101, Level::One)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -285,8 +278,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
-            SectionContentToBeCreated::fromImportedArtifact(101)
+            SectionContentToBeCreated::fromImportedArtifact(101, Level::One)
         );
 
         self::assertTrue(Result::isErr($result));
@@ -312,8 +304,7 @@ final class SectionCreatorTest extends TestCase
         $result = $creator->create(
             1,
             Option::fromValue($this->identifier_factory->buildFromHexadecimalString(self::ANOTHER_SECTION_ID)),
-            Level::One,
-            SectionContentToBeCreated::fromImportedArtifact(101)
+            SectionContentToBeCreated::fromImportedArtifact(101, Level::One)
         );
 
         self::assertTrue(Result::isErr($result));

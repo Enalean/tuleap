@@ -379,13 +379,8 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(400, 'Sibling section id is invalid');
         }
 
-        $level = Level::tryFrom($section->level);
-        if ($level === null) {
-            throw new RestException(400, 'Unknown level. Allowed values: ' . implode(', ', Level::allowed()));
-        }
-
         return $this->getSectionCreator($user, $collector)
-            ->create($artidoc_id, $before_section_id, $level, ContentToBeCreatedBuilder::buildFromRepresentation($section, $level))
+            ->create($artidoc_id, $before_section_id, ContentToBeCreatedBuilder::buildFromRepresentation($section))
             ->andThen(
                 fn (SectionIdentifier $section_identifier) =>
                 $this->getSectionRetriever($user, $collector)

@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeCreatedArtifact;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeImported;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
 use Tuleap\NeverThrow\Err;
@@ -35,21 +36,21 @@ use Tuleap\Option\Option;
 final readonly class SectionContentToBeCreated
 {
     /**
-     * @param Option<int> $imported_artifact_id
+     * @param Option<SectionContentToBeImported> $import
      * @param Option<SectionContentToBeCreatedFreetext> $freetext
      * @param Option<SectionContentToBeCreatedArtifact> $artifact
      */
     private function __construct(
-        private Option $imported_artifact_id,
+        private Option $import,
         private Option $freetext,
         private Option $artifact,
     ) {
     }
 
-    public static function fromImportedArtifact(int $imported_artifact_id): self
+    public static function fromImportedArtifact(int $import, Level $level): self
     {
         return new self(
-            Option::fromValue($imported_artifact_id),
+            Option::fromValue(new SectionContentToBeImported($import, $level)),
             Option::nothing(SectionContentToBeCreatedFreetext::class),
             Option::nothing(SectionContentToBeCreatedArtifact::class),
         );
@@ -58,7 +59,7 @@ final readonly class SectionContentToBeCreated
     public static function fromFreetext(string $title, string $description, Level $level): self
     {
         return new self(
-            Option::nothing(\Psl\Type\int()),
+            Option::nothing(SectionContentToBeImported::class),
             Option::fromValue(
                 new SectionContentToBeCreatedFreetext(
                     new FreetextContent($title, $description, $level),
@@ -74,7 +75,7 @@ final readonly class SectionContentToBeCreated
     public static function fromArtifact(string $title, string $description, array $attachments, Level $level): self
     {
         return new self(
-            Option::nothing(\Psl\Type\int()),
+            Option::nothing(SectionContentToBeImported::class),
             Option::nothing(SectionContentToBeCreatedFreetext::class),
             Option::fromValue(
                 new SectionContentToBeCreatedArtifact(
@@ -88,7 +89,7 @@ final readonly class SectionContentToBeCreated
      * @template TImportedArtifactReturn
      * @template TFreetextReturn
      * @template TArtifactReturn
-     * @psalm-param callable(int): (Ok<TImportedArtifactReturn>|Err<Fault>) $imported_artifact_callback
+     * @psalm-param callable(SectionContentToBeImported): (Ok<TImportedArtifactReturn>|Err<Fault>) $imported_artifact_callback
      * @psalm-param callable(SectionContentToBeCreatedFreetext): (Ok<TFreetextReturn>|Err<Fault>) $freetext_callback
      * @psalm-param callable(SectionContentToBeCreatedArtifact): (Ok<TArtifactReturn>|Err<Fault>) $artifact_callback
      * @return Ok<TImportedArtifactReturn>|Ok<TFreetextReturn>|Ok<TArtifactReturn>|Err<Fault>
@@ -98,8 +99,8 @@ final readonly class SectionContentToBeCreated
         callable $freetext_callback,
         callable $artifact_callback,
     ): Ok|Err {
-        return $this->imported_artifact_id->match(
-            fn ($artifact_id) => $imported_artifact_callback($artifact_id),
+        return $this->import->match(
+            fn ($import) => $imported_artifact_callback($import),
             fn () => $this->freetext->match(
                 fn ($freetext) => $freetext_callback($freetext),
                 fn () => $this->artifact->match(
