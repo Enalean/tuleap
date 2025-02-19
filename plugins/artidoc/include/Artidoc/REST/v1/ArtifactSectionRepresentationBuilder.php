@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
 final class ArtifactSectionRepresentationBuilder implements BuildArtifactSectionRepresentation
 {
@@ -49,8 +50,18 @@ final class ArtifactSectionRepresentationBuilder implements BuildArtifactSection
 
         $attachments = null;
         if ($file_upload_data) {
-            $attachments = $file_upload_data->getField()->getRESTValue($user, $artifact_information->last_changeset)
+            $rest = $file_upload_data->getField()->getRESTValue($user, $artifact_information->last_changeset)
                 ?? ArtifactFieldValueFileFullRepresentation::fromEmptyValues($file_upload_data->getField());
+
+            $attachments = new ArtifactSectionAttachmentsRepresentation(
+                $file_upload_data->getUploadUrl(),
+                array_values(
+                    array_map(
+                        static fn (FileInfoRepresentation $file_info_representation): int => $file_info_representation->id,
+                        $rest->file_descriptions,
+                    ),
+                ),
+            );
         }
 
         return new ArtifactSectionRepresentation(

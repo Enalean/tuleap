@@ -20,6 +20,7 @@
 import type { Tracker } from "@/stores/configuration-store";
 import type { Project } from "@/helpers/project.type";
 import type { Level } from "@/sections/levels/SectionsNumberer";
+import type { FileIdentifier } from "@tuleap/file-upload/dist/file-upload-options";
 
 interface ArtifactFieldValueRepresentation {
     readonly field_id: number;
@@ -33,24 +34,15 @@ interface ArtifactFieldValueTextRepresentation extends ArtifactFieldValueReprese
     readonly post_processed_value: string;
 }
 
-interface FileInfoRepresentation {
-    id: number;
-    type: string;
-}
-
-export interface ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueRepresentation {
-    type: "file";
-    file_descriptions: FileInfoRepresentation[];
+export interface ArtifactSectionAttachmentsRepresentation {
+    upload_url: string;
+    attachment_ids: FileIdentifier[];
 }
 
 export interface ArtifactFieldValueCommonmarkRepresentation
     extends ArtifactFieldValueTextRepresentation {
     readonly commonmark: string;
 }
-
-export type ArtifactTextFieldValueRepresentation =
-    | ArtifactFieldValueCommonmarkRepresentation
-    | ArtifactFieldValueTextRepresentation;
 
 export type ArtidocSection = FreetextSection | SectionBasedOnArtifact;
 
@@ -70,7 +62,7 @@ export type SectionBasedOnArtifact = {
     id: string;
     title: string;
     description: string;
-    attachments: ArtifactFieldValueFileFullRepresentation | null;
+    attachments: ArtifactSectionAttachmentsRepresentation | null;
     level: Level;
     display_level: string;
 };

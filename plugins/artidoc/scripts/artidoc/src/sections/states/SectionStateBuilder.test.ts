@@ -50,23 +50,19 @@ describe("SectionStateBuilder", () => {
             );
         });
 
-        it.each([
-            [{ attachments: null }] as Partial<ArtifactSection>,
-            [{ attachments: {} }] as Partial<ArtifactSection>,
-            [{ attachments: { field_id: 0 } }] as Partial<ArtifactSection>,
-        ])(
-            "should be false when no file can be attached to the section (%o)",
-            (section_attachments_config) => {
-                const section = ArtifactSectionFactory.override(section_attachments_config);
+        it("should be false when no file can be attached to the section (%o)", () => {
+            const section = ArtifactSectionFactory.override({
+                attachments: null,
+            });
 
-                expect(createState(section).is_image_upload_allowed.value).toBe(false);
-            },
-        );
+            expect(createState(section).is_image_upload_allowed.value).toBe(false);
+        });
 
         it("should be true when files can be attached to the section", () => {
             const section = ArtifactSectionFactory.override({
                 attachments: {
-                    field_id: 1015,
+                    upload_url: "/upload/1015",
+                    attachment_ids: [],
                 },
             } as Partial<ArtifactSection>);
 

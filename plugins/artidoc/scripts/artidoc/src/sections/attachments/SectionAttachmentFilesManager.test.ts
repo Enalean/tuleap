@@ -91,10 +91,9 @@ describe("SectionAttachmentFilesManager", () => {
                 const current_description =
                     '<img src="/path/to/foo.png" /> some content <img src="/path/to/bar.png" />';
 
-                expect(mergeArtifactAttachments(section, current_description)).toEqual({
-                    field_id: 171,
-                    value: [123, 456],
-                });
+                expect(mergeArtifactAttachments(section, current_description)).toStrictEqual([
+                    123, 456,
+                ]);
             });
         });
         describe("when some pending images has been removed in the current description", () => {
@@ -112,10 +111,7 @@ describe("SectionAttachmentFilesManager", () => {
 
                 const current_description = '<img src="/path/to/foo.png" /> some content';
 
-                expect(mergeArtifactAttachments(section, current_description)).toEqual({
-                    field_id: 171,
-                    value: [123],
-                });
+                expect(mergeArtifactAttachments(section, current_description)).toStrictEqual([123]);
             });
         });
     });

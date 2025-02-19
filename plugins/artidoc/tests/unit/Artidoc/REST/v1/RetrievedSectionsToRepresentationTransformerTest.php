@@ -220,7 +220,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 self::assertSame($expected['title'], $result->value->sections[$index]->title);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
-                self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[$index]->attachments);
+                self::assertInstanceOf(ArtifactSectionAttachmentsRepresentation::class, $result->value->sections[$index]->attachments);
             }
         );
     }
@@ -474,7 +474,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         self::assertSame(10, $result->value->total);
         self::assertCount(1, $result->value->sections);
         self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[0]);
-        self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[0]->attachments);
+        self::assertInstanceOf(ArtifactSectionAttachmentsRepresentation::class, $result->value->sections[0]->attachments);
     }
 
     public function testArtifactHasNoAttachmentField(): void
