@@ -105,11 +105,16 @@ describe("SectionStateBuilder", () => {
     });
 
     describe("is_save_allowed", () => {
-        it("should be true only when there is no pending upload for the current section", () => {
+        it("should be true when there is no pending upload for the current section", () => {
             const section = FreetextSectionFactory.create();
             const state = createState(section);
 
             expect(state.is_save_allowed.value).toBe(true);
+        });
+
+        it("should be false when there are not finished pending uploads for the current section", () => {
+            const section = FreetextSectionFactory.create();
+            const state = createState(section);
 
             pending_uploads.value.push({
                 file_id: uuidv4(),
@@ -118,6 +123,19 @@ describe("SectionStateBuilder", () => {
                 section_id: section.id,
             });
             expect(state.is_save_allowed.value).toBe(false);
+        });
+
+        it("should be true when there are only finished pending uploads for the current section", () => {
+            const section = FreetextSectionFactory.create();
+            const state = createState(section);
+
+            pending_uploads.value.push({
+                file_id: uuidv4(),
+                file_name: "test.png",
+                progress: 100,
+                section_id: section.id,
+            });
+            expect(state.is_save_allowed.value).toBe(true);
         });
     });
 

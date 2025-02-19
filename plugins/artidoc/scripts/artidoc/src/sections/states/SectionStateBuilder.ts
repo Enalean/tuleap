@@ -73,13 +73,13 @@ export const getSectionStateBuilder = (
 
                 return false;
             }),
-            is_save_allowed: computed(() => {
-                return (
-                    pending_uploads.value.filter(
-                        (upload: OnGoingUploadFileWithId) => upload.section_id === section.value.id,
-                    ).length === 0
-                );
-            }),
+            is_save_allowed: computed(
+                () =>
+                    !pending_uploads.value.some(
+                        (upload: OnGoingUploadFileWithId) =>
+                            upload.section_id === section.value.id && upload.progress < 100,
+                    ),
+            ),
             is_section_in_edit_mode: ref(isPendingSection(section.value)),
             is_just_refreshed: ref(false),
             is_being_saved: ref(false),
