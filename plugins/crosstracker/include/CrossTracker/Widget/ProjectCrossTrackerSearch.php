@@ -25,6 +25,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\CrossTracker\CrossTrackerWidgetDao;
@@ -39,6 +40,7 @@ use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Widget;
 
+#[ConfigKeyCategory('CrossTracker Search')]
 class ProjectCrossTrackerSearch extends Widget
 {
     #[FeatureFlagConfigKey('Support multiple query in Cross Tracker widget')]
