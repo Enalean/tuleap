@@ -77,6 +77,12 @@ const onChangeApplySelectedStyle = (host: InternalTextStyleItem): void => {
     applyTextStyle(host, host.select_element.value);
 };
 
+const getClasses = (host: InternalTextStyleItem): string => {
+    return host.is_disabled
+        ? "tlp-select tlp-select-small tlp-select-adjusted prose-mirror-toolbar-select-disabled"
+        : "tlp-select tlp-select-small tlp-select-adjusted";
+};
+
 define<InternalTextStyleItem>({
     tag: TAG,
     current_heading: null,
@@ -98,7 +104,7 @@ define<InternalTextStyleItem>({
     },
     render: (host: InternalTextStyleItem): UpdateFunction<InternalTextStyleItem> => html`
         <select
-            class="tlp-select tlp-select-small tlp-select-adjusted"
+            class=${getClasses(host)}
             disabled="${host.is_disabled}"
             onchange="${onChangeApplySelectedStyle}"
         >
