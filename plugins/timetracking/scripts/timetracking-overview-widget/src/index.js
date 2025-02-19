@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { createPinia, PiniaVuePlugin } from "pinia";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { createPinia } from "pinia";
+import { createApp } from "vue";
 import { useOverviewWidgetStore } from "./store/index.ts";
 import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const widgets = document.querySelectorAll(".timetracking-overview-widget");
@@ -29,26 +30,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
-
-    Vue.use(PiniaVuePlugin);
-    const Widget = Vue.extend(TimeTrackingOverview);
     const user_id = parseInt(document.body.dataset.userId, 10);
 
     for (const widget_element of widgets) {
         const report_id = Number.parseInt(widget_element.dataset.reportId, 10);
         const are_void_trackers_hidden = widget_element.dataset.displayPreference === "true";
 
+        const app = createApp(TimeTrackingOverview, {
+            reportId: report_id,
+            userId: user_id,
+            areVoidTrackersHidden: are_void_trackers_hidden,
+        });
+
         const pinia = createPinia();
         useOverviewWidgetStore(report_id)(pinia);
 
-        new Widget({
-            pinia,
-            propsData: {
-                reportId: report_id,
-                userId: user_id,
-                areVoidTrackersHidden: are_void_trackers_hidden,
-            },
-        }).$mount(widget_element);
+        app.use(pinia);
+        app.use(
+            await initVueGettext(
+                createGettext,
+                (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+            ),
+        );
+        app.mount(widget_element);
     }
 });

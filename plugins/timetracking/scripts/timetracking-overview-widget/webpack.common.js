@@ -49,6 +49,9 @@ export default [
         },
         resolve: {
             extensions: [".ts", ".js", ".vue"],
+            alias: {
+                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
+            },
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

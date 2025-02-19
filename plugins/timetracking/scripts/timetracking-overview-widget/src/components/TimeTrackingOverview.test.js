@@ -21,8 +21,8 @@ import { describe, beforeEach, it, expect } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../tests/helpers/local-vue";
 import TimeTrackingOverview from "./TimeTrackingOverview.vue";
+import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
 
 const reportId = 8;
 const noop = () => {
@@ -37,7 +37,7 @@ describe("Given a timetracking overview widget", () => {
         success_message = null;
     });
 
-    const getWrapper = async () => {
+    const getWrapper = () => {
         const useStore = defineStore("overview/8", {
             state: () => ({
                 reading_mode,
@@ -58,33 +58,31 @@ describe("Given a timetracking overview widget", () => {
         useStore(pinia);
 
         return shallowMount(TimeTrackingOverview, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
-                reportId,
-            },
+            global: getGlobalTestOptions(pinia),
+            props: { reportId },
         });
     };
 
-    it("When reading mode is true, then writing should not be displayed", async () => {
-        const wrapper = await getWrapper();
+    it("When reading mode is true, then writing should not be displayed", () => {
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=report-success]").exists()).toBe(false);
         expect(wrapper.find("[data-test=reading-mode]").exists()).toBe(true);
         expect(wrapper.find("[data-test=writing-mode]").exists()).toBe(false);
     });
 
-    it("When success message, then a success message is displayed", async () => {
+    it("When success message, then a success message is displayed", () => {
         success_message = "Great success!";
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=report-success]").exists()).toBe(true);
     });
 
-    it("When reading mode is false, then writing should be displayed", async () => {
+    it("When reading mode is false, then writing should be displayed", () => {
         reading_mode = false;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=report-success]").exists()).toBe(false);
         expect(wrapper.find("[data-test=reading-mode]").exists()).toBe(false);

@@ -21,9 +21,9 @@ import { describe, beforeEach, it, expect, jest } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackersOptions from "./TimeTrackingOverviewTrackersOptions.vue";
-import { createLocalVueForTests } from "../../../tests/helpers/local-vue";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
+import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 
 describe("Given a timetracking overview widget on writing mode", () => {
     let projects, trackers, is_loading_tracker, has_success_message, addSelectedTrackers;
@@ -36,7 +36,7 @@ describe("Given a timetracking overview widget on writing mode", () => {
         addSelectedTrackers = jest.fn();
     });
 
-    const getWrapper = async () => {
+    const getWrapper = () => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 projects,
@@ -55,20 +55,20 @@ describe("Given a timetracking overview widget on writing mode", () => {
         useStore(pinia);
 
         return shallowMount(TimeTrackingOverviewWritingTrackers, {
-            localVue: await createLocalVueForTests(),
+            global: getGlobalTestOptions(pinia),
         });
     };
 
-    it("When trackers and projects are available, then it's possible to click on add button", async () => {
-        const wrapper = await getWrapper();
+    it("When trackers and projects are available, then it's possible to click on add button", () => {
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=icon-spinner]").exists()).toBe(false);
         expect(wrapper.find("[data-test=icon-plus]").exists()).toBe(true);
         expect(wrapper.find("[data-test=icon-ban]").exists()).toBe(false);
     });
 
-    it("When trackers and projects are available, then click on add button", async () => {
-        const wrapper = await getWrapper();
+    it("When trackers and projects are available, then click on add button", () => {
+        const wrapper = getWrapper();
         const selected_tracker_id = 15;
 
         wrapper
@@ -78,21 +78,21 @@ describe("Given a timetracking overview widget on writing mode", () => {
         expect(addSelectedTrackers).toHaveBeenCalledWith(selected_tracker_id);
     });
 
-    it("When trackers are not available, then ban icon is displayed", async () => {
+    it("When trackers are not available, then ban icon is displayed", () => {
         trackers = [];
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=icon-spinner]").exists()).toBe(false);
         expect(wrapper.find("[data-test=icon-plus]").exists()).toBe(false);
         expect(wrapper.find("[data-test=icon-ban]").exists()).toBe(true);
     });
 
-    it("When projects are not available, then spinner icon is displayed", async () => {
+    it("When projects are not available, then spinner icon is displayed", () => {
         projects = [];
         is_loading_tracker = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=icon-spinner]").exists()).toBe(true);
         expect(wrapper.find("[data-test=icon-plus]").exists()).toBe(false);

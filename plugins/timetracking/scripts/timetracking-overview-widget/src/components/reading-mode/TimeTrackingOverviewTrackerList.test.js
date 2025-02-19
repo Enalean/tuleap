@@ -17,22 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, it, expect } from "@jest/globals";
-import { defineStore } from "pinia";
+import { describe, it, expect } from "@jest/globals";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
-import { createLocalVueForTests } from "../../../tests/helpers/local-vue";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
+import { defineStore } from "pinia";
 
 describe("TimeTrackingOverviewTrackerList tests", () => {
     describe("Given a timetracking overview widget on reading mode", () => {
-        let selected_trackers;
-
-        beforeEach(() => {
-            selected_trackers = [];
-        });
-
-        const getWrapper = async () => {
+        const getWrapper = (selected_trackers) => {
             const useStore = defineStore("overview/1", {
                 state: () => ({
                     selected_trackers,
@@ -43,12 +37,12 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
             useStore(pinia);
 
             return shallowMount(TimeTrackingOverviewTrackerList, {
-                localVue: await createLocalVueForTests(),
+                global: getGlobalTestOptions(pinia),
             });
         };
 
         it("When no selected trackers, then 'no trackers selected' is displayed", async () => {
-            const wrapper = await getWrapper();
+            const wrapper = await getWrapper([]);
             expect(
                 wrapper
                     .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
@@ -56,8 +50,8 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
             ).toBe(true);
         });
 
-        it("When trackers are selected, then empty field is not displayed", async () => {
-            selected_trackers = [
+        it("When trackers are selected, then empty field is not displayed", () => {
+            const selected_trackers = [
                 {
                     artifacts: [
                         {
@@ -85,7 +79,7 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
                 },
             ];
 
-            const wrapper = await getWrapper();
+            const wrapper = getWrapper(selected_trackers);
             expect(
                 wrapper
                     .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
