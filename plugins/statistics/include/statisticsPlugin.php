@@ -25,6 +25,8 @@
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
@@ -41,7 +43,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class StatisticsPlugin extends Plugin
+class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
 {
     public function __construct($id)
     {
@@ -117,11 +119,16 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    public function getPluginInfo()
+    public function getPluginInfo(): PluginInfo
     {
-        if (! $this->pluginInfo instanceof StatisticsPluginInfo) {
-            include_once('StatisticsPluginInfo.php');
-            $this->pluginInfo = new StatisticsPluginInfo($this);
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-statistics', 'Statistics'),
+                    dgettext('tuleap-statistics', 'A collection of statistics tools & scripts'),
+                )
+            );
         }
         return $this->pluginInfo;
     }
@@ -303,5 +310,11 @@ class StatisticsPlugin extends Plugin
             __DIR__ . '/../frontend-assets',
             '/assets/statistics'
         );
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(ProjectQuotaManager::class);
+        $event->addConfigClass(Statistics_DiskUsageManager::class);
     }
 }

@@ -55,7 +55,7 @@ class DiskUsagePieDisplayer
     public function displayDiskUsagePie(Project $project)
     {
         $project_id      = $project->getID();
-        $quota           = $this->disk_manager->getProperty('allowed_quota');
+        $quota           = \ForgeConfig::getInt(ProjectQuotaManager::CONFIG_ALLOWED_QUOTA);
         $custom_quota    = $this->quota_manager->getProjectCustomQuota($project->getId());
         $used_proportion = $this->disk_manager->returnTotalProjectSize($project_id);
 
