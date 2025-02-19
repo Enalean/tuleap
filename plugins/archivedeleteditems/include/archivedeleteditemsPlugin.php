@@ -23,22 +23,23 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\ArchiveDeletedItems\ArchiveLogger;
 use Tuleap\ArchiveDeletedItems\FileCopier;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 
-class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[ConfigKeyCategory('Archive Deleted Items')]
+class ArchivedeleteditemsPlugin extends Plugin implements PluginWithConfigKeys //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /**
-     * Constructor of the class
-     *
-     * @param int $id Id of the plugin
-     *
-     * @return Void
-     */
-    public function __construct($id)
+    #[ConfigKey('Archive deleted items path')]
+    #[ConfigKeyString('/tmp/')]
+    public const CONFIG_KEY_ARCHIVE_PATH = 'archive_deleted_items_path';
+
+    public function __construct(?int $id)
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_SYSTEM);
-        $this->addHook(\Tuleap\Event\Events\ArchiveDeletedItemEvent::NAME);
         bindtextdomain('tuleap-archivedeleteditems', __DIR__ . '/../site-content');
     }
 
@@ -47,35 +48,21 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
         return new ArchiveLogger();
     }
 
-    /**
-     * Obtain ArchiveDeletedItemsPluginInfo instance
-     *
-     * @return ArchiveDeletedItemsPluginInfo
-     */
-    public function getPluginInfo()
+    public function getPluginInfo(): PluginInfo
     {
-        if (! $this->pluginInfo instanceof \ArchiveDeletedItemsPluginInfo) {
-            require_once('ArchiveDeletedItemsPluginInfo.php');
-            $this->pluginInfo = new ArchiveDeletedItemsPluginInfo($this);
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new PluginInfo($this);
+            $this->pluginInfo->setPluginDescriptor(
+                new PluginDescriptor(
+                    dgettext('tuleap-archivedeleteditems', 'Archive deleted items'),
+                    dgettext('tuleap-archivedeleteditems', 'This plugin will move files that should be purged (permanently deleted) in a dedicated filesystem for an external archiving (archiving process itself is not managed by this plugin).'),
+                )
+            );
         }
         return $this->pluginInfo;
     }
 
-    /**
-     * Returns the configuration defined for given variable name
-     *
-     * @param String $key name of the param
-     *
-     * @return String
-     */
-    public function getConfigurationParameter($key)
-    {
-        return $this->getPluginInfo()->getPropertyValueForName($key);
-    }
-
-    /**
-     * Copy files to the archiving directory
-     */
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function archiveDeletedItem(ArchiveDeletedItemEvent $event): void
     {
         $logger = $this->getLogger();
@@ -116,7 +103,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
 
     private function getWellFormattedArchivePath()
     {
-        $archive_path = $this->getConfigurationParameter('archive_path');
+        $archive_path = ForgeConfig::get(self::CONFIG_KEY_ARCHIVE_PATH);
 
         if ($archive_path) {
             $archive_path  = rtrim($archive_path, '/');
@@ -124,5 +111,10 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
         }
 
         return $archive_path;
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(self::class);
     }
 }
