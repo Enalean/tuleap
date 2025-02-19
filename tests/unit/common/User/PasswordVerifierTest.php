@@ -67,11 +67,6 @@ final class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             {
                 throw new \RuntimeException('Not expected to be called');
             }
-
-            public function computeUnixPassword(ConcealedString $plain_password): string
-            {
-                throw new \RuntimeException('Not expected to be called');
-            }
         };
     }
 }

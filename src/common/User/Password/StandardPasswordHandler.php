@@ -43,13 +43,4 @@ class StandardPasswordHandler implements PasswordHandler
     {
         return \password_needs_rehash($hash_password, PASSWORD_BCRYPT, ['cost' => 13]);
     }
-
-    public function computeUnixPassword(ConcealedString $plain_password): string
-    {
-        $number_generator = new RandomNumberGenerator(self::SALT_SIZE);
-        $salt             = $number_generator->getNumber();
-        // We use SHA-512 with 20000 rounds to create the Unix Password
-        // SHA-512 is more widely available than BCrypt in GLibc OS library
-        return crypt($plain_password->getString(), '$6$rounds=20000$' . $salt . '$');
-    }
 }

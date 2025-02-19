@@ -108,11 +108,6 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
                 {
                     return false;
                 }
-
-                public function computeUnixPassword(ConcealedString $plain_password): string
-                {
-                    return 'hash';
-                }
             }
         );
 
