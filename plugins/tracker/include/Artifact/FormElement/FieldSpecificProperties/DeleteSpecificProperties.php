@@ -24,5 +24,5 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
 interface DeleteSpecificProperties
 {
-    public function delete(int $field_id): void;
+    public function deleteFieldProperties(int $field_id): void;
 }

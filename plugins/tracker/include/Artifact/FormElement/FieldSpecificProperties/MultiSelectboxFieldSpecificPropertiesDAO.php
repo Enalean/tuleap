@@ -26,7 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class MultiSelectboxFieldSpecificPropertiesDAO extends DataAccessObject implements DeleteSpecificProperties
 {
-    public function delete(int $field_id): void
+    public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_field_msb', ['field_id' => $field_id]);
     }

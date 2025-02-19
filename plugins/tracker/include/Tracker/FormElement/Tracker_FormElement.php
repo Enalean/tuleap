@@ -1041,7 +1041,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         if (! $dao) {
             return;
         }
-        $dao->delete($this->id);
+        $dao->deleteFieldProperties($this->id);
     }
 
     /**

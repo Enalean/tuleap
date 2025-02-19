@@ -33,7 +33,7 @@ final class StringFieldSpecificPropertiesDAO extends DataAccessObject implements
         $this->getDB()->run($sql, $to_field_id, $from_field_id);
     }
 
-    public function delete(int $field_id): void
+    public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_field_string', ['field_id' => $field_id]);
     }
