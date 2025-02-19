@@ -40,6 +40,27 @@ import {
     getPOFileFromLocaleWithoutExtension,
     initGettext,
 } from "@tuleap/gettext";
+import { buildToolbarItems } from "../helpers/build-toolbar-items-collection";
+
+export type ItemGroupName =
+    | "basic_text_items"
+    | "list_items"
+    | "link_items"
+    | "scripts_items"
+    | "text_styles_items"
+    | "additional_items";
+
+export const BASIC_TEXT_ITEMS_GROUP: ItemGroupName = "basic_text_items";
+export const LIST_ITEMS_GROUP: ItemGroupName = "list_items";
+export const LINK_ITEMS_GROUP: ItemGroupName = "link_items";
+export const SCRIPTS_ITEMS_GROUP: ItemGroupName = "scripts_items";
+export const TEXT_STYLES_ITEMS_GROUP: ItemGroupName = "text_styles_items";
+export const ADDITIONAL_ITEMS_GROUP: ItemGroupName = "additional_items";
+
+export type ItemGroup = {
+    name: ItemGroupName;
+    element: unknown;
+};
 
 export type ProseMirrorToolbarElement = {
     controller: ToolbarController;
@@ -48,6 +69,7 @@ export type ProseMirrorToolbarElement = {
     script_elements: ScriptElements | null;
     link_elements: LinkElements | null;
     style_elements: StyleElements | null;
+    additional_elements: AdditionalElement[] | null;
 };
 
 export type TextElements = {
@@ -77,6 +99,12 @@ export type StyleElements = {
     headings: boolean;
     text: boolean;
     preformatted: boolean;
+};
+
+export type AdditionalElement = {
+    position: "before" | "after";
+    target_name: ItemGroupName;
+    item_element: HTMLElement;
 };
 
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
@@ -128,11 +156,14 @@ export const renderToolbar = (
         host.text_elements?.italic ||
         host.text_elements?.code ||
         host.text_elements?.quote;
-    const basic_text_items = has_at_least_one_basic_text_element
-        ? html`<span class="prose-mirror-button-group">
-              ${bold_item} ${italic_item} ${quote_item} ${code_item}
-          </span>`
-        : html``;
+    const basic_text_items: ItemGroup = {
+        name: BASIC_TEXT_ITEMS_GROUP,
+        element: has_at_least_one_basic_text_element
+            ? html`<span class="prose-mirror-button-group">
+                  ${bold_item} ${italic_item} ${quote_item} ${code_item}
+              </span>`
+            : html``,
+    };
 
     const ordered = host.list_elements?.ordered_list;
     const ordered_item = ordered
@@ -154,11 +185,15 @@ export const renderToolbar = (
           ></bullet-list-item>`
         : html``;
 
-    const list_items =
-        host.list_elements?.ordered_list || host.list_elements?.bullet_list
-            ? html`<span class="prose-mirror-button-group">${bullet_item} ${ordered_item}</span>`
-            : html``;
-
+    const list_items: ItemGroup = {
+        name: LIST_ITEMS_GROUP,
+        element:
+            host.list_elements?.ordered_list || host.list_elements?.bullet_list
+                ? html`<span class="prose-mirror-button-group"
+                      >${bullet_item} ${ordered_item}</span
+                  >`
+                : html``,
+    };
     const subscript = host.script_elements?.subscript;
     const subscript_item = subscript
         ? html`<subscript-item
@@ -179,11 +214,14 @@ export const renderToolbar = (
 
     const has_supersubscript_elements =
         host.script_elements?.subscript || host.script_elements?.superscript;
-    const supersubscript_items = has_supersubscript_elements
-        ? html`<span class="prose-mirror-button-group">
-              ${subscript_item} ${superscript_item}
-          </span>`
-        : html``;
+    const supersubscript_items: ItemGroup = {
+        name: SCRIPTS_ITEMS_GROUP,
+        element: has_supersubscript_elements
+            ? html`<span class="prose-mirror-button-group">
+                  ${subscript_item} ${superscript_item}
+              </span>`
+            : html``,
+    };
 
     const link_item = host.link_elements?.link
         ? html`<link-item
@@ -212,32 +250,48 @@ export const renderToolbar = (
 
     const has_at_least_one_link_element =
         host.link_elements?.link || host.link_elements?.unlink || host.link_elements?.image;
-    const link_items = has_at_least_one_link_element
-        ? html`<span class="prose-mirror-button-group">
-              ${link_item} ${unlink_item} ${image_item}
-          </span>`
-        : html``;
+    const link_items: ItemGroup = {
+        name: LINK_ITEMS_GROUP,
+        element: has_at_least_one_link_element
+            ? html`<span class="prose-mirror-button-group">
+                  ${link_item} ${unlink_item} ${image_item}
+              </span>`
+            : html``,
+    };
 
     const has_at_least_one_style_element_activated =
         host.style_elements !== null &&
         (host.style_elements.headings ||
             host.style_elements.text ||
             host.style_elements.preformatted);
-    const text_style_item = has_at_least_one_style_element_activated
-        ? html` <span class="prose-mirror-button-group">
-              <text-style-item
-                  toolbar_bus="${host.controller.getToolbarBus()}"
-                  style_elements="${host.style_elements}"
-                  gettext_provider="${gettext_provider}"
-                  is_disabled="${host.is_disabled}"
-              ></text-style-item>
-          </span>`
-        : html``;
+    const text_style_item: ItemGroup = {
+        name: TEXT_STYLES_ITEMS_GROUP,
+        element: has_at_least_one_style_element_activated
+            ? html` <span class="prose-mirror-button-group">
+                  <text-style-item
+                      toolbar_bus="${host.controller.getToolbarBus()}"
+                      style_elements="${host.style_elements}"
+                      gettext_provider="${gettext_provider}"
+                      is_disabled="${host.is_disabled}"
+                  ></text-style-item>
+              </span>`
+            : html``,
+    };
+
+    const default_item_groups_collection: ItemGroup[] = [
+        basic_text_items,
+        text_style_item,
+        list_items,
+        link_items,
+        supersubscript_items,
+    ];
 
     return html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
-            ${basic_text_items} ${text_style_item} ${list_items} ${link_items}
-            ${supersubscript_items}
+            ${buildToolbarItems(
+                default_item_groups_collection,
+                host.additional_elements ? host.additional_elements : [],
+            ).map((items) => html`${items.element}`)}
         </div>
     `.style(scss_styles);
 };
@@ -255,6 +309,7 @@ initGettext(
         link_elements: null,
         list_elements: null,
         style_elements: null,
+        additional_elements: null,
         is_disabled: {
             value: true,
             connect: (host) => {
