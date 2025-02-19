@@ -1,6 +1,7 @@
 %define _buildhost tuleap-builder
 %define _source_payload w16T8.zstdio
 %define _binary_payload w16T8.zstdio
+%define _use_weak_usergroup_deps 1
 
 %define target_path /usr/lib/tuleap-realtime
 

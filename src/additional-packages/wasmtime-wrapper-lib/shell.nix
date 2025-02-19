@@ -5,7 +5,7 @@ pkgs.mkShellNoCC {
   buildInputs = [
     (import ./build-tools/cargo-zig-wrapper.nix { inherit pkgs; })
     (pkgs.rust-bin.stable.latest.default.override {
-      targets = [ "wasm32-wasi" "x86_64-unknown-linux-gnu" ];
+      targets = [ "wasm32-wasip1" "x86_64-unknown-linux-gnu" ];
       extensions = [ "cargo" "rustc" "rust-src" "clippy" ];
     })
   ];

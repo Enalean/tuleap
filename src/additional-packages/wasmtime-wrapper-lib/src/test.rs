@@ -11,7 +11,7 @@ mod tests {
     #[test]
     fn expected_output_normal() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/happy-path.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
@@ -31,7 +31,7 @@ mod tests {
     #[test]
     fn can_read_from_preopened_dirs() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/read-from-preopened-dir.wasm",
             "mount_points": [
                 {
                     "host_path": "./test-wasm-modules/TryToReadHere0",
@@ -63,7 +63,7 @@ mod tests {
     #[test]
     fn write_to_preopened_dir_fails() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/write-to-preopened-dir.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/write-to-preopened-dir.wasm",
             "mount_points": [{
                 "host_path": "./test-wasm-modules/TryToReadHere0",
                 "guest_path": "/git-dir-7331/"
@@ -108,7 +108,7 @@ mod tests {
     #[test]
     fn module_input_json_ptr_is_null_error() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/happy-path.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
@@ -133,7 +133,7 @@ mod tests {
     #[test]
     fn module_not_found() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/i-do-not-exist.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/i-do-not-exist.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
@@ -144,7 +144,7 @@ mod tests {
         let str_out = run_wasm_module(config_json, "");
 
         assert_eq!(
-            r#"{"internal_error":"Failed to load the wasm module: failed to read input file: ./test-wasm-modules/target/wasm32-wasi/release/i-do-not-exist.wasm"}"#,
+            r#"{"internal_error":"Failed to load the wasm module: failed to read input file: ./test-wasm-modules/target/wasm32-wasip1/release/i-do-not-exist.wasm"}"#,
             str_out
         );
     }
@@ -152,7 +152,7 @@ mod tests {
     #[test]
     fn module_exceeding_max_running_time_gets_killed() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/running-time.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/running-time.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
@@ -175,7 +175,7 @@ mod tests {
     #[test]
     fn wasm_module_allocate_too_much_memory() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-fail.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/memory-alloc-fail.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
@@ -199,7 +199,7 @@ mod tests {
     #[test]
     fn wasm_module_allocate_okay_amount_of_memory() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-success.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/memory-alloc-success.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
@@ -219,7 +219,7 @@ mod tests {
     #[test]
     fn explicit_exit_0() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/explicit-exit.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/explicit-exit.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
@@ -237,7 +237,7 @@ mod tests {
     #[test]
     fn explicit_exit_1() {
         let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/explicit-exit.wasm",
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/explicit-exit.wasm",
             "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,

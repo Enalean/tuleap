@@ -94,7 +94,6 @@ if (! $plugin) {
         --default-domain=core \
         --from-code=UTF-8 \
         --no-location \
-        --sort-output \
         --omit-header \
         -o - \
     | sed '/^msgctxt/d' \

@@ -11,7 +11,7 @@ let
 
     vendorHash = "sha256-PuLwWwlO6rQGDW3fniZN9lLPsiWv1Hp4U5a3ATCfcxU=";
 
-    CGO_ENABLED=0;
+    env.CGO_ENABLED=0;
 
     ldflags = [ "-s" "-w" ];
   };
