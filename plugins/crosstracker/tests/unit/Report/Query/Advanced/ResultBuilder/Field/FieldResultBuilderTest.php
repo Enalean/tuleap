@@ -367,19 +367,11 @@ EOL
 
     public function testItReturnsValuesForUserGroupListField(): void
     {
-        $matcher = $this->exactly(2);
-        $GLOBALS['Language']->expects($matcher)->method('getText')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('project_ugroup', $parameters[0]);
-                self::assertSame('ugroup_project_members', $parameters[1]);
-                return 'Project members';
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('project_ugroup', $parameters[0]);
-                self::assertSame('ugroup_project_admins', $parameters[1]);
-                return 'Project admins';
-            }
-        });
+        $GLOBALS['Language']->expects(self::exactly(2))->method('getText')
+            ->willReturnCallback(static fn(string $pagename, string $category) => match ($category) {
+                'ugroup_project_members' => 'Project members',
+                'ugroup_project_admins'  => 'Project admins',
+            });
 
         $result = $this->getSelectedResult(
             RetrieveUsedFieldsStub::withFields(
