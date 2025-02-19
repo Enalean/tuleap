@@ -21,7 +21,7 @@ import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue
 import { createApp, ref } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createGettext } from "vue3-gettext";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import App from "./App.vue";
 
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
@@ -79,17 +79,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const current_locale = userLocale(user_locale);
 
-    const item_id = Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-item-id"), 10);
+    const item_id = Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-item-id"), 10);
 
     const app = createApp(App);
 
     app.provide(TOOLBAR_BUS, buildToolbarBus());
 
     const can_user_edit_document = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "data-can-user-edit-document"),
+        getAttributeOrThrow(vue_mount_point, "data-can-user-edit-document"),
     );
     const selected_tracker = JSON.parse(
-        getDatasetItemOrThrow(vue_mount_point, "data-selected-tracker"),
+        getAttributeOrThrow(vue_mount_point, "data-selected-tracker"),
     );
     const file_uploads_collection = getFileUploadsCollection();
     const states_collection = getSectionsStatesCollection(
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const configuration_store = initConfigurationStore(
         item_id,
         selected_tracker,
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-allowed-trackers")),
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-trackers")),
     );
 
     const is_loading_failed = ref(false);
@@ -124,28 +124,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus());
     app.provide(REMOVE_FREETEXT_SECTION_MODAL, useRemoveFreetextSectionModal());
     app.provide(DOCUMENT_ID, item_id);
-    app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "data-title"));
+    app.provide(TITLE, getAttributeOrThrow(vue_mount_point, "data-title"));
     app.provide(
         UPLOAD_MAX_SIZE,
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-upload-max-size"), 10),
+        Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-upload-max-size"), 10),
     );
     app.provide(
         IS_FREETEXT_ALLOWED,
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-is-freetext-allowed"), 10),
+        Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-is-freetext-allowed"), 10),
     );
     app.provide(CONFIGURATION_STORE, configuration_store);
     app.provide(
         PDF_TEMPLATES_STORE,
         initPdfTemplatesStore(
-            JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-pdf-templates")),
+            JSON.parse(getAttributeOrThrow(vue_mount_point, "data-pdf-templates")),
         ),
     );
     app.provide(
         IS_USER_ANONYMOUS,
-        Number(getDatasetItemOrThrow(document.body, "data-user-id")) === 0,
+        Number(getAttributeOrThrow(document.body, "data-user-id")) === 0,
     );
 
-    app.provide(PROJECT_ID, getDatasetItemOrThrow(vue_mount_point, "data-project-id"));
+    app.provide(PROJECT_ID, getAttributeOrThrow(vue_mount_point, "data-project-id"));
     app.provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed);
     app.use(gettext);
     app.use(VueDOMPurifyHTML);

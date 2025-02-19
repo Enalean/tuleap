@@ -40,7 +40,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { ColumnNameGetter } from "./domain/ColumnNameGetter";
 import type { Events } from "./helpers/emitter-provider";
 import mitt from "mitt";
-import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -64,17 +64,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const documentation_url = getDatasetItemOrThrow(
+        const documentation_url = getAttributeOrThrow(
             widget_element,
             "data-documentation-base-url",
         );
-        const widget_id_string = getDatasetItemOrThrow(widget_element, "data-widget-id");
+        const widget_id_string = getAttributeOrThrow(widget_element, "data-widget-id");
         const widget_id = Number.parseInt(widget_id_string, 10);
         const is_widget_admin = Boolean(
-            getDatasetItemOrThrow(widget_element, "data-is-widget-admin"),
+            getAttributeOrThrow(widget_element, "data-is-widget-admin"),
         );
         const is_multiple_query_supported = Boolean(
-            getDatasetItemOrThrow(widget_element, "data-is-multiple-query-supported"),
+            getAttributeOrThrow(widget_element, "data-is-multiple-query-supported"),
         );
 
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");

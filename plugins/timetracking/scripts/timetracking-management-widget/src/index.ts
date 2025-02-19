@@ -22,7 +22,7 @@ import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "./injection-symbols";
 import { QueryRetriever } from "./query/QueryRetriever";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("timetracking-management-widget");
@@ -40,11 +40,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
         )
-        .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "data-user-locale"))
+        .provide(USER_LOCALE_KEY, getAttributeOrThrow(document.body, "data-user-locale"))
         .provide(RETRIEVE_QUERY, QueryRetriever())
-        .provide(
-            WIDGET_ID,
-            Number.parseInt(getDatasetItemOrThrow(mount_point, "data-widget-id"), 10),
-        )
+        .provide(WIDGET_ID, Number.parseInt(getAttributeOrThrow(mount_point, "data-widget-id"), 10))
         .mount(mount_point);
 });

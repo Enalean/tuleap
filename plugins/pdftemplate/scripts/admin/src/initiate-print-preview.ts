@@ -21,7 +21,7 @@ import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import type CodeMirror from "codemirror";
 import { createModal } from "@tuleap/tlp-modal";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 
 export function initiatePrintPreview(
     style: CodeMirror.EditorFromTextArea,
@@ -73,7 +73,7 @@ export function initiatePrintPreview(
         printAsPdf(
             fake_document,
             template,
-            JSON.parse(getDatasetItemOrThrow(button, "data-variables")),
+            JSON.parse(getAttributeOrThrow(button, "data-variables")),
         ).mapErr((fault) => {
             details.innerText = fault.toString();
 

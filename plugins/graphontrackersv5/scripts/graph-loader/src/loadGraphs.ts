@@ -18,7 +18,7 @@
  */
 
 import "../themes/style.scss";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import {
     getLocaleWithDefault,
     getPOFileFromLocaleWithoutExtension,
@@ -41,10 +41,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     function buildGraph(graph_node: HTMLElement): void {
-        const graph_id = getDatasetItemOrThrow(graph_node, "data-graph-id");
-        const renderer_id = getDatasetItemOrThrow(graph_node, "data-renderer-id");
-        const report_id = getDatasetItemOrThrow(graph_node, "data-report-id");
-        const in_dashboard = getDatasetItemOrThrow(graph_node, "data-in-dashboard");
+        const graph_id = getAttributeOrThrow(graph_node, "data-graph-id");
+        const renderer_id = getAttributeOrThrow(graph_node, "data-renderer-id");
+        const report_id = getAttributeOrThrow(graph_node, "data-report-id");
+        const in_dashboard = getAttributeOrThrow(graph_node, "data-in-dashboard");
 
         const spinner_node = showSpinner(graph_node);
         getChartData(

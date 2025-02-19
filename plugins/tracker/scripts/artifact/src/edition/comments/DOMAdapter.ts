@@ -18,7 +18,7 @@
  */
 
 import { Option } from "@tuleap/option";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     isValidTextFormat,
@@ -74,7 +74,7 @@ const computeNumberOfRowsShown = (comment_body: string): number => {
 };
 
 function readUserPreferredFormat(element: HTMLElement): TextFieldFormat {
-    const format = getDatasetItemOrThrow(element, "data-user-preferred-format");
+    const format = getAttributeOrThrow(element, "data-user-preferred-format");
     return isValidTextFormat(format) ? format : TEXT_FORMAT_COMMONMARK;
 }
 
@@ -103,8 +103,8 @@ export const DOMAdapter = (doc: Document): DOMAdapter => {
             if (!(follow_up_content instanceof HTMLElement)) {
                 return Option.nothing();
             }
-            const changeset_id = getDatasetItemOrThrow(follow_up_content, "data-changeset-id");
-            const project_id = getDatasetItemOrThrow(follow_up_content, "data-project-id");
+            const changeset_id = getAttributeOrThrow(follow_up_content, "data-changeset-id");
+            const project_id = getAttributeOrThrow(follow_up_content, "data-project-id");
             const are_notifications_enabled = !follow_up_content.hasAttribute(
                 "data-notifications-disabled",
             );

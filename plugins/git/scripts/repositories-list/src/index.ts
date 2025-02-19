@@ -23,7 +23,7 @@ import { createGettext } from "vue3-gettext";
 import TimeAgo from "javascript-time-ago";
 import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import App from "./components/App.vue";
 import "../themes/main.scss";
 import { setBreadcrumbSettings } from "./breadcrumb-presenter";
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const locale = getDatasetItemOrThrow(document.body, "data-user-Locale");
+    const locale = getAttributeOrThrow(document.body, "data-user-Locale");
 
     const gettext_plugin = await initVueGettext(
         createGettext,
@@ -55,21 +55,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     setBreadcrumbSettings(
-        getDatasetItemOrThrow(vue_mount_point, "data-repositories-administration-url"),
-        getDatasetItemOrThrow(vue_mount_point, "data-repository-list-url"),
-        getDatasetItemOrThrow(vue_mount_point, "data-repositories-fork-url"),
-        getDatasetItemOrThrow(vue_mount_point, "data-project-public-name"),
-        getDatasetItemOrThrow(vue_mount_point, "data-project-url"),
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-privacy")),
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-project-flags")),
+        getAttributeOrThrow(vue_mount_point, "data-repositories-administration-url"),
+        getAttributeOrThrow(vue_mount_point, "data-repository-list-url"),
+        getAttributeOrThrow(vue_mount_point, "data-repositories-fork-url"),
+        getAttributeOrThrow(vue_mount_point, "data-project-public-name"),
+        getAttributeOrThrow(vue_mount_point, "data-project-url"),
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-privacy")),
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-project-flags")),
         vue_mount_point.dataset.projectIcon || "",
     );
 
-    const repositories_owners = getDatasetItemOrThrow(vue_mount_point, "data-repositories-owners");
+    const repositories_owners = getAttributeOrThrow(vue_mount_point, "data-repositories-owners");
 
     buildRepositoryListPresenter(
-        Number.parseInt(getDatasetItemOrThrow(document.body, "data-user-id"), 10),
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "data-project-id"), 10),
+        Number.parseInt(getAttributeOrThrow(document.body, "data-user-id"), 10),
+        Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-project-id"), 10),
         Boolean(vue_mount_point.dataset.isAdmin),
         locale,
         JSON.parse(repositories_owners).sort(function (
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
             return user_a.display_name.localeCompare(user_b.display_name);
         }),
-        JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-external-plugins")),
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-external-plugins")),
     );
 
     const state: State = {
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         display_mode: display_mode,
         is_first_load_done: false,
         services_name_used: JSON.parse(
-            getDatasetItemOrThrow(vue_mount_point, "data-external-services-name-used"),
+            getAttributeOrThrow(vue_mount_point, "data-external-services-name-used"),
         ),
         add_gitlab_repository_modal: null,
         unlink_gitlab_repository_modal: null,
