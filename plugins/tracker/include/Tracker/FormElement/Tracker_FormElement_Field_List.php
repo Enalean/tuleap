@@ -21,6 +21,7 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
@@ -97,6 +98,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function setBind($bind)
     {
         $this->bind = $bind;
+    }
+
+    protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
+    {
+        return new ListFieldSpecificPropertiesDAO();
     }
 
     public function duplicate(int $from_field_id): SpecificPropertiesWithMappingDuplicator

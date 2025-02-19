@@ -1,7 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Tracker\FormElement;
+declare(strict_types=1);
 
-use DataAccessObject;
+namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
-abstract class SpecificPropertiesDao extends DataAccessObject
+interface DeleteSpecificProperties
 {
-    public function searchByFieldId($field_id)
-    {
-        $field_id = $this->da->escapeInt($field_id);
-        $sql      = "SELECT *
-                FROM $this->table_name
-                WHERE field_id = $field_id ";
-        return $this->retrieve($sql);
-    }
-
-    abstract public function save($field_id, $row);
+    public function delete(int $field_id): void;
 }

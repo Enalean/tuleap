@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class DateFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties
+final class DateFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
@@ -33,5 +33,10 @@ final class DateFieldSpecificPropertiesDAO extends DataAccessObject implements D
                 FROM tracker_field_date
                 WHERE field_id = ?';
         $this->getDB()->run($sql, $to_field_id, $from_field_id);
+    }
+
+    public function delete(int $field_id): void
+    {
+        $this->getDB()->delete('tracker_field_date', ['field_id' => $field_id]);
     }
 }

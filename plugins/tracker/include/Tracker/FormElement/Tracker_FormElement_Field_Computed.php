@@ -614,7 +614,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return new ComputedFieldDao();
     }
 
-    protected function getDuplicateSpecificPropertiesDao(): ?ComputedFieldSpecificPropertiesDAO
+    protected function getDuplicateSpecificPropertiesDao(): ComputedFieldSpecificPropertiesDAO
+    {
+        return new ComputedFieldSpecificPropertiesDAO();
+    }
+
+    protected function getDeleteSpecificPropertiesDao(): ComputedFieldSpecificPropertiesDAO
     {
         return new ComputedFieldSpecificPropertiesDAO();
     }
