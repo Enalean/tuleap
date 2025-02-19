@@ -42,20 +42,13 @@ final class POSTSectionRepresentation
      */
     public mixed $position;
 
-    /**
-     * @var int The level of the section {@required false}
-     */
-    public int $level;
-
     public function __construct(
         ?POSTSectionImportRepresentation $import,
         ?POSTSectionPositionBeforeRepresentation $position,
         ?POSTContentSectionRepresentation $content,
-        int $level,
     ) {
         $this->import   = $import;
         $this->position = $position;
         $this->content  = $content;
-        $this->level    = $level;
     }
 }

@@ -29,6 +29,7 @@ final class POSTSectionImportRepresentation
 {
     public function __construct(
         public POSTSectionArtifactRepresentation $artifact,
+        public int $level,
     ) {
     }
 }

@@ -26,6 +26,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\CreateArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeCreatedArtifact;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeImported;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
@@ -47,17 +48,17 @@ final readonly class SectionCreator
      * @param Option<SectionIdentifier> $before_section_id
      * @return Ok<SectionIdentifier>|Err<Fault>
      */
-    public function create(int $id, Option $before_section_id, Level $level, SectionContentToBeCreated $content): Ok|Err
+    public function create(int $id, Option $before_section_id, SectionContentToBeCreated $content): Ok|Err
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
             ->andThen(fn (ArtidocWithContext $artidoc) => $content->apply(
-                fn (int $artifact_id) => $this->collect_required_section_information_for_creation
-                    ->collectRequiredSectionInformation($artidoc, $artifact_id)
-                    ->andThen(fn () => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id, $level), $before_section_id)),
+                fn (SectionContentToBeImported $import) => $this->collect_required_section_information_for_creation
+                    ->collectRequiredSectionInformation($artidoc, $import->artifact_id)
+                    ->andThen(fn () => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($import->artifact_id, $import->level), $before_section_id)),
                 fn (SectionContentToBeCreatedFreetext $freetext) => $this->saveSection($artidoc, ContentToInsert::fromFreetext($freetext->content), $before_section_id),
                 fn (SectionContentToBeCreatedArtifact $artifact) => $this->artifact_content_creator->createArtifact($artidoc, $artifact->content)
-                    ->andThen(fn (int $artifact_id) => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id, $level), $before_section_id)),
+                    ->andThen(fn (int $artifact_id) => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($artifact_id, $artifact->content->level), $before_section_id)),
             ));
     }
 

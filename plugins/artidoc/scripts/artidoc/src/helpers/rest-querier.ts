@@ -75,10 +75,11 @@ export function createSectionFromExistingArtifact(
     return postJSON<ArtidocSection>(uri`/api/artidoc_sections`, {
         artidoc_id,
         section: {
-            import: { artifact: { id: artifact_id } },
+            import: {
+                artifact: { id: artifact_id },
+                level,
+            },
             position,
-            level,
-            content: null,
         },
     });
 }
@@ -95,8 +96,7 @@ export function createSection(
     return postJSON<ArtidocSection>(uri`/api/v1/artidoc_sections`, {
         artidoc_id,
         section: {
-            content: { title, description, type, attachments },
-            level,
+            content: { title, description, type, attachments, level },
             position,
         },
     });

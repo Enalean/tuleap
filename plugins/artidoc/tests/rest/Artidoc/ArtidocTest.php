@@ -278,10 +278,12 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                         [
                             'artidoc_id' => $artidoc_id,
                             'section' => [
-                                'import' => ['artifact' => ['id' => $artifact_id]],
+                                'import' => [
+                                    'artifact' => ['id' => $artifact_id],
+                                    'level' => 1,
+                                ],
                                 'position' => null,
                                 'content' => null,
-                                'level' => 1,
                             ],
                         ],
                         JSON_THROW_ON_ERROR
@@ -337,8 +339,8 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             'description' => 'Content of section 3',
                             'type' => 'artifact',
                             'attachments' => [],
+                            'level' => 1,
                         ],
-                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
@@ -369,8 +371,8 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             'description' => 'Content of section 4',
                             'type' => 'artifact',
                             'attachments' => [],
+                            'level' => 1,
                         ],
-                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
@@ -400,8 +402,8 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             'description' => 'My freetext description',
                             'type' => 'freetext',
                             'attachments' => [],
+                            'level' => 1,
                         ],
-                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
@@ -851,8 +853,8 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                             'description' => 'My freetext description',
                             'type' => 'freetext',
                             'attachments' => [],
+                            'level' => 1,
                         ],
-                        'level' => 1,
                     ],
                 ], JSON_THROW_ON_ERROR))
             ),
