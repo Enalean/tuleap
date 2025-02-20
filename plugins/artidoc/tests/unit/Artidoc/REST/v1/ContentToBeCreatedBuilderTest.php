@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeCreatedArtifact;
-use Tuleap\Artidoc\Domain\Document\Section\Artifact\SectionContentToBeImported;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\SectionContentToBeCreatedFreetext;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
+use Tuleap\Artidoc\Domain\Document\Section\Artifact\ImportContent;
+use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -72,17 +72,17 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
         $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
         $content_to_insert->apply(
-            function (SectionContentToBeImported $import) use ($id) {
+            function (ImportContent $import) use ($id) {
                 self::assertSame($id, $import->artifact_id);
 
                 return Result::ok($import);
             },
-            function (SectionContentToBeCreatedFreetext $freetext) {
+            function (FreetextContent $freetext) {
                 self::assertNull($freetext);
 
                 return Result::ok($freetext);
             },
-            function (SectionContentToBeCreatedArtifact $artifact) {
+            function (ArtifactContent $artifact) {
                 self::assertNull($artifact);
 
                 return Result::ok($artifact);
@@ -100,17 +100,17 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
         $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
         $content_to_insert->apply(
-            function (SectionContentToBeImported $import) {
+            function (ImportContent $import) {
                 self::assertNull($import);
 
                 return Result::ok($import);
             },
-            function (SectionContentToBeCreatedFreetext $freetext) {
-                self::assertSame('title', $freetext->content->title);
+            function (FreetextContent $freetext) {
+                self::assertSame('title', $freetext->title);
 
                 return Result::ok($freetext);
             },
-            function (SectionContentToBeCreatedArtifact $artifact) {
+            function (ArtifactContent $artifact) {
                 self::assertNull($artifact);
 
                 return Result::ok($artifact);
@@ -128,18 +128,18 @@ final class ContentToBeCreatedBuilderTest extends TestCase
 
         $content_to_insert = ContentToBeCreatedBuilder::buildFromRepresentation($section);
         $content_to_insert->apply(
-            function (SectionContentToBeImported $import) {
+            function (ImportContent $import) {
                 self::assertNull($import);
 
                 return Result::ok($import);
             },
-            function (SectionContentToBeCreatedFreetext $freetext) {
+            function (FreetextContent $freetext) {
                 self::assertNull($freetext);
 
                 return Result::ok($freetext);
             },
-            function (SectionContentToBeCreatedArtifact $artifact) {
-                self::assertSame('title', $artifact->content->title);
+            function (ArtifactContent $artifact) {
+                self::assertSame('title', $artifact->title);
 
                 return Result::ok($artifact);
             },
