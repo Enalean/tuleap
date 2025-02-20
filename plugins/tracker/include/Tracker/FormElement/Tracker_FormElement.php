@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
@@ -274,8 +276,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
                 break;
             case 'admin-formElement-delete':
-                $this->delete();
-                Tracker_FormElementFactory::instance()->deleteFormElement($this->id);
+                $transaction = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+                $transaction->execute(function () {
+                    $this->delete();
+                    Tracker_FormElementFactory::instance()->deleteFormElement($this->id);
+                });
                 $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field deleted'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
                 break;
