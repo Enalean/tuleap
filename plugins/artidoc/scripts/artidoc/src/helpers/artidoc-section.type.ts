@@ -22,26 +22,9 @@ import type { Project } from "@/helpers/project.type";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 import type { FileIdentifier } from "@tuleap/file-upload/dist/file-upload-options";
 
-interface ArtifactFieldValueRepresentation {
-    readonly field_id: number;
-    readonly label: string;
-}
-
-interface ArtifactFieldValueTextRepresentation extends ArtifactFieldValueRepresentation {
-    readonly type: "text";
-    readonly value: string;
-    readonly format: string;
-    readonly post_processed_value: string;
-}
-
 export interface ArtifactSectionAttachmentsRepresentation {
     upload_url: string;
     attachment_ids: FileIdentifier[];
-}
-
-export interface ArtifactFieldValueCommonmarkRepresentation
-    extends ArtifactFieldValueTextRepresentation {
-    readonly commonmark: string;
 }
 
 export type ArtidocSection = FreetextSection | SectionBasedOnArtifact;

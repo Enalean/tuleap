@@ -60,13 +60,6 @@ final readonly class DocumentTrackerRepresentation
             ? new DocumentTrackerFieldTextRepresentation($description_field->getId(), $description_field->getLabel(), Tracker_FormElementFactory::instance()->getType($description_field), $description_field->getDefaultRESTValue())
             : null;
 
-        $file_upload_data = $file_upload_provider->getFileUploadData($tracker, null, $user);
-
-        $file_field = $file_upload_data?->getField();
-        $file       = $file_field && $file_field->userCanSubmit($user)
-            ? new DocumentTrackerFieldFileRepresentation($file_field->getId(), $file_field->getLabel(), Tracker_FormElementFactory::instance()->getType($file_field))
-            : null;
-
         $project = new MinimalProjectRepresentation($tracker->getProject());
 
         return new self(
@@ -76,8 +69,31 @@ final readonly class DocumentTrackerRepresentation
             $tracker->getItemName(),
             $title,
             $description,
-            $file,
+            self::getFile($file_upload_provider, $tracker, $user),
             $project,
+        );
+    }
+
+    private static function getFile(
+        GetFileUploadData $file_upload_provider,
+        Tracker $tracker,
+        PFUser $user,
+    ): ?DocumentTrackerFieldFileRepresentation {
+        $file_upload_data = $file_upload_provider->getFileUploadData($tracker, null, $user);
+        if (! $file_upload_data) {
+            return null;
+        }
+
+        $file_field = $file_upload_data->getField();
+        if (! $file_field->userCanSubmit($user)) {
+            return null;
+        }
+
+        return new DocumentTrackerFieldFileRepresentation(
+            $file_field->getId(),
+            $file_field->getLabel(),
+            Tracker_FormElementFactory::instance()->getType($file_field),
+            $file_upload_data->getUploadUrl(),
         );
     }
 }

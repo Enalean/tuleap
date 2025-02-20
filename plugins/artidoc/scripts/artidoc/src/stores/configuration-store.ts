@@ -31,7 +31,6 @@ export interface TitleFieldDefinition {
 }
 
 interface DescriptionFieldDefinition {
-    readonly field_id: number;
     readonly label: string;
     readonly type: "text";
     readonly default_value: {
@@ -41,9 +40,9 @@ interface DescriptionFieldDefinition {
 }
 
 interface FileFieldDefinition {
-    readonly field_id: number;
     readonly label: string;
     readonly type: "file";
+    readonly upload_url: string;
 }
 
 export interface Tracker {

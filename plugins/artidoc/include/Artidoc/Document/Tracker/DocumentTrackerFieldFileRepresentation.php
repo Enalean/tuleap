@@ -27,7 +27,11 @@ namespace Tuleap\Artidoc\Document\Tracker;
  */
 final readonly class DocumentTrackerFieldFileRepresentation
 {
-    public function __construct(public int $field_id, public string $label, public string $type)
-    {
+    public function __construct(
+        public int $field_id,
+        public string $label,
+        public string $type,
+        public string $upload_url,
+    ) {
     }
 }
