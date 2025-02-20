@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\ListFields\ListFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class ListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private ListFieldSpecificPropertiesDAO $dao;
     private int $list_field_id;
-    private ListFieldDao $old_dao;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -43,11 +41,10 @@ final class ListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new ListFieldSpecificPropertiesDAO();
-        $this->old_dao = new ListFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new ListFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -62,7 +59,7 @@ final class ListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchBindByFieldId($this->list_field_id)->unwrapOr(null);
         self::assertSame('static', $properties);
 
-        $this->old_dao->save($this->list_field_id, 'users');
+        $this->dao->saveBindForFieldId($this->list_field_id, 'users');
         $properties = $this->dao->searchBindByFieldId($this->list_field_id)->unwrapOr(null);
         self::assertSame('users', $properties);
 

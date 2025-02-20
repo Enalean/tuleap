@@ -21,7 +21,6 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
@@ -29,11 +28,6 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
-
-    protected function getDao()
-    {
-        return new DateFieldDao();
-    }
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {

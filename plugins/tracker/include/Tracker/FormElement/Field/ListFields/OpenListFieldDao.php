@@ -21,29 +21,14 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
-use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
+use DataAccessObject;
 
-class OpenListFieldDao extends SpecificPropertiesDao
+class OpenListFieldDao extends DataAccessObject
 {
     public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_field_openlist';
-    }
-
-    public function save($field_id, $row)
-    {
-        $field_id = $this->da->escapeInt($field_id);
-
-        if (isset($row['hint'])) {
-            $hint = $this->da->quoteSmart($row['hint']);
-        } else {
-            $hint = "''";
-        }
-
-        $sql = "REPLACE INTO $this->table_name (field_id, hint)
-                VALUES ($field_id, $hint)";
-        return $this->update($sql);
     }
 
     public function searchChangesetValues(

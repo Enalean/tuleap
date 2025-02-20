@@ -30,7 +30,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 
-class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
@@ -287,7 +287,7 @@ class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getUpdatedListFormElement(int $element_id, bool $is_multiple)
     {
         $mock = $this->getListFormElement($element_id, $is_multiple);
-        $mock->shouldReceive('getFlattenPropertiesValues')->once();
+        $mock->shouldReceive('getFlattenPropertiesValues')->once()->andReturn([]);
         $mock->shouldReceive('storeProperties')->once();
 
         return $mock;

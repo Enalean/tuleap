@@ -25,6 +25,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\FieldPropertiesRetriever;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
@@ -572,16 +573,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
-     * Get the dao of the field
-     *
-     * @return DataAccessObject
-     */
-    protected function getDao()
-    {
-        return null;
-    }
-
-    /**
      * Get the dao enabling specific properties to be duplicated
      */
     protected function getDuplicateSpecificPropertiesDao(): ?DuplicateSpecificProperties
@@ -598,6 +589,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     protected function getSearchSpecificPropertiesDao(): ?SearchSpecificProperties
+    {
+        return null;
+    }
+
+    protected function getSaveSpecificPropertiesDao(): ?SaveSpecificFieldProperties
     {
         return null;
     }
@@ -659,20 +655,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * Store the specific properties of the formElement
-     *
-     * @param array $properties The properties
-     *
-     * @return bool true if success
      */
-    public function storeProperties($properties)
+    public function storeProperties(array $properties): bool
     {
-        $success = true;
-        $dao     = $this->getDao();
-
-        if ($dao && ($success = $dao->save($this->id, $properties))) {
+        $dao = $this->getSaveSpecificPropertiesDao();
+        if ($dao) {
+            $dao->saveSpecificProperties($this->id, $properties);
             $this->cache_specific_properties = null; //force reload
         }
-        return $success;
+
+        return true;
     }
 
     /**

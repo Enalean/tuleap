@@ -29,7 +29,6 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset\ItemsDatasetBuilder;
-use Tuleap\Tracker\FormElement\Field\ListFields\ListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\ListFormElementTypeUpdater;
@@ -1157,8 +1156,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         $bf = new Tracker_FormElement_Field_List_BindFactory();
         if ($this->bind = $bf->createBind($this, $type, $bind_data)) {
-            $dao = new ListFieldDao();
-            $dao->save($this->getId(), $bf->getType($this->bind));
+            $dao = new ListFieldSpecificPropertiesDAO();
+            $dao->saveBindForFieldId($this->getId(), $bf->getType($this->bind));
         }
     }
 
@@ -1221,18 +1220,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function afterSaveObject(Tracker $tracker, $tracker_is_empty, $force_absolute_ranking)
     {
         $bind = $this->getBind();
-        $this->getListDao()->save($this->getId(), $this->getBindFactory()->getType($bind));
+        $this->getListDao()->saveBindForFieldId($this->getId(), $this->getBindFactory()->getType($bind));
         $bind->saveObject();
     }
 
-    /**
-     * Get an instance of Tracker_FormElement_Field_ListDao
-     *
-     * @return ListFieldDao
-     */
-    public function getListDao()
+    public function getListDao(): ListFieldSpecificPropertiesDAO
     {
-        return new ListFieldDao();
+        return new ListFieldSpecificPropertiesDAO();
     }
 
     /**

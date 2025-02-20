@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class TextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private TextFieldSpecificPropertiesDAO $dao;
     private int $text_field_id;
-    private TextFieldDao $old_dao;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -43,11 +41,10 @@ final class TextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new TextFieldSpecificPropertiesDAO();
-        $this->old_dao = new TextFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new TextFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -62,7 +59,7 @@ final class TextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->text_field_id);
         self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 0, 'cols' => 0, 'default_value' => null], $properties);
 
-        $this->old_dao->save($this->text_field_id, []);
+        $this->dao->saveSpecificProperties($this->text_field_id, []);
         $properties = $this->dao->searchByFieldId($this->text_field_id);
 
         self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 10, 'cols' => 50, 'default_value' => ''], $properties);
@@ -78,7 +75,7 @@ final class TextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->text_field_id);
         self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 0, 'cols' => 0, 'default_value' => null], $properties);
 
-        $this->old_dao->save($this->text_field_id, ['rows' => 20, 'cols' => 30, 'default_value' => 'My value']);
+        $this->dao->saveSpecificProperties($this->text_field_id, ['rows' => 20, 'cols' => 30, 'default_value' => 'My value']);
         $properties = $this->dao->searchByFieldId($this->text_field_id);
         self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 20, 'cols' => 30, 'default_value' => 'My value'], $properties);
 

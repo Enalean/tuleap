@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\Integer\IntegerFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private IntegerFieldSpecificPropertiesDAO $dao;
     private int $int_field_id;
-    private IntegerFieldDao $old_dao;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -43,11 +41,10 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new IntegerFieldSpecificPropertiesDAO();
-        $this->old_dao = new IntegerFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new IntegerFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -62,7 +59,7 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->int_field_id);
         self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
 
-        $this->old_dao->save($this->int_field_id, []);
+        $this->dao->saveSpecificProperties($this->int_field_id, []);
         $properties = $this->dao->searchByFieldId($this->int_field_id);
         self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 30, 'default_value' => null], $properties);
 
@@ -77,7 +74,7 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->int_field_id);
         self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
 
-        $this->old_dao->save($this->int_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45']);
+        $this->dao->saveSpecificProperties($this->int_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45']);
         $properties = $this->dao->searchByFieldId($this->int_field_id);
         self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45], $properties);
 
