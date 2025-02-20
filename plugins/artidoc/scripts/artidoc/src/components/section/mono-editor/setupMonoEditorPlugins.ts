@@ -21,8 +21,14 @@ import type { Plugin } from "prosemirror-state";
 import { JumpToSectionNodePlugin } from "@/components/section/mono-editor/jump-to-section-node";
 import { EnableOrDisableToolbarPlugin } from "@/components/section/mono-editor/enable-or-disable-toolbar";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type { HeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 
-export const setupMonoEditorPlugins = (toolbar_bus: ToolbarBus): Plugin[] => [
+export const setupMonoEditorPlugins = (
+    toolbar_bus: ToolbarBus,
+    headings_button_state: HeadingsButtonState,
+    section: ReactiveStoredArtidocSection,
+): Plugin[] => [
     JumpToSectionNodePlugin(),
-    EnableOrDisableToolbarPlugin(toolbar_bus),
+    EnableOrDisableToolbarPlugin(toolbar_bus, headings_button_state, section),
 ];

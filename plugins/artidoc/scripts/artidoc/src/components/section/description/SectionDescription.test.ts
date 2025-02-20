@@ -42,6 +42,7 @@ describe("SectionDescription", () => {
         can_user_edit_document = true;
     });
 
+    const sections_collection = SectionsCollectionStub.withSections([]);
     const section_state = SectionStateStub.withDefaults();
     const section = ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.create());
     const getWrapper = (): VueWrapper =>
@@ -61,7 +62,11 @@ describe("SectionDescription", () => {
             props: {
                 section,
                 section_state,
-                manage_section_editor_state: getSectionEditorStateManager(section, section_state),
+                manage_section_editor_state: getSectionEditorStateManager(
+                    section,
+                    section_state,
+                    sections_collection.sections.value,
+                ),
                 manage_section_attachment_files: SectionAttachmentFilesManagerStub.forSection(
                     section.value,
                 ),

@@ -105,6 +105,7 @@ export const getSectionSaver = (
                     if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
                         update_sections.updateSection(artidoc_section);
                     }
+                    section_state.initial_level.value = section.value.level;
                     close_section_editor.closeEditor();
                     section_state.is_being_saved.value = false;
                     section_state.is_just_saved.value = true;
@@ -134,7 +135,7 @@ export const getSectionSaver = (
                 ) {
                     update_sections.updateSection(artidoc_section);
                 }
-
+                section_state.initial_level.value = section.value.level;
                 close_section_editor.closeEditor();
                 section_state.is_being_saved.value = false;
                 section_state.is_just_saved.value = true;

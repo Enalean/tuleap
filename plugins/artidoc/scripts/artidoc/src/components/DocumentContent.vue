@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <editor-toolbar v-if="can_user_edit_document" />
+    <editor-toolbar
+        v-if="can_user_edit_document"
+        v-bind:sections="sections_collection.sections.value"
+        v-bind:states_collection="states_collection"
+    />
     <notification-container />
     <div class="tlp-card">
         <ul>

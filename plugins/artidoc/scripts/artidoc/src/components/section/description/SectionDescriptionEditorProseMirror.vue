@@ -46,8 +46,10 @@ import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
 import { setupMonoEditorPlugins } from "../mono-editor/setupMonoEditorPlugins";
 import { getProjectIdFromSection } from "@/helpers/get-project-id-from-section";
+import { HEADINGS_BUTTON_STATE } from "@/headings-button-state-injection-key";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
+const headings_button_state = strictInject(HEADINGS_BUTTON_STATE);
 
 const props = defineProps<{
     section: ReactiveStoredArtidocSection;
@@ -117,7 +119,7 @@ onMounted(async () => {
         area_editor.value,
         setupUploadPlugin,
         setupInputPlugin,
-        () => setupMonoEditorPlugins(toolbar_bus),
+        () => setupMonoEditorPlugins(toolbar_bus, headings_button_state, props.section),
         is_upload_allowed,
         renderArtidocSectionNode(props.section),
         getProjectIdFromSection(props.section.value) ?? current_project_id,

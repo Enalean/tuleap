@@ -19,6 +19,7 @@
 
 import { ref, computed } from "vue";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
+import { LEVEL_1, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
 
 const initial_state = {
     is_image_upload_allowed: computed(() => true),
@@ -34,6 +35,7 @@ const initial_state = {
     error_message: ref(""),
     edited_title: ref(""),
     edited_description: ref(""),
+    initial_level: ref(LEVEL_1),
     is_editor_reset_needed: ref(false),
 };
 
@@ -42,15 +44,18 @@ export const SectionStateStub = {
     inEditMode: (): SectionState => ({
         ...initial_state,
         is_section_in_edit_mode: ref(true),
+        initial_level: ref(LEVEL_1),
     }),
     notEditable: (): SectionState => ({
         ...initial_state,
         is_section_editable: computed(() => false),
+        initial_level: ref(LEVEL_1),
     }),
     withDisallowedSave: (): SectionState => ({
         ...initial_state,
         is_section_in_edit_mode: ref(true),
         is_save_allowed: computed(() => false),
+        initial_level: ref(LEVEL_1),
     }),
     withEditedContent: (
         new_title = "new title",
@@ -59,6 +64,7 @@ export const SectionStateStub = {
         ...initial_state,
         edited_title: ref(new_title),
         edited_description: ref(new_description),
+        initial_level: ref(LEVEL_3),
         is_section_in_edit_mode: ref(true),
         is_editor_reset_needed: ref(true),
     }),
