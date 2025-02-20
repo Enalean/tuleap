@@ -832,7 +832,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         } else {
             $cannot_remove_message = $usage_in_semantics->getUsages() . ' ' . $this->getCannotRemoveMessage();
-            $html                 .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
+            $html                 .= '<span style="color:gray;" title="' . $hp->purify($cannot_remove_message) . '">';
             $html                 .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
             $html                 .= '</span>';
         }
