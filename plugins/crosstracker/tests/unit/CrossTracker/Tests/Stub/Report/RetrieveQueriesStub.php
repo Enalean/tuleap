@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Tests\Stub\Report;
 
 use Tuleap\DB\UUID;
 
-final readonly class RetrieveReportStub implements \Tuleap\CrossTracker\Report\RetrieveReport
+final readonly class RetrieveQueriesStub implements \Tuleap\CrossTracker\Report\Query\RetrieveQueries
 {
     /**
      * @param list<array{id: UUID, query: string, title: string, description: string, widget_id: int}> $reports

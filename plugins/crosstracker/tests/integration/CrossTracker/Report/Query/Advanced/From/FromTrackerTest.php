@@ -28,7 +28,7 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -74,7 +74,7 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     /**
      * @param list<string> $expected
      */
-    private function assertItContainsTrackers(array $expected, CrossTrackerReportContentRepresentation $result): void
+    private function assertItContainsTrackers(array $expected, CrossTrackerQueryContentRepresentation $result): void
     {
         $found = [];
         foreach ($result->artifacts as $artifact) {

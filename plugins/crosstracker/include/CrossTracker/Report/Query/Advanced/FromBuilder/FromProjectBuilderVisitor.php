@@ -28,7 +28,7 @@ use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
-use Tuleap\CrossTracker\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProject;

@@ -40,9 +40,9 @@
             </div>
             <div
                 v-for="query in filtered_queries"
-                v-bind:key="query.uuid"
+                v-bind:key="query.id"
                 v-bind:title="query.description"
-                v-bind:class="{ 'current-query': query.uuid === current_query?.uuid }"
+                v-bind:class="{ 'current-query': query.id === backend_query.id }"
                 class="tlp-dropdown-menu-item"
                 role="menuitem"
                 v-on:click.prevent="updateSelectedQuery(query)"
@@ -59,9 +59,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { EMITTER } from "../../injection-symbols";
-import type { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
-import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
-import type { Report } from "../../type";
+import type { Query } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REFRESH_ARTIFACTS_EVENT, SWITCH_QUERY_EVENT } from "../../helpers/emitter-provider";
 
@@ -72,21 +70,17 @@ let dropdown: Dropdown | null = null;
 const emitter = strictInject(EMITTER);
 
 const props = defineProps<{
-    writing_cross_tracker_report: WritingCrossTrackerReport;
-    reading_cross_tracker_report: ReadingCrossTrackerReport;
-    queries: ReadonlyArray<Report>;
-    selected_query: Report | null;
+    backend_query: Query;
+    queries: ReadonlyArray<Query>;
 }>();
-
-const current_query = ref<Report | null>(null);
 
 const filter_input = ref("");
 const filter_element = ref<InstanceType<typeof HTMLInputElement>>();
 
 const filtered_queries = computed(
-    (): ReadonlyArray<Report> =>
+    (): ReadonlyArray<Query> =>
         props.queries.filter(
-            (query: Report) =>
+            (query: Query) =>
                 query.title.toLowerCase().indexOf(filter_input.value.toLowerCase()) !== -1,
         ),
 );
@@ -108,12 +102,9 @@ function updateFilter(event: Event): void {
     }
 }
 
-function updateSelectedQuery(query: Report): void {
-    props.writing_cross_tracker_report.setExpertQuery(query.expert_query);
-    props.reading_cross_tracker_report.setNewQuery(query.expert_query);
+function updateSelectedQuery(query: Query): void {
     emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
-    emitter.emit(SWITCH_QUERY_EVENT);
-    current_query.value = query;
+    emitter.emit(SWITCH_QUERY_EVENT, { query });
     resetFilter();
     dropdown?.hide();
 }
@@ -124,6 +115,7 @@ function resetFilter(): void {
         filter_element.value.value = "";
     }
 }
+
 onBeforeUnmount(() => {
     dropdown?.destroy();
 });

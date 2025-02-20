@@ -18,7 +18,7 @@
  */
 
 import type { Emitter } from "mitt";
-import type { Report } from "../type";
+import type { Query } from "../type";
 
 export type EmitterProvider = Pick<Emitter<Events>, "off" | "on" | "emit">;
 
@@ -26,10 +26,14 @@ export const SWITCH_QUERY_EVENT = "switch-query";
 export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";
 
 export type Events = {
-    [SWITCH_QUERY_EVENT]: void;
+    [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
     [REFRESH_ARTIFACTS_EVENT]: RefreshArtifactsEvent;
 };
 
+export type SwitchQueryEvent = {
+    readonly query: Query;
+};
+
 export type RefreshArtifactsEvent = {
-    readonly query: Report;
+    readonly query: Query;
 };

@@ -20,7 +20,7 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { decodeJSON, getResponse, uri, getAllJSON } from "@tuleap/fetch-result";
-import type { SelectableReportContentRepresentation } from "./cross-tracker-rest-api-types";
+import type { SelectableQueryContentRepresentation } from "./cross-tracker-rest-api-types";
 import type {
     ArtifactsTableWithTotal,
     RetrieveArtifactsTable,
@@ -29,28 +29,34 @@ import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import type { ArtifactsTable } from "../domain/ArtifactsTable";
 
 export const ArtifactsTableRetriever = (
+    widget_id: number,
     table_builder: ArtifactsTableBuilder,
 ): RetrieveArtifactsTable => {
     return {
         getSelectableQueryResult(
-            query_id,
-            expert_query,
+            tql_query,
             limit,
             offset,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/cross_tracker_reports/${query_id}/content`, {
+            return getResponse(uri`/api/v1/crosstracker_query/content`, {
                 params: {
                     limit,
                     offset,
                     query: JSON.stringify({
-                        expert_query,
+                        widget_id,
+                        tql_query,
                     }),
                 },
             }).andThen((response) => {
                 const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
-                return decodeJSON<SelectableReportContentRepresentation>(response).map((report) => {
-                    return { table: table_builder.mapReportToArtifactsTable(report), total };
-                });
+                return decodeJSON<SelectableQueryContentRepresentation>(response).map(
+                    (query_content) => {
+                        return {
+                            table: table_builder.mapReportToArtifactsTable(query_content),
+                            total,
+                        };
+                    },
+                );
             });
         },
 
@@ -59,29 +65,34 @@ export const ArtifactsTableRetriever = (
             limit,
             offset,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/cross_tracker_reports/${query_id}/content`, {
+            return getResponse(uri`/api/v1/crosstracker_query/${query_id}/content`, {
                 params: {
                     limit,
                     offset,
                 },
             }).andThen((response) => {
                 const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
-                return decodeJSON<SelectableReportContentRepresentation>(response).map((report) => {
-                    return { table: table_builder.mapReportToArtifactsTable(report), total };
-                });
+                return decodeJSON<SelectableQueryContentRepresentation>(response).map(
+                    (query_content) => {
+                        return {
+                            table: table_builder.mapReportToArtifactsTable(query_content),
+                            total,
+                        };
+                    },
+                );
             });
         },
 
         getSelectableFullReport(query_id): ResultAsync<readonly ArtifactsTable[], Fault> {
-            return getAllJSON<SelectableReportContentRepresentation>(
-                uri`/api/v1/cross_tracker_reports/${query_id}/content`,
+            return getAllJSON<SelectableQueryContentRepresentation>(
+                uri`/api/v1/crosstracker_query/${query_id}/content`,
                 {
                     params: {
                         limit: 50,
                     },
                 },
-            ).map((report) => {
-                return report.map((table) => table_builder.mapReportToArtifactsTable(table));
+            ).map((query_content) => {
+                return query_content.map((table) => table_builder.mapReportToArtifactsTable(table));
             });
         },
     };

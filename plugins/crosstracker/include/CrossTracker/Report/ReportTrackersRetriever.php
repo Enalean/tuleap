@@ -33,7 +33,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromTrackerCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
-use Tuleap\CrossTracker\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;

@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use LogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\CrossTracker\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectConditionVisitor;

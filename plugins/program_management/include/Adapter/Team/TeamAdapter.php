@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
@@ -35,13 +36,14 @@ use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\REST\ProjectAuthorization;
 
-final class TeamAdapter implements BuildTeam
+final readonly class TeamAdapter implements BuildTeam
 {
     public function __construct(
         private RetrieveFullProject $retrieve_full_project,
         private VerifyIsProgram $program_verifier,
         private ExplicitBacklogDao $explicit_backlog_dao,
         private RetrieveUser $retrieve_user,
+        private CheckUserCanAccessProjectAndIsAdmin $url_verification,
     ) {
     }
 
@@ -50,7 +52,7 @@ final class TeamAdapter implements BuildTeam
         $user    = $this->retrieve_user->getUserWithId($user_identifier);
         $project = $this->retrieve_full_project->getProject($team_id);
         try {
-            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project, $this->url_verification);
         } catch (RestException $exception) {
             throw new TeamAccessException($team_id);
         }

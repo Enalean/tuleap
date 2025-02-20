@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ReadingCrossTrackerReport } from "./ReadingCrossTrackerReport";
+declare(strict_types=1);
 
-export class WritingCrossTrackerReport {
-    expert_query: string;
+namespace Tuleap\CrossTracker\REST\v1\Representation;
 
-    constructor() {
-        this.expert_query = "";
-    }
-
-    duplicateFromReport(report: ReadingCrossTrackerReport): void {
-        this.expert_query = report.expert_query;
-    }
-
-    setExpertQuery(expert_query: string): void {
-        this.expert_query = expert_query;
-    }
+/**
+ * @psalm-immutable
+ */
+final class CrossTrackerQueryPostRepresentation
+{
+    /**
+     * @var int ID of the widget {@required true}
+     */
+    public int $widget_id;
+    /**
+     * @var string The TQL query {@required true}
+     */
+    public string $tql_query;
+    /**
+     * @var string The query title {@required true}
+     */
+    public string $title;
+    /**
+     * @var string The query description {@required false}
+     */
+    public string $description;
 }

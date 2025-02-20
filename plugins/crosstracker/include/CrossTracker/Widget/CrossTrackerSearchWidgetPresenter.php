@@ -20,20 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST;
+namespace Tuleap\CrossTracker\Widget;
 
-use Luracast\Restler\Restler;
-use Tuleap\CrossTracker\REST\v1\CrossTrackerQueryResource;
-use Tuleap\CrossTracker\REST\v1\CrossTrackerWidgetResource;
+use PFUser;
 
-/**
- * Inject resource into restler
- */
-final class ResourcesInjector
+final readonly class CrossTrackerSearchWidgetPresenter
 {
-    public function populate(Restler $restler): void
+    public int $widget_id;
+    public string $is_widget_admin;
+    public string $documentation_base_url;
+    public bool $is_multiple_query_supported;
+
+    public function __construct(int $widget_id, bool $is_admin, PFUser $current_user, bool $is_multiple_query_supported)
     {
-        $restler->addAPIClass(CrossTrackerWidgetResource::class, CrossTrackerWidgetResource::ROUTE);
-        $restler->addAPIClass(CrossTrackerQueryResource::class, CrossTrackerQueryResource::ROUTE);
+        $this->widget_id = $widget_id;
+
+        $this->is_widget_admin = $is_admin ? 'true' : 'false';
+
+        $this->documentation_base_url      = '/doc/' . urlencode(
+            $current_user->getShortLocale()
+        );
+        $this->is_multiple_query_supported = $is_multiple_query_supported;
     }
 }

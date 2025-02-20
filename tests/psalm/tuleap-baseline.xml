@@ -4126,18 +4126,6 @@
       <code><![CDATA[searchArtifactsFromTracker]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerReportFactory.php">
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/REST/v1/CrossTrackerReportsResource.php">
-    <MissingParamType>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$size]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryBuilder/CrossTrackerExpertQueryReportDao.php">
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
@@ -4182,7 +4170,7 @@
       <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Widget/ProjectCrossTrackerSearch.php">
+  <file src="plugins/crosstracker/include/CrossTracker/Widget/CrossTrackerSearchWidget.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -4190,15 +4178,6 @@
       <code><![CDATA[$owner_id]]></code>
       <code><![CDATA[$owner_type]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[destroy]]></code>
-      <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
-      <code><![CDATA[getDescription]]></code>
-      <code><![CDATA[getTitle]]></code>
-      <code><![CDATA[isUnique]]></code>
-      <code><![CDATA[loadContent]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Widget/WidgetPermissionChecker.php">
     <PossiblyInvalidArgument>
@@ -21796,7 +21775,6 @@
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$ldapTime]]></code>
-      <code><![CDATA[$lum]]></code>
       <code><![CDATA[$sync]]></code>
       <code><![CDATA[$um]]></code>
     </MissingPropertyType>
@@ -21805,7 +21783,6 @@
       <code><![CDATA[getElapsedLdapTime]]></code>
       <code><![CDATA[getEventManager]]></code>
       <code><![CDATA[getLdapSyncNotificationManager]]></code>
-      <code><![CDATA[getLdapUserManager]]></code>
       <code><![CDATA[getLdapUserSync]]></code>
       <code><![CDATA[getProjectManager]]></code>
       <code><![CDATA[getUserManager]]></code>
@@ -49727,13 +49704,6 @@
       <code><![CDATA[getIncomingFileSize]]></code>
       <code><![CDATA[setInstance]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/webdav/include/webdavPlugin.php">
-    <DeprecatedMethod>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="src/common/Authentication/SplitToken/PrefixedSplitTokenSerializer.php">
     <ArgumentTypeCoercion>

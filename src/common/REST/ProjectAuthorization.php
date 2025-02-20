@@ -22,6 +22,7 @@ namespace Tuleap\REST;
 use PFUser;
 use Project;
 use Tuleap\include\CheckUserCanAccessProject;
+use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
 use Tuleap\Project\AccessNotActiveException;
 use URLVerification;
 use Luracast\Restler\RestException;
@@ -42,10 +43,9 @@ final readonly class ProjectAuthorization
         }
     }
 
-    public static function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project): void
+    public static function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project, CheckUserCanAccessProjectAndIsAdmin $url_verification): void
     {
         try {
-            $url_verification = new URLVerification();
             $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
         } catch (Project_AccessProjectNotFoundException | AccessNotActiveException) {
             throw new RestException(404, 'Project does not exist');

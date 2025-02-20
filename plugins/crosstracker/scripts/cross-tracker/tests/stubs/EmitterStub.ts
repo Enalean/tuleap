@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
@@ -31,13 +31,15 @@ export const EmitterStub = (): EmitterStub => {
     const emitted_event_name: Array<keyof Events> = [];
     const emitted_event_message: Array<Option<Events[keyof Events]>> = [];
     function off(): void {}
-    function emit(type: keyof Events, event: Events[keyof Events]): void {
+    function emit(type: keyof Events, event?: Events[keyof Events]): void {
         emitted_event_name.push(type);
         if (event === undefined) {
             emitted_event_message.push(Option.nothing());
+            return;
         }
         emitted_event_message.push(Option.fromValue(event));
     }
+
     function on<Key extends keyof Events>(type: Key): void {
         emitted_event_name.push(type);
         emitted_event_message.push(Option.nothing());

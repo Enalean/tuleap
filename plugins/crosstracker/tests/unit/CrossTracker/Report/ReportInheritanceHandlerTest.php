@@ -23,22 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\CrossTracker\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\SearchCrossTrackerWidgetStub;
 use Tuleap\CrossTracker\Tests\Stub\Report\CloneWidgetStub;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ReportInheritanceHandlerTest extends TestCase
 {
     private const TEMPLATE_REPORT_ID = 90;
     private const CLONED_REPORT_ID   = 95;
-    private CrossTrackerWidgetDao&MockObject $widget_dao;
+    private SearchCrossTrackerWidget $widget_dao;
     private CloneWidgetStub $report_cloner;
     private TestLogger $logger;
 
     protected function setUp(): void
     {
-        $this->widget_dao    = $this->createMock(CrossTrackerWidgetDao::class);
+        $this->widget_dao    = SearchCrossTrackerWidgetStub::withoutExistingWidget();
         $this->report_cloner = CloneWidgetStub::withClonedReportMap(
             [self::TEMPLATE_REPORT_ID => self::CLONED_REPORT_ID]
         );
@@ -57,7 +57,7 @@ final class ReportInheritanceHandlerTest extends TestCase
 
     public function testItClonesExpertReport(): void
     {
-        $this->widget_dao->expects(self::once())->method('searchWidgetExistence')->with(self::TEMPLATE_REPORT_ID)->willReturn(true);
+        $this->widget_dao = SearchCrossTrackerWidgetStub::withExistingWidget([]);
 
         $result = $this->handle(self::TEMPLATE_REPORT_ID);
 
@@ -67,8 +67,6 @@ final class ReportInheritanceHandlerTest extends TestCase
 
     public function testItWritesLogsAndReturnsZeroToAvoidCrashingTheProjectCreationWhenTemplateReportIsNotFound(): void
     {
-        $this->widget_dao->expects(self::once())->method('searchWidgetExistence')->with(404)->willReturn(false);
-
         $result = $this->handle(404);
 
         self::assertSame(0, $result);

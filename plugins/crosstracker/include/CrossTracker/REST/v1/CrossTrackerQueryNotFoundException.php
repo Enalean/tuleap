@@ -18,28 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\CrossTracker\REST\v1;
 
-namespace Tuleap\CrossTracker\Widget;
+use Exception;
 
-use PFUser;
-
-final readonly class ProjectCrossTrackerSearchPresenter
+class CrossTrackerQueryNotFoundException extends Exception
 {
-    public int $report_id;
-    public string $is_widget_admin;
-    public string $documentation_base_url;
-    public bool $is_multiple_query_supported;
-
-    public function __construct(int $report_id, bool $is_admin, PFUser $current_user, bool $is_multiple_query_supported)
-    {
-        $this->report_id = $report_id;
-
-        $this->is_widget_admin = $is_admin ? 'true' : 'false';
-
-        $this->documentation_base_url      = '/doc/' . urlencode(
-            $current_user->getShortLocale()
-        );
-        $this->is_multiple_query_supported = $is_multiple_query_supported;
-    }
 }

@@ -42,12 +42,13 @@ import {
     CLEAR_FEEDBACKS,
     GET_COLUMN_NAME,
     NOTIFY_FAULT,
-    REPORT_ID,
+    WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../injection-symbols";
 import { XLSXExportFault } from "../domain/XLSXExportFault";
+import type { Query } from "../type";
 
-const report_id = strictInject(REPORT_ID);
+const report_id = strictInject(WIDGET_ID);
 const artifact_table_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
@@ -55,14 +56,14 @@ const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
 const notifyFault = strictInject(NOTIFY_FAULT);
 
 const props = defineProps<{
-    query_id: string | null;
+    current_query: Query;
 }>();
 
 const is_loading = ref(false);
 const { $gettext } = useGettext();
 
 async function exportXSLX(): Promise<void> {
-    if (props.query_id === null) {
+    if (props.current_query.tql_query === "") {
         return;
     }
     is_loading.value = true;
@@ -75,7 +76,7 @@ async function exportXSLX(): Promise<void> {
     await downloadXLSXDocument(
         artifact_table_retriever,
         report_id,
-        props.query_id,
+        props.current_query.id,
         column_name_getter,
         downloadXLSX,
     ).mapErr((fault) => {

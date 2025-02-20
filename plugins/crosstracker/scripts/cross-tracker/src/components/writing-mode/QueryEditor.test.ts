@@ -24,20 +24,16 @@ import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror"
 import * as TQLEditor from "@tuleap/plugin-tracker-tql-codemirror";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import QueryEditor from "./QueryEditor.vue";
-import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
+import type { Query } from "../../type";
 
 const noop = (): void => {
     //Do nothing
 };
 
 describe("QueryEditor", () => {
-    function instantiateComponent(
-        writing_cross_tracker_report: WritingCrossTrackerReport,
-    ): VueWrapper<InstanceType<typeof QueryEditor>> {
+    function getWrapper(writing_query: Query): VueWrapper<InstanceType<typeof QueryEditor>> {
         return shallowMount(QueryEditor, {
-            props: {
-                writing_cross_tracker_report,
-            },
+            props: { writing_query },
             global: { ...getGlobalTestOptions() },
         });
     }
@@ -76,11 +72,14 @@ describe("QueryEditor", () => {
             buildFakeEditorImplementation("update"),
         );
 
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
-        writing_cross_tracker_report.expert_query = "@title = 'foo'";
-        instantiateComponent(writing_cross_tracker_report);
+        const wrapper = getWrapper({
+            id: "",
+            tql_query: "@title = 'foo'",
+            title: "",
+            description: "",
+        });
 
-        expect(writing_cross_tracker_report.expert_query).toBe("@title = 'bar'");
+        expect(wrapper.vm.tql_query).toBe("@title = 'bar'");
     });
 
     it(`Updates the report and emits an event when the form submit keybinding is run`, () => {
@@ -88,11 +87,14 @@ describe("QueryEditor", () => {
             buildFakeEditorImplementation("submit"),
         );
 
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
-        writing_cross_tracker_report.expert_query = "@title = 'foo'";
-        const wrapper = instantiateComponent(writing_cross_tracker_report);
+        const wrapper = getWrapper({
+            id: "",
+            tql_query: "@title = 'foo'",
+            title: "",
+            description: "",
+        });
 
-        expect(writing_cross_tracker_report.expert_query).toBe("@title = 'bar'");
+        expect(wrapper.vm.tql_query).toBe("@title = 'bar'");
         expect(wrapper.emitted()).toHaveProperty("trigger-search");
     });
 });

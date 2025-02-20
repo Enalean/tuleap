@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder;
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
-use Tuleap\CrossTracker\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;

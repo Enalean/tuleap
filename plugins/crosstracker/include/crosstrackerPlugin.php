@@ -19,12 +19,12 @@
  */
 
 use Tuleap\Config\GetConfigKeys;
-use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\CrossTracker\Widget\WidgetPermissionChecker;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Widget\CrossTrackerSearchWidget;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Widget\Event\GetProjectWidgetList;
@@ -62,29 +62,29 @@ class crosstrackerPlugin extends Plugin
     #[ListeningToEventClass]
     public function getUserWidgetList(GetUserWidgetList $event): void
     {
-        $event->addWidget(ProjectCrossTrackerSearch::NAME);
+        $event->addWidget(CrossTrackerSearchWidget::NAME);
     }
 
     #[ListeningToEventClass]
     public function getProjectWidgetList(GetProjectWidgetList $event): void
     {
-        $event->addWidget(ProjectCrossTrackerSearch::NAME);
+        $event->addWidget(CrossTrackerSearchWidget::NAME);
     }
 
     #[ListeningToEventClass]
     public function widgetInstance(GetWidget $get_widget_event): void
     {
-        if ($get_widget_event->getName() === ProjectCrossTrackerSearch::NAME) {
-            $report_dao = new CrossTrackerWidgetDao();
+        if ($get_widget_event->getName() === CrossTrackerSearchWidget::NAME) {
+            $widget_dao = new CrossTrackerWidgetDao();
             $get_widget_event->setWidget(
-                new ProjectCrossTrackerSearch(
-                    $report_dao,
+                new CrossTrackerSearchWidget(
+                    $widget_dao,
                     new ReportInheritanceHandler(
-                        $report_dao,
-                        $report_dao,
+                        $widget_dao,
+                        $widget_dao,
                         $this->getBackendLogger()
                     ),
-                    new WidgetPermissionChecker($report_dao, \ProjectManager::instance())
+                    new WidgetPermissionChecker($widget_dao, \ProjectManager::instance())
                 )
             );
         }
@@ -92,7 +92,7 @@ class crosstrackerPlugin extends Plugin
 
     public function uninstall(): void
     {
-        $this->removeOrphanWidgets([ProjectCrossTrackerSearch::NAME]);
+        $this->removeOrphanWidgets([CrossTrackerSearchWidget::NAME]);
     }
 
     #[ListeningToEventName(Event::REST_RESOURCES)]
@@ -106,6 +106,6 @@ class crosstrackerPlugin extends Plugin
     public function getConfigKeys(GetConfigKeys $config_keys): void
     {
         $config_keys->addConfigClass(CrossTrackerArtifactReportFactory::class);
-        $config_keys->addConfigClass(ProjectCrossTrackerSearch::class);
+        $config_keys->addConfigClass(CrossTrackerSearchWidget::class);
     }
 }

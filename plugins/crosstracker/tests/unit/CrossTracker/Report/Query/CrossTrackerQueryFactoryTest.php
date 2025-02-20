@@ -20,15 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker;
+namespace Tuleap\CrossTracker\Report\Query;
 
 use LogicException;
-use Tuleap\CrossTracker\Tests\Stub\Report\RetrieveReportStub;
+use Tuleap\CrossTracker\CrossTrackerQuery;
+use Tuleap\CrossTracker\REST\v1\CrossTrackerQueryNotFoundException;
+use Tuleap\CrossTracker\Tests\Stub\Report\RetrieveQueriesStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class CrossTrackerReportFactoryTest extends TestCase
+final class CrossTrackerQueryFactoryTest extends TestCase
 {
     private const QUERY_ID = '00000000-1b58-7366-ad1b-dfe646c5ce9d';
 
@@ -44,37 +46,37 @@ final class CrossTrackerReportFactoryTest extends TestCase
     }
 
     /**
-     * @throws CrossTrackerReportNotFoundException
+     * @throws CrossTrackerQueryNotFoundException
      */
     private function getById(string $query_id): CrossTrackerQuery
     {
-        $report_retriever = RetrieveReportStub::withReports([
+        $report_retriever = RetrieveQueriesStub::withReports([
             'id'          => $this->query_id,
             'query'       => '',
             'title'       => '',
             'description' => '',
             'widget_id'   => 1,
         ]);
-        $factory          = new CrossTrackerReportFactory($report_retriever);
+        $factory          = new CrossTrackerQueryFactory($report_retriever);
         return $factory->getById($query_id);
     }
 
     private function getByWidgetId(int $id): array
     {
-        $report_retriever = RetrieveReportStub::withReports([
+        $report_retriever = RetrieveQueriesStub::withReports([
             'id'          => $this->query_id,
             'query'       => '',
             'title'       => '',
             'description' => '',
             'widget_id'   => 1,
         ]);
-        $factory          = new CrossTrackerReportFactory($report_retriever);
+        $factory          = new CrossTrackerQueryFactory($report_retriever);
         return $factory->getByWidgetId($id);
     }
 
     public function testItThrowsAnExceptionWhenReportIsNotFound(): void
     {
-        $this->expectException(CrossTrackerReportNotFoundException::class);
+        $this->expectException(CrossTrackerQueryNotFoundException::class);
         $this->getById('something');
     }
 

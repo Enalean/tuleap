@@ -183,9 +183,6 @@ msgstr ""
 "Erreur pendant l'analyse de la requête. L'un des éléments suivants était "
 "attendu : %s"
 
-msgid "Expert query is required and cannot be empty"
-msgstr "La requête expert est obligatoire et ne peut pas être vide"
-
 #, php-format
 msgid ""
 "Field '%s' is present in trackers '%s' but their types cannot be compared. "
@@ -195,15 +192,15 @@ msgstr ""
 "peuvent pas être comparés. Veuillez modifier votre requête ou vérifier la "
 "configuration des outils de suivi."
 
+msgid "Given 'widget_id' parameter is invalid"
+msgstr "Le paramètre 'widget_id' est invalide"
+
 msgid ""
 "In the context of a personal dashboard, you must provide a @project "
 "condition in the FROM part of your query"
 msgstr ""
 "Dans le contexte d'un tableau de bord personnel, vous devez fournir une "
 "condition sur @project dans la partie FROM de votre requête"
-
-msgid "My query"
-msgstr "Ma requête"
 
 msgid "No tracker found"
 msgstr "Aucun outils de suivi trouvé"
@@ -214,12 +211,15 @@ msgstr "Seulement 'self' et 'aggregated' sont supportés pour @project IN(...)"
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr "Seulement @project = 'self' et @project = 'aggregated' sont supportés"
 
-msgid "Report not found"
-msgstr "Le rapport n'a pas été trouvé"
+msgid "Parameter 'query' is invalid"
+msgstr "Le paramètre 'query' est invalide"
 
 #, php-format
-msgid "Report with id %d not found"
-msgstr "Le rapport avec l'identifiant %d n'a pas été trouvé"
+msgid "Parameter 'query' is invalid: %s"
+msgstr "Le paramètre 'query' est invalide : %s"
+
+msgid "Query not found"
+msgstr "La requête n'a pas été trouvé"
 
 msgid "Search artifacts that are in different trackers"
 msgstr "Permet la recherche d'artéfacts à travers plusieurs outils de suivi"
@@ -235,6 +235,9 @@ msgstr ""
 "Ordonner les artéfacts avec %s n'est pas autorisé. Merci de modifier votre "
 "requête ou de vérifier la configuration des outils de suivi."
 
+msgid "TQL query is required and cannot be empty"
+msgstr "La requête TQL est obligatoire et ne peut pas être vide"
+
 msgid ""
 "The both conditions of 'FROM' must be on \"tracker\" and \"project\". If you "
 "want to search on several trackers or projects, please use 'IN' operator "
@@ -244,6 +247,10 @@ msgstr ""
 "\"projet\". Si vous souhaitez chercher sur plusieurs outils de suivi ou "
 "projets, veuillez utiliser l'opérateur 'IN' à la place (ex @tracker.name "
 "IN('t1', ...))"
+
+#, php-format
+msgid "Widget with id %d not found"
+msgstr "Le widget avec l'identifiant %d n'a pas été trouvé"
 
 msgid "You can use @project with 'aggregated' only in a Program project"
 msgstr ""

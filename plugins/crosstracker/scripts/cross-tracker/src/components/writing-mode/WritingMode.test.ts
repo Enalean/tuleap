@@ -23,28 +23,40 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import WritingMode from "./WritingMode.vue";
-import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
-import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../../injection-symbols";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT, EMITTER } from "../../injection-symbols";
+import type { Query } from "../../type";
+import { EmitterStub } from "../../../tests/stubs/EmitterStub";
+import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+
 describe("WritingMode", () => {
     let resetSpy: Mock, errorSpy: Mock;
+    let emitter: EmitterStub;
+    let backend_query: Query;
 
     beforeEach(() => {
         resetSpy = vi.fn();
         errorSpy = vi.fn();
+        emitter = EmitterStub();
+        backend_query = {
+            id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
+            tql_query: "",
+            title: "",
+            description: "",
+        };
     });
 
-    function getWrapper(
-        writing_cross_tracker_report: WritingCrossTrackerReport,
-    ): VueWrapper<InstanceType<typeof WritingMode>> {
+    function getWrapper(writing_query: Query): VueWrapper<InstanceType<typeof WritingMode>> {
         return shallowMount(WritingMode, {
             props: {
-                writing_cross_tracker_report,
+                writing_query,
+                backend_query,
             },
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
                     [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
+                    [EMITTER.valueOf()]: emitter,
                 },
             },
         });
@@ -52,23 +64,28 @@ describe("WritingMode", () => {
 
     describe("cancel()", () => {
         it("when I hit cancel, then an event will be emitted to cancel the query edition and switch the widget back to reading mode", () => {
-            const writing_cross_tracker_report = new WritingCrossTrackerReport();
-            const wrapper = getWrapper(writing_cross_tracker_report);
+            const wrapper = getWrapper({ id: "", tql_query: "", title: "", description: "" });
 
             wrapper.find("[data-test=writing-mode-cancel-button]").trigger("click");
             const emitted = wrapper.emitted("cancel-query-edition");
             expect(emitted).toBeDefined();
+            expect(emitter.emitted_event_name.length).toBe(1);
+            expect(emitter.emitted_event_name[0]).toBe(REFRESH_ARTIFACTS_EVENT);
+            expect(emitter.emitted_event_message[0].unwrapOr("")).toStrictEqual({
+                query: backend_query,
+            });
         });
     });
 
     describe("search()", () => {
         it("when I hit search, then an event will be emitted to preview the results and switch the widget to reading mode", () => {
-            const writing_cross_tracker_report = new WritingCrossTrackerReport();
-            const wrapper = getWrapper(writing_cross_tracker_report);
+            const wrapper = getWrapper({ id: "", tql_query: "", title: "", description: "" });
 
             wrapper.find("[data-test=search-report-button]").trigger("click");
             const emitted = wrapper.emitted("preview-result");
             expect(emitted).toBeDefined();
+            expect(emitter.emitted_event_name.length).toBe(1);
+            expect(emitter.emitted_event_name[0]).toBe(REFRESH_ARTIFACTS_EVENT);
         });
     });
 });

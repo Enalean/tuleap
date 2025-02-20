@@ -28,7 +28,6 @@ use TemplateRendererFactory;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
-use Tuleap\CrossTracker\CrossTrackerWidgetDao;
 use Tuleap\CrossTracker\Report\CreateWidget;
 use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
 use Tuleap\Layout\CssAssetCollection;
@@ -41,7 +40,7 @@ use Tuleap\Project\MappingRegistry;
 use Widget;
 
 #[ConfigKeyCategory('CrossTracker Search')]
-class ProjectCrossTrackerSearch extends Widget
+class CrossTrackerSearchWidget extends Widget
 {
     #[FeatureFlagConfigKey('Support multiple query in Cross Tracker widget')]
     #[ConfigKeyInt(0)]
@@ -57,12 +56,12 @@ class ProjectCrossTrackerSearch extends Widget
         parent::__construct(self::NAME);
     }
 
-    public function loadContent($id)
+    public function loadContent($id): void
     {
         $this->content_id = $id;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
             __DIR__ . '/../../../templates/widgets'
@@ -74,8 +73,8 @@ class ProjectCrossTrackerSearch extends Widget
         $is_admin = $this->permission_checker->isUserWidgetAdmin($user, $this->content_id);
 
         return $renderer->renderToString(
-            'project-cross-tracker-search',
-            new ProjectCrossTrackerSearchPresenter(
+            'cross-tracker-search-widget',
+            new CrossTrackerSearchWidgetPresenter(
                 $this->content_id,
                 $is_admin,
                 $user,
@@ -84,39 +83,39 @@ class ProjectCrossTrackerSearch extends Widget
         );
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return dgettext('tuleap-crosstracker', 'Search into multiple trackers and multiple projects.');
     }
 
-    public function getIcon()
+    public function getIcon(): string
     {
         return 'fa-list-ul';
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return dgettext('tuleap-crosstracker', 'Cross trackers search');
     }
 
-    public function getCategory()
+    public function getCategory(): string
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
-    public function isUnique()
+    public function isUnique(): bool
     {
         return false;
     }
 
-    public function create(Codendi_Request $request)
+    public function create(Codendi_Request $request): int
     {
         return $this->widget_creator->createWidget();
     }
 
-    public function destroy($id)
+    public function destroy($id): void
     {
-        $this->getDao()->deleteWidget($id);
+        $this->getWidgetDao()->deleteWidget($id);
     }
 
     public function cloneContent(
@@ -138,7 +137,7 @@ class ProjectCrossTrackerSearch extends Widget
         ];
     }
 
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
         return new CssAssetCollection([
             new CssAssetWithoutVariantDeclinaisons(new IncludeCoreAssets(), 'syntax-highlight'),
@@ -153,10 +152,7 @@ class ProjectCrossTrackerSearch extends Widget
         );
     }
 
-    /**
-     * @return CrossTrackerWidgetDao
-     */
-    private function getDao()
+    private function getWidgetDao(): CrossTrackerWidgetDao
     {
         return new CrossTrackerWidgetDao();
     }

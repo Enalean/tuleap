@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\CrossTracker\SearchCrossTrackerWidgetStub;
+use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProjectsCollection;
