@@ -151,7 +151,6 @@ describe("AddNewSectionButton", () => {
                 ...ConfigurationStoreStub.bugs,
                 title: null,
                 description: {
-                    field_id: 1002,
                     label: "Description",
                     type: "text",
                     default_value: { format: "html", content: "" },
@@ -175,7 +174,6 @@ describe("AddNewSectionButton", () => {
                 ...ConfigurationStoreStub.bugs,
                 title: null,
                 description: {
-                    field_id: 1002,
                     label: "Description",
                     type: "text",
                     default_value: { format: "html", content: "" },
@@ -284,7 +282,6 @@ describe("AddNewSectionButton", () => {
                     default_value: "",
                 },
                 description: {
-                    field_id: 1002,
                     label: "Description",
                     type: "text",
                     default_value: { format: "html", content: "" },
@@ -322,7 +319,6 @@ describe("AddNewSectionButton", () => {
                     default_value: "",
                 },
                 description: {
-                    field_id: 1002,
                     label: "Description",
                     type: "text",
                     default_value: { format: "html", content: "" },

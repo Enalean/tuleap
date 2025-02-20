@@ -52,7 +52,7 @@ const PendingArtifactSectionFactory = {
                 : tracker.description.default_value.content,
             attachments: tracker.file
                 ? {
-                      upload_url: `/api/v1/tracker_fields/${tracker.file.field_id}/files`,
+                      upload_url: tracker.file.upload_url,
                       attachment_ids: [],
                   }
                 : null,
