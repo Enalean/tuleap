@@ -29,6 +29,7 @@
                 v-bind:id="getId(section.value)"
                 v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
                 data-test="artidoc-section"
+                v-bind:data-test-type="`${section.value.type}-section`"
             >
                 <add-new-section-button
                     class="artidoc-button-add-section-container"
