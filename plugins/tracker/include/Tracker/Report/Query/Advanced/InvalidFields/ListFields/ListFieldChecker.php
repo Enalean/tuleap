@@ -45,14 +45,14 @@ final readonly class ListFieldChecker
      * @throws ListToStatusOpenComparisonException
      * @throws ListValueDoNotExistComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field_List $field,): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field_List $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
             ComparisonType::NotEqual => $this->checkListValueIsValid($comparison, $field, false),
             ComparisonType::In,
-            ComparisonType::NotIn => $this->checkListValueIsValid($comparison, $field, true),
-            default => throw new FieldIsNotSupportedForComparisonException($field, $comparison->getType()->value),
+            ComparisonType::NotIn    => $this->checkListValueIsValid($comparison, $field, true),
+            default                  => throw new FieldIsNotSupportedForComparisonException($field, $comparison->getType()->value),
         };
     }
 
@@ -72,6 +72,8 @@ final readonly class ListFieldChecker
         $values            = $values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $normalized_labels = $this->bind_labels_extractor->extractCollectionOfNormalizedLabels($field);
 
+        /** @var ListValueDoNotExistComparisonException[] $exceptions */
+        $exceptions = [];
         foreach ($values as $value) {
             if ($is_empty_string_a_problem && $value === '') {
                 throw new ListToEmptyStringTermException($comparison, $field);
@@ -83,8 +85,12 @@ final readonly class ListFieldChecker
             $normalized_value = $this->value_normalizer->normalize((string) $value);
 
             if ($value !== '' && ! in_array($normalized_value, $normalized_labels, true)) {
-                throw new ListValueDoNotExistComparisonException($field, (string) $value);
+                $exceptions[] = new ListValueDoNotExistComparisonException($field, (string) $value);
             }
+        }
+
+        if (count($exceptions) > 0 && count($exceptions) === count($values)) {
+            throw $exceptions[0];
         }
     }
 }

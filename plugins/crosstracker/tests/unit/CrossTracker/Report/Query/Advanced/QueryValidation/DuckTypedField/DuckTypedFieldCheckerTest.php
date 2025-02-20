@@ -44,6 +44,8 @@ use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
@@ -275,10 +277,10 @@ final class DuckTypedFieldCheckerTest extends TestCase
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             SubmittedByFieldBuilder::aSubmittedByField(156) // @submitted_on
-                    ->withName(self::FIELD_NAME)
-                        ->inTracker($this->first_tracker)
-                            ->withReadPermission($this->user, true)
-                                ->build(),
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
         );
         $this->user_permission_on_fields->withPermissionOn([156], FieldPermissionType::PERMISSION_READ);
 
@@ -357,13 +359,46 @@ final class DuckTypedFieldCheckerTest extends TestCase
         self::assertEquals("The value 'e' doesn't exist for the list field '" . self::FIELD_NAME . "'.", (string) $result->error);
     }
 
+    public function testSearchCheckGoodWhenStrictUnionOfLabels(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(586)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->withStaticValues([
+                0 => 'Todo',
+            ])->build()->getField(),
+            ListStaticBindBuilder::aStaticBind(
+                ListFieldBuilder::aListField(489)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->withStaticValues([
+                2 => 'To do',
+            ])->build()->getField()
+        );
+
+        $result = $this->checkForSearch(new InComparison(
+            new Field(self::FIELD_NAME),
+            new InValueWrapper([
+                new SimpleValueWrapper('Todo'),
+                new SimpleValueWrapper('To do'),
+            ])
+        ));
+        self::assertTrue(Result::isOk($result));
+    }
+
     public function testSelectCheckFailsWhenTheFieldIsAlreadyRelatedToAnAlwaysThereField(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             SubmittedOnFieldBuilder::aSubmittedOnField(156) // @submitted_on
-                    ->withName(self::FIELD_NAME)
-                        ->inTracker($this->first_tracker)
-                            ->build(),
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
         );
         $this->user_permission_on_fields->withPermissionOn([156], FieldPermissionType::PERMISSION_READ);
 
@@ -395,9 +430,9 @@ final class DuckTypedFieldCheckerTest extends TestCase
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             SubmittedByFieldBuilder::aSubmittedByField(156) // @submitted_on
-                    ->withName(self::FIELD_NAME)
-                        ->inTracker($this->first_tracker)
-                            ->build(),
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
         );
         $this->user_permission_on_fields->withPermissionOn([156], FieldPermissionType::PERMISSION_READ);
 
