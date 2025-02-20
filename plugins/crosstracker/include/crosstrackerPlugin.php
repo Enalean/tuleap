@@ -50,10 +50,15 @@ class crosstrackerPlugin extends Plugin
         return ['tracker'];
     }
 
-    public function getPluginInfo(): \Tuleap\CrossTracker\Plugin\PluginInfo
+    public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
-            $this->pluginInfo = new Tuleap\CrossTracker\Plugin\PluginInfo($this);
+            $plugin_info = new PluginInfo($this);
+            $plugin_info->setPluginDescriptor(new PluginDescriptor(
+                dgettext('tuleap-crosstracker', 'Cross trackers search'),
+                dgettext('tuleap-crosstracker', 'Search artifacts that are in different trackers'),
+            ));
+            $this->pluginInfo = $plugin_info;
         }
 
         return $this->pluginInfo;

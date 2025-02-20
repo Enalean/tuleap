@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query;
 
 use Tuleap\CrossTracker\CrossTrackerQuery;
