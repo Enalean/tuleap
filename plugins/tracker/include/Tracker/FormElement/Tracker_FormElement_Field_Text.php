@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\TextFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
@@ -223,6 +224,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     }
 
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
+    {
+        return new TextFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new TextFieldSpecificPropertiesDAO();
     }

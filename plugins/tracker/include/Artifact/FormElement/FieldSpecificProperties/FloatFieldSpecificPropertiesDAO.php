@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class FloatFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties
+final class FloatFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
@@ -36,5 +36,17 @@ final class FloatFieldSpecificPropertiesDAO extends DataAccessObject implements 
     public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_field_float', ['field_id' => $field_id]);
+    }
+
+    /**
+     * @return array{field_id: int, maxchars: int, size: int, default_value: float}
+     */
+    public function searchByFieldId(int $field_id): ?array
+    {
+        $sql = 'SELECT *
+                FROM tracker_field_float
+                WHERE field_id = ? ';
+
+        return $this->getDB()->row($sql, $field_id);
     }
 }

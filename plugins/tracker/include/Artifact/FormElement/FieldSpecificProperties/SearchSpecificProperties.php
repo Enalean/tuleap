@@ -22,24 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
-use Tuleap\DB\DataAccessObject;
-
-final class MultiSelectboxFieldSpecificPropertiesDAO extends DataAccessObject implements DeleteSpecificProperties, SearchSpecificProperties
+interface SearchSpecificProperties
 {
-    public function deleteFieldProperties(int $field_id): void
-    {
-        $this->getDB()->delete('tracker_field_msb', ['field_id' => $field_id]);
-    }
-
-    /**
-     * @return array{field_id: int, size: int}
-     */
-    public function searchByFieldId(int $field_id): ?array
-    {
-        $sql = 'SELECT *
-                FROM tracker_field_msb
-                WHERE field_id = ? ';
-
-        return $this->getDB()->row($sql, $field_id);
-    }
+    public function searchByFieldId(int $field_id): ?array;
 }

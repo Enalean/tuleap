@@ -39,7 +39,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
 
     public function getRichText()
     {
-        if ($row = $this->getDao()->searchByFieldId($this->id)->getRow()) {
+        if ($row = $this->getSearchSpecificPropertiesDao()->searchByFieldId($this->id)) {
             $hp    = Codendi_HTMLPurifier::instance();
             $value = $row['static_value'];
             return $hp->purify($value, CODENDI_PURIFIER_FULL);
@@ -59,6 +59,11 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     }
 
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
+    {
+        return new RichTextFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSearchSpecificPropertiesDao(): RichTextFieldSpecificPropertiesDAO
     {
         return new RichTextFieldSpecificPropertiesDAO();
     }

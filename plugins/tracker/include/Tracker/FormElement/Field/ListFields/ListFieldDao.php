@@ -32,15 +32,6 @@ class ListFieldDao extends SpecificPropertiesDao
         $this->table_name = 'tracker_field_list';
     }
 
-    public function searchByFieldId($field_id)
-    {
-        $field_id = $this->da->escapeInt($field_id);
-        $sql      = "SELECT *
-                FROM $this->table_name
-                WHERE field_id = $field_id ";
-        return $this->retrieve($sql);
-    }
-
     public function save($field_id, $bind_type)
     {
         $field_id  = $this->da->escapeInt($field_id);

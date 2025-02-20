@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\FloatFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatFieldDao;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
@@ -151,6 +152,11 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
     }
 
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
+    {
+        return new FloatFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new FloatFieldSpecificPropertiesDAO();
     }
