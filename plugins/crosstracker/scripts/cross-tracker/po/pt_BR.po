@@ -33,6 +33,9 @@ msgstr "Cancelar"
 msgid "Choose another query"
 msgstr ""
 
+msgid "Create new query"
+msgstr ""
+
 msgid "Description"
 msgstr "Descrição"
 
@@ -74,6 +77,9 @@ msgstr ""
 msgid "Last update date"
 msgstr ""
 
+msgid "Name your query"
+msgstr ""
+
 msgid "Next"
 msgstr ""
 
@@ -92,10 +98,19 @@ msgstr "Projeto"
 msgid "Query"
 msgstr ""
 
+msgid "Query creation is under implementation"
+msgstr ""
+
 msgid "Query is empty"
 msgstr ""
 
+msgid "Query title"
+msgstr ""
+
 msgid "Report has been successfully saved"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "Save report"
@@ -127,6 +142,9 @@ msgstr ""
 
 msgid "User avatar"
 msgstr "Avatar do Usuário"
+
+msgid "Write your description"
+msgstr ""
 
 msgid ""
 "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT "

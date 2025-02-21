@@ -34,6 +34,9 @@ msgstr "Annuler"
 msgid "Choose another query"
 msgstr "Choisir une autre requête"
 
+msgid "Create new query"
+msgstr "Créer une nouvelle requête"
+
 msgid "Description"
 msgstr "Description"
 
@@ -78,6 +81,9 @@ msgstr "Mis à jour par"
 msgid "Last update date"
 msgstr "Mis à jour le"
 
+msgid "Name your query"
+msgstr "Nommer votre requête"
+
 msgid "Next"
 msgstr "Suivant"
 
@@ -96,11 +102,20 @@ msgstr "Projet"
 msgid "Query"
 msgstr "Requête"
 
+msgid "Query creation is under implementation"
+msgstr "La création de requête est en cours d'implémentation"
+
 msgid "Query is empty"
 msgstr "La requête est vide"
 
+msgid "Query title"
+msgstr "Titre de la requête"
+
 msgid "Report has been successfully saved"
 msgstr "Rapport enregistré avec succès"
+
+msgid "Save"
+msgstr "Sauvegarder"
 
 msgid "Save report"
 msgstr "Enregistrer le rapport"
@@ -131,6 +146,9 @@ msgstr "Outil de suivi"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
+
+msgid "Write your description"
+msgstr "Ecrire votre description"
 
 msgid ""
 "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT "

@@ -24,7 +24,11 @@ import { beforeEach, expect, vi, describe, it } from "vitest";
 import ChooseQueryButton from "./ChooseQueryButton.vue";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 import type { Query } from "../../type";
-import { REFRESH_ARTIFACTS_EVENT, SWITCH_QUERY_EVENT } from "../../helpers/emitter-provider";
+import {
+    REFRESH_ARTIFACTS_EVENT,
+    SWITCH_QUERY_EVENT,
+    CREATE_NEW_QUERY,
+} from "../../helpers/emitter-provider";
 
 vi.mock("@tuleap/tlp-dropdown", () => ({
     createDropdown: (): void => {
@@ -93,6 +97,14 @@ describe("ChooseQueryButton", () => {
         expect(emitter.emitted_event_message[1].unwrapOr("")).toStrictEqual({
             query: queries[0],
         });
+    });
+
+    it("should send the new query creation event when the `Create new query` button is clicked", async () => {
+        const wrapper = getWrapper();
+        await wrapper.find("[data-test=query-create-new-button]").trigger("click");
+
+        expect(emitter.emitted_event_name.length).toBe(1);
+        expect(emitter.emitted_event_name[0]).toBe(CREATE_NEW_QUERY);
     });
 
     it.each([

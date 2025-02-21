@@ -36,6 +36,8 @@ import {
     WIDGET_ID,
 } from "./injection-symbols";
 import { EmitterStub } from "../tests/stubs/EmitterStub";
+import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
+import { QUERY_CREATION_PANE } from "./domain/WidgetPaneDisplay";
 
 vi.useFakeTimers();
 
@@ -224,6 +226,7 @@ describe("CrossTrackerWidget", () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.report_state).toBe("edit-query");
+            expect(wrapper.vm.widget_pane).toBe(QUERY_CREATION_PANE);
         });
     });
 
@@ -272,6 +275,24 @@ describe("CrossTrackerWidget", () => {
             const wrapper = getWrapper();
 
             expect(wrapper.vm.is_export_allowed).toBe(true);
+        });
+    });
+
+    describe("Pane displayed", () => {
+        it("Displays the read query pane by default", () => {
+            const wrapper = getWrapper();
+            expect(wrapper.find("[data-test=reading-pane]").exists()).toBe(true);
+            expect(wrapper.findComponent(CreateNewQuery).exists()).toBe(false);
+        });
+
+        it("Displays the creation query pane at create new query event", async () => {
+            const wrapper = getWrapper();
+
+            wrapper.vm.widget_pane = QUERY_CREATION_PANE;
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.find("[data-test=reading-pane]").exists()).toBe(false);
+            expect(wrapper.findComponent(CreateNewQuery).exists()).toBe(true);
         });
     });
 });

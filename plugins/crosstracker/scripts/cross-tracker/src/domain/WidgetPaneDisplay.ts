@@ -17,25 +17,5 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Emitter } from "mitt";
-import type { Query } from "../type";
-
-export type EmitterProvider = Pick<Emitter<Events>, "off" | "on" | "emit">;
-
-export const SWITCH_QUERY_EVENT = "switch-query";
-export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";
-export const CREATE_NEW_QUERY = "create-new-query";
-
-export type Events = {
-    [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
-    [REFRESH_ARTIFACTS_EVENT]: RefreshArtifactsEvent;
-    [CREATE_NEW_QUERY]: void;
-};
-
-export type SwitchQueryEvent = {
-    readonly query: Query;
-};
-
-export type RefreshArtifactsEvent = {
-    readonly query: Query;
-};
+export const QUERY_CREATION_PANE = "query-creation";
+export const QUERY_ACTIVE_PANE = "query-active";
