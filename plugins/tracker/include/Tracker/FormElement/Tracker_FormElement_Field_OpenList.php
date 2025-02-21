@@ -22,6 +22,9 @@
 use Tuleap\Option\Option;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\OpenListSpecificPropertiesDAO;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
@@ -270,6 +273,16 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function getDao()
     {
         return new OpenListFieldDao();
+    }
+
+    protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
+    {
+        return new OpenListSpecificPropertiesDAO();
+    }
+
+    protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
+    {
+        return new OpenListSpecificPropertiesDAO();
     }
 
     public static function getFactoryLabel()
