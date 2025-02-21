@@ -18,239 +18,43 @@
   -->
 
 <template>
-    <div v-if="widget_pane === 'query-active'" data-test="reading-pane">
-        <section
-            class="tlp-pane-section"
-            v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
-        >
-            <div
-                class="action-buttons"
-                v-if="is_multiple_query_supported && report_state !== 'edit-query'"
-            >
-                <action-buttons v-bind:backend_query="backend_query" v-bind:queries="queries" />
-            </div>
-            <error-message v-bind:fault="current_fault" v-bind:writing_query="writing_query" />
-            <div
-                class="tlp-alert-success cross-tracker-report-success"
-                v-if="current_success.isValue()"
-                data-test="cross-tracker-report-success"
-            >
-                {{ current_success.unwrapOr("") }}
-            </div>
-            <div class="cross-tracker-loader" v-if="is_loading"></div>
-            <reading-mode
-                v-if="is_reading_mode_shown"
-                v-bind:backend_query="backend_query"
-                v-bind:reading_query="reading_query"
-                v-bind:has_error="has_error"
-                v-on:switch-to-writing-mode="handleSwitchWriting"
-                v-on:saved="reportSaved"
-                v-on:discard-unsaved-report="unsavedReportDiscarded"
-            />
-            <writing-mode
-                v-if="report_state === 'edit-query'"
-                v-bind:writing_query="writing_query"
-                v-bind:backend_query="backend_query"
-                v-on:preview-result="handlePreviewResult"
-                v-on:cancel-query-edition="handleCancelQueryEdition"
-            />
-        </section>
-        <section class="tlp-pane-section" v-if="!is_loading">
-            <selectable-table v-bind:writing_query="writing_query" />
-        </section>
-    </div>
-    <div
+    <read-query
+        v-if="widget_pane === 'query-active'"
+        v-on:switch-to-create-query-pane="handleCreateNewQuery"
+    />
+    <create-new-query
         v-else-if="widget_pane === 'query-creation' && is_multiple_query_supported && is_user_admin"
-    >
-        <create-new-query v-on:return-to-active-query-pane="displayActiveQuery" />
-    </div>
+        v-on:return-to-active-query-pane="displayActiveQuery"
+    />
 </template>
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, provide, ref } from "vue";
-import { useGettext } from "vue3-gettext";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import ReadingMode from "./components/reading-mode/ReadingMode.vue";
-import WritingMode from "./components/writing-mode/WritingMode.vue";
-import ErrorMessage from "./components/ErrorMessage.vue";
-import { getQueries } from "./api/rest-querier";
-import type { Query } from "./type";
-import SelectableTable from "./components/selectable-table/SelectableTable.vue";
-import type { ReportState } from "./domain/ReportState";
-import {
-    CLEAR_FEEDBACKS,
-    EMITTER,
-    IS_EXPORT_ALLOWED,
-    IS_MULTIPLE_QUERY_SUPPORTED,
-    IS_USER_ADMIN,
-    NOTIFY_FAULT,
-    WIDGET_ID,
-    REPORT_STATE,
-} from "./injection-symbols";
-import { useFeedbacks } from "./composables/useFeedbacks";
-import { ReportRetrievalFault } from "./domain/ReportRetrievalFault";
-import ActionButtons from "./components/actions/ActionButtons.vue";
-import type { SwitchQueryEvent } from "./helpers/emitter-provider";
-import { CREATE_NEW_QUERY, SWITCH_QUERY_EVENT } from "./helpers/emitter-provider";
+import { EMITTER, IS_MULTIPLE_QUERY_SUPPORTED, IS_USER_ADMIN } from "./injection-symbols";
+import { CREATE_NEW_QUERY } from "./helpers/emitter-provider";
 import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
 import { QUERY_ACTIVE_PANE, QUERY_CREATION_PANE } from "./domain/WidgetPaneDisplay";
+import ReadQuery from "./components/ReadQuery.vue";
 
-const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
 const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
 
 const widget_pane = ref(QUERY_ACTIVE_PANE);
 
-const gettext_provider = useGettext();
-
-const EmptyQuery: Query = { id: "", tql_query: "", title: "", description: "" };
-const backend_query = ref<Query>(EmptyQuery);
-const reading_query = ref<Query>(EmptyQuery);
-const writing_query = ref<Query>(EmptyQuery);
-
-const report_state = ref<ReportState>("report-saved");
-provide(REPORT_STATE, report_state);
-const is_loading = ref(true);
-const queries = ref<ReadonlyArray<Query>>([]);
-
-const is_reading_mode_shown = computed(
-    () =>
-        (report_state.value === "report-saved" || report_state.value === "result-preview") &&
-        !is_loading.value,
-);
-
-const { current_fault, current_success, notifyFault, notifySuccess, clearFeedbacks } =
-    useFeedbacks();
-provide(NOTIFY_FAULT, notifyFault);
-provide(CLEAR_FEEDBACKS, clearFeedbacks);
-const has_error = computed<boolean>(() => current_fault.value.isValue());
-
-const is_export_allowed = computed<boolean>(() => {
-    if (report_state.value !== "report-saved" || has_error.value === true) {
-        return false;
-    }
-    if (!is_user_admin) {
-        return true;
-    }
-    return current_fault.value.isNothing();
-});
-
-provide(IS_EXPORT_ALLOWED, is_export_allowed);
-
-function initQueries(): void {
-    reading_query.value = backend_query.value;
-    writing_query.value = backend_query.value;
-}
-
 function displayActiveQuery(): void {
     widget_pane.value = QUERY_ACTIVE_PANE;
 }
 
-function loadBackendReport(): void {
-    is_loading.value = true;
-    getQueries(widget_id)
-        .match(
-            (reports: ReadonlyArray<Query>) => {
-                queries.value = reports;
-                if (reports.length === 0) {
-                    if (is_user_admin) {
-                        report_state.value = "edit-query";
-                        if (is_multiple_query_supported) {
-                            widget_pane.value = QUERY_CREATION_PANE;
-                        }
-                    }
-
-                    return;
-                }
-                backend_query.value = reports[0];
-                initQueries();
-            },
-            (fault) => {
-                notifyFault(ReportRetrievalFault(fault));
-            },
-        )
-        .then(() => {
-            is_loading.value = false;
-        });
-}
-
 onMounted(() => {
-    loadBackendReport();
-    emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
     emitter.on(CREATE_NEW_QUERY, handleCreateNewQuery);
 });
 
 onBeforeUnmount(() => {
-    emitter.off(SWITCH_QUERY_EVENT);
+    emitter.off(CREATE_NEW_QUERY);
 });
 
 function handleCreateNewQuery(): void {
     widget_pane.value = QUERY_CREATION_PANE;
 }
-
-function handleSwitchWriting(): void {
-    if (!is_user_admin) {
-        return;
-    }
-
-    writing_query.value = reading_query.value;
-    report_state.value = "edit-query";
-    clearFeedbacks();
-}
-
-function handleSwitchQuery(event: SwitchQueryEvent): void {
-    if (!is_user_admin) {
-        return;
-    }
-
-    backend_query.value = event.query;
-    initQueries();
-
-    clearFeedbacks();
-}
-
-function handlePreviewResult(query: Query): void {
-    writing_query.value = query;
-    reading_query.value = query;
-    report_state.value = "result-preview";
-    clearFeedbacks();
-}
-
-function handleCancelQueryEdition(): void {
-    reading_query.value = backend_query.value;
-    report_state.value = "report-saved";
-    clearFeedbacks();
-}
-
-function reportSaved(query: Query): void {
-    backend_query.value = query;
-    initQueries();
-    report_state.value = "report-saved";
-    clearFeedbacks();
-    notifySuccess(gettext_provider.$gettext("Report has been successfully saved"));
-}
-
-function unsavedReportDiscarded(): void {
-    initQueries();
-    report_state.value = "report-saved";
-    clearFeedbacks();
-}
-
-defineExpose({
-    report_state,
-    current_fault,
-    current_success,
-    is_export_allowed,
-    widget_pane,
-});
 </script>
-
-<style lang="scss" scoped>
-.reading-mode-shown {
-    border: 0;
-}
-
-.action-buttons {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-</style>
