@@ -21,7 +21,7 @@ git config gpg.format ssh
 git config user.signingKey ~/.ssh/id_ecdsa_sk
 ```
 
-Add yourself in the allowed signers file `tools/utils/signing-keys/allowed-integrators` (follow the existing entries to add your public key) and in integrators list in `README.mkd`.
+Add yourself in the allowed signers file `tools/utils/signing-keys/allowed-integrators` (follow the existing entries to add your public key) and in integrators list in `README.md`.
 Push these modifications under review and wait for the `+2` from the integrators.
 
 If you need to check signature of existing commits (e.g `git log --show-signature`) then you need to instruct git to use our allowed signers file:
