@@ -30,16 +30,25 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_StaticField_Separator;
 use Tracker_FormElementFactory;
 use TrackerManager;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\TemporaryTestDirectory;
 
 class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
+
+    protected function setUp(): void
+    {
+        \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
+    }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['HTML']);
+        unset($GLOBALS['HTML'], $GLOBALS['_SESSION']);
     }
 
     public function testGetOriginalProjectAndOriginalTracker()

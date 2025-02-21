@@ -89,7 +89,7 @@ export default {
             const tracker_id = this.current_tracker.id;
             const workflow_field_id = this.current_tracker.workflow.field_id;
 
-            return `/plugins/tracker/?tracker=${tracker_id}&func=admin-formElement-update&formElement=${workflow_field_id}`;
+            return `/plugins/tracker/?tracker=${tracker_id}&func=admin-formElement-update-view&formElement=${workflow_field_id}`;
         },
     },
 };

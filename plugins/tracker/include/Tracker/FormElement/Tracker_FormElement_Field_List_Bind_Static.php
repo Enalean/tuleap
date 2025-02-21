@@ -653,15 +653,17 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     }
                     break;
                 case 'delete':
-                    if (($row = $value_dao->searchById((int) $value)->getRow()) && $value_dao->delete($this->field, (int) $value)) {
-                        $params['decorator'] = [(int) $value => null];
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::INFO,
-                            sprintf(
-                                dgettext('tuleap-tracker', 'Value %s deleted'),
-                                $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML),
-                            )
-                        );
+                    foreach (array_keys($value) as $value_id) {
+                        if (($row = $value_dao->searchById((int) $value_id)->getRow()) && $value_dao->delete($this->field, (int) $value_id)) {
+                            $params['decorator'] = [(int) $value => null];
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::INFO,
+                                sprintf(
+                                    dgettext('tuleap-tracker', 'Value %s deleted'),
+                                    $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML),
+                                )
+                            );
+                        }
                     }
                     break;
                 case 'order':

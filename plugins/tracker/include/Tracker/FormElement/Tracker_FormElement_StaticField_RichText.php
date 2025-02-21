@@ -79,19 +79,22 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
 
     public function fetchAdmin($tracker)
     {
-        $html  = '';
-        $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
-        $html .= '<div class="tracker-admin-field-controls">';
-        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
-        $html .= '<a href="?' . http_build_query([
-            'tracker'  => $this->tracker_id,
-            'func'     => 'admin-formElement-remove',
-            'formElement' => $this->id,
-        ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
-        $html .= '</div>';
-        $html .= '<br />';
-        $html .= $this->fetchAdminFormElement();
-        $html .= '</div>';
+        $html_purifier = Codendi_HTMLPurifier::instance();
+        $html          = '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $html_purifier->purify((string) $this->id) . '">';
+        $html         .= '<div class="tracker-admin-field-controls">';
+        $html         .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
+        $csrf_token    = $this->getCSRFTokenForElementUpdate();
+        $html         .= '<form method="POST" action="?">';
+        $html         .= $csrf_token->fetchHTMLInput();
+        $html         .= '<input type="hidden" name="func" value="' . $html_purifier->purify(\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE) . '" />';
+        $html         .= '<input type="hidden" name="tracker" value="' . $html_purifier->purify((string) $tracker->getId()) . '" />';
+        $html         .= '<input type="hidden" name="formElement" value="' . $html_purifier->purify((string) $this->id) . '" />';
+        $html         .= '<button type="submit" class="btn-link">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</button>';
+        $html         .= '</form>';
+        $html         .= '</div>';
+        $html         .= '<br />';
+        $html         .= $this->fetchAdminFormElement();
+        $html         .= '</div>';
         return $html;
     }
 

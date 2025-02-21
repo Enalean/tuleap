@@ -248,7 +248,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     /**
      *
-     * @param Codendi_Request               $request
+     * @param HTTPRequest                   $request
      * @param PFUser                        $current_user
      */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)

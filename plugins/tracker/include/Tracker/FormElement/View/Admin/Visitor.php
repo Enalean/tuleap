@@ -257,11 +257,12 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         return $this->adminElement;
     }
 
-    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $url, $title, $formContent)
+    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $url, $title, $formContent, string $form_prefix_content = ''): void
     {
-        $form  = '<form name="form1" method="POST" action="' . $url . '" data-admin-form="true">';
+        $form  = '<div>' . $form_prefix_content;
+        $form .= '<form name="form1" method="POST" action="' . $url . '" data-admin-form="true">';
         $form .= $formContent;
-        $form .= '</form>';
+        $form .= '</form></div>';
 
         if ($request->isAjax()) {
             $this->displayAjax($title, $form);

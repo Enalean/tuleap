@@ -125,23 +125,25 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
 
     public function fetchAdminInGroup($tracker)
     {
-        $html  = '';
         $hp    = Codendi_HTMLPurifier::instance();
-        $html .= $this->fetchColumnPrefix('class="tracker-admin-container tracker-admin-column" id="tracker-admin-formElements_' . $this->id . '" style="min-width:200px; min-height:80px; border:1px dashed #ccc; margin: 1px; padding: 4px;"');
+        $html  = $this->fetchColumnPrefix('class="tracker-admin-container tracker-admin-column" id="tracker-admin-formElements_' . $hp->purify((string) $this->id) . '" style="min-width:200px; min-height:80px; border:1px dashed #ccc; margin: 1px; padding: 4px;"');
         $html .= '<div><label title="' . $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '<span class="tracker-admin-field-controls">';
         $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
 
         if ($this->canBeRemovedFromUsage()) {
-            $html .= '<a href="?' . http_build_query([
-                'tracker'  => $this->tracker_id,
-                'func'     => 'admin-formElement-remove',
-                'formElement' => $this->id,
-            ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
+            $csrf_token = $this->getCSRFTokenForElementUpdate();
+            $html      .= '<form method="POST" action="?">';
+            $html      .= $csrf_token->fetchHTMLInput();
+            $html      .= '<input type="hidden" name="func" value="' . $hp->purify(\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE) . '" />';
+            $html      .= '<input type="hidden" name="tracker" value="' . $hp->purify((string) $tracker->getId()) . '" />';
+            $html      .= '<input type="hidden" name="formElement" value="' . $hp->purify((string) $this->id) . '" />';
+            $html      .= '<button type="submit" class="btn-link">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</button>';
+            $html      .= '</form>';
         } else {
             $cannot_remove_message = $this->getCannotRemoveMessage();
-            $html                 .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
+            $html                 .= '<span style="color:gray;" title="' . $hp->purify($cannot_remove_message) . '">';
             $html                 .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
             $html                 .= '</span>';
         }
