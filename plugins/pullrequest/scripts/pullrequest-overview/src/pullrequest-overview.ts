@@ -20,7 +20,7 @@
 import { createApp, readonly } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
 import { createOverviewRouter } from "./router/router";
 import { buildBaseUrl } from "./router/base-url-builders";
@@ -39,8 +39,8 @@ import {
 } from "./constants";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
-    const project_id = getDatasetItemOrThrow(mount_point, "data-project-id");
-    const current_repository_id = getDatasetItemOrThrow(mount_point, "data-repository-id");
+    const project_id = getAttributeOrThrow(mount_point, "data-project-id");
+    const current_repository_id = getAttributeOrThrow(mount_point, "data-repository-id");
     const base_url = buildBaseUrl(window.location, current_repository_id, project_id);
 
     createApp(OverviewApp)
@@ -49,22 +49,19 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
             CURRENT_USER_ID,
-            Number.parseInt(getDatasetItemOrThrow(document.body, "data-user-id"), 10),
+            Number.parseInt(getAttributeOrThrow(document.body, "data-user-id"), 10),
         )
         .provide(PROJECT_ID, Number.parseInt(project_id, 10))
         .provide(CURRENT_REPOSITORY_ID, Number.parseInt(current_repository_id, 10))
-        .provide(
-            CURRENT_USER_AVATAR_URL,
-            getDatasetItemOrThrow(mount_point, "data-user-avatar-url"),
-        )
+        .provide(CURRENT_USER_AVATAR_URL, getAttributeOrThrow(mount_point, "data-user-avatar-url"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-            getDatasetItemOrThrow(mount_point, "data-relative-date-display"),
+            getAttributeOrThrow(mount_point, "data-relative-date-display"),
         )
         .provide(
             ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
             Boolean(
-                getDatasetItemOrThrow(mount_point, "data-are-merge-commits-allowed-in-repository"),
+                getAttributeOrThrow(mount_point, "data-are-merge-commits-allowed-in-repository"),
             ),
         )
         .use(createOverviewRouter(base_url))

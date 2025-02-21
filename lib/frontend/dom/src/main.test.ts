@@ -18,10 +18,10 @@
  */
 
 import { beforeEach, describe, it, expect } from "vitest";
-import { getDatasetItemOrThrow, selectOrThrow } from "./main";
+import { getAttributeOrThrow, selectOrThrow } from "./main";
 
 describe(`DOM`, () => {
-    describe(`getDatasetItemOrThrow`, () => {
+    describe(`getAttributeOrThrow`, () => {
         const DATA_ATTRIBUTE_VALUE = "lingberry";
 
         function createElement(key: string): HTMLDivElement {
@@ -35,24 +35,24 @@ describe(`DOM`, () => {
 
         function* generateKeys(): Generator<[string]> {
             yield ["data-name"];
-            yield ["data-my-dataset-name"];
+            yield ["my-attribute"];
         }
 
         it.each([...generateKeys()])(
-            `returns the string value of the item's data-attribute for the given key`,
+            `returns the string value of the item's attribute for the given key`,
             (key) => {
                 const element = createElement(key);
-                expect(getDatasetItemOrThrow(element, key)).toBe(DATA_ATTRIBUTE_VALUE);
+                expect(getAttributeOrThrow(element, key)).toBe(DATA_ATTRIBUTE_VALUE);
             },
         );
 
         it.each([...generateKeys()])(
-            `throws when the item has no matching data-attribute for the given key`,
+            `throws when the item has no matching attribute for the given key`,
             (key) => {
-                const element = createElement("unknownKey");
+                const element = createElement("unknown-key");
                 const error = `Missing attribute ${key}`;
 
-                expect(() => getDatasetItemOrThrow(element, key)).toThrowError(error);
+                expect(() => getAttributeOrThrow(element, key)).toThrowError(error);
             },
         );
     });

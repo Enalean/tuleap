@@ -20,7 +20,7 @@
 import { datePicker } from "tlp";
 import "@tuleap/copy-to-clipboard";
 import { getAuthenticationResult, openTargetModalIdAfterAuthentication } from "@tuleap/webauthn";
-import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 import type { ResultAsync } from "neverthrow";
 import type { Modal } from "@tuleap/tlp-modal";
 import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
@@ -34,7 +34,7 @@ const ALERT_DANGER_ID = "keys-tokens-alert-danger";
 const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const locale = getDatasetItemOrThrow(document.body, "data-user-locale");
+    const locale = getAttributeOrThrow(document.body, "data-user-locale");
     const gettext_provider = await initGettext(
         locale,
         "core-account",

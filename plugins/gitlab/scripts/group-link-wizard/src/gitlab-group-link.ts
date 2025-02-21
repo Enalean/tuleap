@@ -21,7 +21,7 @@ import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { createPinia } from "pinia";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 
 import { createInitializedRouter } from "./router/router";
 
@@ -33,7 +33,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
     const pinia = createPinia();
 
     const base_url = `/plugins/git/${encodeURIComponent(
-        getDatasetItemOrThrow(mount_point, "data-current-project-unix-name"),
+        getAttributeOrThrow(mount_point, "data-current-project-unix-name"),
     )}/administration/gitlab/`;
 
     app.use(createInitializedRouter(base_url));
@@ -47,8 +47,8 @@ export async function init(mount_point: HTMLElement): Promise<void> {
     const root_store = useRootStore();
     root_store.setBaseUrl(base_url);
     root_store.setCurrentProject({
-        id: Number.parseInt(getDatasetItemOrThrow(mount_point, "data-current-project-id"), 10),
-        public_name: getDatasetItemOrThrow(mount_point, "data-current-project-name"),
+        id: Number.parseInt(getAttributeOrThrow(mount_point, "data-current-project-id"), 10),
+        public_name: getAttributeOrThrow(mount_point, "data-current-project-name"),
     });
 
     app.mount(mount_point);

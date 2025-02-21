@@ -22,7 +22,7 @@ import { createGettext } from "vue3-gettext";
 import App from "./components/App.vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createInitializedStore } from "./store";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import "../themes/main.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const user_locale = getDatasetItemOrThrow(document.body, "data-user-locale");
+    const user_locale = getAttributeOrThrow(document.body, "data-user-locale");
 
     const gettext_plugin = await initVueGettext(
         createGettext,
@@ -41,23 +41,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     createApp(App)
         .use(
             createInitializedStore({
-                program: JSON.parse(getDatasetItemOrThrow(vue_mount_point, "data-program")),
+                program: JSON.parse(getAttributeOrThrow(vue_mount_point, "data-program")),
                 program_privacy: JSON.parse(
-                    getDatasetItemOrThrow(vue_mount_point, "data-program-privacy"),
+                    getAttributeOrThrow(vue_mount_point, "data-program-privacy"),
                 ),
                 program_flags: JSON.parse(
-                    getDatasetItemOrThrow(vue_mount_point, "data-program-flags"),
+                    getAttributeOrThrow(vue_mount_point, "data-program-flags"),
                 ),
                 is_program_admin: Boolean(vue_mount_point.getAttribute("data-is-user-admin")),
                 program_increment: JSON.parse(
-                    getDatasetItemOrThrow(vue_mount_point, "data-program-increment"),
+                    getAttributeOrThrow(vue_mount_point, "data-program-increment"),
                 ),
                 iterations_labels: JSON.parse(
-                    getDatasetItemOrThrow(vue_mount_point, "data-iterations-labels"),
+                    getAttributeOrThrow(vue_mount_point, "data-iterations-labels"),
                 ),
                 user_locale: user_locale.replace("_", "-"),
                 iteration_tracker_id: Number.parseInt(
-                    getDatasetItemOrThrow(vue_mount_point, "data-iteration-tracker-id"),
+                    getAttributeOrThrow(vue_mount_point, "data-iteration-tracker-id"),
                     10,
                 ),
                 is_accessibility_mode_enabled: Boolean(

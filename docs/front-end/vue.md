@@ -187,7 +187,7 @@ Once your mount point is ready, head to your `main.ts` file.
 import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
-import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 import MyVueApp from "./components/MyVueApp.vue";
 import { useRootStore } from "./stores/root";
 
@@ -210,8 +210,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(pinia);
     const root_store = useRootStore();
 
-    // Retrieve the JSON data from the mount point. The dataset key is in CamelCase.
-    const user_info = JSON.parse(getDatasetItemOrThrow(mount_point, "data-user-info"));
+    // Retrieve the JSON data from the mount point
+    const user_info = JSON.parse(getAttributeOrThrow(mount_point, "data-user-info"));
 
     // Pass the mount-point data to the pinia store
     root_store.setUserInfo(user_info);
