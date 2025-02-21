@@ -42,6 +42,8 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\Report\Renderer\Table\TableRendererForReportRetriever;
 use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
+use Tuleap\Tracker\REST\Artifact\ArtifactCollectionFormat;
+use Tuleap\Tracker\REST\Artifact\ArtifactCollectionFormatter;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
@@ -250,17 +252,15 @@ class ReportsResource extends AuthenticatedResource
      */
     private function getArtifactRepresentationsInExpectedFormat(string $output_format, array $artifact_representations): array
     {
-        return match ($output_format) {
-            'flat' => RESTCollectionTransformer::flattenRepresentations(
-                $artifact_representations,
-                new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelArrayTransformer())
-            ),
-            'flat_with_semicolon_string_array' => RESTCollectionTransformer::flattenRepresentations(
-                $artifact_representations,
-                new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelFlatStringTransformer())
-            ),
-            'nested' => $artifact_representations,
-        };
+        return (new ArtifactCollectionFormatter(
+            new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelArrayTransformer()),
+            new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelFlatStringTransformer())
+        ))->format(
+            ArtifactCollectionFormat::from($output_format),
+            $artifact_representations,
+            /** @psalm-return list<ArtifactRepresentation> */
+            fn($artifact_representations): array => $artifact_representations
+        );
     }
 
     /**
