@@ -120,4 +120,14 @@ function insertSelectedField(event: Event): void {
         insertAllowedFieldInCodeMirror(event, editor);
     });
 }
+
+function updateEditor(query: string): void {
+    code_mirror_instance.apply((editor) => {
+        editor.dispatch({
+            changes: { from: 0, to: editor.state.doc.length, insert: query },
+        });
+    });
+}
+
+defineExpose({ updateEditor });
 </script>

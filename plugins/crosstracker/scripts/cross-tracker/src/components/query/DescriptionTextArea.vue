@@ -27,6 +27,7 @@
             class="tlp-textarea"
             v-bind:placeholder="$gettext('Write your description')"
             v-on:input="handleDescription"
+            v-bind:value="description"
         ></textarea>
     </div>
 </template>

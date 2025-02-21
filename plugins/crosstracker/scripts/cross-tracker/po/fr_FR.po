@@ -16,6 +16,12 @@ msgstr ""
 msgid "%{from} – %{to} of %{total}"
 msgstr "%{from} – %{to} sur %{total}"
 
+msgid "All artifacts created in the last 10 days"
+msgstr "Tous les artéfacts créés ces 10 derniers jours"
+
+msgid "All open artifacts"
+msgstr "Tous les artéfacts ouverts"
+
 msgid "An error occurred: %{error}"
 msgstr "Une erreur s'est produite : %{error}"
 
@@ -72,6 +78,11 @@ msgstr "Premier"
 msgid "Id"
 msgstr "Id"
 
+msgid ""
+"If you click on one of the suggested query, your content will be replaced."
+msgstr ""
+"Si vous cliquez sur l'une des requêtes suggérées, votre contenu sera remplacé"
+
 msgid "Last"
 msgstr "Dernier"
 
@@ -90,6 +101,12 @@ msgstr "Suivant"
 msgid "No artifact found"
 msgstr "Aucun artéfact trouvé"
 
+msgid "Open artifacts assigned to me"
+msgstr "Les artéfacts ouverts qui me sont assignés"
+
+msgid "Open artifacts assigned to me in my projects"
+msgstr "Les artéfacts ouverts qui me sont assignés dans mes projets"
+
 msgid "Please create a new query."
 msgstr "Veuillez créer une nouvelle requête."
 
@@ -107,6 +124,9 @@ msgstr "La création de requête est en cours d'implémentation"
 
 msgid "Query is empty"
 msgstr "La requête est vide"
+
+msgid "Query suggestions"
+msgstr "Requêtes suggérées"
 
 msgid "Query title"
 msgstr "Titre de la requête"

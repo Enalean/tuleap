@@ -15,6 +15,12 @@ msgstr ""
 msgid "%{from} – %{to} of %{total}"
 msgstr ""
 
+msgid "All artifacts created in the last 10 days"
+msgstr ""
+
+msgid "All open artifacts"
+msgstr ""
+
 msgid "An error occurred: %{error}"
 msgstr ""
 
@@ -68,6 +74,10 @@ msgstr ""
 msgid "Id"
 msgstr ""
 
+msgid ""
+"If you click on one of the suggested query, your content will be replaced."
+msgstr ""
+
 msgid "Last"
 msgstr ""
 
@@ -86,6 +96,12 @@ msgstr ""
 msgid "No artifact found"
 msgstr ""
 
+msgid "Open artifacts assigned to me"
+msgstr ""
+
+msgid "Open artifacts assigned to me in my projects"
+msgstr ""
+
 msgid "Please create a new query."
 msgstr ""
 
@@ -102,6 +118,9 @@ msgid "Query creation is under implementation"
 msgstr ""
 
 msgid "Query is empty"
+msgstr ""
+
+msgid "Query suggestions"
 msgstr ""
 
 msgid "Query title"

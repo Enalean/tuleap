@@ -23,6 +23,7 @@ namespace Tuleap\CrossTracker\Widget;
 use Codendi_Request;
 use ForgeConfig;
 use HTTPRequest;
+use LogicException;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Config\ConfigKeyCategory;
@@ -52,6 +53,7 @@ class CrossTrackerSearchWidget extends Widget
         private readonly CreateWidget $widget_creator,
         private readonly ReportInheritanceHandler $inheritance_handler,
         private readonly WidgetPermissionChecker $permission_checker,
+        private readonly SearchCrossTrackerWidget $search_cross_tracker_widget,
     ) {
         parent::__construct(self::NAME);
     }
@@ -72,6 +74,11 @@ class CrossTrackerSearchWidget extends Widget
 
         $is_admin = $this->permission_checker->isUserWidgetAdmin($user, $this->content_id);
 
+        $row = $this->search_cross_tracker_widget->searchCrossTrackerWidgetDashboardById($this->content_id);
+        if ($row === null) {
+            throw new LogicException(sprintf('Widget #%d could not be found.', $this->content_id));
+        }
+
         return $renderer->renderToString(
             'cross-tracker-search-widget',
             new CrossTrackerSearchWidgetPresenter(
@@ -79,6 +86,7 @@ class CrossTrackerSearchWidget extends Widget
                 $is_admin,
                 $user,
                 ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
+                $row['dashboard_type']
             )
         );
     }

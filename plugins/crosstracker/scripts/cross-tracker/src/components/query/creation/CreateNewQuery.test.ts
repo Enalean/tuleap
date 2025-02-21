@@ -20,17 +20,24 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
-import { expect, describe, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import CreateNewQuery from "./CreateNewQuery.vue";
+import QuerySuggested from "../QuerySuggested.vue";
 import TitleInput from "../TitleInput.vue";
-import QueryEditorForCreation from "./QueryEditorForCreation.vue";
 
 vi.useFakeTimers();
 
 describe("CreateNewQuery", () => {
+    const QueryEditorForCreation = {
+        name: "QueryEditorForCreation",
+        template: "<div>custom query editor</div>",
+        methods: {
+            updateEditor: (tql_query: string): string => tql_query,
+        },
+    };
     function getWrapper(): VueWrapper<InstanceType<typeof CreateNewQuery>> {
         return shallowMount(CreateNewQuery, {
-            global: { ...getGlobalTestOptions() },
+            global: { ...getGlobalTestOptions(), stubs: { QueryEditorForCreation } },
         });
     }
 
@@ -82,5 +89,17 @@ describe("CreateNewQuery", () => {
             expect(saved_button.exists()).toBe(true);
             expect(saved_button.element.attributes.getNamedItem("disabled")).toBeNull();
         });
+    });
+    it("update the fields and the editor when the query has been chosen", () => {
+        const tql_query = "SELECT @id FROM @project='self' WHERE @id > 1";
+        const wrapper = getWrapper();
+        const editor_component = wrapper.getComponent(QueryEditorForCreation);
+        const editor_spy = vi.spyOn(editor_component.vm, "updateEditor");
+        wrapper.findComponent(QuerySuggested).vm.$emit("query-chosen", {
+            title: "Original title",
+            description: "",
+            tql_query,
+        });
+        expect(editor_spy).toHaveBeenCalledWith(tql_query);
     });
 });

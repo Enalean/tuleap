@@ -84,7 +84,8 @@ class crosstrackerPlugin extends Plugin
                         $widget_dao,
                         $this->getBackendLogger()
                     ),
-                    new WidgetPermissionChecker($widget_dao, \ProjectManager::instance())
+                    new WidgetPermissionChecker($widget_dao, \ProjectManager::instance()),
+                    $widget_dao
                 )
             );
         }
