@@ -39,17 +39,27 @@ import {
     NOTIFY_SUCCESS,
     WIDGET_ID,
 } from "../injection-symbols";
-import { EmitterStub } from "../../tests/stubs/EmitterStub";
 import ReadQuery from "./ReadQuery.vue";
 import { useFeedbacks } from "../composables/useFeedbacks";
+import type { EmitterProvider, Events, SwitchQueryEvent } from "../helpers/emitter-provider";
+import { SWITCH_QUERY_EVENT } from "../helpers/emitter-provider";
+import type { Query } from "../type";
+import mitt from "mitt";
 
 vi.useFakeTimers();
 
 describe("ReadQuery", () => {
     let is_user_admin: boolean;
+    let dispatched_switch_query_events: SwitchQueryEvent[];
+    let emitter: EmitterProvider;
 
     beforeEach(() => {
         is_user_admin = true;
+        dispatched_switch_query_events = [];
+        emitter = mitt<Events>();
+        emitter.on(SWITCH_QUERY_EVENT, (event) => {
+            dispatched_switch_query_events.push(event);
+        });
 
         vi.spyOn(rest_querier, "getQueries").mockReturnValue(
             okAsync([
@@ -72,7 +82,7 @@ describe("ReadQuery", () => {
                 provide: {
                     [WIDGET_ID.valueOf()]: 96,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
-                    [EMITTER.valueOf()]: EmitterStub(),
+                    [EMITTER.valueOf()]: emitter,
                     [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
                     [NOTIFY_FAULT.valueOf()]: notifyFault,
                     [NOTIFY_SUCCESS.valueOf()]: notifySuccess,
@@ -238,6 +248,28 @@ describe("ReadQuery", () => {
 
             expect(wrapper.vm.report_state).toBe("edit-query");
         });
+
+        it("Does not emit a SWITCH_QUERY_EVENT when there are no queries", () => {
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync([]));
+            getWrapper();
+
+            expect(dispatched_switch_query_events.length).toBe(0);
+        });
+
+        it("Does emit a SWITCH_QUERY_EVENT with the first query as parameter once done loading", async () => {
+            const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
+            const uuid1 = "0194dfd6-a489-703b-aabd-9d473212d908";
+            const uuid2 = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
+            const queries: ReadonlyArray<Query> = [
+                { tql_query: query, title: "TQL query title 1", description: "", id: uuid1 },
+                { tql_query: query, title: "TQL query title 2", description: "", id: uuid2 },
+            ];
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync(queries));
+            getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(dispatched_switch_query_events[0].query).toStrictEqual(queries[0]);
+        });
     });
 
     describe(`isXLSXExportAllowed`, () => {
@@ -269,7 +301,7 @@ describe("ReadQuery", () => {
         it(`when user is admin and there is an error selected in the report,
             it does not allow XLSX export`, async () => {
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(
-                okAsync([{ tql_query: "", title: "title", description: "", id: "" }]),
+                errAsync(Fault.fromMessage("Ooops an error")),
             );
 
             const wrapper = getWrapper();
