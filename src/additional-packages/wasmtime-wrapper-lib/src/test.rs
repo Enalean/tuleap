@@ -197,6 +197,32 @@ mod tests {
     }
 
     #[test]
+    fn wasm_module_allocate_too_much_initial_memory() {
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/large_initial_memory.wasm",
+            "mount_points": [],
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+
+        let str_out = run_wasm_module(config_json, "");
+
+        println!("{}", str_out);
+
+        let json_out: UserErrorJson = serde_json::from_str(&str_out).unwrap();
+
+        assert_eq!(
+            "memory minimum size of 65536 pages exceeds memory limits",
+            json_out.user_error
+        );
+
+        assert!(json_out.stats.exec_time_as_seconds == 0.0);
+        assert!(json_out.stats.memory_in_bytes == 0);
+    }
+
+    #[test]
     fn wasm_module_allocate_okay_amount_of_memory() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasip1/release/memory-alloc-success.wasm",
