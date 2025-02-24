@@ -97,21 +97,21 @@ describe("Artidoc", () => {
 
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
             cy.log("User with write rights should see a form to enter a new section");
-            fillInSectionTitleAndDescription(requirements[0]);
+            createSectionWithTitleAndDescription(requirements[0]);
         });
 
         cy.log("User should be able to add a section at the beginning");
         cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
         cy.get("[data-test=add-new-section]").first().click({ force: true });
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
-            fillInSectionTitleAndDescription(requirements[1]);
+            createSectionWithTitleAndDescription(requirements[1]);
         });
 
         cy.log("User should be able to add a section at the end");
         cy.get("[data-test=artidoc-add-new-section-trigger]").last().click();
         cy.get("[data-test=add-new-section]").last().click({ force: true });
         cy.get("[data-test=artidoc-section]:last-child").within(() => {
-            fillInSectionTitleAndDescription(requirements[2]);
+            createSectionWithTitleAndDescription(requirements[2]);
         });
 
         cy.log("Check that the document has now section in given order");
@@ -125,17 +125,16 @@ describe("Artidoc", () => {
         ]);
 
         cy.get("[data-test=artidoc-section]:last-child").within(() => {
-            getSectionTitle().type("{end} (edited)");
-        });
-
-        cy.get("[data-test=artidoc-section]:last-child").within(() => {
             cy.intercept("PUT", "*/artidoc_sections/*").as("updateSection");
             cy.intercept("GET", "*/artidoc_sections/*").as("RefreshSection");
+
+            getSectionTitle().type("{end} (edited)");
 
             pasteImageInSectionDescription("/uploads/tracker/file/*");
             cy.contains("button", "Save").click();
 
             cy.wait(["@updateSection", "@RefreshSection"]);
+            waitSectionToBeSaved();
 
             getSectionTitle().should("contain.text", "Security Requirement (edited)");
             // ignore rule for image pasted in ProseMirror
@@ -168,7 +167,7 @@ describe("Artidoc", () => {
         cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
         cy.get("[data-test=add-freetext-section]").first().click({ force: true });
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
-            fillInFreeTextSectionTitleAndDescription(structures[0]);
+            createSectionWithTitleAndDescription(structures[0]);
         });
 
         cy.reload();
@@ -186,6 +185,7 @@ describe("Artidoc", () => {
             cy.contains("button", "Save").click();
 
             cy.wait(["@RefreshSection"]);
+            waitSectionToBeSaved();
 
             // ignore rule for image pasted in ProseMirror
             // eslint-disable-next-line cypress/require-data-selectors
@@ -237,18 +237,22 @@ function testCrossReferenceExtraction(): void {
 
     cy.log("User should be able to reference artifacts in freetext and artifact sections");
     cy.get<number>("@artifact_to_reference_id").then((artifact_id) => {
-        cy.get("[data-test-type=freetext-section]")
-            .first()
-            .within(() => {
+        [
+            cy.get("[data-test-type=freetext-section]").first(),
+            cy.get("[data-test-type=artifact-section]").first(),
+        ].forEach((section) => {
+            section.within(() => {
+                waitSectionToBeSaved();
                 insertArtifactReferenceAndAssertItHasBeenProcessed(artifact_id);
             });
-
-        cy.get("[data-test-type=artifact-section]")
-            .first()
-            .within(() => {
-                insertArtifactReferenceAndAssertItHasBeenProcessed(artifact_id);
-            });
+        });
     });
+}
+
+function waitSectionToBeSaved(): void {
+    // Wait for the data-test attribute to disappear. It means that the changes in the section have been processed.
+    // This function helps to prevent Cypress to edit a section while its state is not stabilized yet, making tests flaky.
+    cy.get(`[data-test=section-edition]`).should("not.exist");
 }
 
 function getSectionTitle(): Cypress.Chainable<JQuery<HTMLElement>> {
@@ -265,7 +269,7 @@ function getSectionDescription(): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get("artidoc-section-description");
 }
 
-function fillInSectionTitleAndDescription({
+function createSectionWithTitleAndDescription({
     title,
     description,
 }: {
@@ -279,20 +283,7 @@ function fillInSectionTitleAndDescription({
 
     cy.get("[data-test=section-edition]").contains("button", "Save").click();
     cy.wait("@addSection");
-}
-
-function fillInFreeTextSectionTitleAndDescription({
-    title,
-    description,
-}: {
-    title: string;
-    description: string;
-}): void {
-    getSectionTitle().type(title);
-    getSectionDescription().type(description);
-
-    cy.get("[data-test=section-edition]").contains("button", "Save").click();
-    cy.wait("@RefreshSection");
+    waitSectionToBeSaved();
 }
 
 function pasteImageInSectionDescription(url_to_intercept: string): void {
