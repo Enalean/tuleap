@@ -58,6 +58,7 @@ use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\CannotUpdatePartiallyReadableDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\Domain\Document\Section\EmptyTitleFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
@@ -397,6 +398,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 static function (Fault $fault) {
                     Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {
+                        $fault instanceof CannotUpdatePartiallyReadableDocumentFault => new RestException(404),
                         $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
                             403,
                             dgettext('tuleap-artidoc', "You don't have permission to write the document.")
@@ -420,14 +422,17 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      */
     private function getSectionCreator(PFUser $user, CollectRequiredSectionInformation $collector): SectionCreator
     {
+        $section_identifier_factory  = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());
+        $freetext_identifier_factory = new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory());
+
         return new SectionCreator(
             $this->getArtidocWithContextRetriever($user),
             new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory()),
             new ArtifactContentCreator(
                 new ConfiguredTrackerRetriever(
                     new ArtidocDao(
-                        new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory()),
-                        new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory()),
+                        $section_identifier_factory,
+                        $freetext_identifier_factory,
                     ),
                     TrackerFactory::instance(),
                     RESTLogger::getLogger(),
@@ -437,6 +442,10 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 $user,
             ),
             $collector,
+            new RetrieveArtidocSectionDao(
+                $section_identifier_factory,
+                $freetext_identifier_factory,
+            ),
         );
     }
 

@@ -48,7 +48,7 @@ final class SectionRetrieverTest extends TestCase
 
     public function testHappyPathUserCanRead(): void
     {
-        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformationFor(self::ARTIFACT_ID);
 
         $builder = new SectionRetriever(
             SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),
@@ -77,7 +77,7 @@ final class SectionRetrieverTest extends TestCase
 
     public function testHappyPathUserCanWrite(): void
     {
-        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformationFor(self::ARTIFACT_ID);
 
         $builder = new SectionRetriever(
             SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),
@@ -103,7 +103,7 @@ final class SectionRetrieverTest extends TestCase
 
     public function testWhenSectionIsNotFound(): void
     {
-        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformationFor(self::ARTIFACT_ID);
 
         $builder = new SectionRetriever(
             SearchOneSectionStub::withoutResults(),
@@ -122,7 +122,7 @@ final class SectionRetrieverTest extends TestCase
 
     public function testWhenDocumentIsNotFound(): void
     {
-        $collector = CollectRequiredSectionInformationStub::withRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withRequiredInformationFor(self::ARTIFACT_ID);
 
         $builder = new SectionRetriever(
             SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),
@@ -141,7 +141,7 @@ final class SectionRetrieverTest extends TestCase
 
     public function testFaultWhenArtifactDoesNotHaveRequiredInformation(): void
     {
-        $collector = CollectRequiredSectionInformationStub::withoutRequiredInformation();
+        $collector = CollectRequiredSectionInformationStub::withoutRequiredInformation(self::ARTIFACT_ID);
 
         $builder = new SectionRetriever(
             SearchOneSectionStub::withResults($this->getMatchingRetrievedSection()),

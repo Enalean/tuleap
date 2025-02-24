@@ -33,25 +33,73 @@ final class CollectRequiredSectionInformationStub implements CollectRequiredSect
 {
     private bool $called = false;
 
-    private function __construct(private readonly Ok|Err $result)
+    /**
+     * @param null|array<int, Ok|Err> $results
+     */
+    private function __construct(private ?array $results)
     {
     }
 
-    public static function withRequiredInformation(): self
+    public static function shouldNotBeCalled(): self
     {
-        return new self(Result::ok(null));
+        return new self(null);
     }
 
-    public static function withoutRequiredInformation(): self
+    public static function withRequiredInformationFor(int $artifact_id, int ...$other_artifact_ids): self
     {
-        return new self(Result::err(Fault::fromMessage('Required information are missing')));
+        return new self(
+            self::mapResult(
+                [$artifact_id, ...$other_artifact_ids],
+                Result::ok(null),
+            )
+        );
+    }
+
+    public function andMissingRequiredInformationFor(int $artifact_id, int ...$other_artifact_ids): self
+    {
+        if ($this->results === null) {
+            throw new \LogicException('Cannot add information if not expected to be called');
+        }
+
+        $this->results = $this->results +
+            self::mapResult(
+                [$artifact_id, ...$other_artifact_ids],
+                Result::err(Fault::fromMessage('Required information are missing')),
+            );
+
+        return $this;
+    }
+
+    /**
+     * @return array<int, Ok|Err>
+     */
+    private static function mapResult(array $artifact_ids, Ok|Err $result): array
+    {
+        return array_fill_keys(
+            $artifact_ids,
+            $result,
+        );
+    }
+
+    public static function withoutRequiredInformation(int $artifact_id, int ...$other_artifact_ids): self
+    {
+        return (new self([]))
+            ->andMissingRequiredInformationFor($artifact_id, ...$other_artifact_ids);
     }
 
     public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
     {
         $this->called = true;
 
-        return $this->result;
+        if ($this->results === null) {
+            throw new \Exception('Unexpected call to method  ' . __METHOD__);
+        }
+
+        if (! isset($this->results[$artifact_id])) {
+            throw new \Exception('Artifact ' . $artifact_id . ' not found');
+        }
+
+        return $this->results[$artifact_id];
     }
 
     public function isCalled(): bool

@@ -45,10 +45,10 @@ final readonly class SectionContentToBeCreated
     ) {
     }
 
-    public static function fromImportedArtifact(int $import, Level $level): self
+    public static function fromImportedArtifact(int $artifact_id, Level $level): self
     {
         return new self(
-            Option::fromValue(new ImportContent($import, $level)),
+            Option::fromValue(new ImportContent($artifact_id, $level)),
             Option::nothing(FreetextContent::class),
             Option::nothing(ArtifactContent::class),
         );

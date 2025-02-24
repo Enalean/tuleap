@@ -32,6 +32,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
 final readonly class SectionCreator
@@ -41,6 +42,7 @@ final readonly class SectionCreator
         private SaveOneSection $save_section,
         private CreateArtifactContent $artifact_content_creator,
         private CollectRequiredSectionInformation $collect_required_section_information_for_creation,
+        private SearchAllSections $search_all_sections,
     ) {
     }
 
@@ -52,6 +54,7 @@ final readonly class SectionCreator
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
+            ->andThen($this->checkUserCanReadAllCurrentSectionsOfDocument(...))
             ->andThen(fn (ArtidocWithContext $artidoc) => $content->apply(
                 fn (ImportContent $import) => $this->collect_required_section_information_for_creation
                     ->collectRequiredSectionInformation($artidoc, $import->artifact_id)
@@ -75,5 +78,29 @@ final readonly class SectionCreator
             fn (SectionIdentifier $sibling_section_id) => $this->save_section->saveSectionBefore($artidoc, $content, $sibling_section_id),
             fn () => $this->save_section->saveSectionAtTheEnd($artidoc, $content),
         );
+    }
+
+    /**
+     * @return Ok<ArtidocWithContext>|Err<Fault>
+     */
+    private function checkUserCanReadAllCurrentSectionsOfDocument(ArtidocWithContext $artidoc): Ok|Err
+    {
+        foreach ($this->search_all_sections->searchAllSectionsOfDocument($artidoc) as $section) {
+            $result = $section->content->apply(
+                function (int $artifact_id) use ($artidoc) {
+                    return $this->collect_required_section_information_for_creation
+                        ->collectRequiredSectionInformation($artidoc, $artifact_id);
+                },
+                static fn () => Result::ok(null),
+            );
+
+            if (Result::isErr($result)) {
+                return Result::err(
+                    CannotUpdatePartiallyReadableDocumentFault::build($artidoc->document, $result->error),
+                );
+            }
+        }
+
+        return Result::ok($artidoc);
     }
 }
