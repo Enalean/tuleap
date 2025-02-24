@@ -23,6 +23,7 @@ import {
     initiateTitlePageContentCodeEditor,
     initiateHeaderContentCodeEditor,
     initiateFooterContentCodeEditor,
+    initiateDefaultStylesCodeEditor,
 } from "./initiate-code-editors";
 import { initiateModals } from "./initiate-modals";
 import { initiatePrintPreview } from "./initiate-print-preview";
@@ -30,6 +31,7 @@ import { initiateCopyToClipboard } from "./initiate-copy-to-clipboard";
 import { initiatePopovers } from "./initiate-popovers";
 
 document.addEventListener("DOMContentLoaded", () => {
+    const default_style = initiateDefaultStylesCodeEditor();
     const style = initiateStylesCodeEditor();
     const title_page_content = initiateTitlePageContentCodeEditor();
     const header_content = initiateHeaderContentCodeEditor();
@@ -38,7 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
     initiateCopyToClipboard();
     initiatePopovers();
 
-    if (style && title_page_content && header_content && footer_content) {
-        initiatePrintPreview(style, title_page_content, header_content, footer_content);
+    if (default_style && style && title_page_content && header_content && footer_content) {
+        initiatePrintPreview(
+            default_style,
+            style,
+            title_page_content,
+            header_content,
+            footer_content,
+        );
     }
 });

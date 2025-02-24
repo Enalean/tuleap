@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,54 +20,39 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PdfTemplate\Stubs;
+namespace Tuleap\PdfTemplate;
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
+use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
-use Tuleap\PdfTemplate\CreateTemplate;
-use Tuleap\PdfTemplate\PdfTemplateBuilder;
+use Tuleap\PdfTemplate\Default\DefaultStyleProvider;
 
-final class CreateTemplateStub implements CreateTemplate
+/**
+ * @psalm-immutable
+ */
+final readonly class PdfTemplateBuilder
 {
-    private bool $called = false;
-
-    private function __construct()
-    {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    public function isCalled(): bool
-    {
-        return $this->called;
-    }
-
-    public function create(
+    public static function build(
+        PdfTemplateIdentifier $identifier,
         string $label,
         string $description,
-        string $style,
+        string $user_style,
         string $title_page_content,
         string $header_content,
         string $footer_content,
-        \PFUser $created_by,
-        \DateTimeImmutable $created_date,
+        \PFUser $last_updated_by,
+        \DateTimeImmutable $last_updated_date,
     ): PdfTemplate {
-        $this->called = true;
-
-        return PdfTemplateBuilder::build(
-            (new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier(),
+        return new PdfTemplate(
+            $identifier,
             $label,
             $description,
-            $style,
+            DefaultStyleProvider::getDefaultStyles(),
+            $user_style,
             $title_page_content,
             $header_content,
             $footer_content,
-            $created_by,
-            $created_date,
+            $last_updated_by,
+            $last_updated_date,
         );
     }
 }

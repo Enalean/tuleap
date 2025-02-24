@@ -19,11 +19,11 @@
 
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
-import type CodeMirror from "codemirror";
 import { createModal } from "@tuleap/tlp-modal";
 import { getAttributeOrThrow } from "@tuleap/dom";
 
 export function initiatePrintPreview(
+    default_style: CodeMirror.EditorFromTextArea,
     style: CodeMirror.EditorFromTextArea,
     title_page_content_editor: CodeMirror.EditorFromTextArea,
     header_content_editor: CodeMirror.EditorFromTextArea,
@@ -64,7 +64,7 @@ export function initiatePrintPreview(
             id: "",
             label: label.value,
             description: description.value,
-            style: style.getValue(),
+            style: default_style.getValue() + " " + style.getValue(),
             title_page_content: title_page_content_editor.getValue(),
             header_content: header_content_editor.getValue(),
             footer_content: footer_content_editor.getValue(),

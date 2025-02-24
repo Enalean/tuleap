@@ -58,6 +58,6 @@ final readonly class UsageDetector
 
         return strpos($template->header_content, $href) !== false
             || strpos($template->footer_content, $href) !== false
-            || strpos($template->style, $href) !== false;
+            || strpos($template->user_style, $href) !== false;
     }
 }

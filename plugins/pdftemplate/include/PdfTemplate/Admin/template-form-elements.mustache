@@ -111,6 +111,22 @@
     </section>
 </div>
 
+<div class="tlp-form-element pdftemplate-admin-readonly-editor">
+    <label class="tlp-label" for="input-default-style">
+        {{# dgettext }} tuleap-pdftemplate | Default styling {{/ dgettext }}
+    </label>
+    <textarea
+        id="input-default-style"
+        class="tlp-textarea"
+        rows="20"
+    >{{ default_style }}</textarea>
+    <p class="tlp-text-info">
+        {{# dgettext }} tuleap-pdftemplate | Default CSS rules that are used to shape the style of the document.{{/ dgettext }}
+
+        {{# dgettext }} tuleap-pdftemplate | Interpretation of those rules will depend on the browser used to generate the document.{{/ dgettext }}
+    </p>
+</div>
+
 <div class="tlp-form-element">
     <label class="tlp-label" for="input-style">
         {{# dgettext }} tuleap-pdftemplate | General styling {{/ dgettext }}
@@ -122,8 +138,8 @@
         rows="20"
     >{{ style }}</textarea>
     <p class="tlp-text-info">
-        {{# dgettext }} tuleap-pdftemplate | CSS rules that are used to shape the style of the document.{{/ dgettext }}
+        {{# dgettext }} tuleap-pdftemplate | CSS rules that will override the default ones above.{{/ dgettext }}
 
-        {{# dgettext }} tuleap-pdftemplate | Interpretation of those rules will depend on the browser used to generate the document.{{/ dgettext }}
+        {{# dgettext }} tuleap-pdftemplate | This is where you can apply your company design policy.{{/ dgettext }}
     </p>
 </div>

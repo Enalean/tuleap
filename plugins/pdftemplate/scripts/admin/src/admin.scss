@@ -46,6 +46,11 @@
     border-radius: var(--tlp-small-radius);
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
+.pdftemplate-admin-readonly-editor > .CodeMirror {
+    opacity: 0.5;
+}
+
 .pdftemplate-print-preview-fake-document {
     display: none;
 }

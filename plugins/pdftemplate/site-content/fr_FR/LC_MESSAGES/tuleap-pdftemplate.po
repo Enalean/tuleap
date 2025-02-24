@@ -25,8 +25,8 @@ msgstr ""
 msgid "An error occurred while uploading your image."
 msgstr "Une erreur est survenue lors du téléversement de votre image."
 
-msgid "CSS rules that are used to shape the style of the document."
-msgstr "Règles CSS qui sont utilisées pour mettre en forme le document."
+msgid "CSS rules that will override the default ones above."
+msgstr "Règles CSS qui vont surcharger celle par défaut définies au dessus."
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -58,6 +58,13 @@ msgstr "Créer un modèle"
 
 msgid "Date"
 msgstr "Date"
+
+msgid "Default CSS rules that are used to shape the style of the document."
+msgstr ""
+"Règles CSS par défaut qui sont utilisées pour mettre en forme le document."
+
+msgid "Default styling"
+msgstr "Style par défaut"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -252,6 +259,11 @@ msgid "This is useful to match your company design guidelines for example."
 msgstr ""
 "Ceci permet d'appliquer les règles de conception de documents propres à "
 "votre entreprise par exemple."
+
+msgid "This is where you can apply your company design policy."
+msgstr ""
+"C'est là où vous pouvez appliquer la charte graphique recommandée par votre "
+"entreprise."
 
 msgid "This operation cannot be undone."
 msgstr "Cette opération ne pourra pas être annulée."

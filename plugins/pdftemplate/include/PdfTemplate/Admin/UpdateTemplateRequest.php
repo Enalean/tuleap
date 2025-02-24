@@ -47,7 +47,7 @@ final readonly class UpdateTemplateRequest
         if ($this->submitted->description !== $this->original->description) {
             $changes[] = 'description';
         }
-        if ($this->submitted->style !== $this->original->style) {
+        if ($this->submitted->user_style !== $this->original->user_style) {
             $changes[] = 'style';
         }
         if ($this->submitted->title_page_content !== $this->original->title_page_content) {

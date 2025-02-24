@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
-
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
+namespace Tuleap\PdfTemplate\Default;
 
 /**
  * @psalm-immutable
  */
-final readonly class PdfTemplate
+final readonly class DefaultStyleProvider
 {
-    public string $style;
-
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $default_style,
-        public string $user_style,
-        public string $title_page_content,
-        public string $header_content,
-        public string $footer_content,
-        public \PFUser $last_updated_by,
-        public \DateTimeImmutable $last_updated_date,
-    ) {
-        $this->style = $this->default_style . ' ' . $this->user_style;
+    public static function getDefaultStyles(): string
+    {
+        return file_get_contents(__DIR__ . '/pdf-template-default.css');
     }
 }

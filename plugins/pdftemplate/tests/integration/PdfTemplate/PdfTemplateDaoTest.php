@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate;
 
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
-use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -95,7 +94,7 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
         $the_template      = $dao->create('the template', 'its description', 'its styles', 'its title page', 'its header', 'its footer', $alice, $last_updated_date);
 
         $last_updated_date  = (new \DateTimeImmutable())->setTimestamp(456);
-        $submitted_template = new PdfTemplate(
+        $submitted_template = PdfTemplateBuilder::build(
             $the_template->identifier,
             'updated label',
             'updated description',
@@ -112,7 +111,8 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
         self::assertNotNull($updated_template);
         self::assertEquals('updated label', $updated_template->label);
         self::assertEquals('updated description', $updated_template->description);
-        self::assertEquals('updated style', $updated_template->style);
+        self::assertEquals('updated style', $updated_template->user_style);
+        self::assertStringContainsString('updated style', $updated_template->style);
         self::assertEquals('updated title page', $updated_template->title_page_content);
         self::assertEquals('updated header', $updated_template->header_content);
         self::assertEquals('updated footer', $updated_template->footer_content);
