@@ -7,7 +7,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\CrossTracker\\": ["tests/unit/", "tests/integration/CrossTracker/", "tests/rest/"]
+      "Tuleap\\CrossTracker\\": ["tests/unit/", "tests/integration/", "tests/rest/"]
     }
   },
   "config": {
