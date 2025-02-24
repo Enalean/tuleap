@@ -58,7 +58,7 @@ class ProjectDefinedService extends \Service
 
     public function isOpenedInNewTab(): bool
     {
-        return $this->data['is_in_new_tab'] === '1';
+        return (int) $this->data['is_in_new_tab'] === 1;
     }
 
     public function urlCanChange(): bool
