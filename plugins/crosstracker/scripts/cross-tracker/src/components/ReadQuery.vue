@@ -28,14 +28,11 @@
         >
             <action-buttons v-bind:backend_query="backend_query" v-bind:queries="queries" />
         </div>
-        <error-message v-bind:fault="current_fault" v-bind:writing_query="writing_query" />
-        <div
-            class="tlp-alert-success cross-tracker-report-success"
-            v-if="current_success.isValue()"
-            data-test="cross-tracker-report-success"
-        >
-            {{ current_success.unwrapOr("") }}
-        </div>
+        <feedback-message
+            v-bind:current_fault="current_fault"
+            v-bind:current_success="current_success"
+            v-bind:query="writing_query"
+        />
         <div class="cross-tracker-loader" v-if="is_loading"></div>
         <reading-mode
             v-if="is_reading_mode_shown"
@@ -65,7 +62,6 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import ReadingMode from "../components/reading-mode/ReadingMode.vue";
 import WritingMode from "../components/writing-mode/WritingMode.vue";
-import ErrorMessage from "../components/ErrorMessage.vue";
 import { getQueries } from "../api/rest-querier";
 import type { Query } from "../type";
 import SelectableTable from "../components/selectable-table/SelectableTable.vue";
@@ -85,6 +81,7 @@ import { ReportRetrievalFault } from "../domain/ReportRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
 import type { SwitchQueryEvent } from "../helpers/emitter-provider";
 import { SWITCH_QUERY_EVENT } from "../helpers/emitter-provider";
+import FeedbackMessage from "./feedback/FeedbackMessage.vue";
 
 const emit = defineEmits<{
     (e: "switch-to-create-query-pane"): void;
