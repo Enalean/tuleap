@@ -43,7 +43,7 @@ final class RequiredError
     ) {
         $this->field_admin_url    = '/plugins/tracker/?' .
             http_build_query(
-                ['tracker' => $tracker->getId(), 'func' => 'admin-formElement-update', 'formElement' => $field_id]
+                ['tracker' => $tracker->getId(), 'func' => \Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW, 'formElement' => $field_id]
             );
         $this->tracker_name       = $tracker->getLabel();
         $this->team_project_label = $project_reference->getProjectLabel();

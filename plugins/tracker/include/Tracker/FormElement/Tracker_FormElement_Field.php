@@ -813,7 +813,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     abstract public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string;
 
-    public function fetchAdmin($tracker)
+    public function fetchAdmin($tracker): string
     {
         $hp       = Codendi_HTMLPurifier::instance();
         $html     = '';
@@ -825,11 +825,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html         .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
         if ($usage_in_semantics->areThereSemanticsUsingField() === false && $this->canBeRemovedFromUsage()) {
-            $html .= '<a href="?' . http_build_query([
-                'tracker'  => $tracker->id,
-                'func'     => 'admin-formElement-remove',
-                'formElement'    => $this->id,
-            ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
+            $csrf_token = $this->getCSRFTokenForElementUpdate();
+            $html      .= '<form method="POST" action="?">';
+            $html      .= $csrf_token->fetchHTMLInput();
+            $html      .= '<input type="hidden" name="func" value="' . $hp->purify(\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE) . '" />';
+            $html      .= '<input type="hidden" name="tracker" value="' . $hp->purify((string) $tracker->getId()) . '" />';
+            $html      .= '<input type="hidden" name="formElement" value="' . $hp->purify((string) $this->id) . '" />';
+            $html      .= '<button type="submit" class="btn-link">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</button>';
+            $html      .= '</form>';
         } else {
             $cannot_remove_message = $usage_in_semantics->getUsages() . ' ' . $this->getCannotRemoveMessage();
             $html                 .= '<span style="color:gray;" title="' . $hp->purify($cannot_remove_message) . '">';

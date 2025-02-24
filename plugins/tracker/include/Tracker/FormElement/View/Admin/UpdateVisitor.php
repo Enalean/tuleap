@@ -25,10 +25,7 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
 {
     protected function fetchForm()
     {
-        $html = '';
-
-        $html .= $this->adminElement->fetchTypeForUpdate();
-        $html .= $this->adminElement->fetchNameForUpdate();
+        $html  = $this->adminElement->fetchNameForUpdate();
         $html .= $this->adminElement->fetchLabelForUpdate();
         $html .= $this->adminElement->fetchDescriptionForUpdate();
 
@@ -46,15 +43,15 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
      *
      * @param TrackerManager  $tracker_manager The tracker manager
      * @param HTTPRequest     $request         The data coming from the user
-     *
-     * @return void
      */
-    public function display(TrackerManager $tracker_manager, HTTPRequest $request)
+    public function display(TrackerManager $tracker_manager, HTTPRequest $request): void
     {
         $label = $this->element->getLabel();
         $title = sprintf(dgettext('tuleap-tracker', 'Update Field \'%1$s\''), $label);
-        $url   = $this->element->getAdminEditUrl();
+        $url   = $this->element->getAdminEditSubmitUrl();
 
-        echo $this->displayForm($tracker_manager, $request, $url, $title, $this->fetchForm());
+        $form_content  = $this->fetchForm();
+        $form_content .= $this->element->getCSRFTokenForElementUpdate()->fetchHTMLInput();
+        $this->displayForm($tracker_manager, $request, $url, $title, $form_content, $this->adminElement->fetchTypeForUpdate());
     }
 }

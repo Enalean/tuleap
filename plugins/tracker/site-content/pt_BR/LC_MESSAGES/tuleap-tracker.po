@@ -1661,6 +1661,9 @@ msgstr ""
 msgid "Job build launch succeeded (%1$s)"
 msgstr ""
 
+msgid "Keep the value"
+msgstr ""
+
 msgid "Label"
 msgstr ""
 

@@ -30,6 +30,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
@@ -68,6 +69,11 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->list_field->shouldReceive('getValueDao')->andReturn($this->value_dao);
         $this->list_field->shouldReceive('getBind')->andReturn($this->bind);
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['_SESSION']);
     }
 
     public function testGetChangesetValue(): void
@@ -413,8 +419,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $layout = Mockery::mock(Tracker_IDisplayTrackerLayout::class);
         $user   = Mockery::mock(PFUser::class);
 
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('get')->andReturn('stuff');
+        $request = $this->createStub(HTTPRequest::class);
+        $request->method('get')->willReturn('stuff');
+        $request->method('isPost')->willReturn(false);
 
         $this->bind->shouldReceive('fetchFormattedForJson')->never();
         $this->list_field->process($layout, $request, $user);
@@ -425,8 +432,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $layout = Mockery::mock(Tracker_IDisplayTrackerLayout::class);
         $user   = Mockery::mock(PFUser::class);
 
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('get')->andReturn('get-values');
+        $request = $this->createStub(HTTPRequest::class);
+        $request->method('get')->willReturn('get-values');
+        $request->method('isPost')->willReturn(false);
 
         $this->bind->shouldReceive('fetchFormattedForJson')->once();
         $this->list_field->process($layout, $request, $user);

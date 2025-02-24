@@ -25,9 +25,9 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
 
     public function fetchTypeForUpdate()
     {
-        $html  = '';
-        $html .= '<p><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label><br />';
-        $html .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '" style="vertical-align:middle"/> ' . $this->formElement->getFactoryLabel();
+        $html_purifier = Codendi_HTMLPurifier::instance();
+        $html          = '<div class="tracker-admin-form-element-type-change"><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label><br />';
+        $html         .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '"/> ' . $html_purifier->purify($this->formElement->getFactoryLabel());
 
            //do not change from SB to MSB if the field is used to define the workflow
         $wf = WorkflowFactory::instance();
@@ -36,26 +36,32 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
 
             $change_links = [];
 
-            $labels = [
+            $labels     = [
                 'msb' => dgettext('tuleap-tracker', 'Multi Select Box'),
                 'sb' => dgettext('tuleap-tracker', 'Select Box'),
                 'cb' => dgettext('tuleap-tracker', 'CheckBox'),
                 'rb' => dgettext('tuleap-tracker', 'Radio button'),
             ];
+            $csrf_token = $this->formElement->getCSRFTokenForElementUpdate();
             foreach ($this->getAvailableTypes() as $type) {
-                $change_links[] = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
-                    'tracker'            => $this->formElement->tracker_id,
-                    'func'               => 'admin-formElement-update',
-                    'formElement'        => $this->formElement->id,
-                    'change-type'        => $type,
-                ]) . '" onclick="return confirm(\'' . dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?') . '\');">'
-                       . $labels[$type] . '</a> ';
+                $change_type_form  = '<form method="POST" action="?"';
+                $change_type_form .= 'name="' . $html_purifier->purify($this->formElement->getId() . '_change_type_' . $type) . '"';
+                $change_type_form .= 'onsubmit="return confirm(\'' . $html_purifier->purify(dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?'), Codendi_HTMLPurifier::CONFIG_JS_QUOTE) . '\');"';
+                $change_type_form .= '>';
+                $change_type_form .= $csrf_token->fetchHTMLInput();
+                $change_type_form .= '<input type="hidden" name="func" value="' . $html_purifier->purify(\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE) . '" />';
+                $change_type_form .= '<input type="hidden" name="tracker" value="' . $html_purifier->purify((string) $this->formElement->getTrackerId()) . '" />';
+                $change_type_form .= '<input type="hidden" name="formElement" value="' . $html_purifier->purify((string) $this->formElement->getId()) . '" />';
+                $change_type_form .= '<input type="hidden" name="change-type" value="' . $html_purifier->purify($type) . '" />';
+                $change_type_form .= '<button type="submit" class="btn-link">' . $html_purifier->purify($labels[$type] ?? '') . '</button>';
+                $change_type_form .= '</form>';
+                $change_links[]    = $change_type_form;
             }
             $html .= implode(', ', $change_links);
             $html .= ')';
         }
 
-        $html .= '</p>';
+        $html .= '</div>';
         return $html;
     }
 

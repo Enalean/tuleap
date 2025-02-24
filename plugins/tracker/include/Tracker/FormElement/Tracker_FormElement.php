@@ -251,42 +251,60 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * Process the request
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param Codendi_Request                $request         The data coming from the user
+     * @param HTTPRequest                $request         The data coming from the user
      * @param PFUser                           $current_user    The user who mades the request
      *
      * @return void
      */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
-        switch ($request->get('func')) {
-            case 'admin-formElement-update':
+        $func = (string) $request->get('func');
+        if ($func === Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW) {
+            $this->displayAdminFormElement($layout, $request, $current_user);
+            return;
+        }
+
+        $csrf_token                  = $this->getCSRFTokenForElementUpdate();
+        $form_element_management_url = $csrf_token->url;
+
+        if (! $request->isPost()) {
+            $GLOBALS['Response']->redirect($form_element_management_url);
+        }
+
+        $csrf_token->check();
+
+        switch ($func) {
+            case Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE:
                 $this->processUpdate($layout, $request, $current_user);
-                $this->displayAdminFormElement($layout, $request, $current_user);
                 break;
-            case 'admin-formElement-remove':
+            case Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE:
                 if ($this->isUsedInTrigger()) {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You cannot remove a field used in a trigger. Please update trigger rules before deleting field.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
+                    $GLOBALS['Response']->redirect($form_element_management_url);
                 }
 
                 if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
                     $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field removed'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
                 }
-                $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
+                $GLOBALS['Response']->redirect($form_element_management_url);
                 break;
-            case 'admin-formElement-delete':
+            case Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_DELETE:
                 $transaction = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
                 $transaction->execute(function () {
                     $this->delete();
                     Tracker_FormElementFactory::instance()->deleteFormElement($this->id);
                 });
                 $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field deleted'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
+                $GLOBALS['Response']->redirect($form_element_management_url);
                 break;
             default:
                 break;
         }
+    }
+
+    final public function getCSRFTokenForElementUpdate(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(['func' => 'admin-formElements', 'tracker' => $this->tracker_id]));
     }
 
     /**
@@ -488,30 +506,26 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * Get the use_it row for the element
-     *
-     * @return string html
      */
-    public function fetchAdminAdd()
+    public function fetchAdminAdd(): string
     {
-        $hp      = Codendi_HTMLPurifier::instance();
-        $html    = '';
-        $html   .= '<tr><td>';
-        $html   .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement[' . $this->id . ']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
-        $html   .= '</td><td>';
-        $html   .= '<a href="' . $this->getAdminEditUrl() . '" title="' . dgettext('tuleap-tracker', 'Edit field') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
-        $confirm = dgettext('tuleap-tracker', 'Delete permanently the field') . ' ' . $this->getLabel() . '?';
-        $query   = http_build_query(
-            [
-                'tracker'  => $this->getTracker()->id,
-                'func'     => 'admin-formElement-delete',
-                'formElement'    => $this->id,
-            ]
-        );
-        $html   .= '<a class="delete-field"
-                     onclick="return confirm(\'' . $hp->purify($confirm, CODENDI_PURIFIER_JS_QUOTE) . '\')"
-                     title="' . $hp->purify($confirm) . '"
-                     href="?' . $query . '">' . $GLOBALS['HTML']->getImage('ic/bin_closed.png', ['alt' => 'delete']) . '</a>';
-        $html   .= '</td></tr>';
+        $hp         = Codendi_HTMLPurifier::instance();
+        $html       = '<tr><td>';
+        $html      .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement[' . $this->id . ']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
+        $html      .= '</td><td class="tracker-admin-field-controls">';
+        $html      .= '<a href="' . $this->getAdminEditUrl() . '" title="' . dgettext('tuleap-tracker', 'Edit field') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
+        $confirm    = dgettext('tuleap-tracker', 'Delete permanently the field') . ' ' . $this->getLabel() . '?';
+        $csrf_token = $this->getCSRFTokenForElementUpdate();
+        $html      .= '<form method="POST" action="?"';
+        $html      .= ' onsubmit="return confirm(\'' . $hp->purify($confirm, CODENDI_PURIFIER_JS_QUOTE) . '\')"';
+        $html      .= '>';
+        $html      .= $csrf_token->fetchHTMLInput();
+        $html      .= '<input type="hidden" name="func" value="' . $hp->purify(Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_DELETE) . '" />';
+        $html      .= '<input type="hidden" name="tracker" value="' . $hp->purify((string) $this->getTrackerId()) . '" />';
+        $html      .= '<input type="hidden" name="formElement" value="' . $hp->purify((string) $this->id) . '" />';
+        $html      .= '<button type="submit" class="btn-link">' . $GLOBALS['HTML']->getImage('ic/bin_closed.png', ['alt' => 'delete']) . '</button>';
+        $html      .= '</form>';
+        $html      .= '</td></tr>';
         return $html;
     }
 
@@ -849,7 +863,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             http_build_query(
                 [
                     'tracker'     => $this->getTracker()->getId(),
-                    'func'        => 'admin-formElement-update',
+                    'func'        => Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW,
+                    'formElement' => $this->id,
+                ]
+            );
+    }
+
+    public function getAdminEditSubmitUrl(): string
+    {
+        return TRACKER_BASE_URL . '/?' .
+            http_build_query(
+                [
+                    'tracker'     => $this->getTracker()->getId(),
+                    'func'        => Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE,
                     'formElement' => $this->id,
                 ]
             );

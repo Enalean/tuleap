@@ -52,11 +52,6 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
     private $token;
 
     /**
-     * @var string the url the token is referring to
-     */
-    private $url;
-
-    /**
      * @var string the name of the token (to retrieve in the request)
      */
     private $token_name;
@@ -80,9 +75,8 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
      * @param string $token_name  The name of the token in the request. default is 'challenge'
      * @param array|null $storage Storage used to keep CSRF tokens, $_SESSION is used by default
      */
-    public function __construct($url, $token_name = self::DEFAULT_TOKEN_NAME, &$storage = null)
+    public function __construct(public readonly string $url, $token_name = self::DEFAULT_TOKEN_NAME, &$storage = null)
     {
-        $this->url        = $url;
         $this->token_name = $token_name;
 
         if ($storage === null) {

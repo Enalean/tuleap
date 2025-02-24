@@ -644,7 +644,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * Process the request
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param Codendi_Request                $request         The data coming from the user
+     * @param HTTPRequest                    $request         The data coming from the user
      * @param PFUser                           $current_user    The user who mades the request
      *
      * @return void

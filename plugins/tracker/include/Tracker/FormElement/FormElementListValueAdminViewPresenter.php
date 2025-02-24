@@ -63,10 +63,6 @@ class FormElementListValueAdminViewPresenter
      */
     public $image_hidden_prefix;
     /**
-     * @var string | null
-     */
-    public $delete_url;
-    /**
      * @var bool
      */
     public $value_can_be_deleted;
@@ -89,7 +85,6 @@ class FormElementListValueAdminViewPresenter
         ?ColorpickerMountPointPresenter $decorator,
         bool $value_can_be_hidden,
         bool $value_can_be_deleted,
-        ?string $delete_url,
         string $image_hidden_title,
         string $image_hidden_alt,
         string $image_hidden_prefix,
@@ -102,7 +97,6 @@ class FormElementListValueAdminViewPresenter
         $this->value_can_be_hidden  = $value_can_be_hidden;
         $this->value_can_be_deleted = $value_can_be_deleted;
         $this->image_hidden_alt     = $image_hidden_alt;
-        $this->delete_url           = $delete_url;
         $this->image_hidden_title   = $image_hidden_title;
         $this->image_hidden_prefix  = $image_hidden_prefix;
         $this->decorator            = $decorator;

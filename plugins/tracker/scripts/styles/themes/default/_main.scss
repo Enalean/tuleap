@@ -399,7 +399,8 @@ button[name="tracker_query_submit"] {
     color: #ffffff;
 }
 
-.tracker_admin_static_value_hidden {
+.tracker_admin_static_value_hidden,
+.tracker-admin-one-list-field:has(.tracker_admin_static_value_delete_checkbox > input:checked) {
     background: url("../default/images/tracker_admin_static_value_hidden.png") top left repeat;
 
     > .tracker-admin-bindvalue_grip,
@@ -408,6 +409,27 @@ button[name="tracker_query_submit"] {
     > .tracker-admin-custom-value,
     > .tracker-admin-bindvalue_decorator > .dropdown > .dropdown-toggle {
         opacity: 0.35;
+    }
+}
+
+.tracker_admin_static_value_delete_checkbox {
+    display: inline;
+    cursor: pointer;
+
+    > input {
+        display: none;
+    }
+
+    > input:not(:checked) ~ .static_value_img_checked {
+        display: none;
+    }
+
+    > input:checked ~ .static_value_img_checked {
+        display: inline;
+    }
+
+    > input:checked ~ .static_value_img_not_checked {
+        display: none;
     }
 }
 
@@ -423,6 +445,24 @@ button[name="tracker_query_submit"] {
 
 .tracker-admin-custom-value {
     display: inline;
+}
+
+.tracker-admin-form-element-type-change {
+    display: flex;
+    align-items: center;
+
+    > img {
+        height: fit-content;
+    }
+
+    > form {
+        margin: initial;
+
+        > .btn-link {
+            padding: 0;
+            border-right: 0;
+        }
+    }
 }
 
 .tracker_report_table_pager {
@@ -1131,8 +1171,16 @@ ul.tracker-form-element-checkbox {
     }
 }
 
+.tracker-admin-field-controls {
+    display: flex;
+    align-items: center;
+
+    > form {
+        margin: initial;
+    }
+}
+
 div.tracker-admin-field-controls {
-    size: 0.8em;
     float: right;
 }
 
@@ -1160,7 +1208,7 @@ div.tracker-admin-field-controls {
 }
 
 .tracker-admin-fieldset legend:hover .tracker-admin-field-controls {
-    display: inline;
+    display: flex;
 }
 
 .tracker-admin-field label,
@@ -1607,15 +1655,15 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     background: #fcfcff;
 }
 
-.tracker-admin-palette button img,
-.tracker-admin-palette a.button img {
+.tracker-admin-palette button:not(.btn-link) img,
+.tracker-admin-palette a.button:not(.btn-link) img {
     margin-right: 0.5em;
     vertical-align: middle;
 }
 
-.tracker-admin-palette button,
+.tracker-admin-palette button:not(.btn-link),
 .tracker-admin-palette a.button_disabled,
-.tracker-admin-palette a.button {
+.tracker-admin-palette a.button:not(.btn-link) {
     display: block;
     width: 40%;
     min-width: 148px;
@@ -1639,15 +1687,15 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     cursor: default;
 }
 
-.tracker-admin-palette button:focus,
-.tracker-admin-palette button:hover,
-.tracker-admin-palette a.button:focus,
-.tracker-admin-palette a.button:hover {
+.tracker-admin-palette button:focus:not(.btn-link),
+.tracker-admin-palette button:hover:not(.btn-link),
+.tracker-admin-palette a.button:focus:not(.btn-link),
+.tracker-admin-palette a.button:hover:not(.btn-link) {
     background: transparent url("../default/images/button-gradient-hover.png") top left repeat-x;
 }
 
-.tracker-admin-palette button:active,
-.tracker-admin-palette a.button:active {
+.tracker-admin-palette button:active:not(.btn-link),
+.tracker-admin-palette a.button:active:not(.btn-link) {
     padding-top: 5px; /* push text down 1px */
     padding-bottom: 2px; /* push text down 1px */
     background: transparent url("../default/images/button-gradient-hover.png") bottom left repeat-x;

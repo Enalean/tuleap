@@ -1466,7 +1466,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         $html  = '';
         $html .= '<div class="tracker-admin-palette-content">';
         foreach ($event->getKlasses() as $type => $klass) {
-            $html .= $this->getFactoryButton($klass, 'create-formElement[' .  urlencode($type) . ']', $tracker);
+            $html .= '<form>' . $this->getFactoryButton($klass, 'create-formElement[' .  urlencode($type) . ']', $tracker) . '</form>';
         }
         $html .= '</div>';
 

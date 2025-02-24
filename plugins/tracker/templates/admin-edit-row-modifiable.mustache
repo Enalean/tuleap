@@ -28,9 +28,24 @@
              title="{{ image_hidden_title }}"/>
         {{^ is_custom_value }}
             {{# value_can_be_deleted }}
-                <a title="{{# dgettext }}tuleap-tracker | Delete the value{{/ dgettext }}" href="{{ delete_url }}">
-                <img src="/themes/FlamingParrot/images/ic/cross.png" alt="/themes/FlamingParrot/images/ic/cross.png"/>
-            </a>
+                <label class="tracker_admin_static_value_delete_checkbox">
+                    <input type="checkbox"
+                           name="bind[delete][{{id}}]"
+                           value="1"
+                    />
+                    <img
+                        class="static_value_img_not_checked"
+                        src="/themes/FlamingParrot/images/ic/cross.png"
+                        title="{{# dgettext }}tuleap-tracker | Delete the value{{/ dgettext }}"
+                        alt="{{# dgettext }}tuleap-tracker | Delete the value{{/ dgettext }}"
+                    />
+                    <img
+                        class="static_value_img_checked"
+                        src="/themes/FlamingParrot/images/ic/cross-button.png"
+                        title="{{# dgettext }}tuleap-tracker | Keep the value{{/ dgettext }}"
+                        alt="{{# dgettext }}tuleap-tracker | Keep the value{{/ dgettext }}"
+                    />
+                </label>
             {{/ value_can_be_deleted }}
             {{^ value_can_be_deleted }}
                 <img src="/themes/FlamingParrot/images/ic/cross-disabled.png"

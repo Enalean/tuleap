@@ -1875,6 +1875,9 @@ msgstr ""
 msgid "Job build launch succeeded (%1$s)"
 msgstr "Le build d'intégration continue a été lancé (%1$s)"
 
+msgid "Keep the value"
+msgstr "Conserver la valeur"
+
 msgid "Label"
 msgstr "Label"
 
