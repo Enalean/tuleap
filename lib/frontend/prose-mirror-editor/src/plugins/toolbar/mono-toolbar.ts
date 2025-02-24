@@ -158,6 +158,10 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                             getHeadingCommand(heading.level)(view.state, view.dispatch);
                             view.focus();
                         },
+                        toggleSubtitle(): void {
+                            getHeadingCommand(1)(view.state, view.dispatch);
+                            view.focus();
+                        },
                         togglePlainText(): void {
                             getPlainTextCommand(schema.nodes.paragraph)(view.state, view.dispatch);
                             view.focus();

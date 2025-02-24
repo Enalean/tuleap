@@ -33,9 +33,13 @@ export const MonoToolbarTextStyleItemsActivator = (
     detect_paragraphs: DetectParagraphsInSelection,
 ): ActivateMonoToolbarTextStyleItems => ({
     activateTextStyleItems: (toolbar_view, state): void => {
-        toolbar_view.activateHeading(
-            retrieve_heading.retrieveHeadingInSelection(state.doc, state.selection),
+        const current_heading = retrieve_heading.retrieveHeadingInSelection(
+            state.doc,
+            state.selection,
         );
+
+        toolbar_view.activateHeading(current_heading);
+        toolbar_view.activateSubtitle(current_heading !== null && current_heading.level === 1);
 
         toolbar_view.activatePlainText(
             detect_paragraphs.doesSelectionContainOnlyParagraphs(state.doc, state.selection),

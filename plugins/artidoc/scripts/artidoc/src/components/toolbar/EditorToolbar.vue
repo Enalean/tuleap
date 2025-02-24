@@ -38,7 +38,7 @@
             ordered_list: true,
             bullet_list: true,
         }"
-        v-bind:style_elements="{ headings: true, text: true, preformatted: true }"
+        v-bind:style_elements="{ subtitles: true, text: true, preformatted: true }"
         v-bind:additional_elements="[
             {
                 position: 'at_the_end',
