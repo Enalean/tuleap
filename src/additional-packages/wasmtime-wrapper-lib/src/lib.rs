@@ -94,7 +94,21 @@ pub unsafe extern "C" fn callWasmModule(
                     }
             }
         },
-        Err(e) => internal_error(format!("{}", e)),
+        Err(e) => {
+            let error_message = e.to_string();
+            if error_message.starts_with("memory minimum size of ")
+                && error_message.ends_with(" pages exceeds memory limits")
+            {
+                return user_error(
+                    format!("{}", e.root_cause()),
+                    Stats {
+                        exec_time_as_seconds: 0.0,
+                        memory_in_bytes: 0,
+                    },
+                );
+            }
+            internal_error(format!("{}", e.root_cause()))
+        }
     }
 }
 
@@ -211,9 +225,7 @@ fn compile_and_exec(
         Err(e) => return Err(anyhow!("Failed to load the wasm module: {}", e)),
     };
 
-    let instance = linker
-        .instantiate(&mut store, &module)
-        .expect("Failed to instantiate imported instance");
+    let instance = linker.instantiate(&mut store, &module)?;
 
     let max_exec_time = limits.max_exec_time_in_ms;
     std::thread::spawn(move || {
