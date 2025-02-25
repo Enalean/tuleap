@@ -57,7 +57,7 @@ class WorkerSystemCtlCommand extends Command
             ->addArgument('action', InputArgument::REQUIRED, 'Possible actions: start|stop');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         switch ($input->getArgument('action')) {
             case 'start':
@@ -68,7 +68,7 @@ class WorkerSystemCtlCommand extends Command
 
             default:
                 $output->writeln('<error>Invalid action</error>');
-                return -1;
+                return Command::FAILURE;
         }
     }
 

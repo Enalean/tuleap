@@ -313,7 +313,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         {
             public function getProcess(array $args): Process
             {
-                return new Process([]);
+                return new Process(['/bin/sh', '-c', 'true']);
             }
         };
     }
