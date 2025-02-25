@@ -22,6 +22,7 @@
         v-bind:data-test="
             section_state.is_section_in_edit_mode.value ? 'section-edition' : undefined
         "
+        v-bind:class="`artidoc-section-level-${section.value.level}`"
     >
         <div class="artidoc-dropdown-container">
             <section-dropdown
@@ -45,9 +46,9 @@
         >
             <section-header
                 class="section-header"
+                v-bind:class="{ 'section-header-with-border': section.value.level === LEVEL_1 }"
                 v-if="!is_loading_sections"
-                v-bind:display_level="''"
-                v-bind:title="section.value.title"
+                v-bind:section="section"
             />
             <section-header-skeleton v-if="is_loading_sections" class="section-header" />
             <section-description
@@ -99,6 +100,7 @@ import { getSectionEditorCloser } from "@/sections/editors/SectionEditorCloser";
 import { getSectionRefresher } from "@/sections/update/SectionRefresher";
 import { getSectionDeletor } from "@/sections/remove/SectionDeletor";
 import { getSectionSaver } from "@/sections/save/SectionSaver";
+import { LEVEL_1 } from "@/sections/levels/SectionsNumberer";
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
@@ -225,7 +227,10 @@ section {
 
 .section-header {
     margin-bottom: var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tuleap-artidoc-section-background);
+}
+
+.section-header-with-border {
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
 }
 </style>

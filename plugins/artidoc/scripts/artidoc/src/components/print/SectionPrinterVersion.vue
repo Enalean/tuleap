@@ -22,10 +22,9 @@
     <article>
         <section-header
             class="section-header"
-            v-bind:display_level="section.value.display_level"
-            v-bind:title="section.value.title"
+            v-bind:class="{ 'section-header-with-border': section.value.level === LEVEL_1 }"
+            v-bind:section="section"
             v-bind:is_print_mode="true"
-            v-bind:is_freetext="!isArtifactSection(section.value)"
         />
         <section-description-read-only v-bind:section="section" />
     </article>
@@ -33,9 +32,9 @@
 
 <script setup lang="ts">
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import SectionHeader from "@/components/section/header/SectionHeader.vue";
 import SectionDescriptionReadOnly from "@/components/section/description/SectionDescriptionReadOnly.vue";
+import { LEVEL_1 } from "@/sections/levels/SectionsNumberer";
 
 defineProps<{ section: ReactiveStoredArtidocSection }>();
 </script>

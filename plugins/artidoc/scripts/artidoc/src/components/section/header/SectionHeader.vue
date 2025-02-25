@@ -19,10 +19,9 @@
   -->
 <template>
     <div v-if="!can_header_be_edited">
-        <h1 v-if="is_print_mode" class="section-title section-title-with-delegated-numbering">
-            {{ display_level + title }}
-        </h1>
-        <h1 v-else class="section-title">{{ title }}</h1>
+        <h1 v-if="section.value.level === LEVEL_1" v-bind:class="classes">{{ display_title }}</h1>
+        <h2 v-if="section.value.level === LEVEL_2" v-bind:class="classes">{{ display_title }}</h2>
+        <h3 v-if="section.value.level === LEVEL_3" v-bind:class="classes">{{ display_title }}</h3>
     </div>
 </template>
 
@@ -30,11 +29,12 @@
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { LEVEL_1, LEVEL_2, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 const props = withDefaults(
     defineProps<{
-        display_level: string;
-        title: string;
+        section: ReactiveStoredArtidocSection;
         is_print_mode?: boolean;
     }>(),
     {
@@ -42,6 +42,18 @@ const props = withDefaults(
     },
 );
 
+const classes = computed(() => ({
+    "section-title": true,
+    "section-title-with-delegated-numbering": props.is_print_mode,
+}));
+
+const display_title = computed(() => {
+    if (!props.is_print_mode) {
+        return props.section.value.title;
+    }
+
+    return props.section.value.display_level + props.section.value.title;
+});
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const can_header_be_edited = computed(() => props.is_print_mode !== true && can_user_edit_document);
 </script>
