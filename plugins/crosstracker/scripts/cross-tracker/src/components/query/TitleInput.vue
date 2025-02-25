@@ -29,6 +29,7 @@
             v-bind:placeholder="$gettext('Name your query')"
             v-on:input="handleInput"
             required
+            v-bind:value="title"
         />
     </div>
 </template>

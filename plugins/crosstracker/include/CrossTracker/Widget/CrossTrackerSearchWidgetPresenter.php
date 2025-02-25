@@ -30,8 +30,9 @@ final readonly class CrossTrackerSearchWidgetPresenter
     public string $is_widget_admin;
     public string $documentation_base_url;
     public bool $is_multiple_query_supported;
+    public string $dashboard_type;
 
-    public function __construct(int $widget_id, bool $is_admin, PFUser $current_user, bool $is_multiple_query_supported)
+    public function __construct(int $widget_id, bool $is_admin, PFUser $current_user, bool $is_multiple_query_supported, string $dashboard_type)
     {
         $this->widget_id = $widget_id;
 
@@ -41,5 +42,6 @@ final readonly class CrossTrackerSearchWidgetPresenter
             $current_user->getShortLocale()
         );
         $this->is_multiple_query_supported = $is_multiple_query_supported;
+        $this->dashboard_type              = $dashboard_type;
     }
 }

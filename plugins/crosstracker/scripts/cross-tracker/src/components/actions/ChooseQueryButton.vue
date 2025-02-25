@@ -43,8 +43,10 @@
                     v-on:click="handleCreateNewQueryButton()"
                     data-test="query-create-new-button"
                 >
-                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-                    {{ $gettext("Create new query") }}
+                    <span>
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{ $gettext("Create new query") }}</span
+                    >
                 </button>
             </div>
             <div

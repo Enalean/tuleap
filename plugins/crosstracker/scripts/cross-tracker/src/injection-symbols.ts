@@ -25,6 +25,8 @@ import type { ReportState } from "./domain/ReportState";
 import type { NotifyFaultCallback, ClearFeedbacksCallback } from "./composables/useFeedbacks";
 import type { GetColumnName } from "./domain/ColumnNameGetter";
 import type { EmitterProvider } from "./helpers/emitter-provider";
+import type { SuggestedQueriesGetter } from "./domain/SuggestedQueriesGetter";
+import type { DashboardType } from "./domain/DashboardType";
 
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
@@ -39,3 +41,5 @@ export const DOCUMENTATION_BASE_URL: StrictInjectionKey<string> = Symbol();
 export const GET_COLUMN_NAME: StrictInjectionKey<GetColumnName> = Symbol();
 export const EMITTER: StrictInjectionKey<EmitterProvider> = Symbol();
 export const IS_MULTIPLE_QUERY_SUPPORTED: StrictInjectionKey<boolean> = Symbol();
+export const GET_SUGGESTED_QUERIES: StrictInjectionKey<SuggestedQueriesGetter> = Symbol();
+export const DASHBOARD_TYPE: StrictInjectionKey<DashboardType> = Symbol();

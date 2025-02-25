@@ -29,10 +29,12 @@ import {
     DOCUMENTATION_BASE_URL,
     EMITTER,
     GET_COLUMN_NAME,
+    GET_SUGGESTED_QUERIES,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
+    DASHBOARD_TYPE,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -41,6 +43,7 @@ import { ColumnNameGetter } from "./domain/ColumnNameGetter";
 import type { Events } from "./helpers/emitter-provider";
 import mitt from "mitt";
 import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
+import { SuggestedQueries } from "./domain/SuggestedQueriesGetter";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -77,6 +80,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             getAttributeOrThrow(widget_element, "data-is-multiple-query-supported"),
         );
 
+        const dashboard_type = getAttributeOrThrow(widget_element, "data-dashboard-type");
+
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
 
         createApp(CrossTrackerWidget)
@@ -94,6 +99,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(GET_COLUMN_NAME, column_name_getter)
             .provide(EMITTER, mitt<Events>())
             .provide(IS_MULTIPLE_QUERY_SUPPORTED, is_multiple_query_supported)
+            .provide(GET_SUGGESTED_QUERIES, SuggestedQueries({ $gettext: gettext_plugin.$gettext }))
+            .provide(DASHBOARD_TYPE, dashboard_type)
             .mount(vue_mount_point);
     }
 });

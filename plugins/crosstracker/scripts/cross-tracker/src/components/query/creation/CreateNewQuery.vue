@@ -19,6 +19,7 @@
 
 <template>
     <section class="tlp-pane-section create-new-query-section">
+        <query-suggested v-on:query-chosen="handleChosenQuery" />
         <div class="create-new-query-title-description-container">
             <title-input v-model:title="title" />
             <description-text-area v-model:description="description" />
@@ -27,6 +28,7 @@
             <query-editor-for-creation
                 v-model:tql_query="tql_query"
                 v-on:trigger-search="handleSearch"
+                ref="query_editor"
             />
         </div>
         <div class="query-creation-action-buttons">
@@ -68,9 +70,13 @@ import QueryEditorForCreation from "./QueryEditorForCreation.vue";
 import TitleInput from "../TitleInput.vue";
 import DescriptionTextArea from "../DescriptionTextArea.vue";
 import { computed, ref } from "vue";
+import type { QuerySuggestion } from "../../../domain/SuggestedQueriesGetter";
+import QuerySuggested from "../QuerySuggested.vue";
+
 const emit = defineEmits<{
     (e: "return-to-active-query-pane"): void;
 }>();
+const query_editor = ref<InstanceType<typeof QueryEditorForCreation>>();
 
 const title = ref("");
 const description = ref("");
@@ -112,6 +118,13 @@ function handleSearchButton(): void {
     // eslint-disable-next-line no-console
     console.log("Trigger search button with tql_query: " + tql_query.value);
     searched_tql_query.value = tql_query.value;
+}
+
+function handleChosenQuery(query: QuerySuggestion): void {
+    title.value = query.title;
+    description.value = query.description;
+    tql_query.value = query.tql_query;
+    query_editor.value?.updateEditor(query.tql_query);
 }
 </script>
 
