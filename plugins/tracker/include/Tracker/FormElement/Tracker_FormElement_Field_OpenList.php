@@ -1073,12 +1073,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
-        parent::process($layout, $request, $current_user);
-
         if ($request->get('func') === 'textboxlist') {
             $GLOBALS['Response']->sendJSON($this->textboxlist($request->get('keyword'), $limit = 10));
             exit();
         }
+        parent::process($layout, $request, $current_user);
     }
 
     public function getSelectDefaultValues($default_values)
