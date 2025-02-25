@@ -33,6 +33,13 @@ export type QueryRepresentation = {
     readonly description: string;
 };
 
+export type PostQueryRepresentation = {
+    widget_id: number;
+    tql_query: string;
+    title: string;
+    description?: string;
+};
+
 export const DATE_SELECTABLE_TYPE = "date";
 export const NUMERIC_SELECTABLE_TYPE = "numeric";
 export const TEXT_SELECTABLE_TYPE = "text";

@@ -23,13 +23,14 @@ import type { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 
 export type NotifyFaultCallback = (fault: Fault) => void;
+export type NotifySuccessCallback = (message: string) => void;
 export type ClearFeedbacksCallback = () => void;
 
 export type FeedbacksController = {
     current_fault: Ref<Option<Fault>>;
     current_success: Ref<Option<string>>;
     notifyFault: NotifyFaultCallback;
-    notifySuccess(message: string): void;
+    notifySuccess: NotifySuccessCallback;
     clearFeedbacks: ClearFeedbacksCallback;
 };
 

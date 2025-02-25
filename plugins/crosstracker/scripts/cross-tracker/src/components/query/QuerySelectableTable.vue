@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2025-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,11 +18,8 @@
   -->
 
 <template>
-    <empty-state v-if="is_table_empty" v-bind:tql_query="writing_query.tql_query" />
-    <div class="tlp-table-actions" v-if="should_show_export_button">
-        <export-x-l-s-x-button v-bind:current_query="writing_query" />
-    </div>
-    <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
+    <empty-state v-if="is_table_empty" v-bind:tql_query="tql_query" />
+    <div class="query-tracker-loader" v-if="is_loading" data-test="loading"></div>
     <div class="overflow-wrapper" v-if="total > 0">
         <div class="selectable-table" v-if="!is_loading">
             <span
@@ -62,35 +59,30 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     EMITTER,
     GET_COLUMN_NAME,
-    IS_EXPORT_ALLOWED,
     NOTIFY_FAULT,
-    REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
-import SelectablePagination from "./SelectablePagination.vue";
-import EmptyState from "../EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
-import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
-import EditCell from "./EditCell.vue";
-import ExportXLSXButton from "../ExportXLSXButton.vue";
-import type { RefreshArtifactsEvent } from "../../helpers/emitter-provider";
-import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
-import type { Query } from "../../type";
+import { SEARCH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import SelectablePagination from "../selectable-table/SelectablePagination.vue";
+import EditCell from "../selectable-table/EditCell.vue";
+import SelectableCell from "../selectable-table/SelectableCell.vue";
+import EmptyState from "../EmptyState.vue";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
-const report_state = strictInject(REPORT_STATE);
 const notifyFault = strictInject(NOTIFY_FAULT);
-const is_xslx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 
 const props = defineProps<{
-    writing_query: Query;
+    tql_query: string;
+}>();
+
+const emit = defineEmits<{
+    (e: "search-finished"): void;
+    (e: "search-started"): void;
 }>();
 
 const is_loading = ref(false);
@@ -101,10 +93,6 @@ let offset = 0;
 const limit = 30;
 
 const is_table_empty = computed<boolean>(() => !is_loading.value && total.value === 0);
-
-const should_show_export_button = computed(
-    () => is_xslx_export_allowed.value && !is_table_empty.value,
-);
 
 const emitter = strictInject(EMITTER);
 
@@ -126,38 +114,23 @@ function resetArtifactList(): void {
 
 onMounted(() => {
     refreshArtifactList();
-    emitter.on(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
+    emitter.on(SEARCH_ARTIFACTS_EVENT, refreshArtifactList);
 });
 
 onBeforeUnmount(() => {
-    emitter.off(REFRESH_ARTIFACTS_EVENT);
+    emitter.off(SEARCH_ARTIFACTS_EVENT);
 });
 
 function loadArtifacts(): void {
-    if (props.writing_query.tql_query === "") {
+    emit("search-started");
+    if (props.tql_query === "") {
         is_loading.value = false;
+        emit("search-finished");
         return;
     }
-    getArtifactsFromReportOrUnsavedQuery()
-        .match(
-            (report_with_total) => {
-                columns.value = report_with_total.table.columns;
-                rows.value = report_with_total.table.rows;
-                total.value = report_with_total.total;
-            },
-            (fault) => {
-                notifyFault(ArtifactsRetrievalFault(fault));
-            },
-        )
-        .then(() => {
-            is_loading.value = false;
-        });
-}
 
-function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
-    resetArtifactList();
     artifacts_retriever
-        .getSelectableQueryResult(event.query.tql_query, limit, offset)
+        .getSelectableQueryResult(props.tql_query, limit, offset)
         .match(
             (report_with_total) => {
                 columns.value = report_with_total.table.columns;
@@ -169,24 +142,9 @@ function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
             },
         )
         .then(() => {
+            emit("search-finished");
             is_loading.value = false;
         });
-}
-
-function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithTotal, Fault> {
-    if (report_state.value === "report-saved") {
-        return artifacts_retriever.getSelectableReportContent(
-            props.writing_query.id,
-            limit,
-            offset,
-        );
-    }
-
-    return artifacts_retriever.getSelectableQueryResult(
-        props.writing_query.tql_query,
-        limit,
-        offset,
-    );
 }
 
 const getColumnName = (name: ColumnName): string => {
@@ -230,5 +188,10 @@ function isLastCellOfRow(index: number, size: number): boolean {
     border-bottom: 2px solid var(--tlp-main-color);
     color: var(--tlp-main-color);
     white-space: nowrap;
+}
+
+.query-tracker-loader {
+    height: 100px;
+    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
 }
 </style>

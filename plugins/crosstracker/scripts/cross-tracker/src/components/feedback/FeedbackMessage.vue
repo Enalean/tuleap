@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <error-message v-bind:fault="current_fault" v-bind:query="query" />
+    <error-message v-bind:fault="current_fault" v-bind:tql_query="query.tql_query" />
     <div
         class="tlp-alert-success cross-tracker-report-success"
         v-if="current_success.isValue()"

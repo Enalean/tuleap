@@ -29,13 +29,19 @@ import * as rest_querier from "../api/rest-querier";
 import ReadingMode from "../components/reading-mode/ReadingMode.vue";
 import WritingMode from "../components/writing-mode/WritingMode.vue";
 import {
+    CLEAR_FEEDBACKS,
+    CURRENT_FAULT,
+    CURRENT_SUCCESS,
     EMITTER,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
+    NOTIFY_FAULT,
+    NOTIFY_SUCCESS,
     WIDGET_ID,
 } from "../injection-symbols";
 import { EmitterStub } from "../../tests/stubs/EmitterStub";
 import ReadQuery from "./ReadQuery.vue";
+import { useFeedbacks } from "../composables/useFeedbacks";
 
 vi.useFakeTimers();
 
@@ -58,6 +64,8 @@ describe("ReadQuery", () => {
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ReadQuery>> {
+        const { notifyFault, notifySuccess, clearFeedbacks, current_fault, current_success } =
+            useFeedbacks();
         return shallowMount(ReadQuery, {
             global: {
                 ...getGlobalTestOptions(),
@@ -66,6 +74,11 @@ describe("ReadQuery", () => {
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: EmitterStub(),
                     [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
+                    [NOTIFY_FAULT.valueOf()]: notifyFault,
+                    [NOTIFY_SUCCESS.valueOf()]: notifySuccess,
+                    [CLEAR_FEEDBACKS.valueOf()]: clearFeedbacks,
+                    [CURRENT_FAULT.valueOf()]: current_fault,
+                    [CURRENT_SUCCESS.valueOf()]: current_success,
                 },
             },
         });

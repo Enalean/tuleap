@@ -114,6 +114,9 @@ msgstr "Projeto"
 msgid "Query"
 msgstr ""
 
+msgid "Query created with success!"
+msgstr ""
+
 msgid "Query creation is under implementation"
 msgstr ""
 

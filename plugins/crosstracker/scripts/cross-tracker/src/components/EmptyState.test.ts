@@ -22,25 +22,19 @@ import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { expect, describe, it } from "vitest";
 import EmptyState from "./EmptyState.vue";
-import type { Query } from "../type";
 
 describe("EmptyState", () => {
-    const getWrapper = (writing_query: Query): VueWrapper<InstanceType<typeof EmptyState>> => {
+    const getWrapper = (tql_query: string): VueWrapper<InstanceType<typeof EmptyState>> => {
         return shallowMount(EmptyState, {
             global: {
                 ...getGlobalTestOptions(),
             },
-            props: { writing_query },
+            props: { tql_query },
         });
     };
 
     it(`display no artifact message if expert mode when no tracker`, () => {
-        const wrapper = getWrapper({
-            id: "",
-            tql_query: `SELECT start_date FROM @project='self' WHERE start_date != ''`,
-            title: "",
-            description: "",
-        });
+        const wrapper = getWrapper(`SELECT start_date FROM @project='self' WHERE start_date != ''`);
         expect(wrapper.find("[data-test=selectable-empty-state-title]").text()).toContain(
             "No artifact found",
         );

@@ -38,7 +38,7 @@
             v-if="is_reading_mode_shown"
             v-bind:backend_query="backend_query"
             v-bind:reading_query="reading_query"
-            v-bind:has_error="has_error"
+            v-bind:has_error="current_fault.isValue()"
             v-on:switch-to-writing-mode="handleSwitchWriting"
             v-on:saved="reportSaved"
             v-on:discard-unsaved-report="unsavedReportDiscarded"
@@ -75,12 +75,14 @@ import {
     NOTIFY_FAULT,
     WIDGET_ID,
     REPORT_STATE,
+    NOTIFY_SUCCESS,
+    CURRENT_SUCCESS,
+    CURRENT_FAULT,
 } from "../injection-symbols";
-import { useFeedbacks } from "../composables/useFeedbacks";
 import { ReportRetrievalFault } from "../domain/ReportRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
-import type { SwitchQueryEvent } from "../helpers/emitter-provider";
-import { SWITCH_QUERY_EVENT } from "../helpers/emitter-provider";
+import type { CreatedQuery, SwitchQueryEvent } from "../helpers/emitter-provider";
+import { NEW_QUERY_CREATED_EVENT, SWITCH_QUERY_EVENT } from "../helpers/emitter-provider";
 import FeedbackMessage from "./feedback/FeedbackMessage.vue";
 
 const emit = defineEmits<{
@@ -110,10 +112,12 @@ const is_reading_mode_shown = computed(
         !is_loading.value,
 );
 
-const { current_fault, current_success, notifyFault, notifySuccess, clearFeedbacks } =
-    useFeedbacks();
-provide(NOTIFY_FAULT, notifyFault);
-provide(CLEAR_FEEDBACKS, clearFeedbacks);
+const notifyFault = strictInject(NOTIFY_FAULT);
+const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
+const current_fault = strictInject(CURRENT_FAULT);
+const notifySuccess = strictInject(NOTIFY_SUCCESS);
+const current_success = strictInject(CURRENT_SUCCESS);
+
 const has_error = computed<boolean>(() => current_fault.value.isValue());
 
 const is_export_allowed = computed<boolean>(() => {
@@ -164,11 +168,17 @@ function loadBackendReport(): void {
 onMounted(() => {
     loadBackendReport();
     emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
+    emitter.on(NEW_QUERY_CREATED_EVENT, handleAddQuery);
 });
 
 onBeforeUnmount(() => {
     emitter.off(SWITCH_QUERY_EVENT);
+    emitter.off(NEW_QUERY_CREATED_EVENT);
 });
+
+function handleAddQuery(new_query: CreatedQuery): void {
+    queries.value = queries.value.concat([new_query.created_query]);
+}
 
 function handleSwitchWriting(): void {
     if (!is_user_admin) {

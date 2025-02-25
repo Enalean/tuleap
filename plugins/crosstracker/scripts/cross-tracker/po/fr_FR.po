@@ -119,6 +119,9 @@ msgstr "Projet"
 msgid "Query"
 msgstr "Requête"
 
+msgid "Query created with success!"
+msgstr "Requête créée avec succés !"
+
 msgid "Query creation is under implementation"
 msgstr "La création de requête est en cours d'implémentation"
 
