@@ -28,9 +28,9 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Export\Pdf\Template\Identifier\InvalidPdfTemplateIdentifierStringException;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
-use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\PdfTemplate\PdfTemplateBuilder;
 use Tuleap\PdfTemplate\RetrieveTemplate;
 use Tuleap\Request\NotFoundException;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
@@ -83,7 +83,7 @@ final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareI
             UpdateTemplateRequest::class,
             new UpdateTemplateRequest(
                 $original_template,
-                new PdfTemplate(
+                PdfTemplateBuilder::build(
                     $original_template->identifier,
                     $label,
                     (string) ($parsed_body['description'] ?? ''),

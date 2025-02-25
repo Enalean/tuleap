@@ -25,6 +25,7 @@ namespace Tuleap\PdfTemplate\Admin;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\PdfTemplate\Default\DefaultStyleProvider;
 use Tuleap\User\Admin\UserPresenter;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
@@ -37,6 +38,7 @@ final readonly class PdfTemplatePresenter
     public string $update_url;
     public string $duplicate_url;
     public bool $is_update;
+    public string $default_style;
 
     private function __construct(
         public string $id,
@@ -50,6 +52,7 @@ final readonly class PdfTemplatePresenter
         public TlpRelativeDatePresenter $last_updated_date_inline,
         public TlpRelativeDatePresenter $last_updated_date_block,
     ) {
+        $this->default_style = DefaultStyleProvider::getDefaultStyles();
         $this->update_url    = DisplayPdfTemplateUpdateFormController::ROUTE . '/' . urlencode($id);
         $this->duplicate_url = DisplayPdfTemplateDuplicateFormController::ROUTE . '/' . urlencode($id);
         $this->is_update     = $id !== self::DUMMY_ID_FOR_CREATION;
@@ -63,7 +66,7 @@ final readonly class PdfTemplatePresenter
             $template->identifier->toString(),
             $template->label,
             $template->description,
-            $template->style,
+            $template->user_style,
             $template->title_page_content,
             $template->header_content,
             $template->footer_content,
@@ -81,7 +84,7 @@ final readonly class PdfTemplatePresenter
             self::DUMMY_ID_FOR_CREATION,
             '',
             '',
-            file_get_contents(__DIR__ . '/../Default/pdf-template-default.css'),
+            '',
             file_get_contents(__DIR__ . '/../Default/pdf-template-default-title-page.html'),
             file_get_contents(__DIR__ . '/../Default/pdf-template-default-header.html'),
             file_get_contents(__DIR__ . '/../Default/pdf-template-default-footer.html'),
@@ -99,7 +102,7 @@ final readonly class PdfTemplatePresenter
             self::DUMMY_ID_FOR_CREATION,
             '',
             '',
-            $source->style,
+            $source->user_style,
             $source->title_page_content,
             $source->header_content,
             $source->footer_content,

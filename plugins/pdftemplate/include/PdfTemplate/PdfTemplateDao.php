@@ -64,7 +64,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
             ],
         );
 
-        return new PdfTemplate(
+        return PdfTemplateBuilder::build(
             $identifier,
             $label,
             $description,
@@ -115,7 +115,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
 
     private function instantiatePdfTemplateFromRow(array $row): PdfTemplate
     {
-        return new PdfTemplate(
+        return PdfTemplateBuilder::build(
             $this->identifier_factory->buildFromBytesData($row['id']),
             $row['label'],
             $row['description'],
@@ -145,7 +145,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
             [
                 'label'              => $template->label,
                 'description'        => $template->description,
-                'style'              => $template->style,
+                'style'              => $template->user_style,
                 'title_page_content' => $template->title_page_content,
                 'header_content'     => $template->header_content,
                 'footer_content'     => $template->footer_content,

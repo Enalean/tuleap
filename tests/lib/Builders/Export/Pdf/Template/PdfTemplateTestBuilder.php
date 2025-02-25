@@ -137,6 +137,7 @@ final class PdfTemplateTestBuilder
             $this->identifier,
             $this->label,
             $this->description,
+            '',
             $this->style,
             $this->title_page_content,
             $this->header_content,
