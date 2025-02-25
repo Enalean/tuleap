@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 /**
  * @psalm-immutable
  */
-final class TrackerReferenceProxy implements TrackerReference
+final readonly class TrackerReferenceProxy implements TrackerReference
 {
     private function __construct(
         private int $id,
@@ -58,6 +58,14 @@ final class TrackerReferenceProxy implements TrackerReference
     public function getProjectLabel(): string
     {
         return $this->project_name;
+    }
+
+    public function getURLToEditAField(int $field_id): string
+    {
+        return '/plugins/tracker/?' .
+            http_build_query(
+                ['tracker' => $this->id, 'func' => \Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW, 'formElement' => $field_id]
+            );
     }
 
     public static function fromTracker(Tracker $tracker): self

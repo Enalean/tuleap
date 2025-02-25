@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
 /**
  * @psalm-immutable
  */
-final class RequiredError
+final readonly class RequiredError
 {
     public string $field_admin_url;
     public string $tracker_name;
@@ -41,10 +41,7 @@ final class RequiredError
         TrackerReference $tracker,
         ProjectReference $project_reference,
     ) {
-        $this->field_admin_url    = '/plugins/tracker/?' .
-            http_build_query(
-                ['tracker' => $tracker->getId(), 'func' => \Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW, 'formElement' => $field_id]
-            );
+        $this->field_admin_url    = $tracker->getURLToEditAField($field_id);
         $this->tracker_name       = $tracker->getLabel();
         $this->team_project_label = $project_reference->getProjectLabel();
     }

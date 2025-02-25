@@ -35,4 +35,6 @@ interface TrackerReference extends TrackerIdentifier
     public function getProjectId(): int;
 
     public function getProjectLabel(): string;
+
+    public function getURLToEditAField(int $field_id): string;
 }
