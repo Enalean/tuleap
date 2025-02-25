@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 /**
  * @psalm-immutable
  */
-final class TrackerReferenceStub implements TrackerReference
+final readonly class TrackerReferenceStub implements TrackerReference
 {
     private function __construct(private int $id, private string $name, private int $project_id, private string $project_name)
     {
@@ -82,5 +82,10 @@ final class TrackerReferenceStub implements TrackerReference
     public function getProjectLabel(): string
     {
         return $this->project_name;
+    }
+
+    public function getURLToEditAField(int $field_id): string
+    {
+        return '/edit_field/' . $field_id;
     }
 }
