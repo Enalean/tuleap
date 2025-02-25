@@ -181,10 +181,6 @@ function handleSwitchWriting(): void {
 }
 
 function handleSwitchQuery(event: SwitchQueryEvent): void {
-    if (!is_user_admin) {
-        return;
-    }
-
     backend_query.value = event.query;
     initQueries();
 

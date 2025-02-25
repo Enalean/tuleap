@@ -19,7 +19,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { EMITTER, WIDGET_ID } from "../../injection-symbols";
+import { EMITTER, IS_USER_ADMIN, WIDGET_ID } from "../../injection-symbols";
 import { beforeEach, expect, vi, describe, it } from "vitest";
 import ChooseQueryButton from "./ChooseQueryButton.vue";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
@@ -71,6 +71,7 @@ describe("ChooseQueryButton", () => {
                 provide: {
                     [WIDGET_ID.valueOf()]: widget_id,
                     [EMITTER.valueOf()]: emitter,
+                    [IS_USER_ADMIN.valueOf()]: true,
                 },
             },
             props: {

@@ -39,6 +39,7 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Widget;
+use function Psl\Json\encode;
 
 #[ConfigKeyCategory('CrossTracker Search')]
 class CrossTrackerSearchWidget extends Widget
@@ -81,13 +82,15 @@ class CrossTrackerSearchWidget extends Widget
 
         return $renderer->renderToString(
             'cross-tracker-search-widget',
-            new CrossTrackerSearchWidgetPresenter(
-                $this->content_id,
-                $is_admin,
-                $user,
-                ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
-                $row['dashboard_type']
-            )
+            [
+                'widget_json_data' => encode(new CrossTrackerSearchWidgetPresenter(
+                    $this->content_id,
+                    $is_admin,
+                    $user,
+                    ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
+                    $row['dashboard_type']
+                )),
+            ]
         );
     }
 
