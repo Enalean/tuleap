@@ -20,13 +20,35 @@
 
 namespace Tuleap\Redis;
 
+use Tuleap\Config\ConfigCannotBeModifiedYet;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\ConfigKeySecret;
+use Tuleap\Config\ConfigKeyString;
 use Tuleap\Cryptography\ConcealedString;
 
+#[ConfigKeyCategory('Redis')]
 class ClientFactory
 {
-    public static function canClientBeBuiltFromForgeConfig()
+    #[ConfigKey('Redis server hostname')]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/redis.inc')]
+    #[ConfigKeyString('')]
+    public const REDIS_SERVER   = 'redis_server';
+    #[ConfigKey('Port used by the Redis server')]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/redis.inc')]
+    #[ConfigKeyInt(6379)]
+    public const REDIS_PORT     = 'redis_port';
+    #[ConfigKey('Password for the Redis server')]
+    #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/redis.inc')]
+    #[ConfigKeySecret]
+    #[ConfigKeyString('')]
+    public const REDIS_PASSWORD = 'redis_password';
+
+    public static function canClientBeBuiltFromForgeConfig(): bool
     {
-        return \ForgeConfig::exists('redis_server');
+        $host = (string) \ForgeConfig::get('redis_server', '');
+        return $host !== '';
     }
 
     /**
