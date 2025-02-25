@@ -49,6 +49,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\CustomProjectArchive;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\Redis\ClientFactory;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\ServerHostname;
 use Tuleap\System\ServiceControl;
@@ -99,6 +100,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         OpeningDaysRetriever::class,
         CookieManager::class,
         DeprecatedForum::class,
+        ClientFactory::class,
     ];
 
     /**
