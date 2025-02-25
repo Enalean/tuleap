@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_ValueDao
+class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_ValueDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
@@ -36,13 +36,6 @@ class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_
         } else {
             $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
         }
-        return $this->update($sql);
-    }
-
-    public function delete($id)
-    {
-        $id  = $this->da->escapeInt($id);
-        $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
         return $this->update($sql);
     }
 }

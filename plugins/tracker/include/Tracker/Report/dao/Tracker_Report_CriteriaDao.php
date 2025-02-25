@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_CriteriaDao extends DataAccessObject
+class Tracker_Report_CriteriaDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
@@ -45,12 +45,12 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function delete($report_id, $field_id)
+    public function deleteFieldFromCriteriaList($report_id, $field_id): void
     {
         $report_id = $this->da->escapeInt($report_id);
         $field_id  = $this->da->escapeInt($field_id);
         $sql       = "DELETE FROM $this->table_name WHERE report_id = $report_id AND field_id = $field_id";
-        return $this->update($sql);
+        $this->update($sql);
     }
 
     public function deleteAll($report_id)

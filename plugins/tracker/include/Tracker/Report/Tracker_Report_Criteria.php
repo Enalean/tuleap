@@ -22,11 +22,11 @@
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-class Tracker_Report_Criteria
+class Tracker_Report_Criteria // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $id;
     public $report;
-    public $field;
+    public Tracker_FormElement_Field $field;
     public $rank;
 
     /**
@@ -46,7 +46,7 @@ class Tracker_Report_Criteria
      * @param int $rank the rank
      * @param int | bool $is_advanced use advanced search for this field
      */
-    public function __construct($id, $report, $field, $rank, $is_advanced)
+    public function __construct($id, $report, Tracker_FormElement_Field $field, $rank, $is_advanced)
     {
         $this->id          = $id;
         $this->report      = $report;
@@ -81,9 +81,9 @@ class Tracker_Report_Criteria
         return $this->field->fetchCriteriaWithoutExpandFunctionnality($this);
     }
 
-    public function delete()
+    public function deleteFieldValueFromCriteria(): void
     {
-        return $this->field->deleteCriteriaValue($this);
+        $this->field->deleteCriteriaValue($this);
     }
 
     public function setId($id)

@@ -29,6 +29,8 @@ use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\StringFieldSpeci
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\StringField\StringFieldDao;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
+use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
+use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
@@ -69,6 +71,11 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new StringFieldSpecificPropertiesDAO();
+    }
+
+    public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
+    {
+        return new CriteriaAlphaNumValueDAO();
     }
 
     /**

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject
+abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function searchByCriteriaId($criteria_id)
     {
@@ -26,13 +26,6 @@ abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject
                 FROM $this->table_name
                 WHERE criteria_id = $criteria_id ";
         return $this->retrieve($sql);
-    }
-
-    public function delete($id)
-    {
-        $id  = $this->da->escapeInt($id);
-        $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
-        return $this->update($sql);
     }
 
     abstract public function save($id, $value);

@@ -28,6 +28,8 @@ use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifact
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
+use Tuleap\Tracker\Report\Criteria\CriteriaPermissionsOnArtifactValueDAO;
+use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
@@ -537,6 +539,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     protected function getCriteriaDao()
     {
         return new Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao();
+    }
+
+    public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
+    {
+        return new CriteriaPermissionsOnArtifactValueDAO();
     }
 
     /**
