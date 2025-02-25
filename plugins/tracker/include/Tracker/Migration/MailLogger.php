@@ -40,15 +40,16 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
 
     private function generateLogWithException($level, string|\Stringable $message, array $context): string|\Stringable
     {
-        $log_string = $message;
+        $html_purifier = Codendi_HTMLPurifier::instance();
+        $log_string    = $message;
         if ($level === LogLevel::ERROR || $level === LogLevel::CRITICAL || $level === LogLevel::ALERT || $level === LogLevel::EMERGENCY) {
-            $log_string = "<strong>$message</strong>";
+            $log_string = '<strong>' . $html_purifier->purify($message) . '</strong>';
         }
         if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
             $exception     = $context['exception'];
             $error_message = $exception->getMessage();
             $stack_trace   = $exception->getTraceAsString();
-            $log_string   .= ": $error_message:\n$stack_trace";
+            $log_string   .= $html_purifier->purify(": $error_message:\n$stack_trace");
         }
         return $log_string;
     }
@@ -59,7 +60,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
         $mail        = new Codendi_Mail();
         $breadcrumbs = [];
 
-        $breadcrumbs[] = '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . $hp->purify(\Tuleap\ServerHostname::HTTPSUrl() . '/projects/' . $project->getUnixName(true)) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->addAdditionalHeader('X-Codendi-Project', $project->getUnixName());

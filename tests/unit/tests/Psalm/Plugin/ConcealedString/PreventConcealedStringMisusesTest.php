@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Psalm\Plugin\ConcealedString;
 
+use PhpParser\Node\Expr\MethodCall;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\IssueBuffer;
@@ -44,7 +45,7 @@ final class PreventConcealedStringMisusesTest extends \Tuleap\Test\PHPUnit\TestC
                 $this->createMock(StatementsSource::class),
                 ConcealedString::class,
                 'getstring',
-                [],
+                $this->createStub(MethodCall::class),
                 new Context(),
                 $this->createMock(CodeLocation::class)
             )

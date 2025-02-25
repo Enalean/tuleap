@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Stubs\Administration;
 
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
 final class UploadedFileStub implements UploadedFileInterface
@@ -47,7 +48,7 @@ final class UploadedFileStub implements UploadedFileInterface
         return new self(UPLOAD_ERR_OK, false, 123);
     }
 
-    public function getStream()
+    public function getStream(): StreamInterface
     {
         // Not needed yet
         throw new \Exception('Not used yet');
@@ -61,24 +62,24 @@ final class UploadedFileStub implements UploadedFileInterface
         $this->captured_moved_to_path = $targetPath;
     }
 
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
 
-    public function getError()
+    public function getError(): int
     {
         return $this->error;
     }
 
-    public function getClientFilename()
+    public function getClientFilename(): null
     {
-        // Not needed yet
+        return null;
     }
 
-    public function getClientMediaType()
+    public function getClientMediaType(): null
     {
-        // Not needed yet
+        return null;
     }
 
     public function getCapturedMovedToPath(): ?string

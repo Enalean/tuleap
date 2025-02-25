@@ -27,6 +27,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 final class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -64,7 +65,7 @@ final class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $http_client = new Client();
         $response    = $this->createMock(ResponseInterface::class);
-        $response->method('getBody')->willReturn('Not valid XML');
+        $response->method('getBody')->willReturn(HTTPFactoryBuilder::streamFactory()->createStream('Not valid XML'));
         $response->method('getStatusCode')->willReturn(200);
         $http_client->addResponse($response);
 
@@ -86,7 +87,7 @@ final class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $http_client = new Client();
         $response    = $this->createMock(ResponseInterface::class);
-        $response->method('getBody')->willReturn('<_/>');
+        $response->method('getBody')->willReturn(HTTPFactoryBuilder::streamFactory()->createStream('<_/>'));
         $response->method('getStatusCode')->willReturn(200);
         $http_client->addResponse($response);
 
@@ -114,7 +115,7 @@ final class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $http_client = new Client();
         $response    = $this->createMock(ResponseInterface::class);
-        $response->method('getBody')->willReturn('<_/>');
+        $response->method('getBody')->willReturn(HTTPFactoryBuilder::streamFactory()->createStream('<_/>'));
         $response->method('getStatusCode')->willReturn(200);
         $http_client->setDefaultResponse($response);
 
