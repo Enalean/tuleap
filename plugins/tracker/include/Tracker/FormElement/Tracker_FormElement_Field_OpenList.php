@@ -1094,7 +1094,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                     <input id="tracker_field_default"
                            name="bind[default][]"
                            style="width:98%"
-                           type="text"></div>
+                           type="text">
                     <input id="field_id" type="hidden"
                            value="' . $this->getId() . '">
                   </div>';
