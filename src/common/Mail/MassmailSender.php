@@ -47,7 +47,7 @@ class MassmailSender
         $mail->setSubject('[' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . '] [' . $project_name . '] ' . $subject);
         $mail->setBodyText($hp->purify($html_body, CODENDI_PURIFIER_STRIP_HTML));
 
-        $mail->setBodyHtml($html_body);
+        $mail->setBodyHtml($hp->purify($html_body, Codendi_HTMLPurifier::CONFIG_FULL));
 
         $is_sent = $mail->send();
         return $is_sent;
