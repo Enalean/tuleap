@@ -47,3 +47,11 @@ export type User = {
     readonly display_name: string;
     readonly user_url: string;
 };
+
+export type WidgetData = {
+    readonly widget_id: number;
+    readonly is_widget_admin: boolean;
+    readonly documentation_base_url: string;
+    readonly is_multiple_query_supported: boolean;
+    readonly dashboard_type: string;
+};

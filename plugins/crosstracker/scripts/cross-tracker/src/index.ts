@@ -44,6 +44,7 @@ import type { Events } from "./helpers/emitter-provider";
 import mitt from "mitt";
 import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 import { SuggestedQueries } from "./domain/SuggestedQueriesGetter";
+import type { WidgetData } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -67,20 +68,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const documentation_url = getAttributeOrThrow(
-            widget_element,
-            "data-documentation-base-url",
-        );
-        const widget_id_string = getAttributeOrThrow(widget_element, "data-widget-id");
-        const widget_id = Number.parseInt(widget_id_string, 10);
-        const is_widget_admin = Boolean(
-            getAttributeOrThrow(widget_element, "data-is-widget-admin"),
-        );
-        const is_multiple_query_supported = Boolean(
-            getAttributeOrThrow(widget_element, "data-is-multiple-query-supported"),
-        );
-
-        const dashboard_type = getAttributeOrThrow(widget_element, "data-dashboard-type");
+        const widget_json_data = getAttributeOrThrow(widget_element, "data-widget-json-data");
+        const widget_data: WidgetData = JSON.parse(widget_json_data);
 
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
 
@@ -91,16 +80,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(DATE_TIME_FORMATTER, date_time_formatter)
             .provide(
                 RETRIEVE_ARTIFACTS_TABLE,
-                ArtifactsTableRetriever(widget_id, ArtifactsTableBuilder()),
+                ArtifactsTableRetriever(widget_data.widget_id, ArtifactsTableBuilder()),
             )
-            .provide(WIDGET_ID, widget_id)
-            .provide(IS_USER_ADMIN, is_widget_admin)
-            .provide(DOCUMENTATION_BASE_URL, documentation_url)
+            .provide(WIDGET_ID, widget_data.widget_id)
+            .provide(IS_USER_ADMIN, widget_data.is_widget_admin)
+            .provide(DOCUMENTATION_BASE_URL, widget_data.documentation_base_url)
             .provide(GET_COLUMN_NAME, column_name_getter)
             .provide(EMITTER, mitt<Events>())
-            .provide(IS_MULTIPLE_QUERY_SUPPORTED, is_multiple_query_supported)
+            .provide(IS_MULTIPLE_QUERY_SUPPORTED, widget_data.is_multiple_query_supported)
             .provide(GET_SUGGESTED_QUERIES, SuggestedQueries({ $gettext: gettext_plugin.$gettext }))
-            .provide(DASHBOARD_TYPE, dashboard_type)
+            .provide(DASHBOARD_TYPE, widget_data.dashboard_type)
             .mount(vue_mount_point);
     }
 });

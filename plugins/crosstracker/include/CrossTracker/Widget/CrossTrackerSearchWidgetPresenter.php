@@ -27,7 +27,7 @@ use PFUser;
 final readonly class CrossTrackerSearchWidgetPresenter
 {
     public int $widget_id;
-    public string $is_widget_admin;
+    public bool $is_widget_admin;
     public string $documentation_base_url;
     public bool $is_multiple_query_supported;
     public string $dashboard_type;
@@ -36,7 +36,7 @@ final readonly class CrossTrackerSearchWidgetPresenter
     {
         $this->widget_id = $widget_id;
 
-        $this->is_widget_admin = $is_admin ? 'true' : 'false';
+        $this->is_widget_admin = $is_admin;
 
         $this->documentation_base_url      = '/doc/' . urlencode(
             $current_user->getShortLocale()

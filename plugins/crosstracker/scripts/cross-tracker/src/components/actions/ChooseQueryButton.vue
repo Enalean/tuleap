@@ -38,6 +38,7 @@
                     data-test="query-filter"
                 />
                 <button
+                    v-if="is_user_admin"
                     class="tlp-button-primary tlp-button-small"
                     v-bind:title="$gettext('Query creation is under implementation')"
                     v-on:click="handleCreateNewQueryButton()"
@@ -69,7 +70,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { EMITTER } from "../../injection-symbols";
+import { EMITTER, IS_USER_ADMIN } from "../../injection-symbols";
 import type { Query } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
@@ -83,6 +84,7 @@ const dropdown_menu = ref<HTMLElement>();
 let dropdown: Dropdown | null = null;
 
 const emitter = strictInject(EMITTER);
+const is_user_admin = strictInject(IS_USER_ADMIN);
 
 const props = defineProps<{
     backend_query: Query;
