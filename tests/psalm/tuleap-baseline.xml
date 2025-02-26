@@ -1406,9 +1406,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/archivedeleteditems/include/archivedeleteditemsPlugin.php">
-    <DeprecatedMethod>
-      <code><![CDATA[addHook]]></code>
-    </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[getWellFormattedArchivePath]]></code>
     </MissingReturnType>
@@ -2626,9 +2623,6 @@
       <code><![CDATA[$matching_ids]]></code>
       <code><![CDATA[$report_can_be_modified]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$criterion->field]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[afterSaveObject]]></code>
       <code><![CDATA[delete]]></code>
@@ -4188,15 +4182,6 @@
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/tests/unit/CrossTracker/Report/Query/Advanced/ResultBuilder/Field/FieldResultBuilderTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
   </file>
   <file src="plugins/docman/bin/DocmanExport/Docman_ExportException.php">
     <MissingParamType>
@@ -26727,9 +26712,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getId()]]></code>
     </PossiblyInvalidArgument>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$quota]]></code>
-    </PossiblyInvalidOperand>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$custom_quota]]></code>
     </RiskyTruthyFalsyComparison>
@@ -27288,11 +27270,6 @@
       <code><![CDATA[addStatistic]]></code>
       <code><![CDATA[getStatistics]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/statistics/include/StatisticsPluginInfo.php">
-    <MissingParamType>
-      <code><![CDATA[$plugin]]></code>
-    </MissingParamType>
   </file>
   <file src="plugins/statistics/include/Statistics_ConfigurationDao.php">
     <DeprecatedMethod>
@@ -27923,7 +27900,6 @@
       <code><![CDATA[cssFile]]></code>
       <code><![CDATA[getConfigurationManager]]></code>
       <code><![CDATA[getDiskUsagePurger]]></code>
-      <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[getProjectQuota]]></code>
       <code><![CDATA[getProjectWidgetList]]></code>
       <code><![CDATA[get_more_info_links]]></code>
@@ -35266,9 +35242,6 @@
     </ArgumentTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder.php">
-    <InvalidArgument>
-      <code><![CDATA[$ugroup]]></code>
-    </InvalidArgument>
     <MissingPropertyType>
       <code><![CDATA[$distance]]></code>
       <code><![CDATA[$fieldId]]></code>
@@ -35277,7 +35250,6 @@
       <code><![CDATA[$roles]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$trackerId]]></code>
-      <code><![CDATA[$ugroups]]></code>
     </MissingPropertyType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$tracker->getGroupId()]]></code>
@@ -37143,20 +37115,16 @@
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/ListFieldDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$bind_type]]></code>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByFieldId]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/ListValueDao.php">
@@ -37495,22 +37463,12 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/SpecificPropertiesDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
     <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$row]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByFieldId]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php">
@@ -37562,7 +37520,6 @@
     <MissingPropertyType>
       <code><![CDATA[$cache_permissions]]></code>
       <code><![CDATA[$cache_specific_properties]]></code>
-      <code><![CDATA[$this->getTracker()->id]]></code>
       <code><![CDATA[$user_can_read]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -37610,7 +37567,6 @@
     <UndefinedMethod>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByFieldId]]></code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElementFactory.php">
@@ -37968,9 +37924,7 @@
       <code><![CDATA[canBeUsedAsReportColumn]]></code>
       <code><![CDATA[canBeUsedAsReportCriterion]]></code>
       <code><![CDATA[deleteChangesetValue]]></code>
-      <code><![CDATA[deleteCriteriaValue]]></code>
       <code><![CDATA[exportCriteriaValueToXML]]></code>
-      <code><![CDATA[fetchAdmin]]></code>
       <code><![CDATA[fetchArtifactForOverlay]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[fetchSubmitForOverlay]]></code>
@@ -38001,9 +37955,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$criteria->is_advanced]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Criteria]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_FieldVisitor.php">
     <MissingReturnType>
@@ -39258,9 +39209,6 @@
       <code><![CDATA[isArrayNone]]></code>
       <code><![CDATA[isScalarNone]]></code>
     </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[delete]]></code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Numeric.php">
     <ForbiddenCode>
@@ -39605,7 +39553,6 @@
       <code><![CDATA[static::class == 'Tracker_FormElement_Field_Text']]></code>
     </TypeDoesNotContainType>
     <UndefinedMethod>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[getContentAsText]]></code>
       <code><![CDATA[getField]]></code>
       <code><![CDATA[getFormat]]></code>
@@ -39676,9 +39623,6 @@
       <code><![CDATA[getDefaultValue]]></code>
       <code><![CDATA[getRichText]]></code>
     </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[searchByFieldId]]></code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_Separator.php">
     <MissingParamType>
@@ -39888,7 +39832,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[displayAjax]]></code>
-      <code><![CDATA[displayForm]]></code>
       <code><![CDATA[displayFullPage]]></code>
       <code><![CDATA[visit]]></code>
       <code><![CDATA[visitArtifactId]]></code>
@@ -42575,9 +42518,6 @@
       <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$criteria->field]]></code>
-      <code><![CDATA[$criteria->field]]></code>
-      <code><![CDATA[$criteria->field]]></code>
       <code><![CDATA[$criterias]]></code>
       <code><![CDATA[$current_renderer_id]]></code>
       <code><![CDATA[$current_user]]></code>
@@ -42604,7 +42544,6 @@
       <code><![CDATA[_fetchAddCriteria]]></code>
       <code><![CDATA[addRendererInSession]]></code>
       <code><![CDATA[canExecuteExpertQuery]]></code>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[deleteAllCriteria]]></code>
       <code><![CDATA[deleteRenderer]]></code>
       <code><![CDATA[display]]></code>
@@ -42643,7 +42582,6 @@
       <code><![CDATA[nbPublicReport]]></code>
       <code><![CDATA[orderRenderersByRank]]></code>
       <code><![CDATA[registerInSession]]></code>
-      <code><![CDATA[removeCriteria]]></code>
       <code><![CDATA[saveAdditionalCriteria]]></code>
       <code><![CDATA[saveCommentCriterion]]></code>
       <code><![CDATA[saveCriteria]]></code>
@@ -42742,13 +42680,11 @@
       <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$field]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$report]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[fetch]]></code>
       <code><![CDATA[fetchWithoutExpandFunctionnality]]></code>
@@ -43449,7 +43385,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[create]]></code>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[deleteAll]]></code>
       <code><![CDATA[searchById]]></code>
       <code><![CDATA[searchByReportId]]></code>
@@ -43459,19 +43394,15 @@
   <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_Alphanum_ValueDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[save]]></code>
     </MissingReturnType>
   </file>
@@ -43573,18 +43504,14 @@
   <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_ValueDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$criteria_id]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[save]]></code>
       <code><![CDATA[searchByCriteriaId]]></code>
     </MissingReturnType>
@@ -45087,7 +45014,6 @@
     <RedundantCast>
       <code><![CDATA[(int) $link_artifact_id]]></code>
       <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getId()]]></code>
       <code><![CDATA[(int) $this->getId()]]></code>
       <code><![CDATA[(int) $this->getId()]]></code>
       <code><![CDATA[(string) $request_tracker_color]]></code>
@@ -48417,9 +48343,6 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
     </DeprecatedFunction>
-    <InvalidArgument>
-      <code><![CDATA[$ugroup_id]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$atid]]></code>
       <code><![CDATA[$atid]]></code>
@@ -57210,6 +57133,7 @@
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$project_id]]></code>
+      <code><![CDATA[$ugroupId]]></code>
       <code><![CDATA[$ugroup_description]]></code>
       <code><![CDATA[$ugroup_id]]></code>
       <code><![CDATA[$ugroup_name]]></code>
@@ -57977,11 +57901,6 @@
     <MissingReturnType>
       <code><![CDATA[addItem]]></code>
       <code><![CDATA[display]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Redis/ClientFactory.php">
-    <MissingReturnType>
-      <code><![CDATA[canClientBeBuiltFromForgeConfig]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/Redis/RedisInitializer.php">
@@ -73198,12 +73117,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$import_project_xml_command->getName()]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullIterator>
-      <code><![CDATA[$argv]]></code>
-    </PossiblyNullIterator>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['argv']]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/utils/launch_system_check.php">
     <PossiblyNullArgument>

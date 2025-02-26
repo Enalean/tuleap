@@ -19,7 +19,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_DateReminder
+class Tracker_DateReminder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const BEFORE = 0;
     public const AFTER  = 1;
@@ -47,7 +47,6 @@ class Tracker_DateReminder
     * @param int $reminderId Id of the reminder
     * @param int $trackerId Id of the tracker
     * @param int $fieldId Id of the field
-    * @param String                       $ugroups          List of ugroups to be notified
     * @param Tracker_DateReminder_Role[]  $roles            Array of tracker predifined roles to be notified
     * @param int $notificationType Before or after the date value
     * @param int $distance Distance from the date value
@@ -55,7 +54,7 @@ class Tracker_DateReminder
     *
     * @return Void
     */
-    public function __construct($reminderId, $trackerId, $fieldId, $ugroups, $roles, $notificationType, $distance, $status, private bool $notify_closed_artifacts)
+    public function __construct($reminderId, $trackerId, $fieldId, string $ugroups, $roles, $notificationType, $distance, $status, private bool $notify_closed_artifacts)
     {
         $this->reminderId       = $reminderId;
         $this->trackerId        = $trackerId;
@@ -337,14 +336,15 @@ class Tracker_DateReminder
 
     /**
      * Retrieve the reminder notified ugroups as string
-     *
-     * @return String
      */
-    public function getUgroupsLabel()
+    public function getUgroupsLabel(): string
     {
         $ugroupsLabel  = '';
         $ugroupManager = $this->getUGroupManager();
-        $ugroups       = explode(',', $this->ugroups);
+        if ($this->ugroups === '') {
+            return '';
+        }
+        $ugroups = explode(',', $this->ugroups);
         if (! empty($ugroups)) {
             foreach ($ugroups as $ugroup) {
                 $ugroupsLabel .= ' "' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroupManager->getById($ugroup)->getName()) . ' "';
