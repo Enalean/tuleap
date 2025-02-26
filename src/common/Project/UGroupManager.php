@@ -310,13 +310,10 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, Pr
 
     /**
      * Returns a ProjectUGroup from its Id
-     *
-     * @param int $ugroupId The UserGroupId
-     *
      */
     public function getById($ugroupId): ProjectUGroup
     {
-        $dar = $this->getDao()->searchByUGroupId($ugroupId);
+        $dar = $this->getDao()->searchByUGroupId((int) $ugroupId);
         if ($dar !== null) {
             return new ProjectUGroup($dar);
         } else {
