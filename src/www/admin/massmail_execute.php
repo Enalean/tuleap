@@ -71,7 +71,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->getLookAndFeelTemplate()->set('title', $title);
-        $mail->setBodyHtml($mailMessage);
+        $mail->setBodyHtml($purifier->purify($mailMessage, Codendi_HTMLPurifier::CONFIG_FULL));
         $mail->setSubject($mailSubject);
 
         // This part would send a preview email, parameters are retrieved within the function sendPreview() in MassMail.js
