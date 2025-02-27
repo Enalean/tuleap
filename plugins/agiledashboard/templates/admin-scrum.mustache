@@ -8,7 +8,7 @@
            href="?group_id={{ group_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}
         </a>
         <a class="tlp-tab"
-           href="?group_id={{ group_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}
+           href="?group_id={{ group_id }}&action=admin&pane=charts" data-test="backlog-chart-administration">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}
         </a>
     </nav>
 </div>
@@ -58,6 +58,7 @@
                                        value="1"
                                        {{# should_sidebar_display_last_milestones }}checked{{/ should_sidebar_display_last_milestones }}
                                        name="should-sidebar-display-last-milestones"
+                                       data-test="should-sidebar-display-last-milestones"
                                        value="1"
                                 >
                                 {{# dgettext }}tuleap-agiledashboard | Display milestones in sidebar{{/ dgettext }}
@@ -76,6 +77,7 @@
                         <button type="submit"
                                 class="tlp-button-primary submit-without-modal"
                                 id="ad-service-submit"
+                                data-test="backlog-edit-global-settings"
                         >
                             <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }}tuleap-agiledashboard | Save{{/ dgettext }}
                         </button>
@@ -135,7 +137,7 @@
                     </div>
 
                     {{# has_plannings }}
-                        <table class="tlp-table">
+                        <table class="tlp-table" data-test="planning-configuration">
                             <thead>
                                 <tr>
                                     <th>Planning</th>
@@ -157,7 +159,7 @@
                                             {{/ extra_message }}
                                         </td>
                                         <td class="tlp-table-cell-actions">
-                                            <a href="{{ edit_url }}" class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                                            <a href="{{ edit_url }}" class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" data-test="edit-planning-configuration">
                                                 <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ edit_action_label }}
                                             </a>
                                             {{> admin-scrum/admin-planning-deletion }}

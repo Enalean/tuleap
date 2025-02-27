@@ -23,6 +23,7 @@
                     <input type="checkbox"
                            name="burnup-count-mode"
                            value="1" {{# is_burnup_count_mode_activated }} checked {{/ is_burnup_count_mode_activated }}
+                           data-test="burnup-count-mode"
                     >
                     {{# dgettext }}tuleap-agiledashboard | Activate count elements mode for burnup chart{{/ dgettext }}
                 </label>
@@ -31,6 +32,6 @@
                 </p>
             </div>
         </section>
-        <button type="submit" class="btn btn-primary" id="ad-service-submit">{{# dgettext }} tuleap-agiledashboard | Save {{/ dgettext }}</button>
+        <button type="submit" class="btn btn-primary" id="ad-service-submit" data-test="backlog-save-chart-configuration">{{# dgettext }} tuleap-agiledashboard | Save {{/ dgettext }}</button>
     </form>
 </div>

@@ -50,6 +50,14 @@ class AgileDashboardChartsConfigurationUpdater
         $use_count_mode = (bool) $this->request->get('burnup-count-mode');
         $this->count_elements_mode_updater->updateBurnupMode($project, $use_count_mode);
 
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::INFO,
+            dgettext(
+                'tuleap-agiledashboard',
+                'Chart configuration updated successfully.'
+            )
+        );
+
         $this->redirectToAdmin($project);
     }
 
