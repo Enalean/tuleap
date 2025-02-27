@@ -18,42 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\XMLImport;
 
-use Mockery;
 use PFUser;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
 use Tracker_FormElement_Field;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use User\XML\Import\IFindUserFromXMLReference;
 
-final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
-     */
-    private $artifact_fields_data_builder;
+    private Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $artifact_fields_data_builder;
     private PFUser $user;
     private Artifact $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $formelement_factory;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
     private Tracker $tracker;
     private PostCreationContext $context;
 
@@ -62,32 +57,21 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tulea
         $this->user                = UserTestBuilder::anActiveUser()->build();
         $this->artifact            = ArtifactTestBuilder::anArtifact(1)->build();
         $this->tracker             = TrackerTestBuilder::aTracker()->withId(111)->build();
-        $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $user_finder               = Mockery::mock(IFindUserFromXMLReference::class);
-        $files_importer            = Mockery::mock(Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact::class);
-        $extraction_path           = '';
-        $static_value_dao          = Mockery::mock(BindStaticValueDao::class);
-        $logger                    = Mockery::mock(LoggerInterface::class);
-        $xml_fields_mapping        = Mockery::mock(TrackerXmlFieldsMapping::class);
-        $artifact_id_mapping       = Mockery::mock(Tracker_XML_Importer_ArtifactImportedMapping::class);
-        $nature_dao                = Mockery::mock(TypeDao::class);
+        $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
         $this->context             = PostCreationContext::withNoConfig(false);
 
-        $this->artifact_fields_data_builder = Mockery::mock(
-            Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder::class,
-            [
-                $this->formelement_factory,
-                $user_finder,
-                $this->tracker,
-                $files_importer,
-                $extraction_path,
-                $static_value_dao,
-                $logger,
-                $xml_fields_mapping,
-                $artifact_id_mapping,
-                $nature_dao,
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->artifact_fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
+            $this->formelement_factory,
+            $this->createMock(IFindUserFromXMLReference::class),
+            $this->tracker,
+            $this->createMock(Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact::class),
+            '',
+            $this->createMock(BindStaticValueDao::class),
+            new NullLogger(),
+            $this->createMock(TrackerXmlFieldsMapping::class),
+            $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            $this->createMock(TypeDao::class),
+        );
     }
 
     public function testGetFieldsData(): void
@@ -112,31 +96,28 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tulea
 
         $xml = new SimpleXMLElement($xml_data);
 
-        $field_1        = Mockery::mock(Tracker_FormElement_Field::class);
-        $field_2        = Mockery::mock(Tracker_FormElement_Field::class);
-        $external_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $field_1        = $this->createMock(Tracker_FormElement_Field::class);
+        $field_2        = $this->createMock(Tracker_FormElement_Field::class);
+        $external_field = $this->createMock(Tracker_FormElement_Field::class);
 
-        $field_1->shouldReceive('setTracker')->with($this->tracker);
-        $field_2->shouldReceive('setTracker')->with($this->tracker);
-        $external_field->shouldReceive('setTracker')->with($this->tracker);
+        $field_1->method('setTracker')->with($this->tracker);
+        $field_2->method('setTracker')->with($this->tracker);
+        $external_field->method('setTracker')->with($this->tracker);
 
-        $field_1->shouldReceive('validateField')->andReturn(true);
-        $field_2->shouldReceive('validateField')->andReturn(true);
-        $external_field->shouldReceive('validateField')->andReturn(true);
+        $field_1->method('validateField')->willReturn(true);
+        $field_2->method('validateField')->willReturn(true);
+        $external_field->method('validateField')->willReturn(true);
 
-        $field_1->shouldReceive('getId')->andReturn(1)->once();
-        $field_2->shouldReceive('getId')->andReturn(2)->once();
-        $external_field->shouldReceive('getId')->andReturn(3)->once();
+        $field_1->expects(self::once())->method('getId')->willReturn(1);
+        $field_2->expects(self::once())->method('getId')->willReturn(2);
+        $external_field->expects(self::once())->method('getId')->willReturn(3);
 
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')
-            ->withArgs([111, 'summary'])
-            ->andReturn($field_1);
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')
-            ->withArgs([111, 'details'])
-            ->andReturn($field_2);
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')
-            ->withArgs([111, 'steps'])
-            ->andReturn($external_field);
+        $this->formelement_factory->method('getUsedFieldByName')->with(111, self::anything())
+            ->willReturnCallback(static fn(int $tracker_id, string $name) => match ($name) {
+                'summary' => $field_1,
+                'details' => $field_2,
+                'steps'   => $external_field,
+            });
 
         self::assertCount(3, $this->artifact_fields_data_builder->getFieldsData($xml, $this->user, $this->artifact, $this->context));
     }
@@ -151,7 +132,7 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tulea
 
         $xml = new SimpleXMLElement($xml_data);
 
-        $this->formelement_factory->shouldNotReceive('getUsedFieldByName');
+        $this->formelement_factory->expects(self::never())->method('getUsedFieldByName');
 
         self::assertEmpty($this->artifact_fields_data_builder->getFieldsData($xml, $this->user, $this->artifact, $this->context));
     }
