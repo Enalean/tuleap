@@ -86,7 +86,7 @@ class Tracker_FormElement_View_Admin
         $html     = '';
         $html    .= '<p>';
         $html    .= '<label for="formElement_label">' . dgettext('tuleap-tracker', 'Label') . ': <font color="red">*</font></label> ';
-        $html    .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="' . $purifier->purify($this->formElement->getLabel()) . '" size="40" />';
+        $html    .= '<input type="text" name="formElement_data[label]" id="formElement_label" data-test="formElement_label" value="' . $purifier->purify($this->formElement->getLabel()) . '" size="40" />';
         $html    .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
         $html    .= '</p>';
         $html    .= $this->fetchCustomHelp();
@@ -339,7 +339,7 @@ class Tracker_FormElement_View_Admin
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $html    .= '<p>';
-        $html    .= '<input type="submit" name="' . $purifier->purify($name) . '" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        $html    .= '<input type="submit" name="' . $purifier->purify($name) . '" data-test="formElement-submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
         $html    .= '</p>';
         return $html;
     }

@@ -346,6 +346,35 @@ describe("Tracker artifacts", function () {
             });
         });
 
+        describe("Tracker artifact permissions", function () {
+            it("field permission on artifact should restrict access", function () {
+                cy.log("Add artifact permissions field");
+                cy.projectAdministratorSession();
+                cy.visitProjectService(project_name, "Trackers");
+                cy.getContains("[data-test=tracker-link]", "Issues").click();
+                // eslint-disable-next-line cypress/no-force -- Link is in a dropdown
+                cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+                cy.get('[data-test="create-formElement[perm]"]').click();
+                cy.get("[data-test=formElement_label]").type("Artifact permissions");
+                cy.get("[data-test='formElement-submit']").click();
+
+                cy.log("Create artifact with permissions");
+                cy.projectMemberSession();
+                cy.visitProjectService(project_name, "Trackers");
+                cy.getContains("[data-test=tracker-link]", "Issues").click();
+                cy.get("[data-test=create-new]").click();
+                cy.get("[data-test=create-new-item]").first().click();
+                cy.get("[data-test=artifact-permission-enable-checkbox]").click();
+                cy.get("[data-test=artifact-permissions-selectbox]").select([
+                    "Project administrators",
+                ]);
+                submitAndStay();
+                cy.get("[data-test=feedback]").contains(
+                    "You don't have the permissions to view this artifact.",
+                );
+            });
+        });
+
         describe("Concurrent artifact edition", function () {
             it("A popup is shown to warn the user that someone has edited the artifact while he was editing it.", function () {
                 cy.projectMemberSession();
