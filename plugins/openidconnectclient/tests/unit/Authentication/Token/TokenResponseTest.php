@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 
 use Psr\Http\Message\ResponseInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNotValidJSONISRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
-        $http_response->method('getBody')->willReturn('{NotJSONValid');
+        $http_response->method('getBody')->willReturn(HTTPFactoryBuilder::streamFactory()->createStream('{NotJSONValid'));
 
         $this->expectException(IncorrectlyFormattedTokenResponseException::class);
 
@@ -39,7 +40,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testJSONWithMissingEntryIsRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
-        $http_response->method('getBody')->willReturn(json_encode(['id_token' => 'token']));
+        $http_response->method('getBody')->willReturn(HTTPFactoryBuilder::streamFactory()->createStream(json_encode(['id_token' => 'token'])));
 
         $this->expectException(IncorrectlyFormattedTokenResponseException::class);
         $this->expectExceptionMessageMatches('{"id_token":"token"}');
@@ -50,7 +51,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInvalidTokenTypeIsRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
-        $http_response->method('getBody')->willReturn(
+        $http_response->method('getBody')->willReturn(HTTPFactoryBuilder::streamFactory()->createStream(
             json_encode(
                 [
                     'id_token'     => 'token',
@@ -58,7 +59,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
                     'token_type'   => 'MAC',
                 ]
             )
-        );
+        ));
 
         $this->expectException(IncorrectTokenResponseTypeException::class);
 
@@ -68,7 +69,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testResponseTokenIsParsed(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
-        $http_response->method('getBody')->willReturn(
+        $http_response->method('getBody')->willReturn(HTTPFactoryBuilder::streamFactory()->createStream(
             json_encode(
                 [
                     'id_token'     => 'token',
@@ -76,7 +77,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
                     'token_type'   => 'bearer',
                 ]
             )
-        );
+        ));
 
         $token_response = TokenResponse::buildFromHTTPResponse($http_response);
         self::assertSame($token_response->getAccessToken(), 'access');

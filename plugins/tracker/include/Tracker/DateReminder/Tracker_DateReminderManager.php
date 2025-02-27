@@ -245,9 +245,9 @@ class Tracker_DateReminderManager
 
         $server_url = \Tuleap\ServerHostname::HTTPSUrl();
 
-        $breadcrumbs[] = '<a href="' . $server_url . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
-        $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?tracker=' . (int) $trackerId . '" />' . $hp->purify($this->getTracker()->getName()) . '</a>';
-        $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?aid=' . (int) $artifactId . '" />' . $hp->purify($this->getTracker()->getName() . ' #' . $artifactId) . '</a>';
+        $breadcrumbs[] = '<a href="' . $hp->purify($server_url . '/projects/' . $project->getUnixName(true)) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . $hp->purify($server_url . '/plugins/tracker/?tracker=' . (int) $trackerId) . '" />' . $hp->purify($this->getTracker()->getName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . $hp->purify($server_url . '/plugins/tracker/?aid=' . (int) $artifactId) . '" />' . $hp->purify($this->getTracker()->getName() . ' #' . $artifactId) . '</a>';
 
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));

@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-use Amp\ByteStream\ResourceOutputStream;
-use Amp\Http\Server\HttpServer;
-use Amp\Http\Server\RequestHandler\CallableRequestHandler;
+use Amp\Http\Server\Driver\SocketClientFactory;
+use Amp\Http\Server\RequestHandler\ClosureRequestHandler;
+use Amp\Http\Server\SocketHttpServer;
 use Amp\Log\ConsoleFormatter;
 use Amp\Log\StreamHandler;
 use Amp\Socket\BindContext;
 use Amp\Socket\Certificate;
-use Amp\Socket\Server;
+use Amp\Socket\ResourceServerSocketFactory;
 use Amp\Socket\ServerTlsContext;
 use Http\Adapter\Guzzle7\Client;
 use Http\Client\Common\Plugin\LoggerPlugin;
@@ -49,7 +49,7 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 Amp\Loop::run(
     static function () {
-        $log_handler = new StreamHandler(new ResourceOutputStream(STDOUT));
+        $log_handler = new StreamHandler(Amp\ByteStream\getStdout());
         $log_handler->setFormatter(new ConsoleFormatter());
         $logger_front_channel = new Logger('rp-oidc-front-channel');
         $logger_front_channel->pushHandler($log_handler);
@@ -76,8 +76,6 @@ Amp\Loop::run(
         $cert    = new Certificate($cert_file_path);
         $context = (new BindContext())->withTlsContext((new ServerTlsContext())->withDefaultCertificate($cert));
 
-        $sockets = [Server::listen('0.0.0.0:8443', $context), Server::listen('[::]:8443', $context)];
-
         $router      = new Amp\Http\Server\Router();
         $http_client = new \Http\Client\Common\PluginClient(
             Client::createWithConfig(['verify' => false]),
@@ -86,21 +84,21 @@ Amp\Loop::run(
         $router->addRoute(
             'GET',
             '/init-flow',
-            new CallableRequestHandler(
-                new OAuth2InitFlowController(
+            new ClosureRequestHandler(
+                (new OAuth2InitFlowController(
                     $secret_generator,
                     $client_credential_storage,
                     $http_client,
                     HTTPFactoryBuilder::requestFactory(),
                     $configuration_storage
-                )
+                ))(...)
             )
         );
         $router->addRoute(
             'GET',
             '/callback',
-            new CallableRequestHandler(
-                new OAuth2AuthorizationCallbackController(
+            new ClosureRequestHandler(
+                (new OAuth2AuthorizationCallbackController(
                     $secret_generator,
                     $http_client,
                     new OAuth2TestFlowHTTPClientWithClientCredentialFactory(
@@ -114,19 +112,25 @@ Amp\Loop::run(
                     new Validator(),
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory()
-                )
+                ))(...)
             )
         );
-        $server = new HttpServer($sockets, $router, $logger_front_channel);
 
-        yield $server->start();
+        $server = new SocketHttpServer(
+            $logger_front_channel,
+            new ResourceServerSocketFactory(),
+            new SocketClientFactory($logger_front_channel),
+        );
+        $server->expose('0.0.0.0:8443', $context);
+        $server->expose('[::]:8443', $context);
+        $server->start($router, new \Amp\Http\Server\DefaultErrorHandler());
 
         Amp\Loop::onSignal(
             SIGINT,
             static function (string $watcher_id) use ($server, $cert_file) {
                 Amp\Loop::cancel($watcher_id);
                 fclose($cert_file);
-                yield $server->stop();
+                $server->stop();
             }
         );
     }

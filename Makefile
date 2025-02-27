@@ -232,10 +232,6 @@ psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use
 psalm-taint-analysis: ## Run Psalm (PHP static analysis tool) taint analysis. Use FILES variables to execute on a given set of files or directories.
 	$(PHP) ./src/vendor/bin/psalm --memory-limit=4096M --threads=1 --no-cache --taint-analysis -c=tests/psalm/psalm.xml $(FILES)
 
-.PHONY:psalm-unused-code
-psalm-unused-code: ## Run Psalm (PHP static analysis tool) detection of unused code. Use FILES variables to execute on a given set of files or directories.
-	$(PHP) ./src/vendor/bin/psalm --find-unused-code -c=tests/psalm/psalm.xml $(FILES)
-
 .PHONY:psalm-baseline-update
 psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
 	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline

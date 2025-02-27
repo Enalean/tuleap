@@ -7,8 +7,8 @@
     resolveFromConfigFile="false"
     errorBaseline="./tests/psalm/tuleap-baseline.xml"
     allowNamedArgumentCalls="false"
+    ensureOverrideAttribute="false"
     findUnusedBaselineEntry="false"
-    findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src/common/" />
@@ -1383,6 +1383,8 @@
 
         <UnresolvableInclude errorLevel="info" />
 
+        <ClassMustBeFinal errorLevel="suppress" />
+
         <!-- Unused code detection -->
         <UnusedMethodCall errorLevel="suppress" />
         <UnusedFunctionCall errorLevel="suppress" />
@@ -1398,7 +1400,6 @@
         <UnusedProperty>
             <errorLevel type="suppress">
                 <file name="plugins/git/include/GitActions.php"/>
-                <file name="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php"/>
             </errorLevel>
         </UnusedProperty>
         <UnusedReturnValue errorLevel="suppress" />

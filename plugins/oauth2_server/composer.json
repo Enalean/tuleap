@@ -12,9 +12,9 @@
         }
     },
     "require-dev": {
-        "amphp/http-server": "^2.0",
-        "amphp/log": "^1.1",
-        "amphp/http-server-router": "^1.0",
+        "amphp/http-server": "^3.4",
+        "amphp/log": "^2.0",
+        "amphp/http-server-router": "^2.0",
         "php-http/logger-plugin": "^1.1"
     }
 }

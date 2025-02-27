@@ -65,7 +65,7 @@ final class CallbackNoBufferStream implements StreamInterface
     {
     }
 
-    public function detach()
+    public function detach(): null
     {
         return null;
     }
@@ -75,7 +75,7 @@ final class CallbackNoBufferStream implements StreamInterface
         return null;
     }
 
-    public function tell()
+    public function tell(): int
     {
         $this->throwExceptionOnDirectIOOperations();
     }
@@ -105,7 +105,7 @@ final class CallbackNoBufferStream implements StreamInterface
         return false;
     }
 
-    public function write($string)
+    public function write(string $string): int
     {
         $this->throwExceptionOnDirectIOOperations();
     }
@@ -115,7 +115,7 @@ final class CallbackNoBufferStream implements StreamInterface
         return false;
     }
 
-    public function read($length): string
+    public function read(int $length): string
     {
         $this->throwExceptionOnDirectIOOperations();
     }
@@ -127,15 +127,12 @@ final class CallbackNoBufferStream implements StreamInterface
         return '';
     }
 
-    public function getMetadata($key = null)
+    public function getMetadata(?string $key = null): null
     {
         return null;
     }
 
-    /**
-     * @psalm-return never-return
-     */
-    private function throwExceptionOnDirectIOOperations(): void
+    private function throwExceptionOnDirectIOOperations(): never
     {
         throw new \RuntimeException('Direct I/O operations are not accepted by this stream interface implementation');
     }

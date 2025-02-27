@@ -21,6 +21,8 @@
 namespace Tuleap\Http\Server;
 
 use GuzzleHttp\Psr7\ServerRequest;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -34,134 +36,125 @@ final class NullServerRequest implements ServerRequestInterface
         $this->server_request = new ServerRequest('GET', '/');
     }
 
-    public function getProtocolVersion()
+    public function getProtocolVersion(): string
     {
         return $this->server_request->getProtocolVersion();
     }
 
-    public function withProtocolVersion($version)
+    public function withProtocolVersion(string $version): MessageInterface
     {
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $this->server_request->withProtocolVersion($version);
     }
 
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->server_request->getHeaders();
     }
 
-    public function hasHeader($name)
+    public function hasHeader(string $name): bool
     {
         return $this->server_request->hasHeader($name);
     }
 
-    public function getHeader($name)
+    public function getHeader(string $name): array
     {
         return $this->server_request->getHeader($name);
     }
 
-    public function getHeaderLine($name)
+    public function getHeaderLine(string $name): string
     {
         return $this->server_request->getHeaderLine($name);
     }
 
-    public function withHeader($name, $value)
+    public function withHeader(string $name, $value): MessageInterface
     {
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $this->server_request->withHeader($name, $value);
     }
 
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader(string $name, $value): MessageInterface
     {
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $this->server_request->withAddedHeader($name, $value);
     }
 
-    public function withoutHeader($name)
+    public function withoutHeader(string $name): MessageInterface
     {
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $this->server_request->withoutHeader($name);
     }
 
-    public function getBody()
+    public function getBody(): StreamInterface
     {
         return $this->server_request->getBody();
     }
 
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body): MessageInterface
     {
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $this->server_request->withBody($body);
     }
 
-    public function getRequestTarget()
+    public function getRequestTarget(): string
     {
         return $this->server_request->getRequestTarget();
     }
 
-    public function withRequestTarget($requestTarget)
+    public function withRequestTarget(string $requestTarget): RequestInterface
     {
-        /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withRequestTarget($requestTarget);
     }
 
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->server_request->getMethod();
     }
 
-    public function withMethod($method)
+    public function withMethod(string $method): RequestInterface
     {
         /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withMethod($method);
     }
 
-    public function getUri()
+    public function getUri(): UriInterface
     {
         return $this->server_request->getUri();
     }
 
-    public function withUri(UriInterface $uri, $preserveHost = false)
+    public function withUri(UriInterface $uri, $preserveHost = false): RequestInterface
     {
         /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withUri($uri, $preserveHost);
     }
 
-    public function getServerParams()
+    public function getServerParams(): array
     {
         return $this->server_request->getServerParams();
     }
 
-    public function getCookieParams()
+    public function getCookieParams(): array
     {
         return $this->server_request->getCookieParams();
     }
 
     public function withCookieParams(array $cookies): ServerRequestInterface
     {
-        /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withCookieParams($cookies);
     }
 
-    public function getQueryParams()
+    public function getQueryParams(): array
     {
         return $this->server_request->getQueryParams();
     }
 
     public function withQueryParams(array $query): ServerRequestInterface
     {
-        /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withQueryParams($query);
     }
 
-    public function getUploadedFiles()
+    public function getUploadedFiles(): array
     {
         return $this->server_request->getUploadedFiles();
     }
 
-    public function withUploadedFiles(array $uploadedFiles)
+    public function withUploadedFiles(array $uploadedFiles): ServerRequestInterface
     {
-        /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withUploadedFiles($uploadedFiles);
     }
 
@@ -172,11 +165,10 @@ final class NullServerRequest implements ServerRequestInterface
 
     public function withParsedBody($data): ServerRequestInterface
     {
-        /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withParsedBody($data);
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->server_request->getAttributes();
     }
@@ -186,15 +178,13 @@ final class NullServerRequest implements ServerRequestInterface
         return $this->server_request->getAttribute($name, $default);
     }
 
-    public function withAttribute($name, $value)
+    public function withAttribute($name, $value): ServerRequestInterface
     {
-        /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withAttribute($name, $value);
     }
 
-    public function withoutAttribute($name)
+    public function withoutAttribute($name): ServerRequestInterface
     {
-        /** @psalm-suppress InvalidReturnStatement */
         return $this->server_request->withoutAttribute($name);
     }
 }

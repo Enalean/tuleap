@@ -85,7 +85,7 @@ def runPsalm(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php82 "src/vendor/bin/psalm --find-unused-code --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php82 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
