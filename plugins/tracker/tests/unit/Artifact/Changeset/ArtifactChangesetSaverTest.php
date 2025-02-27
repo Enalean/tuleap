@@ -23,90 +23,66 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use DateTimeImmutable;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetDao;
 use Tracker_ArtifactDao;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-final class ArtifactChangesetSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactChangesetSaverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $user;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var ArtifactChangesetSaver
-     */
-    private $saver;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ChangesetFromXmlDao
-     */
-    private $changeset_from_xml_dao;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactDao
-     */
-    private $tracker_artifact_dao;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetDao
-     */
-    private $changeset_dao;
+    private PFUser $user;
+    private Artifact $artifact;
+    private ArtifactChangesetSaver $saver;
+    private ChangesetFromXmlDao&MockObject $changeset_from_xml_dao;
+    private Tracker_ArtifactDao&MockObject $tracker_artifact_dao;
+    private Tracker_Artifact_ChangesetDao&MockObject $changeset_dao;
 
     protected function setUp(): void
     {
-        $transaction_executor = new DBTransactionExecutorPassthrough();
-
-        $this->changeset_dao          = \Mockery::mock(Tracker_Artifact_ChangesetDao::class);
-        $this->tracker_artifact_dao   = \Mockery::mock(Tracker_ArtifactDao::class);
-        $this->changeset_from_xml_dao = \Mockery::mock(ChangesetFromXmlDao::class);
+        $this->changeset_dao          = $this->createMock(Tracker_Artifact_ChangesetDao::class);
+        $this->tracker_artifact_dao   = $this->createMock(Tracker_ArtifactDao::class);
+        $this->changeset_from_xml_dao = $this->createMock(ChangesetFromXmlDao::class);
 
         $this->saver = new ArtifactChangesetSaver(
             $this->changeset_dao,
-            $transaction_executor,
+            new DBTransactionExecutorPassthrough(),
             $this->tracker_artifact_dao,
             $this->changeset_from_xml_dao
         );
 
-        $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(101);
-        $this->user = \Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(102);
-        $this->user->shouldReceive('isAnonymous')->andReturnFalse();
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
+        $this->user     = UserTestBuilder::anActiveUser()->withId(102)->build();
     }
 
     public function testItStoreChangeset(): void
     {
         $import_config = new TrackerNoXMLImportLoggedConfig();
-        $time          = new \DateTimeImmutable();
+        $time          = new DateTimeImmutable();
 
-        $this->changeset_dao->shouldReceive('create')->once()->andReturn(1234);
-        $this->tracker_artifact_dao->shouldReceive('updateLastChangsetId')->once();
-        $this->changeset_from_xml_dao->shouldReceive('saveChangesetIsCreatedFromXml')->never();
+        $this->changeset_dao->expects(self::once())->method('create')->willReturn(1234);
+        $this->tracker_artifact_dao->expects(self::once())->method('updateLastChangsetId');
+        $this->changeset_from_xml_dao->expects(self::never())->method('saveChangesetIsCreatedFromXml');
 
         $this->saver->saveChangeset($this->artifact, $this->user, $time->getTimestamp(), $import_config);
     }
 
     public function testItStoreChangesetCreatedFromXML(): void
     {
-        $time          = new \DateTimeImmutable();
+        $time          = new DateTimeImmutable();
         $import_config = new TrackerXmlImportConfig($this->user, $time, MoveImportConfig::buildForRegularImport(), false);
 
-        $this->changeset_dao->shouldReceive('create')->once()->andReturn(1234);
-        $this->tracker_artifact_dao->shouldReceive('updateLastChangsetId')->once();
-        $this->changeset_from_xml_dao->shouldReceive('saveChangesetIsCreatedFromXml')->once();
+        $this->changeset_dao->expects(self::once())->method('create')->willReturn(1234);
+        $this->tracker_artifact_dao->expects(self::once())->method('updateLastChangsetId');
+        $this->changeset_from_xml_dao->expects(self::once())->method('saveChangesetIsCreatedFromXml');
 
         $this->saver->saveChangeset($this->artifact, $this->user, $time->getTimestamp(), $import_config);
     }
