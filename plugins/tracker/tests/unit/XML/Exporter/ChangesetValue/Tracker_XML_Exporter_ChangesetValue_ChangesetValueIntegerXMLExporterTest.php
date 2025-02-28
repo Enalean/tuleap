@@ -20,36 +20,36 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter */
-    private $exporter;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private Tracker_Artifact_ChangesetValue_Integer $changeset_value;
 
-    /** @var Tracker_Artifact_ChangesetValue_Integer */
-    private $changeset_value;
-
-    /** @var Tracker_FormElement_Field */
-    private $field;
+    private Tracker_FormElement_Field $field;
 
     protected function setUp(): void
     {
-        $this->field         = Mockery::spy(Tracker_FormElement_Field_File::class)->shouldReceive('getName')->andReturn('story_points')->getMock();
+        $this->field         = IntFieldBuilder::anIntField(1001)->withName('story_points')->build();
         $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter();
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_File::class);
-        $this->changeset_value->shouldReceive('getValue')->andReturns(123);
-        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
+        $this->changeset_value = ChangesetValueIntegerTestBuilder::aValue(
+            101,
+            ChangesetTestBuilder::aChangeset(101)->build(),
+            $this->field
+        )->withValue(123)->build();
     }
 
     public function testItCreatesFieldChangeNodeInChangesetNode(): void
@@ -57,7 +57,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $this->changeset_value
         );
 

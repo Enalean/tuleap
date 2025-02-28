@@ -20,20 +20,18 @@
 
 declare(strict_types=1);
 
+use ColinODell\PsrTestLogger\TestLogger;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger;
 
-    /** @var Tracker_XML_Importer_CopyArtifactInformationsAggregator */
-    private $logger;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $backend_logger;
+    private TestLogger $backend_logger;
 
     protected function setUp(): void
     {
-        $this->backend_logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->backend_logger = new TestLogger();
         $this->logger         = new Tracker_XML_Importer_CopyArtifactInformationsAggregator($this->backend_logger);
     }
 
@@ -56,15 +54,13 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
 
     public function testItAlsoLogsUsingTheBackendLogger(): void
     {
-        $this->backend_logger->shouldReceive('log')->once();
-
         $this->logger->error('this is an error');
+
+        self::assertTrue($this->backend_logger->hasErrorRecords());
     }
 
     public function testItOnlyLogsErrorsAndWarningsInTheLogStack(): void
     {
-        $this->backend_logger->shouldReceive('log')->times(4);
-
         $this->logger->error('this is an error');
         $this->logger->warning('this is a warning');
         $this->logger->info('this is an info');
@@ -74,6 +70,11 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
             '[error] this is an error',
             '[warning] this is a warning',
         ];
-        $this->assertEquals($expected_logs, $this->logger->getAllLogs());
+        self::assertEquals($expected_logs, $this->logger->getAllLogs());
+
+        self::assertTrue($this->backend_logger->hasErrorRecords());
+        self::assertTrue($this->backend_logger->hasWarningRecords());
+        self::assertTrue($this->backend_logger->hasInfoRecords());
+        self::assertTrue($this->backend_logger->hasDebugRecords());
     }
 }

@@ -21,80 +21,65 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 
 final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private ExternalExporterCollector&MockObject $collector;
 
-    /**
-     * @var ExternalExporterCollector|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $collector;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter&MockObject $unknown_exporter;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter
-     */
-    private $unknown_exporter;
+    private Tracker_Artifact_Changeset $changeset;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
+    private Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor $visitor;
 
-    /** @var Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor */
-    private $visitor;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $int_exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter */
-    private $int_exporter;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter $float_exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter */
-    private $float_exporter;
-
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter */
-    private $artlink_exporter;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter;
 
     protected function setUp(): void
     {
-        $this->int_exporter     = \Mockery::spy(
+        $this->int_exporter     = $this->createMock(
             \Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter::class
         );
-        $this->float_exporter   = \Mockery::spy(
+        $this->float_exporter   = $this->createMock(
             \Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter::class
         );
-        $this->artlink_exporter = \Mockery::spy(
+        $this->artlink_exporter = $this->createMock(
             \Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter::class
         );
-        $this->collector        = Mockery::mock(ExternalExporterCollector::class);
+        $this->collector        = $this->createMock(ExternalExporterCollector::class);
         $this->artifact_xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->unknown_exporter = \Mockery::spy(
+        $this->unknown_exporter = $this->createMock(
             \Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter::class
         );
         $this->visitor          = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
-            \Mockery::spy(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter::class),
-            \Mockery::spy(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter::class),
+            $this->createMock(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter::class),
+            $this->createMock(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter::class),
             $this->float_exporter,
             $this->int_exporter,
-            \Mockery::spy(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter::class),
-            \Mockery::spy(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter::class),
-            \Mockery::spy(\Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter::class),
-            \Mockery::spy(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter::class),
-            \Mockery::spy(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter::class),
+            $this->createMock(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter::class),
+            $this->createMock(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter::class),
+            $this->createMock(\Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter::class),
+            $this->createMock(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter::class),
+            $this->createMock(\Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter::class),
             $this->artlink_exporter,
-            \Mockery::spy(\Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter::class),
+            $this->createMock(\Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter::class),
             $this->unknown_exporter,
             $this->collector
         );
 
-        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $this->changeset = ChangesetTestBuilder::aChangeset(101)->build();
     }
 
     public function testItCallsTheIntegerExporterAccordinglyToTheTypeOfTheChangesetValue(): void
@@ -102,19 +87,19 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
         $int_changeset_value = new Tracker_Artifact_ChangesetValue_Integer(
             '1',
             $this->changeset,
-            Mockery::mock(Tracker_FormElement_Field_Integer::class),
+            $this->createMock(Tracker_FormElement_Field_Integer::class),
             false,
             false
         );
 
-        $this->int_exporter->shouldReceive('export')->once();
-        $this->float_exporter->shouldReceive('export')->never();
-        $this->artlink_exporter->shouldReceive('export')->never();
+        $this->int_exporter->expects($this->once())->method('export');
+        $this->float_exporter->expects($this->never())->method('export');
+        $this->artlink_exporter->expects($this->never())->method('export');
 
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
             $int_changeset_value
         );
     }
@@ -124,19 +109,19 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
         $float_changeset_value = new Tracker_Artifact_ChangesetValue_Float(
             '2',
             $this->changeset,
-            Mockery::mock(Tracker_FormElement_Field_Float::class),
+            $this->createMock(Tracker_FormElement_Field_Float::class),
             false,
             false
         );
 
-        $this->int_exporter->shouldReceive('export')->never();
-        $this->float_exporter->shouldReceive('export')->Once();
-        $this->artlink_exporter->shouldReceive('export')->never();
+        $this->int_exporter->expects($this->never())->method('export');
+        $this->float_exporter->expects($this->once())->method('export');
+        $this->artlink_exporter->expects($this->never())->method('export');
 
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
             $float_changeset_value
         );
     }
@@ -146,20 +131,20 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
         $artlink_changeset_value = new Tracker_Artifact_ChangesetValue_ArtifactLink(
             '3',
             $this->changeset,
-            Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class),
+            $this->createMock(Tracker_FormElement_Field_ArtifactLink::class),
             false,
             [],
             []
         );
 
-        $this->int_exporter->shouldReceive('export')->never();
-        $this->float_exporter->shouldReceive('export')->never();
-        $this->artlink_exporter->shouldReceive('export')->once();
+        $this->int_exporter->expects($this->never())->method('export');
+        $this->float_exporter->expects($this->never())->method('export');
+        $this->artlink_exporter->expects($this->once())->method('export');
 
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
             $artlink_changeset_value
         );
     }
@@ -168,20 +153,20 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
     {
         $external_changeset_value = $this->getExternalChangeset(
             $this->changeset,
-            Mockery::mock(Tracker_FormElement_Field::class)
+            $this->createMock(Tracker_FormElement_Field::class)
         );
 
-        $this->int_exporter->shouldReceive('export')->never();
-        $this->float_exporter->shouldReceive('export')->never();
-        $this->artlink_exporter->shouldReceive('export')->never();
-        $this->unknown_exporter->shouldReceive('export')->never();
+        $this->int_exporter->expects($this->never())->method('export');
+        $this->float_exporter->expects($this->never())->method('export');
+        $this->artlink_exporter->expects($this->never())->method('export');
+        $this->unknown_exporter->expects($this->never())->method('export');
         $external_exporter = $this->getExternalExporter();
-        $this->collector->shouldReceive('collectExporter')->once()->andReturn($external_exporter);
+        $this->collector->expects($this->once())->method('collectExporter')->willReturn($external_exporter);
 
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
             $external_changeset_value
         );
     }
@@ -190,19 +175,19 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
     {
         $external_changeset_value = $this->getExternalChangeset(
             $this->changeset,
-            Mockery::mock(Tracker_FormElement_Field::class)
+            $this->createMock(Tracker_FormElement_Field::class)
         );
 
-        $this->int_exporter->shouldReceive('export')->never();
-        $this->float_exporter->shouldReceive('export')->never();
-        $this->artlink_exporter->shouldReceive('export')->never();
-        $this->unknown_exporter->shouldReceive('export')->once();
-        $this->collector->shouldReceive('collectExporter')->once()->andReturn(null);
+        $this->int_exporter->expects($this->never())->method('export');
+        $this->float_exporter->expects($this->never())->method('export');
+        $this->artlink_exporter->expects($this->never())->method('export');
+        $this->unknown_exporter->expects($this->once())->method('export');
+        $this->collector->expects($this->once())->method('collectExporter')->willReturn(null);
 
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
             $external_changeset_value
         );
     }

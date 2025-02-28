@@ -20,47 +20,36 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_Updater_ChangesetXMLUpdater $updater;
 
-    /** @var Tracker_XML_Updater_ChangesetXMLUpdater */
-    private $updater;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor&MockObject $visitor;
 
-    /** @var Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor */
-    private $visitor;
+    private array $submitted_values;
 
-    /** @var array */
-    private $submitted_values;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
 
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
+    private PFUser $user;
 
-    /** @var PFUser */
-    private $user;
+    private int $tracker_id = 123;
 
-    /** @var int */
-    private $tracker_id = 123;
+    private int $user_id = 101;
 
-    /** @var int */
-    private $user_id = 101;
+    private Tracker_FormElement_Field_String $field_summary;
 
-    /** @var Tracker_FormElement_Field */
-    private $field_summary;
+    private Tracker_FormElement_Field_String $field_effort;
 
-    /** @var Tracker_FormElement_Field */
-    private $field_effort;
+    private Tracker_FormElement_Field_String $field_details;
 
-    /** @var Tracker_FormElement_Field */
-    private $field_details;
-    /**
-     * @var \Mockery\MockInterface&Tracker
-     */
-    private $tracker;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {
@@ -81,24 +70,25 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
                 . '    </field_change>'
                 . '  </changeset>'
                 . '</artifact>');
-        $this->visitor             = \Mockery::spy(\Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor::class);
-        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->visitor             = $this->createMock(\Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor::class);
+        $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->updater             = new Tracker_XML_Updater_ChangesetXMLUpdater($this->visitor, $this->formelement_factory);
         $this->user                = new PFUser(['user_id' => $this->user_id, 'language_id' => 'en']);
-        $this->tracker             = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn($this->tracker_id)->getMock();
+        $this->tracker             = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
         $this->submitted_values    = [
             1001 => 'Content of summary field',
             1002 => '123',
         ];
 
-        $this->field_summary = Mockery::spy(Tracker_FormElement_Field_String::class);
-        $this->field_summary->shouldReceive('getId')->andReturn(1001);
-        $this->field_summary->shouldReceive('getName')->andReturn('summary');
-        $this->field_effort  = Mockery::spy(Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturn(1002)->getMock();
-        $this->field_details = Mockery::spy(Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturn(1003)->getMock();
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->with($this->tracker_id, 'summary', $this->user)->andReturns($this->field_summary);
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->with($this->tracker_id, 'effort', $this->user)->andReturns($this->field_effort);
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->with($this->tracker_id, 'details', $this->user)->andReturns($this->field_details);
+        $this->field_summary = StringFieldBuilder::aStringField(1001)->build();
+        $this->field_effort  = StringFieldBuilder::aStringField(1002)->build();
+        $this->field_details = StringFieldBuilder::aStringField(1003)->build();
+        $this->formelement_factory->method('getUsedFieldByNameForUser')
+            ->willReturnCallback(fn (int $tracker_id, string $field_name, PFUser $user) => match ($field_name) {
+                'summary' => $this->field_summary,
+                'effort'  => $this->field_effort,
+                'details' => $this->field_details,
+            });
     }
 
     public function testItUpdatesTheSubmittedOnInformation(): void
@@ -117,25 +107,19 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
         $this->assertEquals((int) $this->artifact_xml->changeset->submitted_by, $this->user->getId());
     }
 
-    public function testItAsksToVisitorToUpdateSummary(): void
+    public function testItAsksToVisitorToUpdateSummaryAndEffortButNotDetailsBecauseItIsNotPartOfSubmittedValues(): void
     {
-        $this->expectNotToPerformAssertions();
-        $this->visitor->shouldReceive('update')->with($this->artifact_xml->changeset->field_change[0], $this->field_summary, 'Content of summary field')->ordered();
-
-        $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
-    }
-
-    public function testItAsksToVisitorToUpdateEffort(): void
-    {
-        $this->expectNotToPerformAssertions();
-        $this->visitor->shouldReceive('update')->with($this->artifact_xml->changeset->field_change[1], $this->field_effort, '123')->ordered();
-
-        $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
-    }
-
-    public function testItDoesNotUpdateFieldIfTheyAreNotSubmitted(): void
-    {
-        $this->visitor->shouldReceive('update')->times(2);
+        $this->visitor
+            ->expects($this->exactly(2))
+            ->method('update')
+            ->willReturnCallback(
+                fn (SimpleXMLElement $field_change_xml, Tracker_FormElement_Field $field, mixed $submitted_value) => match (true) {
+                    $field === $this->field_summary &&
+                    $submitted_value === 'Content of summary field',
+                    $field === $this->field_effort &&
+                    $submitted_value === '123' => true,
+                }
+            );
 
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
     }

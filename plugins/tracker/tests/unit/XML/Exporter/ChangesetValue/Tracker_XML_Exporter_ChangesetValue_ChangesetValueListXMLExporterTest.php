@@ -20,27 +20,22 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter */
-    private $exporter;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private Tracker_Artifact_ChangesetValue_List&MockObject $changeset_value;
 
-    /** @var Tracker_Artifact_ChangesetValue_PermissionsOnArtifact */
-    private $changeset_value;
-
-    /** @var Tracker_FormElement_Field */
-    private $field;
+    private Tracker_FormElement_Field $field;
 
     protected function setUp(): void
     {
@@ -48,7 +43,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
         $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
             new FieldChangeListBuilder(
                 new XML_SimpleXMLCDATAFactory(),
-                \Mockery::spy(\UserXMLExporter::class)
+                $this->createMock(\UserXMLExporter::class)
             )
         );
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
@@ -62,24 +57,27 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
             null
         );
 
-        $this->field = Mockery::spy(Tracker_FormElement_Field_MultiSelectbox::class);
-        $this->field->shouldReceive('getBind')->andReturn($bind_static);
-        $this->field->shouldReceive('getName')->andReturn('status');
+        $this->field = \Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder::aListField(1001)
+            ->withMultipleValues()
+            ->withName('status')
+            ->build();
 
-        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class);
-        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
+        $this->field->setBind($bind_static);
+
+        $this->changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
+        $this->changeset_value->method('getField')->willReturn($this->field);
     }
 
     public function testItCreatesFieldChangeNodeWithOneValueInChangesetNode(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns([
+        $this->changeset_value->method('getValue')->willReturn([
             '101',
         ]);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $this->changeset_value
         );
 
@@ -92,7 +90,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
 
     public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNode(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns([
+        $this->changeset_value->method('getValue')->willReturn([
             '101',
             '102',
         ]);
@@ -100,7 +98,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $this->changeset_value
         );
 

@@ -18,40 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_ChildrenCollector $collector;
 
-    /** @var Tracker_XML_Exporter_ChildrenCollectorTest */
-    private $collector;
+    private Tracker_XML_Exporter_ChildrenXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ChildrenXMLExporter */
-    private $exporter;
+    private Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_exporter;
 
-    /** @var Tracker_XML_Exporter_ArtifactXMLExporter */
-    private $artifact_xml_exporter;
+    private Tracker_XML_Updater_TemporaryFileXMLUpdater&MockObject $file_updater;
 
-    /** @var Tracker_XML_Updater_TemporaryFileXMLUpdater */
-    private $file_updater;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private Tracker_XML_Exporter_ChangesetXMLExporter&MockObject $changeset_exporter;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_XML_Exporter_ChangesetXMLExporter */
-    private $changeset_exporter;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
+    private int $artifact_id_1 = 123;
 
-    /** @var int */
-    private $artifact_id_1 = 123;
-
-    /** @var int */
-    private $artifact_id_2 = 456;
+    private int $artifact_id_2 = 456;
     private Tracker_Artifact_Changeset $last_changeset_1;
     private Tracker_Artifact_Changeset $last_changeset_2;
 
@@ -60,15 +51,12 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
         parent::setUp();
         $this->artifact_xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
 
-        $this->file_updater     = Mockery::mock(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
-        $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->file_updater     = $this->createMock(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
+        $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
 
-        $artifact_1 = Mockery::mock(Artifact::class)
-            ->shouldReceive(['getId' => $this->artifact_id_1, 'getTrackerId' => 101])
-            ->getMock();
-        $artifact_2 = Mockery::mock(Artifact::class)
-            ->shouldReceive(['getId' => $this->artifact_id_2, 'getTrackerId' => 101])
-            ->getMock();
+        $tracker    = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $artifact_1 = ArtifactTestBuilder::anArtifact($this->artifact_id_1)->inTracker($tracker)->build();
+        $artifact_2 = ArtifactTestBuilder::anArtifact($this->artifact_id_2)->inTracker($tracker)->build();
 
         $this->last_changeset_1 = new Tracker_Artifact_Changeset(
             1,
@@ -86,24 +74,22 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
             null
         );
 
-        $artifact_1->shouldReceive('getLastChangeset')->andReturn($this->last_changeset_1);
-        $artifact_2->shouldReceive('getLastChangeset')->andReturn($this->last_changeset_2);
+        $artifact_1->setChangesets([$this->last_changeset_1]);
+        $artifact_2->setChangesets([$this->last_changeset_2]);
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
-            ->with($this->artifact_id_1)
-            ->andReturn($artifact_1);
-        $this->artifact_factory
-            ->shouldReceive('getArtifactById')
-            ->with($this->artifact_id_2)
-            ->andReturn($artifact_2);
+            ->method('getArtifactById')
+            ->willReturnCallback(fn (int $id) => match ($id) {
+                $this->artifact_id_1 => $artifact_1,
+                $this->artifact_id_2 => $artifact_2,
+                default => null,
+            });
         $this->collector = new Tracker_XML_ChildrenCollector();
 
-        $this->changeset_exporter = Mockery::mock(Tracker_XML_Exporter_ChangesetXMLExporter::class);
+        $this->changeset_exporter = $this->createMock(Tracker_XML_Exporter_ChangesetXMLExporter::class);
 
-        $file_info_xml_exporter = Mockery::mock(FileInfoXMLExporter::class)
-            ->shouldReceive('export')
-            ->getMock();
+        $file_info_xml_exporter = $this->createMock(FileInfoXMLExporter::class);
+        $file_info_xml_exporter->method('export');
 
         $this->artifact_xml_exporter = new Tracker_XML_Exporter_ArtifactXMLExporter(
             $this->changeset_exporter,
@@ -120,8 +106,8 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
 
     public function testDoesNothingIfCollectorIsEmpty(): void
     {
-        $this->file_updater->shouldReceive('update')->never();
-        $this->changeset_exporter->shouldReceive('exportWithoutComments')->never();
+        $this->file_updater->expects($this->never())->method('update');
+        $this->changeset_exporter->expects($this->never())->method('exportWithoutComments');
 
         $this->exporter->exportChildren($this->artifact_xml);
     }
@@ -130,13 +116,11 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
     {
         $this->collector->addChild($this->artifact_id_1, 'whatever');
 
-        $this->file_updater->shouldReceive('update')
-            ->withArgs(
-                function (SimpleXMLElement $xml_artifact): bool {
-                    return (int) $xml_artifact['id'] === $this->artifact_id_1;
-                }
-            )->once();
-        $this->changeset_exporter->shouldReceive('exportWithoutComments')->once();
+        $this->file_updater->method('update')
+            ->willReturnCallback(fn (SimpleXMLElement $xml_artifact) => match ((int) $xml_artifact['id']) {
+                $this->artifact_id_1 => true,
+            });
+        $this->changeset_exporter->expects($this->once())->method('exportWithoutComments');
 
         $this->exporter->exportChildren($this->artifact_xml);
     }
@@ -146,19 +130,11 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
         $this->collector->addChild($this->artifact_id_1, 'whatever');
         $this->collector->addChild($this->artifact_id_2, 'whatever');
 
-        $this->file_updater->shouldReceive('update')
-            ->withArgs(
-                function (SimpleXMLElement $xml_artifact): bool {
-                    return (int) $xml_artifact['id'] === $this->artifact_id_1;
-                }
-            )->once();
-        $this->file_updater->shouldReceive('update')
-            ->withArgs(
-                function (SimpleXMLElement $xml_artifact): bool {
-                    return (int) $xml_artifact['id'] === $this->artifact_id_2;
-                }
-            )->once();
-        $this->changeset_exporter->shouldReceive('exportWithoutComments')->twice();
+        $this->file_updater->method('update')
+            ->willReturnCallback(fn (SimpleXMLElement $xml_artifact) => match ((int) $xml_artifact['id']) {
+                $this->artifact_id_1, $this->artifact_id_2 => true,
+            });
+        $this->changeset_exporter->expects($this->exactly(2))->method('exportWithoutComments');
 
         $this->exporter->exportChildren($this->artifact_xml);
     }
@@ -166,11 +142,11 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
     public function testDoesNotFailWhenChildDoesNotExistAnymore(): void
     {
         $unknown_artifact_id = 666;
-        $this->artifact_factory->shouldReceive('getArtifactById')->with($unknown_artifact_id);
+        $this->artifact_factory->method('getArtifactById')->with($unknown_artifact_id);
         $this->collector->addChild($unknown_artifact_id, 'whatever');
 
-        $this->file_updater->shouldReceive('update')->never();
-        $this->changeset_exporter->shouldReceive('exportWithoutComments')->never();
+        $this->file_updater->expects($this->never())->method('update');
+        $this->changeset_exporter->expects($this->never())->method('exportWithoutComments');
 
         $this->exporter->exportChildren($this->artifact_xml);
     }

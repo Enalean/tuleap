@@ -20,28 +20,20 @@
 
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
-use Tracker_FormElement_Field;
 use Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter */
-    private $exporter;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
-
-    /** @var Tracker_FormElement_Field */
-    private $field;
+    private \Tracker_FormElement_Field_PermissionsOnArtifact $field;
 
     public function setUp(): void
     {
@@ -68,18 +60,16 @@ class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\Test\PH
 
     public function testItCreatesFieldChangeNodeInChangesetNode()
     {
-        $changeset_value = \Mockery::spy(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
-        $changeset_value->shouldReceive([
-            'getUgroupNamesFromPerms' => ['ug01', 'ug02'],
-            'getPerms'                => [101, 102],
-            'getUsed'                 => true,
-            'getField'                => $this->field,
-        ]);
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
+        $changeset_value->method('getUgroupNamesFromPerms')->willReturn(['ug01', 'ug02']);
+        $changeset_value->method('getPerms')->willReturn([101, 102]);
+        $changeset_value->method('getUsed')->willReturn(true);
+        $changeset_value->method('getField')->willReturn($this->field);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $changeset_value
         );
 
@@ -94,18 +84,16 @@ class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\Test\PH
 
     public function testItDoesNotAddEmptyUgroupIfASelectedUgroupHAsBeenDeleted()
     {
-        $changeset_value = \Mockery::spy(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
-        $changeset_value->shouldReceive([
-            'getUgroupNamesFromPerms' => ['ug01', null],
-            'getPerms'                => [101, null],
-            'getUsed'                 => true,
-            'getField'                => $this->field,
-        ]);
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
+        $changeset_value->method('getUgroupNamesFromPerms')->willReturn(['ug01', null]);
+        $changeset_value->method('getPerms')->willReturn([101, null]);
+        $changeset_value->method('getUsed')->willReturn(true);
+        $changeset_value->method('getField')->willReturn($this->field);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $changeset_value
         );
 

@@ -20,31 +20,28 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter */
-    private $exporter;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private Tracker_Artifact_ChangesetValue_Text $changeset_value;
 
-    /** @var Tracker_Artifact_ChangesetValue_File */
-    private $changeset_value;
-
-    /** @var Tracker_FormElement_Field */
-    private $field;
+    private Tracker_FormElement_Field $field;
 
     protected function setUp(): void
     {
-        $this->field    = Mockery::spy(Tracker_FormElement_Field_File::class)->shouldReceive('getName')->andReturn('textarea')->getMock();
+        $this->field    = TextFieldBuilder::aTextField(1001)->withName('textarea')->build();
         $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(
             new FieldChangeTextBuilder(
                 new XML_SimpleXMLCDATAFactory()
@@ -54,19 +51,20 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTes
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class);
-        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
+        $changeset = ChangesetTestBuilder::aChangeset(102)->build();
+
+        $this->changeset_value = ChangesetValueTextTestBuilder::aValue(101, $changeset, $this->field)
+            ->withValue('<p>test</p>')
+            ->withFormat(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+            ->build();
     }
 
     public function testItCreatesTextNodeWithHTMLFormattedText(): void
     {
-        $this->changeset_value->shouldReceive('getText')->andReturns('<p>test</p>');
-        $this->changeset_value->shouldReceive('getFormat')->andReturns(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
-
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $this->changeset_value
         );
 

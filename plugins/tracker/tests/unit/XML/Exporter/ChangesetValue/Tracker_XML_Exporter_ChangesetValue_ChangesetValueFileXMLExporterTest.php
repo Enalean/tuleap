@@ -20,58 +20,49 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private FileInfoXMLExporter&MockObject $file_exporter;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FileInfoXMLExporter */
-    private $file_exporter;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter */
-    private $exporter;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private Artifact $artifact;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact */
-    private $artifact;
-
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetValue_File */
-    private $changeset_value;
+    private Tracker_Artifact_ChangesetValue_File&MockObject $changeset_value;
 
     protected function setUp(): void
     {
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->file_exporter = Mockery::mock(FileInfoXMLExporter::class);
+        $this->file_exporter = $this->createMock(FileInfoXMLExporter::class);
         $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
             $this->file_exporter
         );
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class)
-            ->shouldReceive(['getName' => 'attachments'])
-            ->getMock();
+        $field = FileFieldBuilder::aFileField(1001)->withName('attachments')->build();
 
-        $this->changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class)
-            ->shouldReceive(['getField' => $field])
-            ->getMock();
+        $this->changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_File::class);
+        $this->changeset_value->method('getField')->willReturn($field);
 
-        $this->artifact = Mockery::mock(Artifact::class);
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
     }
 
     public function testItExportsEmptyValueIfThereIsNoFileChange(): void
     {
-        $this->changeset_value->shouldReceive('getFiles')->andReturn([]);
+        $this->changeset_value->method('getFiles')->willReturn([]);
 
-        $this->file_exporter->shouldReceive('add')->never();
+        $this->file_exporter->expects($this->never())->method('add');
 
         $this->exporter->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->changeset_value);
 
@@ -85,7 +76,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
     {
         $file_1 = new Tracker_FileInfo(
             190,
-            Mockery::mock(\Tracker_FormElement_Field_File::class),
+            $this->createMock(Tracker_FormElement_Field_File::class),
             101,
             '',
             'document.txt',
@@ -94,23 +85,21 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         );
         $file_2 = new Tracker_FileInfo(
             191,
-            Mockery::mock(\Tracker_FormElement_Field_File::class),
+            $this->createMock(Tracker_FormElement_Field_File::class),
             102,
             '',
             'landscape.png',
             '256',
             'image/png'
         );
-        $this->changeset_value->shouldReceive('getFiles')->andReturn([$file_1, $file_2]);
+        $this->changeset_value->method('getFiles')->willReturn([$file_1, $file_2]);
 
         $this->file_exporter
-            ->shouldReceive('add')
-            ->with($this->artifact, $file_1)
-            ->once();
-        $this->file_exporter
-            ->shouldReceive('add')
-            ->with($this->artifact, $file_2)
-            ->once();
+            ->expects($this->exactly(2))
+            ->method('add')
+            ->willReturnCallback(static fn (Artifact $artifact, Tracker_FileInfo $file) => match ($file) {
+                $file_1, $file_2 => true,
+            });
 
         $this->exporter->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->changeset_value);
 
