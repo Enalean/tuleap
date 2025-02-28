@@ -49,8 +49,8 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
         $required = $this->isRequired() ? 'required' : '';
 
         $html .= '<div class="val_' . $id . '">';
-        $html .= '    <label class="radio" for="rb_' . $id . '" >';
-        $html .= '        <input type="radio" ' . $name . ' value="' . $id . '" id=rb_' . $id . ' ' . $checked . ' ' . $required . ' valign="middle" />';
+        $html .= '    <label class="radio" for="rb_' . $id . '" data-test="radiobutton-field-value">';
+        $html .= '        <input data-test="radiobutton-field-input" type="radio" ' . $name . ' value="' . $id . '" id=rb_' . $id . ' ' . $checked . ' ' . $required . ' valign="middle" />';
         $html .= '    ' . $label . '</label>';
         $html .= '</div>';
 

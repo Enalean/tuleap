@@ -62,7 +62,6 @@ class UploadDataAttributesForRichTextEditorBuilder
             ];
         }
 
-
         return $data_attributes;
     }
 }
