@@ -37,8 +37,10 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitActions extends PluginActions
+/**
+ * @psalm-suppress UnusedProperty
+ */
+class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var PermissionChangesDetector
