@@ -52,7 +52,7 @@ class ConfigNotificationEmailCustomSenderFormatter
     /**
      * Replaces all occurrences of %field_name with the value of kvargs['field_name'] in $str
      * @param string $str
-     * @return the input string, with all formatting using %field_name replaced by values in kvargs
+     * @return string the input string, with all formatting using %field_name replaced by values in kvargs
      * */
     public function formatString($str)
     {
