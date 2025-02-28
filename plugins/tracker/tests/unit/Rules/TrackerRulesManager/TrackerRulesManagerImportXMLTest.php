@@ -20,17 +20,19 @@
 
 namespace Tuleap\Tracker\Rule;
 
-use Mockery;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker;
+use Tracker_FormElementFactory;
+use Tracker_Rule_Date_Factory;
+use Tracker_Rule_List_Factory;
 use Tracker_RulesManager;
 use TrackerFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
-class TrackerRulesManagerImportXMLTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerRulesManagerImportXMLTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testExportToXmlCallsRuleListFactoryExport()
     {
         $xml_data                     = <<<XML
@@ -39,13 +41,13 @@ class TrackerRulesManagerImportXMLTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $sax_object                   = new SimpleXMLElement($xml_data);
         $xmlMapping                   = [];
-        $tracker                      = \Mockery::mock(Tracker::class);
-        $form_element_factory         = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $frozen_dao                   = Mockery::mock(FrozenFieldsDao::class);
-        $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
-        $tracker_rules_date_validator = \Mockery::mock(TrackerRulesDateValidator::class);
+        $tracker                      = TrackerTestBuilder::aTracker()->withId(45)->build();
+        $form_element_factory         = $this->createMock(Tracker_FormElementFactory::class);
+        $frozen_dao                   = $this->createMock(FrozenFieldsDao::class);
+        $tracker_rules_list_validator = $this->createMock(TrackerRulesListValidator::class);
+        $tracker_rules_date_validator = $this->createMock(TrackerRulesDateValidator::class);
 
-        $tracker_factory = Mockery::mock(TrackerFactory::class);
+        $tracker_factory = $this->createMock(TrackerFactory::class);
 
         $manager = new Tracker_RulesManager(
             $tracker,
@@ -54,16 +56,14 @@ XML;
             $tracker_rules_list_validator,
             $tracker_rules_date_validator,
             $tracker_factory,
-            new \Psr\Log\NullLogger()
+            new NullLogger()
         );
 
-        $tracker->shouldReceive('getId')->andReturn(45);
+        $date_factory = $this->createMock(Tracker_Rule_Date_Factory::class);
+        $date_factory->expects($this->once())->method('exportToXml')->with($sax_object, $xmlMapping, 45);
 
-        $date_factory = \Mockery::mock(\Tracker_Rule_Date_Factory::class);
-        $date_factory->shouldReceive('exportToXml')->withArgs([$sax_object, $xmlMapping, 45])->once();
-
-        $list_factory = \Mockery::mock(\Tracker_Rule_List_Factory::class);
-        $list_factory->shouldReceive('exportToXml')->withArgs([$sax_object, $xmlMapping, $form_element_factory, 45])->once();
+        $list_factory = $this->createMock(Tracker_Rule_List_Factory::class);
+        $list_factory->expects($this->once())->method('exportToXml')->with($sax_object, $xmlMapping, $form_element_factory, 45);
 
         $manager->setRuleDateFactory($date_factory);
         $manager->setRuleListFactory($list_factory);

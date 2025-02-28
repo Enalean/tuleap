@@ -20,96 +20,79 @@
 
 namespace Tuleap\Tracker\Rule;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tracker;
+use Tracker_FormElementFactory;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tracker_RulesManager;
 use TrackerFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
-class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerRulesManagerForbiddenTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_RulesManager&MockObject $tracker_rules_manager;
 
-    /**
-     * @var Tracker_RulesManager
-     */
-    private $tracker_rules_manager;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $formelement_factory;
+    private TrackerRulesListValidator&MockObject $tracker_rules_list_validator;
 
-    /**
-     * @var Mockery\MockInterface|TrackerRulesListValidator
-     */
-    private $tracker_rules_list_validator;
+    private FrozenFieldsDao&MockObject $frozen_fields_dao;
 
-    /**
-     * @var Mockery\MockInterface|FrozenFieldsDao
-     */
-    private $frozen_fields_dao;
+    private Tracker $tracker;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
+    private TrackerFactory&MockObject $tracker_factory;
 
-    /**
-     * @var  Mockery\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
+    private Tracker_RuleFactory&MockObject $rule_factory;
 
-    /**
-     * @var Mockery\MockInterface|Tracker_RuleFactory
-     */
-    private $rule_factory;
-    /**
-     * @var Mockery\MockInterface|TrackerRulesDateValidator
-     */
-
-    private $tracker_rules_date_validator;
+    private TrackerRulesDateValidator&MockObject $tracker_rules_date_validator;
 
     public function setUp(): void
     {
-        $this->tracker = \Mockery::mock(\Tracker::class);
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->frozen_fields_dao            = \Mockery::mock(FrozenFieldsDao::class);
-        $this->tracker_rules_list_validator = \Mockery::mock(TrackerRulesListValidator::class);
-        $this->tracker_rules_date_validator = \Mockery::mock(TrackerRulesDateValidator::class);
-        $this->tracker_factory              = \Mockery::mock(TrackerFactory::class);
-        $this->rule_factory                 = \Mockery::mock(Tracker_RuleFactory::class);
+        $this->formelement_factory          = $this->createMock(Tracker_FormElementFactory::class);
+        $this->frozen_fields_dao            = $this->createMock(FrozenFieldsDao::class);
+        $this->tracker_rules_list_validator = $this->createMock(TrackerRulesListValidator::class);
+        $this->tracker_rules_date_validator = $this->createMock(TrackerRulesDateValidator::class);
+        $this->tracker_factory              = $this->createMock(TrackerFactory::class);
+        $this->rule_factory                 = $this->createMock(Tracker_RuleFactory::class);
 
-        $this->tracker_rules_manager = \Mockery::mock(Tracker_RulesManager::class, [$this->tracker,
-            $this->formelement_factory,
-            $this->frozen_fields_dao,
-            $this->tracker_rules_list_validator,
-            $this->tracker_rules_date_validator,
-            $this->tracker_factory,
-            new \Psr\Log\NullLogger(),
-        ])->makePartial();
+        $this->tracker_rules_manager = $this->getMockBuilder(Tracker_RulesManager::class)
+            ->onlyMethods(['getRuleFactory'])
+            ->setConstructorArgs([$this->tracker,
+                $this->formelement_factory,
+                $this->frozen_fields_dao,
+                $this->tracker_rules_list_validator,
+                $this->tracker_rules_date_validator,
+                $this->tracker_factory,
+                new NullLogger(),
+            ])->getMock();
 
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([1])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([2])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([3])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([4])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([5])->andReturn(false);
+        $this->frozen_fields_dao->method('isFieldUsedInPostAction')->willReturnMap([
+            [1, false],
+            [2, false],
+            [3, false],
+            [4, false],
+            [5, false],
+        ]);
 
         $rule_list_1 = new Tracker_Rule_List(1, 1, 1, 1, 2, 2);
         $rule_list_2 = new Tracker_Rule_List(2, 1, 2, 3, 3, 4);
         $rule_list_3 = new Tracker_Rule_List(3, 1, 4, 5, 5, 6);
 
-        $this->rule_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([$rule_list_1, $rule_list_2, $rule_list_3]);
+        $this->rule_factory->method('getAllListRulesByTrackerWithOrder')->willReturn([$rule_list_1, $rule_list_2, $rule_list_3]);
 
         $involved_fields_1 = new InvolvedFieldsInRule(1, 2);
         $involved_fields_2 = new InvolvedFieldsInRule(2, 3);
         $involved_fields_3 = new InvolvedFieldsInRule(4, 5);
 
-        $this->rule_factory->shouldReceive('getInvolvedFieldsByTrackerIdCollection')->andReturn([$involved_fields_1, $involved_fields_2, $involved_fields_3]);
+        $this->rule_factory->method('getInvolvedFieldsByTrackerIdCollection')->willReturn([$involved_fields_1, $involved_fields_2, $involved_fields_3]);
 
-        $this->tracker_rules_manager->shouldReceive('getRuleFactory')->andReturn($this->rule_factory);
+        $this->tracker_rules_manager->method('getRuleFactory')->willReturn($this->rule_factory);
     }
 
     /**
