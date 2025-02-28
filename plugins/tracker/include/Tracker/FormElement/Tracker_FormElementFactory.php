@@ -1495,7 +1495,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             $description = $label;
         }
 
-        $button .= '<a class="' . $button_class . '" name="' . $name . '" title="' . $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) . '"><span>';
+        $button .= '<a class="' . $button_class . '" name="' . $name . '" title="' . $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) . '" data-test="' . $name . '"><span>';
         $button .= '<img width="16" height="16" alt="" src="' . $icon . '" />';
         $button .=  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML);
         $button .= '</span></a>';
