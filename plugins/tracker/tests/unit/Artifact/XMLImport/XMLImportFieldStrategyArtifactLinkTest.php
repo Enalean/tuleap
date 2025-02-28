@@ -18,44 +18,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Artifact\XMLImport;
+
+use ColinODell\PsrTestLogger\TestLogger;
+use PFUser;
+use PHPUnit\Framework\MockObject\Stub;
+use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink;
+use Tracker_ArtifactLinkInfo;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_XML_Importer_ArtifactImportedMapping;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /** @var  Tracker_FormElement_Field_ArtifactLink */
-    private $field;
-
-    /** @var  PFUser */
-    private $submitted_by;
-
-    /** @var  Logger */
-    private $logger;
-
-    /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink */
-    private $artlink_strategy;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao
-     */
-    private $nature_dao;
-
-    /** @var  Artifact */
-    private $artifact;
+    private Tracker_FormElement_Field_ArtifactLink $field;
+    private PFUser $submitted_by;
+    private TestLogger $logger;
+    private TypeDao&Stub $nature_dao;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->field        = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
-        $this->submitted_by = \Mockery::spy(\PFUser::class);
-        $this->logger       = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->nature_dao   = $this->createStub(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao::class);
-        $this->artifact     = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getTrackerId')->andReturns(888);
-
-        $this->artlink_strategy = \Mockery::mock(\Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->field        = ArtifactLinkFieldBuilder::anArtifactLinkField(568)->build();
+        $this->submitted_by = UserTestBuilder::buildWithDefaults();
+        $this->logger       = new TestLogger();
+        $this->nature_dao   = $this->createStub(TypeDao::class);
+        $this->artifact     = ArtifactTestBuilder::anArtifact(412)->inTracker(TrackerTestBuilder::aTracker()->withId(888)->build())->build();
     }
 
     public function testItShouldWorkWithCompleteMapping(): void
@@ -76,11 +77,13 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                   </field_change>');
 
         $this->nature_dao->method('getTypeByShortname')->willReturn([[]]);
-        $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getValues')->willReturn([]);
+        $this->artifact->setLastChangeset($changeset);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
         $expected_res = ['new_values' => '2,1', 'removed_values' => [], 'types' => ['1' => '', '2' => '']];
-        $this->assertEquals($expected_res, $res);
+        self::assertEquals($expected_res, $res);
     }
 
     public function testItShouldImportSystemNatures(): void
@@ -101,12 +104,14 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                   </field_change>');
 
         $this->nature_dao->method('getTypeByShortname')->willReturn([[]]);
-        $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getValues')->willReturn([]);
+        $this->artifact->setLastChangeset($changeset);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
         $expected_res = ['new_values' => '2,1', 'removed_values' => [], 'types' => ['1' => '_fixed_in', '2' => '_is_child']];
 
-        $this->assertEquals($expected_res, $res);
+        self::assertEquals($expected_res, $res);
     }
 
     public function testItShouldWorkWithCompleteMappingAndNature(): void
@@ -128,12 +133,14 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                     <value>102</value>
                   </field_change>');
 
-        $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getValues')->willReturn([]);
+        $this->artifact->setLastChangeset($changeset);
         $this->nature_dao->method('getTypeByShortname')->willReturn([['titi']]);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
         $expected_res = ['new_values' => '2,1,3', 'removed_values' => [], 'types' => ['1' => 'titi', '2' => 'toto', '3' => '']];
-        $this->assertEquals($expected_res, $res);
+        self::assertEquals($expected_res, $res);
     }
 
     public function testItShouldLogWhenArtifactLinkReferenceIsBroken(): void
@@ -150,10 +157,12 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                   </field_change>');
 
         $this->nature_dao->method('getTypeByShortname')->willReturn([[]]);
-        $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getValues')->willReturn([]);
+        $this->artifact->setLastChangeset($changeset);
 
-        $this->logger->shouldReceive('error')->once();
         $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     public function testItShouldRemoveValuesWhenArtifactChildrenAreRemoved(): void
@@ -173,16 +182,22 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                     <value nature="toto">200</value>
                   </field_change>');
 
-        $changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_value->shouldReceive('getArtifactIds')->andReturns([1, 2, 3]);
-        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getValues')->andReturns([$changeset_value]);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
+        $changeset = ChangesetTestBuilder::aChangeset(123)->build();
+        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(
+            1,
+            $changeset,
+            $this->field
+        )->withLinks([
+            1 => new Tracker_ArtifactLinkInfo(1, '', 101, 888, 123, null),
+            2 => new Tracker_ArtifactLinkInfo(2, '', 101, 888, 123, null),
+            3 => new Tracker_ArtifactLinkInfo(3, '', 101, 888, 123, null),
+        ])->build());
+        $this->artifact->setLastChangeset($changeset);
 
         $this->nature_dao->method('getTypeByShortname')->willReturn([['toto']]);
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
         $expected_res = ['new_values' => '1', 'removed_values' => [2 => 2, 3 => 3], 'types' => ['1' => 'toto']];
 
-        $this->assertEquals($expected_res, $res);
+        self::assertEquals($expected_res, $res);
     }
 }
