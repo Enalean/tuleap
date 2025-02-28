@@ -50,7 +50,7 @@ final class OAuth2TestFlowHTTPClientWithClientCredentialFactory
         $client_id     = $this->client_credential_storage->getClientId();
         $client_secret = $this->client_credential_storage->getClientSecret();
         if ($client_id === null || $client_secret === null) {
-            throw new RuntimeException('Client ID and secret are missing, did you call GET /init-flow first?');
+            throw new \RuntimeException('Client ID and secret are missing, did you call GET /init-flow first?');
         }
         return new PluginClient(
             $this->client,

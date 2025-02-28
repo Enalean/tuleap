@@ -15,6 +15,7 @@
         "amphp/http-server": "^3.4",
         "amphp/log": "^2.0",
         "amphp/http-server-router": "^2.0",
-        "php-http/logger-plugin": "^1.1"
+        "php-http/logger-plugin": "^1.1",
+        "revolt/event-loop": "^1.0"
     }
 }
