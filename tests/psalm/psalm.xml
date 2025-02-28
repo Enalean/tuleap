@@ -1397,11 +1397,6 @@
         <UnusedMethod errorLevel="suppress" />
         <PossiblyUnusedProperty errorLevel="suppress" />
         <UnusedConstructor errorLevel="suppress" />
-        <UnusedProperty>
-            <errorLevel type="suppress">
-                <file name="plugins/git/include/GitActions.php"/>
-            </errorLevel>
-        </UnusedProperty>
         <UnusedReturnValue errorLevel="suppress" />
         <PossiblyUnusedReturnValue errorLevel="suppress" />
     </issueHandlers>
