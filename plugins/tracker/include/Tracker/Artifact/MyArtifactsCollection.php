@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Artifact;
 use PFUser;
 use Tracker;
 use Tracker_Semantic_Title;
-use TrackerFactory;
+use Tuleap\Tracker\RetrieveTracker;
 
 class MyArtifactsCollection implements \Countable
 {
@@ -37,17 +37,12 @@ class MyArtifactsCollection implements \Countable
     private $trackers_has_title = [];
     private $artifacts          = [];
     /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
      * @var int
      */
     private $nb_max_artifacts = 0;
 
-    public function __construct(TrackerFactory $tracker_factory)
+    public function __construct(private readonly RetrieveTracker $tracker_factory)
     {
-        $this->tracker_factory = $tracker_factory;
     }
 
     public function trackerHasArtifactId(Tracker $tracker, int $artifact_id): bool
