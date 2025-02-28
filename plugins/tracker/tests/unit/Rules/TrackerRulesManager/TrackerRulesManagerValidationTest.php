@@ -22,88 +22,67 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Rule;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tracker;
+use Tracker_FormElementFactory;
+use Tracker_Rule_Date;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
-class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
+class TrackerRulesManagerValidationTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var Tracker_RulesManager
-     */
-    private $tracker_rules_manager;
+    private Tracker_RulesManager&MockObject $tracker_rules_manager;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $formelement_factory;
+    private TrackerRulesListValidator&MockObject $tracker_rules_list_validator;
 
-    /**
-     * @var Mockery\MockInterface|TrackerRulesListValidator
-     */
-    private $tracker_rules_list_validator;
+    private Tracker $tracker;
 
-    /**
-     * @var Mockery\MockInterface|FrozenFieldsDao
-     */
-    private $frozen_fields_dao;
-
-    /**
-     * @var Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var  Mockery\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var Mockery\MockInterface|TrackerRulesDateValidator
-     */
-    private $tracker_rules_date_validator;
+    private TrackerRulesDateValidator&MockObject $tracker_rules_date_validator;
 
     public function setUp(): void
     {
-        $this->tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(10);
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
 
-        $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->frozen_fields_dao            = \Mockery::mock(FrozenFieldsDao::class);
-        $this->tracker_rules_list_validator = \Mockery::mock(TrackerRulesListValidator::class);
-        $this->tracker_rules_date_validator = \Mockery::mock(TrackerRulesDateValidator::class);
-        $this->tracker_factory              = \Mockery::mock(TrackerFactory::class);
+        $formelement_factory                = $this->createMock(Tracker_FormElementFactory::class);
+        $frozen_fields_dao                  = $this->createMock(FrozenFieldsDao::class);
+        $this->tracker_rules_list_validator = $this->createMock(TrackerRulesListValidator::class);
+        $this->tracker_rules_date_validator = $this->createMock(TrackerRulesDateValidator::class);
+        $tracker_factory                    = $this->createMock(TrackerFactory::class);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($this->tracker);
+        $tracker_factory->method('getTrackerById')->willReturn($this->tracker);
 
-        $this->tracker_rules_manager = \Mockery::mock(Tracker_RulesManager::class, [$this->tracker,
-            $this->formelement_factory,
-            $this->frozen_fields_dao,
-            $this->tracker_rules_list_validator,
-            $this->tracker_rules_date_validator,
-            $this->tracker_factory,
-            new \Psr\Log\NullLogger(),
-        ])->makePartial();
+        $this->tracker_rules_manager = $this->getMockBuilder(Tracker_RulesManager::class)
+            ->onlyMethods(['getRuleFactory', 'getAllDateRulesByTrackerId'])
+            ->setConstructorArgs([$this->tracker,
+                $formelement_factory,
+                $frozen_fields_dao,
+                $this->tracker_rules_list_validator,
+                $this->tracker_rules_date_validator,
+                $tracker_factory,
+                new NullLogger(),
+            ])->getMock();
 
-        $tracker_rule_date  = \Mockery::mock(\Tracker_Rule_Date::class);
-        $tracker_rule_date2 = \Mockery::mock(\Tracker_Rule_Date::class);
+        $tracker_rule_date  = $this->createMock(Tracker_Rule_Date::class);
+        $tracker_rule_date2 = $this->createMock(Tracker_Rule_Date::class);
 
         $rule_list_1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
         $rule_list_2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
         $rule_list_3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
 
-        $rule_factory = \Mockery::mock(Tracker_RuleFactory::class);
-        $rule_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([$rule_list_1, $rule_list_2, $rule_list_3]);
+        $rule_factory = $this->createMock(Tracker_RuleFactory::class);
+        $rule_factory->method('getAllListRulesByTrackerWithOrder')->willReturn([$rule_list_1, $rule_list_2, $rule_list_3]);
 
-        $this->tracker_rules_manager->shouldReceive('getRuleFactory')->andReturn($rule_factory);
-        $this->tracker_rules_manager->shouldReceive('getAllDateRulesByTrackerId')->andReturns([$tracker_rule_date, $tracker_rule_date2]);
+        $this->tracker_rules_manager->method('getRuleFactory')->willReturn($rule_factory);
+        $this->tracker_rules_manager->method('getAllDateRulesByTrackerId')->willReturn([$tracker_rule_date, $tracker_rule_date2]);
     }
 
     public function testValidateReturnsFalseWhenTheDateDataIsInvalid()
@@ -115,8 +94,8 @@ class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
             13 => '',
         ];
 
-        $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
-        $this->tracker_rules_date_validator->shouldReceive('validateDateRules')->andReturn(false);
+        $this->tracker_rules_list_validator->method('validateListRules')->willReturn(true);
+        $this->tracker_rules_date_validator->method('validateDateRules')->willReturn(false);
 
         $this->assertFalse($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
     }
@@ -130,8 +109,8 @@ class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
             13 => '',
         ];
 
-        $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
-        $this->tracker_rules_date_validator->shouldReceive('validateDateRules')->andReturn(true);
+        $this->tracker_rules_list_validator->method('validateListRules')->willReturn(true);
+        $this->tracker_rules_date_validator->method('validateDateRules')->willReturn(true);
 
         $this->assertTrue($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
     }
@@ -143,8 +122,8 @@ class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
             789 => 586,
         ];
 
-        $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(false);
-        $this->tracker_rules_date_validator->shouldReceive('validateDateRules')->andReturn(true);
+        $this->tracker_rules_list_validator->method('validateListRules')->willReturn(false);
+        $this->tracker_rules_date_validator->method('validateDateRules')->willReturn(true);
 
         $this->assertFalse($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
     }
