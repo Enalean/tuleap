@@ -24,74 +24,56 @@ namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
 use Codendi_Diff;
 use Codendi_UnifiedDiffFormatter;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use HTTPRequest;
+use LogicException;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_Text;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
-final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TextDiffRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_Text
-     */
-    private $field_text;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact_Changeset
-     */
-    private $previous_changeset;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact_Changeset
-     */
-    private $next_changeset;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BaseLayout
-     */
-    private $layout;
-
-    /**
-     * @var TextDiffRetriever
-     */
-    private $text_diff_retriever;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ChangesetsForDiffRetriever
-     */
-    private $changesets_for_diff_retriever;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private Tracker_FormElement_Field_Text $field_text;
+    private Tracker_Artifact_Changeset $previous_changeset;
+    private Tracker_Artifact_Changeset $next_changeset;
+    private BaseLayout&MockObject $layout;
+    private TextDiffRetriever $text_diff_retriever;
+    private ChangesetsForDiffRetriever&MockObject $changesets_for_diff_retriever;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
     protected function setUp(): void
     {
-        $this->artifact_factory              = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->changesets_for_diff_retriever = \Mockery::mock(ChangesetsForDiffRetriever::class);
-
-        $this->layout = \Mockery::mock(BaseLayout::class);
+        $this->artifact_factory              = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->changesets_for_diff_retriever = $this->createMock(ChangesetsForDiffRetriever::class);
+        $this->layout                        = $this->createMock(BaseLayout::class);
 
         $this->text_diff_retriever = new TextDiffRetriever(
             $this->artifact_factory,
             $this->changesets_for_diff_retriever,
-            new DiffProcessor(new \Codendi_UnifiedDiffFormatter())
+            new DiffProcessor(new Codendi_UnifiedDiffFormatter())
         );
 
-        $this->next_changeset     = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $this->previous_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $this->field_text         = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
+        $this->next_changeset     = ChangesetTestBuilder::aChangeset(30)->build();
+        $this->previous_changeset = ChangesetTestBuilder::aChangeset(31)->build();
+        $this->field_text         = TextFieldBuilder::aTextField(452)->build();
     }
 
     public function testItThrowsIfUserCanNotReadArtifact(): void
     {
-        $user    = \Mockery::mock(\PFUser::class);
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->getAnArtifact(123, $user, false);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $request = new HTTPRequest();
+        $request->setCurrentUser($user);
+        $this->buildAnArtifact($user, false);
 
         $this->expectException(NotFoundException::class);
 
@@ -109,22 +91,24 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenChangesetIsNotATypeText(): void
     {
-        $user    = \Mockery::mock(\PFUser::class);
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->getAnArtifact(123, $user, true);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $request = new HTTPRequest();
+        $request->setCurrentUser($user);
+        $this->buildAnArtifact($user, true);
 
-        $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Integer::class);
-        $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
+        $this->next_changeset->setFieldValue(
+            $this->field_text,
+            ChangesetValueIntegerTestBuilder::aValue(1, $this->next_changeset, $this->field_text)->build(),
+        );
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
             $this->field_text,
             $this->previous_changeset
         );
-        $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
+        $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
 
         $this->text_diff_retriever->process(
             $request,
@@ -140,20 +124,22 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEmptyWhenLastChangesetDoesNotExists(): void
     {
-        $user    = \Mockery::mock(\PFUser::class);
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->getAnArtifact(123, $user, true);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $request = new HTTPRequest();
+        $request->setCurrentUser($user);
+        $this->buildAnArtifact($user, true);
 
         $previous_changeset = null;
 
-        $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
+        $this->next_changeset->setFieldValue(
+            $this->field_text,
+            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)->build(),
+        );
 
         $changesets_for_diff = new ChangesetsForDiff($this->next_changeset, $this->field_text, $previous_changeset);
-        $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
+        $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
-        $this->layout->shouldReceive('sendJSON')->once()->with('');
+        $this->layout->expects(self::once())->method('sendJSON')->with('');
 
         $this->text_diff_retriever->process(
             $request,
@@ -169,24 +155,25 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEmptyWhenLastChangesetDidNotHaveAVValue(): void
     {
-        $user    = \Mockery::mock(\PFUser::class);
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->getAnArtifact(123, $user, true);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $request = new HTTPRequest();
+        $request->setCurrentUser($user);
+        $this->buildAnArtifact($user, true);
 
-        $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
-
-        $this->previous_changeset->shouldReceive('getValue')->andReturnNull();
+        $this->next_changeset->setFieldValue(
+            $this->field_text,
+            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)->build(),
+        );
+        $this->previous_changeset->setFieldValue($this->field_text, null);
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
             $this->field_text,
             $this->previous_changeset
         );
-        $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
+        $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
-        $this->layout->shouldReceive('sendJSON')->once()->with('');
+        $this->layout->expects(self::once())->method('sendJSON')->with('');
 
         $this->text_diff_retriever->process(
             $request,
@@ -202,30 +189,31 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheDiffForTextFormat(): void
     {
-        $user    = \Mockery::mock(\PFUser::class);
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->getAnArtifact(123, $user, true);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $request = new HTTPRequest();
+        $request->setCurrentUser($user);
+        $this->buildAnArtifact($user, true);
 
-        $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
-        $next_changeset_value->shouldReceive('getText')->andReturn('this is a test');
-
-        $previous_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $this->previous_changeset->shouldReceive('getValue')->andReturn($previous_changeset_value);
-        $previous_changeset_value->shouldReceive('getText')->andReturn('this is not a test');
+        $this->next_changeset->setFieldValue(
+            $this->field_text,
+            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)->withValue('this is a test')->build(),
+        );
+        $this->previous_changeset->setFieldValue(
+            $this->field_text,
+            ChangesetValueTextTestBuilder::aValue(1, $this->previous_changeset, $this->field_text)->withValue('this is not a test')->build(),
+        );
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
             $this->field_text,
             $this->previous_changeset
         );
-        $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
+        $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
         $diff      = new Codendi_Diff(['this is not a test'], ['this is a test']);
         $formatter = new Codendi_UnifiedDiffFormatter();
 
-        $this->layout->shouldReceive('sendJSON')->once()->with(PHP_EOL . $formatter->format($diff));
+        $this->layout->expects(self::once())->method('sendJSON')->with(PHP_EOL . $formatter->format($diff));
 
         $this->text_diff_retriever->process(
             $request,
@@ -241,29 +229,29 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheDiffForHTMLFormat(): void
     {
-        $user    = \Mockery::mock(\PFUser::class);
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->getAnArtifact(123, $user, true);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $request = new HTTPRequest();
+        $request->setCurrentUser($user);
+        $this->buildAnArtifact($user, true);
 
-        $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
-        $next_changeset_value->shouldReceive('getText')->andReturn('this is a test');
-
-        $previous_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
-        $this->previous_changeset->shouldReceive('getValue')->andReturn($previous_changeset_value);
-        $previous_changeset_value->shouldReceive('getText')->andReturn('this is not a test');
+        $this->next_changeset->setFieldValue(
+            $this->field_text,
+            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)->withValue('this is a test')->build(),
+        );
+        $this->previous_changeset->setFieldValue(
+            $this->field_text,
+            ChangesetValueTextTestBuilder::aValue(1, $this->previous_changeset, $this->field_text)->withValue('this is not a test')->build(),
+        );
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
             $this->field_text,
             $this->previous_changeset
         );
-        $this->changesets_for_diff_retriever->shouldReceive('retrieveChangesets')->andReturn($changesets_for_diff);
+        $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
-        $next_changeset_value->shouldReceive('getFormattedDiff')->once()->andReturn('this is a formatted diff');
-
-        $this->layout->shouldReceive('sendJSON')->once()->with('this is a formatted diff');
+        $this->layout->expects(self::once())->method('sendJSON')
+            ->with('<div class="block"><div class="difftext"><div class="original"><tt class="prefix">-</tt>this is <del>not </del>a test&nbsp;</div></div><div class="difftext"><div class="final"><tt class="prefix">+</tt>this is a test&nbsp;</div></div></div>');
 
         $this->text_diff_retriever->process(
             $request,
@@ -277,14 +265,15 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function getAnArtifact(int $artifact_id, \PFUser $user, bool $user_can_view): void
+    private function buildAnArtifact(PFUser $user, bool $user_can_view): void
     {
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with($artifact_id)
-            ->andReturn($artifact);
-
-        $artifact->shouldReceive('userCanView')->with($user)->once()->andReturn($user_can_view);
+        $builder = ArtifactTestBuilder::anArtifact(123);
+        if ($user_can_view) {
+            $builder->userCanView($user);
+        } else {
+            $builder->userCannotView($user);
+        }
+        $artifact = $builder->build();
+        $this->artifact_factory->expects(self::once())->method('getArtifactById')->with(123)->willReturn($artifact);
     }
 }

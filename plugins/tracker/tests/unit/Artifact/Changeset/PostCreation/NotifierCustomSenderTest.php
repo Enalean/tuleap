@@ -19,68 +19,62 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
-use ColinODell\PsrTestLogger\TestLogger;
+use BaseLanguage;
 use ConfigNotificationAssignedTo;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use Tracker;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_MailGateway_RecipientFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\SendMailStub;
 use UserHelper;
 
-class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NotifierCustomSenderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var String
-     * */
-    private $default_format;
-    private $recipients_manager;
-    private $mail_gateway_config;
-    private $recipient_factory;
-    private $mail_sender;
-    private $custom_email_sender;
-    private $mail_notification_task;
-    private $user_realname;
-    private $default_format_var;
-    private $default_format_value;
+    private string $default_format;
+    private RecipientsManager&MockObject $recipients_manager;
+    private ConfigNotificationEmailCustomSender&MockObject $custom_email_sender;
+    private EmailNotificationTask $mail_notification_task;
+    private string $user_realname;
+    private string $default_format_var;
+    private string $default_format_value;
 
     public function setUp(): void
     {
-        parent::setUp();
+        $this->recipients_manager = $this->createMock(RecipientsManager::class);
 
-        $logger                   = \Mockery::mock(LoggerInterface::class);
-        $this->recipients_manager = \Mockery::mock(RecipientsManager::class);
+        $mail_gateway_config = $this->createMock(MailGatewayConfig::class);
+        $mail_gateway_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $mail_gateway_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
 
-        $this->mail_gateway_config = \Mockery::mock(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
-        $this->mail_gateway_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturn(false);
-        $this->mail_gateway_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturn(false);
+        $config_notification_assigned_to = $this->createMock(ConfigNotificationAssignedTo::class);
+        $config_notification_assigned_to->method('isAssignedToSubjectEnabled')->willReturn(false);
 
-        $config_notification_assigned_to = \Mockery::mock(ConfigNotificationAssignedTo::class);
-        $config_notification_assigned_to->shouldReceive('isAssignedToSubjectEnabled')->andReturn(false);
-
-        $this->recipient_factory   = \Mockery::mock(Tracker_Artifact_MailGateway_RecipientFactory::class);
-        $user_helper               = \Mockery::spy(UserHelper::class);
-        $this->mail_sender         = \Mockery::mock(MailSender::class);
-        $this->custom_email_sender = \Mockery::mock(\Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender::class);
+        $this->custom_email_sender = $this->createMock(ConfigNotificationEmailCustomSender::class);
 
         $this->mail_notification_task = new EmailNotificationTask(
-            $logger,
-            $user_helper,
+            new NullLogger(),
+            $this->createMock(UserHelper::class),
             $this->recipients_manager,
-            $this->recipient_factory,
-            $this->mail_gateway_config,
-            $this->mail_sender,
+            $this->createMock(Tracker_Artifact_MailGateway_RecipientFactory::class),
+            $mail_gateway_config,
+            SendMailStub::build(),
             $config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
@@ -92,78 +86,68 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_format_value = $this->user_realname;
     }
 
-    private function getMessagesForRecipients($custom_sender_enabled)
+    private function getMessagesForRecipients(bool $custom_sender_enabled): array
     {
-        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getId')->andReturn(66);
-        $changeset->shouldReceive('mailDiffToPrevious')->andReturn(false);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getId')->willReturn(66);
+        $changeset->method('mailDiffToPrevious')->willReturn(false);
+        $changeset->method('getComment')->willReturn($this->createMock(Tracker_Artifact_Changeset_Comment::class));
 
-        $changeset->shouldReceive('getComment')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset_Comment::class));
-
-        $this->recipients_manager->shouldReceive('getRecipients')->andReturn([
-            'a_user' => true,
+        $this->recipients_manager->method('getRecipients')->willReturn([
+            'a_user'            => true,
             'email@example.com' => true,
-            'comment1' => true,
+            'comment1'          => true,
         ]);
 
-        $language = $this->createStub(\BaseLanguage::class);
+        $language = $this->createStub(BaseLanguage::class);
         $language->method('getText')->willReturn('');
 
-        $example = \Mockery::spy(PFUser::class);
-        $example->shouldReceive('toRow')->andReturn(
-            [
-                'user_name' => 'abc',
-                'realname' => $this->user_realname,
-                'language' => $language,
-                'email' => 'email@example.com',
-            ]
-        );
-        $example->shouldReceive('getRealname')->andReturn($this->user_realname);
-        $example->shouldReceive('getEmail')->andReturn('email@example.com');
-        $example->shouldReceive('getLanguage')->andReturn($language);
-        $example->shouldReceive('getTimezone')->andReturn('Europe/Paris');
+        $user = UserTestBuilder::anActiveUser()
+            ->withUserName('abc')
+            ->withRealName($this->user_realname)
+            ->withLanguage($language)
+            ->withEmail('email@example.com')
+            ->withTimezone('Europe/Paris')
+            ->build();
 
-        $changeset->shouldReceive('getSubmitter')->andReturn($example);
-        $this->recipients_manager->shouldReceive('getUserFromRecipientName')->andReturn($example);
+        $changeset->method('getSubmitter')->willReturn($user);
+        $this->recipients_manager->method('getUserFromRecipientName')->willReturn($user);
 
-        $tracker = \Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getItemName')->andReturn('story');
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('story')->build();
 
-        $changeset->shouldReceive('getTracker')->andReturn($tracker);
+        $changeset->method('getTracker')->willReturn($tracker);
 
-        $artifact = \Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(666);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('fetchMailTitle')->andReturn('The title in the mail');
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(666);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('fetchMailTitle')->willReturn('The title in the mail');
 
-        $changeset->shouldReceive('getArtifact')->andReturn($artifact);
+        $changeset->method('getArtifact')->willReturn($artifact);
 
-        $this->custom_email_sender->shouldReceive('getCustomSender')->andReturn(
-            [
-                'format' => $this->default_format,
-                'enabled' => $custom_sender_enabled,
-            ]
-        );
+        $this->custom_email_sender->method('getCustomSender')->willReturn([
+            'format'  => $this->default_format,
+            'enabled' => $custom_sender_enabled,
+        ]);
 
-        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true, new NullLogger()), false, new TestLogger());
+        $logger = new NullLogger();
+        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true, $logger), false, $logger);
     }
 
-    public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled()
+    public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled(): void
     {
         $messages  = $this->getMessagesForRecipients(true);
         $formatter = new ConfigNotificationEmailCustomSenderFormatter([$this->default_format_var => $this->default_format_value]);
         foreach ($messages as $message) {
-            $this->assertNotEquals(strpos($message['from'], $formatter->formatString($this->default_format)), false);
+            self::assertNotEquals(false, strpos($message['from'], $formatter->formatString($this->default_format)));
         }
     }
 
-    public function testDoesNotFetchCustomSendersWhenDisabled()
+    public function testDoesNotFetchCustomSendersWhenDisabled(): void
     {
         $messages  = $this->getMessagesForRecipients(false);
         $formatter = new ConfigNotificationEmailCustomSenderFormatter([$this->default_format_var => $this->default_format_value]);
         foreach ($messages as $message) {
-            $this->assertEquals(strpos($message['from'], $formatter->formatString($this->default_format)), false);
+            self::assertFalse(strpos($message['from'], $formatter->formatString($this->default_format)));
         }
     }
 }
