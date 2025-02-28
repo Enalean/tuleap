@@ -20,23 +20,24 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactAttachmentExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
 
-    /** @var ZipArchive */
-    private $archive;
+    private \Tuleap\Project\XML\Export\ZipArchive $archive;
 
-    /** @var string */
-    private $archive_path;
+    private string $archive_path;
 
-    /** @var string */
-    private $file01_path;
+    private string $file01_path;
 
-    /** @var string */
-    private $extraction_path;
+    private string $extraction_path;
 
     protected function setUp(): void
     {
@@ -50,20 +51,23 @@ final class ArtifactAttachmentExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsFileIntoArchive(): void
     {
-        $tracker    = Mockery::spy(Tracker::class);
-        $file_field = \Mockery::spy(\Tracker_FormElement_Field_File::class);
-        $file_info  = \Mockery::spy(\Tracker_FileInfo::class)->shouldReceive('getPath')->andReturns($this->file01_path)->getMock();
-        $file_info->shouldReceive('getId')->andReturns(1);
+        $tracker    = TrackerTestBuilder::aTracker()->build();
+        $file_field = FileFieldBuilder::aFileField(1001)->build();
+        $file_info  = $this->createMock(\Tracker_FileInfo::class);
+        $file_info->method('getPath')->willReturn($this->file01_path);
+        $file_info->method('getId')->willReturn(1);
 
-        $files      = [$file_info];
-        $changeset  = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $file_value = new Tracker_Artifact_ChangesetValue_File(1, $changeset, $file_field, 1, $files);
-        $changeset->shouldReceive('getValue')->with($file_field)->andReturns($file_value);
+        $files     = [$file_info];
+        $changeset = ChangesetTestBuilder::aChangeset(101)->build();
 
-        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getTracker')->andReturns($tracker)->getMock();
-        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
+        $file_value = ChangesetValueFileTestBuilder::aValue(1, $changeset, $file_field)->withFiles($files)->build();
+        $changeset->setFieldValue($file_field, $file_value);
 
-        $form_element_factory = Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFileFields')->with($tracker)->andReturns([$file_field])->getMock();
+
+        $artifact = ArtifactTestBuilder::anArtifact(101)->inTracker($tracker)->withChangesets($changeset)->build();
+
+        $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $form_element_factory->method('getUsedFileFields')->with($tracker)->willReturn([$file_field]);
 
         $exporter = new Tracker_XML_Exporter_ArtifactAttachmentExporter($form_element_factory);
 

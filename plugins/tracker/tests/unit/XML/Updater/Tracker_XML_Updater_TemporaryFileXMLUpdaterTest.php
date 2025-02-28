@@ -23,13 +23,9 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_Updater_TemporaryFileXMLUpdater $updater;
 
-    /** @var Tracker_XML_Updater_TemporaryFileXMLUpdater */
-    private $updater;
-
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private SimpleXMLElement $artifact_xml;
 
     protected function setUp(): void
     {
@@ -45,9 +41,13 @@ final class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends \Tuleap\Test
                 . '  </file>'
                 . '</artifact>');
 
-        $temporary_file_creator = \Mockery::spy(\Tracker_XML_Updater_TemporaryFileCreator::class);
-        $temporary_file_creator->shouldReceive('createTemporaryFile')->with('/path/to/toto.txt')->andReturns('/tmp/toto.txt');
-        $temporary_file_creator->shouldReceive('createTemporaryFile')->with('/path/to/Spec.doc')->andReturns('/tmp/Spec.doc');
+        $temporary_file_creator = $this->createMock(\Tracker_XML_Updater_TemporaryFileCreator::class);
+        $temporary_file_creator
+            ->method('createTemporaryFile')
+            ->willReturnCallback(static fn (string $path) => match ($path) {
+                '/path/to/toto.txt' => '/tmp/toto.txt',
+                '/path/to/Spec.doc' => '/tmp/Spec.doc',
+            });
 
         $this->updater = new Tracker_XML_Updater_TemporaryFileXMLUpdater($temporary_file_creator);
     }

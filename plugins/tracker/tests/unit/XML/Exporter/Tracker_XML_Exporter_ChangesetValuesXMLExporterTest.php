@@ -25,8 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /** @var Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor */
     private $visitor;
 
@@ -54,10 +52,10 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\
         parent::setUp();
         $this->artifact_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml   = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->visitor         = \Mockery::spy(\Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor::class);
+        $this->visitor         = $this->createMock(\Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor::class);
         $this->values_exporter = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($this->visitor, false);
 
-        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
 
         $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', $changeset, '*', '*', '*');
         $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', $changeset, '*', '*', '*');
@@ -66,14 +64,26 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\
             $this->float_changeset_value,
         ];
 
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
     }
 
     public function testItCallsTheVisitorForEachChangesetValue(): void
     {
-        $this->visitor->shouldReceive('export')->times(2);
-        $this->visitor->shouldReceive('export')->with($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->int_changeset_value)->ordered();
-        $this->visitor->shouldReceive('export')->with($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->float_changeset_value)->ordered();
+        $matcher = $this->exactly(2);
+        $this->visitor
+            ->expects($matcher)
+            ->method('export')
+            ->willReturnCallback(
+                fn (
+                    SimpleXMLElement $artifact_xml,
+                    SimpleXMLElement $changeset_xml,
+                    Artifact $artifact,
+                    Tracker_Artifact_ChangesetValue $changeset_value,
+                ) => match (true) {
+                    $changeset_value === $this->int_changeset_value && $matcher->numberOfInvocations() === 1,
+                    $changeset_value === $this->float_changeset_value && $matcher->numberOfInvocations() === 2 => true
+                }
+            );
 
         $this->values_exporter->exportSnapshot(
             $this->artifact_xml,
@@ -85,9 +95,21 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\
 
     public function testItDoesNotCrashWhenExportingASnapshotIfAChangesetValueIsNull(): void
     {
-        $this->visitor->shouldReceive('export')->times(2);
-        $this->visitor->shouldReceive('export')->with($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->int_changeset_value)->ordered();
-        $this->visitor->shouldReceive('export')->with($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->float_changeset_value)->ordered();
+        $matcher = $this->exactly(2);
+        $this->visitor
+            ->expects($matcher)
+            ->method('export')
+            ->willReturnCallback(
+                fn (
+                    SimpleXMLElement $artifact_xml,
+                    SimpleXMLElement $changeset_xml,
+                    Artifact $artifact,
+                    Tracker_Artifact_ChangesetValue $changeset_value,
+                ) => match (true) {
+                    $changeset_value === $this->int_changeset_value && $matcher->numberOfInvocations() === 1,
+                    $changeset_value === $this->float_changeset_value && $matcher->numberOfInvocations() === 2 => true
+                }
+            );
 
         $this->values_exporter->exportSnapshot(
             $this->artifact_xml,
@@ -99,9 +121,21 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\
 
     public function testItDoesNotCrashWhenExportingChangedFieldsIfAChangesetValueIsNull(): void
     {
-        $this->visitor->shouldReceive('export')->times(2);
-        $this->visitor->shouldReceive('export')->with($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->int_changeset_value)->ordered();
-        $this->visitor->shouldReceive('export')->with($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->float_changeset_value)->ordered();
+        $matcher = $this->exactly(2);
+        $this->visitor
+            ->expects($matcher)
+            ->method('export')
+            ->willReturnCallback(
+                fn (
+                    SimpleXMLElement $artifact_xml,
+                    SimpleXMLElement $changeset_xml,
+                    Artifact $artifact,
+                    Tracker_Artifact_ChangesetValue $changeset_value,
+                ) => match (true) {
+                    $changeset_value === $this->int_changeset_value && $matcher->numberOfInvocations() === 1,
+                    $changeset_value === $this->float_changeset_value && $matcher->numberOfInvocations() === 2 => true
+                }
+            );
 
         $this->values_exporter->exportChangedFields(
             $this->artifact_xml,

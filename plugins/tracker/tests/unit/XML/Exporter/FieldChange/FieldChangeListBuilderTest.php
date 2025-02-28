@@ -23,20 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Exporter\FieldChange;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
 final class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FieldChangeListBuilder
-     */
-    private $builder;
+    private FieldChangeListBuilder $builder;
 
     protected function setUp(): void
     {
@@ -44,7 +37,7 @@ final class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->builder = new FieldChangeListBuilder(
             new XML_SimpleXMLCDATAFactory(),
-            Mockery::mock(UserXMLExporter::class)
+            $this->createMock(UserXMLExporter::class)
         );
     }
 

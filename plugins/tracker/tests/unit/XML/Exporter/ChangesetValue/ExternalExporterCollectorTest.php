@@ -23,22 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
-use Mockery;
-
 final class ExternalExporterCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItCollectExternalExporter(): void
     {
-        $changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $event_manager   = \Mockery::mock(\EventManager::class);
+        $changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
+        $event_manager   = $this->createMock(\EventManager::class);
 
         $collector = new ExternalExporterCollector(
             $event_manager
         );
 
-        $event_manager->shouldReceive('processEvent')->withArgs([Mockery::type(GetExternalExporter::class)])->once();
+        $event_manager->expects($this->once())
+            ->method('processEvent')
+            ->with(self::isInstanceOf(GetExternalExporter::class));
         $collector->collectExporter($changeset_value);
     }
 }

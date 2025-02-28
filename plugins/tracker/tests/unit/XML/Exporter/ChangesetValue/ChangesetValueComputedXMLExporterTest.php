@@ -23,49 +23,37 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
+use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
 final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Artifact&MockObject $artifact;
 
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
+    private Tracker_FormElement_Field_Computed&MockObject $field;
 
-    /**
-     * @var \Tracker_FormElement_Field_Computed
-     */
-    private $field;
+    private SimpleXMLElement $artifact_xml;
 
-    /**
-     * @var SimpleXMLElement
-     */
-    private $artifact_xml;
+    private SimpleXMLElement $changeset_value_xml;
 
-    /**
-     * @var SimpleXMLElement
-     */
-    private $changeset_value_xml;
-    /**
-     * @var Tracker_Artifact_Changeset&\Mockery\MockInterface
-     */
-    private $changeset;
+    private Tracker_Artifact_Changeset&MockObject $changeset;
     private PFUser $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artifact            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->field               = \Mockery::spy(\Tracker_FormElement_Field_Computed::class);
-        $this->field               = $this->field->shouldReceive('getName')->andReturns('capacity')->getMock();
+        $this->artifact            = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->field               = $this->createMock(\Tracker_FormElement_Field_Computed::class);
         $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_value_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->changeset           = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $this->changeset           = $this->createMock(\Tracker_Artifact_Changeset::class);
         $this->user                = new PFUser(['user_id' => 101, 'language_id' => 'en']);
+
+        $this->field->method('getName')->willReturn('capacity');
     }
 
     public function testItCreatesAComputedNode(): void
@@ -97,10 +85,10 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $exporter        = new ChangesetValueComputedXMLExporter($this->user, true);
         $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null, false);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);
-        $this->artifact->shouldReceive('getChangesets')->andReturns([$this->changeset]);
-        $this->changeset->shouldReceive('getValue')->andReturns($changeset_value);
-        $this->field->shouldReceive('getComputedValue')->andReturns(1.5);
+        $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
+        $this->artifact->method('getChangesets')->willReturn([$this->changeset]);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
+        $this->field->method('getComputedValue')->willReturn(1.5);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -113,15 +101,15 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     {
         $exporter                 = new ChangesetValueComputedXMLExporter($this->user, true);
         $changeset_value          = new ChangesetValueComputed(2, $this->changeset, $this->field, true, 1.5, true);
-        $previous_changeset       = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $previous_changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
         $previous_changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null, false);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);
-        $this->artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
-        $this->artifact->shouldReceive('getChangesets')->andReturns([$previous_changeset, $this->changeset]);
-        $this->changeset->shouldReceive('getValue')->andReturns($changeset_value);
-        $previous_changeset->shouldReceive('getValue')->andReturns($previous_changeset_value);
-        $this->field->shouldReceive('getComputedValue')->andReturns(1.5);
+        $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
+        $this->artifact->method('getPreviousChangeset')->willReturn($previous_changeset);
+        $this->artifact->method('getChangesets')->willReturn([$previous_changeset, $this->changeset]);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
+        $previous_changeset->method('getValue')->willReturn($previous_changeset_value);
+        $this->field->method('getComputedValue')->willReturn(1.5);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -134,14 +122,14 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     {
         $exporter           = new ChangesetValueComputedXMLExporter($this->user, true);
         $changeset_value    = new ChangesetValueComputed(2, $this->changeset, $this->field, true, 1.5, true);
-        $previous_changeset = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $previous_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);
-        $this->artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
-        $this->artifact->shouldReceive('getChangesets')->andReturns([$previous_changeset, $this->changeset]);
-        $this->changeset->shouldReceive('getValue')->andReturns($changeset_value);
-        $previous_changeset->shouldReceive('getValue')->andReturns(null);
-        $this->field->shouldReceive('getComputedValue')->andReturns(1.5);
+        $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
+        $this->artifact->method('getPreviousChangeset')->willReturn($previous_changeset);
+        $this->artifact->method('getChangesets')->willReturn([$previous_changeset, $this->changeset]);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
+        $previous_changeset->method('getValue')->willReturn(null);
+        $this->field->method('getComputedValue')->willReturn(1.5);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -152,12 +140,12 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItOnlyExportsLastChangesetAsAManualValueInArchiveMode(): void
     {
-        $current_changeset = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $current_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $exporter          = new ChangesetValueComputedXMLExporter($this->user, true);
         $changeset_value   = new ChangesetValueComputed(1, $current_changeset, $this->field, true, null, false);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);
-        $this->artifact->shouldReceive('getChangesets')->andReturns([$current_changeset, $this->changeset]);
+        $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
+        $this->artifact->method('getChangesets')->willReturn([$current_changeset, $this->changeset]);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -168,16 +156,16 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItDoesNotExportLastChangesetInArchiveModeIfAlreadyInManualMode(): void
     {
-        $previous_changeset       = \Mockery::spy(Tracker_Artifact_Changeset::class);
+        $previous_changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
         $exporter                 = new ChangesetValueComputedXMLExporter($this->user, true);
         $changeset_value          = new ChangesetValueComputed(2, $this->changeset, $this->field, true, 1, true);
         $previous_changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1, true);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);
-        $this->artifact->shouldReceive('getChangesets')->andReturns([$previous_changeset, $this->changeset]);
-        $this->artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
-        $this->changeset->shouldReceive('getValue')->andReturns($changeset_value);
-        $previous_changeset->shouldReceive('getValue')->andReturns($previous_changeset_value);
+        $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
+        $this->artifact->method('getChangesets')->willReturn([$previous_changeset, $this->changeset]);
+        $this->artifact->method('getPreviousChangeset')->willReturn($previous_changeset);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
+        $previous_changeset->method('getValue')->willReturn($previous_changeset_value);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 

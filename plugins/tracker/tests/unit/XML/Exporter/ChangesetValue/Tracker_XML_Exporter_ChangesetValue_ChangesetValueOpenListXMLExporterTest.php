@@ -20,25 +20,21 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter */
-    private $exporter;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private Tracker_Artifact_ChangesetValue_OpenList&MockObject $changeset_value;
 
-    /** @var Tracker_Artifact_ChangesetValue_OpenList */
-    private $changeset_value;
-
-    /** @var Tracker_FormElement_Field */
-    private $field;
+    private Tracker_FormElement_Field $field;
 
     protected function setUp(): void
     {
@@ -46,35 +42,39 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $user              = new PFUser([
+        $user         = new PFUser([
             'user_id' => 112,
             'language_id' => 'en',
             'ldap_id' => 'ldap_01',
         ]);
-        $user_manager      = \Mockery::spy(\UserManager::class)->shouldReceive('getUserById')->with(112)->andReturns($user)->getMock();
-        $user_xml_exporter = new UserXMLExporter($user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getUserById')->with(112)->willReturn($user);
+        $user_xml_exporter = new UserXMLExporter($user_manager, $this->createMock(UserXMLExportedCollection::class));
 
         $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter($user_xml_exporter);
     }
 
     private function setUpUserTests(): void
     {
-        $bind       = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Users::class)->shouldReceive('getType')->andReturns('users')->getMock();
-        $open_value = \Mockery::spy(\Tracker_FormElement_Field_List_OpenValue::class)->shouldReceive('getLabel')->andReturns('email@tuleap.org')->getMock();
+        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Users::class);
+        $bind->method('getType')->willReturn('users');
+        $open_value = $this->createMock(Tracker_FormElement_Field_List_OpenValue::class);
+        $open_value->method('getLabel')->willReturn('email@tuleap.org');
 
 
-        $this->field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class)->shouldReceive('getBind')->andReturns($bind)->getMock();
-        $this->field->shouldReceive('getName')->andReturns('CC');
-        $this->field->shouldReceive('getOpenValueById')->andReturns($open_value);
+        $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $this->field->method('getBind')->willReturn($bind);
+        $this->field->method('getName')->willReturn('CC');
+        $this->field->method('getOpenValueById')->willReturn($open_value);
 
-        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_OpenList::class);
-        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
+        $this->changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_OpenList::class);
+        $this->changeset_value->method('getField')->willReturn($this->field);
     }
 
     public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNodeUser(): void
     {
         $this->setUpUserTests();
-        $this->changeset_value->shouldReceive('getValue')->andReturns([
+        $this->changeset_value->method('getValue')->willReturn([
             'o14',
             'b112',
         ]);
@@ -82,7 +82,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $this->changeset_value
         );
 
@@ -97,26 +97,29 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
 
     private function setUpUGroupsTest(): void
     {
-        $bind       = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Ugroups::class)->shouldReceive('getType')->andReturns('ugroups')->getMock();
-        $open_value = \Mockery::spy(\Tracker_FormElement_Field_List_OpenValue::class)->shouldReceive('getLabel')->andReturns('new_ugroup')->getMock();
+        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Ugroups::class);
+        $bind->method('getType')->willReturn('ugroups');
+        $open_value = $this->createMock(Tracker_FormElement_Field_List_OpenValue::class);
+        $open_value->method('getLabel')->willReturn('new_ugroup');
 
-        $this->field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class)->shouldReceive('getBind')->andReturns($bind)->getMock();
-        $this->field->shouldReceive('getName')->andReturns('ugroup_binded');
-        $this->field->shouldReceive('getOpenValueById')->andReturns($open_value);
+        $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $this->field->method('getBind')->willReturn($bind);
+        $this->field->method('getName')->willReturn('ugroup_binded');
+        $this->field->method('getOpenValueById')->willReturn($open_value);
 
-        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_OpenList::class);
-        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
+        $this->changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_OpenList::class);
+        $this->changeset_value->method('getField')->willReturn($this->field);
     }
 
     public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNodeUGroup(): void
     {
         $this->setUpUGroupsTest();
-        $this->changeset_value->shouldReceive('getValue')->andReturns(['o14', 'b112']);
+        $this->changeset_value->method('getValue')->willReturn(['o14', 'b112']);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $this->changeset_value
         );
 
@@ -131,26 +134,29 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
 
     private function setUpStaticTest(): void
     {
-        $bind       = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class)->shouldReceive('getType')->andReturns('static')->getMock();
-        $open_value = \Mockery::spy(\Tracker_FormElement_Field_List_OpenValue::class)->shouldReceive('getLabel')->andReturns('keyword01')->getMock();
+        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind->method('getType')->willReturn('static');
+        $open_value = $this->createMock(Tracker_FormElement_Field_List_OpenValue::class);
+        $open_value->method('getLabel')->willReturn('keyword01');
 
-        $this->field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class)->shouldReceive('getBind')->andReturns($bind)->getMock();
-        $this->field->shouldReceive('getName')->andReturns('keywords');
-        $this->field->shouldReceive('getOpenValueById')->andReturns($open_value);
+        $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $this->field->method('getBind')->willReturn($bind);
+        $this->field->method('getName')->willReturn('keywords');
+        $this->field->method('getOpenValueById')->willReturn($open_value);
 
-        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_OpenList::class);
-        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
+        $this->changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_OpenList::class);
+        $this->changeset_value->method('getField')->willReturn($this->field);
     }
 
     public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNode(): void
     {
         $this->setUpStaticTest();
-        $this->changeset_value->shouldReceive('getValue')->andReturns(['o14', 'b112']);
+        $this->changeset_value->method('getValue')->willReturn(['o14', 'b112']);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(101)->build(),
             $this->changeset_value
         );
 

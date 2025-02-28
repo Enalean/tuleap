@@ -18,67 +18,53 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_XML_Exporter_ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private Tracker_XML_Exporter_ArtifactXMLExporter $exporter;
 
-    /** @var Tracker_XML_Exporter_ArtifactXMLExporter */
-    private $exporter;
+    private SimpleXMLElement $artifacts_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifacts_xml;
+    private Tracker_XML_Exporter_ChangesetXMLExporter&MockObject $changeset_exporter;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_XML_Exporter_ChangesetXMLExporter */
-    private $changeset_exporter;
+    private Tracker_Artifact_Changeset $changeset;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset */
-    private $changeset;
+    private FileInfoXMLExporter&MockObject $file_exporter;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FileInfoXMLExporter  */
-    private $file_exporter;
-
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact */
-    private $artifact;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->artifacts_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
 
-        $this->artifact = Mockery::mock(Artifact::class)
-            ->shouldReceive(['getId' => 123, 'getTrackerId' => 456])
-            ->getMock();
+        $tracker        = TrackerTestBuilder::aTracker()->withId(456)->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(123)->inTracker($tracker)->build();
 
-        $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class)
-            ->shouldReceive(['getId' => 66, 'getArtifact' => $this->artifact])
-            ->getMock();
+        $this->changeset    = ChangesetTestBuilder::aChangeset(66)->ofArtifact($this->artifact)->build();
+        $previous_changeset = ChangesetTestBuilder::aChangeset(67)->ofArtifact($this->artifact)->build();
+        $this->artifact->setChangesets([$previous_changeset, $this->changeset]);
 
-        $this->changeset_exporter = Mockery::mock(Tracker_XML_Exporter_ChangesetXMLExporter::class);
-        $this->file_exporter      = Mockery::mock(FileInfoXMLExporter::class);
+        $this->changeset_exporter = $this->createMock(Tracker_XML_Exporter_ChangesetXMLExporter::class);
+        $this->file_exporter      = $this->createMock(FileInfoXMLExporter::class);
 
         $this->exporter = new Tracker_XML_Exporter_ArtifactXMLExporter(
             $this->changeset_exporter,
             $this->file_exporter
         );
-
-        $previous_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->artifact
-            ->shouldReceive('getChangesets')
-            ->andReturn([
-                $previous_changeset,
-                $this->changeset,
-            ]);
     }
 
     public function testAppendsArtifactNodeToArtifactsNode(): void
     {
-        $this->file_exporter->shouldReceive('export')->once();
-        $this->changeset_exporter->shouldReceive('exportWithoutComments')->once();
+        $this->file_exporter->expects($this->once())->method('export');
+        $this->changeset_exporter->expects($this->once())->method('exportWithoutComments');
 
         $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->changeset);
 
@@ -89,8 +75,8 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\
 
     public function testExportsTheFullHistory(): void
     {
-        $this->file_exporter->shouldReceive('export')->once();
-        $this->changeset_exporter->shouldReceive('exportFullHistory')->twice();
+        $this->file_exporter->expects($this->once())->method('export');
+        $this->changeset_exporter->expects($this->exactly(2))->method('exportFullHistory');
 
         $this->exporter->exportFullHistory($this->artifacts_xml, $this->artifact);
     }
