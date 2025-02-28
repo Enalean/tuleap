@@ -6,7 +6,7 @@
     <form method="post" action="/plugins/agiledashboard/?group_id={{ project_id }}&planning_id={{ planning_id }}&action=update">
         <p>
             <label for="planning_name">{{# dgettext }}tuleap-agiledashboard | Name{{/ dgettext }}</label>
-            <input type="text" name="planning[name]" id="planning_name" value="{{ planning_name }}" />
+            <input type="text" name="planning[name]" id="planning_name" value="{{ planning_name }}" data-test="planning-name-input" />
         </p>
         <p>
             <label for="planning_backlog_title">{{# dgettext }}tuleap-agiledashboard | Backlog title{{/ dgettext }}</label>
@@ -64,7 +64,7 @@
         {{{ cardwall_admin }}}
 
         <p>
-            <input class="btn btn-primary" type="submit" value="{{# dgettext }}tuleap-agiledashboard | Submit{{/ dgettext }}"/>
+            <input class="btn btn-primary" data-test="update-planning-configuration" type="submit" value="{{# dgettext }}tuleap-agiledashboard | Submit{{/ dgettext }}"/>
         </p>
     </form>
 </div>

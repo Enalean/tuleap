@@ -120,6 +120,9 @@ msgstr "Impossible de créer un nouveau planning"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Chart configuration updated successfully."
+msgstr "Configuration des graphiques mise à jour avec succès."
+
 msgid "Charts"
 msgstr "Graphiques"
 

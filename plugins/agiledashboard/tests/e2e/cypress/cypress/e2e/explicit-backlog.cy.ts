@@ -18,6 +18,12 @@
  */
 
 describe(`Planning view Explicit Backlog`, function () {
+    let now: number;
+
+    before(function () {
+        now = Date.now();
+    });
+
     beforeEach(function () {
         cy.projectMemberSession();
         cy.visitProjectService("explicit-backlog", "Backlog");
@@ -105,11 +111,6 @@ describe(`Planning view Explicit Backlog`, function () {
 
     context("Scrum template usage", () => {
         let project_name: string;
-        let now: number;
-
-        before(function () {
-            now = Date.now();
-        });
 
         beforeEach(function () {
             project_name = "ad-" + now;
@@ -139,6 +140,46 @@ describe(`Planning view Explicit Backlog`, function () {
                 cy.contains("[data-test=backlog-item]", "Perfect World");
                 cy.get("[data-test=backlog-item]").should("not.contain", "Unrealistic Hobby");
             });
+        });
+    });
+
+    context("Backlog administration", () => {
+        it(`Project administrator can edit planning configuration`, function () {
+            cy.createNewPublicProject(`backlog-admin-${now}`, "scrum");
+
+            cy.visitProjectService(`backlog-admin-${now}`, "Backlog");
+            cy.get("[data-test=link-to-ad-administration]").click({ force: true });
+
+            cy.get("[data-test=planning-configuration]").find("tr").should("have.length", 3);
+
+            cy.log("Delete Sprint planning level");
+            cy.get("[data-test=delete-planning-configuration]").last().click();
+
+            cy.get("[data-test=planning-configuration]").find("tr").should("have.length", 2);
+
+            cy.log("Update release configuration");
+            cy.get("[data-test=edit-planning-configuration]").click();
+            cy.get("[data-test=planning-name-input]").clear().type("My new release name");
+            cy.get("[data-test=update-planning-configuration]").click();
+            cy.get("[data-test=feedback]").should("contain", "Planning succesfully updated");
+
+            cy.log("Update global settings");
+            cy.get("[data-test=link-to-ad-administration]").click({ force: true });
+            cy.get("[data-test=should-sidebar-display-last-milestones]").click();
+            cy.get("[data-test=backlog-edit-global-settings]").click();
+            cy.get("[data-test=feedback]").should(
+                "contain",
+                "Scrum configuration successfully updated.",
+            );
+
+            cy.log("User can update burnup configuration");
+            cy.get("[data-test=backlog-chart-administration]").click();
+            cy.get("[data-test=burnup-count-mode]").click();
+            cy.get("[data-test=backlog-save-chart-configuration]").click();
+            cy.get("[data-test=feedback]").should(
+                "contain",
+                "Chart configuration updated successfully.",
+            );
         });
     });
 });

@@ -101,6 +101,9 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgid "Chart configuration updated successfully."
+msgstr ""
+
 msgid "Charts"
 msgstr ""
 

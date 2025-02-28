@@ -2,6 +2,7 @@
     <a {{^ is_planning_administration_delegated }}href="{{ delete_url }}"{{/ is_planning_administration_delegated }}
         class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline {{# is_planning_administration_delegated }} disabled tlp-tooltip tlp-tooltip-left {{/ is_planning_administration_delegated }}"
         data-tlp-tooltip="{{# dgettext }} tuleap-agiledashboard | Deletion of this planning is prohibited because this project is part of a program backlog. {{/ dgettext }}"
+        data-test="delete-planning-configuration"
     >
         <i class="far fa-trash-alt tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Delete {{/ dgettext }}
     </a>
