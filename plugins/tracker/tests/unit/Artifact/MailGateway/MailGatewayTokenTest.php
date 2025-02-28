@@ -18,188 +18,177 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Tracker\Artifact\MailGateway;
+
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tracker;
+use Tracker_Artifact_Changeset_IncomingMailDao;
+use Tracker_Artifact_MailGateway_CitationStripper;
+use Tracker_Artifact_MailGateway_IncomingMessage;
+use Tracker_Artifact_MailGateway_IncomingMessageFactory;
+use Tracker_Artifact_MailGateway_Notifier;
+use Tracker_Artifact_MailGateway_TokenMailGateway;
+use Tracker_ArtifactByEmailStatus;
+use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+
+final class MailGatewayTokenTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const BODY          = 'justaucorps';
+    private const STRIPPED_BODY = 'stripped justaucorps';
 
-    protected $user;
-    protected $mailgateway;
-    protected $artifact;
-    protected $body          = 'justaucorps';
-    protected $stripped_body = 'stripped justaucorps';
-    protected $incoming_mail_dao;
-    protected $tracker_config;
-    protected $tracker;
-    protected $incoming_message;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    protected $incoming_mail;
-    /**
-     * @var Tracker_Artifact_MailGateway_IncomingMessageFactory&\Mockery\MockInterface
-     */
-    private $incoming_message_factory;
-    /**
-     * @var Tracker_FormElementFactory&\Mockery\MockInterface
-     */
-    private $formelement_factory;
-    /**
-     * @var \Psr\Log\LoggerInterface&\Mockery\MockInterface
-     */
-    private $logger;
-    /**
-     * @var Tracker_Artifact_MailGateway_Notifier&\Mockery\MockInterface
-     */
-    private $notifier;
-    /**
-     * @var \Mockery\MockInterface&Tracker_Artifact_MailGateway_CitationStripper
-     */
-    private $citation_stripper;
-    private \Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator & \Mockery\MockInterface $artifact_creator;
+    private PFUser $user;
+    private Tracker_Artifact_MailGateway_TokenMailGateway $mailgateway;
+    private Artifact&MockObject $artifact;
+    private Tracker_Artifact_Changeset_IncomingMailDao&MockObject $incoming_mail_dao;
+    private MailGatewayConfig&MockObject $tracker_config;
+    private Tracker&MockObject $tracker;
+    private Tracker_Artifact_MailGateway_IncomingMessage&MockObject $incoming_message;
+    private IncomingMail&MockObject $incoming_mail;
+    private TrackerArtifactCreator&MockObject $artifact_creator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->artifact                 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->user                     = \Mockery::spy(\PFUser::class);
-        $this->tracker                  = \Mockery::spy(\Tracker::class);
-        $this->incoming_message_factory = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
-        $this->artifact_creator         = \Mockery::spy(\Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator::class);
-        $this->formelement_factory      = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->tracker_config           = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
-        $this->logger                   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->notifier                 = \Mockery::spy(\Tracker_Artifact_MailGateway_Notifier::class);
-        $this->incoming_mail_dao        = \Mockery::spy(\Tracker_Artifact_Changeset_IncomingMailDao::class);
+        $this->artifact           = $this->createMock(Artifact::class);
+        $this->user               = UserTestBuilder::buildWithDefaults();
+        $this->tracker            = $this->createMock(Tracker::class);
+        $incoming_message_factory = $this->createMock(Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
+        $this->artifact_creator   = $this->createMock(TrackerArtifactCreator::class);
+        $this->tracker_config     = $this->createMock(MailGatewayConfig::class);
+        $this->incoming_mail_dao  = $this->createMock(Tracker_Artifact_Changeset_IncomingMailDao::class);
 
-        $this->citation_stripper = \Mockery::spy(\Tracker_Artifact_MailGateway_CitationStripper::class)->shouldReceive('stripText')->with($this->body)->andReturns($this->stripped_body)->getMock();
+        $citation_stripper = $this->createMock(Tracker_Artifact_MailGateway_CitationStripper::class);
+        $citation_stripper->method('stripText')->with(self::BODY)->willReturn(self::STRIPPED_BODY);
 
-        $this->tracker->shouldReceive('getId')->andReturns(888);
+        $this->tracker->method('getId')->willReturn(888);
 
-        $this->incoming_message = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessage::class);
-        $this->incoming_message->shouldReceive('getUser')->andReturns($this->user);
-        $this->incoming_message->shouldReceive('getArtifact')->andReturns($this->artifact);
-        $this->incoming_message->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->incoming_message->shouldReceive('getBody')->andReturns($this->body);
+        $this->incoming_message = $this->createMock(Tracker_Artifact_MailGateway_IncomingMessage::class);
+        $this->incoming_message->method('getUser')->willReturn($this->user);
+        $this->incoming_message->method('getArtifact')->willReturn($this->artifact);
+        $this->incoming_message->method('getTracker')->willReturn($this->tracker);
+        $this->incoming_message->method('getBody')->willReturn(self::BODY);
 
-        $this->incoming_message_factory->shouldReceive('build')->andReturns($this->incoming_message);
+        $incoming_message_factory->method('build')->willReturn($this->incoming_message);
 
-        $this->incoming_mail = Mockery::spy(IncomingMail::class);
-        $this->incoming_mail->shouldReceive('getRawMail')->andReturns('Raw mail');
+        $this->incoming_mail = $this->createMock(IncomingMail::class);
+        $this->incoming_mail->method('getRawMail')->willReturn('Raw mail');
 
-        $filter = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter::class);
+        $filter = $this->createMock(MailGatewayFilter::class);
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_TokenMailGateway(
-            $this->incoming_message_factory,
-            $this->citation_stripper,
-            $this->notifier,
+            $incoming_message_factory,
+            $citation_stripper,
+            $this->createMock(Tracker_Artifact_MailGateway_Notifier::class),
             $this->incoming_mail_dao,
             $this->artifact_creator,
-            $this->formelement_factory,
+            $this->createMock(Tracker_FormElementFactory::class),
             new Tracker_ArtifactByEmailStatus($this->tracker_config),
-            $this->logger,
+            new NullLogger(),
             $filter
         );
 
-        $filter->shouldReceive('isAnAutoReplyMail')->andReturns(false);
+        $filter->method('isAnAutoReplyMail')->willReturn(false);
     }
 
     public function testItDoesNotCreateArtifact(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(false);
-        $this->artifact_creator->shouldReceive('create')->never();
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->incoming_message->method('isAFollowUp')->willReturn(false);
+        $this->artifact_creator->expects(self::never())->method('create');
 
         $this->mailgateway->process($this->incoming_mail);
     }
 
     public function testItCreatesANewChangeset(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
-        $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
-
-        $this->artifact->shouldReceive('createNewChangeset')->with([], $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
+        $this->artifact->expects(self::once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
 
         $this->mailgateway->process($this->incoming_mail);
     }
 
     public function testItCreatesANewChangesetEvenIfPlatformIsInInsecureMode(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
-        $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->shouldReceive('createNewChangeset')->with([], $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
+        $this->artifact->expects(self::once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
 
         $this->mailgateway->process($this->incoming_mail);
     }
 
     public function testItCreatesNothingWhenGatewayIsDisabled(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
-        $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->shouldReceive('createNewChangeset')->never();
+        $this->artifact->expects(self::never())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
 
     public function testItDoesNotCreateWhenUserCannotUpdate(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
-        $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(false);
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(false);
 
-        $this->artifact->shouldReceive('createNewChangeset')->never();
+        $this->artifact->expects(self::never())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
 
     public function testItUpdatesArtifact(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
-        $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->shouldReceive('createNewChangeset')->once();
+        $this->artifact->expects(self::once())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
 
     public function testItDoesNotUpdateArtifactWhenMailGatewayIsDisabled(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
-        $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->shouldReceive('createNewChangeset')->never();
+        $this->artifact->expects(self::never())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
 
     public function testItLinksRawEmailToCreatedChangeset(): void
     {
-        $this->tracker_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(666)->getMock();
-        $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
-        $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
-        $this->artifact->shouldReceive('createNewChangeset')->andReturns($changeset);
+        $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
+        $this->artifact->method('createNewChangeset')->willReturn(ChangesetTestBuilder::aChangeset(666)->build());
 
-        $this->incoming_mail_dao->shouldReceive('save')->with(666, 'Raw mail')->once();
+        $this->incoming_mail_dao->expects(self::once())->method('save')->with(666, 'Raw mail');
 
         $this->mailgateway->process($this->incoming_mail);
     }
