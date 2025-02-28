@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\E2E\RelyingPartyOIDC;
 
+use Amp\Http\HttpStatus;
 use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
-use Amp\Http\Status;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
@@ -80,7 +80,7 @@ final class OAuth2InitFlowController
 
         if ($client_id === null || $client_secret === null) {
             return new Response(
-                Status::BAD_REQUEST,
+                HttpStatus::BAD_REQUEST,
                 ['Content-Type' => 'text/plain'],
                 'Missing client_id or client_secret'
             );
@@ -101,7 +101,7 @@ final class OAuth2InitFlowController
             'code_challenge_method' => 'S256',
         ];
         return new Response(
-            Status::FOUND,
+            HttpStatus::FOUND,
             ['Location' => $endpoints->getAuthorizationEndpoint() . '?' . http_build_query($redirect_parameters)]
         );
     }

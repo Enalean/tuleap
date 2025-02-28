@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\E2E\RelyingPartyOIDC;
 
+use Amp\Http\HttpStatus;
 use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
-use Amp\Http\Status;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
@@ -110,12 +110,12 @@ final class OAuth2AuthorizationCallbackController
     {
         parse_str($request->getUri()->getQuery(), $query_params);
         if (! hash_equals($this->secret_generator->getState(), $query_params['state'] ?? '')) {
-            return new Response(Status::BAD_REQUEST, ['Content-Type' => 'text/html'], 'Failure, state does not match');
+            return new Response(HttpStatus::BAD_REQUEST, ['Content-Type' => 'text/html'], 'Failure, state does not match');
         }
 
         $auth_code = $query_params['code'] ?? null;
         if ($auth_code === null) {
-            return new Response(Status::BAD_REQUEST, ['Content-Type' => 'text/html'], 'Failure, code parameter was not returned by the OAuth2 provider');
+            return new Response(HttpStatus::BAD_REQUEST, ['Content-Type' => 'text/html'], 'Failure, code parameter was not returned by the OAuth2 provider');
         }
 
         $http_client_with_client_credentials = $this->http_client_with_client_credential_factory->getHTTPClient();
@@ -138,7 +138,7 @@ final class OAuth2AuthorizationCallbackController
 
         $this->revoke($http_client_with_client_credentials, $refresh_token_response);
 
-        return new Response(Status::OK, ['Content-Type' => 'text/html'], 'OK as ' . $user_info_response['preferred_username']);
+        return new Response(HttpStatus::OK, ['Content-Type' => 'text/html'], 'OK as ' . $user_info_response['preferred_username']);
     }
 
     /**

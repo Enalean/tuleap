@@ -36,6 +36,7 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Validator;
 use Monolog\Logger;
+use Revolt\EventLoop;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2AuthorizationCallbackController;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2InitFlowController;
@@ -47,7 +48,7 @@ use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowSecretGenerator;
 require_once __DIR__ . '/../../../../../../src/vendor/autoload.php';
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
-Amp\Loop::run(
+EventLoop::defer(
     static function () {
         $log_handler = new StreamHandler(Amp\ByteStream\getStdout());
         $log_handler->setFormatter(new ConsoleFormatter());
@@ -76,8 +77,14 @@ Amp\Loop::run(
         $cert    = new Certificate($cert_file_path);
         $context = (new BindContext())->withTlsContext((new ServerTlsContext())->withDefaultCertificate($cert));
 
-        $router      = new Amp\Http\Server\Router();
-        $http_client = new \Http\Client\Common\PluginClient(
+        $server        = new SocketHttpServer(
+            $logger_front_channel,
+            new ResourceServerSocketFactory(),
+            new SocketClientFactory($logger_front_channel),
+        );
+        $error_handler = new Amp\Http\Server\DefaultErrorHandler();
+        $router        = new Amp\Http\Server\Router($server, $logger_front_channel, $error_handler);
+        $http_client   = new \Http\Client\Common\PluginClient(
             Client::createWithConfig(['verify' => false]),
             [new LoggerPlugin($logger_back_channel)]
         );
@@ -116,22 +123,19 @@ Amp\Loop::run(
             )
         );
 
-        $server = new SocketHttpServer(
-            $logger_front_channel,
-            new ResourceServerSocketFactory(),
-            new SocketClientFactory($logger_front_channel),
-        );
         $server->expose('0.0.0.0:8443', $context);
         $server->expose('[::]:8443', $context);
-        $server->start($router, new \Amp\Http\Server\DefaultErrorHandler());
+        $server->start($router, $error_handler);
 
-        Amp\Loop::onSignal(
+        EventLoop::onSignal(
             SIGINT,
             static function (string $watcher_id) use ($server, $cert_file) {
-                Amp\Loop::cancel($watcher_id);
+                EventLoop::cancel($watcher_id);
                 fclose($cert_file);
                 $server->stop();
             }
         );
     }
 );
+
+EventLoop::run();
