@@ -18,95 +18,98 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use BaseLanguage;
+use ConfigNotificationAssignedTo;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use Tracker;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_Recipient;
+use Tracker_Artifact_MailGateway_RecipientFactory;
 use Tuleap\Mail\MailAttachment;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\StoreUserPreferenceStub;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\SendMailStub;
+use UserHelper;
 
-class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EmailNotificationTaskTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $logger;
-    private $mail_gateway_config;
-    private $config_notification_assigned_to;
-    private $mail_gateway_recipient_factory;
-    private $user_helper;
-    private $custom_email_sender;
-
-    private $tracker;
-    private $artifact;
-    private $changeset;
+    private LoggerInterface $logger;
+    private MailGatewayConfig&MockObject $mail_gateway_config;
+    private ConfigNotificationAssignedTo&MockObject $config_notification_assigned_to;
+    private Tracker_Artifact_MailGateway_RecipientFactory&MockObject $mail_gateway_recipient_factory;
+    private UserHelper&MockObject $user_helper;
+    private ConfigNotificationEmailCustomSender&MockObject $custom_email_sender;
+    private Tracker&MockObject $tracker;
+    private Artifact&MockObject $artifact;
+    private Tracker_Artifact_Changeset $changeset;
 
     protected function setUp(): void
     {
-        $this->logger                          = \Mockery::spy(LoggerInterface::class);
-        $this->mail_gateway_config             = \Mockery::spy(MailGatewayConfig::class);
-        $this->config_notification_assigned_to = \Mockery::spy(\ConfigNotificationAssignedTo::class);
-        $this->mail_gateway_recipient_factory  = \Mockery::spy(\Tracker_Artifact_MailGateway_RecipientFactory::class);
-        $this->user_helper                     = \Mockery::spy(\UserHelper::class);
-        $this->custom_email_sender             = \Mockery::mock(ConfigNotificationEmailCustomSender::class);
+        $this->logger                          = new NullLogger();
+        $this->mail_gateway_config             = $this->createMock(MailGatewayConfig::class);
+        $this->config_notification_assigned_to = $this->createMock(ConfigNotificationAssignedTo::class);
+        $this->mail_gateway_recipient_factory  = $this->createMock(Tracker_Artifact_MailGateway_RecipientFactory::class);
+        $this->user_helper                     = $this->createMock(UserHelper::class);
+        $this->custom_email_sender             = $this->createMock(ConfigNotificationEmailCustomSender::class);
 
-        $this->custom_email_sender->shouldReceive('getCustomSender')->andReturns(['format' => '', 'enabled' => 0]);
+        $this->custom_email_sender->method('getCustomSender')->willReturn(['format' => '', 'enabled' => 0]);
 
-        $language = $this->createStub(\BaseLanguage::class);
+        $language = $this->createStub(BaseLanguage::class);
         $language->method('getText')->willReturn('');
 
-        $this->tracker  = \Mockery::spy(\Tracker::class);
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->artifact->shouldReceive('fetchMailTitle')->andReturn('The title in the mail');
-        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $this->changeset->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
-        $this->changeset->shouldReceive('getSubmitter')->andReturns(
+        $this->tracker  = $this->createMock(Tracker::class);
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $this->artifact->method('fetchMailTitle')->willReturn('The title in the mail');
+        $this->changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
+        $this->changeset->method('getArtifact')->willReturn($this->artifact);
+        $this->changeset->method('getSubmitter')->willReturn(
             UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->withLanguage($language)->build()
         );
     }
 
     public function testNotify(): void
     {
-        $recipients_manager = \Mockery::mock(RecipientsManager::class);
-        $recipients_manager->shouldReceive('getRecipients')->andReturns([
+        $recipients_manager = $this->createMock(RecipientsManager::class);
+        $recipients_manager->method('getRecipients')->willReturn([
             'a_user'            => true,
             'email@example.com' => true,
             'comment1'          => true,
         ]);
-        $language = $this->createStub(\BaseLanguage::class);
+        $language = $this->createStub(BaseLanguage::class);
         $language->method('getText')->willReturn('');
-        $user_1 = \Mockery::mock(\PFUser::class);
-        $user_1->shouldReceive('getEmail')->andReturns('a_user');
-        $user_1->shouldReceive('getLanguage')->andReturns($language);
-        $user_1->shouldReceive('getPreference')->andReturns('');
-        $recipients_manager->shouldReceive('getUserFromRecipientName')->with('a_user')->andReturns($user_1);
-        $user_2 = \Mockery::mock(\PFUser::class);
-        $user_2->shouldReceive('getEmail')->andReturns('email@example.com');
-        $user_2->shouldReceive('getLanguage')->andReturns($language);
-        $user_2->shouldReceive('getPreference')->andReturns('');
-        $recipients_manager->shouldReceive('getUserFromRecipientName')->with('email@example.com')->andReturns($user_2);
-        $user_3 = \Mockery::mock(\PFUser::class);
-        $user_3->shouldReceive('getEmail')->andReturns('comment1');
-        $user_3->shouldReceive('getLanguage')->andReturns($language);
-        $user_3->shouldReceive('getPreference')->andReturns('');
-        $recipients_manager->shouldReceive('getUserFromRecipientName')->with('comment1')->andReturns($user_3);
+        $user_1 = UserTestBuilder::aUser()->withEmail('a_user')->withLanguage($language)->build();
+        $user_2 = UserTestBuilder::aUser()->withEmail('email@example.com')->withLanguage($language)->build();
+        $user_3 = UserTestBuilder::aUser()->withEmail('comment1')->withLanguage($language)->build();
+        $recipients_manager->method('getUserFromRecipientName')->willReturnCallback(static fn(string $email) => match ($email) {
+            'a_user'            => $user_1,
+            'email@example.com' => $user_2,
+            'comment1'          => $user_3,
+        });
 
-        $this->tracker->shouldReceive('isNotificationStopped')->andReturns(false);
-        $this->tracker->shouldReceive('getItemName')->andReturns('story');
-        $this->artifact->shouldReceive('getId')->andReturns(666);
+        $this->tracker->method('isNotificationStopped')->willReturn(false);
+        $this->tracker->method('getItemName')->willReturn('story');
+        $this->artifact->method('getId')->willReturn(666);
 
         $attachment1 = new MailAttachment('text/plain', 'doc.txt', 'Lorem');
         $attachment2 = new MailAttachment('text/plain', 'another.txt', 'Ipsum');
 
-        $mail_sender = \Mockery::mock(MailSender::class);
-        $mail_sender->shouldReceive('send')->withArgs([
+        $mail_sender = $this->createMock(MailSender::class);
+        $mail_sender->expects(self::once())->method('send')->with(
             $this->changeset,
             [ // recipients
                 'a_user',
@@ -114,13 +117,13 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
                 'comment1',
             ],
             [],              // headers
-            \Mockery::any(), // from
+            self::anything(), // from
             '[story #666] The title in the mail', // subject
-            \Mockery::any(), // html body
-            \Mockery::any(), // text body
-            \Mockery::any(),  // msg id,
+            self::anything(), // html body
+            self::anything(), // text body
+            self::anything(),  // msg id,
             [$attachment1, $attachment2],
-        ])->once();
+        );
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -138,15 +141,15 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotifyAlwaysStopped(): void
     {
-        $this->tracker->shouldReceive('isNotificationStopped')->andReturns(true);
+        $this->tracker->method('isNotificationStopped')->willReturn(true);
 
-        $mail_sender = \Mockery::mock(MailSender::class);
-        $mail_sender->shouldReceive('send')->never();
+        $mail_sender = $this->createMock(MailSender::class);
+        $mail_sender->expects(self::never())->method('send');
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
             $this->user_helper,
-            \Mockery::mock(RecipientsManager::class),
+            $this->createMock(RecipientsManager::class),
             $this->mail_gateway_recipient_factory,
             $this->mail_gateway_config,
             $mail_sender,
@@ -159,15 +162,15 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotSendNotificationRelatedToArtifactField(): void
     {
-        $this->tracker->shouldReceive('isNotificationStopped')->andReturns(false);
+        $this->tracker->method('isNotificationStopped')->willReturn(false);
 
-        $mail_sender = \Mockery::mock(MailSender::class);
-        $mail_sender->shouldReceive('send')->never();
+        $mail_sender = $this->createMock(MailSender::class);
+        $mail_sender->expects(self::never())->method('send');
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
             $this->user_helper,
-            \Mockery::mock(RecipientsManager::class),
+            $this->createMock(RecipientsManager::class),
             $this->mail_gateway_recipient_factory,
             $this->mail_gateway_config,
             $mail_sender,
@@ -180,15 +183,13 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSendsNotificationToMentionedUserInComment(): void
     {
-        $language = $this->createStub(\BaseLanguage::class);
+        $language = $this->createStub(BaseLanguage::class);
         $language->method('getText')->willReturn('');
 
-        $this->tracker->shouldReceive('isNotificationStopped')->andReturns(false);
+        $this->tracker->method('isNotificationStopped')->willReturn(false);
         $notified_user_1 = UserTestBuilder::anActiveUser()->withUserName('peralta')->withLanguage($language)->withEmail('peralta@example.com')->build();
         $notified_user_2 = UserTestBuilder::anActiveUser()->withUserName('santiago')->withLanguage($language)->withEmail('santiago@example.com')->build();
-        /**
-         * @var list<\PFUser> $notified_users
-         */
+        /** @var list<PFUser> $notified_users */
         $notified_users = [$notified_user_1, $notified_user_2];
 
         $mail_sender = SendMailStub::withAssertionHelperCallback(function (array $recipients) use ($notified_users) {
@@ -222,16 +223,16 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testChangesetShouldUseUserLanguageInGetBody(): void
     {
-        $user_language = \Mockery::mock(\BaseLanguage::class);
-        $user_language->shouldReceive('getText')->andReturn('Foo')->atLeast(1);
+        $user_language = $this->createMock(BaseLanguage::class);
+        $user_language->expects(self::atLeastOnce())->method('getText')->willReturn('Foo');
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
             $this->user_helper,
-            \Mockery::mock(RecipientsManager::class),
+            $this->createMock(RecipientsManager::class),
             $this->mail_gateway_recipient_factory,
             $this->mail_gateway_config,
-            \Mockery::mock(MailSender::class),
+            $this->createMock(MailSender::class),
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
@@ -239,7 +240,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $body_text              = $mail_notification_task->getBodyText(
             $this->changeset,
             false,
-            \Mockery::mock(\PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $user_language,
             false
         );
@@ -248,17 +249,17 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testChangesetShouldUseUserLanguageInBuildMessage(): void
     {
-        $user_language = \Mockery::mock(\BaseLanguage::class);
-        $user_language->shouldReceive('getText')->andReturn('')->atLeast()->once();
+        $user_language = $this->createMock(BaseLanguage::class);
+        $user_language->expects(self::atLeastOnce())->method('getText')->willReturn('');
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getPreference')->with('text')->andReturns(['user_tracker_mailformat']);
-        $user->shouldReceive('getLanguage')->andReturns($user_language);
+        $preferences = new StoreUserPreferenceStub();
+        $preferences->set(302, 'text', 'user_tracker_mailformat');
+        $user = UserTestBuilder::aUser()->withId(302)->withLanguage($user_language)->withPreferencesStore($preferences)->build();
 
-        $recipients_manager = \Mockery::mock(RecipientsManager::class);
-        $recipients_manager->shouldReceive('getUserFromRecipientName')->with('user01')->andReturns($user);
+        $recipients_manager = $this->createMock(RecipientsManager::class);
+        $recipients_manager->method('getUserFromRecipientName')->with('user01')->willReturn($user);
 
-        $this->mail_gateway_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
+        $this->mail_gateway_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -266,7 +267,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $recipients_manager,
             $this->mail_gateway_recipient_factory,
             $this->mail_gateway_config,
-            \Mockery::mock(MailSender::class),
+            $this->createMock(MailSender::class),
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
@@ -278,34 +279,34 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSendsOneMailPerRecipient()
     {
-        $recipients_manager = \Mockery::mock(RecipientsManager::class);
+        $recipients_manager = $this->createMock(RecipientsManager::class);
 
-        $language = $this->createStub(\BaseLanguage::class);
+        $language = $this->createStub(BaseLanguage::class);
         $language->method('getText')->willReturn('');
-        $user_1 = \Mockery::spy(\PFUser::class);
-        $user_1->shouldReceive('getLanguage')->andReturns($language);
-        $user_1->shouldReceive('getPreference')->with('text')->andReturns(['user_tracker_mailformat']);
-        $recipients_manager->shouldReceive('getUserFromRecipientName')->with('user01')->andReturns($user_1);
-        $user_2 = \Mockery::spy(\PFUser::class);
-        $user_2->shouldReceive('getLanguage')->andReturns($language);
-        $user_2->shouldReceive('getPreference')->with('text')->andReturns(['user_tracker_mailformat']);
-        $recipients_manager->shouldReceive('getUserFromRecipientName')->with('user02')->andReturns($user_2);
-        $user_3 = \Mockery::spy(\PFUser::class);
-        $user_3->shouldReceive('getLanguage')->andReturns($language);
-        $user_3->shouldReceive('getPreference')->with('text')->andReturns(['user_tracker_mailformat']);
-        $recipients_manager->shouldReceive('getUserFromRecipientName')->with('user03')->andReturns($user_3);
+        $preferences = new StoreUserPreferenceStub();
+        $preferences->set(302, 'text', 'user_tracker_mailformat');
+        $user_1 = UserTestBuilder::aUser()->withEmail('email1')->withPreferencesStore($preferences)->withLanguage($language)->build();
+        $user_2 = UserTestBuilder::aUser()->withEmail('email2')->withPreferencesStore($preferences)->withLanguage($language)->build();
+        $user_3 = UserTestBuilder::aUser()->withEmail('email3')->withPreferencesStore($preferences)->withLanguage($language)->build();
+        $recipients_manager->method('getUserFromRecipientName')->willReturnCallback(static fn(string $email) => match ($email) {
+            'user01' => $user_1,
+            'user02' => $user_2,
+            'user03' => $user_3,
+        });
 
-        $this->mail_gateway_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
+        $this->mail_gateway_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
 
-        $recipient_1 = \Mockery::mock(Tracker_Artifact_MailGateway_Recipient::class);
-        $recipient_1->shouldReceive('getEmail')->andReturns('email1');
-        $this->mail_gateway_recipient_factory->shouldReceive('getFromUserAndChangeset')->withArgs([$user_1, \Mockery::any()])->andReturns($recipient_1);
-        $recipient_2 = \Mockery::mock(Tracker_Artifact_MailGateway_Recipient::class);
-        $recipient_2->shouldReceive('getEmail')->andReturns('email2');
-        $this->mail_gateway_recipient_factory->shouldReceive('getFromUserAndChangeset')->withArgs([$user_2, \Mockery::any()])->andReturns($recipient_2);
-        $recipient_3 = \Mockery::mock(Tracker_Artifact_MailGateway_Recipient::class);
-        $recipient_3->shouldReceive('getEmail')->andReturns('email3');
-        $this->mail_gateway_recipient_factory->shouldReceive('getFromUserAndChangeset')->withArgs([$user_3, \Mockery::any()])->andReturns($recipient_3);
+        $recipient_1 = $this->createMock(Tracker_Artifact_MailGateway_Recipient::class);
+        $recipient_1->method('getEmail')->willReturn('email1');
+        $recipient_2 = $this->createMock(Tracker_Artifact_MailGateway_Recipient::class);
+        $recipient_2->method('getEmail')->willReturn('email2');
+        $recipient_3 = $this->createMock(Tracker_Artifact_MailGateway_Recipient::class);
+        $recipient_3->method('getEmail')->willReturn('email3');
+        $this->mail_gateway_recipient_factory->method('getFromUserAndChangeset')->willReturnCallback(static fn(PFUser $user) => match ($user) {
+            $user_1 => $recipient_1,
+            $user_2 => $recipient_2,
+            $user_3 => $recipient_3,
+        });
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -313,7 +314,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $recipients_manager,
             $this->mail_gateway_recipient_factory,
             $this->mail_gateway_config,
-            \Mockery::mock(MailSender::class),
+            $this->createMock(MailSender::class),
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
@@ -327,6 +328,6 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $messages = $mail_notification_task->buildAMessagePerRecipient($this->changeset, $recipients, true, $this->logger);
 
-        $this->assertCount(3, $messages);
+        self::assertCount(3, $messages);
     }
 }
