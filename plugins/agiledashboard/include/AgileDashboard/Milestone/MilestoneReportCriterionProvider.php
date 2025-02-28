@@ -70,10 +70,10 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider // phpcs:ignore 
         }
 
         $criterion  = '';
-        $criterion .= '<label for="tracker_report_crit_agiledashboard_milestone">';
+        $criterion .= '<label for="tracker_report_crit_agiledashboard_milestone" data-test="tracker-report-criteria">';
         $criterion .= dgettext('tuleap-agiledashboard', 'In milestone');
         $criterion .= '</label>';
-        $criterion .= '<select name="additional_criteria[' . self::FIELD_NAME . ']" id="tracker_report_crit_agiledashboard_milestone">';
+        $criterion .= '<select name="additional_criteria[' . self::FIELD_NAME . ']" data-test="criteria-in-milestone" id="tracker_report_crit_agiledashboard_milestone">';
         $criterion .= '<option value="" >' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         $criterion .= $this->unplanned_criterion_options_provider->formatUnplannedAsSelectboxOption(
             $backlog_tracker->getProject(),

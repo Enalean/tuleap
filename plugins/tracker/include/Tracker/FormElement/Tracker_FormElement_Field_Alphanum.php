@@ -55,7 +55,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
 
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
-        $html = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
+        $html = '<input data-test="alphanum-report-criteria" type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $hp    = Codendi_HTMLPurifier::instance();
             $html .= $hp->purify($criteria_value, CODENDI_PURIFIER_CONVERT_HTML);

@@ -70,6 +70,21 @@ describe(`Planning view Explicit Backlog`, function () {
 
             cy.get("[data-test=switch-to-filter]").type("Summer");
             cy.get("[data-test=switch-to-recent-items]").should("contain", "Summer Swift");
+
+            cy.visitProjectService("explicit-backlog", "Trackers");
+            cy.log("Project Member can look for story planned in a dedicated milestone");
+            cy.getContains("[data-test=tracker-link]", "User Stories").click();
+            cy.get("[data-test=criteria-in-milestone]").select("Summer Swift");
+            cy.log("clear report value for replayability");
+            cy.get("[data-test=alphanum-report-criteria]").clear();
+            cy.get("[data-test=submit-report-search]").click();
+            cy.get("[data-test=artifact-report-table]").contains("Red Balcony");
+            cy.get("[data-test=artifact-report-table]").contains("Forsaken Autumn");
+
+            cy.log("Project Member can look for unplanned story");
+            cy.get("[data-test=criteria-in-milestone]").select("Any");
+            cy.get("[data-test=alphanum-report-criteria]").type("Crossbow Everyday");
+            cy.get("[data-test=submit-report-search]").click();
         });
     });
 
