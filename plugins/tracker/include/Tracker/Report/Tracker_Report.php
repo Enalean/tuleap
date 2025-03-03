@@ -606,7 +606,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched) . '</ul>';
 
         $html .= '<div align="center">';
-        $html .= '<button type="submit" name="tracker_query_submit" class="btn btn-primary">';
+        $html .= '<button type="submit" data-test="submit-report-search" name="tracker_query_submit" class="btn btn-primary">';
         $html .= '<i class="fa fa-search"></i> ';
         $html .= $GLOBALS['Language']->getText('global', 'btn_search');
         $html .= '</button>';
