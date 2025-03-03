@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\ForgeConfigSandbox;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use function PHPUnit\Framework\assertStringContainsString;
 
-/**
- * @covers \TuleapCfg\Command\SetupMysql\DatabaseConfigurator
- */
+#[CoversClass(DatabaseConfigurator::class)]
 final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
@@ -131,9 +130,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('1', $sys_db_ssl_verify_cert);
     }
 
-    /**
-     * @dataProvider getEnvironmentIsNotOverrideByCLIDefaults
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getEnvironmentIsNotOverrideByCLIDefaults')]
     public function testEnvironmentIsNotOverrideByCLIDefaults(array $env_var, callable $tests): void
     {
         foreach ($env_var as $var => $value) {

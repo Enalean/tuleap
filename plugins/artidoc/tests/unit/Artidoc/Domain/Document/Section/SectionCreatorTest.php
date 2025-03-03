@@ -349,9 +349,7 @@ final class SectionCreatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideArtidocPOSTSectionRepresentation
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideArtidocPOSTSectionRepresentation')]
     public function testFaultWhenArtifactIsAlreadyReferencedInTheDocumentByAnotherSection(
         int $artifact_id,
         ?string $before_section_id,

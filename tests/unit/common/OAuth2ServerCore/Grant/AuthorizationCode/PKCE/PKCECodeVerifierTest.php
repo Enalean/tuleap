@@ -66,9 +66,7 @@ final class PKCECodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pkce_code_verifier->verifyCode($auth_code, null);
     }
 
-    /**
-     * @dataProvider dataProviderMalformedCodeVerifier
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderMalformedCodeVerifier')]
     public function testThrowsWhenCodeVerifierHasNotTheExpectedFormat(string $code_verifier): void
     {
         $auth_code = $this->buildAuthorizationCode('code_challenge');

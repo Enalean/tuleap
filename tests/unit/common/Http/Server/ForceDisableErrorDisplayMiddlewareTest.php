@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Server;
 
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ForceDisableErrorDisplayMiddlewareTest extends TestCase
 {
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testIniSettingDisplayErrorIsDisabled(): void
     {
         $middleware = new ForceDisableErrorDisplayMiddleware();

@@ -72,7 +72,7 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker                 = $this->buildTracker(4);
         $dao                     = $this->createStub(\Cardwall_OnTop_Dao::class);
         $column_factory          = $this->createStub(\Tuleap\Cardwall\OnTop\Config\ColumnFactory::class);
-        $tracker_mapping_factory = $this->createStub(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
+        $tracker_mapping_factory = $this->createMock(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
 
         $columns = new ColumnCollection([
             ColumnTestBuilder::aColumn()->withLabel('of')->build(),

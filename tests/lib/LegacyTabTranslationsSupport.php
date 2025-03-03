@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Test;
 
+use PHPUnit\Framework\Attributes\Before;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 
@@ -30,9 +31,7 @@ trait LegacyTabTranslationsSupport
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function configureLegacyTabTranslations(): void
     {
         \ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');

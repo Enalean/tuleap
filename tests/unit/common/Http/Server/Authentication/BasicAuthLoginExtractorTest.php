@@ -30,9 +30,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider dataProviderValidAuthorizationHeaders
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidAuthorizationHeaders')]
     public function testExtractsCredentialFromValidAuthorizationHeader(string $authorization_header_line, string $expected_password): void
     {
         $server_request = $this->createMock(ServerRequestInterface::class);
@@ -62,9 +60,7 @@ final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderNotValidAuthorizationHeaders
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderNotValidAuthorizationHeaders')]
     public function testNoCredentialsAreExtractedWhenTheAuthorizationHeaderLineIsNotValid(string $authorization_header_line): void
     {
         $server_request = $this->createMock(ServerRequestInterface::class);

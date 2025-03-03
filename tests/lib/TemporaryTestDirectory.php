@@ -21,6 +21,9 @@
 
 namespace Tuleap;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+
 /**
  * This is required when vfsStream cannot be used (ex. exec() commands & co).
  * In other cases vfsStream is a better option.
@@ -32,9 +35,7 @@ trait TemporaryTestDirectory
      */
     private $temporary_directory = '';
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function generateTemporaryDirectory(): void
     {
         if (! $this->temporary_directory) {
@@ -47,9 +48,7 @@ trait TemporaryTestDirectory
         }
     }
 
-    /**
-     * @after
-     */
+    #[After]
     protected function cleanupTemporaryDirectory(): void
     {
         if ($this->temporary_directory && file_exists($this->temporary_directory)) {

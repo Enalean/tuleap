@@ -52,7 +52,7 @@ final class BaselineArtifactControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private UserProxy $current_user;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());

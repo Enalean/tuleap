@@ -48,9 +48,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
         $this->loader_scheduler = new LoaderScheduler($this->cookie_manager, $this->plugin_loader);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function testSessionHashLoading(): void
     {
         session_save_path($this->getTmpDir());

@@ -23,9 +23,7 @@ declare(strict_types=1);
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider artifactFieldProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('artifactFieldProvider')]
     public function testItSaysIfFieldIsStandard(ArtifactField $field, bool $result): void
     {
         if ($result === true) {

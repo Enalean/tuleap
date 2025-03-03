@@ -57,19 +57,19 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
     {
         $engine = new GraphOnTrackersV5_Engine_Bar();
         $this->builder->expects($this->once())->method('buildParentProperties');
-        $this->builder->expects($this->once())->method('buildSourceField')->will($this->returnValue($this->buildSourceField()));
+        $this->builder->expects($this->once())->method('buildSourceField')->willReturn($this->buildSourceField());
 
-        $this->builder->expects($this->once())->method('getFieldGroupId')->will($this->returnValue(10));
-        $this->builder->expects($this->once())->method('getFieldBaseId')->will($this->returnValue(10));
+        $this->builder->expects($this->once())->method('getFieldGroupId')->willReturn(10);
+        $this->builder->expects($this->once())->method('getFieldBaseId')->willReturn(10);
 
-        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->will($this->returnValue('1,2,3'));
-        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->will($this->returnValue('100,200,300'));
+        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->willReturn('1,2,3');
+        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->willReturn('100,200,300');
 
-        $this->builder->expects($this->once())->method('getQueryResult')->will($this->returnValue([
+        $this->builder->expects($this->once())->method('getQueryResult')->willReturn([
             ['nb' => 10, 'user_defined__10_100' => 130, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
             ['nb' => 5, 'user_defined__10_100' => 131, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
             ['nb' => 3, 'user_defined__10_100' => 130, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
-        ]));
+        ]);
 
         $this->builder->buildProperties($engine);
 
@@ -83,22 +83,22 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         $this->builder->expects($this->once())->method('buildParentProperties');
         $source_field = $this->buildSourceField();
 
-        $this->builder->expects($this->once())->method('buildSourceField')->will($this->returnValue($source_field));
-        $this->builder->expects($this->once())->method('getFormElementFactory')->will($this->returnValue($this->factory));
+        $this->builder->expects($this->once())->method('buildSourceField')->willReturn($source_field);
+        $this->builder->expects($this->once())->method('getFormElementFactory')->willReturn($this->factory);
 
         $group_field = $this->buildGroupField();
-        $this->factory->expects($this->once())->method('getFormElementById')->will($this->returnValue($group_field));
+        $this->factory->expects($this->once())->method('getFormElementById')->willReturn($group_field);
 
-        $this->builder->expects($this->atLeast(2))->method('getFieldGroupId')->will($this->returnValue(10));
-        $this->builder->expects($this->once())->method('getFieldBaseId')->will($this->returnValue(20));
-        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->will($this->returnValue('1,2,3'));
-        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->will($this->returnValue('100,200,300'));
+        $this->builder->expects($this->atLeast(2))->method('getFieldGroupId')->willReturn(10);
+        $this->builder->expects($this->once())->method('getFieldBaseId')->willReturn(20);
+        $this->builder->expects($this->atLeast(2))->method('getArtifactIds')->willReturn('1,2,3');
+        $this->builder->expects($this->once())->method('getArtifactsLastChangesetIds')->willReturn('100,200,300');
 
-        $this->builder->expects($this->once())->method('getQueryResult')->will($this->returnValue([
+        $this->builder->expects($this->once())->method('getQueryResult')->willReturn([
             ['nb' => 10, 'user_defined__10_100' => 130, 'user_defined__10_98' => null, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
             ['nb' => 5, 'user_defined__10_100' => 131, 'user_defined__10_98' => 431, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
             ['nb' => 3, 'user_defined__10_100' => 130, 'user_defined__10_98' => 432, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
-        ]));
+        ]);
 
         $this->builder->buildProperties($engine);
 

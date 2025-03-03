@@ -66,9 +66,6 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_data_dir', $this->initial_sys_data_dir);
     }
 
-    /**
-     * @requires PHP >= 7.4
-     */
     public function testItGetFileSizeDuringTransaction(): void
     {
         $data = 'abc';

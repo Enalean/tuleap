@@ -35,9 +35,7 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 final class ServiceActivationHandlerTest extends TestCase
 {
-    /**
-     * @dataProvider getActivationData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getActivationData')]
     public function testItSendsEvent(?QueueTask $expected_task, bool $should_start_init, array $payload): void
     {
         $factory = ProjectByIDFactoryStub::buildWith(

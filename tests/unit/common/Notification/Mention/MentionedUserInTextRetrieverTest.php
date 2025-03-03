@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Notification\Mention;
 
 use PFUser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
@@ -110,9 +111,7 @@ final class MentionedUserInTextRetrieverTest extends TestCase
         self::assertCount(0, $result->users);
     }
 
-    /**
-     * @dataProvider providerForEmptyUsername
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerForEmptyUsername')]
     public function testItReturnsAnEmptyUserCollection(string $comment): void
     {
         $result = $this->mentioned_user_in_text_retriever->getMentionedUsers($comment);
@@ -120,10 +119,9 @@ final class MentionedUserInTextRetrieverTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForFoundUsername
-     *
      * @param list<PFUser> $expected_users
      */
+    #[DataProvider('providerForFoundUsername')]
     public function testItReturnsTheUsernamesFoundInCommentBody(string $comment, array $expected_users): void
     {
         $result = $this->mentioned_user_in_text_retriever->getMentionedUsers($comment);

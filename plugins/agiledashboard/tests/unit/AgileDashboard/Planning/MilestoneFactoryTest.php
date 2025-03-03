@@ -114,14 +114,14 @@ final class MilestoneFactoryTest extends TestCase
 
         $timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangeset')
             ->with(self::isInstanceOf(Tracker_Artifact_Changeset::class), $this->user, $logger)
-            ->will(self::returnCallback(fn(?Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+            ->willReturnCallback(fn(?Tracker_Artifact_Changeset $changeset) => match ($changeset) {
                 $this->artifact_open_current_without_start_date->getLastChangeset() => $date_period_open_current_without_start_date,
                 $this->artifact_open_current_with_start_date->getLastChangeset()    => $date_period_open_current_with_start_date,
                 $this->artifact_closed_passed->getLastChangeset()                   => $date_period_closed_passed,
                 $this->artifact_open_future_with_start_date->getLastChangeset()     => $date_period_open_future_with_start_date,
                 $this->artifact_open_future_without_start_date->getLastChangeset()  => $date_period_open_future_without_start_date,
                 default                                                             => throw new LogicException("Should not have arg changeset #{$changeset->getId()}"),
-            }));
+            });
 
         $this->milestone = new Planning_MilestoneFactory(
             $planning_factory,

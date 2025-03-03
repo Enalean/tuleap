@@ -55,9 +55,7 @@ final class GitRoutingTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider smartHTTPRoutesProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('smartHTTPRoutesProvider')]
     public function testSmartURLs($method, $uri): void
     {
         $this->runTestOnURL($method, $uri, HTTP\HTTPController::class);
@@ -73,9 +71,7 @@ final class GitRoutingTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider legacyRepositoryBrowsingURLs
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('legacyRepositoryBrowsingURLs')]
     public function testLegacyRepositoryBrowsingURLsHandledByRedirectController($method, $uri): void
     {
         $this->runTestOnURL($method, $uri, GitLegacyURLRedirectController::class);
@@ -91,9 +87,7 @@ final class GitRoutingTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider friendlyURLsProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('friendlyURLsProvider')]
     public function testFriendlyURLs($method, $uri): void
     {
         $this->runTestOnURL($method, $uri, GitRepositoryBrowserController::class);
@@ -107,9 +101,7 @@ final class GitRoutingTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider friendlyProjectURLsProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('friendlyProjectURLsProvider')]
     public function testFriendlyProjectURLs($method, $uri): void
     {
         $this->runTestOnURL($method, $uri, GitRepositoryListController::class);
@@ -123,9 +115,7 @@ final class GitRoutingTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider legacyGitGodControllerURLsProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('legacyGitGodControllerURLsProvider')]
     public function testLegacyUrls($method, $uri): void
     {
         $this->runTestOnURL($method, $uri, GitPluginDefaultController::class);

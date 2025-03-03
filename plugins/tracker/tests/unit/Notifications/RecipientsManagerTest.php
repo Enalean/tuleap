@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Notifications;
 
 use LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tracker;
@@ -36,6 +37,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetCommentTestBuilder;
@@ -44,9 +46,7 @@ use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use UserManager;
 
-/**
- * @covers \Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode
- */
+#[CoversClass(RemoveRecipientWhenTheyAreInCreationOnlyMode::class)]
 final class RecipientsManagerTest extends TestCase
 {
     private UserNotificationOnlyStatusChangeDAO&MockObject $user_status_change_only_dao;

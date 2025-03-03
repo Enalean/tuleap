@@ -53,9 +53,7 @@ final class NotificationOnAllUpdatesSaverTest extends TestCase
         yield 'Enabled → Enabled' => [true, true, false, NotificationOnAllUpdatesSaver::VALUE_NOTIF];
     }
 
-    /**
-     * @dataProvider generateChanges
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateChanges')]
     public function testItHandlesChanges(
         bool $stored_preference,
         bool $new_preference,

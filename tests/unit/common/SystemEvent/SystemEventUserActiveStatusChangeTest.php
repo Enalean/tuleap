@@ -48,7 +48,7 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
      */
     private $user_group_dao;
     /**
-     * @var UserRemover&\PHPUnit\Framework\MockObject\Stub
+     * @var UserRemover&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user_remover;
 
@@ -69,7 +69,7 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
 
         $this->user_manager   = $this->createStub(UserManager::class);
         $this->user_group_dao = $this->createStub(UserGroupDao::class);
-        $this->user_remover   = $this->createStub(UserRemover::class);
+        $this->user_remover   = $this->createMock(UserRemover::class);
 
         $this->system_event->injectDependencies($this->user_manager, $this->user_group_dao, $this->user_remover);
     }

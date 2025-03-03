@@ -27,9 +27,7 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    /**
-     * @dataProvider userNameProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('userNameProvider')]
     public function testUnixNameIsValid(string $username, string $expected_result): void
     {
         $create = new CreateTestProject(
@@ -50,9 +48,7 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider fullNameProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fullNameProvider')]
     public function testFullNameIsValid(string $username, string $expected_result): void
     {
         $create = new CreateTestProject(

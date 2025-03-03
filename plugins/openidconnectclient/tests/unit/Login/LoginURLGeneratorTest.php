@@ -29,9 +29,7 @@ final class LoginURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const BASE_URL    = '/base';
     private const PROVIDER_ID = 1;
 
-    /**
-     * @dataProvider dataProviderReturnTo
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderReturnTo')]
     public function testGeneratesLoginURL(?string $return_to, string $expected_url): void
     {
         $login_url_generator = new LoginURLGenerator(self::BASE_URL);

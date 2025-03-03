@@ -93,9 +93,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('no-cache', $response->getHeaderLine('Cache-Control'));
     }
 
-    /**
-     * @dataProvider validUploadRequestProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validUploadRequestProvider')]
     public function testFileCanBeUploaded(int $upload_offset, string $body_content, string $content_type, bool $has_finisher): void
     {
         $data_writer = $this->createMock(TusWriter::class);

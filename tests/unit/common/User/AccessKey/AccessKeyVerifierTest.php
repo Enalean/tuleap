@@ -68,9 +68,7 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @dataProvider lastAccessValuesProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('lastAccessValuesProvider')]
     public function testAUserCanBeRetrievedFromItsAccessKey($expect_to_log_access, $last_usage, $last_ip): void
     {
         \ForgeConfig::set('last_access_resolution', self::LAST_ACCESS_RESOLUTION);

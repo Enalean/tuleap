@@ -51,9 +51,7 @@ final class FaultMapperTest extends TestCase
         yield 'Inline comment has a parent' => [RootInlineCommentHasAParentFault::fromParentCommentId(15), 400];
     }
 
-    /**
-     * @dataProvider dataProviderFaults
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderFaults')]
     public function testItMapsFaultsToRestExceptions(Fault $fault, int $expected_status_code): void
     {
         $this->expectException(RestException::class);

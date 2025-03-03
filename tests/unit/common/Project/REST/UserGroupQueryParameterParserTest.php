@@ -33,9 +33,7 @@ class UserGroupQueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $parser;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function instanciateParser()
     {
         $this->parser = new UserGroupQueryParameterParser(new JsonDecoder());

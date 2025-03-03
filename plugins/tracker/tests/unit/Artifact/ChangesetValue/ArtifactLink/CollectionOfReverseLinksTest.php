@@ -83,9 +83,7 @@ final class CollectionOfReverseLinksTest extends TestCase
         yield 'Add type' => [ReverseLinkStub::withNoType(643), ReverseLinkStub::withType(643, '_is_child')];
     }
 
-    /**
-     * @dataProvider provideChangeOfType
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideChangeOfType')]
     public function testItReturnsACollectionOfLinksThatHaveChangedType(
         ReverseLinkStub $existing,
         ReverseLinkStub $submitted,

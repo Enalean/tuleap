@@ -47,9 +47,7 @@ class CIBuildUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $validator;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createUpdater()
     {
         $this->ci_build_repository = Mockery::mock(CIBuildValueRepository::class);

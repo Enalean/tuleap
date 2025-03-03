@@ -39,9 +39,7 @@ final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \T
         $this->toggler = new SynchronizedProjectMembershipProjectVisibilityToggler($this->dao);
     }
 
-    /**
-     * @dataProvider toggleProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('toggleProvider')]
     public function testToggleOfSynchroAccordingToVisibilityChange(string $old_visibility, string $new_visibility, bool $should_enable): void
     {
         $project = new Project(['group_id' => 101]);

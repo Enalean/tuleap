@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TrackerFunctions\Administration;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -110,9 +111,7 @@ final class UpdateFunctionControllerTest extends TestCase
         self::assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider getUploadErrors
-     */
+    #[DataProvider('getUploadErrors')]
     public function testErrorWhenErrorDuringUpload(int $error): void
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();

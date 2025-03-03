@@ -259,7 +259,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItPushesTheUpdatedConfigToTheServer(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [ProjectUGroup::REGISTERED],
                 Git::PERM_WRITE => [ProjectUGroup::PROJECT_MEMBERS, 120],
@@ -280,7 +280,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfProjectAlreadyExists(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [ProjectUGroup::REGISTERED],
                 Git::PERM_WRITE => [ProjectUGroup::PROJECT_MEMBERS, 120],
@@ -355,7 +355,7 @@ final class ProjectCreatorTest extends TestCase
 
         $project_creator->method('exportGitBranches');
 
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [ProjectUGroup::REGISTERED],
                 Git::PERM_WRITE,
@@ -374,7 +374,7 @@ final class ProjectCreatorTest extends TestCase
             ProjectUGroup::REGISTERED,
             ProjectUGroup::ANONYMOUS,
         ];
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ,
                 Git::PERM_WRITE,
@@ -389,7 +389,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsLabelCodeReviewOnceIfUserCanReadANdWrite(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ,
                 Git::PERM_WRITE => [ProjectUGroup::PROJECT_MEMBERS],
@@ -405,7 +405,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasReadForRegistered(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [ProjectUGroup::REGISTERED],
                 Git::PERM_WRITE,
@@ -420,7 +420,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForRegistered(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [],
                 Git::PERM_WRITE => [ProjectUGroup::REGISTERED],
@@ -435,7 +435,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForRegistered(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ,
                 Git::PERM_WRITE => [],
@@ -450,7 +450,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function isSetsPermsOnRegisteredUsersIfRepoHasReadForAuthenticated(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [ProjectUGroup::AUTHENTICATED],
                 Git::PERM_WRITE,
@@ -465,7 +465,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForAuthenticated(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [],
                 Git::PERM_WRITE => [ProjectUGroup::AUTHENTICATED],
@@ -480,7 +480,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForAuthenticated(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ,
                 Git::PERM_WRITE => [],
@@ -495,7 +495,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasReadForAnonymous(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [ProjectUGroup::ANONYMOUS],
                 Git::PERM_WRITE,
@@ -510,7 +510,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForAnonymous(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ  => [],
                 Git::PERM_WRITE => [ProjectUGroup::ANONYMOUS],
@@ -525,7 +525,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForAnonymous(): void
     {
-        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isType('string'))
+        $this->userfinder->method('getUgroups')->with($this->repository->getId(), self::isString())
             ->willReturnCallback(static fn($id, string $perm) => match ($perm) {
                 Git::PERM_READ,
                 Git::PERM_WRITE => [],

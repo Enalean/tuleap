@@ -31,9 +31,7 @@ class ProjectTest extends ProjectBase
 {
     use ForgeAccessSandbox;
 
-    /**
-     * @after
-     */
+    #[\PHPUnit\Framework\Attributes\After]
     protected function resetProjectCreationConfiguration(): void
     {
         $tuleap_config = TuleapConfig::instance();

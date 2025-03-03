@@ -91,9 +91,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
         self::assertSame('Something is not OK.', (string) $result->error);
     }
 
-    /**
-     * @dataProvider dataProviderFieldValues
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderFieldValues')]
     public function testTransformAllFieldValues(
         ArtifactFieldValueFullRepresentation|ArtifactFieldValueTextRepresentation|ArtifactFieldComputedValueFullRepresentation|ArtifactFieldValueListFullRepresentation|ArtifactFieldValueOpenListFullRepresentation $field_value,
         array $expected_flat_value,

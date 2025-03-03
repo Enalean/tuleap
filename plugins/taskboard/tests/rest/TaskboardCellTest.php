@@ -43,9 +43,7 @@ final class TaskboardCellTest extends \RestBase
         }
     }
 
-    /**
-     * @dataProvider getUserNameAndExpectedStatusCode
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUserNameAndExpectedStatusCode')]
     public function testPATCHCellReordersCardsOfASwimlane(string $user_name, int $expected_status_code): void
     {
         $US2_swimlane_id = self::$swimlane_ids['US2'];

@@ -31,14 +31,14 @@ use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
 final class PostArtifactDeletionCleanerTest extends TestCase
 {
-    private CrossReferenceManager|\PHPUnit\Framework\MockObject\Stub $reference_manager;
-    private \Tracker_ArtifactDao|\PHPUnit\Framework\MockObject\Stub $artifact_dao;
+    private CrossReferenceManager|\PHPUnit\Framework\MockObject\MockObject $reference_manager;
+    private \Tracker_ArtifactDao|\PHPUnit\Framework\MockObject\MockObject $artifact_dao;
     private PostArtifactDeletionCleaner $cleaner;
 
     protected function setUp(): void
     {
-        $this->reference_manager = $this->createStub(CrossReferenceManager::class);
-        $this->artifact_dao      = $this->createStub(\Tracker_ArtifactDao::class);
+        $this->reference_manager = $this->createMock(CrossReferenceManager::class);
+        $this->artifact_dao      = $this->createMock(\Tracker_ArtifactDao::class);
 
         $this->cleaner = new PostArtifactDeletionCleaner($this->reference_manager, $this->artifact_dao);
     }

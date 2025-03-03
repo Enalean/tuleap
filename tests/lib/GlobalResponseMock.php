@@ -22,27 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use Tuleap\Layout\BaseLayout;
 
 trait GlobalResponseMock
 {
-    /**
-     * @before
-     */
+    #[Before]
     protected function mockResponse(): void
     {
         $GLOBALS['Response'] = $this->getMockBuilder(BaseLayout::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
             ->enableAutoReturnValueGeneration()
             ->getMock();
     }
 
-    /**
-     * @after
-     */
+    #[After]
     protected function clearResponse(): void
     {
         unset($GLOBALS['Response']);

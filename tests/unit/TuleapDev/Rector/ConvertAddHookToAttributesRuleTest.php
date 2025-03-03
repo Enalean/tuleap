@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace TuleapDev\Rector;
 
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 use Tuleap\TemporaryTestDirectory;
 
@@ -50,9 +51,7 @@ class ConvertAddHookToAttributesRuleTest extends AbstractRectorTestCase
         unset($GLOBALS['_SERVER']['SHELL_VERBOSITY']);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function test(): void
     {
         copy(__DIR__ . '/_fixtures/plugin-with-add-hook-calls.php.inc', $this->getTmpDir() . '/plugin-with-add-hook-calls.php.inc');

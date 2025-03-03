@@ -299,9 +299,7 @@ final class GitlabBranchCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideGitLabAPIExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGitLabAPIExceptions')]
     public function testItThrowAnExceptionIfGitlabAPIsInError(Exception $exception): void
     {
         $user = $this->buildMockUser();

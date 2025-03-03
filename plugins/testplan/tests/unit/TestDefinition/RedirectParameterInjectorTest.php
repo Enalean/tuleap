@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use TemplateRendererFactory;
 use Tracker;
 use Tuleap\GlobalLanguageMock;
@@ -150,10 +151,10 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @dataProvider dataProviderInjectAndInformUserAboutBacklogItemBeingCovered
      * @param array<string,string> $request_parameters
      * @psalm-param callable(string):bool $has_expected_feedback_content
      */
+    #[DataProvider('dataProviderInjectAndInformUserAboutBacklogItemBeingCovered')]
     public function testInjectAndInformUserAboutBacklogItemBeingCovered(array $request_parameters, callable $has_expected_feedback_content): void
     {
         $request = new \Codendi_Request(

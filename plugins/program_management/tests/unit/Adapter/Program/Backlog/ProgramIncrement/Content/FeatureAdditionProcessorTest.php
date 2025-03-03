@@ -83,9 +83,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderExceptions')]
     public function testItWrapsExceptions(\Throwable $exception): void
     {
         $feature_addition = $this->buildFeatureAddition();

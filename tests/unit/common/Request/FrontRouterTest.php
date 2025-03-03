@@ -28,6 +28,8 @@ use FastRoute;
 use ForgeConfig;
 use HTTPRequest;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
 use Plugin;
 use PluginManager;
@@ -60,6 +62,7 @@ final class FrontRouterTest extends TestCase
     private BurningParrotTheme&MockObject $burning_parrot;
     private PluginManager&MockObject $plugin_manager;
     private RequestInstrumentation&MockObject $request_instrumentation;
+    private ThemeManager&\PHPUnit\Framework\MockObject\Stub $theme_manager;
 
     protected function setUp(): void
     {
@@ -67,7 +70,6 @@ final class FrontRouterTest extends TestCase
 
         $this->route_collector          = $this->getMockBuilder(RouteCollector::class)
             ->setConstructorArgs([$this->createMock(EventManager::class)])
-            ->addMethods(['myHandler'])
             ->onlyMethods(['collect'])
             ->getMock();
         $this->url_verification_factory = $this->createMock(URLVerificationFactory::class);
@@ -76,13 +78,13 @@ final class FrontRouterTest extends TestCase
         $this->layout                  = $this->createMock(BaseLayout::class);
         $this->logger                  = new TestLogger();
         $this->error_rendering         = $this->createMock(ErrorRendering::class);
-        $theme_manager                 = $this->createMock(ThemeManager::class);
+        $this->theme_manager           = $this->createStub(ThemeManager::class);
         $this->burning_parrot          = $this->createMock(BurningParrotTheme::class);
         $this->plugin_manager          = $this->createMock(PluginManager::class);
         $this->request_instrumentation = $this->createMock(RequestInstrumentation::class);
 
-        $theme_manager->method('getBurningParrot')->willReturn($this->burning_parrot);
-        $theme_manager->method('getTheme')->willReturn($this->layout);
+        $this->theme_manager->method('getBurningParrot')->willReturn($this->burning_parrot);
+        $this->theme_manager->method('getTheme')->willReturn($this->layout);
 
         ForgeConfig::set('codendi_cache_dir', vfsStream::setup()->url());
 
@@ -91,7 +93,7 @@ final class FrontRouterTest extends TestCase
             $this->url_verification_factory,
             $this->logger,
             $this->error_rendering,
-            $theme_manager,
+            $this->theme_manager,
             $this->plugin_manager,
             $this->request_instrumentation,
             ProvideCurrentUserWithLoggedInInformationStub::buildWithUser(UserTestBuilder::anActiveUser()->build())
@@ -427,6 +429,17 @@ final class FrontRouterTest extends TestCase
         $this->router->route($this->request);
     }
 
+    public static function demoHandler(string ...$args): DispatchableWithRequest
+    {
+        self::assertSame(['some_param1', 'some_param2'], $args);
+        return new class implements DispatchableWithRequest
+        {
+            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            {
+            }
+        };
+    }
+
     public function testItRoutesToRouteCollectorWithParams(): void
     {
         $this->request_instrumentation->expects(self::once())->method('increment');
@@ -434,30 +447,65 @@ final class FrontRouterTest extends TestCase
         $url_verification->method('assertValidUrl');
         $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
-        $handler = $this->createMock(DispatchableWithRequest::class);
-        $handler->expects(self::once())->method('process');
-        $this->route_collector->method('myHandler')->with('some_param1', 'some_param2')->willReturn($handler);
+        $counter_process = 0;
 
-        $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) {
-            $r->get('/stuff', ['core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
+        $route_collector = new class ($this->createStub(EventManager::class), $counter_process) extends RouteCollector
+        {
+            public function __construct(EventManager $event_manager, private int &$counter_process)
+            {
+                parent::__construct($event_manager);
+            }
 
-            return true;
-        }));
+            public function collect(FastRoute\RouteCollector $r): void
+            {
+                $r->get('/stuff', ['core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
+            }
+
+            public function myHandler(string ...$args): DispatchableWithRequest
+            {
+                if ($args !== ['some_param1', 'some_param2']) {
+                    throw new \RuntimeException('Unexpected paramaters');
+                }
+
+                return new class ($this->counter_process) implements DispatchableWithRequest
+                {
+                    public function __construct(private int &$counter_process)
+                    {
+                    }
+
+                    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+                    {
+                        $this->counter_process++;
+                    }
+                };
+            }
+        };
+
+        $router = new FrontRouter(
+            $route_collector,
+            $this->url_verification_factory,
+            $this->logger,
+            $this->error_rendering,
+            $this->theme_manager,
+            $this->plugin_manager,
+            $this->request_instrumentation,
+            ProvideCurrentUserWithLoggedInInformationStub::buildWithUser(UserTestBuilder::anActiveUser()->build())
+        );
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->router->route($this->request);
+        $router->route($this->request);
+
+        self::assertSame(1, $counter_process);
     }
 
-    /**
-     * @testWith [200]
-     *           [500]
-     *           [302]
-     *           [419]
-     *           [101]
-     * @runInSeparateProcess
-     */
+    #[TestWith([200])]
+    #[TestWith([500])]
+    #[TestWith([302])]
+    #[TestWith([419])]
+    #[TestWith([101])]
+    #[RunInSeparateProcess]
     public function testHTTPStatusCodeIsCorrectlyRecorded(int $status_code): void
     {
         $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);

@@ -20,11 +20,11 @@
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class IncomingMailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider mailProvider
-     */
+    #[DataProvider('mailProvider')]
     public function testBodyRetrieval($mail_content_path)
     {
         $incoming_mail = new IncomingMail(file_get_contents($mail_content_path));

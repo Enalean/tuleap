@@ -39,9 +39,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class BeforeMoveVisitorTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderProcessableDocumentClasses
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderProcessableDocumentClasses')]
     public function testAllExpectedDocumentTypesCanBeProcessed(string $processed_document_class): void
     {
         $this->expectNotToPerformAssertions();
@@ -66,9 +64,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderProcessableItemClasses
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderProcessableItemClasses')]
     public function testProcessingOfANonExpectedItemTypeIsRejected(string $processed_item_class): void
     {
         $before_move_visitor = new BeforeMoveVisitor(
@@ -87,9 +83,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderProcessableItemClasses
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderProcessableItemClasses')]
     public function testProcessingOfAnItemIsRejectedIfItIsNotMovable(string $processed_item_class): void
     {
         $item_factory = $this->createMock(Docman_ItemFactory::class);
@@ -111,9 +105,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderProcessableDocumentClasses
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderProcessableDocumentClasses')]
     public function testProcessingOfADocumentIsRejectedWhenTheNameIsAlreadyUsedInTheDestinationFolder(string $processed_document_class): void
     {
         $item_factory = $this->createMock(Docman_ItemFactory::class);
@@ -137,9 +129,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderProcessableDocumentClasses
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderProcessableDocumentClasses')]
     public function testProcessingOfADocumentIsRejectedWhenTheNameIsUsedByAnOngoingUploadInTheDestinationFolder(string $processed_document_class): void
     {
         $item_factory = $this->createMock(Docman_ItemFactory::class);

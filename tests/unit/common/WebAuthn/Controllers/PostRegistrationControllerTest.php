@@ -72,9 +72,7 @@ final class PostRegistrationControllerTest extends TestCase
         self::assertSame(401, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider getTest400Data
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTest400Data')]
     public function testItReturnsError400(
         string|array $body,
     ): void {

@@ -23,10 +23,7 @@ use Psr\EventDispatcher\StoppableEventInterface;
 
 class EventManagerTest extends TestCase // phpcs:ignore
 {
-    /**
-     * @test
-     */
-    public function itCallsAClosure(): void
+    public function testCallsAClosure(): void
     {
         $event_manager = new EventManager();
 

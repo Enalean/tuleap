@@ -39,7 +39,7 @@ final class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactLinkRepository $repository;
     private PlanningFactory&MockObject $planning_factory;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     protected function createInstance(): void
     {
         $this->planning_factory = $this->createMock(PlanningFactory::class);
@@ -48,7 +48,7 @@ final class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected Tracker_Artifact_Changeset&MockObject $changeset;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     protected function createEntities(): void
     {
         $tracker = $this->createMock(Tracker::class);

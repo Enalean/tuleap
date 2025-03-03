@@ -364,9 +364,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTestData')]
     public function testGetAllJiraFields(array $payloads, callable $tests): void
     {
         $wrapper = new class ($payloads) extends JiraCloudClientStub {

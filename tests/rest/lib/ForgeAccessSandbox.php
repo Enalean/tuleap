@@ -29,17 +29,13 @@ trait ForgeAccessSandbox
 {
     private string $site_access;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function backupSiteAccess(): void
     {
         $this->site_access = TuleapConfig::instance()->getAccess();
     }
 
-    /**
-     * @after
-     */
+    #[\PHPUnit\Framework\Attributes\After]
     public function restoreSiteAccess(): void
     {
         match ($this->site_access) {

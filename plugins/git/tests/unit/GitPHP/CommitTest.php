@@ -134,9 +134,7 @@ IdFV7BORBPs0tJG5MsN6VKsC4czW822OP2RQ8WOTOPreRxELUnkEAAAAAAAA
 EOF;
 
 
-    /**
-     * @dataProvider commitsProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('commitsProvider')]
     public function testContentIsRetrievedWhenAPGPSignatureIsPresent(
         $commit_content,
         $author_name,

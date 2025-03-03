@@ -88,9 +88,7 @@ final class DateValuesCollectionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generateBetweenValuesIncludingCurrentDateTime
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateBetweenValuesIncludingCurrentDateTime')]
     public function testItAllowsBetweenValuesIncludingCurrentDateTime(
         BetweenValueWrapper $wrapper,
         string $valid_date_string,
@@ -101,9 +99,7 @@ final class DateValuesCollectionTest extends TestCase
         self::assertContains($valid_date_string, $date_values);
     }
 
-    /**
-     * @dataProvider generateBetweenValuesIncludingCurrentDateTime
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateBetweenValuesIncludingCurrentDateTime')]
     public function testItRejectsBetweenValuesIncludingCurrentDateTimeWhenForbidden(
         BetweenValueWrapper $wrapper,
     ): void {

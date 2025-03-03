@@ -63,9 +63,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
         yield 'It rejects open list' => [OpenListFieldBuilder::anOpenListField()->build(), false];
     }
 
-    /**
-     * @dataProvider generateFields
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateFields')]
     public function testItAllowsSingleValueListFields(Tracker_FormElement_Field_List $list, bool $is_allowed): void
     {
         $checker = new InvalidOrderByListChecker(

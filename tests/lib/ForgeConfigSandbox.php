@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap;
 
 use ForgeConfig;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 
 /**
  * Backup and restore Forge configuration, respectively before and after each test.
@@ -31,17 +33,13 @@ use ForgeConfig;
  */
 trait ForgeConfigSandbox
 {
-    /**
-     * @before
-     */
+    #[Before]
     protected function backupForgeConfig(): void
     {
         ForgeConfig::store();
     }
 
-    /**
-     * @after
-     */
+    #[After]
     protected function restoreForgeConfig(): void
     {
         ForgeConfig::restore();

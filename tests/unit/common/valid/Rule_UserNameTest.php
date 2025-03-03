@@ -76,9 +76,7 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($r->isReservedName('forgeron'));
     }
 
-    /**
-     * @dataProvider dataForUnixTestProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataForUnixTestProvider')]
     public function testIsUnixValid(bool $expected_result, string $given_username): void
     {
         $rules = new Rule_UserName();

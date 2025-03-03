@@ -26,12 +26,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class ArtifactsDeletionConfigTest extends TestCase
 {
-    private ArtifactsDeletionConfigDAO|\PHPUnit\Framework\MockObject\Stub $dao;
+    private ArtifactsDeletionConfigDAO|\PHPUnit\Framework\MockObject\MockObject $dao;
     private ArtifactsDeletionConfig $config;
 
     protected function setUp(): void
     {
-        $this->dao    = $this->createStub(ArtifactsDeletionConfigDAO::class);
+        $this->dao    = $this->createMock(ArtifactsDeletionConfigDAO::class);
         $this->config = new ArtifactsDeletionConfig($this->dao);
     }
 

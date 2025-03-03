@@ -45,9 +45,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private EventManager&MockObject $event_manager;
     private ProjectAccessChecker $checker;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->verifier      = $this->createMock(RestrictedUserCanAccessUrlOrProjectVerifier::class);

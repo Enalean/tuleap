@@ -24,9 +24,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider dataProviderInvalidData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidData')]
     public function testFromAppDataThrowsWhenDataIsInvalid(string $app_id, string $app_name): void
     {
         $this->expectException(InvalidAppDataException::class);
@@ -46,9 +44,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderValidData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidData')]
     public function testFromProjectAdministrationDataReturnsAnUpdatedOAuth2AppToBeSavedInDatabase(
         string $redirect_uri,
         bool $use_pkce,
@@ -64,9 +60,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($project, $updated_app->getProject());
     }
 
-    /**
-     * @dataProvider dataProviderValidData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidData')]
     public function testFromSiteAdministrationDataReturnsAnUpdatedOAuth2AppToBeSavedInDatabase(
         string $redirect_uri,
         bool $use_pkce,

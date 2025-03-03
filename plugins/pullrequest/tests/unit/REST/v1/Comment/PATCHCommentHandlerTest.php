@@ -159,9 +159,7 @@ final class PATCHCommentHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generateDestinationGitExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateDestinationGitExceptions')]
     public function testUserCannotSeeThePullRequest(\Throwable $throwable): void
     {
         $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withException($throwable);

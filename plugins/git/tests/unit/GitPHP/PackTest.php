@@ -91,9 +91,7 @@ final class PackTest extends TestCase
         $this->project->method('GetPath')->willReturn($git_repository->url());
     }
 
-    /**
-     * @dataProvider objectReferenceProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('objectReferenceProvider')]
     public function testContainsObject($object_reference, $expected, $pack_index_path): void
     {
         $this->pack_index_file->withContent(file_get_contents($pack_index_path));
@@ -124,9 +122,7 @@ final class PackTest extends TestCase
         return $full_reference_tests;
     }
 
-    /**
-     * @dataProvider objectProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('objectProvider')]
     public function testGetObject($object_reference, $sha256_expected_content, $expected_type, $pack_index_path): void
     {
         $this->pack_index_file->withContent(file_get_contents($pack_index_path));

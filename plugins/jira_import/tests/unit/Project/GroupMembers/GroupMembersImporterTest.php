@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\Project\GroupMembers;
 
 use PFUser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\NullLogger;
 use Tuleap\Project\UGroups\XML\XMLUserGroup;
 use Tuleap\Project\XML\XMLUserGroups;
@@ -38,9 +39,7 @@ use Tuleap\Tracker\XML\XMLUser;
 
 final class GroupMembersImporterTest extends TestCase
 {
-    /**
-     * @dataProvider getJiraServerTestsData
-     */
+    #[DataProvider('getJiraServerTestsData')]
     public function testJiraServer(array $jira_payloads, array $jira_to_tuleap_users, callable $tests): void
     {
         $jira_default_user = UserTestBuilder::aUser()->withId(TrackerImporterUser::ID)->build();
@@ -222,9 +221,7 @@ final class GroupMembersImporterTest extends TestCase
         return array_values(array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === $wanted_user_group_name))[0];
     }
 
-    /**
-     * @dataProvider getJiraCloudTestsData
-     */
+    #[DataProvider('getJiraCloudTestsData')]
     public function testJiraCloud(array $jira_payloads, array $jira_to_tuleap_users, callable $tests): void
     {
         $jira_default_user = UserTestBuilder::aUser()->withId(TrackerImporterUser::ID)->build();

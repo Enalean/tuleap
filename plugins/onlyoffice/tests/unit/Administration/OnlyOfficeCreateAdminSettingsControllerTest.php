@@ -54,9 +54,7 @@ final class OnlyOfficeCreateAdminSettingsControllerTest extends TestCase
         self::assertTrue($creator->hasBeenCreated());
     }
 
-    /**
-     * @dataProvider dataProviderInvalidSettings
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidSettings')]
     public function testRejectsInvalidSettings(array $body): void
     {
         $controller = $this->buildController(ICreateDocumentServerStub::buildSelf());

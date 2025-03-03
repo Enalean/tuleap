@@ -47,9 +47,7 @@ class HiddenFieldsetsValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $hidden_fieldsets_value_validator;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createUpdater()
     {
         $this->hidden_fieldsets_value_repository = Mockery::mock(HiddenFieldsetsValueRepository::class);

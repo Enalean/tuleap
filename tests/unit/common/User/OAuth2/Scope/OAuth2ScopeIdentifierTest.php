@@ -25,9 +25,7 @@ namespace Tuleap\User\OAuth2\Scope;
 
 final class OAuth2ScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider dataProviderValidIdentifierKey
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidIdentifierKey')]
     public function testIdentifierKeyIsNotModified(string $identifier_key): void
     {
         $identifier = OAuth2ScopeIdentifier::fromIdentifierKey($identifier_key);
@@ -44,9 +42,7 @@ final class OAuth2ScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderInvalidIdentifierKey
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidIdentifierKey')]
     public function testIdentifierKeyNotCorrectlyFormattedIsRejected(string $invalid_identifier_key): void
     {
         $this->expectException(InvalidOAuth2ScopeIdentifierException::class);

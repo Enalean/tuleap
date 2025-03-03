@@ -39,9 +39,7 @@ final class CallbackURLSaveTokenIdentifierExtractorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderInvalidURLs
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidURLs')]
     public function testReturnsAnErrorWhenTokenIdentifierCannotBeExtracted(string $url): void
     {
         $res = (new CallbackURLSaveTokenIdentifierExtractor())->extractSaveTokenIdentifierFromTheCallbackURL(

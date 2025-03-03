@@ -22,29 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider dataProviderValidHeaderLines
-     * @dataProvider dataProviderInvalidHeaderLinesLookingLikeABearerToken
-     */
+    #[DataProvider('dataProviderValidHeaderLines')]
+    #[DataProvider('dataProviderInvalidHeaderLinesLookingLikeABearerToken')]
     public function testDetectsHeaderLinesThatMayContainABearerToken(string $header_line): void
     {
         $this->assertTrue((new BearerTokenHeaderParser())->doesHeaderLineContainsBearerTokenInformation($header_line));
     }
 
-    /**
-     * @dataProvider dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag')]
     public function testDoesNotDetectHeaderLinesThatCannotContainABearerToken(string $header_line): void
     {
         $this->assertFalse((new BearerTokenHeaderParser())->doesHeaderLineContainsBearerTokenInformation($header_line));
     }
 
-    /**
-     * @dataProvider dataProviderValidHeaderLines
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidHeaderLines')]
     public function testExtractBearerTokenFromValidHeaderLine(string $header_line, string $expected_identifier): void
     {
         $parser = new BearerTokenHeaderParser();
@@ -64,10 +59,8 @@ final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderInvalidHeaderLinesLookingLikeABearerToken
-     * @dataProvider dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag
-     */
+    #[DataProvider('dataProviderInvalidHeaderLinesLookingLikeABearerToken')]
+    #[DataProvider('dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag')]
     public function testDoesNotExtractBearerTokenFromInvalidHeaderLine(string $header_line): void
     {
         $parser = new BearerTokenHeaderParser();

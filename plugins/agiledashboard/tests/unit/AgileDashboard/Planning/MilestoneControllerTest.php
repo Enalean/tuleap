@@ -64,7 +64,7 @@ final class MilestoneControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $GLOBALS['Language']->method('getText')->willReturn(self::returnCallback(static fn(string $domain, string $text) => $text));
+        $GLOBALS['Language']->method('getText')->willReturnCallback(static fn(string $domain, string $text) => $text);
 
         $this->milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
         $project_manager         = $this->createMock(ProjectManager::class);

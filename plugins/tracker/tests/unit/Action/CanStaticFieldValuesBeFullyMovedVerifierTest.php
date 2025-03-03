@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_List;
@@ -37,11 +38,11 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 {
     private Artifact $artifact;
     private Stub & Tracker_FormElement_Field_List $destination_list_field;
-    private Stub & Tracker_FormElement_Field_List $source_list_field;
+    private MockObject & Tracker_FormElement_Field_List $source_list_field;
 
     protected function setUp(): void
     {
-        $this->source_list_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->source_list_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $this->source_list_field->method('getId')->willReturn('123');
         $this->source_list_field->method('getName')->willReturn('List');
         $this->destination_list_field = $this->createStub(Tracker_FormElement_Field_List::class);

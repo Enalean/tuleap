@@ -41,9 +41,7 @@ final class LinkToGitFileBlobFinderTest extends TestCase
         $this->current_commit->method('GetProject')->willReturn($this->project);
     }
 
-    /**
-     * @dataProvider dataProviderToExistingFile
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderToExistingFile')]
     public function testCanFindsExistingFile(string $readme_path, string $url, string $expected_path): void
     {
         $blob_finder = new LinkToGitFileBlobFinder($readme_path, $this->current_commit);

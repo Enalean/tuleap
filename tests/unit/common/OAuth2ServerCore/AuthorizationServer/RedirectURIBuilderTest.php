@@ -37,9 +37,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
     }
 
-    /**
-     * @dataProvider dataProviderValidErrorURIs
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidErrorURIs')]
     public function testBuildErrorURI(array $parameters, string $expected_result_uri): void
     {
         $result = $this->builder->buildErrorURI(...$parameters);
@@ -72,9 +70,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderValidSuccessURIs
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidSuccessURIs')]
     public function testBuildSuccessURI(array $parameters, string $expected_result_uri): void
     {
         $result = $this->builder->buildSuccessURI(...$parameters);

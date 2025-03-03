@@ -87,9 +87,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderMethodUnderTest
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderMethodUnderTest')]
     public function testItThrowsWhenFieldMatchingReferenceIsNotFound(
         string $method_under_test,
         string $property_to_call,
@@ -100,9 +98,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         call_user_func([$this->getGatherer(), $method_under_test], $this->fields->{$property_to_call});
     }
 
-    /**
-     * @dataProvider dataProviderMethodUnderTest
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderMethodUnderTest')]
     public function testItThrowsWhenChangesetValuesAreNotFound(
         string $method_under_test,
         string $property_to_call,

@@ -67,9 +67,9 @@ final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPU
             ->method('renderAPresenter')
             ->with(
                 'Platform banner',
-                self::isType('string'),
+                self::isString(),
                 'administration',
-                self::isType('array')
+                self::isArray()
             );
 
         $this->process();

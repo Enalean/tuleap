@@ -174,9 +174,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderExceptions')]
     public function testItWrapsTrackerException(\Throwable $exception): void
     {
         $this->changeset_creator->method('create')->willThrowException($exception);
@@ -226,9 +224,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAdder()->addArtifactLinkChangeset($this->artifact_link_changeset);
     }
 
-    /**
-     * @dataProvider dataProviderExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderExceptions')]
     public function testItWrapsTrackerExceptionForArtifactLink(\Throwable $exception): void
     {
         $this->changeset_creator->method('create')->willThrowException($exception);

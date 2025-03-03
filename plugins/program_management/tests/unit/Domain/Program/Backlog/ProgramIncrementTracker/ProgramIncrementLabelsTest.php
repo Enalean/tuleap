@@ -38,9 +38,7 @@ final class ProgramIncrementLabelsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderLabels
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderLabels')]
     public function testItBuildsLabelsFromProgramIncrementTracker(?string $label, ?string $sub_label): void
     {
         $program_increment_tracker = TrackerReferenceStub::withDefaults();

@@ -40,9 +40,7 @@ final class MediawikiStandaloneProjectResourceTest extends \RestBase
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @dataProvider getPermissionsData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPermissionsData')]
     public function testGetOnPlatformOpenToAnonymous(?string $user, array $expected): void
     {
         $this->setForgeToAnonymous();

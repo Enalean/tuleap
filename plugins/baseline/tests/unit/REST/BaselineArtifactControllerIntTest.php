@@ -40,7 +40,7 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
     /** @var BaselineArtifactController */
     private $controller;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(BaselineArtifactController::class);

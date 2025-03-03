@@ -75,7 +75,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->renderer
             ->expects(self::once())
             ->method('renderToPage')
-            ->with('categories', self::isType('array'));
+            ->with('categories', self::isArray());
         $this->dao
             ->expects(self::once())
             ->method('getTopCategories')

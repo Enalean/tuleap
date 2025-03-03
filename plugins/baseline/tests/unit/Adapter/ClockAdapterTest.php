@@ -24,15 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Before;
 use Tuleap\Baseline\Domain\Clock;
 
 final class ClockAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Clock $clock;
 
-    /**
-     * @before
-     */
+    #[Before]
     public function createInstance(): void
     {
         $this->clock = new ClockAdapter();

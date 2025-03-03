@@ -105,9 +105,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
         self::assertSame($expected_response, $response);
     }
 
-    /**
-     * @dataProvider dataProviderBadAuthorizationHeader
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderBadAuthorizationHeader')]
     public function testAccessIsNotAllowedWhenTheAuthorizationHeaderIsNotCorrect(string $bad_authorization_header_for_bearer_token): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);

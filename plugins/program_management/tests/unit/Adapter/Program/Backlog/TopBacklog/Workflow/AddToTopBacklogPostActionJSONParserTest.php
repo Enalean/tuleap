@@ -43,9 +43,7 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
         self::assertTrue($this->parser->accept(['id' => 12, 'type' => 'program_management_add_to_top_backlog']));
     }
 
-    /**
-     * @dataProvider dataProviderInvalidJSONPayload
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidJSONPayload')]
     public function testDoesNotAcceptUnknownAction(array $json): void
     {
         self::assertFalse($this->parser->accept($json));

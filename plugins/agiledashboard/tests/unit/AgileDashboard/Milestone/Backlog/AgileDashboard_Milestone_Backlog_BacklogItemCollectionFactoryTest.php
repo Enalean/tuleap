@@ -188,15 +188,13 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $sorted_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
 
-        $this->backlog_item_builder->method('getCollection')->will(
-            self::onConsecutiveCalls(
-                new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
-                $open_closed_and_inconsistent_collection,
-                new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
-                new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
-                $inconsistent_collection,
-                $sorted_collection
-            )
+        $this->backlog_item_builder->method('getCollection')->willReturnOnConsecutiveCalls(
+            new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
+            $open_closed_and_inconsistent_collection,
+            new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
+            $inconsistent_collection,
+            $sorted_collection
         );
 
         $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
@@ -375,11 +373,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $item_presenter = $this->getItemPresenter($artifact);
 
-        $this->backlog_item_builder->method('getItem')->will(
-            self::onConsecutiveCalls(
-                $item_presenter
-            )
-        );
+        $this->backlog_item_builder->method('getItem')->willReturn($item_presenter);
 
         $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([]);
 

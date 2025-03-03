@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\REST\v1;
 
 use Luracast\Restler\RestException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
@@ -115,10 +116,9 @@ final class GitlabBranchInformationRetrieverTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderGitlabAPIFailures
-     *
      * @psalm-param class-string<\Exception> $exception_name
      */
+    #[DataProvider('dataProviderGitlabAPIFailures')]
     public function testCannotAccessWhenRequestToTheGitLabAPIDoesNotSucceed(string $exception_name): void
     {
         $current_user = $this->createStub(\PFUser::class);

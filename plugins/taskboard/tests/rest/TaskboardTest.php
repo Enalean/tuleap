@@ -52,9 +52,7 @@ class TaskboardTest extends RestBase
         }
     }
 
-    /**
-     * @dataProvider getUserName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUserName')]
     public function testOPTIONSCards(string $user_name): void
     {
         $response = $this->getResponse(
@@ -65,9 +63,7 @@ class TaskboardTest extends RestBase
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @dataProvider getUserName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUserName')]
     public function testGETCards(string $user_name): void
     {
         $response = $this->getResponse(
@@ -114,9 +110,7 @@ class TaskboardTest extends RestBase
         }
     }
 
-    /**
-     * @dataProvider getUserName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUserName')]
     public function testGETNoMilestone(string $user_name): void
     {
         $response = $this->getResponse(
@@ -126,9 +120,7 @@ class TaskboardTest extends RestBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider getUserName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUserName')]
     public function testOPTIONSColumns(string $user_name): void
     {
         $response = $this->getResponse(
@@ -139,9 +131,7 @@ class TaskboardTest extends RestBase
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @dataProvider getUserName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUserName')]
     public function testGETColumns(string $user_name): void
     {
         $response = $this->getResponse(
@@ -162,9 +152,7 @@ class TaskboardTest extends RestBase
         self::assertSame('acid-green', $columns[3]['header_color']);
     }
 
-    /**
-     * @dataProvider getUserName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUserName')]
     public function testGETColumnsThrows404WhenNoMilestone(string $user_name): void
     {
         $response = $this->getResponse(

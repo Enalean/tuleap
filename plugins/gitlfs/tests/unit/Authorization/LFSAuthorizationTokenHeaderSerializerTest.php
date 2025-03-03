@@ -46,9 +46,7 @@ final class LFSAuthorizationTokenHeaderSerializerTest extends \Tuleap\Test\PHPUn
         );
     }
 
-    /**
-     * @dataProvider incorrectlyFormattedIdentifierProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('incorrectlyFormattedIdentifierProvider')]
     public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier): void
     {
         $serializer = new LFSAuthorizationTokenHeaderSerializer();

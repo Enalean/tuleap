@@ -127,9 +127,7 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
         yield 'Add type' => [ForwardLinkStub::withNoType(386), ForwardLinkStub::withType(386, '_is_child')];
     }
 
-    /**
-     * @dataProvider provideChangeOfType
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideChangeOfType')]
     public function testItReturnsACollectionOfLinksThatHaveChangedType(
         ForwardLinkStub $existing,
         ForwardLinkStub $submitted,

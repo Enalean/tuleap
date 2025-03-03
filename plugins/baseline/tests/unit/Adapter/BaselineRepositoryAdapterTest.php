@@ -59,7 +59,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserIdentifier $current_user;
     private \PFUser $user;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->db                           = $this->createMock(EasyDB::class);
@@ -100,7 +100,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db
             ->method('safeQuery')
-            ->with(self::isType('string'), [1])
+            ->with(self::isString(), [1])
             ->willReturn(
                 [
                     [
@@ -135,7 +135,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->db
             ->method('safeQuery')
-            ->with(self::isType('string'), [1])
+            ->with(self::isString(), [1])
             ->willReturn([]);
 
         $baseline = $this->repository->findById($this->current_user, 1);
@@ -162,7 +162,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db
             ->method('safeQuery')
-            ->with(self::isType('string'), [1])
+            ->with(self::isString(), [1])
             ->willReturn(
                 [
                     [
@@ -200,7 +200,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db
             ->method('safeQuery')
-            ->with(self::isType('string'), [1])
+            ->with(self::isString(), [1])
             ->willReturn(
                 [
                     [
@@ -237,7 +237,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db
             ->method('safeQuery')
-            ->with(self::isType('string'), [102, 10, 3])
+            ->with(self::isString(), [102, 10, 3])
             ->willReturn(
                 [
                     [
@@ -287,7 +287,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db
             ->method('safeQuery')
-            ->with(self::isType('string'), [102, 10, 3])
+            ->with(self::isString(), [102, 10, 3])
             ->willReturn(
                 [
                     [
@@ -312,7 +312,7 @@ final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectFactory::oneWithId(102);
         $this->db
             ->method('single')
-            ->with(self::isType('string'), [102])
+            ->with(self::isString(), [102])
             ->willReturn(233);
 
         $count = $this->repository->countByProject($project);

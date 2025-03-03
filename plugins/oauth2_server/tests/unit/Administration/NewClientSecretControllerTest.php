@@ -21,6 +21,7 @@
 namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -76,9 +77,9 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @dataProvider dataProviderInvalidBody
      * @param array|null $parsed_body
      */
+    #[DataProvider('dataProviderInvalidBody')]
     public function testHandleRedirectsWithErrorWhenDataIsInvalid($parsed_body): void
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);

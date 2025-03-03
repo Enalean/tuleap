@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Project;
 use Tracker;
 use TrackerFactory;
@@ -158,9 +159,7 @@ final class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestC
         return $section;
     }
 
-    /**
-     * @depends testItAddsLinkToCampaignInCurrentContextSection
-     */
+    #[Depends('testItAddsLinkToCampaignInCurrentContextSection')]
     public function testItSetASpecialDataAttributeSoThatTestPlanAppCanSelectItMoreEasily(
         NewDropdownLinkSectionPresenter $section,
     ): void {

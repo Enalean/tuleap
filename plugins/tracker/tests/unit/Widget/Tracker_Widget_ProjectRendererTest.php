@@ -77,9 +77,7 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getRenderer
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getRenderer')]
     public function testDoesNotExportWidgetWhenRendererDoesNotExist(?\Tracker_Report_Renderer $renderer): void
     {
         $this->renderer_factory->method('getReportRendererById')->willReturn($renderer);

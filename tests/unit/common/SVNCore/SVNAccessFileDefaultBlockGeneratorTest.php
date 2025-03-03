@@ -33,9 +33,7 @@ use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
 final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
 {
-    /**
-     * @dataProvider membersDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('membersDataProvider')]
     public function testMembers(UGroupRetriever $user_group_retriever, callable $plugin, string $expected): void
     {
         $event_manager = new \EventManager();
@@ -139,9 +137,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider permissionsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('permissionsDataProvider')]
     public function testPermissions(Repository $repository, callable $plugin, string $expected): void
     {
         $event_manager = new \EventManager();

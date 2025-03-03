@@ -77,32 +77,12 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $prjm = $this->createMock(\ProjectManager::class);
         $prjm->method('getProject')->willReturn($this->createMock(\Project::class));
 
-        $grpManager = $this->getMockBuilder(LDAP_GroupManager::class)
-            ->onlyMethods([
-                'addUserToGroup',
-                'getDbGroupMembersIds',
-                'getLdapGroupMembersIds',
-                'getDao',
-            ])
-            ->setConstructorArgs([
-                $ldap,
-                $ldap_user_manager,
-                $prjm,
-                $notm,
-                new NullLogger(),
-            ])->getMockForAbstractClass();
+        $grpManager = $this->buildLDAPGroupManager($ldap, $ldap_user_manager, $prjm, $notm);
 
         $grpManager->setGroupDn('cn=whatever,ou=groups,dc=example,dc=com');
         $grpManager->setId(42);
 
-        $grpManager->method('addUserToGroup');
-        $grpManager->method('getDbGroupMembersIds')->willReturn([]);
-        $grpManager->method('getLdapGroupMembersIds')->willReturn([101, 102]);
-        $dao = $this->createMock(LDAP_ProjectGroupDao::class);
-        $dao->method('searchByGroupId')->willReturn([]);
-        $dao->method('unlinkGroupLdap');
-        $dao->method('linkGroupLdap');
-        $grpManager->method('getDao')->willReturn($dao);
+
 
         $toAdd = $grpManager->getUsersToBeAdded(LDAP_GroupManager::BIND_OPTION);
         self::assertCount(2, $toAdd);
@@ -157,14 +137,7 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ldap_user_manager = $this->createMock(\LDAP_UserManager::class);
 
-        $grpManager = $this->getMockBuilder(LDAP_GroupManager::class)
-            ->setConstructorArgs([
-                $ldap,
-                $ldap_user_manager,
-                $prjm,
-                $this->createMock(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class),
-                new NullLogger(),
-            ])->getMockForAbstractClass();
+        $grpManager = $this->buildLDAPGroupManager($ldap, $ldap_user_manager, $prjm, $this->createStub(GroupSyncAdminEmailNotificationsManager::class));
 
         $members = $grpManager->getLdapGroupMembers('cn=ABCDEF,ou=groups,dc=example,dc=com');
 
@@ -173,5 +146,50 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('edA', $members['edA']->getEdUid());
         self::assertInstanceOf(LDAPResult::class, $members['edE']);
         self::assertSame('edE', $members['edE']->getEdUid());
+    }
+
+    private function buildLDAPGroupManager(
+        \LDAP $ldap,
+        LDAP_UserManager $ldap_user_manager,
+        \ProjectManager $project_manager,
+        GroupSyncNotificationsManager $notifications_manager,
+    ): LDAP_GroupManager {
+        $dao = $this->createStub(LDAP_ProjectGroupDao::class);
+        $dao->method('searchByGroupId')->willReturn([]);
+
+        return new class ($ldap, $ldap_user_manager, $project_manager, $notifications_manager, $dao) extends LDAP_GroupManager {
+            public function __construct(
+                \LDAP $ldap,
+                LDAP_UserManager $ldap_user_manager,
+                \ProjectManager $project_manager,
+                GroupSyncNotificationsManager $notifications_manager,
+                private readonly LDAP_ProjectGroupDao $dao,
+            ) {
+                parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager, new NullLogger());
+            }
+
+            protected function addUserToGroup($id, $userId): void
+            {
+            }
+
+            protected function removeUserFromGroup($id, $userId): void
+            {
+            }
+
+            public function getLdapGroupMembersIds($groupDn): array
+            {
+                return [101, 102];
+            }
+
+            protected function getDbGroupMembersIds($id): array
+            {
+                return [];
+            }
+
+            protected function getDao(): LDAP_ProjectGroupDao
+            {
+                return $this->dao;
+            }
+        };
     }
 }

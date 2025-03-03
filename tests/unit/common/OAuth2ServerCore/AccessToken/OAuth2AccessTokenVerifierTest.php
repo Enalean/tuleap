@@ -170,9 +170,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->verifier->getGrantedAuthorization($access_token, $required_scope);
     }
 
-    /**
-     * @dataProvider dataProviderScopeFailures
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderScopeFailures')]
     public function testVerificationFailsWhenTheRequiredScopeCannotBeApproved(AuthenticationScope ...$scopes_matching_access_token): void
     {
         $expected_user = new \PFUser(['user_id' => 103, 'language_id' => 'en']);

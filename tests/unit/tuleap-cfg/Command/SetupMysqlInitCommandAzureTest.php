@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\ForgeConfigSandbox;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
-/**
- * @covers \TuleapCfg\Command\SetupMysql\DatabaseConfigurator
- */
+#[CoversClass(DatabaseConfigurator::class)]
 final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

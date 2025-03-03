@@ -44,7 +44,7 @@ final class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\T
     private SemanticValueAdapter&MockObject $semantic_value_adapter;
     private ArtifactLinkRepository&MockObject $artifact_link_adapter;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);

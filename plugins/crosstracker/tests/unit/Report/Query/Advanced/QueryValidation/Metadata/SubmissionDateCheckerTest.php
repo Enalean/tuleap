@@ -119,9 +119,7 @@ final class SubmissionDateCheckerTest extends TestCase
         yield "<= ''" => [new LesserThanOrEqualComparison($metadata, $empty_value)];
     }
 
-    /**
-     * @dataProvider generateInvalidComparisonsToEmptyString
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidComparisonsToEmptyString')]
     public function testItForbidsEmptyValueForComparisons(Comparison $comparison): void
     {
         $this->expectException(EmptyStringComparisonException::class);

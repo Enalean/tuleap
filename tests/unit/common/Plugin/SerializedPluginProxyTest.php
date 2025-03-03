@@ -30,9 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class SerializedPluginProxyTest extends TestCase
 {
-    /**
-     * @dataProvider getDataForCaptureDefaultConfigValues
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDataForCaptureDefaultConfigValues')]
     public function testCaptureDefaultConfigValues(object $class, array $environment, array $expected_value): void
     {
         foreach ($environment as $env => $value) {

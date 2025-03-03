@@ -42,11 +42,11 @@ use Tuleap\Tracker\Tracker\XML\Updater\UpdateMoveChangesetXMLDuckTyping;
 
 final class MegaMoverArtifactByDuckTypingTest extends TestCase
 {
-    private ArtifactsDeletionManager|\PHPUnit\Framework\MockObject\Stub $artifacts_deletion_manager;
-    private Tracker_XML_Exporter_ArtifactXMLExporter|\PHPUnit\Framework\MockObject\Stub $xml_exporter;
+    private ArtifactsDeletionManager&\PHPUnit\Framework\MockObject\MockObject $artifacts_deletion_manager;
+    private Tracker_XML_Exporter_ArtifactXMLExporter&\PHPUnit\Framework\MockObject\MockObject $xml_exporter;
     private UpdateMoveChangesetXMLDuckTyping $xml_updater;
-    private Tracker_Artifact_PriorityManager|\PHPUnit\Framework\MockObject\Stub $artifact_priority_manager;
-    private Tracker_Artifact_XMLImport|\PHPUnit\Framework\MockObject\Stub $xml_import;
+    private Tracker_Artifact_PriorityManager&\PHPUnit\Framework\MockObject\MockObject $artifact_priority_manager;
+    private Tracker_Artifact_XMLImport&\PHPUnit\Framework\MockObject\MockObject $xml_import;
     private MegaMoverArtifactByDuckTyping $artifact_mover;
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private Tracker $source_tracker;
@@ -57,12 +57,12 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->artifacts_deletion_manager = $this->createStub(ArtifactsDeletionManager::class);
-        $this->xml_exporter               = $this->createStub(Tracker_XML_Exporter_ArtifactXMLExporter::class);
+        $this->artifacts_deletion_manager = $this->createMock(ArtifactsDeletionManager::class);
+        $this->xml_exporter               = $this->createMock(Tracker_XML_Exporter_ArtifactXMLExporter::class);
         $this->xml_updater                = UpdateMoveChangesetXMLDuckTypingStub::build();
-        $this->artifact_priority_manager  = $this->createStub(Tracker_Artifact_PriorityManager::class);
+        $this->artifact_priority_manager  = $this->createMock(Tracker_Artifact_PriorityManager::class);
         $transaction_executor             = new DBTransactionExecutorPassthrough();
-        $this->xml_import                 = $this->createStub(Tracker_Artifact_XMLImport::class);
+        $this->xml_import                 = $this->createMock(Tracker_Artifact_XMLImport::class);
 
         $this->artifact_mover = new MegaMoverArtifactByDuckTyping(
             $this->artifacts_deletion_manager,
@@ -94,7 +94,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
     public function testItThrowsWhenMoveCanNotBeProcessed(): void
     {
         $project  = ProjectTestBuilder::aProject()->withStatusActive()->build();
-        $workflow = $this->createStub(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
         $workflow->expects(self::once())->method('disable');
         $target_tracker = $this->createStub(Tracker::class);
         $target_tracker->method('getProject')->willReturn($project);
@@ -113,7 +113,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
 
     public function testItRunTheMoveAndUpdateRankAndReturnTotalArtifactsDeleted(): void
     {
-        $workflow = $this->createStub(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
         $workflow->expects(self::once())->method('disable');
         $target_tracker = $this->createStub(Tracker::class);
         $target_tracker->method('getProject')->willReturn($this->project);

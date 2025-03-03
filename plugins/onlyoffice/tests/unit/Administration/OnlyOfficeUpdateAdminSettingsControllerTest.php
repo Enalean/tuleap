@@ -54,9 +54,7 @@ final class OnlyOfficeUpdateAdminSettingsControllerTest extends TestCase
         self::assertTrue($updater->hasBeenUpdated());
     }
 
-    /**
-     * @dataProvider dataProviderInvalidSettings
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidSettings')]
     public function testRejectsInvalidSettings(array $body): void
     {
         $controller = $this->buildController(IUpdateDocumentServerStub::buildSelf());

@@ -30,10 +30,7 @@ class URLVerificationRestrictedUserTest extends TestCase //phpcs:ignore
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
-    public function itAllowsRestrictedUserToAccessProjectDashboard(): void
+    public function testAllowsRestrictedUserToAccessProjectDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/projects/demo-pr';
         $user                   = \Tuleap\Test\Builders\UserTestBuilder::aRestrictedUser()->build();

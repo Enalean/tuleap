@@ -29,7 +29,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $app_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&RetrieveAppMatchingClientID
+     * @var \PHPUnit\Framework\MockObject\MockObject&RetrieveAppMatchingClientID
      */
     private $app_retriever;
     /**
@@ -39,7 +39,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->app_retriever   = $this->createStub(RetrieveAppMatchingClientID::class);
+        $this->app_retriever   = $this->createMock(RetrieveAppMatchingClientID::class);
         $this->project_manager = $this->createMock(\ProjectManager::class);
         $this->app_factory     = new AppFactory($this->app_retriever, $this->project_manager);
     }

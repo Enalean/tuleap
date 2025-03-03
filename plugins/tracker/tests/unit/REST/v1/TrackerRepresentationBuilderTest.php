@@ -86,9 +86,7 @@ final class TrackerRepresentationBuilderTest extends TestCase
         self::assertInstanceOf(CompleteTrackerRepresentation::class, $representation[0]);
     }
 
-    /**
-     * @dataProvider getPaginatedRepresentations
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPaginatedRepresentations')]
     public function testItReturnsAPaginatedCollectionOfTheProjectTrackers(int $offset, int $expected_tracker_id): void
     {
         $this->limit  = 1;

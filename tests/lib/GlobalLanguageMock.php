@@ -22,26 +22,22 @@
 namespace Tuleap;
 
 use BaseLanguage;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 
 trait GlobalLanguageMock
 {
-    /**
-     * @before
-     */
+    #[Before]
     protected function mockLanguage(): void
     {
         $GLOBALS['Language'] = $this->getMockBuilder(BaseLanguage::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
             ->enableAutoReturnValueGeneration()
             ->getMock();
     }
 
-    /**
-     * @after
-     */
+    #[After]
     protected function clearLanguage(): void
     {
         unset($GLOBALS['Language']);

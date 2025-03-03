@@ -110,9 +110,7 @@ final class DefaultBranchPushParserTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideMalformedPayloads
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideMalformedPayloads')]
     public function testItReturnsFaultWhenPayloadIsMalformed(array $payload): void
     {
         $this->payload = $payload;

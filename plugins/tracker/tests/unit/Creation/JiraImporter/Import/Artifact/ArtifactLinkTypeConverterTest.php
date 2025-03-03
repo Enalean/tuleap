@@ -29,9 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeConverterTest extends TestCase
 {
-    /**
-     * @dataProvider getGetMissingArtifactLinkTypeData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getGetMissingArtifactLinkTypeData')]
     public function testGetMissingArtifactLinkType(array $jira_json, array $types, callable $tests): void
     {
         $all_natures = new class ($types) implements AllTypesRetriever
@@ -100,9 +98,7 @@ final class ArtifactLinkTypeConverterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getExistingArtifactLinkTypeData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getExistingArtifactLinkTypeData')]
     public function testGetExistingArtifactLinkType(array $jira_json, array $types, callable $tests): void
     {
         $all_natures = new class ($types) implements AllTypesRetriever

@@ -42,37 +42,25 @@ final class StandardPasswordHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->password_handler = new StandardPasswordHandler();
     }
 
-    /**
-     * @test
-     */
-    public function itVerifyPassword(): void
+    public function testVerifyPassword(): void
     {
         $check_password = $this->password_handler->verifyHashPassword(new ConcealedString(self::HASHED_WORD), self::BCRYPT_HASH);
         $this->assertTrue($check_password);
     }
 
-    /**
-     * @test
-     */
-    public function itVerifyPasswordSaltedMD5(): void
+    public function testVerifyPasswordSaltedMD5(): void
     {
         $check_password = $this->password_handler->verifyHashPassword(new ConcealedString(self::HASHED_WORD), self::MD5_HASH);
         $this->assertTrue($check_password);
     }
 
-    /**
-     * @test
-     */
-    public function itVerifyPasswordSaltedSHA512(): void
+    public function testVerifyPasswordSaltedSHA512(): void
     {
         $check_password = $this->password_handler->verifyHashPassword(new ConcealedString(self::HASHED_WORD), self::SHA512_HASH);
         $this->assertTrue($check_password);
     }
 
-    /**
-     * @test
-     */
-    public function itChecksIfRehashingIsNeeded(): void
+    public function testChecksIfRehashingIsNeeded(): void
     {
         $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::MD5_HASH);
         $this->assertTrue($rehash_needed);

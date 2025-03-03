@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use ProjectCreator;
 use ProjectManager;
 use Psr\Log\NullLogger;
@@ -63,7 +62,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \EventManager&MockObject $event_manager;
     private ProjectRegistrationChecker&MockObject $registration_checker;
     private ProjectCategoriesUpdater&MockObject $project_categories_updater;
-    private EmailCopier&Stub $email_copier;
+    private EmailCopier&MockObject $email_copier;
     private StoreProjectInformationStub $store_project_information;
 
     protected function setUp(): void
@@ -83,7 +82,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_activator                          = $this->createMock(ProjectServiceActivator::class);
         $this->registration_checker                       = $this->createMock(ProjectRegistrationChecker::class);
         $this->project_categories_updater                 = $this->createMock(ProjectCategoriesUpdater::class);
-        $this->email_copier                               = $this->createStub(EmailCopier::class);
+        $this->email_copier                               = $this->createMock(EmailCopier::class);
         $this->store_project_information                  = StoreProjectInformationStub::build();
     }
 

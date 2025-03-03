@@ -33,6 +33,7 @@ use ForgeConfig;
 use Generator;
 use MailBuilder;
 use PFUser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use TemplateRendererFactory;
 use TestHelper;
@@ -187,8 +188,8 @@ final class NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.
      * @param $lc bool c is listened
      * @param $ld bool d is listened
      * @param $res 'item'|'from'|'from_wo_c'|'to'|'to_wo_b'|'none' expected result
-     * @dataProvider provideTestVariations
      */
+    #[DataProvider('provideTestVariations')]
     public function testNotification(bool $dr, bool $br, bool $cr, bool $lb, bool $lc, bool $ld, string $res): void
     {
         $a = new Docman_Item(['item_id' => 102, 'parent_id' => 0]);

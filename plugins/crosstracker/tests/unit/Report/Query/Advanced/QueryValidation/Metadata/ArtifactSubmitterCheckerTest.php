@@ -101,9 +101,7 @@ final class ArtifactSubmitterCheckerTest extends TestCase
         yield '!=' => [new NotEqualComparison($metadata, new InValueWrapper([$empty_value]))];
     }
 
-    /**
-     * @dataProvider generateInvalidComparisonsToEmptyString
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidComparisonsToEmptyString')]
     public function testItForbidsEmptyValueForComparisons(Comparison $comparison): void
     {
         $this->expectException(EmptyStringComparisonException::class);

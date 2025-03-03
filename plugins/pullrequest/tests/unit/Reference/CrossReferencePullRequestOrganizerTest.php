@@ -236,9 +236,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
         $this->organizePullRequestReferences($by_nature_organizer);
     }
 
-    /**
-     * @dataProvider getPullRequest
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPullRequest')]
     public function testItMovesCrossReferenceToRepositorySection(PullRequest $pull_request_with_status, string $expected_status_label): void
     {
         $user = UserTestBuilder::aUser()->withId(105)->withLocale('en_US')->build();

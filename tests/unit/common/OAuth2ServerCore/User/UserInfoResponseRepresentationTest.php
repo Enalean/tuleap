@@ -34,9 +34,7 @@ final class UserInfoResponseRepresentationTest extends \Tuleap\Test\PHPUnit\Test
         \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
     }
 
-    /**
-     * @dataProvider dataProviderClaims
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderClaims')]
     public function testBuildsRepresentation(
         bool $with_email,
         bool $with_profile,

@@ -36,9 +36,7 @@ final class AreListFieldsCompatibleVerifierTest extends TestCase
         $this->verifier = new AreListFieldsCompatibleVerifier();
     }
 
-    /**
-     * @dataProvider getSourceAndDestinationFieldsForSameBindTypeTest
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getSourceAndDestinationFieldsForSameBindTypeTest')]
     public function testReturnsFalseWhenTheFieldsDoNotHaveTheSameTypeOfBind(
         Tracker_FormElement_Field_List $source_field,
         Tracker_FormElement_Field_List $destination_field,

@@ -51,18 +51,14 @@ final class IsOpenRetrieverTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderMethodUnderTest
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderMethodUnderTest')]
     public function testItReturnsTrue(callable $method_under_test): void
     {
         $artifact = $this->createConfiguredMock(Artifact::class, ['isOpen' => true]);
         self::assertTrue($method_under_test($artifact));
     }
 
-    /**
-     * @dataProvider dataProviderMethodUnderTest
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderMethodUnderTest')]
     public function testItReturnsFalse(callable $method_under_test): void
     {
         $artifact = $this->createConfiguredMock(Artifact::class, ['isOpen' => false]);

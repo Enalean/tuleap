@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Throwable;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorNotAllowedForMetadataException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ToAnyStringComparisonException;
@@ -84,9 +85,7 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         yield '@id BETWEEN(min, max), min < max AND are > 0' => [new BetweenComparison($metadata, new BetweenValueWrapper(new SimpleValueWrapper(1), new SimpleValueWrapper(10)))];
     }
 
-    /**
-     * @dataProvider generateAllowedComparisonsWithValidValues
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateAllowedComparisonsWithValidValues')]
     public function testItDoesNothingWhenTheComparisonAndTheValuesAreValid(Comparison $comparison): void
     {
         $this->expectNotToPerformAssertions();
@@ -165,8 +164,8 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
 
     /**
      * @psalm-param class-string<Throwable> $expected_exception
-     * @dataProvider generateComparisonsWithInvalidValues
      */
+    #[DataProvider('generateComparisonsWithInvalidValues')]
     public function testItThrowsExceptionWhenProvidedValueIsInvalid(Comparison $comparison, string $expected_exception): void
     {
         $this->expectException($expected_exception);
@@ -182,9 +181,7 @@ final class ArtifactIdMetadataCheckerTest extends TestCase
         yield 'not in()' => [new NotInComparison($metadata, new InValueWrapper([$value]))];
     }
 
-    /**
-     * @dataProvider generateInvalidComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidComparisons')]
     public function testItThrowsWhenOperatorIsForbidden(Comparison $comparison): void
     {
         $this->expectException(OperatorNotAllowedForMetadataException::class);

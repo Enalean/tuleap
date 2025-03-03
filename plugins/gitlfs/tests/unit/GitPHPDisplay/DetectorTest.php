@@ -24,9 +24,7 @@ namespace Tuleap\GitLFS\GitPHPDisplay;
 
 final class DetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider fileProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fileProvider')]
     public function testItDetectsLFSFile(string $file, bool $expected): void
     {
         $detector = new Detector();

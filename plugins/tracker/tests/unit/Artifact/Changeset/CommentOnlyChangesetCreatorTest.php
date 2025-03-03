@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -104,9 +105,7 @@ final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
         ];
     }
 
-    /**
-     * @dataProvider dataProviderExceptions
-     */
+    #[DataProvider('dataProviderExceptions')]
     public function testItReturnsErrWhenThereIsAnExceptionDuringChangesetCreation(\Throwable $exception): void
     {
         $this->inner_creator = CreateNewChangesetStub::withException($exception);

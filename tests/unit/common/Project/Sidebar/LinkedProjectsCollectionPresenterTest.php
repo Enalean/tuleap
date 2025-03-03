@@ -38,9 +38,7 @@ final class LinkedProjectsCollectionPresenterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderContext
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderContext')]
     public function testItBuildsPresenterWithChildrenFromEvent(bool $is_in_children_context): void
     {
         $first_project  = ProjectTestBuilder::aProject()

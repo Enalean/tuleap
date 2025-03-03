@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\Batch\Request;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 final class BatchRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testParsingRequestWithAllProperties(): void
@@ -68,9 +70,7 @@ JSON;
         $this->assertNull($batch_request->getReference());
     }
 
-    /**
-     * @dataProvider providerIncorrectJSONBatchRequest
-     */
+    #[DataProvider('providerIncorrectJSONBatchRequest')]
     public function testParsingIncorrectBatchRequest(string $json_string): void
     {
         $this->expectException(IncorrectlyFormattedBatchRequestException::class);
