@@ -105,24 +105,6 @@ id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 ignoreUntil = 2025-04-12
 
-# Go stdlib
-[[IgnoredVulns]]
-id = "GO-2025-3447"
-reason = "No impact in Tuleap situation, not building for ppc64"
-ignoreUntil = 2025-02-28
-
-# vault-tuleap-plugin
-## github.com/hashicorp/yamux
-[[IgnoredVulns]]
-id = "GO-2025-3408"
-reason = "vault-tuleap-plugin is not exposed to untrusted connections"
-ignoreUntil = 2025-02-28
-
-[[IgnoredVulns]]
-id = "GHSA-29qp-crvh-w22m"
-reason = "vault-tuleap-plugin is not exposed to untrusted connections"
-ignoreUntil = 2025-02-28
-
 # ESBuild
 [[IgnoredVulns]]
 id = "GHSA-67mh-4wv8-2f99"
