@@ -19,12 +19,11 @@
 
 import type { AdditionalElement, ItemGroup } from "../elements/toolbar-element";
 import { ADDITIONAL_ITEMS_GROUP } from "../elements/toolbar-element";
-import { html } from "hybrids";
 
 export const buildAdditionalItemGroup = (additional_element: AdditionalElement): ItemGroup => {
     return {
         name: ADDITIONAL_ITEMS_GROUP,
-        element: html`${additional_element.item_element}`,
+        elements: [additional_element.item_element],
     };
 };
 
@@ -41,7 +40,12 @@ export function buildToolbarItems(
         const index = new_item_postions.findIndex(
             (item) => item.name === additional_item.target_name,
         );
-        if (additional_item.position === "before") {
+
+        if (additional_item.position === "at_the_start") {
+            new_item_postions[index].elements.unshift(additional_item.item_element);
+        } else if (additional_item.position === "at_the_end") {
+            new_item_postions[index].elements.push(additional_item.item_element);
+        } else if (additional_item.position === "before") {
             new_item_postions.splice(index, 0, buildAdditionalItemGroup(additional_item));
         } else {
             new_item_postions.splice(index + 1, 0, buildAdditionalItemGroup(additional_item));
