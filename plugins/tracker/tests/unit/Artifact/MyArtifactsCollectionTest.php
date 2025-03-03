@@ -23,20 +23,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 
-final class MyArtifactsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MyArtifactsCollectionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCanGetArtifactsOfAnEmptyTracker(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn('111');
+        $tracker    = TrackerTestBuilder::aTracker()->withId(111)->build();
+        $collection = new MyArtifactsCollection(RetrieveTrackerStub::withoutTracker());
 
-        $collection = new MyArtifactsCollection(\Mockery::mock(\TrackerFactory::class));
-
-        $this->assertEmpty($collection->getArtifactsInTracker($tracker));
-        $this->assertEquals(0, $collection->getArtifactsInTrackerCount($tracker));
+        self::assertEmpty($collection->getArtifactsInTracker($tracker));
+        self::assertEquals(0, $collection->getArtifactsInTrackerCount($tracker));
     }
 }
