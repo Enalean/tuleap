@@ -36,28 +36,22 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { namespace, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { ColumnDefinition } from "../../../type";
+<script setup lang="ts">
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
 import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
+import { useState, useStore } from "vuex-composition-helpers";
+import { computed } from "vue";
+import type { ColumnDefinition } from "../../../type";
 
-const column = namespace("column");
-const swimlane = namespace("swimlane");
+const { backlog_items_have_children } = useState(["backlog_items_have_children"]);
 
-@Component({
-    components: { CollapsedHeaderCell, ExpandedHeaderCell },
-})
-export default class TaskBoardHeader extends Vue {
-    @column.State
-    readonly columns!: Array<ColumnDefinition>;
+const store = useStore();
 
-    @swimlane.Getter
-    readonly taskboard_cell_swimlane_header_classes!: string[];
+const taskboard_cell_swimlane_header_classes = computed((): ColumnDefinition[] => {
+    return store.getters["swimlane/taskboard_cell_swimlane_header_classes"];
+});
 
-    @State
-    readonly backlog_items_have_children!: boolean;
-}
+const columns = computed((): ColumnDefinition[] => {
+    return store.state.column.columns;
+});
 </script>
