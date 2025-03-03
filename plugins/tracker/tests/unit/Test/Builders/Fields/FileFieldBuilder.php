@@ -27,12 +27,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FileFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+
     private string $name = 'file';
     private \Tracker $tracker;
-    /** @var list<\PFUser> */
-    private array $user_with_read_permission = [];
-    /** @var array<int, bool> */
-    private array $read_permissions = [];
 
     private function __construct(private readonly int $id)
     {
@@ -56,13 +54,6 @@ final class FileFieldBuilder
         return $this;
     }
 
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
-    {
-        $this->user_with_read_permission[]            = $user;
-        $this->read_permissions[(int) $user->getId()] = $user_can_read;
-        return $this;
-    }
-
     public function build(): Tracker_FormElement_Field_File
     {
         $field = new Tracker_FormElement_Field_File(
@@ -80,9 +71,8 @@ final class FileFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
-        foreach ($this->user_with_read_permission as $user) {
-            $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
-        }
+        $this->setPermissions($field);
+
         return $field;
     }
 }

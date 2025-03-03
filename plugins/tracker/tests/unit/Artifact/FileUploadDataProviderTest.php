@@ -22,50 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FileInfo;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
-class FileUploadDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileUploadDataProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FrozenFieldDetector
-     */
-    private $frozen_field_detector;
-    /**
-     * @var FileUploadDataProvider
-     */
-    private $file_upload_data_provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private FrozenFieldDetector&MockObject $frozen_field_detector;
+    private FileUploadDataProvider $file_upload_data_provider;
+    private Tracker $tracker;
+    private Artifact $artifact;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->form_element_factory  = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->frozen_field_detector = Mockery::mock(FrozenFieldDetector::class);
-        $this->tracker               = Mockery::mock(Tracker::class);
-        $this->artifact              = Mockery::mock(Artifact::class);
-        $this->user                  = Mockery::mock(PFUser::class);
+        $this->form_element_factory  = $this->createMock(Tracker_FormElementFactory::class);
+        $this->frozen_field_detector = $this->createMock(FrozenFieldDetector::class);
+        $this->tracker               = TrackerTestBuilder::aTracker()->build();
+        $this->artifact              = ArtifactTestBuilder::anArtifact(46)->inTracker($this->tracker)->build();
+        $this->user                  = UserTestBuilder::buildWithDefaults();
 
         $this->file_upload_data_provider = new FileUploadDataProvider(
             $this->frozen_field_detector,
@@ -75,63 +59,48 @@ class FileUploadDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFileUploadData(): void
     {
-        $file_1 = Mockery::mock(Tracker_FileInfo::class);
-        $file_1->shouldReceive('getId')->andReturn(12);
+        $file_1 = $this->createMock(Tracker_FileInfo::class);
+        $file_1->method('getId')->willReturn(12);
 
-        $field_1 = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field_1->shouldReceive('getId')->andReturn(1);
-        $field_1->shouldReceive('userCanUpdate')->andReturn(true);
+        $field_1 = FileFieldBuilder::aFileField(1)->withUpdatePermission($this->user, true)->build();
+        $field_2 = FileFieldBuilder::aFileField(2)->build();
 
-        $field_2 = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field_2->shouldReceive('getId')->andReturn(2);
-        $field_2->shouldReceive('userCanUpdate')->never();
+        $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1, $field_2]);
 
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-
-        $this->form_element_factory->shouldReceive('getUsedFileFields')->andReturn([$field_1, $field_2]);
-
-        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->andReturn(false);
+        $this->frozen_field_detector->method('isFieldFrozen')->willReturn(false);
 
         $result = $this->file_upload_data_provider->getFileUploadData($this->tracker, $this->artifact, $this->user);
 
-        $this->assertEquals(1, $result->getField()->getId());
-        $this->assertEquals('/api/v1/tracker_fields/1/files', $result->getUploadUrl());
+        self::assertEquals(1, $result->getField()->getId());
+        self::assertEquals('/api/v1/tracker_fields/1/files', $result->getUploadUrl());
     }
 
     public function testGetFileUploadDataReturnNullIfFieldFrozen(): void
     {
-        $file_1 = Mockery::mock(Tracker_FileInfo::class);
-        $file_1->shouldReceive('getId')->andReturn(12);
+        $file_1 = $this->createMock(Tracker_FileInfo::class);
+        $file_1->method('getId')->willReturn(12);
 
-        $field_1 = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field_1->shouldReceive('getId')->andReturn(1);
-        $field_1->shouldReceive('userCanUpdate')->andReturn(true);
+        $field_1 = FileFieldBuilder::aFileField(1)->withUpdatePermission($this->user, true)->build();
 
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 
-        $this->form_element_factory->shouldReceive('getUsedFileFields')->andReturn([$field_1]);
-
-        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->andReturn(true);
+        $this->frozen_field_detector->method('isFieldFrozen')->willReturn(true);
 
         $result = $this->file_upload_data_provider->getFileUploadData($this->tracker, $this->artifact, $this->user);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testGetFileUploadDataReturnNullIfUserCannotUpdate(): void
     {
-        $file_1 = Mockery::mock(Tracker_FileInfo::class);
-        $file_1->shouldReceive('getId')->andReturn(12);
+        $file_1 = $this->createMock(Tracker_FileInfo::class);
+        $file_1->method('getId')->willReturn(12);
 
-        $field_1 = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field_1->shouldReceive('getId')->andReturn(1);
-        $field_1->shouldReceive('userCanUpdate')->andReturn(false);
+        $field_1 = FileFieldBuilder::aFileField(1)->withUpdatePermission($this->user, false)->build();
 
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 
-        $this->form_element_factory->shouldReceive('getUsedFileFields')->andReturn([$field_1]);
-
-        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->never();
+        $this->frozen_field_detector->expects(self::never())->method('isFieldFrozen');
 
         $result = $this->file_upload_data_provider->getFileUploadData(
             $this->tracker,
@@ -139,48 +108,40 @@ class FileUploadDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         );
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testGetFileUploadDataForSubmit(): void
     {
-        $file_1 = Mockery::mock(Tracker_FileInfo::class);
-        $file_1->shouldReceive('getId')->andReturn(12);
+        $file_1 = $this->createMock(Tracker_FileInfo::class);
+        $file_1->method('getId')->willReturn(12);
 
-        $field_1 = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field_1->shouldReceive('getId')->andReturn(1);
-        $field_1->shouldReceive('userCanSubmit')->andReturn(true);
+        $field_1 = FileFieldBuilder::aFileField(1)->withSubmitPermission($this->user, true)->build();
+        $field_2 = FileFieldBuilder::aFileField(2)->build();
 
-        $field_2 = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field_2->shouldReceive('getId')->andReturn(2);
-        $field_2->shouldReceive('userCanSubmit')->never();
+        $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1, $field_2]);
 
-        $this->form_element_factory->shouldReceive('getUsedFileFields')->andReturn([$field_1, $field_2]);
-
-        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->andReturn(false);
+        $this->frozen_field_detector->method('isFieldFrozen')->willReturn(false);
 
         $result = $this->file_upload_data_provider->getFileUploadDataForSubmit($this->tracker, $this->user);
 
-        $this->assertEquals(1, $result->getField()->getId());
-        $this->assertEquals('/api/v1/tracker_fields/1/files', $result->getUploadUrl());
+        self::assertEquals(1, $result->getField()->getId());
+        self::assertEquals('/api/v1/tracker_fields/1/files', $result->getUploadUrl());
     }
 
     public function testGetFileUploadDataForSubmitReturnNullIfUserCannotSubmit(): void
     {
-        $file_1 = Mockery::mock(Tracker_FileInfo::class);
-        $file_1->shouldReceive('getId')->andReturn(12);
+        $file_1 = $this->createMock(Tracker_FileInfo::class);
+        $file_1->method('getId')->willReturn(12);
 
-        $field_1 = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field_1->shouldReceive('getId')->andReturn(1);
-        $field_1->shouldReceive('userCanSubmit')->andReturn(false);
+        $field_1 = FileFieldBuilder::aFileField(1)->withSubmitPermission($this->user, false)->build();
 
+        $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 
-        $this->form_element_factory->shouldReceive('getUsedFileFields')->andReturn([$field_1]);
-
-        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->never();
+        $this->frozen_field_detector->expects(self::never())->method('isFieldFrozen');
 
         $result = $this->file_upload_data_provider->getFileUploadDataForSubmit($this->tracker, $this->user);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 }
