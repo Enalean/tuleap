@@ -33,6 +33,8 @@ final class StringFieldBuilder
     private string $name      = 'title';
     private bool $is_required = false;
     private \Tracker $tracker;
+    /** @var array<string, mixed> */
+    private array $specific_properties = [];
 
     private function __construct(private readonly int $id)
     {
@@ -68,6 +70,12 @@ final class StringFieldBuilder
         return $this;
     }
 
+    public function withSpecificProperty(string $key, mixed $value): self
+    {
+        $this->specific_properties[$key] = $value;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_String
     {
         $field = new Tracker_FormElement_Field_String(
@@ -86,6 +94,9 @@ final class StringFieldBuilder
         );
         $field->setTracker($this->tracker);
         $this->setPermissions($field);
+        if ($this->specific_properties !== []) {
+            $field->setCacheSpecificProperties($this->specific_properties);
+        }
 
         return $field;
     }

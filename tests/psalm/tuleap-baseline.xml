@@ -11729,14 +11729,6 @@
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
   </file>
-  <file src="plugins/document/tests/unit/DownloadFolderAsZip/ErrorsListingBuilderTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[self::returnCallback(function (string $filename, string $contents): void {
-                self::assertStringContainsString('/my folder/my file.jpg', $contents);
-                self::assertStringContainsString('embedded file.html', $contents);
-            })]]></code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/document/tests/unit/DownloadFolderAsZip/ZipStreamFolderFilesVisitorTest.php">
     <InternalMethod>
       <code><![CDATA[numberOfInvocations]]></code>
@@ -20498,22 +20490,6 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/graphontrackersv5/tests/unit/DataTransformation/GraphOnTrackersV5ChartBarDataBuilderTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-      <code><![CDATA[returnValue]]></code>
-    </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$engine->data]]></code>
       <code><![CDATA[$engine->data]]></code>
@@ -22816,12 +22792,6 @@
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/ldap/tests/unit/LDAPGroupManagerTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getMockForAbstractClass]]></code>
-      <code><![CDATA[getMockForAbstractClass]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/mediawiki/bin/identify_lost_databases.php">
     <DeprecatedMethod>
@@ -33646,12 +33616,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/PostCreation/EmailNotificationTask.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$name]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$artifact_link]]></code>
       <code><![CDATA[$check_perms]]></code>
@@ -35811,17 +35775,6 @@
       <code><![CDATA[$enabled]]></code>
       <code><![CDATA[$format]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSenderFormatter.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$slugify->slugify($result)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[the]]></code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[the]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/DefaultTemplatesCollectionBuilder.php">
     <InvalidPropertyFetch>
@@ -49714,6 +49667,11 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/tracker/tests/unit/Test/Builders/Fields/DateFieldBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[setCacheSpecificProperties]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/StringFieldBuilder.php">
     <DeprecatedMethod>
       <code><![CDATA[setCacheSpecificProperties]]></code>
     </DeprecatedMethod>
@@ -78490,18 +78448,6 @@
       <code><![CDATA[(string) $email]]></code>
     </RedundantCast>
   </file>
-  <file src="tests/lib/GlobalLanguageMock.php">
-    <DeprecatedMethod>
-      <code><![CDATA[disableArgumentCloning]]></code>
-      <code><![CDATA[disallowMockingUnknownTypes]]></code>
-    </DeprecatedMethod>
-  </file>
-  <file src="tests/lib/GlobalResponseMock.php">
-    <DeprecatedMethod>
-      <code><![CDATA[disableArgumentCloning]]></code>
-      <code><![CDATA[disallowMockingUnknownTypes]]></code>
-    </DeprecatedMethod>
-  </file>
   <file src="tests/lib/Stubs/ExtractReferencesStub.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->return_values[0]]]></code>
@@ -78645,7 +78591,6 @@
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[string[]]]></code>
-      <code><![CDATA[string[]]]></code>
     </InvalidReturnType>
   </file>
   <file src="tests/unit/common/JWT/JWKS/PKCS1FormatTest.php">
@@ -78732,14 +78677,6 @@
       <code><![CDATA[AuthenticationScope]]></code>
       <code><![CDATA[AuthenticationScopeThrowOnActualMethodCall]]></code>
     </MissingTemplateParam>
-  </file>
-  <file src="tests/unit/common/OAuth2ServerCore/App/AppFactoryTest.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="tests/unit/common/OAuth2ServerCore/App/AppMatchingClientIDFilterAppTypeRetrieverTest.php">
     <PossiblyNullArrayAccess>
