@@ -22,102 +22,78 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset_Comment;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use UserHelper;
 
-final class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommentPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PermissionChecker
-     */
-    private $permission_checker;
-    /**
-     * @var CommentPresenterBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact_Changeset_Comment
-     */
-    private $comment;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserHelper
-     */
-    private $user_helper;
+    private PermissionChecker&MockObject $permission_checker;
+    private CommentPresenterBuilder $builder;
+    private PFUser $user;
+    private Tracker_Artifact_Changeset_Comment $comment;
 
     protected function setUp(): void
     {
-        $this->permission_checker = \Mockery::mock(PermissionChecker::class);
-
-        $this->user = \Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('getPreference');
-        $this->user->shouldReceive('getLocale');
-
-        $this->comment = $this->buildComment('My body');
-
-        $this->user_helper = \Mockery::spy(\UserHelper::class);
+        $this->permission_checker = $this->createMock(PermissionChecker::class);
+        $this->user               = UserTestBuilder::buildWithDefaults();
+        $this->comment            = $this->buildComment('My body');
 
         $GLOBALS['Language']
             ->method('getText')
             ->with('system', 'datefmt')
             ->willReturn('d/m/Y H:i');
 
-        $this->builder = new CommentPresenterBuilder($this->permission_checker, $this->user_helper);
+        $this->builder = new CommentPresenterBuilder($this->permission_checker, $this->createMock(UserHelper::class));
     }
 
     public function testGetNullIfCommentIsEmpty(): void
     {
         $this->comment = $this->buildComment('');
         $presenter     = $this->builder->getCommentPresenter($this->comment, $this->user);
-        $this->assertNull($presenter);
+        self::assertNull($presenter);
     }
 
     public function testGetNullIfUserCanNotSeeComment(): void
     {
-        $this->permission_checker->shouldReceive('isPrivateCommentForUser')
+        $this->permission_checker->expects(self::once())->method('isPrivateCommentForUser')
             ->with($this->user, $this->comment)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
         $presenter = $this->builder->getCommentPresenter($this->comment, $this->user);
-        $this->assertNull($presenter);
+        self::assertNull($presenter);
     }
 
     public function testGetCommentPresenterIfUserCanSeeCommentAndItIsNotEmpty(): void
     {
-        $this->permission_checker->shouldReceive('isPrivateCommentForUser')
+        $this->permission_checker->expects(self::once())->method('isPrivateCommentForUser')
             ->with($this->user, $this->comment)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
         $presenter = $this->builder->getCommentPresenter($this->comment, $this->user);
-        $this->assertInstanceOf(CommentPresenter::class, $presenter);
+        self::assertInstanceOf(CommentPresenter::class, $presenter);
     }
 
     private function buildComment(string $body): Tracker_Artifact_Changeset_Comment
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(110);
-        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
-        $artifact = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getArtifact')->andReturn($artifact);
-        $changeset->shouldReceive('getId')->andReturn(52);
+        $tracker   = TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->withId(110)->build())->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(458)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(52)->ofArtifact($artifact)->build();
 
         return new Tracker_Artifact_Changeset_Comment(
             525,
             $changeset,
-            null,
-            null,
+            1,
+            0,
             110,
             1234567890,
             $body,

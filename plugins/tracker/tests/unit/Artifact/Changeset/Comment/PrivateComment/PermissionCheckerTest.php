@@ -22,278 +22,312 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectUGroup;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
-final class PermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var PermissionChecker
-     */
-    private $checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset_Comment
-     */
-    private $comment;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RetrieveTrackerPrivateCommentInformation
-     */
-    private $tracker_private_comment_information_retriever;
+    private PermissionChecker $checker;
+    private PFUser&MockObject $user;
+    private Tracker_Artifact_Changeset_Comment $comment;
+    private Tracker_Artifact_Changeset $changeset;
+    private Tracker&MockObject $tracker;
+    private RetrieveTrackerPrivateCommentInformation&MockObject $tracker_private_comment_information_retriever;
 
     protected function setUp(): void
     {
-        $this->user = \Mockery::mock(\PFUser::class);
+        $this->user = $this->createMock(PFUser::class);
 
-        $this->tracker = \Mockery::mock(Tracker::class, ['getGroupId' => 101, 'getId' => 200]);
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(false)->byDefault();
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getGroupId')->willReturn(101);
+        $this->tracker->method('getId')->willReturn(200);
 
-        $this->changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $artifact        = ArtifactTestBuilder::anArtifact(569)->inTracker($this->tracker)->build();
+        $this->changeset = ChangesetTestBuilder::aChangeset(12)->ofArtifact($artifact)->build();
 
         $this->comment = $this->buildComment([]);
 
-        $this->tracker_private_comment_information_retriever = \Mockery::mock(RetrieveTrackerPrivateCommentInformation::class);
-        $this->tracker_private_comment_information_retriever
-            ->shouldReceive('doesTrackerAllowPrivateComments')
-            ->with($this->tracker)
-            ->andReturnTrue()
-            ->byDefault();
+        $this->tracker_private_comment_information_retriever = $this->createMock(RetrieveTrackerPrivateCommentInformation::class);
 
         $this->checker = new PermissionChecker($this->tracker_private_comment_information_retriever);
     }
 
     public function testReturnsFalseIfTrackerDoesNotUsePrivateComment(): void
     {
-        $this->tracker_private_comment_information_retriever
-            ->shouldReceive('doesTrackerAllowPrivateComments')
+        $this->tracker_private_comment_information_retriever->expects(self::once())
+            ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsFalseIfUserIsSiteAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnTrue();
-        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(true);
+        self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsFalseIfUserIsProjectAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnTrue();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(true);
 
-        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsFalseIfUserIsTrackerAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true)->once();
-        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->tracker->expects(self::once())->method('userIsAdmin')->willReturn(true);
+        self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsFalseIfUserIsMemberOfStaticUgroupAndNotAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $ugroup_1 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
-        $ugroup_2 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
-        $ugroup_3 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $ugroup_1 = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
+        $ugroup_2 = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
+        $ugroup_3 = ProjectUGroupTestBuilder::aCustomUserGroup(3)->build();
 
         $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
 
-        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnTrue();
+        $this->user->method('isMemberOfUGroup')->willReturnCallback(static fn(int $id) => $id == 2);
 
-        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsTrueIfThereAreNoUGroupsButCommentIsPrivate(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $this->user->shouldReceive('isMemberOfUGroup')->never();
+        $this->user->expects(self::never())->method('isMemberOfUGroup');
 
-        $this->assertTrue($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        self::assertTrue($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsFalseIfPrivateCommentIsNull(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $this->user->shouldReceive('isMemberOfUGroup')->never();
+        $this->user->expects(self::never())->method('isMemberOfUGroup');
 
         $this->comment = $this->buildComment(null);
 
-        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsTrueIfUserIsNotMemberOfStaticUgroupAndNotAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $ugroup_1 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
-        $ugroup_2 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
-        $ugroup_3 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $ugroup_1 = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
+        $ugroup_2 = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
+        $ugroup_3 = ProjectUGroupTestBuilder::aCustomUserGroup(3)->build();
 
         $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
 
-        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
+        $this->user->method('isMemberOfUGroup')->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)->willReturn(false);
 
-        $this->assertTrue($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        self::assertTrue($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testGetAllUGroupsIfUserIsSiteAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnTrue();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(true);
 
-        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
-        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
-        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
+        $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
+        $ugroup_3      = ProjectUGroupTestBuilder::aCustomUserGroup(3)->build();
         $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
 
         $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
 
-        $this->assertIsArray($ugroups);
-        $this->assertCount(3, $ugroups);
+        self::assertIsArray($ugroups);
+        self::assertCount(3, $ugroups);
     }
 
     public function testGetAllUGroupsIfUserIsProjectAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnTrue();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(true);
 
-        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
-        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
-        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
+        $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
+        $ugroup_3      = ProjectUGroupTestBuilder::aCustomUserGroup(3)->build();
         $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
         $ugroups       = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
 
-        $this->assertIsArray($ugroups);
-        $this->assertCount(3, $ugroups);
+        self::assertIsArray($ugroups);
+        self::assertCount(3, $ugroups);
     }
 
     public function testGetAllUGroupsIfUserIsTrackerAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true)->once();
+        $this->tracker->expects(self::once())->method('userIsAdmin')->willReturn(true);
 
-        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
-        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
-        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
+        $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
+        $ugroup_3      = ProjectUGroupTestBuilder::aCustomUserGroup(3)->build();
         $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
         $ugroups       = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
 
-        $this->assertIsArray($ugroups);
-        $this->assertCount(3, $ugroups);
+        self::assertIsArray($ugroups);
+        self::assertCount(3, $ugroups);
     }
 
     public function testGetUGroupsThatUserIsMemberOfAndUserIsNotAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnTrue();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnTrue();
+        $this->user->method('isMemberOfUGroup')
+            ->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)
+            ->willReturnCallback(static fn(int $id) => in_array($id, [1, 3]));
 
-        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
-        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
-        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
+        $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
+        $ugroup_3      = ProjectUGroupTestBuilder::aCustomUserGroup(3)->build();
         $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
         $ugroups       = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
 
-        $this->assertIsArray($ugroups);
-        $this->assertCount(2, $ugroups);
-        $this->assertEquals(1, $ugroups[0]->getId());
-        $this->assertEquals(3, $ugroups[1]->getId());
+        self::assertIsArray($ugroups);
+        self::assertCount(2, $ugroups);
+        self::assertEquals(1, $ugroups[0]->getId());
+        self::assertEquals(3, $ugroups[1]->getId());
     }
 
     public function testGetUserIsNotAllowedToSeeUGroupsIfUserIsNotMemberOfUGroupsAndUserIsNotAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
-        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
-        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
+        $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
+        $ugroup_3      = ProjectUGroupTestBuilder::aCustomUserGroup(3)->build();
         $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
-        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
+        $this->user->method('isMemberOfUGroup')
+            ->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)
+            ->willReturn(false);
 
         $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
 
-        $this->assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
+        self::assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
     }
 
     public function testGetUserIsNotAllowedToSeeUGroupsIfUGroupsIsNull(): void
     {
-        $this->user->shouldReceive('isSuperUser')->never();
-        $this->user->shouldReceive('isAdmin')->with(101)->never();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::never())->method('isSuperUser');
+        $this->user->expects(self::never())->method('isAdmin')->with(101);
 
-        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
+        $this->user->method('isMemberOfUGroup')
+            ->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)
+            ->willReturn(false);
 
         $this->comment = $this->buildComment(null);
 
         $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
 
-        $this->assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
+        self::assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
     }
 
     public function testGetUserIsNotAllowedToSeeUGroupsIfThereAreNoGroups(): void
     {
-        $this->user->shouldReceive('isSuperUser')->never();
-        $this->user->shouldReceive('isAdmin')->with(101)->never();
+        $this->tracker_private_comment_information_retriever
+            ->method('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
+            ->willReturn(true);
+        $this->user->expects(self::never())->method('isSuperUser');
+        $this->user->expects(self::never())->method('isAdmin')->with(101);
 
-        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
-        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
+        $this->user->method('isMemberOfUGroup')
+            ->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)
+            ->willReturn(false);
 
         $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
 
-        $this->assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
+        self::assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
     }
 
     /**
-     * @param \ProjectUGroup[]|null $ugroups
+     * @param ProjectUGroup[]|null $ugroups
      */
     private function buildComment(?array $ugroups): Tracker_Artifact_Changeset_Comment
     {
         return new Tracker_Artifact_Changeset_Comment(
             525,
             $this->changeset,
-            null,
-            null,
+            1,
+            0,
             110,
             1234567890,
             'A text comment',
