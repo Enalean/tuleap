@@ -34,11 +34,11 @@ describe("buildToolbarItems", () => {
     let default_item_positon: ItemGroup[] = [];
     beforeEach(() => {
         default_item_positon = [
-            { name: BASIC_TEXT_ITEMS_GROUP, element: element },
-            { name: TEXT_STYLES_ITEMS_GROUP, element: element },
-            { name: LIST_ITEMS_GROUP, element: element },
-            { name: LINK_ITEMS_GROUP, element: element },
-            { name: SCRIPTS_ITEMS_GROUP, element: element },
+            { name: BASIC_TEXT_ITEMS_GROUP, elements: [element] },
+            { name: TEXT_STYLES_ITEMS_GROUP, elements: [element] },
+            { name: LIST_ITEMS_GROUP, elements: [element] },
+            { name: LINK_ITEMS_GROUP, elements: [element] },
+            { name: SCRIPTS_ITEMS_GROUP, elements: [element] },
         ];
     });
 
@@ -119,6 +119,56 @@ describe("buildToolbarItems", () => {
             ADDITIONAL_ITEMS_GROUP,
             LINK_ITEMS_GROUP,
             SCRIPTS_ITEMS_GROUP,
+        ]);
+    });
+
+    it("it should not return additional_items in a item group when they are positioned at the start and end of list_items", () => {
+        const additional_item: AdditionalElement[] = [
+            {
+                position: "at_the_start",
+                target_name: LIST_ITEMS_GROUP,
+                item_element: element,
+            },
+            {
+                position: "at_the_end",
+                target_name: LIST_ITEMS_GROUP,
+                item_element: element,
+            },
+        ];
+
+        expect(
+            buildToolbarItems(default_item_positon, additional_item).map(
+                (group_item) => group_item.name,
+            ),
+        ).toStrictEqual([
+            BASIC_TEXT_ITEMS_GROUP,
+            TEXT_STYLES_ITEMS_GROUP,
+            LIST_ITEMS_GROUP,
+            LINK_ITEMS_GROUP,
+            SCRIPTS_ITEMS_GROUP,
+        ]);
+    });
+
+    it("it should return list_items group with additional_items, when they are positioned at the start and end of list_items", () => {
+        const additional_element = document.createElement("other");
+        const additional_item: AdditionalElement[] = [
+            {
+                position: "at_the_start",
+                target_name: LIST_ITEMS_GROUP,
+                item_element: additional_element,
+            },
+            {
+                position: "at_the_end",
+                target_name: LIST_ITEMS_GROUP,
+                item_element: additional_element,
+            },
+        ];
+
+        const list_items_group = buildToolbarItems(default_item_positon, additional_item)[2];
+        expect(list_items_group.elements).toStrictEqual([
+            additional_element,
+            element,
+            additional_element,
         ]);
     });
 });
