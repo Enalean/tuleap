@@ -30,13 +30,12 @@ import { computed } from "vue";
 import { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
 import { useGettext } from "vue3-gettext";
-import type { Query } from "../../type";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
     fault: Option<Fault>;
-    query: Query;
+    tql_query: string;
 }>();
 
 const error_message = computed<Option<string>>(() =>
@@ -100,7 +99,7 @@ const code_to_show = computed(
             if (details.line <= 0) {
                 return Option.nothing();
             }
-            const query = props.query.tql_query;
+            const query = props.tql_query;
             const lines = query.split("\n");
             if (lines.length < details.line) {
                 return Option.nothing();

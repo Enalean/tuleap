@@ -35,6 +35,7 @@ import {
     WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
     DASHBOARD_TYPE,
+    NEW_QUERY_CREATOR,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -44,6 +45,7 @@ import type { Events } from "./helpers/emitter-provider";
 import mitt from "mitt";
 import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 import { SuggestedQueries } from "./domain/SuggestedQueriesGetter";
+import { NewQueryCreator } from "./api/NewQueryCreator";
 import type { WidgetData } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -71,6 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const widget_json_data = getAttributeOrThrow(widget_element, "data-widget-json-data");
         const widget_data: WidgetData = JSON.parse(widget_json_data);
 
+        const new_query_creator = NewQueryCreator();
+
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
 
         createApp(CrossTrackerWidget)
@@ -90,6 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(IS_MULTIPLE_QUERY_SUPPORTED, widget_data.is_multiple_query_supported)
             .provide(GET_SUGGESTED_QUERIES, SuggestedQueries({ $gettext: gettext_plugin.$gettext }))
             .provide(DASHBOARD_TYPE, widget_data.dashboard_type)
+            .provide(NEW_QUERY_CREATOR, new_query_creator)
             .mount(vue_mount_point);
     }
 });

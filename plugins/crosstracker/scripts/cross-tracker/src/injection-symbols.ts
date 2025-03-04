@@ -22,18 +22,28 @@ import type { IntlFormatter } from "@tuleap/date-helper";
 import type { Ref } from "vue";
 import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
 import type { ReportState } from "./domain/ReportState";
-import type { NotifyFaultCallback, ClearFeedbacksCallback } from "./composables/useFeedbacks";
+import type {
+    NotifyFaultCallback,
+    ClearFeedbacksCallback,
+    NotifySuccessCallback,
+} from "./composables/useFeedbacks";
 import type { GetColumnName } from "./domain/ColumnNameGetter";
 import type { EmitterProvider } from "./helpers/emitter-provider";
 import type { SuggestedQueriesGetter } from "./domain/SuggestedQueriesGetter";
 import type { DashboardType } from "./domain/DashboardType";
+import type { PostNewQuery } from "./domain/PostNewQuery";
+import type { Fault } from "@tuleap/fault";
+import type { Option } from "@tuleap/option";
 
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> = Symbol();
 export const REPORT_STATE: StrictInjectionKey<Ref<ReportState>> = Symbol();
 export const NOTIFY_FAULT: StrictInjectionKey<NotifyFaultCallback> = Symbol();
+export const NOTIFY_SUCCESS: StrictInjectionKey<NotifySuccessCallback> = Symbol();
+export const CURRENT_SUCCESS: StrictInjectionKey<Ref<Option<string>>> = Symbol();
 export const CLEAR_FEEDBACKS: StrictInjectionKey<ClearFeedbacksCallback> = Symbol();
+export const CURRENT_FAULT: StrictInjectionKey<Ref<Option<Fault>>> = Symbol();
 export const IS_EXPORT_ALLOWED: StrictInjectionKey<Ref<boolean>> = Symbol();
 export const WIDGET_ID: StrictInjectionKey<number> = Symbol();
 export const IS_USER_ADMIN: StrictInjectionKey<boolean> = Symbol();
@@ -43,3 +53,4 @@ export const EMITTER: StrictInjectionKey<EmitterProvider> = Symbol();
 export const IS_MULTIPLE_QUERY_SUPPORTED: StrictInjectionKey<boolean> = Symbol();
 export const GET_SUGGESTED_QUERIES: StrictInjectionKey<SuggestedQueriesGetter> = Symbol();
 export const DASHBOARD_TYPE: StrictInjectionKey<DashboardType> = Symbol();
+export const NEW_QUERY_CREATOR: StrictInjectionKey<PostNewQuery> = Symbol();

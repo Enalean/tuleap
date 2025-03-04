@@ -19,6 +19,7 @@
 
 <template>
     <section class="tlp-pane-section create-new-query-section">
+        <error-message v-bind:fault="current_fault" v-bind:tql_query="tql_query" />
         <query-suggested v-on:query-chosen="handleChosenQuery" />
         <div class="create-new-query-title-description-container">
             <title-input v-model:title="title" />
@@ -47,7 +48,18 @@
                 v-bind:disabled="is_search_button_disabled"
                 data-test="query-creation-search-button"
             >
-                <i aria-hidden="true" class="fa-solid fa-search tlp-button-icon"></i>
+                <i
+                    v-if="!is_search_loading"
+                    aria-hidden="true"
+                    class="fa-solid fa-search tlp-button-icon"
+                    data-test="query-creation-search-button-search-icon"
+                ></i>
+                <i
+                    v-if="is_search_loading"
+                    aria-hidden="true"
+                    class="tlp-button-icon fas fa-spin fa-circle-notch"
+                    data-test="query-creation-search-button-spin-icon"
+                ></i>
                 {{ $gettext("Search") }}
             </button>
             <button
@@ -58,10 +70,26 @@
                 v-bind:disabled="is_save_button_disabled"
                 data-test="query-creation-save-button"
             >
-                <i aria-hidden="true" class="tlp-button-icon fa-solid fa-save"></i>
+                <i
+                    v-if="!is_save_loading"
+                    aria-hidden="true"
+                    class="tlp-button-icon fa-solid fa-save"
+                ></i>
+                <i
+                    v-if="is_save_loading"
+                    aria-hidden="true"
+                    class="tlp-button-icon fas fa-spin fa-circle-notch"
+                ></i>
                 {{ $gettext("Save") }}
             </button>
         </div>
+        <section class="tlp-pane-section" v-if="is_selectable_table_displayed">
+            <query-selectable-table
+                v-on:search-finished="is_search_loading = false"
+                v-on:search-started="is_search_loading = true"
+                v-bind:tql_query="tql_query"
+            />
+        </section>
     </section>
 </template>
 
@@ -73,10 +101,38 @@ import { computed, ref } from "vue";
 import type { QuerySuggestion } from "../../../domain/SuggestedQueriesGetter";
 import QuerySuggested from "../QuerySuggested.vue";
 
+import { strictInject } from "@tuleap/vue-strict-inject";
+import {
+    CLEAR_FEEDBACKS,
+    CURRENT_FAULT,
+    EMITTER,
+    NEW_QUERY_CREATOR,
+    NOTIFY_FAULT,
+    NOTIFY_SUCCESS,
+    WIDGET_ID,
+} from "../../../injection-symbols";
+import { SEARCH_ARTIFACTS_EVENT } from "../../../helpers/emitter-provider";
+import QuerySelectableTable from "../QuerySelectableTable.vue";
+import ErrorMessage from "../../feedback/ErrorMessage.vue";
+import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
 const emit = defineEmits<{
     (e: "return-to-active-query-pane"): void;
 }>();
 const query_editor = ref<InstanceType<typeof QueryEditorForCreation>>();
+
+const emitter = strictInject(EMITTER);
+const widget_id = strictInject(WIDGET_ID);
+
+const new_query_creator = strictInject(NEW_QUERY_CREATOR);
+
+const notifyFault = strictInject(NOTIFY_FAULT);
+const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
+const current_fault = strictInject(CURRENT_FAULT);
+const notifySuccess = strictInject(NOTIFY_SUCCESS);
 
 const title = ref("");
 const description = ref("");
@@ -84,8 +140,12 @@ const tql_query = ref("");
 
 const searched_tql_query = ref("");
 
+const is_save_loading = ref(false);
+const is_search_loading = ref(false);
+const is_selectable_table_displayed = ref(false);
+
 const is_search_button_disabled = computed((): boolean => {
-    return tql_query.value === searched_tql_query.value;
+    return tql_query.value === searched_tql_query.value || is_search_loading.value;
 });
 
 const is_save_button_displayed = computed((): boolean => {
@@ -93,31 +153,53 @@ const is_save_button_displayed = computed((): boolean => {
 });
 
 const is_save_button_disabled = computed((): boolean => {
-    return tql_query.value !== searched_tql_query.value;
+    return tql_query.value !== searched_tql_query.value || is_save_loading.value;
 });
 
 function handleCancelButton(): void {
+    clearFeedbacks();
     emit("return-to-active-query-pane");
 }
 
 function handleSearch(tql_query: string): void {
-    // eslint-disable-next-line no-console
-    console.log("Trigger search shortcut with tql_query: " + tql_query);
     searched_tql_query.value = tql_query;
+    search();
 }
 
 function handleSaveButton(): void {
-    // eslint-disable-next-line no-console
-    console.log("Trigger save button with tql_query: " + tql_query.value);
-    // eslint-disable-next-line no-console
-    console.log("Trigger save with title:" + title.value + " description: " + description.value);
-    emit("return-to-active-query-pane");
+    clearFeedbacks();
+    is_save_loading.value = true;
+    const new_query: PostQueryRepresentation = {
+        tql_query: searched_tql_query.value,
+        description: description.value,
+        title: title.value,
+        widget_id,
+    };
+    new_query_creator
+        .postNewQuery(new_query)
+        .match(
+            () => {
+                notifySuccess($gettext("Query created with success!"));
+                emit("return-to-active-query-pane");
+            },
+            (fault) => {
+                notifyFault(fault);
+            },
+        )
+        .then(() => {
+            is_save_loading.value = false;
+        });
 }
 
 function handleSearchButton(): void {
-    // eslint-disable-next-line no-console
-    console.log("Trigger search button with tql_query: " + tql_query.value);
     searched_tql_query.value = tql_query.value;
+    search();
+}
+
+function search(): void {
+    clearFeedbacks();
+    is_selectable_table_displayed.value = true;
+    emitter.emit(SEARCH_ARTIFACTS_EVENT);
 }
 
 function handleChosenQuery(query: QuerySuggestion): void {

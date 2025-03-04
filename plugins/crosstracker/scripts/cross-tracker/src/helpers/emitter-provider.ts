@@ -24,12 +24,20 @@ export type EmitterProvider = Pick<Emitter<Events>, "off" | "on" | "emit">;
 
 export const SWITCH_QUERY_EVENT = "switch-query";
 export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";
+export const SEARCH_ARTIFACTS_EVENT = "search-artifact";
 export const CREATE_NEW_QUERY = "create-new-query";
+export const NEW_QUERY_CREATED_EVENT = "new-query-created";
 
 export type Events = {
     [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
     [REFRESH_ARTIFACTS_EVENT]: RefreshArtifactsEvent;
+    [SEARCH_ARTIFACTS_EVENT]: void;
     [CREATE_NEW_QUERY]: void;
+    [NEW_QUERY_CREATED_EVENT]: CreatedQuery;
+};
+
+export type CreatedQuery = {
+    readonly created_query: Query;
 };
 
 export type SwitchQueryEvent = {
