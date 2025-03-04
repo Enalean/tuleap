@@ -399,7 +399,7 @@ button[name="tracker_query_submit"] {
     color: #ffffff;
 }
 
-.tracker_admin_static_value_hidden,
+.tracker-admin-one-list-field:has(.tracker_admin_static_value_hide_checkbox > input:not(:checked)),
 .tracker-admin-one-list-field:has(.tracker_admin_static_value_delete_checkbox > input:checked) {
     background: url("../default/images/tracker_admin_static_value_hidden.png") top left repeat;
 
@@ -412,7 +412,8 @@ button[name="tracker_query_submit"] {
     }
 }
 
-.tracker_admin_static_value_delete_checkbox {
+.tracker_admin_static_value_delete_checkbox,
+.tracker_admin_static_value_hide_checkbox {
     display: inline;
     cursor: pointer;
 

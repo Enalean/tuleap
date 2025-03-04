@@ -49,27 +49,6 @@ document.observe("dom:loaded", function () {
         });
     }
 
-    function tracker_register_hide_value() {
-        $$(".tracker_admin_static_value_hidden_chk").each(function (checkbox) {
-            var img = checkbox.next();
-            checkbox.hide();
-            img.setStyle({ cursor: "pointer" }).observe("click", function () {
-                if (checkbox.checked) {
-                    //switch to "hidden"
-                    checkbox.checked = false;
-                    checkbox.up("li").addClassName("tracker_admin_static_value_hidden");
-                    img.src = img.src.gsub("eye.png", "eye-half.png");
-                } else {
-                    //switch to "shown"
-                    checkbox.checked = true;
-                    checkbox.up("li").removeClassName("tracker_admin_static_value_hidden");
-                    img.src = img.src.gsub("eye-half.png", "eye.png");
-                }
-            });
-        });
-    }
-    tracker_register_hide_value();
-
     var palette = $$(".tracker-admin-palette")[0];
     if (palette) {
         var admin_field_properties = $("tracker-admin-field-properties");
@@ -290,9 +269,6 @@ document.observe("dom:loaded", function () {
 
                         //Edit list values
                         var e = new codendi.tracker.bind.Editor(selected_element); //eslint-disable-line @typescript-eslint/no-unused-vars
-
-                        //register hide action
-                        tracker_register_hide_value();
 
                         initTextboxlistForDefaultValues();
                     },

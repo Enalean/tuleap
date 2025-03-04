@@ -50,62 +50,13 @@ class FormElementListValueAdminViewPresenterBuilder
         $value_can_be_hidden  = $this->canValueBeHidden($value, $field);
         $value_can_be_deleted = $this->canValueBeDeleted($value, $field);
 
-        $image_title = $this->getImageTitle($value, $value_can_be_hidden);
-
-        $image_hidden_alt = $value_can_be_hidden ? dgettext(
-            'tuleap-tracker',
-            'Show/hide this value'
-        ) : dgettext(
-            'tuleap-tracker',
-            'cannot hide'
-        );
-
-        $image_hidden_prefix = $this->getImagePrefix($value_can_be_hidden, (bool) $value->isHidden());
-
         return new FormElementListValueAdminViewPresenter(
             $value,
             $decorator,
             $value_can_be_hidden,
             $value_can_be_deleted,
-            $image_title,
-            $image_hidden_alt,
-            $image_hidden_prefix,
             $is_custom_value
         );
-    }
-
-    private function getImageTitle(Tracker_FormElement_Field_List_Value $value, bool $value_can_be_hidden): string
-    {
-        if ($value_can_be_hidden) {
-            return dgettext(
-                'tuleap-tracker',
-                'Show/hide this value'
-            );
-        }
-
-        if ($value->getId() === Tracker_FormElement_Field_List::NONE_VALUE) {
-            return dgettext(
-                'tuleap-tracker',
-                '"None" value cannot be hidden'
-            );
-        }
-
-        return dgettext(
-            'tuleap-tracker',
-            'You can\'t hide this value since it is used in a semantic, in workflow, in transitions or in field dependency'
-        );
-    }
-
-    private function getImagePrefix(bool $value_can_be_hidden, bool $is_hidden): string
-    {
-        if (! $value_can_be_hidden) {
-            return '--exclamation-hidden';
-        }
-        if ($is_hidden) {
-            return '-half';
-        }
-
-        return '';
     }
 
     public function canValueBeHidden(Tracker_FormElement_Field_List_Value $value, Tracker_FormElement_Field $field): bool

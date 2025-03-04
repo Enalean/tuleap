@@ -23,9 +23,6 @@ msgstr ""
 "Le mot-clé \"FROM\" est absent de votre requête, il est obligatoire en mode "
 "expert"
 
-msgid "\"None\" value cannot be hidden"
-msgstr "La valeur \"Aucun\" ne peut pas être cachée"
-
 msgid "\"SELECT\" keyword is not allowed in default mode"
 msgstr "Le mot-clé \"SELECT\" n'est pas autorisé en mode défaut"
 
@@ -1690,6 +1687,9 @@ msgstr "HTML"
 msgid "Hidden fieldsets:"
 msgstr "Groupes de champs cachés:"
 
+msgid "Hide the value"
+msgstr "Cacher cette valeur"
+
 msgid "Hierarchy"
 msgstr "Hiérarchie"
 
@@ -2932,8 +2932,8 @@ msgstr "Afficher le diff"
 msgid "Show items referenced by {{ artifact_xref }}"
 msgstr "Voir les objets référencés par {{ artifact_xref }}"
 
-msgid "Show/hide this value"
-msgstr "Afficher/cacher cette valeur"
+msgid "Show the value"
+msgstr "Montrer la valeur"
 
 msgid "Simple columns"
 msgstr "Colonnes"
@@ -4842,14 +4842,6 @@ msgstr ""
 "Cet outil de suivi ne peut pas être supprimé car il est utilisé dans: %1$s"
 
 msgid ""
-"You can't hide this value since it is used in a semantic, in workflow, in "
-"transitions or in field dependency"
-msgstr ""
-"Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans une "
-"sémantique, dans le workflow, dans les transitions ou sur une dépendance "
-"entre champs"
-
-msgid ""
 "You can't submit an artifact because you do not have the right to submit all "
 "required fields"
 msgstr ""
@@ -4886,6 +4878,14 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas définir la sémantique État car il n'y a aucun champ de "
 "type liste dans l'outil de suivi"
+
+msgid ""
+"You cannot hide this value since it is used in a semantic, in workflow, in "
+"transitions or in field dependency"
+msgstr ""
+"Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans une "
+"sémantique, dans le workflow, dans les transitions ou sur une dépendance "
+"entre champs"
 
 msgid ""
 "You cannot remove a field used in a trigger. Please update trigger rules "
@@ -5079,9 +5079,6 @@ msgstr "valeur calculée"
 msgid "cancel"
 msgstr "annuler"
 
-msgid "cannot hide"
-msgstr "impossible de cacher cette valeur"
-
 msgid "changed from"
 msgstr "modifié de"
 
@@ -5261,3 +5258,6 @@ msgid ""
 msgstr ""
 "{{ jira_display_name }} identifié en tant que {{ tuleap_user_real_name }} "
 "(@{{ tuleap_user_username }})"
+
+msgid "“None” value cannot be hidden"
+msgstr "La valeur “Aucun” ne peut pas être cachée"
