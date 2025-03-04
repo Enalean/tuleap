@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @covers Tracker_Permission_PermissionManager
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(Tracker_Permission_PermissionManager::class)]
 final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

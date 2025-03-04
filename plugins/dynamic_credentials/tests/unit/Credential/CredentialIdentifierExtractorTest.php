@@ -34,9 +34,7 @@ final class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestC
         $this->assertEquals('identifier', $extractor->extract($username));
     }
 
-    /**
-     * @dataProvider incorrectlyFormattedUsernameProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('incorrectlyFormattedUsernameProvider')]
     public function testRejectionWhenUsernameIsIncorrectlyFormatted(string $username): void
     {
         $extractor = new CredentialIdentifierExtractor();

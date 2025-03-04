@@ -31,9 +31,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider getData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getData')]
     public function testImportOfArtifactLinkTypes(array $urls, ?TypePresenter $type, TypeCreatorInterface $creator, callable $expectations, callable $tests): void
     {
         $client       = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {

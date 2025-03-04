@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Sidebar;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -67,9 +68,7 @@ final class LinkedProjectTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderAccessExceptions
-     */
+    #[DataProvider('dataProviderAccessExceptions')]
     public function testItReturnsNullWhenUserCannotSeeProject(CheckProjectAccess $access_checker): void
     {
         self::assertNull(LinkedProject::fromProject($access_checker, $this->project, $this->user));

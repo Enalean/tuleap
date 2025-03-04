@@ -33,9 +33,7 @@ class PermissionsOnFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @dataProvider controllerProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('controllerProvider')]
     public function testAdminCanDisplay(string $controller_class_name)
     {
         $request         = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);
@@ -48,9 +46,7 @@ class PermissionsOnFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
         $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
-    /**
-     * @dataProvider controllerProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('controllerProvider')]
     public function testNonAdminGetsBlocked(string $controller_class_name)
     {
         $request         = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);
@@ -63,9 +59,7 @@ class PermissionsOnFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
         $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
-    /**
-     * @dataProvider controllerProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('controllerProvider')]
     public function testTrackerWasDeleted(string $controller_class_name)
     {
         $request         = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);
@@ -78,9 +72,7 @@ class PermissionsOnFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
         $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
-    /**
-     * @dataProvider controllerProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('controllerProvider')]
     public function testTrackerWasNotFound(string $controller_class_name)
     {
         $request         = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);

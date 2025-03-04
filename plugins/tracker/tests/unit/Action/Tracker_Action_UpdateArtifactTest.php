@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Action;
 use Codendi_Request;
 use EventManager;
 use PFUser;
+use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Tracker;
@@ -123,9 +124,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
     }
 
-    /**
-     * @after
-     */
+    #[After]
     protected function restoreAjaxRequestHeaders(): void
     {
         if ($this->old_request_with === null) {

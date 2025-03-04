@@ -26,9 +26,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class BlobDataReaderTest extends TestCase
 {
-    /**
-     * @dataProvider provideStringInVariousEncodings
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideStringInVariousEncodings')]
     public function testGetDataStringInUTF8(string $string): void
     {
         $blob = $this->createMock(Blob::class);
@@ -39,9 +37,7 @@ final class BlobDataReaderTest extends TestCase
         self::assertTrue(mb_check_encoding($data_reader->getDataStringInUTF8($blob), 'UTF-8'));
     }
 
-    /**
-     * @dataProvider provideStringInVariousEncodings
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideStringInVariousEncodings')]
     public function testGetDataLinesInUTF8(string $string): void
     {
         $blob = $this->createMock(Blob::class);
@@ -56,9 +52,7 @@ final class BlobDataReaderTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideStringInVariousEncodings
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideStringInVariousEncodings')]
     public function testConvertToUTF8(string $string): void
     {
         $data_reader = new BlobDataReader();

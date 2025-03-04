@@ -58,9 +58,7 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($this->project_verifier->isASiteLevelApp(1));
     }
 
-    /**
-     * @dataProvider dataProviderAppNotPartOfExpectedProject
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderAppNotPartOfExpectedProject')]
     public function testAppIsNotPartOfTheExpectedProject(?int $app_project_id): void
     {
         $this->app_dao->method('searchProjectIDByClientID')->willReturn($app_project_id);

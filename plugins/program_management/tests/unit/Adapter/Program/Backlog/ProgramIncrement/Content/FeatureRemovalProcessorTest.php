@@ -118,9 +118,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderExceptions')]
     public function testItWrapsExceptions(\Throwable $exception): void
     {
         $program_increment_ids        = [['id' => 25]];

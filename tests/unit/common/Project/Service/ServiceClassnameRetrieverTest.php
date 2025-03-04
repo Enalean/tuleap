@@ -41,9 +41,7 @@ final class ServiceClassnameRetrieverTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getServicesWithoutSpecificImplementation
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getServicesWithoutSpecificImplementation')]
     public function testReturnsService(string $name): void
     {
         $retriever = new ServiceClassnameRetriever(EventDispatcherStub::withIdentityCallback());

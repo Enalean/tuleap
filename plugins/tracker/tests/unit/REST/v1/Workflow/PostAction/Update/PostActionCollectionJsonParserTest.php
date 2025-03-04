@@ -43,9 +43,7 @@ class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $action_parser;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createParser()
     {
         $this->action_parser     = Mockery::mock(PostActionUpdateJsonParser::class);

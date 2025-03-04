@@ -128,9 +128,7 @@ final class POSTHandler extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generateDestinationGitExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateDestinationGitExceptions')]
     public function testItReturnsAFaultWhenTheUserCannotAccessThePullRequest(\Throwable $throwable): void
     {
         $result = $this->handle(

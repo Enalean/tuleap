@@ -52,9 +52,7 @@ final class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectIdentifier $a_project;
     private UserProxy $current_user;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
@@ -72,7 +70,7 @@ final class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createEntities(): void
     {
         $this->a_project = ProjectFactory::one();

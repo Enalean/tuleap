@@ -176,9 +176,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider generateComments
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateComments')]
     public function testItSavesCommentAndExtractsCrossReferences(CommentCreation $comment): void
     {
         $this->dao->expects(self::once())

@@ -133,9 +133,7 @@ final class UploadImageControllerTest extends TestCase
         self::assertFalse($creator->isCreated());
     }
 
-    /**
-     * @dataProvider getErrorStatus
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getErrorStatus')]
     public function testErrorIfFileUploadIsInError(int $error): void
     {
         $_FILES = [

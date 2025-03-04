@@ -90,9 +90,7 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
         yield 'string field' => [StringFieldBuilder::aStringField(856)->build()];
     }
 
-    /**
-     * @dataProvider notHandledTypeProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('notHandledTypeProvider')]
     public function testItNotHandleFormElement(Tracker_FormElement $form_element): void
     {
         $retriever = new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withType('not-handled-type'));

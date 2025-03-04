@@ -28,9 +28,7 @@ use function PHPUnit\Framework\assertEquals;
 
 final class ConfigKeyLegacyBoolTest extends TestCase
 {
-    /**
-     * @dataProvider getSerializationTests
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getSerializationTests')]
     public function testSerialization(string $expected, mixed $value): void
     {
         assertEquals($expected . PHP_EOL, (new ConfigKeyLegacyBool())->getSerializedRepresentation('key', $value));

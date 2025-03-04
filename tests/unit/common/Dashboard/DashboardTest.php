@@ -52,9 +52,7 @@ class DashboardTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dashboardLayoutProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dashboardLayoutProvider')]
     public function testOneColumnIsValidWithOneColumn(Dashboard $dashboard, $layout, $column_count, $expected)
     {
         $this->assertEquals($dashboard->isLayoutValid($layout, $column_count), $expected);

@@ -23,14 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertEquals;
 
-/**
- * @covers \Tuleap\JiraImport\JiraAgile\JiraSprint
- * @covers \Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI
- */
+#[CoversClass(JiraSprint::class)]
+#[CoversClass(JiraSprintRetrieverFromAPI::class)]
 final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoSprints(): void

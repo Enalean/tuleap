@@ -25,6 +25,7 @@ use DataAccessQueryException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Before;
 use Transition_PostAction_CIBuildDao;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
@@ -43,9 +44,7 @@ class CIBuildRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $ci_build_dao;
 
-    /**
-     * @before
-     */
+    #[Before]
     public function createRepository()
     {
         $this->ci_build_dao        = Mockery::mock(Transition_PostAction_CIBuildDao::class);

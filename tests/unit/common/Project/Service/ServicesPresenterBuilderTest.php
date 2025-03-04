@@ -20,7 +20,7 @@
 
 namespace Tuleap\Project\Service;
 
-use PHPUnit\Framework\MockObject\Stub;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ServiceManager;
 use Tuleap\GlobalLanguageMock;
@@ -34,7 +34,7 @@ final class ServicesPresenterBuilderTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private ServiceManager & Stub $service_manager;
+    private ServiceManager & MockObject $service_manager;
     private Project $project;
     private EventDispatcherStub $event_manager;
 
@@ -44,7 +44,7 @@ final class ServicesPresenterBuilderTest extends TestCase
         $this->project->method('getMinimalRank');
         $this->project->method('getID');
 
-        $this->service_manager = $this->createStub(ServiceManager::class);
+        $this->service_manager = $this->createMock(ServiceManager::class);
         $this->event_manager   = EventDispatcherStub::withIdentityCallback();
     }
 

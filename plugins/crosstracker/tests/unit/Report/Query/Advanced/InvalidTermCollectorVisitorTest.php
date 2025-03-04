@@ -308,9 +308,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidNumericComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidNumericComparisons')]
     public function testItRejectsInvalidNumericComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -356,9 +354,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidTextComparisons(new Field(self::FIELD_NAME));
     }
 
-    /**
-     * @dataProvider generateInvalidTextFieldComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidTextFieldComparisons')]
     public function testItRejectsInvalidTextComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -392,9 +388,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidDateComparisons(new Field(self::FIELD_NAME));
     }
 
-    /**
-     * @dataProvider generateInvalidDateFieldComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidDateFieldComparisons')]
     public function testItRejectsInvalidDateComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -428,9 +422,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidTextFieldComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidTextFieldComparisons')]
     public function testItRejectsInvalidFileComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -482,9 +474,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidListComparisons($field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidListFieldComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidListFieldComparisons')]
     public function testItRejectsInvalidListComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -510,9 +500,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidListFieldComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidListFieldComparisons')]
     public function testItRejectsMoreInvalidListComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -537,9 +525,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidListFieldComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidListFieldComparisons')]
     public function testItRejectsMoreInvalidOpenListComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -650,9 +636,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generateFieldsThatCannotBeComparedToMyself
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateFieldsThatCannotBeComparedToMyself')]
     public function testItRejectsInvalidFieldComparisonsToMyself(
         \Tracker_FormElement_Field $field,
         \Tracker $tracker,
@@ -693,9 +677,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidTextComparisons(new Metadata('title'));
     }
 
-    /**
-     * @dataProvider generateInvalidTitleComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidTitleComparisons')]
     public function testItRejectsInvalidTitleComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -710,9 +692,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidTextComparisons(new Metadata('description'));
     }
 
-    /**
-     * @dataProvider generateInvalidDescriptionComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidDescriptionComparisons')]
     public function testItRejectsInvalidDescriptionComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -738,9 +718,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidListComparisons($semantic, $simple_value);
     }
 
-    /**
-     * @dataProvider generateInvalidStatusComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidStatusComparisons')]
     public function testItRejectsInvalidStatusComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -759,9 +737,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidListComparisons($semantic, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidAssignedToComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidAssignedToComparisons')]
     public function testItRejectsInvalidAssignedToComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -779,9 +755,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidDateComparisons($always_there_field);
     }
 
-    /**
-     * @dataProvider generateInvalidSubmittedOnComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidSubmittedOnComparisons')]
     public function testItRejectsInvalidSubmittedOnComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -799,9 +773,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidDateComparisons($always_there_field);
     }
 
-    /**
-     * @dataProvider generateInvalidLastUpdateDateComparison
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidLastUpdateDateComparison')]
     public function testItRejectsInvalidLastUpdateDateComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -820,9 +792,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidListComparisons($always_there_field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidSubmittedByComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidSubmittedByComparisons')]
     public function testItRejectsInvalidSubmittedByComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -841,9 +811,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateInvalidListComparisons($always_there_field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidLastUpdateByComparisons
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidLastUpdateByComparisons')]
     public function testItRejectsInvalidLastUpdateByComparisons(Comparison $comparison): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -862,9 +830,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield '@last_update_date' => [new Metadata('last_update_date')];
     }
 
-    /**
-     * @dataProvider generateMetadataThatCannotBeComparedToMyself
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateMetadataThatCannotBeComparedToMyself')]
     public function testItRejectsInvalidMetadataComparisonsToMyself(Metadata $metadata): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
@@ -923,9 +889,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateNestedExpressions($valid_comparison, $invalid_comparison);
     }
 
-    /**
-     * @dataProvider generateNestedFields
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateNestedFields')]
     public function testItAddsInvalidFieldInNestedExpressions(Logical $parsed_query): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -953,9 +917,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         yield from self::generateNestedExpressions($valid_comparison, $invalid_comparison);
     }
 
-    /**
-     * @dataProvider generateNestedMetadata
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateNestedMetadata')]
     public function testItAddsInvalidMetadataInNestedExpressions(Logical $parsed_query): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();

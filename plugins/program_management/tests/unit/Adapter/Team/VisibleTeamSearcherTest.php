@@ -101,9 +101,7 @@ final class VisibleTeamSearcherTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderAccessExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderAccessExceptions')]
     public function testItReturnsErrorWhenUserCannotSeeOneOfTheTeams(CheckProjectAccess $access_checker): void
     {
         $this->access_checker = $access_checker;
@@ -124,9 +122,7 @@ final class VisibleTeamSearcherTest extends TestCase
         $this->getSearcher()->searchTeamWithIdInProgram($this->program, $this->user, self::FIRST_TEAM_ID);
     }
 
-    /**
-     * @dataProvider dataProviderAccessExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderAccessExceptions')]
     public function testItThrowsWhenUserCannotSeeTheTeam(CheckProjectAccess $access_checker): void
     {
         $this->access_checker = $access_checker;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -36,7 +37,7 @@ abstract class SemanticValueAdapterTestCase extends \Tuleap\Test\PHPUnit\TestCas
     protected SemanticValueAdapter $adapter;
     protected SemanticFieldRepository&MockObject $semantic_field_repository;
 
-    /** @before */
+    #[Before]
     protected function createInstance(): void
     {
         $this->semantic_field_repository = $this->createMock(SemanticFieldRepository::class);
@@ -46,7 +47,7 @@ abstract class SemanticValueAdapterTestCase extends \Tuleap\Test\PHPUnit\TestCas
     protected Tracker_Artifact_Changeset&MockObject $changeset;
     protected Tracker&MockObject $tracker;
 
-    /** @before */
+    #[Before]
     protected function createEntities(): void
     {
         $this->changeset = $this->createMock(Tracker_Artifact_Changeset::class);

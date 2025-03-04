@@ -64,9 +64,7 @@ final class FeatureFlagControllerTest extends TestCase
         yield 'Name does not have feature flag prefix' => [['name' => 'hehehe'], 'Bad request: the name given is not a feature flag'];
     }
 
-    /**
-     * @dataProvider provideInvalidNames
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidNames')]
     public function testItReturnsBadRequestWhenInvalidParameter(array $query_parameters, string $expected_error): void
     {
         $request = (new NullServerRequest())->withQueryParams($query_parameters);

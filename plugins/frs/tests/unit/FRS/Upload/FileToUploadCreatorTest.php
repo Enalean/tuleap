@@ -52,9 +52,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $release;
     private PFUser $user;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function instantiateCreator(): void
     {
         $this->dao          = $this->createMock(FileOngoingUploadDao::class);
@@ -69,9 +67,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = UserTestBuilder::aUser()->withId(102)->build();
     }
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function instantiateRelease(): void
     {
         $this->release = $this->createMock(FRSRelease::class);

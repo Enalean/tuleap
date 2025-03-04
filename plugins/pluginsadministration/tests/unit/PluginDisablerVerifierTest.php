@@ -22,9 +22,7 @@ namespace Tuleap\PluginsAdministration;
 
 final class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider providerOptionUntouchablePlugins
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerOptionUntouchablePlugins')]
     public function testPluginsAdministrationIsAlwaysUntouchable(string|false $plugins_that_can_not_be_disabled): void
     {
         $plugin_administration = $this->createMock(\PluginsAdministrationPlugin::class);

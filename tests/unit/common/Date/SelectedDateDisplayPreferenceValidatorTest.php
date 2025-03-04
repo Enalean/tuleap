@@ -35,9 +35,7 @@ class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\Te
         $this->validator = new SelectedDateDisplayPreferenceValidator();
     }
 
-    /**
-     * @dataProvider dataProviderValidAndInvalidUserPreferences
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidAndInvalidUserPreferences')]
     public function testItValidatesTheSelectedUserPreference(
         string $new_relative_dates_display,
         bool $is_valid,

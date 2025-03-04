@@ -314,9 +314,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideGitLabAPIToRetrieveGitlabProjectExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGitLabAPIToRetrieveGitlabProjectExceptions')]
     public function testItThrowAnExceptionIfGitlabAPIToRetrieveGitlabProjectHasError(Exception $exception): void
     {
         $user = $this->buildMockUser();
@@ -382,9 +380,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideGitLabAPIExceptions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGitLabAPIExceptions')]
     public function testItThrowAnExceptionIfGitlabCreateMergeRequestAPIHasError(Exception $exception): void
     {
         $user = $this->buildMockUser();

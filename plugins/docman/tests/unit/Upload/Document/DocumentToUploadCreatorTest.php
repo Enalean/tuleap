@@ -62,9 +62,7 @@ final class DocumentToUploadCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider permissionsForGroupsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('permissionsForGroupsDataProvider')]
     public function testCreation(?DocmanItemPermissionsForGroupsSet $permissions_for_groups): void
     {
         $metadata_creator = $this->createMock(DocumentMetadataCreator::class);

@@ -222,9 +222,7 @@ final class PullRequestRepresentationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generatePullRequestStatus
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generatePullRequestStatus')]
     public function testItExpandsOneLetterStatusToWordStatus(PullRequest $pull_request, string $expected_status): void
     {
         $this->url_generator->method('getHTTPURL')->willReturn('https://example.com/git');
@@ -256,9 +254,7 @@ final class PullRequestRepresentationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generateMergeStatus
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateMergeStatus')]
     public function testItExpandsIntMergeStatusToWordMergeStatus(
         PullRequest $pull_request,
         string $expected_merge_status,

@@ -25,6 +25,7 @@ use DataAccessQueryException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Before;
 use Transition_PostAction_Field_DateDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
@@ -44,9 +45,7 @@ class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $set_date_value_dao;
 
-    /**
-     * @before
-     */
+    #[Before]
     public function createRepository()
     {
         $this->set_date_value_dao = Mockery::mock(Transition_PostAction_Field_DateDao::class);

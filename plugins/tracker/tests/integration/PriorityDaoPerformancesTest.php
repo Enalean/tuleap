@@ -23,14 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
+use PHPUnit\Framework\Attributes\Group;
 use Tracker_Artifact_PriorityDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 /**
  * Also need to increase the memory limit to execute properly
- * @group ToFatToRun
  */
+#[Group('ToFatToRun')]
 final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
 {
     private Tracker_Artifact_PriorityDao $dao;

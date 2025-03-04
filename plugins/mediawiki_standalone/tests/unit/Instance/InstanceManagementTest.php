@@ -26,6 +26,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,12 +48,10 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
-/**
- * @covers \Tuleap\MediawikiStandalone\Instance\CreateInstance
- * @covers \Tuleap\MediawikiStandalone\Instance\ResumeInstance
- * @covers \Tuleap\MediawikiStandalone\Instance\SuspendInstance
- * @covers \Tuleap\MediawikiStandalone\Instance\DeleteInstance
- */
+#[CoversClass(CreateInstance::class)]
+#[CoversClass(ResumeInstance::class)]
+#[CoversClass(SuspendInstance::class)]
+#[CoversClass(DeleteInstance::class)]
 final class InstanceManagementTest extends TestCase
 {
     use ForgeConfigSandbox;

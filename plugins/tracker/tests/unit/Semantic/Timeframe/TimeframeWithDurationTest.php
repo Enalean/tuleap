@@ -76,8 +76,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsItsConfigDescription(): void
     {
-        $this->start_date_field->expects(self::any())->method('getLabel')->will(self::returnValue('Start date'));
-        $this->duration_field->expects(self::any())->method('getLabel')->will(self::returnValue('Duration'));
+        $this->start_date_field->expects(self::any())->method('getLabel')->willReturn('Start date');
+        $this->duration_field->expects(self::any())->method('getLabel')->willReturn('Duration');
 
         $this->assertEquals(
             'Timeframe is based on start date field "Start date" and duration field "Duration".',
@@ -128,16 +128,16 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_duration): void
     {
-        $this->start_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue($can_read_start_date));
-        $this->duration_field->expects(self::any())->method('userCanRead')->will(self::returnValue($can_read_duration));
+        $this->start_date_field->expects(self::any())->method('userCanRead')->willReturn($can_read_start_date);
+        $this->duration_field->expects(self::any())->method('userCanRead')->willReturn($can_read_duration);
 
         $this->assertNull($this->timeframe->exportToREST($this->user));
     }
 
     public function testItExportsToREST(): void
     {
-        $this->start_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::any())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::any())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::any())->method('userCanRead')->willReturn(true);
 
         $this->assertEquals(
             new SemanticTimeframeWithDurationRepresentation(
@@ -153,8 +153,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
         $tracker = $this->getMockBuilder(\Tracker::class)->disableOriginalConstructor()->getMock();
 
-        $dao->expects(self::once())->method('save')->with(113, 1001, 1002, null, null)->will(self::returnValue(true));
-        $tracker->expects(self::once())->method('getId')->will(self::returnValue(113));
+        $dao->expects(self::once())->method('save')->with(113, 1001, 1002, null, null)->willReturn(true);
+        $tracker->expects(self::once())->method('getId')->willReturn(113);
 
         self::assertTrue(
             $this->timeframe->save($tracker, $dao)
@@ -168,8 +168,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifact($start_date, $duration);
 
@@ -188,8 +188,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $duration = 10;
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifactWithoutStartDate($duration);
 
@@ -208,8 +208,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = '07/01/2013';
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifactWithoutDuration($start_date);
 
@@ -231,8 +231,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifact($start_date, $duration);
 
@@ -251,8 +251,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $duration = 10;
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifactWithoutStartDate($duration);
 
@@ -271,8 +271,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = '07/01/2013';
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifactWithoutDuration($start_date);
 
@@ -294,8 +294,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifact($start_date, $duration);
 
@@ -312,7 +312,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenStartDateIsEmptyOrHasNoValueInChartContext(): void
     {
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifactWithoutStartDate(1);
 
@@ -335,8 +335,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = '07/01/2013';
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         if ($duration) {
             $artifact = $this->anArtifact($start_date, $duration);
@@ -357,8 +357,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date = '07/01/2013';
 
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifactWithoutDuration($start_date);
 
@@ -373,15 +373,15 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueWhenUserCanReadFields(): void
     {
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         self::assertTrue($this->timeframe->userCanReadTimeframeFields($this->user));
     }
 
     public function testItReturnsFalseWhenUserCannotReadFields(): void
     {
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(false);
         // duration_field->userCanRead is not called cause of && operator
 
         self::assertFalse($this->timeframe->userCanReadTimeframeFields($this->user));
@@ -389,8 +389,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueWhenAllFieldsAreZero(): void
     {
-        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->anArtifactWithoutAnyValue();
 
@@ -403,8 +403,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenAtLeastOneFieldIsNotZero(): void
     {
-        $this->start_date_field->expects(self::exactly(3))->method('userCanRead')->will(self::returnValue(true));
-        $this->duration_field->expects(self::exactly(3))->method('userCanRead')->will(self::returnValue(true));
+        $this->start_date_field->expects(self::exactly(3))->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects(self::exactly(3))->method('userCanRead')->willReturn(true);
 
         $start_date = '07/01/2013';
         $duration   = 10;
@@ -446,7 +446,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mock->expects(self::any())->method('getId')->will(self::returnValue($field_id));
+        $mock->expects(self::any())->method('getId')->willReturn($field_id);
 
         return $mock;
     }
@@ -457,7 +457,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mock->expects(self::any())->method('getId')->will(self::returnValue($field_id));
+        $mock->expects(self::any())->method('getId')->willReturn($field_id);
 
         return $mock;
     }

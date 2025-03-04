@@ -49,9 +49,7 @@ class SetIntValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createUpdater()
     {
         $this->set_int_value_repository = Mockery::mock(SetIntValueRepository::class);

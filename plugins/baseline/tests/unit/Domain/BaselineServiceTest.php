@@ -50,7 +50,7 @@ final class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var Authorizations&\PHPUnit\Framework\MockObject\MockObject */
     private $authorizations;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->baseline_repository   = $this->createMock(BaselineRepository::class);
@@ -68,7 +68,7 @@ final class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private ProjectIdentifier $a_project;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createEntities(): void
     {
         $this->a_project = ProjectFactory::one();

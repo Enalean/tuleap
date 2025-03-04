@@ -63,9 +63,7 @@ final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($expected_response, $response);
     }
 
-    /**
-     * @dataProvider restAuthenticationExceptionProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('restAuthenticationExceptionProvider')]
     public function testRequestIsRejectedWhenTheCurrentUserCanNotBeAuthenticated(Exception $exception): void
     {
         $basic_rest_auth   = $this->createMock(BasicAuthentication::class);

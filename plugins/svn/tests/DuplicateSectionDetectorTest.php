@@ -28,9 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class DuplicateSectionDetectorTest extends TestCase
 {
-    /**
-     * @dataProvider getTestWarnWhenPathIsUsedTwice
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTestWarnWhenPathIsUsedTwice')]
     public function testWarnWhenPathIsUsedTwice(string $source, int $nb_faults): void
     {
         $svn_access_file = new SVNAccessFileContent(

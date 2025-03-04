@@ -383,9 +383,7 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @dataProvider getShortNamesAndCorrespondingConversions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getShortNamesAndCorrespondingConversions')]
     public function testItConvertsGivenStringToValidShortName(string $expected, string $wished): void
     {
         assertEquals($expected, TrackerCreationDataChecker::getShortNameWithValidFormat($wished));

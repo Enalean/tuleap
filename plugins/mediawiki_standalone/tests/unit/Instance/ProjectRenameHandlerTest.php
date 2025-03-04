@@ -33,9 +33,7 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 final class ProjectRenameHandlerTest extends TestCase
 {
-    /**
-     * @dataProvider getTestData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTestData')]
     public function testRename(?QueueTask $expected_task, int $project_id, ProjectByIDFactory $project_factory): void
     {
         $queue = new EnqueueTaskStub();

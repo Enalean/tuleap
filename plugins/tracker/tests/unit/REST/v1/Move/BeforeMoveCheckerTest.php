@@ -46,7 +46,7 @@ final class BeforeMoveCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->project_status_verificator = $this->createStub(ProjectStatusVerificator::class);
+        $this->project_status_verificator = $this->createMock(ProjectStatusVerificator::class);
         $this->event_manager              = $this->createStub(\EventManager::class);
         $this->move_dao                   = $this->createMock(MoveActionAllowedDAO::class);
 
@@ -75,8 +75,6 @@ final class BeforeMoveCheckerTest extends TestCase
         $target_tracker->method('getId')->willReturn(2);
         $this->event_manager->method('processEvent');
         $this->move_dao->method('isMoveActionAllowedInTracker')->willReturn(true);
-
-        $this->expectNotToPerformAssertions();
 
         $this->before_move_checker->check($source_tracker, $target_tracker, $this->user, $artifact, $event);
     }

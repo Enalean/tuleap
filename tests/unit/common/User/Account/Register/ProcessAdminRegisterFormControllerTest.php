@@ -46,9 +46,7 @@ class ProcessAdminRegisterFormControllerTest extends TestCase
         self::assertTrue($form_processor->isPasswordNeeded());
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getNonAdminUsers')]
     public function testRejectForNonAdmin(\PFUser $user): void
     {
         $this->expectException(ForbiddenException::class);

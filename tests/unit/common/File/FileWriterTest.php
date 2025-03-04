@@ -37,9 +37,7 @@ final class FileWriterTest extends TestCase
         self::assertSame($content, file_get_contents($file_path));
     }
 
-    /**
-     * @dataProvider dataProviderPermissions
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderPermissions')]
     public function testCreateFileWithExpectedPermissions(int $chmod): void
     {
         $file_path = vfsStream::setup()->url() . '/my_file';

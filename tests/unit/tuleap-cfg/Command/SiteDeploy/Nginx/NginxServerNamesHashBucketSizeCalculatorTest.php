@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SiteDeploy\Nginx;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class NginxServerNamesHashBucketSizeCalculatorTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderServerNamesExpectedHashBucketSize
-     */
+    #[DataProvider('dataProviderServerNamesExpectedHashBucketSize')]
     public function testHashBucketSizeCalculation(int $server_name_size, int $expected_hash_bucket_size): void
     {
         $cpu_information        = new FakeX8664CPUInformationStub();

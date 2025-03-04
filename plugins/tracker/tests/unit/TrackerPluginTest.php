@@ -40,9 +40,7 @@ final class TrackerPluginTest extends TestCase
         yield "Value is '1'" => ['1', false];
     }
 
-    /**
-     * @dataProvider provideUserPreferenceValues
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideUserPreferenceValues')]
     public function testItSetsADefaultValueForTrackerCommentOrderUserPreference(
         string|false $value,
         bool $should_have_default_value,

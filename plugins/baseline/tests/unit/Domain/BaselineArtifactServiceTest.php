@@ -40,7 +40,7 @@ final class BaselineArtifactServiceTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var BaselineArtifactRepository&MockObject */
     private $baseline_artifact_repository;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->baseline_artifact_repository = $this->createMock(BaselineArtifactRepository::class);

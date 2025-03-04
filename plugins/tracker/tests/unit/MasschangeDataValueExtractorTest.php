@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_Text;
@@ -34,9 +35,9 @@ final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
     use GlobalLanguageMock;
 
     /**
-     * @dataProvider dataProviderFields
      * @param class-string $field_class
      */
+    #[DataProvider('dataProviderFields')]
     public function testReturnsFieldWithNewValue(string $field_class, mixed $value, bool $is_expected_to_set_value): void
     {
         $field = $this->createStub($field_class);

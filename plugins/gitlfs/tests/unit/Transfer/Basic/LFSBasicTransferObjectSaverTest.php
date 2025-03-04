@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\GitLFS\Transfer\Basic;
 
 use League\Flysystem\FilesystemOperator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\DB\DBConnection;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
@@ -187,10 +188,9 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
     }
 
     /**
-     * @dataProvider objectSizeProvider
-     *
      * @param class-string<\Throwable> $excepted_exception
      */
+    #[DataProvider('objectSizeProvider')]
     public function testSaveIsRejectedWhenSizeOfSavedFileDoesNotMatchTheExpectation(
         int $input_size,
         int $object_size,

@@ -59,9 +59,7 @@ final class CollectLinkedProjectsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderContext
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderContext')]
     public function testItAddsChildrenOrParentProjects(bool $is_in_children_context): void
     {
         $event          = $this->getEvent();
@@ -88,9 +86,7 @@ final class CollectLinkedProjectsTest extends TestCase
         self::assertCount(2, $context_projects->getProjects());
     }
 
-    /**
-     * @dataProvider dataProviderContext
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderContext')]
     public function testItThrowsWhenGivenADifferentContextThanWhatIsAlreadySet(bool $is_in_children_context): void
     {
         $event        = $this->getEvent();
@@ -119,9 +115,7 @@ final class CollectLinkedProjectsTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider dataProviderContext
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderContext')]
     public function testItMergesCollectionsWithTheSameContext(bool $is_in_children_context): void
     {
         $event            = $this->getEvent();

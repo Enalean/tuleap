@@ -187,9 +187,7 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
         self::assertFalse($restrictor->hasBeenUnrestricted());
     }
 
-    /**
-     * @dataProvider dataProviderInvalidSettings
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidSettings')]
     public function testRejectsInvalidSettings(array $body): void
     {
         $server_id = new UUIDTestContext();

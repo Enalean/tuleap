@@ -75,7 +75,7 @@ abstract class IntegrationTestCaseWithStubs extends \Tuleap\Test\PHPUnit\TestCas
     /** @var FrozenClock */
     protected $clock;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function createContainer(): void
     {
         if ($this->container === null) {

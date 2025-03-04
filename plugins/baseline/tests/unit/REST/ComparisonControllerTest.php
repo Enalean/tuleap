@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
+use PHPUnit\Framework\Attributes\Before;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\ComparisonRepository;
@@ -51,7 +52,7 @@ final class ComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $comparison_repository;
     private UserProxy $current_user;
 
-    /** @before */
+    #[Before]
     protected function createInstance(): void
     {
         $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());

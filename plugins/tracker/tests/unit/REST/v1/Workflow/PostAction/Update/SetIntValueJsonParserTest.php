@@ -36,9 +36,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $parser;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createParser()
     {
         $this->parser = new SetIntValueJsonParser();

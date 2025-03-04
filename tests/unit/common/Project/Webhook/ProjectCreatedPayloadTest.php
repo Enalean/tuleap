@@ -26,9 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectCreatedPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider ownerDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ownerDataProvider')]
     public function testPayloadCreation(bool $has_owner): void
     {
         $project = $this->createMock(\Project::class);

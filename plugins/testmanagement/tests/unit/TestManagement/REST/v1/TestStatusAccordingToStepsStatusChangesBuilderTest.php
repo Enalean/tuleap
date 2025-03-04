@@ -85,9 +85,7 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
         $this->assertEmpty($changes);
     }
 
-    /**
-     * @dataProvider stepsStatusProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('stepsStatusProvider')]
     public function testPassWhenAllStepsPassed(array $steps_defined_in_test, array $steps_changes, $expected_status)
     {
         $changes = [];

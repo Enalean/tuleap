@@ -49,9 +49,7 @@ class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createUpdater()
     {
         $this->set_date_value_repository = Mockery::mock(SetDateValueRepository::class);

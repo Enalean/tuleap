@@ -31,9 +31,7 @@ final class CommentFormatIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         yield ['commonmark'];
     }
 
-    /**
-     * @dataProvider generateFormats
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateFormats')]
     public function testItBuildsFromFormatString(string $format_string): void
     {
         $format = CommentFormatIdentifier::fromStringWithDefault($format_string);

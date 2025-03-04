@@ -147,9 +147,7 @@ final class PullRequestMinimalRepresentationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generateStatus
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateStatus')]
     public function testItExpandsOneLetterStatusToWordStatus(PullRequest $pull_request, string $expected_status): void
     {
         $this->url_generator->method('getHTTPURL')->willReturn('https://example.com/git');

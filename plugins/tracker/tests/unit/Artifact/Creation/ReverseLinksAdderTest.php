@@ -163,9 +163,7 @@ final class ReverseLinksAdderTest extends TestCase
         self::assertSame(0, $changeset_creator->getCallsCount());
     }
 
-    /**
-     * @dataProvider provideFaults
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFaults')]
     public function testExceptionWhenChangesetConverterFaults(Fault $fault, \Exception $expected_exception): void
     {
         $submitter = UserTestBuilder::buildWithDefaults();

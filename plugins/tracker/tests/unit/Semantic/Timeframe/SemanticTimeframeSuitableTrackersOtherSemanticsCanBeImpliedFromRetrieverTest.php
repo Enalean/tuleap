@@ -119,7 +119,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
     private function getMockedTracker(int $id)
     {
         $mock = $this->createMock(\Tracker::class);
-        $mock->expects(self::any())->method('getId')->will(self::returnValue($id));
+        $mock->expects(self::any())->method('getId')->willReturn($id);
         return $mock;
     }
 }

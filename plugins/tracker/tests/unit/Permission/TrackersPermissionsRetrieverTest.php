@@ -129,9 +129,7 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         yield 'Tracker_UserWithReadAllPermission' => [new Tracker_UserWithReadAllPermission(UserTestBuilder::buildWithDefaults())];
     }
 
-    /**
-     * @dataProvider provideSpecialUsers
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialUsers')]
     public function testItAllowAllFieldsIfUserIsSpecial(PFUser $user): void
     {
         $project     = ProjectTestBuilder::aProject()->withId(101)->build();
@@ -190,9 +188,7 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         yield 'Permission SUBMIT' => [TrackerPermissionType::PERMISSION_SUBMIT];
     }
 
-    /**
-     * @dataProvider provideTrackerPermissionTypes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideTrackerPermissionTypes')]
     public function testItAllowAllTrackersIfUserIsAdmin(TrackerPermissionType $permission): void
     {
         $permissions = new TrackersPermissionsRetriever(
@@ -331,9 +327,7 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         yield 'Permission UPDATE' => [ArtifactPermissionType::PERMISSION_UPDATE];
     }
 
-    /**
-     * @dataProvider provideArtifactPermissionTypes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideArtifactPermissionTypes')]
     public function testItReturnsAllowedArtifact(ArtifactPermissionType $permission): void
     {
         $user    = $this->createMock(PFUser::class);
@@ -368,9 +362,7 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         self::assertEqualsCanonicalizing([$artifact2, $artifact3], $results->not_allowed);
     }
 
-    /**
-     * @dataProvider provideArtifactPermissionTypes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideArtifactPermissionTypes')]
     public function testItAllowAllArtifactIfUserIsAdmin(ArtifactPermissionType $permission): void
     {
         $user    = $this->createMock(PFUser::class);

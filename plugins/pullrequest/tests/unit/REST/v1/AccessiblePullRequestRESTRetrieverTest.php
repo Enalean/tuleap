@@ -64,9 +64,7 @@ final class AccessiblePullRequestRESTRetrieverTest extends TestCase
         yield 'Project access not found' => [new Project_AccessProjectNotFoundException()];
     }
 
-    /**
-     * @dataProvider dataProvider404ExceptionCases
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProvider404ExceptionCases')]
     public function testItMapsExceptionToRestExceptions(\Throwable $exception): void
     {
         $this->permission_checker = CheckUserCanAccessPullRequestStub::withException($exception);

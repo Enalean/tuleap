@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Closure;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public static function provideKeywordVariants(): array
@@ -60,10 +62,8 @@ final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideMixedCaseKeywordVariants
-     * @dataProvider provideKeywordVariants
-     */
+    #[DataProvider('provideKeywordVariants')]
+    #[DataProvider('provideMixedCaseKeywordVariants')]
     public function testItAcceptsResolvesVariants(string $potential_keyword): void
     {
         $keyword = ClosingKeyword::fromString($potential_keyword);
@@ -75,9 +75,7 @@ final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull(ClosingKeyword::fromString('blabla'));
     }
 
-    /**
-     * @dataProvider provideKeywordVariants
-     */
+    #[DataProvider('provideKeywordVariants')]
     public function testItMatchesKeywordVariants(string $potential_keyword): void
     {
         preg_match('/' . ClosingKeyword::getKeywordsRegexpPart() . '/', $potential_keyword, $matches);
@@ -94,9 +92,7 @@ final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideMatch
-     */
+    #[DataProvider('provideMatch')]
     public function testItMatchesKeywordToArgument(string $keyword, string $expected_match): void
     {
         $keyword = ClosingKeyword::fromString($keyword);

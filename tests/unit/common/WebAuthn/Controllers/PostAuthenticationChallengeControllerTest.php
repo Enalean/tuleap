@@ -47,9 +47,7 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @dataProvider getTest400Data
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTest400Data')]
     public function testItReturnsError400ForAnonymous(
         string|array $body,
     ): void {

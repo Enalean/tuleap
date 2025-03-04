@@ -44,9 +44,7 @@ class SetFloatValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $set_float_value_dao;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createRepository()
     {
         $this->set_float_value_dao = Mockery::mock(Transition_PostAction_Field_FloatDao::class);

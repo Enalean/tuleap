@@ -674,9 +674,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
         ];
     }
 
-    /**
-     * @dataProvider getJiraFieldsAreMappedToXMLObjects
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getJiraFieldsAreMappedToXMLObjects')]
     public function testJiraFieldsAreMappedToXMLObjects(JiraFieldAPIRepresentation $jira_field, callable $tests): void
     {
         $xml_tracker = $this->mapper->exportFieldToXml(

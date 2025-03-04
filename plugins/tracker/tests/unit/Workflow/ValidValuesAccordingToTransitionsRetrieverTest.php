@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Workflow;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_Selectbox;
@@ -39,7 +40,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     private const THIRD_VALUE_ID                  = 103;
     private const ORIGINAL_FIELD_CHANGED_VALUE_ID = 108;
 
-    private Tracker_FormElement_Field_Selectbox|Stub $field_changed;
+    private Tracker_FormElement_Field_Selectbox&MockObject $field_changed;
     private Artifact|Stub $artifact;
     private Stub|Workflow $workflow;
     private BindValueIdCollectionStub $values_collection;
@@ -49,7 +50,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     private \Tracker_FormElement_Field_List_Bind_StaticValue $value_from_artifact;
     private \PFUser $user;
     /**
-     * @var Workflow_Transition_ConditionFactory&Stub
+     * @var Workflow_Transition_ConditionFactory&MockObject
      */
     private $condition_factory;
     private ValidValuesAccordingToTransitionsRetriever $first_valid_value_according_to_dependencies_retriever;
@@ -58,7 +59,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     {
         $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();
 
-        $this->field_changed = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
+        $this->field_changed = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
         $this->field_changed->method('getId')->willReturn(201);
 
         $this->artifact = $this->createStub(Artifact::class);
@@ -76,7 +77,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         $this->artifact->method('getValue')->willReturn($changeset_value_field_changed);
         $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
 
-        $this->condition_factory = $this->createStub(
+        $this->condition_factory = $this->createMock(
             Workflow_Transition_ConditionFactory::class
         );
 

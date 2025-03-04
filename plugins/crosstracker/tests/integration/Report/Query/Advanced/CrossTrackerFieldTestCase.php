@@ -50,9 +50,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
 {
     use TemporaryTestDirectory;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     protected function generateForgeConfig(): void
     {
         ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
@@ -62,9 +60,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         $_SERVER['REQUEST_URI'] = '';
     }
 
-    /**
-     * @after
-     */
+    #[\PHPUnit\Framework\Attributes\After]
     protected function unsetServer(): void
     {
         unset($_SERVER['REQUEST_URI']);

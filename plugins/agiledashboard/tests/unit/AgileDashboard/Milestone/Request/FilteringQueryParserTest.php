@@ -74,9 +74,7 @@ final class FilteringQueryParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertInstanceOf(StatusClosed::class, $filter->getStatusFilter());
     }
 
-    /**
-     * @dataProvider invalidQueryDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidQueryDataProvider')]
     public function testItThrowsIfQueryIsInvalid(string $query): void
     {
         $this->expectException(MalformedQueryParameterException::class);

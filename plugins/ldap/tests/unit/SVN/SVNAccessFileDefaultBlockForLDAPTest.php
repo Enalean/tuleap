@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP\SVN;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\LDAP\Project\UsesLDAPAuthProvider;
 use Tuleap\LDAP\User\LdapLoginFromTuleapUserIdProvider;
@@ -38,9 +39,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @dataProvider membersDataProvider
-     */
+    #[DataProvider('membersDataProvider')]
     public function testUserGroups(SVNAccessFileDefaultBlockOverride $default_block, bool $project_uses_ldap, array $ldap_uids, array $expected): void
     {
         $ldap_logins_provider = new class ($ldap_uids) implements LdapLoginFromTuleapUserIdProvider {
@@ -144,9 +143,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider permissionsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('permissionsDataProvider')]
     public function testPermissions(\Project $project, string $platform_access, bool $project_uses_ldap, bool $is_world_access_forbidden): void
     {
         \ForgeConfig::set(\ForgeAccess::CONFIG, $platform_access);

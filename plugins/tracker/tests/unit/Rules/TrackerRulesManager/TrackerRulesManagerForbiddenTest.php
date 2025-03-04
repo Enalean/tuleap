@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Rule;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tracker;
@@ -95,9 +96,7 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         $this->tracker_rules_manager->method('getRuleFactory')->willReturn($this->rule_factory);
     }
 
-    /**
-     * @dataProvider forbiddenSourceProvider
-     */
+    #[DataProvider('forbiddenSourceProvider')]
     public function testForbiddenSource($field_id, $source_id, $expected, $message)
     {
         self::assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenSource(1, $field_id, $source_id), $message);
@@ -125,9 +124,7 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider forbiddenTargetProvider
-     */
+    #[DataProvider('forbiddenTargetProvider')]
     public function testForbiddenTarget($field_id, $source_id, $expected, $message)
     {
         self::assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenTarget(1, $field_id, $source_id), $message);
@@ -155,9 +152,7 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider fieldHasSourceProvider
-     */
+    #[DataProvider('fieldHasSourceProvider')]
     public function testFieldHasSource($field_id, $expected)
     {
         self::assertSame($expected, $this->tracker_rules_manager->fieldHasSource(1, $field_id));
@@ -175,10 +170,8 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider fieldHasTargetProvider
-     */
-    public function test6ieldHasTarget($field_id, $expected)
+    #[DataProvider('fieldHasTargetProvider')]
+    public function testFieldHasTarget($field_id, $expected)
     {
         self::assertSame($expected, $this->tracker_rules_manager->fieldHasTarget(1, $field_id));
     }
@@ -195,9 +188,7 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider isCyclicProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('isCyclicProvider')]
     public function testcheckIfRuleIsCyclic($source_id, $target_id, $expected)
     {
         $this->assertsame($expected, $this->tracker_rules_manager->checkIfRuleIsCyclic(1, $source_id, $target_id));
@@ -234,9 +225,7 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider ruleExistProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ruleExistProvider')]
     public function testRuleExists($source_id, $target_id, $expected)
     {
         $this->assertsame($expected, $this->tracker_rules_manager->ruleExists(1, $source_id, $target_id));

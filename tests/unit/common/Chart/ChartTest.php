@@ -49,6 +49,7 @@ namespace Tuleap\Chart {
             $this->assertCount(1, $http_headers);
             $this->assertEquals('Content-type: image/png', $http_headers[0]->getHeader());
             $this->expectOutputRegex('/^' . self::PNG_FILE_SIGNATURE . '/');
+            set_exception_handler($GLOBALS['__jpg_OldHandler']);
         }
     }
 }

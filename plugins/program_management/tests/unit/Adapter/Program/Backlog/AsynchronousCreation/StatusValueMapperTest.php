@@ -127,9 +127,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderMatchingValue
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderMatchingValue')]
     public function testItMapsValuesByDuckTyping(
         string $source_label,
         int $expected_bind_value_id,

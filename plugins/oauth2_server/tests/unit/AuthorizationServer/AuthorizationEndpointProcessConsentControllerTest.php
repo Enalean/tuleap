@@ -180,9 +180,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
         ];
     }
 
-    /**
-     * @dataProvider dataProviderInvalidBodyParams
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidBodyParams')]
     public function testHandleThrowsForbiddenWhenInvalidBodyParams(array $body_params): void
     {
         $this->user_manager->method('getCurrentUser')

@@ -45,7 +45,7 @@ final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private UpdateCategoriesProcessor&MockObject $update_processor;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function instantiateMocks(): void
     {
         $this->request               = $this->createMock(HTTPRequest::class);

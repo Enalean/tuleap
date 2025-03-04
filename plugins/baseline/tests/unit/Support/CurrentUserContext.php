@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Support;
 
+use PHPUnit\Framework\Attributes\Before;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\UserIdentifier;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -35,7 +36,7 @@ trait CurrentUserContext
     /** @var \PFUser */
     protected $current_tuleap_user;
 
-    /** @before */
+    #[Before]
     protected function buildCurrentUser(): void
     {
         $this->current_tuleap_user = UserTestBuilder::aUser()->build();

@@ -70,9 +70,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         \Docman_PermissionsManager::clearInstances();
     }
 
-    /**
-     * @dataProvider dataProviderLastVersionFileEdit
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderLastVersionFileEdit')]
     public function testCanRetrieveTheLastVersionOfADocmanFile(
         bool $user_can_write,
         RetrieveFilenamePattern $filename_pattern_retriever,

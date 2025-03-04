@@ -25,12 +25,11 @@ namespace Tuleap\LDAP;
 
 use LDAP_UserSync;
 use PFUser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-/**
- * @covers \LDAP_UserSync
- */
+#[CoversClass(\LDAP_UserSync::class)]
 final class UserSyncTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNoUpdateWhenNoDifference(): void

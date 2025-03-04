@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -281,9 +282,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidNumericComparisons
-     */
+    #[DataProvider('generateInvalidNumericComparisons')]
     public function testItRejectsInvalidFloatComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -298,9 +297,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidNumericComparisons
-     */
+    #[DataProvider('generateInvalidNumericComparisons')]
     public function testItRejectsInvalidIntComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -336,9 +333,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidTextComparisons
-     */
+    #[DataProvider('generateInvalidTextComparisons')]
     public function testItRejectsInvalidStringComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -353,9 +348,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidTextComparisons
-     */
+    #[DataProvider('generateInvalidTextComparisons')]
     public function testItRejectsInvalidTextComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -379,9 +372,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield from self::generateInvalidComparisonsForFieldsThatAreNotLists($field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidDateComparisons
-     */
+    #[DataProvider('generateInvalidDateComparisons')]
     public function testItRejectsInvalidDateComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -396,9 +387,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidDateComparisons
-     */
+    #[DataProvider('generateInvalidDateComparisons')]
     public function testItRejectsInvalidSubmittedOnComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -413,9 +402,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidDateComparisons
-     */
+    #[DataProvider('generateInvalidDateComparisons')]
     public function testItRejectsInvalidLastUpdateDateComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -447,9 +434,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidTextComparisons
-     */
+    #[DataProvider('generateInvalidTextComparisons')]
     public function testItRejectsInvalidFileComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -493,9 +478,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield from self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidListComparisons
-     */
+    #[DataProvider('generateInvalidListComparisons')]
     public function testItRejectsInvalidSelectboxComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -510,9 +493,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidListComparisons
-     */
+    #[DataProvider('generateInvalidListComparisons')]
     public function testItRejectsInvalidMultiSelectboxComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -527,9 +508,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidListComparisons
-     */
+    #[DataProvider('generateInvalidListComparisons')]
     public function testItRejectsInvalidRadioButtonComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -544,9 +523,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidListComparisons
-     */
+    #[DataProvider('generateInvalidListComparisons')]
     public function testItRejectsInvalidCheckboxComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -576,9 +553,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield from self::generateInvalidComparisonsForFieldsThatAreNotNumeric($field, $valid_value);
     }
 
-    /**
-     * @dataProvider generateInvalidSubmitterComparisons
-     */
+    #[DataProvider('generateInvalidSubmitterComparisons')]
     public function testItRejectsInvalidSubmittedByComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -592,9 +567,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
     }
 
-    /**
-     * @dataProvider generateInvalidSubmitterComparisons
-     */
+    #[DataProvider('generateInvalidSubmitterComparisons')]
     public function testItRejectsInvalidLastUpdateByComparisons(Comparison $comparison): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
@@ -629,9 +602,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield 'user group list' => [ListUserGroupBindBuilder::aUserGroupBind($list_field)->build()->getField()];
     }
 
-    /**
-     * @dataProvider generateFieldTypes
-     */
+    #[DataProvider('generateFieldTypes')]
     public function testItRejectsInvalidComparisonToMyself(\Tracker_FormElement_Field $field): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')->willReturn($field);
@@ -684,9 +655,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         ];
     }
 
-    /**
-     * @dataProvider generateNestedExpressions
-     */
+    #[DataProvider('generateNestedExpressions')]
     public function testItAddsInvalidFieldInNestedExpressions(Logical $parsed_query): void
     {
         $int_field = IntFieldBuilder::anIntField(102)->build();

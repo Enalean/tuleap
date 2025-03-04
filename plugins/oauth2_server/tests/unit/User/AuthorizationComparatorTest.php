@@ -42,9 +42,7 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->comparator = new AuthorizationComparator($this->factory);
     }
 
-    /**
-     * @dataProvider dataProviderCoveringScopes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderCoveringScopes')]
     public function testAreRequestedScopesAlreadyGranted(
         bool $expected_result,
         array $saved_scopes,

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\XMLImport;
 
 use PFUser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use TestHelper;
@@ -38,9 +39,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Stub\TrackerXmlFieldsMappingStub;
 use User\XML\Import\IFindUserFromXMLReference;
 
-/**
- * @covers Tracker_Artifact_XMLImport_XMLImportFieldStrategyList
- */
+#[CoversClass(Tracker_Artifact_XMLImport_XMLImportFieldStrategyList::class)]
 final class XMLImportFieldStrategyListTest extends TestCase
 {
     private BindStaticValueDao&MockObject $static_value_dao;

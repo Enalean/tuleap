@@ -571,8 +571,6 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/toto.xls');
         $project = $this->createMock(Project::class);
         $file->method('getGroup')->willReturn($project);
-        $file->method('getReleaseID')->willReturn(self::isType('int'));
-        $project->method('getGroupId')->willReturn(self::isType('int'));
         $this->createReleaseDir('prj', 'p1_r1');
         self::assertTrue(is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/'));
 
@@ -615,7 +613,6 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileID')->willReturn(5);
         $file->method('getFileName')->willReturn('p1_r1/toto.xls');
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/toto.xls');
-        $file->method('getReleaseID')->willReturn(self::isType('int'));
         self::assertTrue(is_dir(dirname(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/')));
 
         $dao = $this->createMock(FRSFileDao::class);
@@ -657,8 +654,6 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p2_r1/toto.xls');
         $project = $this->createMock(Project::class);
         $file->method('getGroup')->willReturn($project);
-        $file->method('getReleaseID')->willReturn(self::isType('int'));
-        $project->method('getGroupId')->willReturn(self::isType('int'));
         self::assertTrue(is_dir(dirname(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p2_r1/')));
         $backend->method('chgrp')->willReturn(true);
 
@@ -705,7 +700,6 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p3_r1/toto.xls');
         $project = $this->createMock(Project::class);
         $file->method('getGroup')->willReturn($project);
-        $file->method('getReleaseID')->willReturn(self::isType('int'));
         self::assertTrue(is_dir(dirname(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p3_r1/')));
 
         $dao = $this->createMock(FRSFileDao::class);

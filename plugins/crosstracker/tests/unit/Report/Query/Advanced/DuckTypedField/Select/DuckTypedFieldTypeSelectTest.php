@@ -104,9 +104,7 @@ final class DuckTypedFieldTypeSelectTest extends TestCase
         yield [Tracker_FormElementFactory::FIELD_ARTIFACT_IN_TRACKER];
     }
 
-    /**
-     * @dataProvider generateTypes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateTypes')]
     public function testOtherTypesReturnAnError(string $type_name): void
     {
         $result = DuckTypedFieldTypeSelect::fromString($type_name);

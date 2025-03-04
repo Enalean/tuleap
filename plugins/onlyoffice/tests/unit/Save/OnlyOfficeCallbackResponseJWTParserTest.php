@@ -35,6 +35,7 @@ use Lcobucci\JWT\Validation\ConstraintViolation;
 use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 use Lcobucci\JWT\Validator;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
@@ -76,9 +77,9 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderSaveCallBackContentVariants
      * @psalm-param list<int> $expected_authors
      */
+    #[DataProvider('dataProviderSaveCallBackContentVariants')]
     public function testParsesSaveCallbackContent(string $jwt, string $expected_onlyoffice_server_version, array $expected_authors): void
     {
         $res = $this->buildParser(true)->parseCallbackResponseContent(
@@ -208,9 +209,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderJWtWithUnexpectedClaims
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderJWtWithUnexpectedClaims')]
     public function testRejectsWhenCallbackContentJWTDoesNotTheExpectedClaims(string $jwt): void
     {
         self::assertTrue(

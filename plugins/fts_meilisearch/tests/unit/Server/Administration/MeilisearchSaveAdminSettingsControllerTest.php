@@ -84,9 +84,7 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
         self::assertEmpty($config_updater->getAllUpdatedConfig());
     }
 
-    /**
-     * @dataProvider dataProviderInvalidSettings
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidSettings')]
     public function testRejectsInvalidSettings(array $body): void
     {
         $config_updater = ConfigUpdaterStub::build();

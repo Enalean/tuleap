@@ -35,7 +35,7 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
     /** @var ComparisonController */
     private $controller;
 
-    /** @before */
+        #[\PHPUnit\Framework\Attributes\Before]
     public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(ComparisonController::class);

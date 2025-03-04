@@ -47,17 +47,13 @@ final class AzureADTenantSetupTest extends \Tuleap\Test\PHPUnit\TestCase
         }
     }
 
-    /**
-     * @dataProvider dataProviderAllPossibleSetups
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderAllPossibleSetups')]
     public function testSetupHaveAnIdentifier(AzureADTenantSetup $setup): void
     {
         $this->assertNotEmpty($setup->getIdentifier());
     }
 
-    /**
-     * @dataProvider dataProviderAllPossibleSetups
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderAllPossibleSetups')]
     public function testSetupHaveADescription(AzureADTenantSetup $setup): void
     {
         $this->assertNotEmpty($setup->getDescription());

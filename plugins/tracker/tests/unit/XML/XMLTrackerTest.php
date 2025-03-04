@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
@@ -36,6 +37,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceBy
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue;
+use Tuleap\Tracker\FormElement\Field\XML\XMLFieldPermission;
 use Tuleap\Tracker\FormElement\Field\XML\XMLFieldWithoutPermissionsException;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
 use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
@@ -63,23 +65,22 @@ use function PHPUnit\Framework\assertTrue;
 /**
  * This test class intend to test not only the XMLTracker class itself but to provide an integrated test of
  * the whole tracker export
- *
- * @covers \Tuleap\Tracker\XML\XMLTracker
- * @covers \Tuleap\Tracker\FormElement\XML\XMLReferenceByID
- * @covers \Tuleap\Tracker\FormElement\XML\XMLReferenceByName
- * @covers \Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset
- * @covers \Tuleap\Tracker\FormElement\Field\XML\XMLFieldPermission
- * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField
- * @covers \Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic
- * @covers \Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic
- * @covers \Tuleap\Tracker\Report\XML\XMLReport
- * @covers \Tuleap\Tracker\Report\XML\XMLReportCriterion
- * @covers \Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable
- * @covers \Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn
- * @covers \Tuleap\Tracker\Artifact\XML\XMLArtifact
- * @covers \Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset
- * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue
  */
+#[CoversClass(XMLTracker::class)]
+#[CoversClass(XMLReferenceByID::class)]
+#[CoversClass(XMLReferenceByName::class)]
+#[CoversClass(XMLFieldset::class)]
+#[CoversClass(XMLFieldPermission::class)]
+#[CoversClass(XMLStringField::class)]
+#[CoversClass(XMLTitleSemantic::class)]
+#[CoversClass(XMLTimeframeSemantic::class)]
+#[CoversClass(XMLReport::class)]
+#[CoversClass(XMLReportCriterion::class)]
+#[CoversClass(XMLTable::class)]
+#[CoversClass(XMLTableColumn::class)]
+#[CoversClass(XMLArtifact::class)]
+#[CoversClass(XMLChangeset::class)]
+#[CoversClass(XMLStringChangesetValue::class)]
 class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExportsOneTracker(): void

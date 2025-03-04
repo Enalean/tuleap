@@ -30,9 +30,7 @@ use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 
 final class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider getTestData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTestData')]
     public function testItBuildsWorklogsFromJiraCloudAPIResponse(JiraClient $jira_client, callable $tests): void
     {
         $retriever = new WorklogRetriever(

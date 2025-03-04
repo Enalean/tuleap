@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2ServerCore\Grant;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -74,9 +75,9 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @dataProvider dataProviderInvalidBody
      * @param array|null $parsed_body
      */
+    #[DataProvider('dataProviderInvalidBody')]
     public function testHandleReturnsErrorWhenDataIsInvalid($parsed_body): void
     {
         $request  = $this->buildRequest()->withParsedBody($parsed_body);

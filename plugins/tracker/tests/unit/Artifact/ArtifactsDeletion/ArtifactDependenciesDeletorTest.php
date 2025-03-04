@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use PermissionsManager;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
-use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -36,22 +35,21 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class ArtifactDependenciesDeletorTest extends TestCase
 {
     private const PROJECT_ID = 109;
-    private CrossReferenceManager|\PHPUnit\Framework\MockObject\Stub $cross_reference_manager;
     private ArtifactDependenciesCleaner $deletor;
     private \Tracker|\PHPUnit\Framework\MockObject\Stub $tracker;
     private \Tracker_FormElement_Field_File $file_field;
     private \PFUser $user;
-    private \PHPUnit\Framework\MockObject\Stub|PostArtifactMoveReferencesCleaner $post_move_deletor;
-    private PostArtifactDeletionCleaner|\PHPUnit\Framework\MockObject\Stub $artifact_deletor;
+    private \PHPUnit\Framework\MockObject\MockObject&PostArtifactMoveReferencesCleaner $post_move_deletor;
+    private PostArtifactDeletionCleaner&\PHPUnit\Framework\MockObject\MockObject $artifact_deletor;
 
     protected function setUp(): void
     {
-        $permissions_manager               = $this->createStub(PermissionsManager::class);
-        $tracker_artifact_priority_manager = $this->createStub(Tracker_Artifact_PriorityManager::class);
-        $dao                               = $this->createStub(Tracker_ArtifactDao::class);
-        $computed_dao_cache                = $this->createStub(ComputedFieldDaoCache::class);
-        $recently_visited_dao              = $this->createStub(RecentlyVisitedDao::class);
-        $artifact_removal                  = $this->createStub(PendingArtifactRemovalDao::class);
+        $permissions_manager               = $this->createMock(PermissionsManager::class);
+        $tracker_artifact_priority_manager = $this->createMock(Tracker_Artifact_PriorityManager::class);
+        $dao                               = $this->createMock(Tracker_ArtifactDao::class);
+        $computed_dao_cache                = $this->createMock(ComputedFieldDaoCache::class);
+        $recently_visited_dao              = $this->createMock(RecentlyVisitedDao::class);
+        $artifact_removal                  = $this->createMock(PendingArtifactRemovalDao::class);
         $this->post_move_deletor           = $this->createMock(PostArtifactMoveReferencesCleaner::class);
         $this->artifact_deletor            = $this->createMock(PostArtifactDeletionCleaner::class);
 

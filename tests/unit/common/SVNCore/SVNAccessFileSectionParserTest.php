@@ -23,9 +23,7 @@ use Tuleap\SVNCore\SVNAccessFileContent;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class SVNAccessFileSectionParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @dataProvider getRenameData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getRenameData')]
     public function testRenameGroup(string $old_group, string $new_group, string $source_access_file, string $expected_access_file): void
     {
         $saf = new SVNAccessFileSectionParser();
@@ -95,9 +93,7 @@ final class SVNAccessFileSectionParserTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @dataProvider getSvnAccessFileSamples
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getSvnAccessFileSamples')]
     public function testParseGroupLines(string $source, string $expected): void
     {
         $saf = new SVNAccessFileSectionParser();

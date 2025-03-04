@@ -33,9 +33,7 @@ final class ConfigDumpCommandTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @dataProvider getTestData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTestData')]
     public function testVariablesInJsonFormat(array $variables_defined, string $expected_output): void
     {
         foreach ($variables_defined as $key => $value) {

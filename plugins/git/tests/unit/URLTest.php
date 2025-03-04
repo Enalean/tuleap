@@ -51,7 +51,7 @@ final class URLTest extends TestCase
         $this->goldfish_repository = $this->buildRepository($gpig_project, 'device/generic/goldfish');
         $this->apache_repository   = $this->buildRepository($gpig_project, 'apache-2.5');
 
-        $this->repository_factory->method('getByProjectNameAndPath')->with($this->gpig_project_name, self::isType('string'))
+        $this->repository_factory->method('getByProjectNameAndPath')->with($this->gpig_project_name, self::isString())
             ->willReturnCallback(fn(string $project_name, string $path) => match ($path) {
                 'device/generic/goldfish.git' => $this->goldfish_repository,
                 'apache-2.5.git'              => $this->apache_repository,

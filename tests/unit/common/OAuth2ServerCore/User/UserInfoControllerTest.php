@@ -52,9 +52,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderScopes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderScopes')]
     public function testReturnsAJSONObjectWithAskedClaims(
         GrantedAuthorization $authorization,
         string $expected_json,

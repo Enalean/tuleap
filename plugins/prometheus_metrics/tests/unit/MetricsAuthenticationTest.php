@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PrometheusMetrics;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -30,9 +31,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\AlwaysSuccessfulRequestHandler;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 
-/**
- * @covers \Tuleap\PrometheusMetrics\MetricsAuthentication
- */
+#[CoversClass(MetricsAuthentication::class)]
 final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MetricsAuthentication $metrics_authentication;

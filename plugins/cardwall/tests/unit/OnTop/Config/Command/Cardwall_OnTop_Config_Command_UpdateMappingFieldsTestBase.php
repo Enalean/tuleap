@@ -27,6 +27,7 @@ use Cardwall_OnTop_ColumnMappingFieldValueDao;
 use Cardwall_OnTop_Config_Command_UpdateMappingFields;
 use Cardwall_OnTop_Config_TrackerMappingFreestyle;
 use Cardwall_OnTop_Config_TrackerMappingStatus;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field;
@@ -51,9 +52,7 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
     protected Cardwall_OnTop_Config_Command_UpdateMappingFields $command;
     protected Cardwall_OnTop_ColumnMappingFieldDao&MockObject $dao;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function buildCommand(): void
     {
         $this->tracker_id    = 666;

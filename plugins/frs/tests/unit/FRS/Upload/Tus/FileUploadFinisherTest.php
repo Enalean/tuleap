@@ -71,9 +71,7 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $frs_file_builder;
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
         $this->tmp_dir = vfsStream::setup()->url();

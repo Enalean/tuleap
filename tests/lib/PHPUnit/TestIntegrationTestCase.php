@@ -36,9 +36,7 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
     private string $savepoint_id = '';
 
-    /**
-     * @before
-     */
+    #[\PHPUnit\Framework\Attributes\Before]
     public function setUpSaveForgeConfigAndStartTransaction(): void
     {
         parent::setUp();
@@ -58,9 +56,7 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
         $db->run('SAVEPOINT ' . $this->savepoint_id);
     }
 
-    /**
-     * @after
-     */
+    #[\PHPUnit\Framework\Attributes\After]
     public function tearDownRollbackTransactionAndRestoreGlobals(): void
     {
         parent::tearDown();

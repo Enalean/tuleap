@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Authentication\SplitToken;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Cryptography\ConcealedString;
 
 final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -63,9 +64,7 @@ final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertSame($hex_verification_string, bin2hex((string) $access_key->getVerificationString()->getString()));
     }
 
-    /**
-     * @dataProvider incorrectlyFormattedIdentifierProvider
-     */
+    #[DataProvider('incorrectlyFormattedIdentifierProvider')]
     public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier): void
     {
         $access_key_serializer = new PrefixedSplitTokenSerializer($this->getPrefix());

@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
+use PHPUnit\Framework\Attributes\Before;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\REST\JsonCast;
@@ -34,7 +35,7 @@ class ProjectComparisonControllerIntTest extends IntegrationTestCaseWithStubs
     /** @var ProjectComparisonController */
     private $controller;
 
-    /** @before */
+    #[Before]
     public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(ProjectComparisonController::class);
