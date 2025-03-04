@@ -37,6 +37,7 @@ use Tuleap\Mediawiki\PermissionsPerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Mediawiki\XML\XMLMediawikiExportabilityChecker;
 use Tuleap\Mediawiki\XMLMediaWikiExporter;
 use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
@@ -906,5 +907,12 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
                 dgettext('tuleap-mediawiki', 'Archive should not contain mediawiki data.'),
             );
         }
+    }
+
+    #[ListeningToEventClass]
+    public function executeUpdateHook(PluginExecuteUpdateHookEvent $event): void
+    {
+        $plugin_manager = PluginManager::instance();
+        $plugin_manager->installAndEnable('mediawiki_standalone');
     }
 }
