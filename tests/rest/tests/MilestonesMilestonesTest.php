@@ -23,6 +23,7 @@ use Tuleap\REST\MilestoneBase;
 /**
  * @group MilestonesTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class MilestonesMilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testPUTRemoveSubMilestones(): void

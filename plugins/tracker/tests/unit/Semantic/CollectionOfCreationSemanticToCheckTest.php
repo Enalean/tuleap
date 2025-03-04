@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Semantic;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfCreationSemanticToCheckTest extends TestCase
 {
     public function testItReturnsAnErrorIfSemanticIsNotSupported(): void

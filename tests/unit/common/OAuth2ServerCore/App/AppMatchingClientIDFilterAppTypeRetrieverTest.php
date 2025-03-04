@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AppMatchingClientIDFilterAppTypeRetrieverTest extends TestCase
 {
     /**

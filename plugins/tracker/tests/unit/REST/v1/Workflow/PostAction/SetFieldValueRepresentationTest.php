@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Transition_PostAction_Field_Date;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SetFieldValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testForDate()

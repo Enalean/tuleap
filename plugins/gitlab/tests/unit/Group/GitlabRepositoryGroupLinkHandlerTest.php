@@ -40,6 +40,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
 {
     private const GROUP_ID                    = 45;

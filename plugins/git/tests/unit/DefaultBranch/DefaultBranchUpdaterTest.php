@@ -26,6 +26,7 @@ namespace Tuleap\Git\DefaultBranch;
 use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefaultBranchUpdaterTest extends TestCase
 {
     private DefaultBranchUpdateExecutorStub $default_branch_update_executor;

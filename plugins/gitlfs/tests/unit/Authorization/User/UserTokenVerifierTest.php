@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UserAuthorizationDAO&\PHPUnit\Framework\MockObject\MockObject $dao;

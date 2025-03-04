@@ -26,6 +26,7 @@ use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
 use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThreadCommentColorRetrieverTest extends TestCase
 {
     private const PULLREQUEST_ID = 1;

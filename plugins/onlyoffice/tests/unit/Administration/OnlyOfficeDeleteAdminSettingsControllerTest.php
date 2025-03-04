@@ -33,6 +33,7 @@ use Tuleap\OnlyOffice\Stubs\IDeleteDocumentServerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeDeleteAdminSettingsControllerTest extends TestCase
 {
     use ForgeConfigSandbox;

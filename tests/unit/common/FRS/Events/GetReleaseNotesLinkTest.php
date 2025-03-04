@@ -24,6 +24,7 @@ namespace Tuleap\FRS\Events;
 
 use FRSRelease;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GetReleaseNotesLinkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FRSRelease $release;

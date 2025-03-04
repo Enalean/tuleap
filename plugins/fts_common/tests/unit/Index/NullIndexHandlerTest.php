@@ -24,6 +24,7 @@ namespace Tuleap\FullTextSearchCommon\Index;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NullIndexHandlerTest extends TestCase
 {
     public function testFindsNothing(): void

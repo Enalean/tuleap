@@ -37,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 /**
  * @psalm-immutable
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromotedMilestoneListBuilderTest extends TestCase
 {
     public function testItBuildsOnePromotedMilestoneAndSubMilestonesUntilLimitIsReached(): void

@@ -32,6 +32,7 @@ use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
 {
     private const PROJECT_ID = 101;

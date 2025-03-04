@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\Repository;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RepositoryRegexpBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RepositoryRegexpBuilder $regexp;

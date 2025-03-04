@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
 {
     use GlobalLanguageMock;

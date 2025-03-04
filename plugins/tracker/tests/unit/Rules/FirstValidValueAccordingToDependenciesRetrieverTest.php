@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BindValueIdCollectionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_VALUE_ID  = 101;

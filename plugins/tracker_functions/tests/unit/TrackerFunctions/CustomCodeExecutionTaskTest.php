@@ -43,6 +43,7 @@ use Tuleap\TrackerFunctions\Stubs\WASM\WASMResponseExecutorStub;
 use Tuleap\TrackerFunctions\WASM\WASMResponseRepresentation;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CustomCodeExecutionTaskTest extends TestCase
 {
     private const WASM_FILE = __FILE__;

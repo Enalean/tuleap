@@ -29,6 +29,7 @@ use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationContentFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const COMMENT_SOURCE      = '**Some content**';

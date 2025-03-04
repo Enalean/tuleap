@@ -27,6 +27,7 @@ use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PreReceiveHookDataWithoutTechnicalReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRemovesTechnicalReference(): void

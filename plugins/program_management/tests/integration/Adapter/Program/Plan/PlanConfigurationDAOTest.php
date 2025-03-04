@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsVal
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanConfigurationDAOTest extends TestIntegrationTestCase
 {
     private PlanConfigurationDAO $dao;

@@ -36,6 +36,7 @@ use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Config&MockObject $config;

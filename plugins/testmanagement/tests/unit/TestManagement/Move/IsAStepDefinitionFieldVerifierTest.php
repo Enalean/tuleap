@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement\Move;
 use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class IsAStepDefinitionFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueWhenFieldIsAStepDefinitionField(): void

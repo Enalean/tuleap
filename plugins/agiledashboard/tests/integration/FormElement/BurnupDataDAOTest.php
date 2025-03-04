@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BurnupDataDAOTest extends TestIntegrationTestCase
 {
     private BurnupDataDAO $dao;

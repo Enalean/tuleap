@@ -44,6 +44,7 @@ use Tuleap\SVN\Repository\RuleName;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private XMLRepositoryImporter $repository_importer;

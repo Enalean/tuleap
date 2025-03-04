@@ -29,6 +29,7 @@ use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AttachmentForTusUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

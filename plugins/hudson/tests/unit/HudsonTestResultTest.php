@@ -27,6 +27,7 @@ use HudsonTestResult;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HudsonTestResultTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

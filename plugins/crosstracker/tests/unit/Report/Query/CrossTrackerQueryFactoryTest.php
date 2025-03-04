@@ -30,6 +30,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossTrackerQueryFactoryTest extends TestCase
 {
     private const QUERY_ID = '00000000-1b58-7366-ad1b-dfe646c5ce9d';

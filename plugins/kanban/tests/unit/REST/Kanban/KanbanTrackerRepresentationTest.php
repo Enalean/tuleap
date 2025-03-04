@@ -25,6 +25,7 @@ namespace Tuleap\Kanban\REST\v1;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanTrackerRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsRepresentation(): void

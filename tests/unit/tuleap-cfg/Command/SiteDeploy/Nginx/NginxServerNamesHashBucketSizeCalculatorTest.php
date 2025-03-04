@@ -25,6 +25,7 @@ namespace TuleapCfg\Command\SiteDeploy\Nginx;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NginxServerNamesHashBucketSizeCalculatorTest extends TestCase
 {
     #[DataProvider('dataProviderServerNamesExpectedHashBucketSize')]

@@ -25,6 +25,7 @@ namespace Tuleap\Option;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OptionTest extends TestCase
 {
     public function testCanUnwrapValue(): void

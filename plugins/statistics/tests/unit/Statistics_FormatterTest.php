@@ -26,6 +26,7 @@ namespace Tuleap\Statistics;
 use Statistics_Formatter;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Statistics_FormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsCsv(): void

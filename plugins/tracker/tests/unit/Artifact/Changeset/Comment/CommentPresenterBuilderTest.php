@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentPresenterBuilderTest extends TestCase
 {
     use GlobalLanguageMock;
@@ -55,7 +56,10 @@ final class CommentPresenterBuilderTest extends TestCase
             ->with('system', 'datefmt')
             ->willReturn('d/m/Y H:i');
 
-        $this->builder = new CommentPresenterBuilder($this->permission_checker, $this->createMock(UserHelper::class));
+        $user_helper = $this->createStub(UserHelper::class);
+        $user_helper->method('getLinkOnUserFromUserId')->willReturn('/some/user/link');
+
+        $this->builder = new CommentPresenterBuilder($this->permission_checker, $user_helper);
     }
 
     public function testGetNullIfCommentIsEmpty(): void

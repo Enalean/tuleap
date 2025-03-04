@@ -29,6 +29,7 @@ use TrackerFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const CAMPAIGN_ID     = 683;

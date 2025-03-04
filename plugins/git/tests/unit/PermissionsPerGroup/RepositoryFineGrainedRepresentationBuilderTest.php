@@ -29,6 +29,7 @@ use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryFineGrainedRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

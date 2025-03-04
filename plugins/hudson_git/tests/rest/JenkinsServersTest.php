@@ -22,6 +22,7 @@ namespace Tuleap\HudsonGit\Tests\REST;
 
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JenkinsServersTest extends RestBase
 {
     public const TEST_JENKINS_SERVERS_SHORTNAME = 'test-jenkins-servers';

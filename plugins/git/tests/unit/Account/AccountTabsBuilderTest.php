@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private readonly MockObject&Git_RemoteServer_GerritServerFactory $factory;

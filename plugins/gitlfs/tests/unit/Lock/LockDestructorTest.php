@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\GitLFS\Lock;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LockDestructor $lock_destructor;

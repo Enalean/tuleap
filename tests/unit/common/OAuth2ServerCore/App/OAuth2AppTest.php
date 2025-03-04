@@ -22,6 +22,7 @@ namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderInvalidData')]

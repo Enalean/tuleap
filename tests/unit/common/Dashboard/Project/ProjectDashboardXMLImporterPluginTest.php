@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImporterBase
 {
     public function testItImportsAWidgetDefinedInAPlugin(): void

@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use WikiAttachment;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BackendSystemTest extends TestIntegrationTestCase
 {
     use GlobalLanguageMock;

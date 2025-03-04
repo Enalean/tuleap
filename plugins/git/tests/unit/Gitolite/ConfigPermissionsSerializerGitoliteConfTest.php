@@ -33,6 +33,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 {
     use ForgeConfigSandbox;

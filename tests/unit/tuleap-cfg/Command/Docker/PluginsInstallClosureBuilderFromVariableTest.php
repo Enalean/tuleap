@@ -27,6 +27,7 @@ use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 use TuleapCfg\Command\ProcessFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PluginsInstallClosureBuilderFromVariableTest extends TestCase
 {
     public function testDoNothingWhenVariableIsEmpty(): void

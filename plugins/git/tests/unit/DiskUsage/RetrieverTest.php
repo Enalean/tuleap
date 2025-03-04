@@ -25,6 +25,7 @@ namespace Tuleap\Git\DiskUsage;
 use Statistics_DiskUsageDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private readonly Statistics_DiskUsageDao $dao;

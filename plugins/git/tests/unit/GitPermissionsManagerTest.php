@@ -33,6 +33,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitPermissionsManagerTest extends TestCase
 {
     private GitPermissionsManager $git_permissions_manager;

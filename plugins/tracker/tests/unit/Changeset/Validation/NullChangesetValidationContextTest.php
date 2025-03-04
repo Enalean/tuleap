@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Changeset\Validation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NullChangesetValidationContextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDefaultsArtifactLinkToManualAction(): void

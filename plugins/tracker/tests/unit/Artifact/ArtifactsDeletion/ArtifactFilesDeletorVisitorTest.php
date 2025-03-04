@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactFilesDeletorVisitorTest extends TestCase
 {
     private Artifact $artifact;

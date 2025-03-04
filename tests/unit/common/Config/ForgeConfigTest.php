@@ -36,6 +36,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\ServerHostname;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(ConfigValueEnvironmentProvider::class)]
 class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {

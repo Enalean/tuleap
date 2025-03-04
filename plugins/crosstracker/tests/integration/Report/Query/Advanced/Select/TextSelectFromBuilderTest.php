@@ -34,6 +34,7 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
     private UUID $uuid;

@@ -25,6 +25,7 @@ namespace Tuleap\Tools\Xml2Php\Tracker\FormElement;
 use PhpParser\PrettyPrinter;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ContainerConvertorTest extends TestCase
 {
     public function testItBuildsABasicContainer(): void

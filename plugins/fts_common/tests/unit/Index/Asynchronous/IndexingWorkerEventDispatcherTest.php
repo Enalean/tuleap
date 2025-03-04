@@ -31,6 +31,7 @@ use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IndexingWorkerEventDispatcherTest extends TestCase
 {
     public function testDoesNothingWhenProcessingAnUnknownEvent(): void

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Language;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LocaleSwitcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanSetLocaleForSpecificExecutionContext(): void

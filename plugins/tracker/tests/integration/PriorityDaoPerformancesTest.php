@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 /**
  * Also need to increase the memory limit to execute properly
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[Group('ToFatToRun')]
 final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
 {

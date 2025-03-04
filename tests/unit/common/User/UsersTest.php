@@ -25,6 +25,7 @@ namespace Tuleap\User;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Users;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExtractsUserNames(): void

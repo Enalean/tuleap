@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST\Exception;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForbiddenRestExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testForbiddenRestException(): void

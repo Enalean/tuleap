@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Reviewer\Change;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReviewerChangeCanBeConstructed(): void

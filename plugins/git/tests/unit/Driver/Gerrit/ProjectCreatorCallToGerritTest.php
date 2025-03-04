@@ -47,6 +47,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 use ZipArchive;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreatorCallToGerritTest extends TestCase
 {
     use ForgeConfigSandbox;

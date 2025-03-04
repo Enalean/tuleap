@@ -30,6 +30,7 @@ use Project;
 use Tuleap\ForgeConfigSandbox;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectGroupManagerRestrictedUserFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

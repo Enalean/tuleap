@@ -25,6 +25,7 @@ namespace Tuleap\BuildVersion\REST\v1;
 
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class VersionTest extends RestBase
 {
     public function testVersionOptions(): void

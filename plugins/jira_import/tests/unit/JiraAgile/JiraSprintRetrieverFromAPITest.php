@@ -28,6 +28,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(JiraSprint::class)]
 #[CoversClass(JiraSprintRetrieverFromAPI::class)]
 final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase

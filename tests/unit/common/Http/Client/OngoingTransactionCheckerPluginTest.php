@@ -26,6 +26,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\DB\CheckThereIsAnOngoingTransactionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OngoingTransactionCheckerPluginTest extends TestCase
 {
     public function testItBlocksTheRequestChainIfThereIsAnOngoingTransaction(): void

@@ -23,6 +23,7 @@ namespace Tuleap\BotMattermost\SenderServices;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EncoderMessageTest extends TestCase
 {
     private EncoderMessage $encoder_message;

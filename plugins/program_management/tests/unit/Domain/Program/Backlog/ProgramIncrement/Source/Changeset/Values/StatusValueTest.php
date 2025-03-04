@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_LABEL  = 'diaster';

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\xml;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLDateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExtractFromNodeRaisesExceptionIfFormatIsNotISO8601(): void

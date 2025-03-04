@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureHasUserStoriesVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_USER_STORY_ID  = 236;

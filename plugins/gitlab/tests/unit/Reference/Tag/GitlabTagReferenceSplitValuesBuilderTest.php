@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Reference\Tag;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabTagReferenceSplitValuesBuilderTest extends TestCase
 {
     private GitlabTagReferenceSplitValuesBuilder $builder;

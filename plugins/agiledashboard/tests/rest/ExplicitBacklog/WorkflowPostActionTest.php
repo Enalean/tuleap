@@ -26,6 +26,7 @@ use REST_TestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WorkflowPostActionTest extends TestBase
 {
     public function testGetBasePostAction()

@@ -38,6 +38,7 @@ use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HeaderOptionsForPlanningProviderTest extends TestCase
 {
     private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder&MockObject $submilestone_finder;

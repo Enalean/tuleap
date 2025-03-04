@@ -29,6 +29,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_FormElement_Field_ArtifactLink&MockObject $links_field;

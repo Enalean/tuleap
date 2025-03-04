@@ -28,6 +28,7 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediaWikiAsyncInstallAndUpdateProcessorTest extends TestCase
 {
     private \Closure $has_update_been_executed;

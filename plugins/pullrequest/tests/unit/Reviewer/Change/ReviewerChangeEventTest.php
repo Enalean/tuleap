@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Reviewer\Change;
 
 use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerChangeEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEventCanBeTransformedToAWorkerEventPayload(): void

@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTReverseLinkProxyTest extends TestCase
 {
     public function testItBuildsFromPayload(): void

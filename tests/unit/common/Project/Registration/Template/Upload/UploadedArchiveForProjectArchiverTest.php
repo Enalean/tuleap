@@ -26,6 +26,7 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UploadedArchiveForProjectArchiverTest extends TestCase
 {
     public function testArchive(): void

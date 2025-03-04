@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinksByChangesetCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCachesLinksByChangeset(): void

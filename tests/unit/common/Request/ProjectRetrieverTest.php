@@ -26,6 +26,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var ProjectRetriever */

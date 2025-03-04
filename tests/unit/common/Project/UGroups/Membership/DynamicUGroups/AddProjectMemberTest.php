@@ -35,6 +35,7 @@ use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowi
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

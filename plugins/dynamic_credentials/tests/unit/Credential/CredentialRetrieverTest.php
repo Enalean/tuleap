@@ -24,6 +24,7 @@ namespace Tuleap\DynamicCredentials\Credential;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CredentialRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAuthenticateCredential(): void

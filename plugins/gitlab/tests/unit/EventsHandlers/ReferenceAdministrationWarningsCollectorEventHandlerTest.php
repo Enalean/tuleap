@@ -25,6 +25,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ReferenceAdministrationWarningsCollectorEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

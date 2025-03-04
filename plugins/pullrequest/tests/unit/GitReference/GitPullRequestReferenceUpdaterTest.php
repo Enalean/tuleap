@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest\GitReference;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGitReferenceIsUpdated(): void

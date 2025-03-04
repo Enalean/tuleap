@@ -46,6 +46,7 @@ use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\ChangesetValue\ArtifactLink\ConvertAddReverseLinksStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReverseLinksAdderTest extends TestCase
 {
     private const CURRENT_ARTIFACT_ID  = 1;

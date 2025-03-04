@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use UserManager;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Artifact_PriorityManagerTest extends TestCase
 {
     private Tracker_Artifact_PriorityManager $priority_manager;
@@ -136,7 +137,8 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
 
     private function mockMovedArtifact(int $artifact_id, bool $are_priority_changes_shown): Artifact
     {
-        $tracker  = $this->createMock(Tracker::class);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(123);
         $artifact = ArtifactTestBuilder::anArtifact($artifact_id)->inTracker($tracker)->build();
         $tracker->expects(self::once())->method('arePriorityChangesShown')->willReturn($are_priority_changes_shown);
         return $artifact;

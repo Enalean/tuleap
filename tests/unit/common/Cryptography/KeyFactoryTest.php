@@ -25,6 +25,7 @@ namespace Tuleap\Cryptography;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

@@ -32,6 +32,7 @@ use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestCase
 {
     public function testNoCalendarEventIfAttributeIsNotPresent(): void

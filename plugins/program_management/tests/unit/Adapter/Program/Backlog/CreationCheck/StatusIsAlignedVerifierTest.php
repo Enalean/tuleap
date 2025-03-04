@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusIsAlignedVerifier $verifier;

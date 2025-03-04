@@ -41,6 +41,7 @@ use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCase
 {
     private RetrieveUserByIdStub $user_retriever;

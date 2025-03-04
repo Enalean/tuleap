@@ -27,6 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SmtpOptionsBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;

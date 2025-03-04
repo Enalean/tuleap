@@ -29,6 +29,7 @@ use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardFieldXmlExtractorTest extends TestCase
 {
     public function testItImportsACardFieldsSemanticFromXMLFormat(): void

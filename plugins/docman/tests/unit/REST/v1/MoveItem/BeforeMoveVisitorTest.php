@@ -37,6 +37,7 @@ use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BeforeMoveVisitorTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderProcessableDocumentClasses')]

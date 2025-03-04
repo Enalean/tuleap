@@ -32,6 +32,7 @@ use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsImporterTest extends TestCase
 {
     private PermissionsManager&MockObject $permission_manager;

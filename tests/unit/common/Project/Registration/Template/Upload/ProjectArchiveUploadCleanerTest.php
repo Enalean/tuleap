@@ -32,6 +32,7 @@ use Tuleap\Test\Stubs\Project\ProjectRenameStub;
 use Tuleap\Test\Stubs\Project\UpdateProjectStatusStub;
 use Tuleap\Upload\UploadPathAllocator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectArchiveUploadCleanerTest extends TestCase
 {
     use TemporaryTestDirectory;

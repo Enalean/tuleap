@@ -46,6 +46,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayPlanIterationsControllerTest extends TestCase
 {
     private const PROGRAM_ID           = 101;

@@ -26,6 +26,7 @@ namespace Tuleap\MediawikiStandalone\REST\v1;
 use TestDataBuilder;
 use Tuleap\REST\ForgeAccessSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediawikiStandaloneProjectResourceTest extends \RestBase
 {
     use ForgeAccessSandbox;

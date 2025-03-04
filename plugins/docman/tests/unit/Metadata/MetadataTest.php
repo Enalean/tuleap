@@ -30,6 +30,7 @@ use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataTest extends TestCase
 {
     public function testCloneOneMetadata(): void

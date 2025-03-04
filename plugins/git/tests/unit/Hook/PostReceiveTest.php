@@ -41,6 +41,7 @@ use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\User\RetrieveUserByUserName;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostReceiveTest extends TestCase
 {
     use GlobalLanguageMock;

@@ -29,6 +29,7 @@ use TuleapCfg\Command\ProcessFactory;
 use Tuleap\TemporaryTestDirectory;
 use TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3Hooks;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

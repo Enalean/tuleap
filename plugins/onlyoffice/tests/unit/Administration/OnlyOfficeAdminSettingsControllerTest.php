@@ -34,6 +34,7 @@ use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeAdminSettingsControllerTest extends TestCase
 {
     public function testCanDisplaySettingsPage(): void

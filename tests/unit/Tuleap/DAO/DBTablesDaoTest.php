@@ -26,6 +26,7 @@ use org\bovigo\vfs\vfsStream;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBConnection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

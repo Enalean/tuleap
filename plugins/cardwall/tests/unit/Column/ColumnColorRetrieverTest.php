@@ -24,6 +24,7 @@ namespace Tuleap\Cardwall\Column;
 
 use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetHeaderColorNameOrRGBReturnsRGBColor(): void

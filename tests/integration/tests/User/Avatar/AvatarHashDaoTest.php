@@ -25,6 +25,7 @@ namespace Tuleap\User\Avatar;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AvatarHashDaoTest extends TestIntegrationTestCase
 {
     public function testStorage(): void

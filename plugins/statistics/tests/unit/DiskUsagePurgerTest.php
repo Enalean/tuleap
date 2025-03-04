@@ -26,6 +26,7 @@ namespace Tuleap\Statistics;
 use Statistics_DiskUsageDao;
 use Statistics_DiskUsagePurger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DiskUsagePurgerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Statistics_DiskUsagePurger */

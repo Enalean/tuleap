@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserIsProgramAdminVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueWhenUserIsProgramAdmin(): void

@@ -24,6 +24,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $exporter;
@@ -49,7 +50,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
         ]);
         $user_manager = $this->createMock(UserManager::class);
         $user_manager->method('getUserById')->with(112)->willReturn($user);
-        $user_xml_exporter = new UserXMLExporter($user_manager, $this->createMock(UserXMLExportedCollection::class));
+        $user_xml_exporter = new UserXMLExporter($user_manager, new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory()));
 
         $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter($user_xml_exporter);
     }

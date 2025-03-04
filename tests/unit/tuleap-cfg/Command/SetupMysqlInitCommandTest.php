@@ -30,6 +30,7 @@ use Tuleap\ForgeConfigSandbox;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use function PHPUnit\Framework\assertStringContainsString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(DatabaseConfigurator::class)]
 final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $fixtures_dir;

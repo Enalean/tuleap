@@ -26,6 +26,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

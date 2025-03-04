@@ -25,6 +25,7 @@ namespace Tuleap\Collection;
 use Collection;
 use stdClass;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEmptyCollection()

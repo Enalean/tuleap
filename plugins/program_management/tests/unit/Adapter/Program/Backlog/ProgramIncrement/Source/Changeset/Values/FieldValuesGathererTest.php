@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\DurationFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\EndDateFieldReferenceStub;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const CHANGESET_ID = 8501;

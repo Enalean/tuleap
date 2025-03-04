@@ -27,6 +27,7 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanHomePresenterTest extends TestCase
 {
     /**

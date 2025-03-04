@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RejectNonBaselineAdministratorMiddlewareTest extends TestCase
 {
     public function testProcessThrowsWhenProjectIsNotAnAttributeOfRequest(): void

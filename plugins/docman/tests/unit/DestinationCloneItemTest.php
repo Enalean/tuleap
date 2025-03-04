@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DestinationCloneItemTest extends TestCase
 {
     public function testDestinationForACloneCanBeBuiltFromAFolder(): void

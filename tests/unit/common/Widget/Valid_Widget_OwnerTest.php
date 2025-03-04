@@ -24,6 +24,7 @@
  */
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Valid_Widget_OwnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testOk(): void

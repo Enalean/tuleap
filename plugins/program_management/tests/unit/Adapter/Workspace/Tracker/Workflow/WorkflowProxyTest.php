@@ -28,6 +28,7 @@ use Tracker_RulesManager;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAProxyAroundWorkflow(): void

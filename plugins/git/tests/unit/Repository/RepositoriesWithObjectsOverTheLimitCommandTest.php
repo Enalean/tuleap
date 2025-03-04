@@ -30,6 +30,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoriesWithObjectsOverTheLimitCommandTest extends TestCase
 {
     private GitRepositoryFactory&MockObject $repository_factory;

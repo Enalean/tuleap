@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ImportPropertiesTest extends TestCase
 {
     public function testLink(): void

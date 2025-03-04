@@ -27,6 +27,7 @@ use Tuleap\Git\Hook\PushDetails;
 use Tuleap\Git\Tests\Stub\VerifyIsDefaultBranchStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PushAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_COMMIT_SHA1  = 'a53ff58a';

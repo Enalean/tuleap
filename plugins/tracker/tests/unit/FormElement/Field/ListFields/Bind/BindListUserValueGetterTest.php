@@ -31,6 +31,7 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

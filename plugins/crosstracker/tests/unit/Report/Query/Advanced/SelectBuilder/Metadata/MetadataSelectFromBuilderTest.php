@@ -33,6 +33,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\Pro
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataSelectFromBuilderTest extends TestCase
 {
     private function getSelectFrom(Metadata $metadata): IProvideParametrizedSelectAndFromSQLFragments

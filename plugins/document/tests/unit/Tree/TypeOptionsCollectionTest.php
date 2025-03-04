@@ -25,6 +25,7 @@ namespace Tuleap\Document\Tree;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TypeOptionsCollectionTest extends TestCase
 {
     public function testAddPaneAfterEmptyArray(): void

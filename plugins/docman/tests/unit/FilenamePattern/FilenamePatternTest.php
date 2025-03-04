@@ -24,6 +24,7 @@ namespace Tuleap\Docman\FilenamePattern;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FilenamePatternTest extends TestCase
 {
     public function testNoPattern(): void

@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use Tuleap\GlobalLanguageMock;
 use XMLImportHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLImportHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

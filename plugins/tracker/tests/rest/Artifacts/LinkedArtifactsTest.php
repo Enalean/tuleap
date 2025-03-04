@@ -27,6 +27,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinkedArtifactsTest extends TrackerBase
 {
     private const PROJECT_SHORTNAME = 'linked-artifacts';

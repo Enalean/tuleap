@@ -32,6 +32,7 @@ use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

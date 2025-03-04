@@ -25,6 +25,7 @@ namespace Tuleap\OnlyOffice\Administration;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeServerUrlValidatorTest extends TestCase
 {
     public function testExceptionWhenServerUrlIsEmpty(): void

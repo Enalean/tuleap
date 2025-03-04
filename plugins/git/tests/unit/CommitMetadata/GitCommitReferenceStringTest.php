@@ -24,6 +24,7 @@ namespace Tuleap\Git\CommitMetadata;
 
 use Tuleap\Git\Hook\DefaultBranchPush\CommitHash;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitCommitReferenceStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const COMMIT_SHA1     = '130586a6';

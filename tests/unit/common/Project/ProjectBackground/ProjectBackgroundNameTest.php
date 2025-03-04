@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\ProjectBackground;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectBackgroundNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanBeInstantiatedFromAnIdentifier(): void

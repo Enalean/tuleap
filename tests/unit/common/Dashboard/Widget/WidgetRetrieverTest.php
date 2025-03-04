@@ -24,6 +24,7 @@ namespace Tuleap\Dashboard\User;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAllWidgets()

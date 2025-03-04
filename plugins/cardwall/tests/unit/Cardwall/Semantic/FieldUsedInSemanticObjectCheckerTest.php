@@ -27,6 +27,7 @@ use Tracker_FormElement_Field;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldUsedInSemanticObjectCheckerTest extends TestCase
 {
     private Tracker_FormElement_Field $field;

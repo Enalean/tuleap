@@ -20,6 +20,7 @@
 
 namespace Tuleap\XML;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItTransformsZeroToFalse(): void

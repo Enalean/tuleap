@@ -25,6 +25,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 require_once __DIR__ . '/../../../../src/www/include/service.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private array $template;

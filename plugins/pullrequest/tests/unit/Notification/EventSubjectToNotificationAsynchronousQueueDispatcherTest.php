@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\Notification;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventSubjectToNotificationAsynchronousQueueDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

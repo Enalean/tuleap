@@ -35,6 +35,7 @@ use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 use Tuleap\User\ProvideCurrentRequestUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectFileUploadFinisherTest extends TestCase
 {
     use \Tuleap\TemporaryTestDirectory;

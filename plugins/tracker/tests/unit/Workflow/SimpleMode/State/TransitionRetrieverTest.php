@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TransitionRetriever $transition_retriever;

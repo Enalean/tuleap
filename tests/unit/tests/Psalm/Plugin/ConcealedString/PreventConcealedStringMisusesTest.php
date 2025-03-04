@@ -30,6 +30,7 @@ use Psalm\Plugin\EventHandler\Event\MethodReturnTypeProviderEvent;
 use Psalm\StatementsSource;
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PreventConcealedStringMisusesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected function tearDown(): void

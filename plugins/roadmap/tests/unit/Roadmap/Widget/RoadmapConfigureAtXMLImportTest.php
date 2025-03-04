@@ -32,6 +32,7 @@ use Tuleap\Widget\Note\NoteDao;
 use Tuleap\Widget\Note\ProjectNote;
 use Tuleap\XML\MappingsRegistry;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNothingIfWidgetIsNotRoadmap(): void

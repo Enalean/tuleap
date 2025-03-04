@@ -25,6 +25,7 @@ namespace Tuleap\Request;
 use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HeaderAcceptReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

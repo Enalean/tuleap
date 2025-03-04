@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_String;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFormElementFieldStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestAbandonedNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RetrieveUserByIdStub $user_manager;

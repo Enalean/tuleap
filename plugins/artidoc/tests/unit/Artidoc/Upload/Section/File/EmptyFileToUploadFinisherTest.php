@@ -29,6 +29,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmptyFileToUploadFinisherTest extends TestCase
 {
     use ForgeConfigSandbox;

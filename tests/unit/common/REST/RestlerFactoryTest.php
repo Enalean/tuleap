@@ -27,6 +27,7 @@ use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
 use org\bovigo\vfs\vfsStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RestlerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsRestler(): void

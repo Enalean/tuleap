@@ -20,6 +20,7 @@
 
 namespace Tuleap\Templating\Mustache;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MustacheEngineTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItContainsGettextHelpersToDoI18nDirectlyInTemplates(): void

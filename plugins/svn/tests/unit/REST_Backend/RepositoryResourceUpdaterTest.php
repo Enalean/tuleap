@@ -36,6 +36,7 @@ use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MailNotificationManager&MockObject $mail_notification_manager;

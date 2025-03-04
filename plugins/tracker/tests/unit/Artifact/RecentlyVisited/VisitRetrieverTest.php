@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID = 101;

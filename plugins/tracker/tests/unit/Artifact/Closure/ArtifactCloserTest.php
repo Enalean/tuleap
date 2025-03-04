@@ -44,6 +44,7 @@ use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCloserTest extends TestCase
 {
     private const CLOSER_USERNAME      = '@asticotc';

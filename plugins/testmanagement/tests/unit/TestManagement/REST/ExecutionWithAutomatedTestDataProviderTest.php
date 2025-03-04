@@ -30,6 +30,7 @@ use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestDataProvider;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ExecutionDao&MockObject $execution_dao;

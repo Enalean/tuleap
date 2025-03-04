@@ -24,6 +24,7 @@ namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsTuleapPluginHookTokenDAOTest extends TestIntegrationTestCase
 {
     private JenkinsTuleapPluginHookTokenDAO $dao;

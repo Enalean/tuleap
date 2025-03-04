@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 54;

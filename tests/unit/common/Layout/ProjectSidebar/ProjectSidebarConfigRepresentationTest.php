@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\VerifyUserCanAccessProjectAdministrationStub;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectSidebarConfigRepresentationTest extends TestCase
 {
     public function testBuildsRepresentation(): void

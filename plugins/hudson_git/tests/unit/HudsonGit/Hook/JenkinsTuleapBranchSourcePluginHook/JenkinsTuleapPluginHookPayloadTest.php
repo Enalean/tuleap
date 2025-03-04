@@ -25,6 +25,7 @@ namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsTuleapPluginHookPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsThePayload(): void

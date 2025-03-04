@@ -24,6 +24,7 @@ namespace Tuleap\Taskboard\Tracker;
 
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testMapReturnsArrayOfResultsOfClosure(): void

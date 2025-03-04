@@ -26,6 +26,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Document\RecentlyVisited\RecentlyVisitedDocumentDao;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecentlyVisitedDocumentDaoTest extends TestIntegrationTestCase
 {
     public function testDeleteOldEntriesPerUser(): void

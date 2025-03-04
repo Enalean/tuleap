@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Token;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class IntegrationApiTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildAlreadyKnownToken(): void

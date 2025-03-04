@@ -29,6 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\Process;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

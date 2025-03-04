@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const CHANGESET_ID = 7715;

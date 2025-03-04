@@ -34,6 +34,7 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChartDataControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -31,6 +31,7 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_DOING_THE_CHANGES_ID = 999;

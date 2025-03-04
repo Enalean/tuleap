@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PluginManager;
 use ServiceManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;

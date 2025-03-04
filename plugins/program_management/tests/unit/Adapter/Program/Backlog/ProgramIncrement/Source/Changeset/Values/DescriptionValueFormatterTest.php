@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Tests\Stub\DescriptionFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DescriptionValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const DESCRIPTION_VALUE  = 'overhurriedly rattleskull';

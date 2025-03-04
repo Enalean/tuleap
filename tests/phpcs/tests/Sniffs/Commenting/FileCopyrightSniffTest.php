@@ -25,6 +25,7 @@ namespace TuleapCodingStandard\Sniffs\Commenting;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SlevomatCodingStandard\Sniffs\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileCopyrightSniffTest extends TestCase
 {
     #[DataProvider('providerValidFiles')]

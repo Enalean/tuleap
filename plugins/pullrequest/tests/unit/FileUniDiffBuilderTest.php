@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest;
 
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

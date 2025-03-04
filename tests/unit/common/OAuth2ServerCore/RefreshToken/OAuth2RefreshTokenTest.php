@@ -28,6 +28,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsValidRefreshToken(): void

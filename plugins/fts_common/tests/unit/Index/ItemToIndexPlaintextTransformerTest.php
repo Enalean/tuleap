@@ -26,6 +26,7 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ItemToIndexPlaintextTransformerTest extends TestCase
 {
     public function testTransformsItems(): void

@@ -47,6 +47,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\Project\Registration\StoreProjectInformationStub;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public ProjectManager&MockObject $project_manager;

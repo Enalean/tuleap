@@ -25,6 +25,7 @@ namespace Tuleap\Tracker;
 use Mockery;
 use Tuleap\Layout\BaseLayout;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerBlockingErrorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

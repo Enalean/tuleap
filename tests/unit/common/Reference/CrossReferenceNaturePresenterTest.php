@@ -24,6 +24,7 @@ namespace Tuleap\Reference;
 
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CrossReferenceNaturePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testWithAdditionalCrossReference(): void

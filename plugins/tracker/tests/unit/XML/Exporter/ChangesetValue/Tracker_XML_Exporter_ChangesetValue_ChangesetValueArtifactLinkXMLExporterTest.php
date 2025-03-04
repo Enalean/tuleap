@@ -28,6 +28,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $exporter;
@@ -94,6 +95,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(false);
+        $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
 
         $this->exporter->export(
@@ -122,6 +124,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
 
         $this->exporter->export(
@@ -165,6 +168,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(false);
+        $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
 
         $this->exporter->export(
@@ -187,6 +191,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             ])->build();
 
         $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(101);
         $tracker->method('isProjectAllowedToUseType')->willReturn(true);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
 
@@ -229,6 +234,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(false);
+        $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
 
         $this->exporter->export(
@@ -251,6 +257,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
 
         $this->exporter->export(

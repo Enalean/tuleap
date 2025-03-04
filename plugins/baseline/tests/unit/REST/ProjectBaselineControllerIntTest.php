@@ -35,6 +35,7 @@ use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
 {
     use GlobalLanguageMock;

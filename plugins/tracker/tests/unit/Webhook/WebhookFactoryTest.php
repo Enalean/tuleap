@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Webhook;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

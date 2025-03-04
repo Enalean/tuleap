@@ -32,6 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEventManagerGetTypesForQueueTest extends TestCase
 {
     public const CUSTOM_QUEUE = 'custom_queue';

@@ -41,6 +41,7 @@ use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryManagerCreateTest extends TestCase
 {
     private GitRepositoryCreator&MockObject $creator;

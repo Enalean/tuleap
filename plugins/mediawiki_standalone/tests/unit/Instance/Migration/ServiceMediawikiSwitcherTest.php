@@ -28,6 +28,7 @@ use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceMediawikiSwitcherTest extends TestCase
 {
     private const PROJECT_ID              = 101;

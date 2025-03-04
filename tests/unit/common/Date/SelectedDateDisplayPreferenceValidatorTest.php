@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Date;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

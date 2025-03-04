@@ -22,6 +22,7 @@ namespace Tuleap\User\Password\Reset;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRemovesUserLostPasswordTokens(): void

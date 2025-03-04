@@ -24,6 +24,7 @@ namespace Tuleap\Project\UGroups\Membership;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MembershipUpdateVerifier $verifier;

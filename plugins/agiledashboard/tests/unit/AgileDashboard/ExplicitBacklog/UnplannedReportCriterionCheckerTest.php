@@ -26,6 +26,7 @@ use AgileDashboard_Milestone_MilestoneReportCriterionProvider;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UnplannedReportCriterionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseIfAdditionalCriterionIsNotProvided(): void

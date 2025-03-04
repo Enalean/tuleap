@@ -23,6 +23,7 @@ namespace Tuleap\SVN\Repository;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RuleNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Tuleap\SVN\Dao&MockObject $dao;

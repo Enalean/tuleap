@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication\Authorization;
 
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testResponseIsBuiltWhenAllParametersAreAvailable(): void

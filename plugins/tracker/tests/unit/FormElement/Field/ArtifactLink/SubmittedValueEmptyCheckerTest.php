@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmittedValueEmptyCheckerTest extends TestCase
 {
     private SubmittedValueEmptyChecker $empty_checker;

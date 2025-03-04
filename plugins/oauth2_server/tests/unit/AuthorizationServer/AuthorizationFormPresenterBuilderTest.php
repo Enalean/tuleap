@@ -29,6 +29,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

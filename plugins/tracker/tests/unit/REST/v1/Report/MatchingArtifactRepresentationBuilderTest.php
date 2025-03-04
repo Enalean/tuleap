@@ -42,6 +42,7 @@ use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MatchingArtifactRepresentationBuilderTest extends TestCase
 {
     use GlobalLanguageMock;

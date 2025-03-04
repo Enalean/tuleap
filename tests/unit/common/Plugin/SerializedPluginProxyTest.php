@@ -28,6 +28,7 @@ use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SerializedPluginProxyTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('getDataForCaptureDefaultConfigValues')]

@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StepDefinitionSubmittedValuesTransformatorTest extends TestCase
 {
     public function testItTransformsSubmittedValuesIntoStepsObjects(): void

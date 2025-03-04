@@ -26,6 +26,7 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XmlReportDefaultCriteriaExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsCriteriaWithNoSelectedValues(): void

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfCannotCreateArtifactReasonTest extends TestCase
 {
     public function testItConvertsIntoStringArray(): void

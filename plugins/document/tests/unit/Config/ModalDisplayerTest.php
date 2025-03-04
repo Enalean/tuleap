@@ -26,6 +26,7 @@ namespace Tuleap\Document\Config;
 use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ModalDisplayerTest extends TestCase
 {
     public function testItReturnsTrueWhenHistoryEnforcementSettingsAllowsChangelogModal(): void

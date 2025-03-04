@@ -55,6 +55,7 @@ use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ROADMAP_ID         = 42;

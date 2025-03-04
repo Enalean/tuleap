@@ -45,6 +45,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MissingProgramIncrementCreatorTest extends TestCase
 {
     private const PROGRAM_INCREMENT_ID = 1;

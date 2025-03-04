@@ -24,6 +24,7 @@ require_once __DIR__ . '/../TrackerBase.php';
 
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFieldsTest extends TrackerBase
 {
     private const FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb';

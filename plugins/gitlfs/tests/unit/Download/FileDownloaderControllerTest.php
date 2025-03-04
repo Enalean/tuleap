@@ -29,6 +29,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileDownloaderControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNotFoundExceptionIsThrownWhenTheGitRepositoryCanNotBeFound(): void

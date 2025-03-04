@@ -36,6 +36,7 @@ use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotContains;
 use function PHPUnit\Framework\assertNull;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StoryPointFieldExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StoryPointFieldExporter $sp_exporter;

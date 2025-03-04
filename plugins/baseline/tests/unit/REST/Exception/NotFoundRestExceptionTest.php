@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST\Exception;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotFoundRestExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNotFoundRestException(): void

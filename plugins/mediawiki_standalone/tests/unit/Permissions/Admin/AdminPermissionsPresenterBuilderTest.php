@@ -28,6 +28,7 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AdminPermissionsPresenterBuilderTest extends TestCase
 {
     public function testGetPresenter(): void

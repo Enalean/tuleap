@@ -24,6 +24,7 @@ namespace Tuleap\OnlyOffice\Open;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AllowedFileExtensionsTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('getExtensionsToTest')]

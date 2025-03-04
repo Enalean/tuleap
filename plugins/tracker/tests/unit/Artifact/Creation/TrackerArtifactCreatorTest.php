@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Stub\CreateInitialChangesetStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Creation\AddReverseLinksStub;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

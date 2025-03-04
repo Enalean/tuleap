@@ -25,6 +25,7 @@ namespace Tuleap\FullTextSearchCommon\CLI;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgressQueueIndexItemCategorySymfonyOutputTest extends TestCase
 {
     public function testOutputNothingWhenThereIsNoItem(): void

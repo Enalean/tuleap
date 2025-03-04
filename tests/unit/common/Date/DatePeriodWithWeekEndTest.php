@@ -26,6 +26,7 @@ namespace Tuleap\Date;
 
 use DateTime;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DatePeriodWithWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private DatePeriodWithWeekEnd $date_period;

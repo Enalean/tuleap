@@ -44,6 +44,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
 use Tuleap\User\UserName;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

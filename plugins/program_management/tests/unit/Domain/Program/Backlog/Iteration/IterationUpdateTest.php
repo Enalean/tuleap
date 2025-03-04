@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\IterationUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_ID         = 10;

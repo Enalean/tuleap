@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Report;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MatchingIdsOrdererTest extends TestCase
 {
     private MatchingIdsOrderer $orderer;

@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeboxArtifactLinkPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasAMirroredMilestoneArtifactLinkType(): void

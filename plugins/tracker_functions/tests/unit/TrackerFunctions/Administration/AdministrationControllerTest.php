@@ -39,6 +39,7 @@ use Tuleap\TrackerFunctions\Stubs\Administration\CheckFunctionIsActivatedStub;
 use Tuleap\TrackerFunctions\Stubs\Logs\RetrieveLogsForTrackerStub;
 use Tuleap\TrackerFunctions\WASM\FindWASMFunctionPath;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdministrationControllerTest extends TestCase
 {
     use TemporaryTestDirectory;

@@ -24,6 +24,7 @@ use EventManager;
 use ReferenceDao;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceValidatorTest extends TestCase
 {
     private ReferenceValidator $reference_validator;

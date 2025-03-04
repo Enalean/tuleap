@@ -31,6 +31,7 @@ use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionItemUpdaterFromRESTContextTest extends TestCase
 {
     private PermissionItemUpdater&MockObject $permissions_item_updater;

@@ -26,6 +26,7 @@ use DateTime;
 use Docman_Metadata;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanMetadataInputValidatorTest extends TestCase
 {
     private DocmanMetadataInputValidator $validator;

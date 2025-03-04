@@ -26,6 +26,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FunctionLogDaoTest extends TestIntegrationTestCase
 {
     private FunctionLogDao $dao;

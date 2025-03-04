@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryWithParentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID        = 56;

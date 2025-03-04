@@ -41,6 +41,7 @@ use Tuleap\OAuth2ServerCore\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

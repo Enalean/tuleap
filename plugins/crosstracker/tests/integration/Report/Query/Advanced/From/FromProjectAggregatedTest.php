@@ -41,6 +41,7 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 use Tuleap\Test\Stubs\SearchLinkedProjectsStub;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
 {
     private UUID $uuid;

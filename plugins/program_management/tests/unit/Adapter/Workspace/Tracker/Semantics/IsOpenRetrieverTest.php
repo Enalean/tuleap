@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IsOpenRetrieverTest extends TestCase
 {
     private static function isUserStoryOpen(Artifact $artifact): bool

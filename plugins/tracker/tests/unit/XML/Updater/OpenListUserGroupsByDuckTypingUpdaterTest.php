@@ -33,6 +33,7 @@ use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByIdStub;
 use Tuleap\Tracker\Tracker\XML\Updater\OpenListUserGroupsByDuckTypingUpdater;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Tracker_FormElement_Field_List_Bind_Ugroups $source_bind;

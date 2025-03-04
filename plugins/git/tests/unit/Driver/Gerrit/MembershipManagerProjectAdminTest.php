@@ -39,6 +39,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MembershipManagerProjectAdminTest extends TestCase
 {
     private Git_Driver_Gerrit_MembershipManager $membership_manager;

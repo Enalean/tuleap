@@ -22,6 +22,7 @@ namespace Tuleap\DynamicCredentials\REST;
 
 require_once 'bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DynamicCredentialsTest extends \RestBase
 {
     public const USERNAME         = 'forge__dynamic_credential-user1';

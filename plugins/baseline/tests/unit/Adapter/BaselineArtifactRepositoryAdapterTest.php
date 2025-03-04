@@ -34,6 +34,7 @@ use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use CurrentUserContext;

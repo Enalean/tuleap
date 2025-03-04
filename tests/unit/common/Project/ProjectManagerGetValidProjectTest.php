@@ -30,6 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
 use ProjectManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectManagerGetValidProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \ProjectDao&MockObject $dao;

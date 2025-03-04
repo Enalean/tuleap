@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupRetrieverWithLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UGroupManager&MockObject $ugroup_manager;

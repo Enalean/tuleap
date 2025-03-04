@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ParseXMLConfigStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramManagementConfigXMLImporterTest extends TestCase
 {
     private CreatePlanConfigurationStub $plan_creator;

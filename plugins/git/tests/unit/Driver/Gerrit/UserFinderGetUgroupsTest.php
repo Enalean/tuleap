@@ -30,6 +30,7 @@ use ProjectUGroup;
 use TestHelper;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserFinderGetUgroupsTest extends TestCase
 {
     private PermissionsManager&MockObject $permissions_manager;

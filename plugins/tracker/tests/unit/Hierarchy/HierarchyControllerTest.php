@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

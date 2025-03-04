@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SUBMISSION_TIMESTAMP = 1908282639;

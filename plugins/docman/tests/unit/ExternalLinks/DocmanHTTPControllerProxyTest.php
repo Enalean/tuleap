@@ -30,6 +30,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanHTTPControllerProxyTest extends TestCase
 {
     public function testThrowsNotFoundWhenProjectCannotBeIdentifierFromTheRequest(): void

@@ -32,6 +32,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InvitationToEmailRequestExtractorTest extends TestCase
 {
     public function testNullWhenTokenIsNotInTheRequest()

@@ -27,6 +27,7 @@ use REST_TestDataBuilder;
 /**
  * @group ProjectTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectServicesTest extends ProjectBase
 {
     public function testGETProjectServices(): void

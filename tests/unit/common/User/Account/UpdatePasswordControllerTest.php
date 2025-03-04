@@ -38,6 +38,7 @@ use Tuleap\User\PasswordVerifier;
 use User_StatusInvalidException;
 use User_UserStatusManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -25,6 +25,7 @@ namespace Tuleap\Cryptography\Asymmetric;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidSignatureException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AsymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCannotBeInstantiated(): void

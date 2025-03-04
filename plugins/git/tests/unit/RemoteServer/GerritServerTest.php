@@ -26,6 +26,7 @@ use Git_Driver_Gerrit_User;
 use Git_RemoteServer_GerritServer;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GerritServerTest extends TestCase
 {
     public function testItDoesNotNeedToCustomizeSSHConfigOfCodendiadmOrRoot(): void

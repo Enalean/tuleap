@@ -35,6 +35,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProcessRegisterFormControllerTest extends TestCase
 {
     public function testPasswordIsNeededByDefault(): void

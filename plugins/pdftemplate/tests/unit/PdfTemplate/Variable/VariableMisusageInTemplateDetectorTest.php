@@ -25,6 +25,7 @@ namespace Tuleap\PdfTemplate\Variable;
 use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VariableMisusageInTemplateDetectorTest extends TestCase
 {
     public function testNothingWhenNoMisusage(): void

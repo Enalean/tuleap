@@ -23,6 +23,7 @@ namespace Tuleap\Layout;
 use ThemeVariant;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThemeVariantTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

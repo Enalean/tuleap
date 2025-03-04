@@ -24,6 +24,7 @@ namespace Tuleap\User;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPasswordVerificationSuccess(): void

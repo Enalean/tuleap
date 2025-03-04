@@ -37,6 +37,7 @@ use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

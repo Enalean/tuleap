@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CSRFSynchronizerToken&MockObject $token;

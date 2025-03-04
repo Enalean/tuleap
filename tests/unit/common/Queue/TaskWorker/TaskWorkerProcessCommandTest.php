@@ -32,6 +32,7 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Stubs\Queue\FindWorkerEventProcessorStub;
 use Tuleap\Test\Stubs\Queue\WorkerEventProcessorStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private vfsStreamDirectory $filesystem_root;

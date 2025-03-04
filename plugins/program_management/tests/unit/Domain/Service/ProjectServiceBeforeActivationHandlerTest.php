@@ -32,6 +32,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectServiceBeforeActivation $event;

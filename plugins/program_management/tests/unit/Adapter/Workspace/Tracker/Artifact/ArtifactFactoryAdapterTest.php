@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundE
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 644;

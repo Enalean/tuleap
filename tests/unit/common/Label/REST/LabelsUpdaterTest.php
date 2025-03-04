@@ -29,6 +29,7 @@ use Tuleap\Label\LabelableDao;
 use Tuleap\Label\UnknownLabelException;
 use Tuleap\Project\Label\LabelDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $project_id;

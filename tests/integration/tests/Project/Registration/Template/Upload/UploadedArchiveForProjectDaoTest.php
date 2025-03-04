@@ -24,6 +24,7 @@ namespace Tuleap\Project\Registration\Template\Upload;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UploadedArchiveForProjectDaoTest extends TestIntegrationTestCase
 {
     public function testSave(): void

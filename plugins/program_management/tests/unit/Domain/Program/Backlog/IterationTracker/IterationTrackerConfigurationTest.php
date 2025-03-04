@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_TRACKER_ID = 94;

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Webhook;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItUsesGivenInformation(): void

@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormattedChangesetValueForTextFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetFormattedChangesetValueForFieldText(): void

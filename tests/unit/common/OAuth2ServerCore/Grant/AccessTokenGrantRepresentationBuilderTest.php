@@ -35,6 +35,7 @@ use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenCreator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

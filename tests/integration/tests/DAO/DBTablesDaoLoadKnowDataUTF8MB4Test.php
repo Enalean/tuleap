@@ -24,6 +24,7 @@ namespace Tuleap\DAO;
 
 use Tuleap\DB\DBFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DBTablesDaoLoadKnowDataUTF8MB4Test extends DBTablesDaoLoadKnowDataTestCase
 {
     protected function createDatabase(string $db_name): void

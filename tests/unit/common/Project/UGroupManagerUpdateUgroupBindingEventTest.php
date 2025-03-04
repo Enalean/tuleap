@@ -25,6 +25,7 @@ namespace Tuleap\Project;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupManagerUpdateUgroupBindingEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \EventManager&MockObject $event_manager;

@@ -40,6 +40,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

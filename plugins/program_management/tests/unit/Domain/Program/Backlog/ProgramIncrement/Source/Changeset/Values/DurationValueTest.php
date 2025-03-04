@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Tests\Stub\DurationFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDurationValueStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DurationValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const VALUE = 36;

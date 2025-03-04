@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossTrackerQueryDaoTest extends TestIntegrationTestCase
 {
     private CrossTrackerQueryDao $query_dao;

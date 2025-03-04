@@ -24,6 +24,7 @@ require_once __DIR__ . '/../TrackerBase.php';
 
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerReportTest extends TrackerBase
 {
     public function testGETArtifactReportWithRendererTableValues(): void

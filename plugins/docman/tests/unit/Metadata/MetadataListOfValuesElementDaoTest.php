@@ -26,6 +26,7 @@ use Docman_MetadataListOfValuesElementDao;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataListOfValuesElementDaoTest extends TestCase
 {
     public function testUpdate(): void

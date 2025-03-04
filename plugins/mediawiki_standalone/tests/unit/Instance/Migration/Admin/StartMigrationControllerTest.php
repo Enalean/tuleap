@@ -39,6 +39,7 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\EnqueueTaskStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StartMigrationControllerTest extends TestCase
 {
     public function testStartMigration(): void

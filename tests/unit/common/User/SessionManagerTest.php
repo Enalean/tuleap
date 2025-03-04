@@ -25,6 +25,7 @@ namespace Tuleap\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SESSION_LIFETIME_2_WEEKS = 1209600;

@@ -25,6 +25,7 @@ namespace Tuleap\Project\UGroups;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SynchronizedProjectMembershipDetector $detector;

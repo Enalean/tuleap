@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Notifications;
 use Tracker;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationLevelExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsDefaultValueWhenValueIsNotAPossibleValueForNotificationLevel(): void

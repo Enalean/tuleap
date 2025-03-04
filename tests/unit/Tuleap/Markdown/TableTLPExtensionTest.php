@@ -26,6 +26,7 @@ use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\MarkdownConverter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TableTLPExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MarkdownConverter $converter;

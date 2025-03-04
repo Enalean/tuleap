@@ -27,6 +27,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabBranchFactoryTest extends TestCase
 {
     private GitlabBranchFactory $factory;

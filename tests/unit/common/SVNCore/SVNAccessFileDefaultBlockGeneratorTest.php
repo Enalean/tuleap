@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('membersDataProvider')]

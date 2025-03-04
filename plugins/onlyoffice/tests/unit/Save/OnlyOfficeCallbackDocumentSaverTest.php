@@ -41,6 +41,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\RetrieveUserById;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -25,6 +25,7 @@ namespace Tuleap\Layout\Logo;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

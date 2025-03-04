@@ -27,6 +27,7 @@ use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\MarkdownConverter;
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinkToGitFileExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private readonly MockObject&LinkToGitFileBlobFinder $blob_finder;

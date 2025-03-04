@@ -26,6 +26,7 @@ namespace Tuleap\Collection;
 use PrioritizedList;
 use stdClass;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PrioritizedListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testOrder(): void

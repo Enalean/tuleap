@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact;
 
 use Tracker_Artifact_Redirect;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

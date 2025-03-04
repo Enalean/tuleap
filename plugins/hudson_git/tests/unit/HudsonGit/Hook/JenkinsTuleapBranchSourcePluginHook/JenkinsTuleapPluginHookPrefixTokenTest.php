@@ -24,6 +24,7 @@ namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsTuleapPluginHookPrefixTokenTest extends TestCase
 {
     public function testHasSpecificPrefix(): void

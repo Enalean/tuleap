@@ -41,6 +41,7 @@ use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
 use UserXMLExporter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerStructureXMLExporterTest extends TestCase
 {
     private const TRACKER_ID = 110;

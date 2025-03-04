@@ -21,6 +21,7 @@
 namespace Tuleap\ProjectOwnership\REST;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectUserGroupTest extends \RestBase
 {
     public function testProjectOwnerCannotBeRemovedFromTheProjectAdministrators(): void

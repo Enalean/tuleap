@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArchiveAndDeleteArtifactTaskTest extends TestCase
 {
     use ForgeConfigSandbox;

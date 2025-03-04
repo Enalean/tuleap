@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private VerifyUserIsGitAdministratorStub $admin_verifier;

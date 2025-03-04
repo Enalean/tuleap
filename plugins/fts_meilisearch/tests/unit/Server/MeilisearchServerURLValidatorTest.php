@@ -25,6 +25,7 @@ namespace Tuleap\FullTextSearchMeilisearch\Server;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MeilisearchServerURLValidatorTest extends TestCase
 {
     public function testAcceptsValidMeilisearchURL(): void

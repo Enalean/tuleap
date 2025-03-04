@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard\Move;
 use Tuleap\AgileDashboard\Test\Builders\BurnupTestBuilder;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AgileDashboardMovableFieldsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItMarksTheFieldAsFullyMigrateableWhenBothSourceAndDestinationAreBurnupFields(): void

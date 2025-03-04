@@ -25,6 +25,7 @@ namespace integration\Version;
 use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CoAuthorDaoTest extends TestIntegrationTestCase
 {
     private CoAuthorDao $co_author_dao;

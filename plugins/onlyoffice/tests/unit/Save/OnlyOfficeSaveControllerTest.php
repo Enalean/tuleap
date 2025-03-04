@@ -36,6 +36,7 @@ use Tuleap\Option\Option;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeSaveControllerTest extends TestCase
 {
     public function testReturnsSuccessResponseNoSaveTokenIsProvided(): void

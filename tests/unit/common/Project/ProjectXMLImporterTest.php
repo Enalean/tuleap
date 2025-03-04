@@ -49,6 +49,7 @@ use Tuleap\XML\MappingsRegistry;
 use XML_RNGValidator;
 use XMLImportHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \EventManager&MockObject $event_manager;

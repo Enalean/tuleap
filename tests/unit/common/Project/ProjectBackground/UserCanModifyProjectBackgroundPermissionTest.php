@@ -24,6 +24,7 @@ namespace Tuleap\Project\ProjectBackground;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserCanModifyProjectBackgroundPermissionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPermissionHoldsAnInstanceOfTheAuthorizedProject(): void

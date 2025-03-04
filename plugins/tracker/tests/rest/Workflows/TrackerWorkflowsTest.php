@@ -24,6 +24,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerWorkflowsTest extends TrackerBase
 {
     public function testGetStatusFieldId(): int

@@ -27,6 +27,7 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

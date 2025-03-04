@@ -24,6 +24,7 @@ namespace Tuleap\DynamicCredentials\Credential;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExtractionOfTheIdentifierFromProperlyFormattedUsername(): void

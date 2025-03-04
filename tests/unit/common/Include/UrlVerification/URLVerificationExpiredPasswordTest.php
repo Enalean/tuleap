@@ -31,6 +31,7 @@ use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

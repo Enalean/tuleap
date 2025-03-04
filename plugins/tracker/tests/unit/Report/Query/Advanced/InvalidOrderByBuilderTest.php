@@ -28,6 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidOrderByBuilderTest extends TestCase
 {
     public function testItThrowsWhenCalled(): void

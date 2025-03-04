@@ -21,6 +21,7 @@
 
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SupportedXmlCharEncodingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItStripsVerticalSpaces(): void

@@ -25,6 +25,7 @@ namespace User\XML\Import;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UsersToBeImportedCollection $collection;

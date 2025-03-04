@@ -31,6 +31,7 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TableRendererForReportRetrieverTest extends TestCase
 {
     public function testItReturnsTheTableRenderersOfAReport(): void

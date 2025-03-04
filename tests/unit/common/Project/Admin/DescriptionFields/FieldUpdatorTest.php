@@ -34,6 +34,7 @@ use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LoggerInterface $logger;

@@ -24,6 +24,7 @@ namespace Tuleap\Docman\Log;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LogEntryPageTest extends TestCase
 {
     public function testNoLog(): void

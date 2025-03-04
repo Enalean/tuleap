@@ -29,6 +29,7 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID  = 29;

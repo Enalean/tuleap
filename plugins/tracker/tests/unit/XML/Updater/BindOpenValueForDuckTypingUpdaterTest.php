@@ -29,6 +29,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveMatchingValueByDuckTypingStub;
 use Tuleap\Tracker\Tracker\XML\Updater\BindOpenValueForDuckTypingUpdater;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindOpenValueForDuckTypingUpdaterTest extends TestCase
 {
     private \Tracker_FormElement_Field_Selectbox $source_field;

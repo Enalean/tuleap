@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use User_ForgeUserGroupPermission;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GlobalAdminPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDoesUserHaveTrackerGlobalAdminRightsOnProject(): void

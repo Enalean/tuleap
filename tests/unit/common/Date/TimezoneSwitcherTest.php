@@ -25,6 +25,7 @@ namespace Tuleap\Date;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TimezoneSwitcherTest extends TestCase
 {
     private string $default_timezone;

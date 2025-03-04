@@ -44,6 +44,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailGatewayInsecureTest extends TestCase
 {
     private const BODY          = 'justaucorps';
@@ -78,6 +79,7 @@ final class MailGatewayInsecureTest extends TestCase
         $citation_stripper->method('stripText')->with(self::BODY)->willReturn(self::STRIPPED_BODY);
 
         $this->incoming_message = $this->createMock(Tracker_Artifact_MailGateway_IncomingMessage::class);
+        $this->incoming_message->method('getSubject')->willReturn('subject');
         $this->incoming_message->method('getUser')->willReturn($this->user);
         $this->incoming_message->method('getArtifact')->willReturn($this->artifact);
         $this->incoming_message->method('getTracker')->willReturn($this->tracker);
@@ -98,10 +100,14 @@ final class MailGatewayInsecureTest extends TestCase
         $this->changeset = ChangesetTestBuilder::aChangeset(666)->build();
         $filter          = $this->createMock(MailGatewayFilter::class);
 
+        $notifier = $this->createStub(Tracker_Artifact_MailGateway_Notifier::class);
+        $notifier->method('sendErrorMailTrackerGeneric');
+        $notifier->method('sendErrorMailInsufficientPermissionUpdate');
+
         $this->mailgateway = new Tracker_Artifact_MailGateway_InsecureMailGateway(
             $incoming_message_factory,
             $citation_stripper,
-            $this->createMock(Tracker_Artifact_MailGateway_Notifier::class),
+            $notifier,
             $this->incoming_mail_dao,
             $this->artifact_creator,
             $this->formelement_factory,
@@ -145,6 +151,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
         $this->incoming_message->method('isAFollowUp')->willReturn(false);
         $this->tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $this->formelement_factory->method('getUsedFieldsWithDefaultValue')->willReturn([]);
 
         $this->artifact_creator->expects(self::once())->method('create');
 
@@ -158,6 +165,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
         $this->incoming_message->method('isAFollowUp')->willReturn(false);
         $this->tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $this->artifact_creator->method('create');
 
         $this->formelement_factory->expects(self::once())->method('getUsedFieldsWithDefaultValue')->with($this->tracker, self::anything(), $this->user);
 
@@ -183,10 +191,13 @@ final class MailGatewayInsecureTest extends TestCase
         $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
         $artifact = ArtifactTestBuilder::anArtifact(56)->inTracker($this->tracker)->withChangesets($this->changeset)->build();
 
+        $this->tracker->method('getItemName')->willReturn('item');
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
         $this->incoming_message->method('isAFollowUp')->willReturn(false);
         $this->artifact_creator->method('create')->willReturn($artifact);
         $this->tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $this->artifact_creator->method('create');
+        $this->formelement_factory->method('getUsedFieldsWithDefaultValue')->willReturn([]);
 
         $this->incoming_mail_dao->expects(self::once())->method('save')->with(666, 'Raw mail');
 

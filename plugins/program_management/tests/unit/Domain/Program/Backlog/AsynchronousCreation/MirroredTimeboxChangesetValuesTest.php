@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_LINK_ID            = 530;

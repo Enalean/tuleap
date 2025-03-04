@@ -37,6 +37,7 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\EnqueueTaskStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AdminSavePermissionsControllerTest extends TestCase
 {
     private const PROJECT_ID = 101;

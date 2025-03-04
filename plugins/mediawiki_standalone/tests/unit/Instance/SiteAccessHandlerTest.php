@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EnqueueTaskStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SiteAccessHandlerTest extends TestCase
 {
     public function testHandleSiteAccessChange(): void

@@ -34,6 +34,7 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

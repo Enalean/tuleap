@@ -24,6 +24,7 @@ namespace Tuleap\Reference;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TitleBadgePresenterTest extends TestCase
 {
     public function testItBuildsABadgeWithALabel(): void

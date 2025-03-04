@@ -24,6 +24,7 @@ namespace Tuleap\Templating\Mustache;
 
 use Tuleap\Language\Gettext\POTEntry;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCollectsGettext(): void

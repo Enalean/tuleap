@@ -32,6 +32,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\BaseLayout;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRequestIsProcessed(): void

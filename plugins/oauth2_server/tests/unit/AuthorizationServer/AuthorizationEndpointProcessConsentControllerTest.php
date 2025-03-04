@@ -37,6 +37,7 @@ use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationCodeResponseFactory
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

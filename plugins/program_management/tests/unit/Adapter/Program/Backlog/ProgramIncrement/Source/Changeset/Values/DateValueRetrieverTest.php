@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\EndDateFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\StartDateFieldReferenceStub;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID = 9581;

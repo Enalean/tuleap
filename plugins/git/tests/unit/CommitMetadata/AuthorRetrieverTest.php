@@ -32,6 +32,7 @@ use Tuleap\User\UserName;
 /**
  * @psalm-immutable
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorRetrieverTest extends TestCase
 {
     use TemporaryTestDirectory;

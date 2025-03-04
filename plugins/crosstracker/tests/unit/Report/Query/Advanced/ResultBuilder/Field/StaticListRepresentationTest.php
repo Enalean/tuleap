@@ -26,6 +26,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\Stat
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StaticListRepresentationTest extends TestCase
 {
     public function testItContainsValues(): void

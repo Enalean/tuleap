@@ -63,6 +63,7 @@ use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ArtifactsInMonoTrackerXMLExporter $exporter;

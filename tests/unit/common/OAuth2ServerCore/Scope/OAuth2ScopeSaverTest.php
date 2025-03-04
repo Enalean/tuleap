@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2ServerCore\Scope;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

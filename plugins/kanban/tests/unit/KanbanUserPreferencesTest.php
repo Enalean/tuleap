@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var  */

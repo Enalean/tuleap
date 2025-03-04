@@ -30,6 +30,7 @@ use System_Command;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DumperFactoryTest extends TestCase
 {
     public function testItBuildsGitoliteDumperIfTuleapDoesNotManageAuthorizedKeysFile(): void

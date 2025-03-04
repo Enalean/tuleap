@@ -45,6 +45,7 @@ use Tuleap\Tracker\Test\Stub\REST\Artifact\HandlePUTStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactContentUpdaterTest extends TestCase
 {
     private const ARTIFACT_ID    = 123;

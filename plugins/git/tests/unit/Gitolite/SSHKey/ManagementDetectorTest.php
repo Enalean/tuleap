@@ -25,6 +25,7 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ManagementDetectorTest extends TestCase
 {
     public function testItIsAbleToFindThatTuleapManagesAuthorizedKeysFile(): void

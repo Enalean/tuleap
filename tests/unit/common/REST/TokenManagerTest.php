@@ -26,6 +26,7 @@ use Rest_TokenDao;
 use Rest_TokenFactory;
 use Rest_TokenManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var  Rest_TokenManager */

@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2ServerCore\AuthorizationServer;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -39,6 +39,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IncomingMessageInsecureBuilderTest extends TestCase
 {
     private const USER_MAIL     = 'user@example.com';

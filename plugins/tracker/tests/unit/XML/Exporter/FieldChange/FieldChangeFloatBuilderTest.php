@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FieldChangeFloatBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

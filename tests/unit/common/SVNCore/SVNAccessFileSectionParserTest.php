@@ -21,6 +21,7 @@ use Tuleap\SVNCore\SVNAccessFileSectionParser;
 use Tuleap\SVNCore\SVNAccessFileContent;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNAccessFileSectionParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('getRenameData')]

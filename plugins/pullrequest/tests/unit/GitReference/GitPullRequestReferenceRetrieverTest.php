@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\GitReference;
 
 use Tuleap\PullRequest\PullRequest;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitPullRequestReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGitReferenceIsRetrieved(): void

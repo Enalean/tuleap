@@ -30,6 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Webhook\Emitter;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookRequestSenderTest extends TestCase
 {
     protected function setUp(): void

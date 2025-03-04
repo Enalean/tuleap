@@ -29,6 +29,7 @@ use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionChangesDetectorForProjectTest extends TestCase
 {
     private GitPermissionsManager&MockObject $git_permission_manager;

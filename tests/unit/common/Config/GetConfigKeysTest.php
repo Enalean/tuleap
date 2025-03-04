@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected function setUp(): void
@@ -142,10 +143,8 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testConfigKeyHasCategory(): void
     {
-        // phpcs 3.6.0 detect an error with annotation bellow, ignore the error until phpcs is fixed
-        // https://github.com/squizlabs/PHP_CodeSniffer/issues/3456
-        // phpcs:ignore PSR12.Classes.ClassInstantiation.MissingParentheses
-        $class = new #[ConfigKeyCategory('bar')] class {
+        $class = new #[ConfigKeyCategory('bar')]
+        class {
             #[ConfigKey('summary')]
             public const SOME_STUFF = 'foo';
         };

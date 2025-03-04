@@ -28,6 +28,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\ChangesetValue\SaveChangesetValueStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewChangesetFieldValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Workflow&\PHPUnit\Framework\MockObject\MockObject $workflow;

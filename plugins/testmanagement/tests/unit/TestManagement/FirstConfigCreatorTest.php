@@ -29,6 +29,7 @@ use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Config&MockObject $config;

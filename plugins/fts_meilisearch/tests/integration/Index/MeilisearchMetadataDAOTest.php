@@ -28,6 +28,7 @@ use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MeilisearchMetadataDAOTest extends TestIntegrationTestCase
 {
     private MeilisearchMetadataDAO $dao;

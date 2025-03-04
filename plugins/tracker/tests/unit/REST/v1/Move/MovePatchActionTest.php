@@ -39,6 +39,7 @@ use Tuleap\Tracker\Test\Stub\MoveDryRunStub;
 use Tuleap\Tracker\Test\Stub\MoveRestArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MovePatchActionTest extends TestCase
 {
     private Project $project;

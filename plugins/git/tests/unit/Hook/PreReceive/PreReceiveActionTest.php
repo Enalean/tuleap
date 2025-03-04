@@ -36,6 +36,7 @@ use Tuleap\WebAssembly\WASMCaller;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\WebAssembly\WASMCallerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

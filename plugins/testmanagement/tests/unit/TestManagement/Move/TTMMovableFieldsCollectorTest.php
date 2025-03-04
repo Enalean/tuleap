@@ -27,6 +27,7 @@ use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
 use Tuleap\TestManagement\Test\Builders\StepExecutionFieldBuilder;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TTMMovableFieldsCollectorTest extends TestCase
 {
     public function testItMarksFieldAsFullyMigrateableWhenItIsAStepDefinitionField(): void

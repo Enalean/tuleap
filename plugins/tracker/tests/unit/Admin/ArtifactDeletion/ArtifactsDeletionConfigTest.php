@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsDeletionConfigTest extends TestCase
 {
     private ArtifactsDeletionConfigDAO|\PHPUnit\Framework\MockObject\MockObject $dao;

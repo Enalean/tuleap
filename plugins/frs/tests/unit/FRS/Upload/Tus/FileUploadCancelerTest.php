@@ -28,6 +28,7 @@ use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

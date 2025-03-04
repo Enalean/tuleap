@@ -25,6 +25,7 @@ namespace Tuleap\Cryptography\Symmetric;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCannotBeInstantiated(): void

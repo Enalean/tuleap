@@ -26,6 +26,7 @@ use EventManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private EventManager&MockObject $event_manager;

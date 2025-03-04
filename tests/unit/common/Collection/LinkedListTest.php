@@ -26,6 +26,7 @@ namespace Tuleap\Collection;
 use LinkedList;
 use stdClass;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class LinkedListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testOrder(): void

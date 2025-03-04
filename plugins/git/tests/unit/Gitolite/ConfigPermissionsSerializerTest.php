@@ -39,6 +39,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigPermissionsSerializerTest extends TestCase
 {
     private Git_Gitolite_ConfigPermissionsSerializer $serializer;

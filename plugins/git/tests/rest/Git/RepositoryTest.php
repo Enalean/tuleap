@@ -27,6 +27,7 @@ use Tuleap\Git\REST\TestBase;
 /**
  * @group GitTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryTest extends TestBase
 {
     private string $artifact_reference;

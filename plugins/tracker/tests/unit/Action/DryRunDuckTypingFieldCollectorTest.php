@@ -51,6 +51,7 @@ use Tuleap\Tracker\Test\Stub\VerifyThereArePermissionsToMigrateStub;
 use Tuleap\Tracker\Test\Stub\VerifyUserFieldValuesCanBeFullyMovedStub;
 use Tuleap\Tracker\Test\Stub\VerifyUserGroupValuesCanBeFullyMovedStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DryRunDuckTypingFieldCollectorTest extends TestCase
 {
     private const DESTINATION_TRACKER_ID = 105;

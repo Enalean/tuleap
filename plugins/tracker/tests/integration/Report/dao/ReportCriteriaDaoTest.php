@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportCriteriaDaoTest extends TestIntegrationTestCase
 {
     private ReportCriteriaDao $dao;

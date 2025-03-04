@@ -28,6 +28,7 @@ use System_Command_CommandException;
 use Tuleap\Git\Gitolite\SSHKey\Provider\IProvideKey;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizedKeysFileCreatorTest extends TestCase
 {
     public function testItGeneratesAuthorizedKeysFile(): void

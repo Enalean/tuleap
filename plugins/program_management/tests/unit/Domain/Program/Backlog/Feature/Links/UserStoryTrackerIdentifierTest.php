@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryTrackerIdentifierTest extends TestCase
 {
     private const TRACKER__ID = 100;

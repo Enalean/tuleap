@@ -44,6 +44,7 @@ use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

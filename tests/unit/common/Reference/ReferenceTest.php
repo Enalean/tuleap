@@ -23,6 +23,7 @@ namespace Tuleap\Reference;
 
 use Reference;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testScope(): void

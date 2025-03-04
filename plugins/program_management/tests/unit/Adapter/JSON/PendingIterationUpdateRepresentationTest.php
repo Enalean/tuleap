@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\JSON;
 
 use Tuleap\ProgramManagement\Tests\Builder\IterationUpdateBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PendingIterationUpdateRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_ID = 758;

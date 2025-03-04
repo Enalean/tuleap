@@ -25,6 +25,7 @@ use REST_TestDataBuilder;
 /**
  * @group KanbanTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanTest extends TestBase
 {
     public function testOPTIONSKanban(): void

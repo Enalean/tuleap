@@ -35,6 +35,7 @@ use Tuleap\REST\RestlerFactory;
 use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinition;
 use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SwaggerJsonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

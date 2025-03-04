@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RoadmapTasksOutOfDateFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRemovesArtifactsThatAreOutOfDate(): void

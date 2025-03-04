@@ -49,6 +49,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

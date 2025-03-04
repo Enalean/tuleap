@@ -27,6 +27,7 @@ use Tracker_Report_Renderer_Table;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsedFieldsRetrieverTest extends TestCase
 {
     public function testItReturnsTheFieldsUsedInTableColumnsUserCanRead(): void

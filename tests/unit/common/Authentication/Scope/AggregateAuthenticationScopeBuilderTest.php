@@ -24,6 +24,7 @@ namespace Tuleap\Authentication\Scope;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testStopLookingForAnAuthenticationScopeAtTheFirstSuccessfulAnswerFromABuilder(): void

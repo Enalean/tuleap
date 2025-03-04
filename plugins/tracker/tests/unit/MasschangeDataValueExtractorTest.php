@@ -30,6 +30,7 @@ use Tracker_FormElementFactory;
 use Tracker_MasschangeDataValueExtractor;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

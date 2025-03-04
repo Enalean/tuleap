@@ -26,6 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\AlwaysSuccessfulRequestHandler;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testMethodCanBeOverridden(): void

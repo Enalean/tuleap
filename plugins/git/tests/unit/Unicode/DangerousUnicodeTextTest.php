@@ -24,6 +24,7 @@ namespace Tuleap\Git\Unicode;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DangerousUnicodeTextTest extends TestCase
 {
     public function testDetectsTextPotentiallyDangerousUnicodeBidirectionalCharacters(): void

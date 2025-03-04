@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\REST;
 use REST_TestDataBuilder;
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TaskboardCardTest extends RestBase
 {
     /**

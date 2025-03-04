@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -35,6 +35,7 @@ use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 use Workflow_TransitionDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

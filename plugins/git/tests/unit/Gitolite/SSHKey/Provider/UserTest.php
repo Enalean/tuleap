@@ -27,6 +27,7 @@ use Tuleap\Git\Gitolite\SSHKey\Key;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTest extends TestCase
 {
     public function testItExtractsUserSSHKeys(): void

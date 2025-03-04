@@ -36,6 +36,7 @@ use Tuleap\Tracker\Test\Stub\BuildCompleteTrackerRESTRepresentationStub;
 use Tuleap\User\TuleapFunctionsUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ArtifactPayloadBuilder $builder;

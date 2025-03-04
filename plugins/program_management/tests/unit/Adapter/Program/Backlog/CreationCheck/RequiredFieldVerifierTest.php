@@ -44,6 +44,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_FIELD_ID         = 789;

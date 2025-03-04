@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\Config\ConfigKeyMetadataBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Config\KeyMetadataProviderStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigResetCommandTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -30,6 +30,7 @@ use SystemEventProcess;
 use SystemEventProcessManager;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitoliteHousekeepingRunnerTest extends TestCase
 {
     private Git_GitoliteHousekeeping_GitoliteHousekeepingRunner $runner;

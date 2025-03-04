@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\XML;
 
 use function PHPUnit\Framework\assertFalse;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLFormElementImplTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItUseItTrueIsTheDefaultThereforeNoNeedToAddIt(): void

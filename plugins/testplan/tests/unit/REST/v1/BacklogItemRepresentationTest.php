@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCannotAddATestIfThereIsNoArtifactLinkField(): void

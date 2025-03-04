@@ -24,6 +24,7 @@ namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WholeInstanceKeysAggregatorTest extends TestCase
 {
     public function testItUsesAllKeyProviders(): void

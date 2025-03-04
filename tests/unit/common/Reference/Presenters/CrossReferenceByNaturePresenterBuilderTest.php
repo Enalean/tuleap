@@ -28,6 +28,7 @@ use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferenceCollection;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 {
     use GlobalLanguageMock;

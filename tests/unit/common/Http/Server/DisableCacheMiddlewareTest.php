@@ -24,6 +24,7 @@ namespace Tuleap\Http\Server;
 
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisableCacheMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testResponseExplicitAskToNotBePutInACache(): void

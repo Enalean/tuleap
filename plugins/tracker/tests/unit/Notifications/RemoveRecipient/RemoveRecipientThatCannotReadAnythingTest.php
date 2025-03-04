@@ -31,6 +31,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RemoveRecipientThatCannotReadAnythingTest extends TestCase
 {
     public function testKeepARecipientWhoCanSeeANonEmptyComment(): void

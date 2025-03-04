@@ -21,6 +21,7 @@
 use Tuleap\Project\ProjectAccessSuspendedException;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $request;

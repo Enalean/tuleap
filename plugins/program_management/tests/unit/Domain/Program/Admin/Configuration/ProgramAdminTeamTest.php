@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTeamSynchronizationHasErrorStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramAdminTeamTest extends TestCase
 {
     private SearchOpenProgramIncrementsStub $open_program_increment_searcher;

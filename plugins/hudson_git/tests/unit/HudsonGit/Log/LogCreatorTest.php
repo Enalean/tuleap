@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\DB\UUIDTestContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LogCreator $creator;

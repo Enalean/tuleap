@@ -25,6 +25,7 @@ namespace Tuleap\Project\XML;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ServiceEnableForXmlImportRetriever&MockObject $event;

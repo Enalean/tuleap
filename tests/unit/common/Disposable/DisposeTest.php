@@ -25,6 +25,7 @@ namespace Tuleap\Disposable;
 use Tuleap\Disposable\Tests\TestDisposable;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisposeTest extends TestCase
 {
     public function testItReturnsTheValueFromItsCallbackAndDisposes(): void

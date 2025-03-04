@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LastAccessKeyIdentifierStoreTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private EncryptionKey $encryption_key;

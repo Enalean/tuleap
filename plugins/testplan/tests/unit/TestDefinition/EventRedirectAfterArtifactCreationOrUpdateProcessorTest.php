@@ -27,6 +27,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

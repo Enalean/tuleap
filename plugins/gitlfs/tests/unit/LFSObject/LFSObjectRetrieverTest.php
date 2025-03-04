@@ -20,6 +20,7 @@
 
 namespace Tuleap\GitLFS\LFSObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSObjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LFSObjectDAO&\PHPUnit\Framework\MockObject\MockObject $dao;

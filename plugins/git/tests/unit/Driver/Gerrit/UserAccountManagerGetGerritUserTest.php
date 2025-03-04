@@ -33,6 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserAccountManagerGetGerritUserTest extends TestCase
 {
     private string $ldap_login;

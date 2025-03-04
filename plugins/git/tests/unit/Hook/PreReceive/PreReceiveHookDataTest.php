@@ -25,6 +25,7 @@ namespace Tuleap\Git\Hook\PreReceive;
 use Psr\Log\NullLogger;
 use Tuleap\NeverThrow\Result;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PreReceiveHookDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function wrongNumberOfRefsTest(): void

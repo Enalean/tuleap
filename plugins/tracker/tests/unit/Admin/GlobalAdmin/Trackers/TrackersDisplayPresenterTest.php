@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 use CSRFSynchronizerToken;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersDisplayPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItSortsAlphabeticallyTheTrackers(): void

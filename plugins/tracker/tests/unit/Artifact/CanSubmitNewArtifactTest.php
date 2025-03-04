@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Artifact;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanSubmitNewArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CanSubmitNewArtifact $can_submit_artifact;

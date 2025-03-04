@@ -28,6 +28,7 @@ use Project_AccessException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FRSPermissionManagerTest extends TestCase
 {
     private FRSPermissionManager $permission_manager;

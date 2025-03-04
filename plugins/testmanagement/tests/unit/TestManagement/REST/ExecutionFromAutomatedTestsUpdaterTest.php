@@ -35,6 +35,7 @@ use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ExecutionStatusUpdater&MockObject $execution_status_updater;

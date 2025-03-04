@@ -27,6 +27,7 @@ use Tuleap\Search\ItemToIndexBatchQueue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IndexAllPendingItemsCommandTest extends TestCase
 {
     public function testCommandCanAskForIndexationOfAllPendingItems(): void

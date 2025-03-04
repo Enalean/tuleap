@@ -27,6 +27,7 @@ use Collection;
 use Map;
 use stdClass;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class MapTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEmptyMap(): void

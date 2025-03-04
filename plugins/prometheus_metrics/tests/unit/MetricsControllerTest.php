@@ -33,6 +33,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Queue\Noop\PersistentQueue;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testMetricsAreRendered(): void

@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\ProvideCurrentUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProvideCurrentUserForXMLImportTest extends TestCase
 {
     public function testCurrentUserIsWrappedAsAUserForXMLImportWhenActiveAndNotAnonymous(): void

@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MassChangeTopBacklogSourceInformationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsSourceInformationFromEvent(): void

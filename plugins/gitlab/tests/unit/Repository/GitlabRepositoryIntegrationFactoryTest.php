@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository;
 use ProjectManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRetrievesGitlabIntegrationsForProject(): void

@@ -25,6 +25,7 @@ namespace Tuleap\Test\Builders;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTestBuilderTest extends TestCase
 {
     public function testIsAdminOfTwoProjects(): void

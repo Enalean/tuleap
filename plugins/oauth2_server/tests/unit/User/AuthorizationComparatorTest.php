@@ -27,6 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AuthorizationComparator */

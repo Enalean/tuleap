@@ -23,6 +23,7 @@ namespace Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheLoginUrlIsGeneratedForTheProviderDefinedAsUniqueAuthenticationEndpoint(): void

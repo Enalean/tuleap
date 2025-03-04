@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

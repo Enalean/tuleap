@@ -41,6 +41,7 @@ use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

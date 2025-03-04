@@ -24,6 +24,7 @@ namespace Tuleap\GitLFS\StreamFilter;
 
 require_once __DIR__ . '/ReplaceDataFilter.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFilterIsAttachedToResource(): void

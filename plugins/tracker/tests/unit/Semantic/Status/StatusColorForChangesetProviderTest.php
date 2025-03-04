@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

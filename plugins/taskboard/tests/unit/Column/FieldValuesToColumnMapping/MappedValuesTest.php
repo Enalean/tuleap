@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MappedValues $mapped_values;

@@ -30,6 +30,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVProject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

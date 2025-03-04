@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\App;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

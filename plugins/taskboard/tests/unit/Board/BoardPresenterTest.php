@@ -32,6 +32,7 @@ use Tuleap\Taskboard\Tracker\TrackerPresenter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \AgileDashboard_MilestonePresenter&MockObject $milestone_presenter;

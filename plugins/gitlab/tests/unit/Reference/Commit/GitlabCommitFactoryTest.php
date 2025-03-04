@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Reference\Commit;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

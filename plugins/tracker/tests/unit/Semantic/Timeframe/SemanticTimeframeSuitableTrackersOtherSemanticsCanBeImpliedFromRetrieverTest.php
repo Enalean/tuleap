@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

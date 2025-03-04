@@ -29,6 +29,7 @@ use Git_GitoliteHousekeeping_GitoliteHousekeepingResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceStopperTest extends TestCase
 {
     private Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&MockObject $response;

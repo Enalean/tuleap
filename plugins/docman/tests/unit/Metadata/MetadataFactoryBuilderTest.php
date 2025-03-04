@@ -26,6 +26,7 @@ use Docman_Item;
 use Docman_MetadataFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataFactoryBuilderTest extends TestCase
 {
     public function testMetadataFactoryIsInitializedCorrectly(): void

@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Tuleap\Tracker\Artifact\Closure\ClosingKeyword;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookTuleapReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCanBeConvertedToStringForArrayDiffOperations(): void

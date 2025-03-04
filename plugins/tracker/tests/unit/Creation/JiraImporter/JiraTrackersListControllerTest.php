@@ -29,6 +29,7 @@ use ProjectManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraTrackersListControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

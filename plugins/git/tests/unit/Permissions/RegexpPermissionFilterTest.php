@@ -28,6 +28,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserGroup\NameTranslator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RegexpPermissionFilterTest extends TestCase
 {
     private RegexpPermissionFilter $permission_filter;

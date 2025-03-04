@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1\CopyItem;
 
 use stdClass;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanValidateRepresentationForCopyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidCopyRepresentation(): void

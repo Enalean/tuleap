@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROJECT_ID = 101;

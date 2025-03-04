@@ -35,6 +35,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailGatewayBuilderTest extends TestCase
 {
     private Tracker_Artifact_MailGateway_MailGatewayBuilder $mailgateway_builder;

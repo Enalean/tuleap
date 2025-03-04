@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

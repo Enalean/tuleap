@@ -34,6 +34,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\REST\I18NRestException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -31,6 +31,7 @@ use Tuleap\PullRequest\Notification\EventSubjectToNotificationSynchronousDispatc
 use Tuleap\PullRequest\Notification\NotificationToProcess;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventSubjectToNotificationSynchronousDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEventNotificationsAreDispatched(): void

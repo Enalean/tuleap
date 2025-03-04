@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\Lock\Request;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildFromRequest(): void

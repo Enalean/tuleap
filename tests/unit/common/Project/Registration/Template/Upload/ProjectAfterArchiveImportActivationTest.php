@@ -30,6 +30,7 @@ use Tuleap\Test\Stubs\Project\ActivateProjectStub;
 use Tuleap\Test\Stubs\Project\NotifySiteAdminStub;
 use Tuleap\Test\Stubs\Project\Registration\Template\Upload\NotifyProjectImportStatusStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectAfterArchiveImportActivationTest extends TestCase
 {
     use ForgeConfigSandbox;

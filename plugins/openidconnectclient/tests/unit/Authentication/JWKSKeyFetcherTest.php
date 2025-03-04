@@ -26,6 +26,7 @@ use Http\Mock\Client;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

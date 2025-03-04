@@ -44,6 +44,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AuthorizationEndpointController $controller;

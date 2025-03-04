@@ -23,6 +23,7 @@ namespace Tuleap\Upload\NextGen;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID(): void

@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DependenciesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetDependencies(): void

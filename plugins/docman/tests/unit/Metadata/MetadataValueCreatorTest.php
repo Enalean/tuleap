@@ -27,6 +27,7 @@ use Docman_MetadataValueList;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataValueCreatorTest extends TestCase
 {
     private MetadataValueStore&MockObject $store;

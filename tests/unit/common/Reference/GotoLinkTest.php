@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GotoLinkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromComponents(): void

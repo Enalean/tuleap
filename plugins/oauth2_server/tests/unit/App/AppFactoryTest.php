@@ -27,6 +27,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

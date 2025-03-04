@@ -26,6 +26,7 @@ use trackerPlugin;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\Preferences\UserPreferencesGetDefaultValue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerPluginTest extends TestCase
 {
     private function getPlugin(): trackerPlugin

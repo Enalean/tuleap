@@ -23,6 +23,7 @@
  *
  * @group Regressions
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Regressions_MilestonesContentTest extends RestBase
 {
     public function testItCanMoveBackFromReleaseBacklogToProductBacklog()

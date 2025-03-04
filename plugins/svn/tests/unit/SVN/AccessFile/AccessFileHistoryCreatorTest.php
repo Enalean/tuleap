@@ -35,6 +35,7 @@ use Tuleap\SVNCore\SVNAccessFileDefaultBlockGeneratorInterface;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

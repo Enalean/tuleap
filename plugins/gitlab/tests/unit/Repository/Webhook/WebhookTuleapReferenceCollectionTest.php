@@ -23,6 +23,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookTuleapReferenceCollectionTest extends TestCase
 {
     public function testCreatesCollectionFromSetOfReferences(): void

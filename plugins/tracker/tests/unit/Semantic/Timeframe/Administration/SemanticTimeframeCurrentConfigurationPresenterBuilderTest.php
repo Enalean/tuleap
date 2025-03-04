@@ -26,6 +26,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

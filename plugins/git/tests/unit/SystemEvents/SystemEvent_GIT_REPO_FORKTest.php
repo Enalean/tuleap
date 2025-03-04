@@ -35,6 +35,7 @@ use SystemEvent_GIT_REPO_FORK;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEvent_GIT_REPO_FORKTest extends TestCase
 {
     private GitRepository&MockObject $old_repository;

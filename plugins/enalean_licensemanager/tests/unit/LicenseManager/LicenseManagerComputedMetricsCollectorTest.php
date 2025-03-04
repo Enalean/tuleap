@@ -24,6 +24,7 @@ namespace Tuleap\Enalean\LicenseManager;
 
 use Tuleap\Instrument\Prometheus\Prometheus;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LicenseManagerComputedMetricsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testComputedMetricsAreSet(): void

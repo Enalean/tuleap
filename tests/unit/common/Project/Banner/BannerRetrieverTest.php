@@ -27,6 +27,7 @@ use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private BannerDao&MockObject $banner_dao;

@@ -40,6 +40,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreateBacklogControllerTest extends TestCase
 {
     public function testExceptionWhenProjectIsNotAllowed(): void

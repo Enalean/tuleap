@@ -24,6 +24,7 @@ namespace Tuleap\LDAP;
 
 use ColinODell\PsrTestLogger\TestLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

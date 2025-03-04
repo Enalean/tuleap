@@ -41,6 +41,7 @@ use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasASprintTracker(): void

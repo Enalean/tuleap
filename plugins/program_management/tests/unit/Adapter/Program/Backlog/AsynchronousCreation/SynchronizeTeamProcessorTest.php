@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID = 1;

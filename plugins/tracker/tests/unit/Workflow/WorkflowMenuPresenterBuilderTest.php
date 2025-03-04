@@ -27,6 +27,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowMenuPresenterBuilderTest extends TestCase
 {
     public function testBuild(): void

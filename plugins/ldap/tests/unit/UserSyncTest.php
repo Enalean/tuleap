@@ -29,6 +29,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(\LDAP_UserSync::class)]
 final class UserSyncTest extends \Tuleap\Test\PHPUnit\TestCase
 {

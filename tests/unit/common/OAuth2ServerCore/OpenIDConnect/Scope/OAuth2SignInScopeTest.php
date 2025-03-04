@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\OpenIDConnect\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2SignInScopeTest extends AuthenticationScopeTestCase
 {
     public function getAuthenticationScopeClassname(): string

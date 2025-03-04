@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\User\Account;
 use Tuleap\User\Account\AccountTabPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AppsTabAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddTabs(): void

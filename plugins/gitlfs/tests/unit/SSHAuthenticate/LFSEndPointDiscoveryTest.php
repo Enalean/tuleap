@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\SSHAuthenticate;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSEndPointDiscoveryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LFSEndPointDiscovery $endpoint_discovery;

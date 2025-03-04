@@ -29,6 +29,7 @@ use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraUserInfoQuerierTest extends TestCase
 {
     public function testItFetchesJiraCloudUserInfoBasedOnAccountId(): void

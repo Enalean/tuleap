@@ -26,6 +26,7 @@ use League\Flysystem\FilesystemWriter;
 use League\Flysystem\UnableToDeleteFile;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FilesystemWriter&\PHPUnit\Framework\MockObject\MockObject $filesystem;

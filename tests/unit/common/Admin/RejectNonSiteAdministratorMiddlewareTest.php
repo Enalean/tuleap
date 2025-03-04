@@ -30,6 +30,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RejectNonSiteAdministratorMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&\UserManager $user_manager;

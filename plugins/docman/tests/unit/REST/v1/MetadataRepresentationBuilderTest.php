@@ -35,6 +35,7 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataRepresentationBuilderTest extends TestCase
 {
     public function testItBuildMetadataWithoutBasicProperties(): void

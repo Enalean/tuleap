@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ChangeForwardLinksCommand $forward_links_command;

@@ -44,6 +44,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchReportBuilderTest extends TestCase
 {
     private const CUSTOM_TEXT_PROPERTY   = 'field_1';

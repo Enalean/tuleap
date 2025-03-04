@@ -43,6 +43,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitoliteDriverTest extends GitoliteTestCase
 {
     private Git_Gitolite_GitoliteRCReader&MockObject $gitoliterc_reader;

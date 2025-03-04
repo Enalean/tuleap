@@ -25,6 +25,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use TruncateLevelLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LoggerInterface&MockObject $logger;

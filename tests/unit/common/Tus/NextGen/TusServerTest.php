@@ -28,6 +28,7 @@ use Psr\Http\Message\StreamInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Tus\CannotWriteFileException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ResponseFactoryInterface $response_factory;

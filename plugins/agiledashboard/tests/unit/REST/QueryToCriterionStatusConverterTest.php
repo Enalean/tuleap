@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class QueryToCriterionStatusConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

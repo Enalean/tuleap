@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\Logs;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsLogsFromCoreAndPlugin(): void

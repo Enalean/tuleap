@@ -26,6 +26,7 @@ namespace Tuleap\Tools\Xml2Php\Tracker\FormElement;
 use PhpParser\PrettyPrinter;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SelectboxConvertorTest extends TestCase
 {
     public function testItBuildsABasicSelectbox(): void

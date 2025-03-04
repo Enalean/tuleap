@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\UserName;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostPushBadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USERNAME = 'asticotc';

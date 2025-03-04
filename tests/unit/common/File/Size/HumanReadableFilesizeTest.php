@@ -24,6 +24,7 @@ namespace Tuleap\File\Size;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HumanReadableFilesizeTest extends TestCase
 {
     public function testConvert(): void

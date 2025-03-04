@@ -28,6 +28,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentServerDaoTest extends TestIntegrationTestCase
 {
     private DocumentServerDao $dao;

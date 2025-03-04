@@ -28,6 +28,7 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StepDefinition $field;

@@ -30,6 +30,7 @@ use PluginConfigChecker;
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemCheckTest extends TestCase
 {
     private Git_GitoliteDriver&MockObject $driver;

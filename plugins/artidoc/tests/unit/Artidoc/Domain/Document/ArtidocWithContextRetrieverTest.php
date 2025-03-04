@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocWithContextRetrieverTest extends TestCase
 {
     private const ITEM_ID = 12;

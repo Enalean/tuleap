@@ -28,6 +28,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group PullRequest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PullRequestsTest extends RestBase
 {
     protected function getResponseForNonMember($request)

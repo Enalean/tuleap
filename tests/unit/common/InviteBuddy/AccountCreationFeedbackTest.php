@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\Account\Register\RegisterFormContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LoggerInterface|MockObject $logger;

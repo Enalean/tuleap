@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DurationFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID    = 797;

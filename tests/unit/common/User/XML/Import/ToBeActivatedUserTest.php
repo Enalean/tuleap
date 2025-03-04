@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ToBeActivatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var ToBeActivatedUser */

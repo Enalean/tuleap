@@ -28,6 +28,7 @@ use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RemoveItemsFromIndexTaskTest extends TestCase
 {
     public function testInstantiatesTaskToQueueFromItemsToRemove(): void

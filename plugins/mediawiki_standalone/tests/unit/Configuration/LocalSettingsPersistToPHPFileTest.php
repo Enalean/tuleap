@@ -28,6 +28,7 @@ use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\NullTemplateCache
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LocalSettingsPersistToPHPFileTest extends TestCase
 {
     use ForgeConfigSandbox;

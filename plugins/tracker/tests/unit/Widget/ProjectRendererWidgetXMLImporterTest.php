@@ -32,6 +32,7 @@ use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\XML\MappingsRegistry;
 use Widget;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Widget&MockObject $widget;

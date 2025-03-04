@@ -30,6 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CustomMetadataCollectionBuilderTest extends TestCase
 {
     private Docman_MetadataFactory&MockObject $metadata_factory;

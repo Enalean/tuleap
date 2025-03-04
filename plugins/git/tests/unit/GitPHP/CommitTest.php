@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\GitPHP;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const COMMIT_CONTENT = <<<EOF

@@ -37,6 +37,7 @@ use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewPullRequestNotificationToProcessBuilderTest extends TestCase
 {
     private function getNotificationToProcess(

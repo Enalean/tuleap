@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

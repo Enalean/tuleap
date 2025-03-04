@@ -26,6 +26,7 @@ use org\bovigo\vfs\vfsStream;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected MappingFileOptimusPrimeTransformer $transformer;

@@ -26,6 +26,7 @@ use HTTPRequest;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use function PHPUnit\Framework\assertSame;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class StatusChangedRedirectURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsRedirectToCampaignURL(): void

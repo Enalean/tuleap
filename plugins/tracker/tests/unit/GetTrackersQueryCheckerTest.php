@@ -31,6 +31,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\REST\Event\GetAdditionalCriteria;
 use Tuleap\Tracker\REST\v1\GetTrackersQueryChecker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -25,6 +25,7 @@ namespace Tuleap\Layout\ProjectSidebar\InstanceInformation;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectSidebarLegacyPNGHrefTest extends TestCase
 {
     public function testBuildsRepresentationWithoutCustomization(): void

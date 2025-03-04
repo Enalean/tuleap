@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticProgressDao&MockObject $dao;

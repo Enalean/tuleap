@@ -41,6 +41,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 use User_LoginException;
 use User_LoginManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

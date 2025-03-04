@@ -30,6 +30,7 @@ use Tuleap\Tracker\REST\WorkflowTransitionRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Workflow_Transition_Condition_Permissions;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowRestBuilderTest extends TestCase
 {
     private WorkflowRestBuilder $builder;

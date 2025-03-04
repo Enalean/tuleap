@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML\Importer;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ImportedChangesetMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGet()

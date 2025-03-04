@@ -31,6 +31,7 @@ use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\OAuth2\OAuth2Exception;
 use User_LoginException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

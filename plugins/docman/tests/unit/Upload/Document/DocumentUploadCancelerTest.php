@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentUploadCancelerTest extends TestCase
 {
     public function testDocumentBeingUploadedIsCleanedWhenTheUploadIsCancelled(): void

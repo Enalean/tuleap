@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\REST\Specification\Swagger;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SwaggerJsonSecurityDefinitionsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddsASecurityDefinition(): void

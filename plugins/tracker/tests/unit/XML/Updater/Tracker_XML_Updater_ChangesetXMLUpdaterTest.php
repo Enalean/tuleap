@@ -25,6 +25,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_Updater_ChangesetXMLUpdater $updater;
@@ -54,7 +55,7 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
+        $this->artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
                 . '<artifact>'
                 . '  <changeset>'
                 . '    <submitted_on>2014</submitted_on>'
@@ -70,7 +71,8 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
                 . '    </field_change>'
                 . '  </changeset>'
                 . '</artifact>');
-        $this->visitor             = $this->createMock(\Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor::class);
+        $this->visitor      = $this->createMock(\Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor::class);
+        $this->visitor->method('update');
         $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->updater             = new Tracker_XML_Updater_ChangesetXMLUpdater($this->visitor, $this->formelement_factory);
         $this->user                = new PFUser(['user_id' => $this->user_id, 'language_id' => 'en']);

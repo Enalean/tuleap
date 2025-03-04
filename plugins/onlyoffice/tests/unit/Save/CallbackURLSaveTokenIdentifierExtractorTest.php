@@ -26,6 +26,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CallbackURLSaveTokenIdentifierExtractorTest extends TestCase
 {
     public function testCanExtractTokenIdentifierFromACorrectCallbackURL(): void

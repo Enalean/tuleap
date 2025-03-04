@@ -25,6 +25,7 @@ namespace Tuleap\LDAP;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GroupAutocompleteController $group_autocomplete;

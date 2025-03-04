@@ -29,6 +29,7 @@ use League\CommonMark\Extension\CommonMark\Renderer\Block\FencedCodeRenderer;
 use League\CommonMark\MarkdownConverter;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MarkdownConverter $converter;

@@ -27,6 +27,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectSidebarSVGLogoTest extends TestCase
 {
     public function testBuildsRepresentationWithoutCustomization(): void

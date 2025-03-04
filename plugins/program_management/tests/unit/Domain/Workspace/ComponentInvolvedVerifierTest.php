@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private VerifyIsTeam $team_verifier;

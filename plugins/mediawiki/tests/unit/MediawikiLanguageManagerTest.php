@@ -28,6 +28,7 @@ use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediawikiLanguageManagerTest extends TestCase
 {
     private MediawikiLanguageManager $language_manager;

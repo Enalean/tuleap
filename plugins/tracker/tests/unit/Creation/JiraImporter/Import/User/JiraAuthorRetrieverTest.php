@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

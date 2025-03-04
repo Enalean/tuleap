@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExternalExporterCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCollectExternalExporter(): void

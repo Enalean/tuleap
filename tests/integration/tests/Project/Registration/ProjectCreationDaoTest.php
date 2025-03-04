@@ -28,6 +28,7 @@ use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreationDaoTest extends TestIntegrationTestCase
 {
     public function testItReturnsCreatedProjectId(): void

@@ -35,6 +35,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 use URLRedirect;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RejectAuthorizationRequiringConsentTest extends TestCase
 {
     private RejectAuthorizationRequiringConsent $response_builder;

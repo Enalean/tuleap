@@ -27,6 +27,7 @@ use REST_TestDataBuilder;
 /**
  * @group ProjectTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectMilestonesPeriodTest extends ProjectBase
 {
     public function testGETmilestonesWithPeriodFutureQuery(): void

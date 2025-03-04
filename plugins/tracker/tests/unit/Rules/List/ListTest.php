@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Rule\List;
 use Tracker_Rule_List;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Rule_List_ListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

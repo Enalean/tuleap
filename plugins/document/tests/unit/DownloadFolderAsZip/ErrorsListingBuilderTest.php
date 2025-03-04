@@ -24,6 +24,7 @@ namespace Tuleap\Document\DownloadFolderAsZip;
 
 use ZipStream\ZipStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ErrorsListingBuilder $builder;

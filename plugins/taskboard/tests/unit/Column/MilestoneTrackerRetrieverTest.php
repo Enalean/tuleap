@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use TrackerFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MilestoneTrackerRetriever $milestone_tracker_retriever;

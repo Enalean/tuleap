@@ -31,6 +31,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresenta
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use function Psl\Json\encode as psl_json_encode;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProcessWASMResponseTest extends TestCase
 {
     private TestLogger $logger;

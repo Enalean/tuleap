@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerPrivateCommentInformationRetrieverTest extends TestCase
 {
     private TrackerPrivateCommentUGroupEnabledDao&MockObject $tracker_private_comment_ugroup_enabled_dao;

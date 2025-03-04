@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TestmanagementTrackersConfiguratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

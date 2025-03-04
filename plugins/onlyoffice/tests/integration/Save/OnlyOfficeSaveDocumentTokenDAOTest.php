@@ -26,6 +26,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeSaveDocumentTokenDAOTest extends TestIntegrationTestCase
 {
     private OnlyOfficeSaveDocumentTokenDAO $dao;

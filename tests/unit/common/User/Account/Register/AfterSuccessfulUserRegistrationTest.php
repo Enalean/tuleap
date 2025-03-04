@@ -36,6 +36,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\User\LogUserStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AfterSuccessfulUserRegistrationTest extends TestCase
 {
     use ForgeConfigSandbox;

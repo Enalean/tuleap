@@ -29,6 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use User_InvalidPasswordException;
 use User_StatusInvalidException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNPasswordBasedAuthenticationMethodTest extends TestCase
 {
     /**

@@ -24,6 +24,7 @@ namespace Tuleap\Project\REST\v1;
 
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HeaderBackgroundRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildHeaderBackgroundRepresentationFromIdentifier(): void

@@ -24,6 +24,7 @@ namespace Tuleap\OnlyOffice\Download;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeDownloadDocumentTokenDAOTest extends TestIntegrationTestCase
 {
     private OnlyOfficeDownloadDocumentTokenDAO $dao;

@@ -39,6 +39,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MAPPED_FIELD_ID   = 3086;

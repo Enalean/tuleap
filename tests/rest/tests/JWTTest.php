@@ -27,6 +27,7 @@ use RestBase;
 /**
  * @group TokenTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JWTTest extends RestBase
 {
     public function testGETJWT(): void

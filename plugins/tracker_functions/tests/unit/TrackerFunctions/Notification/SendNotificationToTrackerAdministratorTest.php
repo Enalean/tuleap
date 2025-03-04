@@ -33,6 +33,7 @@ use Tuleap\TrackerFunctions\Stubs\Notification\MessageBuilderStub;
 use Tuleap\TrackerFunctions\Stubs\Notification\MessageSenderStub;
 use Tuleap\TrackerFunctions\Stubs\Notification\TrackerAdminRecipientsRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SendNotificationToTrackerAdministratorTest extends TestCase
 {
     private TestLogger $logger;

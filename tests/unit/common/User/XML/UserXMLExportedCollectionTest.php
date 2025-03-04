@@ -27,6 +27,7 @@ use UserXMLExportedCollection;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UserXMLExportedCollection $collection;

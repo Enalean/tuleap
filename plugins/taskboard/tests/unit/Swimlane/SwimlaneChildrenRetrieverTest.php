@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\Swimlane;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SwimlaneChildrenRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SwimlaneChildrenRetriever $retriever;

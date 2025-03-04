@@ -28,6 +28,7 @@ use Tuleap\OpenIDConnectClient\Authentication\State;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SIGNED_STATE        = 'Tuleap_signed_state';

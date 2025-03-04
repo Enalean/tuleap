@@ -24,6 +24,7 @@ namespace Tuleap\Tracker;
 
 use InvalidArgumentException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerColorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testColorCanBeBuiltFromAValidColorName(): void

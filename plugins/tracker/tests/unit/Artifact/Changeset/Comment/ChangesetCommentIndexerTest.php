@@ -33,6 +33,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetCommentIndexerTest extends TestCase
 {
     public function testIndexesCommentFromChangeset(): void

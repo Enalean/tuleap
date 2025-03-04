@@ -34,6 +34,7 @@ use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemCheckTest extends TestCase
 {
     use ForgeConfigSandbox;

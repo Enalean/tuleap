@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TIMEBOX_TRACKER_ID   = 58;

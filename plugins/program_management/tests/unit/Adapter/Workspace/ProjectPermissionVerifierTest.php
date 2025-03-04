@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectPermissionVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItProxiesToPFUser(): void

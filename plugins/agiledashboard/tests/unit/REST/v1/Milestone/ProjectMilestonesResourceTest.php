@@ -44,6 +44,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
     use Tuleap\Test\PHPUnit\TestCase;
     use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+    #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
     final class ProjectMilestonesResourceTest extends TestCase
     {
         private ProjectMilestonesResource $controller;

@@ -25,6 +25,7 @@ use REST_TestDataBuilder;
 /**
  * @group TestManagementTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectTest extends TestManagementRESTTestCase
 {
     public function testGetCampaigns(): void

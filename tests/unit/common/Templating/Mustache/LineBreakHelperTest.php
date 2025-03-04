@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Templating\Mustache;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LineBreakHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddsNewLines(): void

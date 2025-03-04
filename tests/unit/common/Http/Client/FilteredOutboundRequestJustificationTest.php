@@ -25,6 +25,7 @@ namespace Tuleap\Http\Client;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilteredOutboundRequestJustificationTest extends TestCase
 {
     public function testDoesNotBuildAJustificationWhenRequestDoesNotAppearToHaveBeenFiltered(): void

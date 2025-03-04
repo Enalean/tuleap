@@ -20,6 +20,7 @@
 
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GetStateVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;

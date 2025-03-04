@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MIRROR_ID  = 48;

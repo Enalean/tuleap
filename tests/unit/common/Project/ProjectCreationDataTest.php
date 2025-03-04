@@ -37,6 +37,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use XML_RNGValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

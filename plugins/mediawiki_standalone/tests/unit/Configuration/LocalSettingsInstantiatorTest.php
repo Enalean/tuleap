@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LocalSettingsInstantiatorTest extends TestCase
 {
     public function testInstantiatesLocalSettings(): void

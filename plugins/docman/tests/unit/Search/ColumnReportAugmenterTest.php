@@ -28,6 +28,7 @@ use Docman_ReportColumnTitle;
 use Tuleap\Docman\REST\v1\Search\SearchSortRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ColumnReportAugmenterTest extends TestCase
 {
     /**

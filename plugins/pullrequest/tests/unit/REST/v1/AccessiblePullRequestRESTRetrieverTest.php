@@ -36,6 +36,7 @@ use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessiblePullRequestRESTRetrieverTest extends TestCase
 {
     private SearchPullRequestStub $pull_request_dao;

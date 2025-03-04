@@ -29,6 +29,7 @@ use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

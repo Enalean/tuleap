@@ -25,6 +25,7 @@ namespace Tuleap\File;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileWriterTest extends TestCase
 {
     public function testWriteExpectedContent(): void

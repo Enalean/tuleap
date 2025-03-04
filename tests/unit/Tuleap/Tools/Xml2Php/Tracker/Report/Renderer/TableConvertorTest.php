@@ -26,6 +26,7 @@ use PhpParser\PrettyPrinter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tools\Xml2Php\Tracker\FormElement\IdToNameMapping;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TableConvertorTest extends TestCase
 {
     public function testItBuildsABasicRenderer(): void

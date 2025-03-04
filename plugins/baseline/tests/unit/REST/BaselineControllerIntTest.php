@@ -33,6 +33,7 @@ use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\I18NRestException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
 {
     use GlobalLanguageMock;

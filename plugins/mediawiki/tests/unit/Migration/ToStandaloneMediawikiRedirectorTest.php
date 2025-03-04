@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ToStandaloneMediawikiRedirectorTest extends TestCase
 {
     public function testNoRedirectionWhenStandaloneServiceIsNotUsed(): void

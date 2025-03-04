@@ -30,6 +30,7 @@ use Tuleap\Reference\CrossReferenceByDirectionPresenter;
 use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CrossReferenceFieldPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

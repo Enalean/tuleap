@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigConformanceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ConfigConformanceValidator $validator;

@@ -30,6 +30,7 @@ use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediaWikiOAuth2AppSecretGeneratorDBStoreTest extends TestCase
 {
     /**

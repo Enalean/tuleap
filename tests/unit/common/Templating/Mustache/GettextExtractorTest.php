@@ -20,6 +20,7 @@
 
 namespace Tuleap\Templating\Mustache;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GettextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExtractNothingIfThereIsNoGettextSection(): void

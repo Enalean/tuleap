@@ -20,6 +20,7 @@
 
 namespace Tuleap\Layout;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CssAssetCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetDeduplicatedAssets(): void

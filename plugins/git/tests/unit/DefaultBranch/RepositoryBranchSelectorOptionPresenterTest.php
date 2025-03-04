@@ -25,6 +25,7 @@ namespace Tuleap\Git\DefaultBranch;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryBranchSelectorOptionPresenterTest extends TestCase
 {
     public function testDoesNotMarkABranchAsDefaultWhenItIsNot(): void

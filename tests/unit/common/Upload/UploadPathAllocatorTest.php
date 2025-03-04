@@ -21,6 +21,7 @@
 namespace Tuleap\Upload;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID()

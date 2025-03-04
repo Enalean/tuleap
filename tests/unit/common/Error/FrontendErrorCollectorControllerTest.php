@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\ProvideCurrentUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FrontendErrorCollectorControllerTest extends TestCase
 {
     private const CURRENT_USER_ID = 102;

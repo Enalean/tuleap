@@ -24,6 +24,7 @@ namespace Tuleap\Layout;
 
 use org\bovigo\vfs\vfsStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JavascriptAssetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsHashedFileURL(): void

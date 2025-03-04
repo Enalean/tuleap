@@ -29,6 +29,7 @@ use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCatchesIfJiraReturnsAPayloadWeCannotWorkWith(): void

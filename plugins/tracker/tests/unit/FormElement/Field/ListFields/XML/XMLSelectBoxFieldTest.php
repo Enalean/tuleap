@@ -29,6 +29,7 @@ use Tuleap\Tracker\XML\IDGenerator;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLSelectBoxFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItMustHaveABindTypeAtExportType(): void

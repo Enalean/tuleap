@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;

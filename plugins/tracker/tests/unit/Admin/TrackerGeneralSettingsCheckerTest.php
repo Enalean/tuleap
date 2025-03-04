@@ -28,6 +28,7 @@ use ReferenceManager;
 use TrackerFactory;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TrackerGeneralSettingsChecker $checker;

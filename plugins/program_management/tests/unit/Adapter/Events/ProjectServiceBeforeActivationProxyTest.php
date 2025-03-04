@@ -28,6 +28,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectServiceBeforeActivationProxyTest extends TestCase
 {
     private ProjectServiceBeforeActivationProxy $proxy;

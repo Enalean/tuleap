@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

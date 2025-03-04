@@ -21,6 +21,7 @@
 
 namespace Tuleap\Dashboard\Widget;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

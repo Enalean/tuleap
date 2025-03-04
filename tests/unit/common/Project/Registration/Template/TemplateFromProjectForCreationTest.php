@@ -30,6 +30,7 @@ use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 use URLVerification;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TemplateFromProjectForCreationTest extends TestCase
 {
     /**

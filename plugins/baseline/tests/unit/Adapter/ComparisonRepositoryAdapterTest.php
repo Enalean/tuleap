@@ -39,6 +39,7 @@ use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use CurrentUserContext;

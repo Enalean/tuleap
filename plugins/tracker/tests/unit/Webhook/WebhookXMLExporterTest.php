@@ -24,6 +24,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private WebhookXMLExporter $exporter;

@@ -32,6 +32,7 @@ use Tuleap\Timetracking\REST\v1\Exception\UserCannotSeeTrackedTimeException;
 use Tuleap\Timetracking\Time\Time;
 use Tuleap\Timetracking\Time\TimeRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

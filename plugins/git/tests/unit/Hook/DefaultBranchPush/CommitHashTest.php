@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitHashTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const COMMIT_SHA1 = '021edd5653';

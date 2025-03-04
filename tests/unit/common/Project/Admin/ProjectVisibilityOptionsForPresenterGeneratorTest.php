@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin;
 use Project;
 use Tuleap\Project\Admin\Visibility\UpdateVisibilityStatus;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectVisibilityOptionsForPresenterGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGeneratedOptionsWhenRestrictedUsersAreNotAllowed(): void

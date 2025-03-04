@@ -25,6 +25,7 @@ use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthe
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AzureProviderIssuerClaimValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -36,6 +36,7 @@ use Tuleap\SVN\Repository\RuleName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private string $arpath;

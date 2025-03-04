@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use XML_ParseError;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanLinksValidityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

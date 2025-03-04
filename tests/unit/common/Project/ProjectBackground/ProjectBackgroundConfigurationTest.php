@@ -24,6 +24,7 @@ namespace Tuleap\Project\ProjectBackground;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectBackgroundConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReturnsTheProjectBackgroundIdentifierWhenOneIsSet(): void

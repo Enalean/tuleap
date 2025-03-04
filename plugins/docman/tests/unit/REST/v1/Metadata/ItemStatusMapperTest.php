@@ -27,6 +27,7 @@ use Docman_SettingsBo;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ItemStatusMapperTest extends TestCase
 {
     private Docman_SettingsBo&MockObject $docman_setting_bo;

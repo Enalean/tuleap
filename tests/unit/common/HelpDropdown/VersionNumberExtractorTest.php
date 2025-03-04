@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\HelpDropdown;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class VersionNumberExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderTuleapVersions')]

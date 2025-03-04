@@ -34,6 +34,7 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

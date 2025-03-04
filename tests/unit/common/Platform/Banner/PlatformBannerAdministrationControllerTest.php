@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AdminPageRenderer & \PHPUnit\Framework\MockObject\MockObject $renderer;

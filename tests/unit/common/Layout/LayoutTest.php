@@ -27,6 +27,7 @@ use UserManager;
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Response class.
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;

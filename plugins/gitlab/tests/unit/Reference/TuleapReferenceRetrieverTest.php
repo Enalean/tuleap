@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Reference;
 use EventManager;
 use ReferenceManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

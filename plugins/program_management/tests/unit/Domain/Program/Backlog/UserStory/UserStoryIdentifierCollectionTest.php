@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchUserStoryPlannedInIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_USER_STORY_ID  = 1000;

@@ -39,6 +39,7 @@ use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\User\RetrieveUserByUserName;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

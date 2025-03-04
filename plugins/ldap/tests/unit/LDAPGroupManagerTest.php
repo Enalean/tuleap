@@ -32,6 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private function getLdapResult(string $method, string|array $result): MockObject&LDAPResultIterator
@@ -156,6 +157,8 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     ): LDAP_GroupManager {
         $dao = $this->createStub(LDAP_ProjectGroupDao::class);
         $dao->method('searchByGroupId')->willReturn([]);
+        $dao->method('linkGroupLdap');
+        $dao->method('unlinkGroupLdap');
 
         return new class ($ldap, $ldap_user_manager, $project_manager, $notifications_manager, $dao) extends LDAP_GroupManager {
             public function __construct(

@@ -42,6 +42,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateFreetextContentDaoTest extends TestIntegrationTestCase
 {
     public function testUpdateFreetextContent(): void

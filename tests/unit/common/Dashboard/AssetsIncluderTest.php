@@ -30,6 +30,7 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AssetsIncluder */

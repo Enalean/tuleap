@@ -32,6 +32,7 @@ use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveAnArtifactLinkFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DuckTypedMoveArtifactLinksMappingBuilderTest extends TestCase
 {
     public function testItReturnsAnEmptyMappingWhenTheSourceTrackerDoesNotHaveAnArtifactLinkField(): void

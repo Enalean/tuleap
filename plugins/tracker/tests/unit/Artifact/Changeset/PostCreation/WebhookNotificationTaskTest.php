@@ -33,6 +33,7 @@ use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookNotificationTaskTest extends TestCase
 {
     public function testConfiguredWebhooksAreSent(): void

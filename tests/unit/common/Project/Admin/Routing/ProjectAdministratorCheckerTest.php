@@ -26,6 +26,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectAdministratorChecker $project_administrator_checker;

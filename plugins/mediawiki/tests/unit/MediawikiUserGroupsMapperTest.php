@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use User_ForgeUserGroupPermissionsDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediawikiUserGroupsMapperTest extends TestCase
 {
     private MediawikiDao&MockObject $dao;

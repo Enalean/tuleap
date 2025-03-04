@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RequirementRetrieverTest extends TestCase
 {
     public function testGetAllRequirementsForDefinitionReturnsOnlyReadableRequirementsLinkedToTheDefinition()

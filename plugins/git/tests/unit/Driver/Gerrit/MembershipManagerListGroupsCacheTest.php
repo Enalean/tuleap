@@ -45,6 +45,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MembershipManagerListGroupsCacheTest extends TestCase
 {
     use ForgeConfigSandbox;

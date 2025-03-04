@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\User;
 use LogicException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser $user_without_dashboard;

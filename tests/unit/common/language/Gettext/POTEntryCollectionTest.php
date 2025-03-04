@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Language\Gettext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class POTEntryCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoEntriesByDefault(): void

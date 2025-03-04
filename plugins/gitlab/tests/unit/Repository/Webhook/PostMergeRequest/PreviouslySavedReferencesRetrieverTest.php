@@ -31,6 +31,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

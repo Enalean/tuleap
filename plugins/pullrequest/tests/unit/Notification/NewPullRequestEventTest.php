@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Notification;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewPullRequestEventTest extends TestCase
 {
     public function testEventCanBeTransformedToWorkerEventPayload(): void

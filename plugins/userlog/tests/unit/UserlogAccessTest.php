@@ -28,6 +28,7 @@ use HTTPRequest;
 use PFUser;
 use Project;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserlogAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAUserlogAccessObjectFromRequest(): void

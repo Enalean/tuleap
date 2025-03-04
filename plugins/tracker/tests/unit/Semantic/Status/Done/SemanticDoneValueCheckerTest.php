@@ -25,6 +25,7 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_Semantic_Status;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_FormElement_Field_List_Bind_StaticValue $to_do_value;

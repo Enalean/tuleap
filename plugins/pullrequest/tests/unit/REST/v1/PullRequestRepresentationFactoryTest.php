@@ -46,6 +46,7 @@ use Tuleap\Test\Stubs\ProvideUserFromRowStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestRepresentationFactoryTest extends TestCase
 {
     private const FIRST_REVIEWER_USER_ID  = 101;

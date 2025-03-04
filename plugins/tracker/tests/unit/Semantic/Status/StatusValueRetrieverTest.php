@@ -39,6 +39,7 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertSame;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusValueRetriever $retriever;

@@ -25,6 +25,7 @@ namespace Tuleap\Git;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestEndpointsAvailableCheckerTest extends TestCase
 {
     public function testReturnTrueIfAPluginProvidesEndpoints(): void

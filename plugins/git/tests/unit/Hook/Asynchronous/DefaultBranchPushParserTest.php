@@ -34,6 +34,7 @@ use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefaultBranchPushParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const GIT_REPOSITORY_ID  = 419;

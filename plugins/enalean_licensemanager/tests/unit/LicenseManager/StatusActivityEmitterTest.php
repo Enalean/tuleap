@@ -25,6 +25,7 @@ namespace Tuleap\Enalean\LicenseManager;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
 use Tuleap\Webhook\Emitter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusActivityEmitterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testWebhookIsCalledWhenAvailable(): void

@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Report\Renderer\Table\Sort;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SortWithIntegrityCheckedTest extends TestCase
 {
     private array $sort_with_used_field;

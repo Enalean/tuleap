@@ -26,6 +26,7 @@ use Tuleap\FakeDataAccessResult;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UserMappingManager $user_mapping_manager;

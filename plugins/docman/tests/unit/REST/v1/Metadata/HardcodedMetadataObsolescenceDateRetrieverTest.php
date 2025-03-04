@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
 {
     private HardcodedMetdataObsolescenceDateChecker&MockObject $metadata_obsolescence_date_checker;

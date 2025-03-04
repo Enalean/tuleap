@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_PREVIOUS_ITERATION_ID    = 465;

@@ -25,6 +25,7 @@ namespace Tuleap\Git\Branch;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BranchNameTest extends TestCase
 {
     public function testAcceptsValidBranchName(): void

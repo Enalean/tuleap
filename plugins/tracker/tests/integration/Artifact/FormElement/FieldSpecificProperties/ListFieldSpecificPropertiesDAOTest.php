@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private ListFieldSpecificPropertiesDAO $dao;

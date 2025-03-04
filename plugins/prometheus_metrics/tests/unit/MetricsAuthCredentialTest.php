@@ -25,6 +25,7 @@ namespace Tuleap\PrometheusMetrics;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Server\Authentication\LoginCredentialSet;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetricsAuthCredentialTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCredentialDoesNotMatchWhenNoneWereSet(): void

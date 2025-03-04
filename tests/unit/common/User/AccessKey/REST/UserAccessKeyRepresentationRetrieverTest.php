@@ -28,6 +28,7 @@ use Tuleap\REST\AccessKeyHeaderExtractor;
 use Tuleap\User\AccessKey\AccessKeyMetadata;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

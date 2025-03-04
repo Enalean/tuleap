@@ -27,6 +27,7 @@ use Tuleap\User\Account\PasswordUserPostUpdateEvent;
 use Tuleap\User\Password\Reset\Revoker;
 use Tuleap\User\SessionManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PasswordChangerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPasswordChangeInvalidateSessionsAndExistingResetTokens(): void

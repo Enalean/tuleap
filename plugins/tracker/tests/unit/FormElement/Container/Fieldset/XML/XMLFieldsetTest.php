@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLFieldsetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasAttributes(): void

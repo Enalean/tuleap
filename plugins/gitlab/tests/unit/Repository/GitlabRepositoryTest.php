@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetGitlabServerUrl(): void

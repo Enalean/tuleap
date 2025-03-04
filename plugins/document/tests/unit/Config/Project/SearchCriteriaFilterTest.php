@@ -28,6 +28,7 @@ use Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchCriteriaFilterTest extends TestCase
 {
     private SearchCriteriaFilter $search_criteria_filter;

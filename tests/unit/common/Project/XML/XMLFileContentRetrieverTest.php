@@ -23,6 +23,7 @@ namespace Tuleap\Project\XML;
 
 use Tuleap\NeverThrow\Fault;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLFileContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidXML(): void

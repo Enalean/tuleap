@@ -27,6 +27,7 @@ use LDAP_GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LDAP_UserGroupManager $manager;

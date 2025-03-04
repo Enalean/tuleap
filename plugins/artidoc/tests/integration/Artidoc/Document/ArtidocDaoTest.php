@@ -36,6 +36,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocDaoTest extends TestIntegrationTestCase
 {
     private ArtidocWithContext $artidoc_101;

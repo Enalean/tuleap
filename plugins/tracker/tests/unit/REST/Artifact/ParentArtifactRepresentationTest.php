@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROJECT_ID               = 119;

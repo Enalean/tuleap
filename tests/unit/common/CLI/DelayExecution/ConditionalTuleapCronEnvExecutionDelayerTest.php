@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\DelayExecution;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConditionalTuleapCronEnvExecutionDelayerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected function tearDown(): void

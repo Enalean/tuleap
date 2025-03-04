@@ -27,6 +27,7 @@ use Tuleap\Project\REST\v1\FieldsPostRepresentation;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRegistrationSubmittedFieldsCollectionTest extends TestCase
 {
     public function testItBuildsACollectionFromProjectPOSTRepresentation(): void

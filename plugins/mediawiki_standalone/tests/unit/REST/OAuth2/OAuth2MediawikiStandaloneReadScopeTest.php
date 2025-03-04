@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\REST\OAuth2;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2MediawikiStandaloneReadScopeTest extends AuthenticationScopeTestCase
 {
     public function getAuthenticationScopeClassname(): string

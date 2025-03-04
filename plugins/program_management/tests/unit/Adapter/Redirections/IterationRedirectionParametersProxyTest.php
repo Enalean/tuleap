@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Redirections;
 use Tuleap\ProgramManagement\Domain\Redirections\IterationRedirectionParameters;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationRedirectionParametersProxyTest extends TestCase
 {
     public function testItBuildsAProxyAroundRequestForIterationAppAfterCreate(): void

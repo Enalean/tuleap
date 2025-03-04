@@ -24,6 +24,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\GlobalLanguageMock;

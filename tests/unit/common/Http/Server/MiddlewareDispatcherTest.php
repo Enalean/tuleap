@@ -28,6 +28,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRequestIsDispatched(): void

@@ -37,6 +37,7 @@ use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Test\Stubs\Project\Registration\Template\VerifyProjectCreationFromArchiveIsAllowedStub;
 use Tuleap\XML\ProjectXMLMerger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

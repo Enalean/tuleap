@@ -40,6 +40,7 @@ use Tuleap\User\PasswordVerifier;
 use Tuleap\User\UserNameNormalizer;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

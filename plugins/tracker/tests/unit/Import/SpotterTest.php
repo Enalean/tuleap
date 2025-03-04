@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Import;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SpotterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotHaveImportRunningByDefault()

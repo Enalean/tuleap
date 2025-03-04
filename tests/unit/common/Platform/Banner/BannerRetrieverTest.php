@@ -25,6 +25,7 @@ namespace Tuleap\Platform\Banner;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private BannerDao&MockObject $banner_dao;

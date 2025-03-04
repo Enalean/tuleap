@@ -25,6 +25,7 @@ namespace Tuleap\User\AccessKey\Scope;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
     public function getAuthenticationScopeClassname(): string

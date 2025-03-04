@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Event;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactUpdatedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromArtifact(): void

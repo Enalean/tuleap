@@ -27,6 +27,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SIGNING_PUBLIC_KEY = <<<EOT

@@ -25,6 +25,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \UserManager&MockObject $user_manager;

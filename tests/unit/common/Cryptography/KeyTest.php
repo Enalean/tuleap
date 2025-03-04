@@ -24,6 +24,7 @@ namespace Tuleap\Cryptography;
 
 use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRawKeyMaterialCanBeRetrieved(): void

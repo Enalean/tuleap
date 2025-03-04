@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AcceptableTenantForAuthenticationConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValueUsedByTheAuthenticationFlowIsTheIdentifierWhenUsersOutsideOfTheSpecificTenantCanAuthenticate(): void

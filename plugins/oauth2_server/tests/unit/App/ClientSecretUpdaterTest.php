@@ -23,6 +23,7 @@ namespace Tuleap\OAuth2Server\App;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ClientSecretUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

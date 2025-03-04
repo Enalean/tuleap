@@ -27,6 +27,7 @@ use Statistics_Formatter;
 use Statistics_Services_UsageFormatter;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Statistics_Services_UsageFormatter */

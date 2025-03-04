@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProgramIncrementInfo(): void

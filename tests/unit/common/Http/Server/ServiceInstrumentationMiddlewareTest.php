@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\ServiceAccessEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceInstrumentationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -26,6 +26,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessKeyDAOTest extends TestIntegrationTestCase
 {
     /**

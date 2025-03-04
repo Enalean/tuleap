@@ -23,6 +23,7 @@ namespace Tuleap\SVN\Logs;
 use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVNCore\Repository;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LastAccessUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItUpdatesTheLastCommitDate(): void

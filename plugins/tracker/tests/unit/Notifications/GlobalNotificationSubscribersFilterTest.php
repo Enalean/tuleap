@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Notifications;
 
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GlobalNotificationSubscribersFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testUnsubscribedUsersAreFiltered(): void

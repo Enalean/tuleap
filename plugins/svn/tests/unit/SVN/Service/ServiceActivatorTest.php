@@ -24,6 +24,7 @@ use Service;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private array $params;

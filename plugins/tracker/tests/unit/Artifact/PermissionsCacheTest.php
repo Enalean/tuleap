@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\User\TuleapFunctionsUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItUsesCacheWhenPossible(): void

@@ -25,6 +25,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

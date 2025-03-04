@@ -34,6 +34,7 @@ use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ServiceLinkDataBuilder&MockObject $link_builder;

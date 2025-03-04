@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsFollowingSiteAccessChangeUpdaterTest extends TestCase
 {
     public function testItUpdatesAllAnonymousAccessToRegisteredWhenPlatformWasAllowingAnonymous(): void

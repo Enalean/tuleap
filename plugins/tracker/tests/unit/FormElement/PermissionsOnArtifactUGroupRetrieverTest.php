@@ -29,6 +29,7 @@ use function PHPUnit\Framework\assertArrayNotHasKey;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertSame;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItAddsMissingUgroupsKeyIfFieldIsMandatoryAndContentIsNotProvided(): void

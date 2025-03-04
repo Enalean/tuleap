@@ -21,6 +21,7 @@
 use ColinODell\PsrTestLogger\TestLogger;
 use Psr\Log\LoggerInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MigrationLoggerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private LoggerInterface $migration_logger;

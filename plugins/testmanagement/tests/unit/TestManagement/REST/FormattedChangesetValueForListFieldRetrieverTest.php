@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FormattedChangesetValueForListFieldRetriever $formatted_changeset_value_for_list_field_retriever;

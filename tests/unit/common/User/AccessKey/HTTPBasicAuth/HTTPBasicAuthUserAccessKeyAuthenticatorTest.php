@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

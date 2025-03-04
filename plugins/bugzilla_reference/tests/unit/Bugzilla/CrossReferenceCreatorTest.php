@@ -25,6 +25,7 @@ use Tuleap\Reference\CrossReferencesDao;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

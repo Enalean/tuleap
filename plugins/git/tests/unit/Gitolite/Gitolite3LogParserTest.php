@@ -35,6 +35,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UserDao;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Gitolite3LogParserTest extends TestCase
 {
     private Gitolite3LogParser $parser;

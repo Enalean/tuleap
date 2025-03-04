@@ -33,6 +33,7 @@ use Tuleap\Baseline\Stub\FrozenClock;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use CurrentUserContext;

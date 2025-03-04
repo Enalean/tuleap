@@ -28,6 +28,7 @@ use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertNull;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAListOfTracker(): void

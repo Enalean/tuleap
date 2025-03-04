@@ -25,6 +25,7 @@ namespace Tuleap\FullTextSearchCommon\Index;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchIndexedItemMetricCollectorTest extends TestCase
 {
     public function testCollectMetricsWhenSearchingItems(): void

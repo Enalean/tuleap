@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
 {
     private const PROJECT_ID = 101;

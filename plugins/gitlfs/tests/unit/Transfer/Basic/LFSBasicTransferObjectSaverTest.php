@@ -31,6 +31,7 @@ use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FilesystemOperator&\PHPUnit\Framework\MockObject\MockObject $filesystem;

@@ -25,6 +25,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CSPViolationReportToControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

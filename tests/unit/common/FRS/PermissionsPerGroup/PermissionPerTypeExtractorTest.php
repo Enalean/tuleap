@@ -30,6 +30,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectUGroup $ugroup_project_member;

@@ -24,6 +24,7 @@ use Tuleap\REST\ArtifactFileBase;
 /**
  * @group ArtifactFilesTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private static $DEFAULT_QUOTA = 67108864;

@@ -93,6 +93,7 @@ use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use LegacyTabTranslationsSupport;

@@ -28,6 +28,7 @@ use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Project;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinkToGitFileBlobFinderTest extends TestCase
 {
     private readonly MockObject&Commit $current_commit;

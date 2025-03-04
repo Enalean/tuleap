@@ -28,6 +28,7 @@ use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchColumnFilterTest extends TestCase
 {
     private Docman_MetadataFactory&MockObject $metadata_factory;

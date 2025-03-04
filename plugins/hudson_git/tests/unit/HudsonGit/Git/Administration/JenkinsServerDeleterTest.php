@@ -25,6 +25,7 @@ namespace Tuleap\HudsonGit\Git\Administration;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private JenkinsServerDeleter $deleter;

@@ -36,6 +36,7 @@ use Tuleap\Tracker\Test\Stub\ConfigurationArtifactsDeletionStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUserDeletionForLastDayStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsDeletionInTrackerAdminControllerTest extends TestCase
 {
     private const TRACKER_ID = 10;

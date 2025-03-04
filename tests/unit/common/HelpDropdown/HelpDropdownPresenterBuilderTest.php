@@ -30,6 +30,7 @@ use Tuleap\REST\ExplorerEndpointAvailableEvent;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

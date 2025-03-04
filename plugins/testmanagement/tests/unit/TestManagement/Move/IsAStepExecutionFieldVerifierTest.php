@@ -26,6 +26,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\TestManagement\Test\Builders\StepExecutionFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IsAStepExecutionFieldVerifierTest extends TestCase
 {
     public function testItReturnsTrueWhenFieldIsAStepExecutionField(): void

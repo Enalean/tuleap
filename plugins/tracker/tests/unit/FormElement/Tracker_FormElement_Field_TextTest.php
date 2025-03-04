@@ -26,6 +26,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

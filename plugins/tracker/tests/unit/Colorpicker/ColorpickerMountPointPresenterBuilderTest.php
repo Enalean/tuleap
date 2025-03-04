@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Colorpicker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ColorpickerMountPointPresenterBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -30,6 +30,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AuthorizationCodeResponseFactory */

@@ -37,6 +37,7 @@ use Tuleap\XML\ParseExceptionWithErrors;
 use XML_ParseException;
 use XML_RNGValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardwallConfigXmlExportTest extends TestCase
 {
     private Project $project;

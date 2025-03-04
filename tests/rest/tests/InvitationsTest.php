@@ -25,6 +25,7 @@ namespace rest\tests;
 use Test\Rest\TuleapConfig;
 use Tuleap\REST\ForgeAccessSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InvitationsTest extends \RestBase
 {
     use ForgeAccessSandbox;

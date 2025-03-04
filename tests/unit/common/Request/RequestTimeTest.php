@@ -24,6 +24,7 @@ namespace Tuleap\Request;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequestTimeTest extends TestCase
 {
     private const REQUEST_TIMESTAMP = 1234567890;

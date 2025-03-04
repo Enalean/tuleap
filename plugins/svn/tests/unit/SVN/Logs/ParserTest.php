@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\Logs;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsALogCache(): void

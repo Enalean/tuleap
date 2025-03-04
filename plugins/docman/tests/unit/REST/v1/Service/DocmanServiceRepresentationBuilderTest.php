@@ -30,6 +30,7 @@ use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanServiceRepresentationBuilderTest extends TestCase
 {
     private ItemRepresentationBuilder&MockObject $item_representation_builder;

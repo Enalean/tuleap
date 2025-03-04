@@ -29,6 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigDumpCommandTest extends TestCase
 {
     use ForgeConfigSandbox;

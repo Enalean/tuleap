@@ -23,6 +23,7 @@ namespace Tuleap\User\History;
 use Tuleap\Dashboard\Project\DeleteVisitByUserId;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItClearsUserHistory(): void

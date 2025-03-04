@@ -29,6 +29,7 @@ use Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

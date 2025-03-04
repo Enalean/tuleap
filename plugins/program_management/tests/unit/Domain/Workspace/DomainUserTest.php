@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DomainUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromId(): void

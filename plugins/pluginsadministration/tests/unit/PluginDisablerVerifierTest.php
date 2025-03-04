@@ -20,6 +20,7 @@
 
 namespace Tuleap\PluginsAdministration;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('providerOptionUntouchablePlugins')]

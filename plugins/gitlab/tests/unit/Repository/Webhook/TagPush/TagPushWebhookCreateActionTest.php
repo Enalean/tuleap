@@ -40,6 +40,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Reference\CrossReference;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

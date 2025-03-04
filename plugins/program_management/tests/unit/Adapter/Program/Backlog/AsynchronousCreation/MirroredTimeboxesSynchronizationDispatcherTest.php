@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\CommandTeamSynchronizationStub;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID = 1;

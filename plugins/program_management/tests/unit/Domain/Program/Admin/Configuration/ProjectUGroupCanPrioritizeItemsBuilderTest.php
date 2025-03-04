@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectUGroupCanPrioritizeItemsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramForAdministrationIdentifier $program;

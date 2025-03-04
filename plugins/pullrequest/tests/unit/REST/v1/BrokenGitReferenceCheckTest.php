@@ -26,6 +26,7 @@ use Tuleap\PullRequest\PullRequest\REST\v1\BrokenGitReferenceCheck;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BrokenGitReferenceCheckTest extends TestCase
 {
     private const TITLE       = 'A title';

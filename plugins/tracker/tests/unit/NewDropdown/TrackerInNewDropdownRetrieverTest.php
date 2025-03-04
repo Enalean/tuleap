@@ -29,6 +29,7 @@ use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\PromotedTrackersRetriever;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerInNewDropdownRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PromotedTrackerDao&MockObject $dao;

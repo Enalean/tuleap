@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramFlagsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProgramFlagsList(): void

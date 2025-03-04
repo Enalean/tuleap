@@ -24,6 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectUGroup;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

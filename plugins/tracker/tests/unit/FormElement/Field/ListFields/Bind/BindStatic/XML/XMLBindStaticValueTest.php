@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLBindStaticValueTest extends TestCase
 {
     public function testItExportASimpleValue(): void

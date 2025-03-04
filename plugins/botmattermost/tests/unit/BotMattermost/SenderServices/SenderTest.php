@@ -24,6 +24,7 @@ use Psr\Log\NullLogger;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SenderTest extends TestCase
 {
     /**

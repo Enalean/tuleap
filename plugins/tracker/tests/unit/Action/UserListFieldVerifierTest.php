@@ -26,6 +26,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseWhenFieldIsNotAListField(): void

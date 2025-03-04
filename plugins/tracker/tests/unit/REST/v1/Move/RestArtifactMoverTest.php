@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveAnArtifactLinkFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMoveStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RestArtifactMoverTest extends TestCase
 {
     use ForgeConfigSandbox;

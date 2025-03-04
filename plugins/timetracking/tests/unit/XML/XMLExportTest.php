@@ -37,6 +37,7 @@ use UserXMLExporter;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\HistoryEntryBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\User\History\HistoryEntryBadge;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserHistoryEntryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const VISIT_TIMESTAMP = 1654304679;

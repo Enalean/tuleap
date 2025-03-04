@@ -20,6 +20,7 @@
 
 namespace Tuleap\REST;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class QueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var QueryParameterParser */

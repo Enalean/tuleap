@@ -38,6 +38,7 @@ use Tuleap\Docman\REST\v1\Metadata\ProjectConfiguredMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\PUTCustomMetadataRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CustomMetadataRepresentationRetrieverTest extends TestCase
 {
     private MetadataListOfValuesElementListBuilder&MockObject $list_values_builder;

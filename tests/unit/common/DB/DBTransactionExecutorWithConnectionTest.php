@@ -24,6 +24,7 @@ namespace Tuleap\DB;
 
 use ParagonIE\EasyDB\EasyDB;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DBTransactionExecutorWithConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTransactionIsGivenToTheUnderlyingDB(): void

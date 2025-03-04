@@ -25,6 +25,7 @@ namespace Tuleap\Queue;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NbBackendWorkersConfigValidatorTest extends TestCase
 {
     public function testLesserThanZero(): void

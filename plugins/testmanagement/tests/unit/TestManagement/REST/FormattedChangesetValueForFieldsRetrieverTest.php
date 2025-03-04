@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FileUploadDataProvider&MockObject $file_upload_data_provider;

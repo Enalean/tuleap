@@ -24,6 +24,7 @@ namespace Tuleap\Cardwall\XML;
 
 use SimpleXMLElement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLCardwallColumnTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsColumnWithoutIdAndColours(): void

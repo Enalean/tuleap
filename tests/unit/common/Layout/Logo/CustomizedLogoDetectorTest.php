@@ -25,6 +25,7 @@ namespace Tuleap\Layout\Logo;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

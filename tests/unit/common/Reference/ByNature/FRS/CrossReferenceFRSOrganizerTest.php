@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceFRSOrganizerTest extends TestCase
 {
     private FRSPackageFactory&MockObject $package_factory;

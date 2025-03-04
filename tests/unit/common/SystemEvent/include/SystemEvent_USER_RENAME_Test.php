@@ -22,6 +22,7 @@
 use Tuleap\ForgeConfigSandbox;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

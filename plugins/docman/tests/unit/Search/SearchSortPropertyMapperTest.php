@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Search;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchSortPropertyMapperTest extends TestCase
 {
     private SearchSortPropertyMapper $sort_property_mapper;

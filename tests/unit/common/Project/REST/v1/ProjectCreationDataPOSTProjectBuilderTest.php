@@ -39,6 +39,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\Registration\Template\VerifyProjectCreationFromArchiveIsAllowedStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 {
     private ProjectCreationDataPOSTProjectBuilder $builder;

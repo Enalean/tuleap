@@ -26,6 +26,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testUserTokenIsCreated(): void

@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Metadata;
 use Docman_MetadataListOfValuesElement;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataValueObjectFactoryTest extends TestCase
 {
     private MetadataValueObjectFactory $metadata_object_value_factory;

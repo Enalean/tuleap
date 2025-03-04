@@ -32,6 +32,7 @@ use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Cardwall_OnTop_Config&MockObject $config;

@@ -28,6 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItInitsCollectionsForIssueTypeInProject(): void

@@ -32,6 +32,7 @@ use Tuleap\Tracker\XML\XMLTracker;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsAFieldset(): void

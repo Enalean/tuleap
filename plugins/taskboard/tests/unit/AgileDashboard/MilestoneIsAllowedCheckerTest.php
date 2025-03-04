@@ -29,6 +29,7 @@ use PluginManager;
 use taskboardPlugin;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&PluginManager $plugin_manager;

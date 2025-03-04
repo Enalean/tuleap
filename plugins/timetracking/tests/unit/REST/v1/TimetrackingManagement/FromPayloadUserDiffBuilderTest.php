@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Timetracking\Tests\Stub\CheckThatUserIsActiveStub;
 use Tuleap\Timetracking\Tests\Stub\GetQueryUsersStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FromPayloadUserDiffBuilderTest extends TestCase
 {
     private const WIDGET_ID = 92;

@@ -31,6 +31,7 @@ use Tuleap\PullRequest\Exception\PullRequestTargetException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestCreatorCheckerTest extends TestCase
 {
     private PullRequestCreatorChecker $creator_checker;

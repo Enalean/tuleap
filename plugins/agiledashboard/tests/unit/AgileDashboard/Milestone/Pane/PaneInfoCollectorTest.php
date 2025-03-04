@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Milestone\PaneInfo;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PaneInfoCollectorTest extends TestCase
 {
     private PaneInfoCollector $collector;

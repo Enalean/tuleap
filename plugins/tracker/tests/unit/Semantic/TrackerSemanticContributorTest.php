@@ -28,6 +28,7 @@ use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Contributor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

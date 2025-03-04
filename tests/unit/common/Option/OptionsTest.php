@@ -24,6 +24,7 @@ namespace Tuleap\Option;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OptionsTest extends TestCase
 {
     public function testCollectValues(): void

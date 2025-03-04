@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Request;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotFoundExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNotFoundExceptionIsAssociatedWithA404Code(): void

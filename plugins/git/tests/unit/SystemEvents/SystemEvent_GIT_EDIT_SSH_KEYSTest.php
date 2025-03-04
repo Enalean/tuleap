@@ -39,6 +39,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 use UserNotExistException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase
 {
     use GlobalLanguageMock;

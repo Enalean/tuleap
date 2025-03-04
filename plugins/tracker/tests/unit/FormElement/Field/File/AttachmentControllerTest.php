@@ -47,6 +47,7 @@ use Tuleap\Upload\PathAllocator;
 use URLVerification;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

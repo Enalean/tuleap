@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\LFSObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSObjectIDTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanConstructValidOID(): void

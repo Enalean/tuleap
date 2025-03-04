@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticProgressFromXMLBuilder $builder;

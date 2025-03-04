@@ -26,6 +26,7 @@ use Psr\Log\LogLevel;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\NeverThrow\Tests\FaultForTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ERROR_MESSAGE     = 'User is not allowed to do that';

@@ -30,6 +30,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CrossReferenceNewsOrganizer $organizer;

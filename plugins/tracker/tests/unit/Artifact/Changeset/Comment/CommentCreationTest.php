@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const CHANGESET_ID         = 4950;

@@ -25,6 +25,7 @@ namespace Tuleap\Mail\Transport\SmtpOptions;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SMTPAuthTypeValidatorTest extends TestCase
 {
     private SMTPAuthTypeValidator $validator;

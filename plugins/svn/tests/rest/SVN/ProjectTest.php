@@ -27,6 +27,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group SVNTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectTest extends TestBase
 {
     public function testGETRepositories(): void

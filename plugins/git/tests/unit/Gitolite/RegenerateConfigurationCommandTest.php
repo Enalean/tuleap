@@ -31,6 +31,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RegenerateConfigurationCommandTest extends TestCase
 {
     private ProjectManager&MockObject $project_manager;

@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\ArtifactDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneStatusCounterTest extends TestCase
 {
     private AgileDashboard_Milestone_MilestoneStatusCounter $counter;

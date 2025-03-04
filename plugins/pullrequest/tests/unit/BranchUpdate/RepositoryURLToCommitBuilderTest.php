@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\BranchUpdate;
 
 use Git_GitRepositoryUrlManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryURLToCommitBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsURLToCommitForASpecificGitRepository(): void

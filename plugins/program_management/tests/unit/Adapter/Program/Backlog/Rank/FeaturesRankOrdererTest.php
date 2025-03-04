@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRanke
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FeaturesRankOrderer $orderer;

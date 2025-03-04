@@ -20,6 +20,7 @@
 
 namespace Tuleap\ProjectOwnership\REST;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectOwnershipTest extends \RestBase
 {
     public function testOptions()

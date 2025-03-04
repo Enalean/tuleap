@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessKeyRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

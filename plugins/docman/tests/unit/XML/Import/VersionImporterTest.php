@@ -36,6 +36,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 use Tuleap\xml\InvalidDateException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VersionImporterTest extends TestCase
 {
     private Docman_VersionFactory&MockObject $version_factory;

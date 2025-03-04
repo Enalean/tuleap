@@ -27,6 +27,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 use function Psl\Vec\shuffle;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChartCachedDaysComparatorTest extends TestCase
 {
     public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreTheSameThanDatePeriodDays(): void

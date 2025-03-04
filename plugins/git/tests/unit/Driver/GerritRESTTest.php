@@ -41,6 +41,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GerritRESTTest extends TestCase
 {
     private TestLogger $logger;

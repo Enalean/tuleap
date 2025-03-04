@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionSaver;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends TestCase
 {
     private PFUser $john;

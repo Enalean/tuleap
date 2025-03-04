@@ -31,6 +31,7 @@ use Tuleap\OAuth2Server\App\ClientSecretUpdater;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -24,6 +24,7 @@ namespace Tuleap\valid;
 
 use ValidFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ValidFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetInstance(): void

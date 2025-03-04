@@ -28,6 +28,7 @@ use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemOperator;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ActionAuthorizationRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDeletionOfActionsOldWorkingFiles(): void

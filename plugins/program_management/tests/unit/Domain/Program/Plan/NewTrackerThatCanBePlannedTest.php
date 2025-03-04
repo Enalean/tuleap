@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewPlannableTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewTrackerThatCanBePlannedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 17;

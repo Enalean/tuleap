@@ -41,6 +41,7 @@ use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

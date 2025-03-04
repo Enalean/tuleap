@@ -49,6 +49,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 use ZipArchive;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreatorTest extends TestCase
 {
     use ForgeConfigSandbox;

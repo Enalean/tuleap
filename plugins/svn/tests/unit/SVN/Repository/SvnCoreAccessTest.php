@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Project $project;

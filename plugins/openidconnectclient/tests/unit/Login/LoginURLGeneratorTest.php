@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Login;
 
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LoginURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const BASE_URL    = '/base';

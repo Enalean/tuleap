@@ -35,6 +35,7 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IndexPdfTemplateControllerTest extends TestCase
 {
     public function testExceptionWhenUserIsNotAllowed(): void

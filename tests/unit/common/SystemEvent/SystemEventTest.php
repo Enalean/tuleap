@@ -20,6 +20,7 @@
 
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SystemEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRetrievesAParameterByItsIndex(): void

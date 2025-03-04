@@ -30,6 +30,7 @@ use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogItemPresenterCollectionTest extends TestCase
 {
     public function testItReturnsFalseWhenCollectionIsEmpty(): void

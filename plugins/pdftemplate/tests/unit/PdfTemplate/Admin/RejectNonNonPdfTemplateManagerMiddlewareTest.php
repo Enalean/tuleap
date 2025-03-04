@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RejectNonNonPdfTemplateManagerMiddlewareTest extends TestCase
 {
     public function testProcessAttachesSuperUserToRequest(): void

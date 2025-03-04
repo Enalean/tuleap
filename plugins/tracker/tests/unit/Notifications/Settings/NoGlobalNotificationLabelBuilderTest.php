@@ -32,6 +32,7 @@ use Tuleap\Tracker\User\NotificationOnAllUpdatesSaver;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionSaver;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NoGlobalNotificationLabelBuilderTest extends TestCase
 {
     private PFUser $current_user;

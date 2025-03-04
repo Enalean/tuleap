@@ -24,6 +24,7 @@ namespace Tuleap\User\OAuth2\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CoreOAuth2ScopeBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCoreOAuth2ScopeBuilderFactoryCanBeBuilt(): void

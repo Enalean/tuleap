@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\GitReference;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BypassBrokenGitReferenceCheckTest extends TestCase
 {
     public function testItReturnsAnOptionObjectWithValueWhenCheckIsRequired(): void

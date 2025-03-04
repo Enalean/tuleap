@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID   = 12;

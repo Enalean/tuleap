@@ -36,6 +36,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 {
     private const TEST_PROJECT_ID = 101;

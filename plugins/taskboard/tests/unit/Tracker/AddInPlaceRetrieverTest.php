@@ -27,6 +27,7 @@ use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SEMANTIC_TITLE_FIELD_ID = 1533;

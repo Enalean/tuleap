@@ -29,6 +29,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FRSReleaseTest extends TestCase
 {
     public function testIsActive(): void

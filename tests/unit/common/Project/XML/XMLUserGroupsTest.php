@@ -32,6 +32,7 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\XML\XMLUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLUserGroupsTest extends TestCase
 {
     use TemporaryTestDirectory;

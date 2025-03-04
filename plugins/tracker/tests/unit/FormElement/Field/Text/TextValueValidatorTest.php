@@ -32,6 +32,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TextValueValidatorTest extends TestCase
 {
     public function testItReturnsAnErrorIfContentIsNotString(): void

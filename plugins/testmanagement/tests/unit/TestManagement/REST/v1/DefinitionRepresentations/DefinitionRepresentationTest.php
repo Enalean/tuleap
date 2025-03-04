@@ -28,6 +28,7 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsADescriptionWithCrossReferences(): void

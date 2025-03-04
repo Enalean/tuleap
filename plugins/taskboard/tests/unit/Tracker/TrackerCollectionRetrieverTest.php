@@ -31,6 +31,7 @@ use Tracker;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TrackerCollectionRetriever $retriever;

@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Redirections;
 use Tuleap\ProgramManagement\Domain\Redirections\ProgramRedirectionParameters;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramRedirectionParametersProxyTest extends TestCase
 {
     public function testItBuildsAProxyAroundProgramApp(): void

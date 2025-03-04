@@ -27,6 +27,7 @@ use Tracker_Artifact_Presenter_FollowUpCommentsPresenter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FollowUpCommentsPresenterTest extends TestCase
 {
     public function testGetOnlyFollowUpWithContent(): void

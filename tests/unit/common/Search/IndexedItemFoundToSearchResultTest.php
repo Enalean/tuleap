@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\SearchResultEntryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IndexedItemFoundToSearchResultTest extends TestCase
 {
     public function testCanProvideASearchResultForAnIdentifiedIndexedItem(): void

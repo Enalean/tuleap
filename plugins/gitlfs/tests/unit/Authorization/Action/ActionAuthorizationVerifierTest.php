@@ -28,6 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PHPUnit\Framework\MockObject\MockObject&ActionAuthorizationDAO $dao;

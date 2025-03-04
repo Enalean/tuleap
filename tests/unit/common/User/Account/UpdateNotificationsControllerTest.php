@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UpdateNotificationsPreferences $controller;

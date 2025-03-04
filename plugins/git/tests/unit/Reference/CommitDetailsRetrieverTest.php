@@ -28,6 +28,7 @@ use Tuleap\Git\GitPHP\Tag;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitDetailsRetrieverTest extends TestCase
 {
     public function testItReturnsCommitDetailsFromDb(): void

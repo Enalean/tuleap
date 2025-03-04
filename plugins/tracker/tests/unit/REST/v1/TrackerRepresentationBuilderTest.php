@@ -38,6 +38,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRepresentationBuilderTest extends TestCase
 {
     private const PROJECT_ID        = 205;

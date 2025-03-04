@@ -29,6 +29,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsTest extends CrossTrackerFieldTestCase
 {
     public function testItGetOnlyArtifactsUserCanSee(): void

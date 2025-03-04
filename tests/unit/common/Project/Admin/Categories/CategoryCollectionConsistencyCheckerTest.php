@@ -26,6 +26,7 @@ use TroveCat;
 use TroveCatFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CategoryCollectionConsistencyCheckerTest extends TestCase
 {
     private CategoryCollectionConsistencyChecker $checker;

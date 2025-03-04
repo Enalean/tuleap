@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\OpenIDConnect\JWK;
 
 use Tuleap\OAuth2ServerCore\OpenIDConnect\SigningPublicKey;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JSONWebKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PUBLIC_KEY = <<<EOT

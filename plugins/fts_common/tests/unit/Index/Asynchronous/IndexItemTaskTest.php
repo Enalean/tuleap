@@ -28,6 +28,7 @@ use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IndexItemTaskTest extends TestCase
 {
     public function testInstantiatesTaskToQueueFromItemToIndex(): void

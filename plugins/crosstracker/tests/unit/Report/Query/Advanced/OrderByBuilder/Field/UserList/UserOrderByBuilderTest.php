@@ -28,6 +28,7 @@ use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserOrderByBuilderTest extends TestCase
 {
     public function testNoPreferences(): void

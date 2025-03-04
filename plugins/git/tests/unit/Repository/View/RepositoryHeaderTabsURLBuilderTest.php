@@ -23,6 +23,7 @@ namespace Tuleap\Git\Repository\View;
 use Git_GitRepositoryUrlManager;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryHeaderTabsURLBuilderTest extends TestCase
 {
     private readonly RepositoryHeaderTabsURLBuilder $builder;

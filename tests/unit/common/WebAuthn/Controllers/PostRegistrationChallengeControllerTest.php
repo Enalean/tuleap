@@ -42,6 +42,7 @@ use Webauthn\PublicKeyCredentialSourceRepository;
 use function Psl\Encoding\Base64\encode;
 use function Psl\Json\decode as psl_json_decode;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostRegistrationChallengeControllerTest extends TestCase
 {
     public function testItReturns401WhenNoAuth(): void

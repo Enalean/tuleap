@@ -30,6 +30,7 @@ use org\bovigo\vfs\vfsStream;
 use System_Alias;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

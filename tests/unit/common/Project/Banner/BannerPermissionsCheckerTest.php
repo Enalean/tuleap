@@ -23,6 +23,7 @@ namespace Tuleap\Project\Banner;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BannerPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private BannerPermissionsChecker $banner_permissions_checker;

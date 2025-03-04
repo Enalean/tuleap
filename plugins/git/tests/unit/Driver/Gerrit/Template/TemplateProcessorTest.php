@@ -28,6 +28,7 @@ use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TemplateProcessorTest extends TestCase
 {
     private const PROJECT_NAME = 'some_project';

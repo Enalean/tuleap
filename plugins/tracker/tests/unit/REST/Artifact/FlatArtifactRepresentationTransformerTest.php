@@ -36,6 +36,7 @@ use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\User\REST\UserRepresentation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FlatArtifactRepresentationTransformerTest extends TestCase
 {
     public function testTransformRepresentationWithMultipleFieldValues(): void

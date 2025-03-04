@@ -33,6 +33,7 @@ use Docman_ApprovalTableNotificationCycle;
 use MailNotificationBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ApprovalTableNotificationCycleTest extends TestCase
 {
     /**

@@ -38,6 +38,7 @@ use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestRepresentationTest extends TestCase
 {
     private const PULL_REQUEST_ID         = 358;

@@ -26,6 +26,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InsertItemsIntoIndexMetricCollectorTest extends TestCase
 {
     public function testCollectMetricWhenInsertingItemsIntoTheIndex(): void

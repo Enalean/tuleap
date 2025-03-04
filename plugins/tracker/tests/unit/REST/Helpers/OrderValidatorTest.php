@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Helpers;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OrderValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private OrderValidator $order_validator;

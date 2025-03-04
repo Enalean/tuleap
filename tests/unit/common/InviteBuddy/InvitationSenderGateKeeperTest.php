@@ -25,6 +25,7 @@ namespace Tuleap\InviteBuddy;
 use PFUser;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private InvitationLimitChecker&\PHPUnit\Framework\MockObject\MockObject $limit_checker;

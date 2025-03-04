@@ -30,6 +30,7 @@ use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
 {
     public function testExceptionIfServerIsNotFound(): void

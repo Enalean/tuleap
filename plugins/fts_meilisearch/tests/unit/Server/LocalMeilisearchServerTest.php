@@ -25,6 +25,7 @@ namespace Tuleap\FullTextSearchMeilisearch\Server;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LocalMeilisearchServerTest extends TestCase
 {
     public function testGivesPathToTheMasterKeyEnvFileWhenLocalServerIsInstalled(): void

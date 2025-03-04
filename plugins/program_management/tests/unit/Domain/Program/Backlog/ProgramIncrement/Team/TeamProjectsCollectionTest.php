@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SearchTeamsOfProgramStub $search_teams;

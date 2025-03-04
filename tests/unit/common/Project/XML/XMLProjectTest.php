@@ -26,6 +26,7 @@ use Tuleap\Dashboard\XML\XMLDashboard;
 use Tuleap\Project\Service\XML\XMLService;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLProjectTest extends TestCase
 {
     public function testExportBasicInfo(): void

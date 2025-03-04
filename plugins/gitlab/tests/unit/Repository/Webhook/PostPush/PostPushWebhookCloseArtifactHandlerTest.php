@@ -52,6 +52,7 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 {
     private const POST_PUSH_LOG_PREFIX  = '|  |  |_ ';

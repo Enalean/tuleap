@@ -28,6 +28,7 @@
  * @see https://tuleap.net/plugins/tracker/?aid=6430
  * @group Regressions
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Regressions_PutSoloCardTest extends RestBase
 {
     public function testItEditSoloCardLabel()

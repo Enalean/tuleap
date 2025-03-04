@@ -34,6 +34,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeRefreshCallbackURLTokenControllerTest extends TestCase
 {
     public function testReturnsA200ResponseWhenAValidTokenIdentifierIsProvided(): void

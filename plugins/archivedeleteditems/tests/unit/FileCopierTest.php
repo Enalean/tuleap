@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 
 require_once __DIR__ . '/bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FileCopierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

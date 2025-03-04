@@ -29,6 +29,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -24,6 +24,7 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SHA256ComputeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSHA256IsComputed(): void

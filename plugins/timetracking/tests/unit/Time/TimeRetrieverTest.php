@@ -24,6 +24,7 @@ use Tracker;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

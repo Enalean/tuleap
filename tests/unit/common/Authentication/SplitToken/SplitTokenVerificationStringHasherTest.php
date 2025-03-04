@@ -22,6 +22,7 @@ namespace Tuleap\Authentication\SplitToken;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SplitTokenVerificationStringHasherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testVerificationStringCanBeHashed(): void

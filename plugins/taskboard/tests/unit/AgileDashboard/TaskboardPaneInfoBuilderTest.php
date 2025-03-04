@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\AgileDashboard;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TaskboardPaneInfoBuilder $builder;

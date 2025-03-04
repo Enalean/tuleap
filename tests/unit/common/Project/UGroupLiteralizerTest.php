@@ -28,6 +28,7 @@ use ProjectUGroup;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser&MockObject $user;

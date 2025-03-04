@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UnsupportedDateValueExceptionTestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testConstructor()

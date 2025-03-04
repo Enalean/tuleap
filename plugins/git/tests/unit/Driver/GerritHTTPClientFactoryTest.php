@@ -27,6 +27,7 @@ use Http\Mock\Client;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GerritHTTPClientFactoryTest extends TestCase
 {
     public function testHTTPClientSetBasicAuthHeaderToRequest(): void

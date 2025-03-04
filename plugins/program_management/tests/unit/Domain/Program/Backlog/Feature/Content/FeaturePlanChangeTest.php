@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content;
 
 use Tuleap\ProgramManagement\Tests\Stub\SearchArtifactsLinksStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeaturePlanChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetUserStoriesLinkedToFeature(): void

@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_Semantic_ContributorFactory;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_Semantic_ContributorFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

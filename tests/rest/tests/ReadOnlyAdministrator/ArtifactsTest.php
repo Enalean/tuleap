@@ -28,6 +28,7 @@ use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
 /**
  * @group ArtifactsTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactsTest extends ArtifactsTestExecutionHelper
 {
     public function testOptionsArtifactsWithUser(): void

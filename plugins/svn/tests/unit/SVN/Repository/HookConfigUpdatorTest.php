@@ -23,6 +23,7 @@ namespace Tuleap\SVN\Repository;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

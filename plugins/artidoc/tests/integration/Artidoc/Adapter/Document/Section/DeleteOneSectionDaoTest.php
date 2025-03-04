@@ -34,6 +34,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
 {
     private ArtidocWithContext $artidoc;

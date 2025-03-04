@@ -41,6 +41,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveAnArtifactLinkFieldStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DirectArtifactLinkCleanerTest extends TestCase
 {
     private DirectArtifactLinkCleaner $cleaner;

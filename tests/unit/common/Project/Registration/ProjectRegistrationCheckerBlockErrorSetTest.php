@@ -30,6 +30,7 @@ use Tuleap\Project\ProjectCreationData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
 {
     public function testItCollectsErrorAndStopsAtFirstCollectorThatHaveErrors(): void

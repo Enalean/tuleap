@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Widget;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossTrackerWidgetDaoTest extends TestIntegrationTestCase
 {
     private CrossTrackerWidgetDao $widget_dao;

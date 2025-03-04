@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\BuildVersion;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VersionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsEnterpriseVersionPresenter(): void

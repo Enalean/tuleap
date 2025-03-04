@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Widget\Event\UserWithStarBadgeCollector;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserWithStarBadgeFinderTest extends TestCase
 {
     public function testItDoesNothingIfProjectHasNoOwnership(): void

@@ -31,6 +31,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimeframeWithDuration $timeframe;

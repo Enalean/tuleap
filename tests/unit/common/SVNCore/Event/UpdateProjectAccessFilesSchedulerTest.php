@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SystemEvent;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

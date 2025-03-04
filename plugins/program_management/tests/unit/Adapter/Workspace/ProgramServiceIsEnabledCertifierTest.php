@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramServiceIsEnabledCertifierTest extends TestCase
 {
     private const PROJECT_ID = 114;

@@ -34,6 +34,7 @@ use Statistics_DiskUsageDao;
 use Statistics_DiskUsagePurger;
 use Tuleap\DB\DBFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DiskUsagePurgerIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Statistics_DiskUsageDao */

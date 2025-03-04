@@ -25,6 +25,7 @@ namespace Tuleap\Project\UGroups\Binding;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecursiveBoundUGroupsRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RecursiveBoundUGroupsRefresher $recursive_refresher;

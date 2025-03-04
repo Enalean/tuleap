@@ -30,6 +30,7 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCatchWhenProvidedXMLIsInvalid(): void

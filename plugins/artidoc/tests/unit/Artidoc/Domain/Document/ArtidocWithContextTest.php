@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Domain\Document;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocWithContextTest extends TestCase
 {
     public function testItCanAddContext(): void

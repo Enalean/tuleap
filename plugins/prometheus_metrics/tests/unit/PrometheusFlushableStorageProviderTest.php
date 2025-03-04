@@ -24,6 +24,7 @@ use Enalean\Prometheus\Storage\NullStore;
 use ForgeConfig;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrometheusFlushableStorageProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

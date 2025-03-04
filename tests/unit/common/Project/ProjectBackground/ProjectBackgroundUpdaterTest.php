@@ -25,6 +25,7 @@ namespace Tuleap\Project\ProjectBackground;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectBackgroundDao&MockObject $project_background_dao;

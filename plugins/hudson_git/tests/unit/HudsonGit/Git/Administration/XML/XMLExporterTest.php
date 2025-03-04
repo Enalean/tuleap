@@ -33,6 +33,7 @@ use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\UUIDTestContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private XMLExporter $exporter;

@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\IterationUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private IterationUpdateEventHandler $iteration_update_event_handler;

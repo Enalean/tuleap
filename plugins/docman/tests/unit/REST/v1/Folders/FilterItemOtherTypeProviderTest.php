@@ -26,6 +26,7 @@ use Docman_FilterItemType;
 use Luracast\Restler\RestException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilterItemOtherTypeProviderTest extends TestCase
 {
     public function testSettingAValueSetTheTypeToOther(): void

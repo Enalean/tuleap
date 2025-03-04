@@ -24,6 +24,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project_HierarchyManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \ProjectHierarchyDao&MockObject $dao;

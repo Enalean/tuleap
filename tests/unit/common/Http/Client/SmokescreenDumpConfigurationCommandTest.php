@@ -26,6 +26,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SmokescreenDumpConfigurationCommandTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -37,6 +37,7 @@ use Tuleap\TrackerFunctions\Stubs\Administration\UpdateFunctionActivationStub;
 use Tuleap\TrackerFunctions\Stubs\Logs\DeleteLogsPerTrackerStub;
 use Tuleap\TrackerFunctions\WASM\FindWASMFunctionPath;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RemoveFunctionControllerTest extends TestCase
 {
     use ForgeConfigSandbox;

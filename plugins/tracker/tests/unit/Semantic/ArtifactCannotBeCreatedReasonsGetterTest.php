@@ -32,6 +32,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
 {
     private VerifySubmissionPermissionStub $can_submit_artifact_verifier;

@@ -38,6 +38,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRoutingTest extends TestCase
 {
     public static function smartHTTPRoutesProvider(): array

@@ -39,6 +39,7 @@ use Tuleap\Tracker\Test\Stub\BindValueIdCollectionStub;
 use Workflow;
 use Workflow_Transition_ConditionFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FirstPossibleValueInListRetrieverTest extends TestCase
 {
     private const FIRST_VALUE_ID                  = 101;

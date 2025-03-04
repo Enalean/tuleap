@@ -25,6 +25,7 @@ namespace Tuleap\Date;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

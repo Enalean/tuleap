@@ -22,6 +22,7 @@
 require_once __DIR__ . '/../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AgileDashboard_HierarchyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AgileDashboard_HierarchyChecker $hierarchy_checker;

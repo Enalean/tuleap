@@ -29,6 +29,7 @@ use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryByProjectCollection;
 use Tuleap\SVN\Repository\RepositoryManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

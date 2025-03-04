@@ -40,6 +40,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

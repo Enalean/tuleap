@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Closure;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\UserName;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_LOGIN = 'jambrosius';

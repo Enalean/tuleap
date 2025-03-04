@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 use Tracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CachingTrackerPrivateCommentInformationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRetrievesInformationFromCache(): void

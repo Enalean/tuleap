@@ -48,6 +48,7 @@ use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\RetrieveUserById;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ManageProjectInvitationsControllerTest extends TestCase
 {
     private const PROJECT_ID = 111;

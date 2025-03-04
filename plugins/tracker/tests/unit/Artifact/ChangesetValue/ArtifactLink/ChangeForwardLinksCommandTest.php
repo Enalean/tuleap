@@ -26,6 +26,7 @@ use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangeForwardLinksCommandTest extends TestCase
 {
     private const FIELD_ID           = 939;

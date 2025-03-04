@@ -30,6 +30,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

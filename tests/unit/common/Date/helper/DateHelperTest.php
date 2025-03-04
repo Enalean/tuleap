@@ -28,6 +28,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

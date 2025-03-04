@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_XML_Exporter_ChildrenCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Tracker_XML_Exporter_ChildrenCollectorTest */

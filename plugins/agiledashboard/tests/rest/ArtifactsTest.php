@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\REST;
 
 require_once dirname(__FILE__) . '/bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsTest extends ArtifactBase
 {
     public function testGETReleaseBurnup(): void

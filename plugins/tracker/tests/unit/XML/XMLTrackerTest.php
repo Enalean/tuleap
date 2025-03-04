@@ -66,6 +66,7 @@ use function PHPUnit\Framework\assertTrue;
  * This test class intend to test not only the XMLTracker class itself but to provide an integrated test of
  * the whole tracker export
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(XMLTracker::class)]
 #[CoversClass(XMLReferenceByID::class)]
 #[CoversClass(XMLReferenceByName::class)]

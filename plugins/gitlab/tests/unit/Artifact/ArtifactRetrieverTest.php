@@ -28,6 +28,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactRetrieverTest extends TestCase
 {
     public function testItThrowsAnExceptionWhenTheArtifactIsNotFound(): void

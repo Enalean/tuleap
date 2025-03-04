@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReportExportPropertiesFetcherTest extends TestCase
 {
     private CrossReportExportPropertiesFetcher $fetcher;

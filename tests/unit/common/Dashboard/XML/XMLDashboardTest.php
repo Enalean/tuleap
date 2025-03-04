@@ -25,6 +25,7 @@ namespace Tuleap\Dashboard\XML;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Widget\XML\XMLWidget;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLDashboardTest extends TestCase
 {
     public function testExportAnEmptyDashboard(): void

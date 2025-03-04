@@ -27,6 +27,7 @@ use DateTimeImmutable;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FromPayloadPeriodBuilderTest extends TestCase
 {
     public function testItReturnsAFaultWhenPredefinedTimePeriodAndTwoDatesAreProvided(): void

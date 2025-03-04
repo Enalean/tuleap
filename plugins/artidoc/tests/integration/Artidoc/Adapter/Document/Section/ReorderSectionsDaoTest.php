@@ -37,6 +37,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReorderSectionsDaoTest extends TestIntegrationTestCase
 {
     private ArtidocWithContext $artidoc_101;

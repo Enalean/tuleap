@@ -24,6 +24,7 @@ namespace Tuleap\Enalean\LicenseManager;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QuotaLicenseCalculatorTest extends TestCase
 {
     public function testQuotaIsNotReached(): void

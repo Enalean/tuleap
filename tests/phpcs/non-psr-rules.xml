@@ -219,4 +219,14 @@
     <!-- Force trailing comma in multilines arrays and function/method declaration -->
     <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
     <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration"/>
+    <!-- Make PHP attribute usages consistent -->
+    <rule ref="SlevomatCodingStandard.Attributes.AttributeAndTargetSpacing">
+      <properties>
+        <property name="linesCount" value="0"/>
+      </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Attributes.DisallowAttributesJoining"/>
+    <rule ref="SlevomatCodingStandard.Attributes.RequireAttributeAfterDocComment"/>
+    <!-- Enforce some PHPUnit test behaviors -->
+    <rule ref="./TuleapCodingStandard/Sniffs/Test/EnforcePHPUnitAttributesSniff.php"/>
 </ruleset>

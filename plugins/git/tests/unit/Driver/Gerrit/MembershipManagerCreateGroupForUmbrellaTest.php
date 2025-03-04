@@ -42,6 +42,7 @@ use UGroupManager;
  * Fix for request #5031 - Fatal error when adding a group in an umbrella parent project
  * @see https://tuleap.net/plugins/tracker/?aid=5031
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MembershipManagerCreateGroupForUmbrellaTest extends TestCase
 {
     private ProjectUGroup $ugroup;

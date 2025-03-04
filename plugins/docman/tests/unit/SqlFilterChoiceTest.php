@@ -28,6 +28,7 @@ use Docman_SqlFilter;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SqlFilterChoiceTest extends TestCase
 {
     public function setUp(): void

@@ -34,6 +34,7 @@ use Tuleap\PHPWiki\WikiPage;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanWikiDeletorTest extends TestCase
 {
     private Docman_PermissionsManager&MockObject $permissions_manager;

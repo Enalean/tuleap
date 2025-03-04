@@ -24,6 +24,7 @@ namespace Tuleap\User\Account\Appearance;
 
 use Tuleap\Language\LocaleSwitcher;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetLanguagePresenterCollectionForUser()

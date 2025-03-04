@@ -25,6 +25,7 @@ namespace Tuleap\FRS\Tests\REST;
 use REST_TestDataBuilder;
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FileTest extends RestBase
 {
     public const PROJECT_NAME = 'frs-test';

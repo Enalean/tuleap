@@ -37,6 +37,7 @@ use Tuleap\Test\Stubs\BuildDisplayNameStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OwnerRequestHandlerTest extends TestCase
 {
     /**

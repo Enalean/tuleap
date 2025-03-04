@@ -26,6 +26,7 @@ use Tracker_Artifact_ChangesetValue_String;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFormElementFieldStringChangesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -28,6 +28,7 @@ use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BotDeletorTest extends TestCase
 {
     private BotDeletor $deletor;

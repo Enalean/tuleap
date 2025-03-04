@@ -25,6 +25,7 @@ namespace Tuleap\Docman\FilenamePattern;
 
 use Tuleap\Docman\Tests\Stub\SettingsDAOStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilenamePatternUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FilenamePatternUpdater $filename_pattern_updater;

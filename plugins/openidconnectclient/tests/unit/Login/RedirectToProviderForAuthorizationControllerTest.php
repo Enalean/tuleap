@@ -33,6 +33,7 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectToProviderForAuthorizationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RedirectToProviderForAuthorizationController $controller;

@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecentlyVisitedDaoTest extends TestIntegrationTestCase
 {
     public function testDeleteOldEntriesPerUser(): void

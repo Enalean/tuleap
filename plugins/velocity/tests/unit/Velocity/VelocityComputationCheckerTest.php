@@ -33,6 +33,7 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Artifact&\PHPUnit\Framework\MockObject\MockObject $artifact;

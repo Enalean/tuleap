@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Admin;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HeaderPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItSetsTheActiveTabBasedOnCurrentItem()

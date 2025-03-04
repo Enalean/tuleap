@@ -24,6 +24,7 @@ namespace Tuleap\Kanban\RecentlyVisited;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecentlyVisitedKanbanDaoTest extends TestIntegrationTestCase
 {
     public function testDeleteOldEntriesPerUser(): void

@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Tests\CustomValueType;
  * PHPUnit will always succeed these tests. They are meant to raise errors in Psalm instead.
  * Psalm will raise errors here if breaking changes are introduced on type annotations.
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testIsOkAndNotIsErrAllowAccessingValue(): void

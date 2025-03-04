@@ -26,6 +26,7 @@ use Project;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramManagementProjectAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProjectData(): void

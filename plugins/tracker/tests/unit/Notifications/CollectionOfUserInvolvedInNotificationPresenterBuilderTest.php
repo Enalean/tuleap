@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Notifications;
 
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected function tearDown(): void

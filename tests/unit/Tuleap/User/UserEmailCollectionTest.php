@@ -25,6 +25,7 @@ namespace Tuleap\User;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserEmailCollectionTest extends TestCase
 {
     public function testItRetrievesUserWithMatchingCase(): void

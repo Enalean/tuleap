@@ -29,6 +29,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

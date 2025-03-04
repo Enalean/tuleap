@@ -34,6 +34,7 @@ use Tuleap\Option\Option;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

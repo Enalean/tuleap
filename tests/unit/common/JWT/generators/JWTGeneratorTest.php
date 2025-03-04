@@ -33,6 +33,7 @@ use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UserManager&MockObject $user_manager;

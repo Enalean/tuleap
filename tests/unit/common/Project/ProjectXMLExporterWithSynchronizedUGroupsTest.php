@@ -41,6 +41,7 @@ use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private EventManager&MockObject $event_manager;

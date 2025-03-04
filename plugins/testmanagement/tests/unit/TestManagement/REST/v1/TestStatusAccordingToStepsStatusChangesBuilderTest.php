@@ -28,6 +28,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const NOT_RUN_ID = 101;

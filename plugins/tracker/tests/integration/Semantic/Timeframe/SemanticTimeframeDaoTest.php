@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticTimeframeDaoTest extends TestIntegrationTestCase
 {
     private static int $first_timeframe_using_end_date_tracker_id;

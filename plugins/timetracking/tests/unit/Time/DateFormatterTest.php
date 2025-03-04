@@ -22,6 +22,7 @@ namespace Tuleap\Timetracking\Time;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

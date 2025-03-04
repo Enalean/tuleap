@@ -27,6 +27,7 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamPlanningProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROJECT_ID              = 101;

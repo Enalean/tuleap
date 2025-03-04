@@ -29,6 +29,7 @@ use Tracker_ArtifactLinkInfo;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

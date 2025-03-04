@@ -29,6 +29,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow;
 use Workflow_Transition_ConditionsCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsTheSimpleWorkflowInXML(): void

@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const GIT_REPOSITORY_ID = 590;

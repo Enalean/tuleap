@@ -29,6 +29,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\ServerHostname;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SecurityTxtControllerTest extends TestCase
 {
     use ForgeConfigSandbox;

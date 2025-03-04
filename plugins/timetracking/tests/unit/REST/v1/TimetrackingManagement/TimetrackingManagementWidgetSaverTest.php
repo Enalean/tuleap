@@ -29,6 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimetrackingManagementWidgetSaverTest extends TestCase
 {
     public function testItReturnsTrueWhenQueryWasSavedWithDates(): void

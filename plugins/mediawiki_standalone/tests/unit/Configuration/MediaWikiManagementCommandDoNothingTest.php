@@ -26,6 +26,7 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediaWikiManagementCommandDoNothingTest extends TestCase
 {
     public function testIsAlwaysSuccessful(): void

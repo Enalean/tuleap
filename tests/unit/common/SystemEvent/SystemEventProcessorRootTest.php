@@ -43,6 +43,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEventProcessorRootTest extends TestCase
 {
     use ForgeConfigSandbox;

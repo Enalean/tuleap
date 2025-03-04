@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE;
 
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PKCEInformationExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

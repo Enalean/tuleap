@@ -33,6 +33,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MercureJWTGeneratorImplTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

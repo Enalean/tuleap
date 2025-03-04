@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\Project\Kanban;
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraKanbanActivatorTest extends TestCase
 {
     public function testItAddsKanbanInProjectXMLContent(): void

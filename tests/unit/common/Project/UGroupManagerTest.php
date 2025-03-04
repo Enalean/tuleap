@@ -36,6 +36,7 @@ use UGroupDao;
 use UGroupManager;
 use UGroupUserDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

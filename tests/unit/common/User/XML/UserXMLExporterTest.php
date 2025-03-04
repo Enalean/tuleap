@@ -26,6 +26,7 @@ use PFUser;
 use SimpleXMLElement;
 use UserXMLExporter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $collection;

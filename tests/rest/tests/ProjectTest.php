@@ -27,6 +27,7 @@ use TestDataBuilder;
 /**
  * @group ProjectTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectTest extends ProjectBase
 {
     use ForgeAccessSandbox;

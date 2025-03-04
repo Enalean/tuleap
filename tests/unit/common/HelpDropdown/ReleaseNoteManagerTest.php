@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use UserPreferencesDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const BASE_URL = 'https://www.tuleap.org/resources/release-notes/tuleap-11-17/?utm_source=tuleap&utm_medium=forge&utm_campaign=tuleap-forge-icon-help-RN-link';

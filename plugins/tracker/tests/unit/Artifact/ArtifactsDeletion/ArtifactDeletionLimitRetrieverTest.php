@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Stub\ConfigurationArtifactsDeletionStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUserDeletionForLastDayStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactDeletionLimitRetrieverTest extends TestCase
 {
     public function testItThrowsWhenLimitIsNotSet(): void

@@ -29,6 +29,7 @@ use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProviderManager $provider_manager;

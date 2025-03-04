@@ -30,6 +30,7 @@ use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 use Tuleap\GitLFS\Authorization\User\UserTokenCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PHPUnit\Framework\MockObject\MockObject&UserTokenCreator $token_creator;

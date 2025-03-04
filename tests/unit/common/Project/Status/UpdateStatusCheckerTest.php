@@ -25,6 +25,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateStatusCheckerTest extends TestCase
 {
     public function testItReturnsAFaultIfNewStatusIsPending(): void

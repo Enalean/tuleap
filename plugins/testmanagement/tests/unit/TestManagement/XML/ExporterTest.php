@@ -27,6 +27,7 @@ use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use XML_RNGValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Exporter $exporter;

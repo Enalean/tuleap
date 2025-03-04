@@ -33,6 +33,7 @@ use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Planning_MilestoneFactory&MockObject $factory;

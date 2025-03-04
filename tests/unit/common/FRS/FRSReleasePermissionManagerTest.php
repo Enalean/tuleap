@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FRSReleasePermissionManagerTest extends TestCase
 {
     /**

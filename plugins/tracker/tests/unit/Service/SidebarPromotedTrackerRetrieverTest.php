@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SidebarPromotedTrackerRetrieverTest extends TestCase
 {
     public function testEmptyWhenProjectIsNotAllowedToPromoteTrackersInSidebar(): void

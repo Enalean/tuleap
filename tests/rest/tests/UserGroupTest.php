@@ -21,6 +21,7 @@
 /**
  * @group UserGroupTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private function getResponseWithUser2($request)

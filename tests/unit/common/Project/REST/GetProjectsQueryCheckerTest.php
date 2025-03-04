@@ -30,6 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\REST\v1\GetProjectsQueryChecker;
 use Tuleap\REST\Event\GetAdditionalCriteria;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GetProjectsQueryChecker $checker;

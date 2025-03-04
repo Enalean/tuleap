@@ -25,6 +25,7 @@ namespace Tuleap\Forum;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForumRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsNullIfForumIsNotFound(): void

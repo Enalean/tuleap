@@ -33,6 +33,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \gitlfsPlugin&\PHPUnit\Framework\MockObject\MockObject $plugin;

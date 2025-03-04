@@ -29,6 +29,7 @@ use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class OnlyOfficeAdminSettingsPresenterBuilderTest extends TestCase
 {
     public function testGetPresenter(): void

@@ -26,6 +26,7 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFileResponseCanBeBuiltFromFilepath(): void

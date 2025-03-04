@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupUnlinkHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const GROUP_LINK_ID = 29;

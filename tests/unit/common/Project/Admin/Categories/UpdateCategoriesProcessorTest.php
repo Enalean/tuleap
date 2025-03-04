@@ -26,6 +26,7 @@ use CSRFSynchronizerToken;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateCategoriesProcessorTest extends TestCase
 {
     private UpdateCategoriesProcessor $processor;

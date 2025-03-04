@@ -43,6 +43,7 @@ use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MercureJWTControllerTest extends TestCase
 {
     use ForgeConfigSandbox;

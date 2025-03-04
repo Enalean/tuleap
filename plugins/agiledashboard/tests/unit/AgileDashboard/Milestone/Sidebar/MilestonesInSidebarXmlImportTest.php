@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\UpdateMilestonesInSidebarConfig
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestonesInSidebarXmlImportTest extends TestCase
 {
     public function testDoesNothingWhenAttributeIsNotPresent(): void

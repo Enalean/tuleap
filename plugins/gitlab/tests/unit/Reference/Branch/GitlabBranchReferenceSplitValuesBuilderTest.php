@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Reference\Branch;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabBranchReferenceSplitValuesBuilderTest extends TestCase
 {
     private GitlabBranchReferenceSplitValuesBuilder $builder;

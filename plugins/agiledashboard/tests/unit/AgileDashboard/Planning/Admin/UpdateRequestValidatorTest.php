@@ -24,6 +24,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ORIGINAL_MILESTONE_TRACKER_ID = 54;

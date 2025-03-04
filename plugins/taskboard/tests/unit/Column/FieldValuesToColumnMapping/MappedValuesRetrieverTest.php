@@ -33,6 +33,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ON_GOING_COLUMN_LABEL = 'On Going';

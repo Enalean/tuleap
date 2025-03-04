@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\DisplayTrackerLayoutStub;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\GlobalResponseMock;

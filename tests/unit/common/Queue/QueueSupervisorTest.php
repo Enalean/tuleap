@@ -25,6 +25,7 @@ namespace Tuleap\Queue;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QueueSupervisorTest extends TestCase
 {
     private TestLogger $logger;

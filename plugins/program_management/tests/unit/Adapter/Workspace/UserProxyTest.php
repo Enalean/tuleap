@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromPFUser(): void

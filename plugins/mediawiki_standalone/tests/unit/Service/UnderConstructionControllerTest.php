@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testUnderConstruction(): void

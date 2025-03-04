@@ -24,6 +24,7 @@ namespace Tuleap\User\REST\v1;
 
 use Tuleap\Test\Builders\HistoryEntryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserHistoryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuilds(): void

@@ -19,6 +19,7 @@
  */
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ValidHelpersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testUInt(): void

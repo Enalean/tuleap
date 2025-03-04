@@ -48,6 +48,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InitialChangesetCreatorTest extends TestCase
 {
     use GlobalResponseMock;

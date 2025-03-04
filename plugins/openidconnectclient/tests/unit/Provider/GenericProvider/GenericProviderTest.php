@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Provider\GenericProvider;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GenericProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReturnsNullJWKSEndpointURLIsEmpty(): void

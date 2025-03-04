@@ -44,6 +44,7 @@ use UserXMLExporter;
 use XML_RNGValidator;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Artifact_XMLExportTest extends TestCase
 {
     private UserManager&MockObject $user_manager;
@@ -135,11 +136,17 @@ final class Tracker_Artifact_XMLExportTest extends TestCase
         $changeset_03->method('getComment')->willReturn($comment_03);
         $changeset_04->method('getComment')->willReturn($comment_04);
 
+        $changeset_01->method('forceFetchAllValues');
+        $changeset_02->method('forceFetchAllValues');
+        $changeset_03->method('forceFetchAllValues');
+        $changeset_04->method('forceFetchAllValues');
+
         $rng_validator    = new XML_RNGValidator();
         $artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
         $artifact_factory->method('getArtifactsByTrackerId')->with(101)->willReturn([$artifact_01, $artifact_02]);
-        $user_xml_exporter        = new UserXMLExporter($this->user_manager, $this->createMock(UserXMLExportedCollection::class));
-        $external_field_extractor = $this->createMock(ExternalFieldsExtractor::class);
+        $user_xml_exported_collection = new UserXMLExportedCollection(new XML_RNGValidator(), new \XML_SimpleXMLCDATAFactory());
+        $user_xml_exporter            = new UserXMLExporter($this->user_manager, $user_xml_exported_collection);
+        $external_field_extractor     = $this->createMock(ExternalFieldsExtractor::class);
 
         $exporter = new Tracker_Artifact_XMLExport(
             $rng_validator,

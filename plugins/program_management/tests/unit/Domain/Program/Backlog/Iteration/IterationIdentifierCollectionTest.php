@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_ITERATION_ID  = 388;

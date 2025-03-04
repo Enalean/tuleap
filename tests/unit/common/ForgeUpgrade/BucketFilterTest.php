@@ -26,6 +26,7 @@ namespace Tuleap\ForgeUpgrade;
 use ArrayIterator;
 use SplFileInfo;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNameCorrect(): void

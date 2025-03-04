@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\Authorization\User\Operation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserOperationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCreationOfAUnknownOperationIsRejected(): void

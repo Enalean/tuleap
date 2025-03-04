@@ -23,6 +23,7 @@ namespace Tuleap\SVN\Repository;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Project $project;

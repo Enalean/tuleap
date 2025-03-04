@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskboardUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDefaultTemplateOrXMLTemplateShouldForceTaskboardUsage(): void

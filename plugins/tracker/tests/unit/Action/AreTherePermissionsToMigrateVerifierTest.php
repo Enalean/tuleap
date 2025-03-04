@@ -25,6 +25,7 @@ use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AreTherePermissionsToMigrateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Artifact $artifact;
