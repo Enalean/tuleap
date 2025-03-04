@@ -176,6 +176,23 @@ final class TrackerDatabaseBuilder
         return $tracker_field_id;
     }
 
+    public function buildStaticRichTextField(int $tracker_id, string $name): int
+    {
+        $tracker_field_id = (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => 'staticrichtext',
+                'name'             => $name,
+                'label'            => $name,
+                'use_it'           => true,
+                'scope'            => 'P',
+            ]
+        );
+
+        return $tracker_field_id;
+    }
+
     public function buildStringField(int $tracker_id, string $name): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(
