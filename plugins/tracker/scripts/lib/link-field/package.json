@@ -15,6 +15,7 @@
     }
   },
   "dependencies": {
+    "@tuleap/cross-ref-badges": "workspace:^",
     "@tuleap/dom": "workspace:^",
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",

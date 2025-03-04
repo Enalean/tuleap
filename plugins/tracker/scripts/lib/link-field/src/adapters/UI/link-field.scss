@@ -18,6 +18,7 @@
  */
 
 @use "pkg:@tuleap/lazybox";
+@use "pkg:@tuleap/cross-ref-badges";
 @use "./variables";
 @use "./dropdown/linkable_item";
 @use "./creation/artifact-creator";
