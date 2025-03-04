@@ -147,6 +147,11 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $params['plugins_permission'][MediawikiAdminAllProjects::ID] = new MediawikiAdminAllProjects();
     }
 
+    public function getDependencies(): array
+    {
+        return ['mediawiki_standalone'];
+    }
+
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
