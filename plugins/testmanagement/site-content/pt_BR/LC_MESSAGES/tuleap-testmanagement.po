@@ -15,6 +15,14 @@ msgstr ""
 msgid "Configuration incomplete"
 msgstr ""
 
+#, php-format
+msgid ""
+"Configuration updated - previous configuration [ campaign tracker #%d, test "
+"definition tracker #%d, test execution tracker #%d, issue tracker #%d ] - "
+"new configuration [ campaign tracker #%d, test definition tracker #%d, test "
+"execution tracker #%d, issue tracker #%d ] "
+msgstr ""
+
 msgid "Covers"
 msgstr ""
 
@@ -215,6 +223,9 @@ msgid ""
 "This tracker uses the Step execution field, which can only be used with\n"
 "          TestManagement. Please <a href=\"%s\">remove the field</a> before "
 "choosing another tracker."
+msgstr ""
+
+msgid "Update the configuration of Test Management"
 msgstr ""
 
 msgid "We configured Test Management for you. Enjoy!"

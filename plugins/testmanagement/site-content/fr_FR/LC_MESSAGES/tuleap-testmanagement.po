@@ -24,6 +24,18 @@ msgstr "Campagnes"
 msgid "Configuration incomplete"
 msgstr "Configuration incomplète"
 
+#, php-format
+msgid ""
+"Configuration updated - previous configuration [ campaign tracker #%d, test "
+"definition tracker #%d, test execution tracker #%d, issue tracker #%d ] - "
+"new configuration [ campaign tracker #%d, test definition tracker #%d, test "
+"execution tracker #%d, issue tracker #%d ] "
+msgstr ""
+"Configuration mise à jour - configuration précédente [ campagne #%d, "
+"définition des tests #%d, exécution des tests #%d, bugs tracker #%d ] - "
+"nouvelle configuration [ campagne #%d, définition des tests #%d, exécution "
+"des tests #%d, bugs tracker #%d ] "
+
 msgid "Covers"
 msgstr "Couvre"
 
@@ -265,6 +277,9 @@ msgstr ""
 "Cet outil de suivi utilise le champ 'Exécution d'étapes', qui ne peut être "
 "utilisé qu'avec TestManagement. Veuillez s'il vous plaît <a "
 "href=\"%s\">enlever ce champ</a> avant de choisir un autre outil de suivi."
+
+msgid "Update the configuration of Test Management"
+msgstr "Mise à jour de la configuration de Test Management"
 
 msgid "We configured Test Management for you. Enjoy!"
 msgstr ""

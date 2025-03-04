@@ -50,83 +50,25 @@ use XMLImportHelper;
 class Router
 {
     /**
-     * @var Config
-     */
-    private $config;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /**
      * @var \Service|null
      */
     private $service;
 
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var ArtifactLinksUsageUpdater
-     */
-    private $artifact_links_usage_updater;
-
-    /**
-     * @var FieldUsageDetector
-     */
-    private $field_usage_detector;
-    /**
-     * @var TrackerChecker
-     */
-    private $tracker_checker;
-    /**
-     * @var VisitRecorder
-     */
-    private $visit_recorder;
-    /**
-     * @var Valid_UInt
-     */
-    private $int_validator;
-    /**
-     * @var ProjectFlagsBuilder
-     */
-    private $project_flags_builder;
-    /**
-     * @var AdminTrackersRetriever
-     */
-    private $tracker_retriever;
-
     public function __construct(
-        Config $config,
-        TrackerFactory $tracker_factory,
-        UserManager $user_manager,
-        EventManager $event_manager,
-        ArtifactLinksUsageUpdater $artifact_links_usage_updater,
-        FieldUsageDetector $field_usage_detector,
-        TrackerChecker $tracker_checker,
-        VisitRecorder $visit_recorder,
-        Valid_UInt $int_validator,
-        ProjectFlagsBuilder $project_flags_builder,
-        AdminTrackersRetriever $tracker_retriever,
+        private readonly Config $config,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly UserManager $user_manager,
+        private readonly EventManager $event_manager,
+        private readonly ArtifactLinksUsageUpdater $artifact_links_usage_updater,
+        private readonly FieldUsageDetector $field_usage_detector,
+        private readonly TrackerChecker $tracker_checker,
+        private readonly VisitRecorder $visit_recorder,
+        private readonly Valid_UInt $int_validator,
+        private readonly ProjectFlagsBuilder $project_flags_builder,
+        private readonly AdminTrackersRetriever $tracker_retriever,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+        private readonly \ProjectHistoryDao $project_history_dao,
     ) {
-        $this->config                       = $config;
-        $this->tracker_factory              = $tracker_factory;
-        $this->user_manager                 = $user_manager;
-        $this->event_manager                = $event_manager;
-        $this->artifact_links_usage_updater = $artifact_links_usage_updater;
-        $this->field_usage_detector         = $field_usage_detector;
-        $this->tracker_checker              = $tracker_checker;
-        $this->visit_recorder               = $visit_recorder;
-        $this->int_validator                = $int_validator;
-        $this->project_flags_builder        = $project_flags_builder;
-        $this->tracker_retriever            = $tracker_retriever;
     }
 
     public function route(Codendi_Request $request): void
@@ -145,7 +87,8 @@ class Router
                     $this->field_usage_detector,
                     $this->tracker_checker,
                     $this->int_validator,
-                    $this->tracker_retriever
+                    $this->tracker_retriever,
+                    $this->project_history_dao
                 );
                 $this->renderAction($controller, 'admin', $request, false);
                 break;
@@ -159,7 +102,8 @@ class Router
                     $this->field_usage_detector,
                     $this->tracker_checker,
                     $this->int_validator,
-                    $this->tracker_retriever
+                    $this->tracker_retriever,
+                    $this->project_history_dao
                 );
                 $this->executeAction($controller, 'update');
                 if ($this->config->isConfigNeeded($request->getProject())) {

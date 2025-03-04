@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\Administration;
 
 use Codendi_Request;
 use CSRFSynchronizerToken;
+use DateTimeImmutable;
 use EventManager;
 use Feedback;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
@@ -36,46 +37,18 @@ use Valid_UInt;
 
 class AdminController extends TestManagementController
 {
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
-    /**
-     * @var FieldUsageDetector
-     */
-    private $field_usage_detector;
-
-    /**
-     * @var TrackerChecker
-     */
-    private $tracker_checker;
-
-    /**
-     * @var Valid_UInt
-     */
-    private $int_validator;
-    /**
-     * @var AdminTrackersRetriever
-     */
-    private $tracker_retriever;
-
     public function __construct(
         Codendi_Request $request,
         Config $config,
         EventManager $event_manager,
-        CSRFSynchronizerToken $csrf_token,
-        FieldUsageDetector $field_usage_detector,
-        TrackerChecker $tracker_checker,
-        Valid_UInt $int_validator,
-        AdminTrackersRetriever $tracker_retriever,
+        private readonly CSRFSynchronizerToken $csrf_token,
+        private readonly FieldUsageDetector $field_usage_detector,
+        private readonly TrackerChecker $tracker_checker,
+        private readonly Valid_UInt $int_validator,
+        private readonly AdminTrackersRetriever $tracker_retriever,
+        private readonly \ProjectHistoryDao $project_history_dao,
     ) {
         parent::__construct($request, $config, $event_manager);
-        $this->csrf_token           = $csrf_token;
-        $this->field_usage_detector = $field_usage_detector;
-        $this->tracker_checker      = $tracker_checker;
-        $this->int_validator        = $int_validator;
-        $this->tracker_retriever    = $tracker_retriever;
     }
 
     public function admin(): string
@@ -149,6 +122,27 @@ class AdminController extends TestManagementController
 
             return;
         }
+
+        $this->project_history_dao->addHistory(
+            $this->project,
+            $this->getCurrentUser(),
+            new DateTimeImmutable(),
+            TestManagementHistoryEntry::UpdateConfiguration->value,
+            '',
+            [
+                // previous configuration
+                $this->config->getCampaignTrackerId($this->project),
+                $this->config->getTestDefinitionTrackerId($this->project),
+                $this->config->getTestExecutionTrackerId($this->project),
+                $this->config->getIssueTrackerId($this->project),
+                // new configuration
+                (int) $campaign_tracker_id,
+                (int) $definition_tracker_id,
+                (int) $execution_tracker_id,
+                (int) $issue_tracker_id,
+
+            ]
+        );
 
         $this->config->setProjectConfiguration(
             $this->project,

@@ -32,6 +32,10 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -46,6 +50,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
 use Tuleap\TestManagement\Administration\FieldUsageDetector;
+use Tuleap\TestManagement\Administration\TestManagementHistoryEntry;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
@@ -519,6 +524,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             new AdminTrackersRetriever($tracker_factory, $this->getTrackerChecker(), $config),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new ProjectHistoryDao()
         );
 
         return new LegacyRoutingController(
@@ -1021,5 +1027,34 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     public function collectTrackerDependantServices(CollectTrackerDependantServices $event): void
     {
         $event->addDependantServicesNames($this->getServiceShortname());
+    }
+
+    #[ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents(array $params): void
+    {
+        $params['subEvents']['event_others'][] = TestManagementHistoryEntry::UpdateConfiguration->value;
+    }
+
+    #[ListeningToEventClass]
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        $history_entry = TestManagementHistoryEntry::tryFrom($event->getKey());
+
+        if ($history_entry) {
+            $event->setLabel(
+                $history_entry->getLabel()
+            );
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event): void
+    {
+        $history_entry = TestManagementHistoryEntry::tryFrom($event->getKey());
+        if ($history_entry) {
+            $event->setValue(
+                $history_entry->getValue($event->getParameters())
+            );
+        }
     }
 }
