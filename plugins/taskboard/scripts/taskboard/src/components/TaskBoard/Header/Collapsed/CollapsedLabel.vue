@@ -1,8 +1,8 @@
 <template>
     <div
         class="taskboard-header-collapsed-label"
-        v-on:pointerenter="pointerEntersCollapsedColumn"
-        v-on:pointerleave="pointerLeavesCollapsedColumn"
+        v-on:pointerenter="pointerEntersColumnWithCheck(column)"
+        v-on:pointerleave="pointerLeavesColumnWithCheck({ column, card_being_dragged })"
         v-on:click="expandColumn(column)"
     >
         <cards-in-column-count v-bind:column="column" />
@@ -11,21 +11,32 @@
 </template>
 <script lang="ts">
 import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-import HoveringStateForCollapsedColumnMixin from "../../Body/Swimlane/Cell/hovering-state-for-collapsed-column-mixin";
+import { Component, Prop } from "vue-property-decorator";
 import type { ColumnDefinition } from "../../../../type";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
+import type { DraggedCard } from "../../../../store/type";
+import type { PointerLeavesColumnPayload } from "../../../../store/column/type";
+import Vue from "vue";
 
 const column_store = namespace("column");
 
 @Component({
     components: { CardsInColumnCount },
 })
-export default class CollapsedLabel extends Mixins(HoveringStateForCollapsedColumnMixin) {
+export default class CollapsedLabel extends Vue {
     @column_store.Action
     readonly expandColumn!: (column: ColumnDefinition) => void;
 
+    @State
+    readonly card_being_dragged!: DraggedCard | null;
+
+    @column_store.Mutation
+    readonly pointerEntersColumnWithCheck!: (column: ColumnDefinition) => void;
+
+    @column_store.Mutation
+    readonly pointerLeavesColumnWithCheck!: (payload: PointerLeavesColumnPayload) => void;
+
     @Prop({ required: true })
-    override readonly column!: ColumnDefinition;
+    readonly column!: ColumnDefinition;
 }
 </script>

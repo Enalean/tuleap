@@ -18,7 +18,7 @@
  */
 
 import type { ColumnDefinition } from "../../type";
-import type { ColumnState } from "./type";
+import type { ColumnState, PointerLeavesColumnPayload } from "./type";
 
 export function collapseColumn(state: ColumnState, column: ColumnDefinition): void {
     findColumn(state, column).is_collapsed = true;
@@ -31,6 +31,26 @@ export function pointerEntersColumn(state: ColumnState, column: ColumnDefinition
 }
 export function pointerLeavesColumn(state: ColumnState, column: ColumnDefinition): void {
     findColumn(state, column).has_hover = false;
+}
+
+export function pointerEntersColumnWithCheck(state: ColumnState, column: ColumnDefinition): void {
+    if (!column.is_collapsed) {
+        return;
+    }
+    findColumn(state, column).has_hover = true;
+}
+export function pointerLeavesColumnWithCheck(
+    state: ColumnState,
+    payload: PointerLeavesColumnPayload,
+): void {
+    if (!payload.column.is_collapsed) {
+        return;
+    }
+    // When a card is being dragged, it also triggers those events.
+    // We should ignore them to keep collapsed column styling.
+    if (payload.card_being_dragged === null) {
+        findColumn(state, payload.column).has_hover = false;
+    }
 }
 
 function findColumn(state: ColumnState, column: ColumnDefinition): ColumnDefinition {

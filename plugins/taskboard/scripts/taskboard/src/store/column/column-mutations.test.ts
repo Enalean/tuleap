@@ -20,6 +20,7 @@
 import type { ColumnDefinition } from "../../type";
 import * as mutations from "./column-mutations";
 import type { ColumnState } from "./type";
+import type { DraggedCard } from "../type";
 
 describe(`Column module mutations`, () => {
     describe("collapseColumn", () => {
@@ -69,6 +70,85 @@ describe(`Column module mutations`, () => {
             };
 
             mutations.pointerLeavesColumn(state, column);
+            expect(state.columns[0].has_hover).toBe(false);
+        });
+    });
+
+    describe("pointerEntersColumnWithCheck", () => {
+        it("does nothing when the column is expanded", () => {
+            const column: ColumnDefinition = {
+                has_hover: false,
+                is_collapsed: false,
+            } as ColumnDefinition;
+
+            const state: ColumnState = {
+                columns: [column],
+            };
+
+            mutations.pointerEntersColumnWithCheck(state, column);
+            expect(state.columns[0].has_hover).toBe(false);
+        });
+        it("marks the column with hovering state", () => {
+            const column: ColumnDefinition = {
+                has_hover: false,
+                is_collapsed: true,
+            } as ColumnDefinition;
+
+            const state: ColumnState = {
+                columns: [column],
+            };
+
+            mutations.pointerEntersColumnWithCheck(state, column);
+            expect(state.columns[0].has_hover).toBe(true);
+        });
+    });
+
+    describe("pointerLeavesColumnWithCheck", () => {
+        it("does nothing when column is open", () => {
+            const column: ColumnDefinition = {
+                has_hover: true,
+                is_collapsed: false,
+            } as ColumnDefinition;
+
+            const state: ColumnState = {
+                columns: [column],
+            };
+
+            mutations.pointerLeavesColumnWithCheck(state, { column, card_being_dragged: null });
+            expect(state.columns[0].has_hover).toBe(true);
+        });
+
+        it(`when the column is collapsed and a card is being dragged,
+                it won't inform the mouseout
+                because too many events are triggered and we want to keep the collapsed column styling`, () => {
+            const column: ColumnDefinition = {
+                has_hover: true,
+                is_collapsed: true,
+            } as ColumnDefinition;
+
+            const state: ColumnState = {
+                columns: [column],
+            };
+
+            const dragged_card = {} as DraggedCard;
+            mutations.pointerLeavesColumnWithCheck(state, {
+                column,
+                card_being_dragged: dragged_card,
+            });
+            expect(state.columns[0].has_hover).toBe(true);
+        });
+
+        it("removes the hovering state", () => {
+            const column: ColumnDefinition = {
+                has_hover: true,
+                is_collapsed: true,
+            } as ColumnDefinition;
+
+            const state: ColumnState = {
+                columns: [column],
+            };
+
+            mutations.pointerLeavesColumnWithCheck(state, { column, card_being_dragged: null });
             expect(state.columns[0].has_hover).toBe(false);
         });
     });

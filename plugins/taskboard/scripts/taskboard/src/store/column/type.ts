@@ -18,7 +18,13 @@
  */
 
 import type { ColumnDefinition } from "../../type";
+import type { DraggedCard } from "../type";
 
 export interface ColumnState {
     columns: ColumnDefinition[];
+}
+
+export interface PointerLeavesColumnPayload {
+    column: ColumnDefinition;
+    card_being_dragged: DraggedCard | null;
 }

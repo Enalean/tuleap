@@ -51,56 +51,26 @@ describe("CollapsedLabel", () => {
         expect(wrapper.findComponent(CardsInColumnCount).exists()).toBe(true);
     });
 
-    it(`informs the pointerenter when the column is collapsed`, () => {
+    it(`informs the pointerenter`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
         wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
-    });
-
-    it(`does not inform the pointerenter when the column is expanded`, () => {
-        const column: ColumnDefinition = { label: "Done", is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column);
-
-        wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
-            "column/pointerEntersColumn",
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "column/pointerEntersColumnWithCheck",
             column,
         );
     });
 
-    it(`informs the pointerleave when the column is collapsed`, () => {
+    it(`informs the pointerleave`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
         wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", column);
-    });
-
-    it(`does not inform the pointerleave when the column is expanded`, () => {
-        const column: ColumnDefinition = { label: "Done", is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column);
-
-        wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
-            "column/pointerLeavesColumn",
-            column,
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "column/pointerLeavesColumnWithCheck",
+            { column, card_being_dragged: null },
         );
-    });
-
-    it(`when the column is collapsed and a card is being dragged,
-        it won't inform the mouseout
-        because too many events are triggered and we want to keep the collapsed column styling`, () => {
-        const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column);
-        wrapper.vm.$store.state.card_being_dragged = {
-            tracker_id: 12,
-            card_id: 15,
-        };
-
-        wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
     it(`expands the column when use click on the collapsed label`, () => {
