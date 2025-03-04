@@ -72,9 +72,6 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             $decorator,
             true,
             false,
-            'Show/hide this value',
-            'Show/hide this value',
-            '',
             false
         );
 
@@ -104,9 +101,6 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             $decorator,
             false,
             false,
-            '"None" value cannot be hidden',
-            'cannot hide',
-            '--exclamation-hidden',
             false
         );
 
@@ -131,9 +125,6 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             $decorator,
             true,
             false,
-            'Show/hide this value',
-            'Show/hide this value',
-            '',
             true
         );
 

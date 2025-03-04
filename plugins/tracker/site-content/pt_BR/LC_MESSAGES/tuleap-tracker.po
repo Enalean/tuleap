@@ -13,9 +13,6 @@ msgid ""
 "\"FROM\" keyword is missing from your query, it is mandatory in expert mode"
 msgstr ""
 
-msgid "\"None\" value cannot be hidden"
-msgstr ""
-
 msgid "\"SELECT\" keyword is not allowed in default mode"
 msgstr ""
 
@@ -1498,6 +1495,9 @@ msgstr ""
 msgid "Hidden fieldsets:"
 msgstr ""
 
+msgid "Hide the value"
+msgstr ""
+
 msgid "Hierarchy"
 msgstr ""
 
@@ -2615,7 +2615,7 @@ msgstr ""
 msgid "Show items referenced by {{ artifact_xref }}"
 msgstr ""
 
-msgid "Show/hide this value"
+msgid "Show the value"
 msgstr ""
 
 msgid "Simple columns"
@@ -4218,11 +4218,6 @@ msgid "You can't delete this tracker because it is used in: %1$s"
 msgstr ""
 
 msgid ""
-"You can't hide this value since it is used in a semantic, in workflow, in "
-"transitions or in field dependency"
-msgstr ""
-
-msgid ""
 "You can't submit an artifact because you do not have the right to submit all "
 "required fields"
 msgstr ""
@@ -4248,6 +4243,11 @@ msgstr ""
 msgid ""
 "You cannot define the status semantic since there isn't any list field in "
 "the tracker"
+msgstr ""
+
+msgid ""
+"You cannot hide this value since it is used in a semantic, in workflow, in "
+"transitions or in field dependency"
 msgstr ""
 
 msgid ""
@@ -4404,9 +4404,6 @@ msgid "autocomputed"
 msgstr ""
 
 msgid "cancel"
-msgstr ""
-
-msgid "cannot hide"
 msgstr ""
 
 msgid "changed from"
@@ -4579,4 +4576,7 @@ msgstr ""
 msgid ""
 "{{ jira_display_name }} identified as {{ tuleap_user_real_name }} "
 "(@{{ tuleap_user_username }})"
+msgstr ""
+
+msgid "“None” value cannot be hidden"
 msgstr ""

@@ -1,5 +1,5 @@
 <li id="staticvalue_{{ id }}"
-    class="{{# is_hidden }}tracker_admin_static_value_hidden{{/ is_hidden }} tracker-admin-one-list-field"
+    class="tracker-admin-one-list-field"
     data-value_id="{{ id }}">
     {{^ is_custom_value }}
         {{# is_none_value }}
@@ -18,14 +18,40 @@
         </span>
     {{/ is_custom_value }}
     <span class="tracker-admin-bindvalue_actions">
-        {{# value_can_be_hidden }}
+        <label class="tracker_admin_static_value_hide_checkbox">
             <input type="checkbox"
                    name="bind[edit{{# is_custom_value }}_custom{{/ is_custom_value }}][{{ id }}][is_hidden]"
                    {{^ is_hidden }}checked="checked"{{/ is_hidden }}
-                   class="tracker_admin_static_value_hidden_chk"/>
-        {{/ value_can_be_hidden }}
-        <img src="/themes/FlamingParrot/images/ic/eye{{ image_hidden_prefix }}.png" alt="{{ image_hidden_alt }}"
-             title="{{ image_hidden_title }}"/>
+                   {{^ value_can_be_hidden }}disabled="disabled"{{/ value_can_be_hidden }}
+            />
+            {{# value_can_be_hidden }}
+            <img
+                class="static_value_img_not_checked"
+                src="/themes/FlamingParrot/images/ic/eye-half.png"
+                title="{{# dgettext }}tuleap-tracker | Show the value{{/ dgettext }}"
+                alt="{{# dgettext }}tuleap-tracker | Show the value{{/ dgettext }}"
+            />
+            <img
+                class="static_value_img_checked"
+                src="/themes/FlamingParrot/images/ic/eye.png"
+                title="{{# dgettext }}tuleap-tracker | Hide the value{{/ dgettext }}"
+                alt="{{# dgettext }}tuleap-tracker | Hide the value{{/ dgettext }}"
+            />
+            {{/ value_can_be_hidden }}
+            {{^ value_can_be_hidden }}
+                <img
+                    src="/themes/FlamingParrot/images/ic/eye--exclamation-hidden.png"
+                    {{# is_none_value }}
+                    title="{{# dgettext }}tuleap-tracker | “None” value cannot be hidden{{/ dgettext }}"
+                    alt="{{# dgettext }}tuleap-tracker | “None” value cannot be hidden{{/ dgettext }}"
+                    {{/ is_none_value }}
+                    {{^ is_none_value }}
+                    title="{{# dgettext }}tuleap-tracker | You cannot hide this value since it is used in a semantic, in workflow, in transitions or in field dependency{{/ dgettext }}"
+                    alt="{{# dgettext }}tuleap-tracker | You cannot hide this value since it is used in a semantic, in workflow, in transitions or in field dependency{{/ dgettext }}"
+                    {{/ is_none_value }}
+                />
+            {{/ value_can_be_hidden }}
+        </label>
         {{^ is_custom_value }}
             {{# value_can_be_deleted }}
                 <label class="tracker_admin_static_value_delete_checkbox">
