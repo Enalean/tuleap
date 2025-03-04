@@ -27,6 +27,7 @@ import {
 } from "@/helpers/artidoc-section.type";
 import type { OnGoingUploadFileWithId } from "@/sections/attachments/FileUploadsCollection";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type { Level } from "@/sections/levels/SectionsNumberer";
 
 export type SectionState = {
     is_image_upload_allowed: ComputedRef<boolean>;
@@ -42,6 +43,7 @@ export type SectionState = {
     error_message: Ref<string>;
     edited_title: Ref<string>;
     edited_description: Ref<string>;
+    initial_level: Ref<Level>;
     is_editor_reset_needed: Ref<boolean>;
 };
 
@@ -90,6 +92,7 @@ export const getSectionStateBuilder = (
             error_message: ref(""),
             edited_title: ref(section.value.title),
             edited_description: ref(section.value.description),
+            initial_level: ref(section.value.level),
             is_editor_reset_needed: ref(false),
         }),
     };

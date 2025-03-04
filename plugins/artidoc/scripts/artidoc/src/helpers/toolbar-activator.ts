@@ -18,11 +18,13 @@
  */
 
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { HeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 
 export const onClickActivateOrDeactivateToolbar = (
     doc: Document,
     toolbar_element: HTMLElement,
     toolbar_bus: ToolbarBus,
+    headings_button_state: HeadingsButtonState,
 ): void => {
     doc.addEventListener(
         "click",
@@ -53,6 +55,7 @@ export const onClickActivateOrDeactivateToolbar = (
             }
 
             toolbar_bus.disableToolbar();
+            headings_button_state.deactivateButton();
         },
         { passive: true },
     );

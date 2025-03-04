@@ -69,6 +69,18 @@ msgstr "Modèles disponibles"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Change section heading level"
+msgstr "Changer le niveau de titre d'une section"
+
+msgid "Change to heading 1"
+msgstr "Changer en titre 1"
+
+msgid "Change to heading 2"
+msgstr "Changer en titre 2"
+
+msgid "Change to heading 3"
+msgstr "Changer en titre 3"
+
 msgid "Choose a tracker"
 msgstr "Choisissez un tracker"
 
@@ -117,6 +129,15 @@ msgstr "Forcer la sauvegarde"
 
 msgid "Go to artifact"
 msgstr "Aller à l'artéfact"
+
+msgid "Heading 1"
+msgstr "Titre 1"
+
+msgid "Heading 2"
+msgstr "Titre 2"
+
+msgid "Heading 3"
+msgstr "Titre 3"
 
 msgid "Import existing %{tracker_label}"
 msgstr "Importer un(e) %{tracker_label} existant(e)"

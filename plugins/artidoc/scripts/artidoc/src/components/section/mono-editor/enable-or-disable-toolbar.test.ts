@@ -28,11 +28,21 @@ import {
     SOMEWHERE_IN_THE_DESCRIPTION_POSITION,
     SOMEWHERE_IN_THE_TITLE_POSITION,
 } from "./test-mono-editor-helper";
+import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("enable-or-disable-toolbar", () => {
     const toolbar_bus = buildToolbarBus();
+    const headings_button = getHeadingsButtonState();
 
-    const state = initStateWithPlugins([EnableOrDisableToolbarPlugin(toolbar_bus)]);
+    const state = initStateWithPlugins([
+        EnableOrDisableToolbarPlugin(
+            toolbar_bus,
+            headings_button,
+            ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create()),
+        ),
+    ]);
     const view = initViewWithState(state);
 
     const setCursorPosition = (position: number): void => {
@@ -41,19 +51,31 @@ describe("enable-or-disable-toolbar", () => {
 
     let enableToolbar: MockInstance;
     let disableToolbar: MockInstance;
+    let activateHeadingButtonForSection: MockInstance;
+    let deactivateHeadingButton: MockInstance;
 
     beforeEach(() => {
         enableToolbar = vi.spyOn(toolbar_bus, "enableToolbar");
         disableToolbar = vi.spyOn(toolbar_bus, "disableToolbar");
+        activateHeadingButtonForSection = vi.spyOn(headings_button, "activateButtonForSection");
+        deactivateHeadingButton = vi.spyOn(headings_button, "deactivateButton");
     });
 
-    it("should enable the toolbar, when the current selection is in the description", () => {
-        setCursorPosition(SOMEWHERE_IN_THE_DESCRIPTION_POSITION);
-        expect(enableToolbar).toHaveBeenCalledOnce();
-    });
-
-    it("should disable the toolbar, when the current selection is in the title", () => {
+    it("should disable the toolbar and deactivate the headings button, at the first update", () => {
         setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
         expect(disableToolbar).toHaveBeenCalledOnce();
+        expect(deactivateHeadingButton).toHaveBeenCalledOnce();
+    });
+
+    it("should enable the toolbar and deactivate the headings button, when the current selection is in the description", () => {
+        setCursorPosition(SOMEWHERE_IN_THE_DESCRIPTION_POSITION);
+        expect(enableToolbar).toHaveBeenCalledOnce();
+        expect(deactivateHeadingButton).toHaveBeenCalledOnce();
+    });
+
+    it("should disable the toolbar and active the headings button, when the current selection is in the title", () => {
+        setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
+        expect(disableToolbar).toHaveBeenCalledOnce();
+        expect(activateHeadingButtonForSection).toHaveBeenCalledOnce();
     });
 });

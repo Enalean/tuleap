@@ -22,6 +22,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { onClickActivateOrDeactivateToolbar } from "@/helpers/toolbar-activator";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 
 describe("toolbar-activator", () => {
     let doc: Document;
@@ -52,7 +53,12 @@ describe("toolbar-activator", () => {
         );
         doc.body.insertAdjacentElement("afterbegin", toolbar_element);
 
-        onClickActivateOrDeactivateToolbar(doc, toolbar_element, toolbar_bus);
+        onClickActivateOrDeactivateToolbar(
+            doc,
+            toolbar_element,
+            toolbar_bus,
+            getHeadingsButtonState(),
+        );
     });
 
     const clickOnElement = (element: Element | null): void => {
