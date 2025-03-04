@@ -67,15 +67,10 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         return ! empty($result) && count($result) === 1;
     }
 
-    public function initialize($repositoryId)
+    public function initialize($repositoryId): void
     {
         $sql = 'UPDATE plugin_git SET repository_is_initialized = 1 WHERE repository_id = ?';
-        try {
-            $this->getDB()->run($sql, $repositoryId);
-        } catch (PDOException $ex) {
-            throw new GitDaoException(dgettext('tuleap-git', 'Unable to update Repository data'));
-        }
-        return true;
+        $this->getDB()->run($sql, $repositoryId);
     }
 
     public function save(GitRepository $repository)
@@ -104,21 +99,17 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         $backup_path    = $repository->getBackupPath();
 
         if ($this->exists($id)) {
-            try {
-                $this->getDB()->update(
-                    'plugin_git',
-                    [
-                        'repository_description'           => $description,
-                        'repository_is_initialized'        => $isInitialized,
-                        'repository_access'                => $access,
-                        'repository_events_mailing_prefix' => $mailPrefix,
-                        'repository_backup_path'           => $backup_path,
-                    ],
-                    ['repository_id' => $id]
-                );
-            } catch (PDOException $ex) {
-                throw new GitDaoException(dgettext('tuleap-git', 'Unable to update Repository data'));
-            }
+            $this->getDB()->update(
+                'plugin_git',
+                [
+                    'repository_description'           => $description,
+                    'repository_is_initialized'        => $isInitialized,
+                    'repository_access'                => $access,
+                    'repository_events_mailing_prefix' => $mailPrefix,
+                    'repository_backup_path'           => $backup_path,
+                ],
+                ['repository_id' => $id]
+            );
             return true;
         }
 
@@ -129,33 +120,29 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
             throw new \LogicException(sprintf('Unexpected Git backend (%s)', $repository_backend::class));
         }
 
-        try {
-            $this->getDB()->insert(
-                'plugin_git',
-                [
-                    'repository_name'             => $name,
-                    'repository_path'             => $path,
-                    'repository_parent_id'        => $parentId,
-                    'repository_description'      => $description,
-                    'project_id'                  => $projectId,
-                    'repository_creation_date'    => date('Y-m-d H:i:s'),
-                    'repository_creation_user_id' => $creationUserId,
-                    'repository_is_initialized'   => $isInitialized,
-                    'repository_access'           => $access,
-                    'repository_backend_type'     => $backendType,
-                    'repository_scope'            => $scope,
-                    'repository_namespace'        => $namespace,
-                    'allow_artifact_closure'      => empty($parentId),
-                ]
-            );
-        } catch (PDOException $ex) {
-            throw new GitDaoException(dgettext('tuleap-git', 'Unable to update Repository data'));
-        }
+        $this->getDB()->insert(
+            'plugin_git',
+            [
+                'repository_name'             => $name,
+                'repository_path'             => $path,
+                'repository_parent_id'        => $parentId,
+                'repository_description'      => $description,
+                'project_id'                  => $projectId,
+                'repository_creation_date'    => date('Y-m-d H:i:s'),
+                'repository_creation_user_id' => $creationUserId,
+                'repository_is_initialized'   => $isInitialized,
+                'repository_access'           => $access,
+                'repository_backend_type'     => $backendType,
+                'repository_scope'            => $scope,
+                'repository_namespace'        => $namespace,
+                'allow_artifact_closure'      => empty($parentId),
+            ]
+        );
 
         return $this->getDB()->lastInsertId();
     }
 
-    public function delete(GitRepository $repository)
+    public function delete(GitRepository $repository): void
     {
         $id        = $repository->getId();
         $projectId = $repository->getProjectId();
@@ -168,44 +155,32 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         $backup_path .= '_' . strtotime($deletionDate);
         $backup_path  = $projectName . '_' . $backup_path;
 
-        try {
-            $affected_rows = $this->getDB()->update(
-                'plugin_git',
-                [
-                    'repository_deletion_date' => $deletionDate,
-                    'repository_backup_path'   => $backup_path,
-                ],
-                [
-                    'repository_id' => $id,
-                    'project_id'    => $projectId,
-                ]
-            );
-        } catch (PDOException $ex) {
-            return false;
-        }
-
-        return $affected_rows === 1;
+        $this->getDB()->update(
+            'plugin_git',
+            [
+                'repository_deletion_date' => $deletionDate,
+                'repository_backup_path'   => $backup_path,
+            ],
+            [
+                'repository_id' => $id,
+                'project_id'    => $projectId,
+            ]
+        );
     }
 
-    public function renameProject(Project $project, $newName)
+    public function renameProject(Project $project, string $newName): void
     {
         $oldPath = $project->getUnixName() . '/';
         $newPath = $newName . '/';
 
-        try {
-            $this->getDB()->run(
-                'UPDATE plugin_git
+        $this->getDB()->run(
+            'UPDATE plugin_git
                 SET repository_path = REPLACE(repository_path, ?, ?)
                 WHERE project_id = ?',
-                $oldPath,
-                $newPath,
-                $project->getID()
-            );
-        } catch (PDOException $ex) {
-            return false;
-        }
-
-        return true;
+            $oldPath,
+            $newPath,
+            $project->getID()
+        );
     }
 
     /**
@@ -323,24 +298,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         );
     }
 
-    public function hasChild($repository)
-    {
-        $repoId = $repository->getId();
-        if (empty($repoId)) {
-            throw new GitDaoException(dgettext('tuleap-git', 'Repository child search failed : missing repository id'));
-        }
-        $query = 'SELECT repository_id' .
-                 ' FROM plugin_git' .
-                 ' WHERE repository_parent_id=? AND repository_deletion_date="0000-00-00 00:00:00"';
-
-        try {
-            $result = $this->getDB()->run($query, $repoId);
-        } catch (PDOException $ex) {
-            return false;
-        }
-        return ! empty($result);
-    }
-
     /**
      * This function log a Git Push in the database
      *
@@ -349,27 +306,21 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
      * @param int $pushTimestamp Date of the push
      * @param int $commitsNumber Number of commits
      *
-     * @return bool
      */
-    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber, $refname, $operation_type, $refname_type)
+    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber, $refname, $operation_type, $refname_type): void
     {
-        try {
-            $this->getDB()->insert(
-                'plugin_git_log',
-                [
-                    'repository_id'  => $repoId,
-                    'user_id'        => $userId,
-                    'push_date'      => $pushTimestamp,
-                    'commits_number' => $commitsNumber,
-                    'refname'        => $refname,
-                    'operation_type' => $operation_type,
-                    'refname_type'   => $refname_type,
-                ]
-            );
-        } catch (PDOException $ex) {
-            return false;
-        }
-        return true;
+        $this->getDB()->insert(
+            'plugin_git_log',
+            [
+                'repository_id'  => $repoId,
+                'user_id'        => $userId,
+                'push_date'      => $pushTimestamp,
+                'commits_number' => $commitsNumber,
+                'refname'        => $refname,
+                'operation_type' => $operation_type,
+                'refname_type'   => $refname_type,
+            ]
+        );
     }
 
     public function getProjectRepositoryById($repository)
@@ -502,9 +453,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
      * @param int $repository_id
      * @param int $remote_server_id
      *
-     * @return bool
      */
-    public function switchToGerrit($repository_id, $remote_server_id)
+    public function switchToGerrit($repository_id, $remote_server_id): void
     {
         $sql = 'UPDATE plugin_git
                 SET remote_server_id = ?,
@@ -512,12 +462,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                     remote_project_deleted_date = NULL
                 WHERE repository_id = ?';
 
-        try {
-            $this->getDB()->run($sql, $remote_server_id, $repository_id);
-        } catch (PDOException $ex) {
-            return false;
-        }
-        return true;
+        $this->getDB()->run($sql, $remote_server_id, $repository_id);
     }
 
     public function setGerritMigrationError($repository_id)
@@ -544,20 +489,12 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         $this->getDB()->run($sql, $repository_id);
     }
 
-    /**
-     * @return bool
-     */
-    public function setGerritProjectAsDeleted($repository_id)
+    public function setGerritProjectAsDeleted($repository_id): void
     {
         $sql = 'UPDATE plugin_git
                 SET remote_project_deleted_date = UNIX_TIMESTAMP(), remote_server_migration_status = NULL
                 WHERE repository_id = ?';
-        try {
-            $this->getDB()->run($sql, $repository_id);
-        } catch (PDOException $ex) {
-            return false;
-        }
-        return true;
+        $this->getDB()->run($sql, $repository_id);
     }
 
     /**

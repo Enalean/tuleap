@@ -230,12 +230,6 @@ class GitRepository
         return $this->id;
     }
 
-    public function hasChild()
-    {
-        $this->load();
-        return $this->getDao()->hasChild($this);
-    }
-
     /**
      * Shortcut of setParent
      * @param int $id

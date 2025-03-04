@@ -872,9 +872,6 @@ msgstr ""
 msgid "Repository access permissions are going to be modified in a few seconds"
 msgstr ""
 
-msgid "Repository child search failed : missing repository id"
-msgstr ""
-
 msgid "Repository does not exist"
 msgstr ""
 
@@ -1234,9 +1231,6 @@ msgstr ""
 msgid ""
 "Unable to restore Git repository : repository with the same name already "
 "exist"
-msgstr ""
-
-msgid "Unable to update Repository data"
 msgstr ""
 
 msgid "Unable to update template"
