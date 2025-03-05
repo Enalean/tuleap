@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -55,13 +55,7 @@ final class PermissionsTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($user_2_artifact);
 
         $result = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $uuid,
-                "SELECT @id FROM @project = 'self' WHERE @id >= 1",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()->withUUID($uuid)->withTqlQuery("SELECT @id FROM @project = 'self' WHERE @id >= 1")->build(),
             $user_1,
         );
         self::assertCount(1, $result);

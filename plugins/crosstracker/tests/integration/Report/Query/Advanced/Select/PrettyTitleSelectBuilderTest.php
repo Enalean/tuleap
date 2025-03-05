@@ -25,9 +25,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\PrettyTitleRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -117,13 +117,10 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @pretty_title FROM @project = 'self' WHERE @title != ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @pretty_title FROM @project = 'self' WHERE @title != ''",
+                )->build(),
             $this->user,
         );
 

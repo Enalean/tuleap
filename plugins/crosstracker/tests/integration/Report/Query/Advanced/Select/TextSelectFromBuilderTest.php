@@ -25,9 +25,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Markdown\CommonMarkInterpreter;
@@ -111,13 +111,10 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT text_field FROM @project = 'self' WHERE text_field = '' OR text_field != ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT text_field FROM @project = 'self' WHERE text_field = '' OR text_field != ''",
+                )->build(),
             $this->user,
         );
         self::assertSame(2, $result->getTotalSize());

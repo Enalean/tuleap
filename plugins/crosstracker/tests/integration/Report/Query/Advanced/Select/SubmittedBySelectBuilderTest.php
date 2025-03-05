@@ -25,9 +25,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -94,13 +94,10 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @submitted_by FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by != 'bob'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @submitted_by FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by != 'bob'",
+                )->build(),
             $this->user,
         );
         self::assertSame(2, $result->getTotalSize());

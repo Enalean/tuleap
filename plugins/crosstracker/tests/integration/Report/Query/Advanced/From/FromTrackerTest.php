@@ -25,9 +25,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\From;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
@@ -90,7 +90,8 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     public function testTrackerNameEqual(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @tracker.name FROM @tracker.name = "release" WHERE @id >= 1', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @tracker.name FROM @tracker.name = "release" WHERE @id >= 1')->build(),
             $this->user,
         );
         $this->assertItContainsTrackers(['Release'], $result);
@@ -99,7 +100,8 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     public function testTrackerNameIn(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @tracker.name FROM @tracker.name IN("release", "sprint") WHERE @id >= 1', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @tracker.name FROM @tracker.name IN("release", "sprint") WHERE @id >= 1')->build(),
             $this->user,
         );
         $this->assertItContainsTrackers(['Release', 'Sprint'], $result);
@@ -108,13 +110,10 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     public function testTrackerNameEqualWithProject(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery(
-                $this->uuid,
-                'SELECT @tracker.name FROM @tracker.name = "sprint" AND @project.category = "foo" WHERE @id >= 1',
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    'SELECT @tracker.name FROM @tracker.name = "sprint" AND @project.category = "foo" WHERE @id >= 1',
+                )->build(),
             $this->user,
         );
         $this->assertItContainsTrackers(['Sprint', 'Sprint'], $result);
@@ -123,13 +122,10 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     public function testTrackerNameInWithProject(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery(
-                $this->uuid,
-                'SELECT @tracker.name FROM @tracker.name IN("sprint", "release") AND @project.category = "foo" WHERE @id >= 1',
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    'SELECT @tracker.name FROM @tracker.name IN("sprint", "release") AND @project.category = "foo" WHERE @id >= 1',
+                )->build(),
             $this->user,
         );
         $this->assertItContainsTrackers(['Sprint', 'Sprint', 'Release'], $result);

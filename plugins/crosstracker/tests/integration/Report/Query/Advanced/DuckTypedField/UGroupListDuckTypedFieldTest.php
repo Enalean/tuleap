@@ -27,8 +27,8 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field_List;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -144,13 +144,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field = ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field = ''",
+                )->build(),
             $this->project_member
         );
 
@@ -161,13 +158,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualUGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'Project members'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'Project members'",
+                )->build(),
             $this->project_member
         );
 
@@ -178,13 +172,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'Project members'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'Project members'",
+                )->build(),
             $this->project_admin
         );
 
@@ -195,13 +186,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualStaticUGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'MyStaticUGroup'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'MyStaticUGroup'",
+                )->build(),
             $this->project_member
         );
 
@@ -212,13 +200,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'MyStaticUGroup' AND ugroup_field = 'Project members'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field = 'MyStaticUGroup' AND ugroup_field = 'Project members'",
+                )->build(),
             $this->project_member
         );
 
@@ -229,13 +214,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field != ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field != ''",
+                )->build(),
             $this->project_member
         );
 
@@ -246,13 +228,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualUGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'Project administrators'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'Project administrators'",
+                )->build(),
             $this->project_member
         );
 
@@ -266,13 +245,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'Project administrators'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'Project administrators'",
+                )->build(),
             $this->project_admin
         );
 
@@ -287,13 +263,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualStaticGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'MyStaticUGroup'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'MyStaticUGroup'",
+                )->build(),
             $this->project_member
         );
 
@@ -307,13 +280,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'MyStaticUGroup' AND ugroup_field != 'Project members'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field != 'MyStaticUGroup' AND ugroup_field != 'Project members'",
+                )->build(),
             $this->project_member
         );
 
@@ -324,13 +294,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInUGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('Project members')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('Project members')",
+                )->build(),
             $this->project_member
         );
 
@@ -341,13 +308,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('Project members')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('Project members')",
+                )->build(),
             $this->project_admin
         );
 
@@ -358,13 +322,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInMultipleUGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('MyStaticUGroup', 'Project members')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('MyStaticUGroup', 'Project members')",
+                )->build(),
             $this->project_member
         );
 
@@ -375,13 +336,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('MyStaticUGroup') AND ugroup_field IN('Project members')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field IN('MyStaticUGroup') AND ugroup_field IN('Project members')",
+                )->build(),
             $this->project_member
         );
 
@@ -392,13 +350,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInUGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup')",
+                )->build(),
             $this->project_member
         );
 
@@ -409,13 +364,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup')",
+                )->build(),
             $this->project_admin
         );
 
@@ -430,13 +382,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInMultipleUGroup(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup', 'Project members')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup', 'Project members')",
+                )->build(),
             $this->project_member
         );
 
@@ -447,13 +396,10 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup') AND ugroup_field NOT IN('Project members')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE ugroup_field NOT IN('MyStaticUGroup') AND ugroup_field NOT IN('Project members')",
+                )->build(),
             $this->project_member
         );
 
