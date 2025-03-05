@@ -25,8 +25,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -102,13 +102,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob'",
+                )->build(),
             $this->project_member,
         );
 
@@ -119,13 +116,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob'",
+                )->build(),
             $this->project_admin,
         );
 
@@ -136,13 +130,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by = MYSELF()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by = MYSELF()",
+                )->build(),
             $this->alice,
         );
 
@@ -153,13 +144,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by = 'alice'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by = 'alice'",
+                )->build(),
             $this->project_member,
         );
 
@@ -173,13 +161,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob'",
+                )->build(),
             $this->project_member,
         );
 
@@ -190,13 +175,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob'",
+                )->build(),
             $this->project_admin,
         );
 
@@ -211,13 +193,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by != MYSELF()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by != MYSELF()",
+                )->build(),
             $this->alice,
         );
 
@@ -228,13 +207,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob' AND @submitted_by != 'alice'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by != 'bob' AND @submitted_by != 'alice'",
+                )->build(),
             $this->project_member,
         );
 
@@ -245,13 +221,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob')",
+                )->build(),
             $this->project_member,
         );
 
@@ -262,13 +235,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob')",
+                )->build(),
             $this->project_admin,
         );
 
@@ -279,13 +249,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN(MYSELF())",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by IN(MYSELF())",
+                )->build(),
             $this->alice,
         );
 
@@ -296,13 +263,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInMultiple(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob', MYSELF())",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob', MYSELF())",
+                )->build(),
             $this->alice,
         );
 
@@ -316,13 +280,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob') OR @submitted_by IN('charles')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by IN('bob') OR @submitted_by IN('charles')",
+                )->build(),
             $this->project_member,
         );
 
@@ -333,13 +294,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob')",
+                )->build(),
             $this->project_member,
         );
 
@@ -350,13 +308,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob')",
+                )->build(),
             $this->project_admin,
         );
 
@@ -371,13 +326,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN(MYSELF())",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN(MYSELF())",
+                )->build(),
             $this->alice,
         );
 
@@ -388,13 +340,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInMultiple(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob', 'alice')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob', 'alice')",
+                )->build(),
             $this->alice,
         );
 
@@ -405,13 +354,10 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob') AND @submitted_by NOT IN('alice')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE @submitted_by NOT IN('bob') AND @submitted_by NOT IN('alice')",
+                )->build(),
             $this->project_member,
         );
 

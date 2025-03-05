@@ -26,8 +26,8 @@ use DateTime;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -143,13 +143,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field = ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field = ''",
+                )->build(),
             $this->project_member
         );
 
@@ -160,13 +157,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field = '2023-02-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field = '2023-02-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -177,13 +171,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field = '2023-02-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field = '2023-02-12'",
+                )->build(),
             $this->project_admin
         );
 
@@ -194,13 +185,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field = NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field = NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -211,13 +199,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field = '2023-02-12' OR date_field = '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field = '2023-02-12' OR date_field = '2023-03-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -228,13 +213,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field != ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field != ''",
+                )->build(),
             $this->project_member
         );
 
@@ -248,13 +230,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field != '2023-02-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field != '2023-02-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -269,13 +248,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field != '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field != '2023-03-12'",
+                )->build(),
             $this->project_admin
         );
 
@@ -290,13 +266,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field != NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field != NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -311,13 +284,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field != '2023-02-12' AND date_field != ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field != '2023-02-12' AND date_field != ''",
+                )->build(),
             $this->project_member
         );
 
@@ -328,13 +298,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field < '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field < '2023-03-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -345,13 +312,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field < '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field < '2023-03-12'",
+                )->build(),
             $this->project_admin
         );
 
@@ -362,13 +326,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field < '2023-03-12' AND date_field < NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field < '2023-03-12' AND date_field < NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -379,13 +340,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field < NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field < NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -396,13 +354,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field <= '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field <= '2023-03-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -413,13 +368,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field <= '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field <= '2023-03-12'",
+                )->build(),
             $this->project_admin
         );
 
@@ -432,13 +384,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field <= '2023-03-12' AND date_field <= NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field <= '2023-03-12' AND date_field <= NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -449,13 +398,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field <= NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field <= NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -466,13 +412,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field > '2023-02-11'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field > '2023-02-11'",
+                )->build(),
             $this->project_member
         );
 
@@ -486,13 +429,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field > '2023-02-11'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field > '2023-02-11'",
+                )->build(),
             $this->project_admin
         );
 
@@ -507,13 +447,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field > '2023-02-12' AND date_field > '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field > '2023-02-12' AND date_field > '2023-03-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -524,13 +461,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field > NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field > NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -541,13 +475,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field >= '2023-02-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field >= '2023-02-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -561,13 +492,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field >= '2023-02-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field >= '2023-02-12'",
+                )->build(),
             $this->project_admin
         );
 
@@ -582,13 +510,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field >= '2023-02-12' AND date_field >= '2023-03-12'",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field >= '2023-02-12' AND date_field >= '2023-03-12'",
+                )->build(),
             $this->project_member
         );
 
@@ -599,13 +524,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field >= NOW()",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field >= NOW()",
+                )->build(),
             $this->project_member
         );
 
@@ -616,13 +538,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testBetweenValues(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN('2023-02-01', '2023-03-31')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN('2023-02-01', '2023-03-31')",
+                )->build(),
             $this->project_member
         );
 
@@ -633,13 +552,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN('2023-02-01', '2023-03-31')",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN('2023-02-01', '2023-03-31')",
+                )->build(),
             $this->project_admin
         );
 
@@ -652,13 +568,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN('2023-02-01', '2023-02-28') OR date_field BETWEEN(NOW() - 1w, NOW())",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN('2023-02-01', '2023-02-28') OR date_field BETWEEN(NOW() - 1w, NOW())",
+                )->build(),
             $this->project_member
         );
 
@@ -669,13 +582,10 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testBetweenYesterdayAndTomorrow(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN(NOW() - 1d, NOW() + 1d)",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT @id FROM @project = 'self' WHERE date_field BETWEEN(NOW() - 1d, NOW() + 1d)",
+                )->build(),
             $this->project_member
         );
 

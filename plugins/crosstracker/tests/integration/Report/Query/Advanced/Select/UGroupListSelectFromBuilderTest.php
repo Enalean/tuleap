@@ -27,10 +27,10 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UGroupListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UGroupListValueRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -141,13 +141,10 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery(
-                $this->uuid,
-                "SELECT ugroup_list_field FROM @project = 'self' WHERE ugroup_list_field = '' OR ugroup_list_field != ''",
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    "SELECT ugroup_list_field FROM @project = 'self' WHERE ugroup_list_field = '' OR ugroup_list_field != ''",
+                )->build(),
             $this->user,
         );
 

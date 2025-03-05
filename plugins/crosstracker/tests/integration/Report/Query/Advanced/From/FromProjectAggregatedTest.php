@@ -28,9 +28,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
@@ -119,7 +119,8 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturn($new_event);
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1')->build(),
             $this->user,
         );
         $this->assertItContainsTrackers(['Tracker 2', 'Tracker 3'], $result);
@@ -137,7 +138,8 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturn($new_event);
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @tracker.name FROM @project IN("aggregated", "self") WHERE @id >= 1', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @tracker.name FROM @project IN("aggregated", "self") WHERE @id >= 1')->build(),
             $this->user,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2', 'Tracker 3'], $result);

@@ -25,8 +25,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -83,13 +83,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id = %d', $this->release_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id = %d', $this->release_artifact_1_id),
+                )->build(),
             $this->project_member
         );
 
@@ -100,13 +97,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id = %d OR @id = %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id = %d OR @id = %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -117,13 +111,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id = %d', $this->sprint_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id = %d', $this->sprint_artifact_1_id),
+                )->build(),
             $this->project_member
         );
 
@@ -133,13 +124,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id != %d', $this->release_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id != %d', $this->release_artifact_1_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -150,13 +138,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id != %d AND @id != %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id != %d AND @id != %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -167,13 +152,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id != %d', $this->release_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id != %d', $this->release_artifact_1_id),
+                )->build(),
             $this->project_member
         );
 
@@ -184,13 +166,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id < %d', $this->release_artifact_3_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id < %d', $this->release_artifact_3_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -201,13 +180,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id < %d AND @id < %d', $this->release_artifact_2_id, $this->release_artifact_3_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id < %d AND @id < %d', $this->release_artifact_2_id, $this->release_artifact_3_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -218,13 +194,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id < %d', $this->release_artifact_3_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id < %d', $this->release_artifact_3_id),
+                )->build(),
             $this->project_member
         );
 
@@ -235,13 +208,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id <= %d', $this->release_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id <= %d', $this->release_artifact_2_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -252,13 +222,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id <= %d AND @id <= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id <= %d AND @id <= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -269,13 +236,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id <= %d', $this->release_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id <= %d', $this->release_artifact_2_id),
+                )->build(),
             $this->project_member
         );
 
@@ -286,13 +250,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id > %d', $this->release_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id > %d', $this->release_artifact_1_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -303,13 +264,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id > %d AND @id > %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id > %d AND @id > %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -320,13 +278,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id > %d', $this->release_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id > %d', $this->release_artifact_1_id),
+                )->build(),
             $this->project_member
         );
 
@@ -337,13 +292,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id >= %d', $this->release_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id >= %d', $this->release_artifact_2_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -354,13 +306,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id >= %d AND @id >= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id >= %d AND @id >= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -371,13 +320,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id >= %d', $this->release_artifact_1_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id >= %d', $this->release_artifact_1_id),
+                )->build(),
             $this->project_member
         );
 
@@ -388,13 +334,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
+                )->build(),
             $this->project_admin
         );
 
@@ -411,17 +354,14 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf(
-                    'SELECT @id FROM @project = "self" WHERE %s OR %s',
-                    sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->release_artifact_1_id),
-                    sprintf('@id BETWEEN(%d, %d)', $this->release_artifact_3_id, $this->sprint_artifact_2_id),
-                ),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf(
+                        'SELECT @id FROM @project = "self" WHERE %s OR %s',
+                        sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->release_artifact_1_id),
+                        sprintf('@id BETWEEN(%d, %d)', $this->release_artifact_3_id, $this->sprint_artifact_2_id),
+                    ),
+                )->build(),
             $this->project_admin
         );
 
@@ -437,13 +377,10 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerQuery(
-                $this->uuid,
-                sprintf('SELECT @id FROM @project = "self" WHERE @id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
-                '',
-                '',
-                1,
-            ),
+            CrossTrackerQueryTestBuilder::aQuery()
+                ->withUUID($this->uuid)->withTqlQuery(
+                    sprintf('SELECT @id FROM @project = "self" WHERE @id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
+                )->build(),
             $this->project_member
         );
 

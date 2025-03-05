@@ -25,9 +25,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderBy;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -81,7 +81,8 @@ final class SubmittedByOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testSubmittedByDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @submitted_by DESC', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @submitted_by DESC')->build(),
             $this->user,
         );
 
@@ -99,7 +100,8 @@ final class SubmittedByOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testSubmittedByAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @submitted_by ASC', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @submitted_by ASC')->build(),
             $this->user,
         );
 

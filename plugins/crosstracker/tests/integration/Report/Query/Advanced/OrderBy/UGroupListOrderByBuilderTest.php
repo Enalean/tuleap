@@ -27,9 +27,9 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
-use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
+use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -119,7 +119,8 @@ final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testLastUpdateDateDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field DESC', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field DESC')->build(),
             $this->user,
         );
 
@@ -137,7 +138,8 @@ final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
     public function testLastUpdateDateAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerQuery($this->uuid, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field ASC', '', '', 1),
+            CrossTrackerQueryTestBuilder::aQuery()
+                 ->withUUID($this->uuid)->withTqlQuery('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY ugroup_list_field ASC')->build(),
             $this->user,
         );
 
