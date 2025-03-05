@@ -27,7 +27,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button"
                 v-for="suggested_query in getTranslatedQueries()"
                 v-bind:key="suggested_query.title"
-                v-on:click="emit('query-chosen', suggested_query)"
+                v-on:click="handleButtonClick(suggested_query)"
                 data-test="query-suggested-button"
             >
                 {{ suggested_query.title }}
@@ -41,13 +41,16 @@
                 )
             }}
         </p>
+        <query-suggested-modal v-on:query-chosen="(query) => emit('query-chosen', query)" />
     </div>
 </template>
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { DASHBOARD_TYPE, GET_SUGGESTED_QUERIES } from "../../injection-symbols";
+import { DASHBOARD_TYPE, EMITTER, GET_SUGGESTED_QUERIES } from "../../injection-symbols";
 import type { QuerySuggestion } from "../../domain/SuggestedQueriesGetter";
 import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
+import QuerySuggestedModal from "./QuerySuggestedModal.vue";
+import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/emitter-provider";
 
 const emit = defineEmits<{
     (e: "query-chosen", query: QuerySuggestion): void;
@@ -55,6 +58,11 @@ const emit = defineEmits<{
 
 const dashboard_type = strictInject(DASHBOARD_TYPE);
 const suggested_query_getter = strictInject(GET_SUGGESTED_QUERIES);
+const emitter = strictInject(EMITTER);
+
+function handleButtonClick(query: QuerySuggestion): void {
+    emitter.emit(DISPLAY_QUERY_PREVIEW_EVENT, { query });
+}
 
 function getTranslatedQueries(): QuerySuggestion[] {
     if (dashboard_type === PROJECT_DASHBOARD) {

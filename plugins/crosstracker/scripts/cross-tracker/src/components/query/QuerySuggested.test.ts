@@ -21,11 +21,12 @@ import { expect, describe, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { DASHBOARD_TYPE, GET_SUGGESTED_QUERIES } from "../../injection-symbols";
+import { DASHBOARD_TYPE, EMITTER, GET_SUGGESTED_QUERIES } from "../../injection-symbols";
 import QuerySuggested from "./QuerySuggested.vue";
 import { PROJECT_DASHBOARD, USER_DASHBOARD } from "../../domain/DashboardType";
 import { SuggestedQueries } from "../../domain/SuggestedQueriesGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
+import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 
 describe("QuerySuggested", () => {
     const suggest_queries = SuggestedQueries(createVueGettextProviderPassThrough());
@@ -39,6 +40,7 @@ describe("QuerySuggested", () => {
                 provide: {
                     [DASHBOARD_TYPE.valueOf()]: dashboard_type,
                     [GET_SUGGESTED_QUERIES.valueOf()]: suggest_queries,
+                    [EMITTER.valueOf()]: EmitterStub(),
                 },
             },
         });

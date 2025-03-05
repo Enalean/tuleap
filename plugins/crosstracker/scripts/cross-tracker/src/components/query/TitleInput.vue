@@ -25,6 +25,7 @@
         <input
             type="text"
             id="create-query-title"
+            data-test="create-query-title"
             class="tlp-input"
             v-bind:placeholder="$gettext('Name your query')"
             v-on:input="handleInput"
