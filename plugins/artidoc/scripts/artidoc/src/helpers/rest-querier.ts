@@ -32,7 +32,6 @@ import type { FileIdentifier } from "@tuleap/file-upload";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { Level } from "@/sections/levels/SectionsNumberer";
-import { injectDisplayLevel } from "@/sections/levels/SectionsNumberer";
 
 export function putConfiguration(
     document_id: number,
@@ -107,7 +106,7 @@ export function getAllSections(document_id: number): ResultAsync<readonly Artido
         params: {
             limit: 50,
         },
-    }).map((sections: readonly ArtidocSection[]) => injectDisplayLevel(sections));
+    });
 }
 
 export function getSection(section_id: string): ResultAsync<ArtidocSection, Fault> {

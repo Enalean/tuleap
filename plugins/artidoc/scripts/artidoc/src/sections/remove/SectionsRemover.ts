@@ -24,7 +24,6 @@ import type { SectionsCollection, StoredArtidocSection } from "@/sections/Sectio
 import { deleteSection } from "@/helpers/rest-querier";
 import { isPendingSection } from "@/helpers/artidoc-section.type";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
-import { updateDisplayLevelToSections } from "@/sections/levels/SectionsNumberer";
 
 export type RemoveSections = {
     removeSection: (section: StoredArtidocSection) => ResultAsync<boolean, Fault>;
@@ -45,13 +44,10 @@ export const getSectionsRemover = (
         states_collection.destroySectionState(section);
         if (isPendingSection(section)) {
             sections_collection.sections.value.splice(index, 1);
-            updateDisplayLevelToSections(sections_collection.sections.value);
             return okAsync(true);
         }
         return deleteSection(section.id).andThen(() => {
             sections_collection.sections.value.splice(index, 1);
-            updateDisplayLevelToSections(sections_collection.sections.value);
-
             return okAsync(true);
         });
     },

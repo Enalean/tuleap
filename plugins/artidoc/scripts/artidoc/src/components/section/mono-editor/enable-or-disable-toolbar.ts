@@ -67,7 +67,7 @@ export const EnableOrDisableToolbarPlugin = (
                         headings_button_state.deactivateButton();
                     } else {
                         toolbar_bus.disableToolbar();
-                        headings_button_state.activateButtonForSection(section.value);
+                        headings_button_state.activateButtonForSection(section);
                     }
                 },
             };

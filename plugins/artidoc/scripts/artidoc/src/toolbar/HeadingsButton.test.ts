@@ -37,7 +37,7 @@ const freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
 );
 
 describe("HeadingsButton", () => {
-    const headings_button_element = createHeadingButton(freetext_section.value);
+    const headings_button_element = createHeadingButton(freetext_section);
     if (headings_button_element === null) {
         throw new Error("Unable to find headings button element");
     }

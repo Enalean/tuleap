@@ -19,7 +19,6 @@
 
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { updateDisplayLevelToSections } from "@/sections/levels/SectionsNumberer";
 
 export type ManageSectionEditorState = {
     setEditedContent(new_title: string, new_description: string): void;
@@ -30,7 +29,6 @@ export type ManageSectionEditorState = {
 export const getSectionEditorStateManager = (
     section: ReactiveStoredArtidocSection,
     section_state: SectionState,
-    sections: ReactiveStoredArtidocSection[],
 ): ManageSectionEditorState => ({
     setEditedContent(new_title, new_description): void {
         const has_content_been_edited =
@@ -46,7 +44,6 @@ export const getSectionEditorStateManager = (
         section_state.edited_title.value = section.value.title;
         section_state.edited_description.value = section.value.description;
         section.value.level = section_state.initial_level.value;
-        updateDisplayLevelToSections(sections);
         section_state.is_section_in_edit_mode.value = false;
     },
     markEditorAsReset(): void {

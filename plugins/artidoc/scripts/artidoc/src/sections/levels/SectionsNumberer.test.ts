@@ -25,10 +25,8 @@ import { buildSectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
-import {
-    initLevelAccordingToPreviousSectionLevelForImportExistingArtifactSection,
-    updateDisplayLevelToSections,
-} from "@/sections/levels/SectionsNumberer";
+import type { NumberSections } from "@/sections/levels/SectionsNumberer";
+import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 import * as rest from "@/helpers/rest-querier";
 import { createSectionFromExistingArtifact } from "@/helpers/rest-querier";
 import { AT_THE_END, getSectionsInserter } from "@/sections/insert/SectionsInserter";
@@ -66,16 +64,19 @@ const sections_collection = SectionsCollectionStub.fromReactiveStoredArtifactSec
 ]);
 const reorderer = buildSectionsReorderer(sections_collection);
 describe("SectionsNumberer", () => {
-    let inserter: InsertSections, states_collection: SectionsStatesCollection;
+    let inserter: InsertSections,
+        states_collection: SectionsStatesCollection,
+        sections_numberer: NumberSections;
 
     beforeEach(() => {
+        sections_numberer = getSectionsNumberer(sections_collection);
         states_collection = SectionsStatesCollectionStub.build();
         vi.spyOn(rest, "reorderSections").mockReturnValue(okAsync({} as Response));
-        inserter = getSectionsInserter(sections_collection, states_collection);
+        inserter = getSectionsInserter(sections_collection, states_collection, sections_numberer);
     });
 
     it("should adjust the section numbers according to their level", () => {
-        updateDisplayLevelToSections(sections_collection.sections.value);
+        sections_numberer.updateSectionsLevels();
         expect(
             sections_collection.sections.value.map((section) => [
                 section.value.display_level,
@@ -93,7 +94,7 @@ describe("SectionsNumberer", () => {
     describe("Reorder section does not change the level of sections", () => {
         it("should adjust section numbers when a level 3 section is moved to bottom", async () => {
             await reorderer.moveSectionAtTheEnd(101, section_life.value);
-            updateDisplayLevelToSections(sections_collection.sections.value);
+            sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
@@ -110,7 +111,7 @@ describe("SectionsNumberer", () => {
 
         it("should adjust section numbers when a level 3 section is moved to top", async () => {
             await reorderer.moveSectionBefore(101, section_life.value, section_requirements.value);
-            updateDisplayLevelToSections(sections_collection.sections.value);
+            sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
@@ -127,7 +128,7 @@ describe("SectionsNumberer", () => {
 
         it("should adjust section numbers when a level 1 section is moved to top", async () => {
             await reorderer.moveSectionBefore(101, section_radiation.value, section_life.value);
-            updateDisplayLevelToSections(sections_collection.sections.value);
+            sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
@@ -144,7 +145,7 @@ describe("SectionsNumberer", () => {
 
         it("should adjust section numbers when a level 3 section is moved down", async () => {
             await reorderer.moveSectionDown(101, section_life);
-            updateDisplayLevelToSections(sections_collection.sections.value);
+            sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
@@ -161,7 +162,7 @@ describe("SectionsNumberer", () => {
 
         it("should adjust section numbers when a level 2 section is moved down", async () => {
             await reorderer.moveSectionDown(101, section_advanced);
-            updateDisplayLevelToSections(sections_collection.sections.value);
+            sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
@@ -178,7 +179,7 @@ describe("SectionsNumberer", () => {
 
         it("should adjust section numbers when a level 2 section is moved to top", async () => {
             await reorderer.moveSectionBefore(101, section_advanced.value, section_radiation.value);
-            updateDisplayLevelToSections(sections_collection.sections.value);
+            sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
                     section.value.display_level,
@@ -389,10 +390,7 @@ describe("SectionsNumberer", () => {
                 artidoc_id,
                 artifact_id,
                 position,
-                initLevelAccordingToPreviousSectionLevelForImportExistingArtifactSection(
-                    sections_collection.sections.value,
-                    position,
-                ),
+                sections_numberer.getLevelFromPositionOfImportedExistingSection(position),
             );
         }
 

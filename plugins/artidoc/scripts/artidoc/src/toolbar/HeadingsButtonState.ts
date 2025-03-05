@@ -19,23 +19,23 @@
 
 import type { Ref } from "vue";
 import { ref } from "vue";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 export type HeadingsButtonState = {
-    readonly active_section: Ref<StoredArtidocSection | undefined>;
+    readonly active_section: Ref<ReactiveStoredArtidocSection | undefined>;
     readonly is_button_active: Ref<boolean>;
-    activateButtonForSection(section: StoredArtidocSection): void;
+    activateButtonForSection(section: ReactiveStoredArtidocSection): void;
     deactivateButton(): void;
 };
 
 export const getHeadingsButtonState = (): HeadingsButtonState => {
-    const active_section: Ref<StoredArtidocSection | undefined> = ref(undefined);
+    const active_section: Ref<ReactiveStoredArtidocSection | undefined> = ref(undefined);
     const is_button_active = ref(false);
 
     return {
         active_section,
         is_button_active,
-        activateButtonForSection(section: StoredArtidocSection): void {
+        activateButtonForSection(section: ReactiveStoredArtidocSection): void {
             is_button_active.value = true;
             active_section.value = section;
         },

@@ -95,7 +95,7 @@ import {
 } from "@/helpers/search-existing-artifacts-for-autocompleter";
 import { errAsync } from "neverthrow";
 import { getInsertionPositionExcludingPendingSections } from "@/helpers/get-insertion-position-excluding-pending-sections";
-import { initLevelAccordingToPreviousSectionLevelForImportExistingArtifactSection } from "@/sections/levels/SectionsNumberer";
+import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 
 const gettext_provider = useGettext();
 const { $gettext, interpolate } = gettext_provider;
@@ -105,6 +105,7 @@ const close_title = $gettext("Close");
 const documentId = strictInject(DOCUMENT_ID);
 const configuration = strictInject(CONFIGURATION_STORE);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
+const sections_numberer = getSectionsNumberer(sections_collection);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 
@@ -241,13 +242,14 @@ function onSubmit(event: Event): void {
         return;
     }
 
+    const insertion_position_excluding_pending_sections =
+        getInsertionPositionExcludingPendingSections(add_position, sections_collection);
     createSectionFromExistingArtifact(
         documentId,
         selected.value.id,
-        getInsertionPositionExcludingPendingSections(add_position, sections_collection),
-        initLevelAccordingToPreviousSectionLevelForImportExistingArtifactSection(
-            sections_collection.sections.value,
-            add_position,
+        insertion_position_excluding_pending_sections,
+        sections_numberer.getLevelFromPositionOfImportedExistingSection(
+            insertion_position_excluding_pending_sections,
         ),
     ).match(
         (section: ArtidocSection) => {

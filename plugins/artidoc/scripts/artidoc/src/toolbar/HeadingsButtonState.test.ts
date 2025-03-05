@@ -38,11 +38,11 @@ describe("getHeadingsButtonState", () => {
     it("should activate button and set the section when activeButtonForSection is called", () => {
         const artidoc_section = ReactiveStoredArtidocSectionStub.fromSection(
             ArtifactSectionFactory.create(),
-        ).value;
+        );
 
         headings_button_state.activateButtonForSection(artidoc_section);
         expect(headings_button_state.is_button_active.value).toBeTruthy();
-        expect(headings_button_state.active_section.value).toBe(artidoc_section);
+        expect(headings_button_state.active_section.value).toStrictEqual(artidoc_section);
     });
 
     it("should deactivate button and reset the section to undefined when deactivateButton is called", () => {
