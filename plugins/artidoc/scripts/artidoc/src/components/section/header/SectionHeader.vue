@@ -19,7 +19,9 @@
   -->
 <template>
     <div v-if="!can_header_be_edited">
-        <h1 v-if="is_print_mode" class="section-title">{{ display_level + title }}</h1>
+        <h1 v-if="is_print_mode" class="section-title section-title-with-delegated-numbering">
+            {{ display_level + title }}
+        </h1>
         <h1 v-else class="section-title">{{ title }}</h1>
     </div>
 </template>
