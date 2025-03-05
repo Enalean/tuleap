@@ -1,4 +1,4 @@
-# On Wrapper elements in TLP-doc v2
+# On Wrapper elements in TLP-doc
 
 * Status: accepted
 * Deciders: Joris MASSON, Lou-Evan ROUBY
@@ -8,7 +8,7 @@ Technical Story: [request #37211 Replace TLP-doc documentation][0]
 
 ## Why do we need Wrapper custom elements in TLP stories?
 
-Throughout the Storybook stories that make up TLP-doc v2, you can find various custom elements called "Wrapper". They are most often used for "function API" components, for example TLP date pickers, TLP popovers, TLP modals, etc. Those components all require developers to call a function (for example `createModal()`) that take HTML elements as parameters. For example, Date pickers require an HTML input that will trigger the display of the date picker "pop-over" element.
+Throughout the Storybook stories that make up TLP-doc, you can find various custom elements called "Wrapper". They are most often used for "function API" components, for example TLP date pickers, TLP popovers, TLP modals, etc. Those components all require developers to call a function (for example `createModal()`) that take HTML elements as parameters. For example, Date pickers require an HTML input that will trigger the display of the date picker "pop-over" element.
 
 The problems arise from Storybook's dynamic rendering combined with this "function API": we do not have access to some kind of Storybook event or callback that would be executed _after_ rendering the HTML elements. Storybook was initially built for React or Vue or similar frameworks, they have built-in "lifecycle" callbacks to deal with such cases, such as `onMounted()` in Vue 3. In our case, we are closer to Vanilla JavaScript DOM API, so we cannot use that. Storybook decorators also cannot help us, as they are executed _before_ the story renders, so we do not find our HTML elements when running `querySelector()` in a Storybook decorator function.
 

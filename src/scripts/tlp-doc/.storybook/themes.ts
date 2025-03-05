@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const white_background = {
-    key: "white",
-    name: "White",
-    value: "var(--tlp-white-color)",
+export const orange_theme_entry = {
+    value: "orange",
+    title: "Orange",
 };
-export const grey_background = {
-    key: "grey",
-    name: "Grey",
-    value: "var(--tlp-background-color)",
+
+export const blue_theme_entry = {
+    value: "blue",
+    title: "Blue",
 };
-export const dark_background = {
-    key: "dark",
-    name: "Dark",
-    value: "var(--tlp-dark-color)",
+
+export const green_theme_entry = {
+    value: "green",
+    title: "Green",
+};
+
+export const grey_theme_entry = {
+    value: "grey",
+    title: "Grey",
+};
+
+export const purple_theme_entry = {
+    value: "purple",
+    title: "Purple",
+};
+
+export const red_theme_entry = {
+    value: "red",
+    title: "Red",
 };

@@ -20,6 +20,8 @@
 import type { StorybookConfig } from "@storybook/web-components-vite";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NodePackageImporter } from "sass";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { mergeConfig } from "vite";
 
 const config: StorybookConfig = {
     framework: "@storybook/web-components-vite",
@@ -30,11 +32,11 @@ const config: StorybookConfig = {
         "@storybook/addon-links",
         "@storybook/addon-themes",
     ],
-    async viteFinal(config) {
-        // eslint-disable-next-line import/no-extraneous-dependencies
-        const { mergeConfig } = await import("vite");
-
-        return mergeConfig(config, {
+    features: {
+        backgroundsStoryGlobals: true,
+    },
+    viteFinal: (config) =>
+        mergeConfig(config, {
             css: {
                 preprocessorOptions: {
                     scss: {
@@ -43,8 +45,7 @@ const config: StorybookConfig = {
                     },
                 },
             },
-        });
-    },
+        }),
 };
 
 export default config;

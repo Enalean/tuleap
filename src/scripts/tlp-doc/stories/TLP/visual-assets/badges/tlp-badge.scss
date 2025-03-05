@@ -17,6 +17,8 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "pkg:@tuleap/tlp-badge";
+
 .doc-example-badges {
     display: flex;
     flex-wrap: wrap;

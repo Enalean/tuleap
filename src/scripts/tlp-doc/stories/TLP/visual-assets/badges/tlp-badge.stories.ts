@@ -21,7 +21,6 @@ import type { Meta, StoryObj } from "@storybook/web-components";
 import { USER_INTERFACE_EMPHASIS_COLORS, COLOR_VARIANTS } from "@tuleap/core-constants";
 import type { UserInterfaceEmphasisColorName } from "@tuleap/core-constants";
 import { html, type TemplateResult } from "lit";
-import "@tuleap/tlp-badge";
 import { dark_background } from "../../../../.storybook/backgrounds";
 import "./tlp-badge.scss";
 
@@ -137,8 +136,8 @@ export const BadgeOnDarkBackground: Story = {
         outline: true,
         on_dark_background: true,
     },
-    parameters: {
-        backgrounds: { default: dark_background.name, values: [dark_background] },
+    globals: {
+        backgrounds: { value: dark_background.key },
     },
 };
 
@@ -177,8 +176,8 @@ export const AllVariationsOnDarkBackground: Story = {
         outline: true,
         on_dark_background: true,
     },
-    parameters: {
-        backgrounds: { default: dark_background.name, values: [dark_background] },
+    globals: {
+        backgrounds: { value: dark_background.key },
     },
     argTypes: {
         with_icon: { control: false },

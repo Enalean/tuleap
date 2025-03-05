@@ -30,20 +30,28 @@ import orange_theme from "@tuleap/tlp/src/scss/tlp-vars-orange.scss?inline";
 import purple_theme from "@tuleap/tlp/src/scss/tlp-vars-purple.scss?inline";
 import red_theme from "@tuleap/tlp/src/scss/tlp-vars-red.scss?inline";
 import { dark_background, grey_background, white_background } from "./backgrounds";
+import {
+    blue_theme_entry,
+    green_theme_entry,
+    grey_theme_entry,
+    orange_theme_entry,
+    purple_theme_entry,
+    red_theme_entry,
+} from "./themes";
 
 const getTheme = (color_name: string): string => {
     switch (color_name) {
-        case "blue":
+        case blue_theme_entry.value:
             return blue_theme;
-        case "green":
+        case green_theme_entry.value:
             return green_theme;
-        case "grey":
+        case grey_theme_entry.value:
             return grey_theme;
-        case "orange":
+        case orange_theme_entry.value:
             return orange_theme;
-        case "purple":
+        case purple_theme_entry.value:
             return purple_theme;
-        case "red":
+        case red_theme_entry.value:
             return red_theme;
         default:
             throw Error("Unknown theme color");
@@ -54,8 +62,11 @@ const preview: Preview = {
     parameters: {
         layout: "centered",
         backgrounds: {
-            default: grey_background.name,
-            values: [white_background, grey_background, dark_background],
+            options: {
+                [white_background.key]: white_background,
+                [grey_background.key]: grey_background,
+                [dark_background.key]: dark_background,
+            },
         },
         docs: {
             source: { excludeDecorators: true },
@@ -108,18 +119,30 @@ const preview: Preview = {
     },
     globalTypes: {
         theme: {
-            description: "Theme color for Tuleap",
-            defaultValue: "orange",
+            description: "Color theme for Tuleap",
             toolbar: {
                 title: "Theme",
-                items: ["orange", "blue", "green", "grey", "purple", "red"],
+                icon: "paintbrush",
+                items: [
+                    orange_theme_entry,
+                    blue_theme_entry,
+                    green_theme_entry,
+                    grey_theme_entry,
+                    purple_theme_entry,
+                    red_theme_entry,
+                ],
             },
         },
+    },
+    initialGlobals: {
+        backgrounds: { value: grey_background.key },
+        theme: orange_theme_entry.value,
     },
     decorators: [
         (Story, context): HTMLTemplateResult => {
             const selected_theme = context.globals.theme;
-            const defaulted_theme = selected_theme === "" ? "orange" : selected_theme;
+            const defaulted_theme =
+                selected_theme === "" ? orange_theme_entry.value : selected_theme;
             const doc = context.canvasElement.ownerDocument;
             const colors_stylesheet = new CSSStyleSheet();
             const theme_style = getTheme(defaulted_theme);
