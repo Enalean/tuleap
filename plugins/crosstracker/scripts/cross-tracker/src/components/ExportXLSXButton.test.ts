@@ -25,7 +25,6 @@ import {
     CLEAR_FEEDBACKS,
     GET_COLUMN_NAME,
     NOTIFY_FAULT,
-    WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../injection-symbols";
 import ExportXLSXButton from "./ExportXLSXButton.vue";
@@ -50,13 +49,12 @@ vi.mock("../helpers/exporter/xlsx/download-xlsx", () => {
     };
 });
 
-const report_id = 36;
 describe("ExportXLSXButton", () => {
-    let resetSpy: Mock, errorSpy: Mock;
+    let clearFeedbackSpy: Mock, notifyFaultSpy: Mock;
 
     beforeEach(() => {
-        resetSpy = vi.fn();
-        errorSpy = vi.fn();
+        clearFeedbackSpy = vi.fn();
+        notifyFaultSpy = vi.fn();
         downloadXLSXDocument.mockReset();
         downloadXLSX.mockReset();
     });
@@ -66,11 +64,10 @@ describe("ExportXLSXButton", () => {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
-                    [NOTIFY_FAULT.valueOf()]: errorSpy,
-                    [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
+                    [NOTIFY_FAULT.valueOf()]: notifyFaultSpy,
+                    [CLEAR_FEEDBACKS.valueOf()]: clearFeedbackSpy,
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]:
                         RetrieveArtifactsTableStub.withDefaultContent(),
-                    [WIDGET_ID.valueOf()]: report_id,
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
                         createVueGettextProviderPassThrough(),
                     ),
@@ -80,7 +77,7 @@ describe("ExportXLSXButton", () => {
                 current_query: {
                     id: "",
                     tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
-                    title: "",
+                    title: "The title of my query",
                     description: "",
                 },
             },
@@ -107,8 +104,8 @@ describe("ExportXLSXButton", () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(xlsx_button_icon.classes()).toContain("fa-download");
-            expect(resetSpy).toHaveBeenCalled();
-            expect(errorSpy).not.toHaveBeenCalled();
+            expect(clearFeedbackSpy).toHaveBeenCalled();
+            expect(notifyFaultSpy).not.toHaveBeenCalled();
         });
 
         it("When there is a REST error, then it will be shown", async () => {
@@ -119,8 +116,8 @@ describe("ExportXLSXButton", () => {
             await wrapper.find("[data-test=export-xlsx-button]").trigger("click");
             await vi.runOnlyPendingTimersAsync();
 
-            expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][0].isXLSXExport()).toBe(true);
+            expect(notifyFaultSpy).toHaveBeenCalled();
+            expect(notifyFaultSpy.mock.calls[0][0].isXLSXExport()).toBe(true);
         });
     });
 });

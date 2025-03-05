@@ -21,9 +21,9 @@ import { utils, writeFile } from "xlsx";
 import { transformAReportCellIntoASheet } from "./transform-report-to-xlsx-sheet";
 import type { ReportSection } from "./data-formater";
 
-export function downloadXLSX(report: ReportSection, report_id: number): void {
+export function downloadXLSX(report: ReportSection, title: string): void {
     const book = utils.book_new();
     const sheet = transformAReportCellIntoASheet(report);
     utils.book_append_sheet(book, sheet);
-    writeFile(book, `cross-tracker-widget-report-${report_id}.xlsx`, { bookSST: true });
+    writeFile(book, `${title}.xlsx`, { bookSST: true });
 }
